@@ -37,16 +37,7 @@
                 <value>text/javascript;charset=UTF-8</value>
             </list>
         </property>
-        <property name="objectMapper">
-            <bean class="com.bcx.plat.core.utils.LongToStringAdapter">
-                <property name="dateFormat">
-                    <bean class="java.text.SimpleDateFormat">
-                        <!-- 处理 date 类型显示方式，但仅对经过springmvc 的模版有效 -->
-                        <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
-                    </bean>
-                </property>
-            </bean>
-        </property>
+        <property name="objectMapper" ref="longToStringAdapter"/>
     </bean>
 
     <mvc:annotation-driven>

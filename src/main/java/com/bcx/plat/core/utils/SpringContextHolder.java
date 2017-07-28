@@ -19,6 +19,7 @@ public class SpringContextHolder implements ApplicationContextAware {
     /**
      * 根据名称获取 JavaBean
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         return (T) getApplicationContext().getBean(name);
     }
