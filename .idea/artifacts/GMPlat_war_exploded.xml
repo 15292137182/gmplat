@@ -1,0 +1,84 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="GMPlat:war exploded">
+    <output-path>$PROJECT_DIR$/target/GMPlat</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="GMPlat" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: postgresql:postgresql:9.1-901.jdbc4" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:4.3.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.media:jersey-media-json-jackson:2.25" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-common:2.25" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.bundles.repackaged:jersey-guava:2.25" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.ext:jersey-entity-filtering:2.25" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.4" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-client:2.25" />
+          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-api:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-utils:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:aopalliance-repackaged:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:javax.inject:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-locator:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.25" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.media:jersey-media-jaxb:2.25" />
+          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.2" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.media:jersey-media-multipart:2.25" />
+          <element id="library" level="project" name="Maven: org.jvnet.mimepull:mimepull:1.9.6" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.media:jersey-media-moxy:2.25" />
+          <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.moxy:2.6.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.core:2.6.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.asm:2.6.0" />
+          <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.0.4" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.ext:jersey-spring3:2.25" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet-core:2.25" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:config-types:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-core:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-config:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.jvnet:tiger-types:1.4" />
+          <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:5.2.4.Final" />
+          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.2.1.Final" />
+          <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.1.0" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-runlevel:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:class-model:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:asm-all-repackaged:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:spring-bridge:2.5.0-b30" />
+          <element id="library" level="project" name="Maven: org.mybatis:mybatis-spring:1.2.2" />
+          <element id="library" level="project" name="Maven: org.mybatis:mybatis:3.2.8" />
+          <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
+          <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.5.4" />
+          <element id="library" level="project" name="Maven: org.json:json:20160810" />
+          <element id="library" level="project" name="Maven: net.sf.json-lib:json-lib:jdk13:2.2" />
+          <element id="library" level="project" name="Maven: commons-beanutils:commons-beanutils:1.7.0" />
+          <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2" />
+          <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.3" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1" />
+          <element id="library" level="project" name="Maven: net.sf.ezmorph:ezmorph:1.0.4" />
+          <element id="library" level="project" name="Maven: com.alibaba:druid:1.0.6" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/GMPlat/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="GMPlat/web/Web" />
+    </root>
+  </artifact>
+</component>
