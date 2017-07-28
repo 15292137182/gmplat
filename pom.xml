@@ -7,15 +7,14 @@
     <version>1.0-SNAPSHOT</version>
     <name>GMPlat Maven Webapp</name>
     <url>http://maven.apache.org</url>
-    <dependencies>
 
+    <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-
         <!-- postgresql驱动包 -->
         <dependency>
             <groupId>postgresql</groupId>
@@ -38,13 +37,11 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.3.9.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>4.3.9.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
