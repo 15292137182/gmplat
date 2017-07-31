@@ -37,7 +37,7 @@
                 <value>text/javascript;charset=UTF-8</value>
             </list>
         </property>
-        <property name="objectMapper" ref="longToStringAdapter"/>
+        <property name="objectMapper" ref="jacksonAdapter"/>
     </bean>
 
     <mvc:annotation-driven>

@@ -15,7 +15,7 @@ import java.util.Map;
 public interface MaintTableMapper extends BaseMapper<MaintTableInfo>{
 
     /**
-     *输入框中输入空格分隔的查询关键字（表Schema、表中英文名称）
+     * 输入框中输入空格分隔的查询关键字（表Schema、表中英文名称）
      * @param map
      * @return
      */

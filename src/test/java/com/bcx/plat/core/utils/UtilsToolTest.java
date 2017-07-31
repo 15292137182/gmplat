@@ -39,6 +39,5 @@ public class UtilsToolTest extends BaseTest {
         String s = "123    456   qwer;sdjr";
         Set<String> set = collectToSet(s);
         assert set.size() == 4;
-    }
 
 }
