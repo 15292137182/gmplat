@@ -1,27 +1,19 @@
 package com.bcx.plat.core.entity;
 
+import com.bcx.plat.core.base.BaseEntity;
+
 import java.io.Serializable;
 
 /**
  * Created by Went on 2017/7/31.
  * 维护数据库表实体类
  */
-public class MaintTableInfo implements Serializable{
+public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serializable {
 
-    private Integer rowId;//表id
     private String schema;//表schema
-    private String tableChinese;//表中文名
-    private String tableEnglish;//表英文名
+    private String tableEname;//表中文名
+    private String tableCname;//表英文名
     private String explain;//说明
-
-
-    public Integer getRowId() {
-        return rowId;
-    }
-
-    public void setRowId(Integer rowId) {
-        this.rowId = rowId;
-    }
 
     public String getSchema() {
         return schema;
@@ -31,20 +23,20 @@ public class MaintTableInfo implements Serializable{
         this.schema = schema;
     }
 
-    public String getTableChinese() {
-        return tableChinese;
+    public String getTableEname() {
+        return tableEname;
     }
 
-    public void setTableChinese(String tableChinese) {
-        this.tableChinese = tableChinese;
+    public void setTableEname(String tableEname) {
+        this.tableEname = tableEname;
     }
 
-    public String getTableEnglish() {
-        return tableEnglish;
+    public String getTableCname() {
+        return tableCname;
     }
 
-    public void setTableEnglish(String tableEnglish) {
-        this.tableEnglish = tableEnglish;
+    public void setTableCname(String tableCname) {
+        this.tableCname = tableCname;
     }
 
     public String getExplain() {

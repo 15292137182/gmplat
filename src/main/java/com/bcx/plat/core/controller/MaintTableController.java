@@ -37,6 +37,7 @@ public class MaintTableController extends BaseController {
     }
 
     @RequestMapping("/selectById")
+    @ResponseBody
     public MappingJacksonValue selectById(Integer rowId, HttpServletRequest request, HttpServletResponse response) {
         List<MaintTableInfo> result = maintTableServiceImpl.selectById(rowId);
         MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功", result)));

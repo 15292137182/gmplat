@@ -12,19 +12,19 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  */
 public class BaseEntity<T extends BaseEntity> {
 
-    private String status;
-    private String version;
-    private String createUser;
-    private String createName;
-    private String createDate;
-    private String modifyUser;
-    private String modifyName;
-    private String modifyDate;
-    private String deleteUser;
-    private String deleteName;
-    private String deleteDate;
-    private String deleteFlag;
-    private String rowId;
+    private String status;//状态
+    private String version;//版本
+    private String createUser;//创建人
+    private String createName;//创建名称
+    private String createDate;//创建时间
+    private String modifyUser;//修改人
+    private String modifyName;//修改名称
+    private String modifyDate;//修改时间
+    private String deleteUser;//删除人
+    private String deleteName;//删除名称
+    private String deleteDate;//删除时间
+    private String deleteFlag;//删除标记
+    private String rowId;//id
 
     private Map etc = new HashMap();
 
