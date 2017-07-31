@@ -6,9 +6,12 @@ import java.io.Serializable;
  * Created by Went on 2017/7/30.
  */
 public class JsonResult implements Serializable {
+
     private static final long serialVersionUID = 812376774103405857L;
+
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
+
     /**
      * 返回是否成功的状态
      * 0:表示成功
