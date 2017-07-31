@@ -6,8 +6,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 测试工具类中的方法
@@ -25,6 +24,11 @@ public class UtilsToolTest extends BaseTest {
         String jsonMap = objToJson(map);
         HashMap map1 = jsonToObj(jsonMap, HashMap.class);
         assert (null != map1 && map1.get("A").equals(map.get("A")));
+
+        // 测试 lengthUUID 方法
+        String uuid32 = lengthUUID(32);
+        assert uuid32.length() == 32;
+        System.out.println(getDateBy10());
     }
 
 }

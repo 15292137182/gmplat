@@ -4,3 +4,4 @@
  
 - 框架基本内容：[Spring](https://spring.io/)、[SpringMVC](https://spring.io/)、[Mybatis](http://www.mybatis.org/mybatis-3/)
 - 数据库连接池采用 [ali-Druid](http://druid.io/)
+- 前台UI框架采用：[element UI](http://element.eleme.io/#/zh-CN/component/transition)

@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
+import static java.time.LocalDateTime.now;
 
 /**
  * 基本工具类
@@ -19,6 +22,52 @@ public class UtilsTool {
      * 禁止使用 new 的方法构造该类
      */
     private UtilsTool() {
+    }
+
+    /**
+     * 返回指定长度的随机字符串
+     *
+     * @param length 长度
+     * @return 随机字符串
+     */
+    public static String lengthUUID(int length) {
+        StringBuilder sb = new StringBuilder();
+        while (length != sb.length()) {
+            sb.append(UUID.randomUUID());
+            if (length < sb.length()) {
+                sb.delete(length - 1, sb.length() - 1);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 获取长度为 10 的日期字符串
+     *
+     * @return 日期字符串
+     */
+    public static String getDateBy10() {
+        return getDateTimeNow("yyyy-MM-dd");
+    }
+
+    /**
+     * 获取当前事件日期
+     *
+     * @return 返回时间日期
+     */
+    public static String getDateTimeNow() {
+        return getDateTimeNow("yyyy-MM-dd hh:mm:ss");
+    }
+
+    /**
+     * 根据指定时间格式来格式化日期
+     *
+     * @param pattern 事件格式
+     * @return 返回时间格式的字符串
+     */
+    public static String getDateTimeNow(String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return now().format(formatter);
     }
 
     /**
