@@ -7,6 +7,7 @@ public enum DBTypeEnum {
 
     /**
      * postgreSQL 数据库
+     *
      */
     PSQL("dataSourcePSQL");
 
