@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bcx.plat.core.mapper.MaintTableMapper">
 
-
     <sql id="template_column">
         row_id,status,'version',create_user,create_name,create_date,modify_user,
         modify_name,modify_date,delete_uer,delete_name,delete_date,delete_flag
@@ -12,8 +11,6 @@
         #{rowId},#{status},#{version},#{createUser},#{createName},#{createDate},#{modifyUser},#{modifyName},
         #{modifyDate},#{deleteUser},#{deleteName},#{deleteDate},#{deleteFlag}
     </sql>
-
-
 
     <select id="selectMaint" resultType="com.bcx.plat.core.entity.MaintTableInfo" parameterType="map">
         SELECT schema,table_ename,table_cname,explain ,<include refid="template_column"/> FROM bcx_maint_table
@@ -29,7 +26,5 @@
     <select id="selectById" parameterType="int" resultType="com.bcx.plat.core.entity.MaintTableInfo">
         SELECT schema,table_ename,table_cname,explain ,<include refid="template_column"/> FROM bcx_maint_table WHERE row_id=#{rowId}
     </select>
-
-
 
 </mapper>
