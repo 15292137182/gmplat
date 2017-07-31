@@ -4,7 +4,6 @@ import com.bcx.BaseTest;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,5 +38,6 @@ public class UtilsToolTest extends BaseTest {
         String s = "123    456   qwer;sdjr";
         Set<String> set = collectToSet(s);
         assert set.size() == 4;
+    }
 
 }
