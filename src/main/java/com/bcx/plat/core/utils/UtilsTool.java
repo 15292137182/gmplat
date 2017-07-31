@@ -60,7 +60,7 @@ public class UtilsTool {
      */
     private static ObjectMapper initMapper() {
         if (null == objectMapper) {
-            objectMapper = (LongToStringAdapter) getBean("longToStringAdapter");
+            objectMapper = (JacksonAdapter) getBean("longToStringAdapter");
         }
         return objectMapper;
     }

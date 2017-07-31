@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 /**
  * 处理 springMVC 在处理数字类型的时候造成的精度丢失问题
  */
-public class LongToStringAdapter extends ObjectMapper {
+public class JacksonAdapter extends ObjectMapper {
 
-    public LongToStringAdapter() {
+    public JacksonAdapter() {
         super();
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
