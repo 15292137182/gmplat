@@ -33,6 +33,15 @@ public class ServiceResult implements Serializable {
     }
 
     /**
+     * 接受 data 的构造方法
+     *
+     * @param data 数据
+     */
+    public ServiceResult(Object data) {
+        setData(data);
+    }
+
+    /**
      * 重写 toString 方法
      *
      * @return 返回 json 字符串
