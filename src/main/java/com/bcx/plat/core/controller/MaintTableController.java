@@ -22,23 +22,26 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
  */
 @Controller
 @RequestMapping("/maint")
-public class MaintTableController extends BaseController{
+public class MaintTableController extends BaseController {
 
     @Autowired
     private MaintTableService maintTableServiceImpl;
 
     @RequestMapping("/select")
     @ResponseBody
-    public MappingJacksonValue select(String str, HttpServletRequest request, HttpServletResponse response){
+    public MappingJacksonValue select(String str, HttpServletRequest request, HttpServletResponse response) {
         List result = maintTableServiceImpl.selectMaint(str);
-        MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功",result)));
-        value.setJsonpFunction(isValid(request.getParameter("callback")) ? "callback" : "callback");
+        MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功", result)));
+        value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
     }
+
     @RequestMapping("/selectById")
-    public void selectById(Integer rowId, HttpServletRequest request, HttpServletResponse response){
+    public MappingJacksonValue selectById(Integer rowId, HttpServletRequest request, HttpServletResponse response) {
         List<MaintTableInfo> result = maintTableServiceImpl.selectById(rowId);
-        JsonCallback.Callback(request, response, new ServiceResult("消息传递成功",result));
+        MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功", result)));
+        value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
+        return value;
     }
 
 
