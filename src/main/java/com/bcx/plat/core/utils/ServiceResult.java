@@ -31,40 +31,27 @@ public class ServiceResult implements Serializable {
     public ServiceResult(int state, String message, Object data) {
 
     }
-
     /**
-<<<<<<< 75841a45d6d5882a644a27fdb9811d989f9bf428
-=======
      * 接受消息和对象的构造函数
+     *
      * @param message
      * @param data
      */
-    public ServiceResult(String message,Object data){
+    public ServiceResult(String message, Object data) {
         state = STATUS_SUCCESS;
-        this.data=data;
-        this.message=message;
+        this.data = data;
+        this.message = message;
     }
     /**
->>>>>>> cd00a2c88c20081ad3302ccf0bebc5d353e95e67
      * 接受 data 的构造方法
      *
      * @param data 数据
      */
     public ServiceResult(Object data) {
         setData(data);
-<<<<<<< 75841a45d6d5882a644a27fdb9811d989f9bf428
-        message="";
+        message = "";
 
     }
-
-=======
-
-                message="";
-
-    }
-
-
->>>>>>> cd00a2c88c20081ad3302ccf0bebc5d353e95e67
     /**
      * 重写 toString 方法
      *
