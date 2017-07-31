@@ -39,6 +39,7 @@ public class ServiceResult implements Serializable {
      */
     public ServiceResult(Object data) {
         setData(data);
+
     }
 
     /**

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 日志配置文件 -->
+    <!--控制台输出-->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <Encoding>UTF-8</Encoding>
+        <encoder>
+            <!--<pattern>%d{HH:mm:ss.SSS}[%5p][%t][%c{1}]:%L - %m%n</pattern>-->
+            <pattern>[%d{HH:mm:ss.SSS}][%c{1}]:%L - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Encoding>UTF-8</Encoding>
+        <encoder>
+            <pattern>%d %p [%t] [%c]:%L - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>../webapps/log/GMPlat/%d{yyyy-MM-dd'.log'}</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+    </appender>
+
+    <!--level是日志显示等级，DEBUG等级最低，可以显示所有level的日志，WARN等级居中，可以显示WARN及其以上level的日志，ERROR等级最高，只能显示ERROR这个level的日志。所以一般用DEBUG就行。
+　　level等级顺序：error>warn>info>debug-->
+    <root level="info">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="logfile"/>
+    </root>
+</configuration>
