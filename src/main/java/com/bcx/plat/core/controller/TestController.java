@@ -3,6 +3,7 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.service.TestService;
+import com.bcx.plat.core.utils.JsonCallback;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,27 +33,13 @@ public class TestController extends BaseController {
     public ServiceResult test(int id) {
         List list = testServiceImpl.testService(id);
         logger.info("sussess");
-        return new ServiceResult(STATUS_SUCCESS,"",list);
+        return new ServiceResult(STATUS_SUCCESS, "", list);
     }
 
     @RequestMapping("/base")
-    @ResponseBody
     public void exchangeJson(int id, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            response.setContentType("text/plain");
-            response.setHeader("Pragma", "No-cache");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setDateHeader("Expires", 0);
-            List list = testServiceImpl.testService(id);
-            ServiceResult jsonResult = new ServiceResult(list);
-            PrintWriter out = response.getWriter();
-            String jsonpCallback = request.getParameter("jsonpCallback");//客户端请求参数
-            out.println(jsonpCallback + "(" + objToJson(jsonResult) + ")");//返回jsonp格式数据
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List list = testServiceImpl.testService(id);
+        JsonCallback.Callback(request, response, list);
     }
 
 

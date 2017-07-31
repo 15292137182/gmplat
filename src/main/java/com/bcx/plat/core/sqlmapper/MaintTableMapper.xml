@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcx.plat.core.sqlmapper.MaintTableMapper">
+
+    <select id="selectMaint" resultType="com.bcx.plat.core.domain.MaintTablePojo" parameterType="map">
+        SELECT row_id,schema,table_chinese,table_english,explain FROM bcx_maint_table
+        <where>
+            <if test="strArr!=null and strArr.length!=0">
+                <foreach collection="strArr" item="str" index="index" open="(" close=")" separator="or">
+                    schema like '%${str}%' or table_chinese like '%${str}%' or table_english like '%${str}%'
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectById" parameterType="int" resultType="com.bcx.plat.core.domain.MaintTablePojo">
+        SELECT row_id,schema,table_chinese,table_english,explain FROM bcx_maint_table WHERE row_id=#{rowId}
+    </select>
+
+
+
+</mapper>
