@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
 /**
@@ -33,7 +34,7 @@ public class MaintTableController extends BaseController{
     public MappingJacksonValue select(String str, HttpServletRequest request, HttpServletResponse response){
         List result = maintTableServiceImpl.selectMaint(str);
         MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功",result)));
-        value.setJsonpFunction("callback");
+        value.setJsonpFunction(isValid(request.getParameter("callback")) ? "callback" : "callback");
         return value;
     }
     @RequestMapping("/selectById")

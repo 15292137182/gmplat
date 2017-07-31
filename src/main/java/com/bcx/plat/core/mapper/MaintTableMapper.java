@@ -1,4 +1,4 @@
-package com.bcx.plat.core.sqlmapper;
+package com.bcx.plat.core.mapper;
 
 import com.bcx.plat.core.domain.MaintTablePojo;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,7 +17,7 @@ public interface MaintTableMapper {
      * @param map
      * @return
      */
-    List<MaintTablePojo> selectMaint(Map<String,Object> map);
+    List<MaintTablePojo> selectMaint(Map<String, Object> map);
 
     /**
      * 根据id查询数据库表字段
