@@ -12,36 +12,36 @@ public interface BaseMapper<T> {
 
     /**
      * 查询方法,返回记录List；
-     * 参数: bean
+     * 参数: entity
      * <p>
      * 2015年12月17日
      */
-    List<T> select(T bean);
+    List<T> select(T entity);
 
     /**
      * 插入方法
-     * 参数: Map
+     * 参数: entity
      * <p>
      * 2015年12月17日
      */
-    int insert(T bean);
+    int insert(T entity);
 
 
     /**
      * 更新方法
-     * 参数: bean
+     * 参数: entity
      * <p>
      * 2015年12月17日
      */
-    int update(T bean);
+    int update(T entity);
 
 
     /**
      * 删除方法
-     * 参数: Map
+     * 参数: entity
      * <p>
      * 2015年12月17日
      */
-    int delete(T bean);
+    int delete(T entity);
 
 }
