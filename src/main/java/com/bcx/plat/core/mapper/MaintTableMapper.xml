@@ -6,7 +6,7 @@
     <select id="selectMaint" resultType="com.bcx.plat.core.entity.MaintTableInfo" parameterType="map">
         SELECT row_id,schema,table_chinese,table_english,explain FROM bcx_maint_table
         <where>
-            <if test="strArr!=null and strArr.length!=0">
+            <if test="strArr!=null and strArr.size()!=0">
                 <foreach collection="strArr" item="str" index="index" open="(" close=")" separator="or">
                     schema like '%${str}%' or table_chinese like '%${str}%' or table_english like '%${str}%'
                 </foreach>

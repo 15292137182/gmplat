@@ -4,7 +4,9 @@ import com.bcx.BaseTest;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.bcx.plat.core.utils.UtilsTool.*;
 
@@ -33,6 +35,10 @@ public class UtilsToolTest extends BaseTest {
         // 测试 isValid方法，确保返回合适的结果
         assert !isValid(null);
         assert isValid(new HashMap<>());
+
+        String s = "123    456   qwer;sdjr";
+        Set<String> set = collectToSet(s);
+        assert set.size() == 4;
     }
 
 }

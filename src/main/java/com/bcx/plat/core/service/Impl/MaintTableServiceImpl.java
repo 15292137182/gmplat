@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
+
 /**
  * Created by Went on 2017/7/31.
  */
@@ -28,10 +30,8 @@ public class MaintTableServiceImpl implements MaintTableService {
     public List selectMaint(String str) {
         try {
             if (str != null) {
-                String symbol = UtilsTool.Symbol(str);
-                String[] split = symbol.split(",");
                 Map<String, Object> map = new HashMap<>();
-                map.put("strArr", split);
+                map.put("strArr", collectToSet(str));
                 List<MaintTableInfo> maintTableInfos = maintTableMapperImpl.selectMaint(map);
                 return maintTableInfos;
             }

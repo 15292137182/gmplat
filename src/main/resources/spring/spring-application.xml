@@ -14,7 +14,7 @@
     <!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
     <bean class="com.bcx.plat.core.utils.SpringContextHolder"/>
 
-    <bean id="longToStringAdapter" class="com.bcx.plat.core.utils.JacksonAdapter">
+    <bean id="jacksonAdapter" class="com.bcx.plat.core.utils.JacksonAdapter">
         <property name="dateFormat">
             <bean class="java.text.SimpleDateFormat">
                 <!-- 处理 date 类型显示方式，但仅对经过springMVC的模版有效 -->

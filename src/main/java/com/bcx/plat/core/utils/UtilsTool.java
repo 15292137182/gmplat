@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
@@ -33,8 +34,6 @@ public class UtilsTool {
     public static boolean isValid(Object obj) {
         return null != obj && !"".equals(obj);
     }
-
-
 
 
     /**
@@ -122,35 +121,24 @@ public class UtilsTool {
      */
     private static ObjectMapper initMapper() {
         if (null == objectMapper) {
-            objectMapper = (JacksonAdapter) getBean("longToStringAdapter");
+            objectMapper = (JacksonAdapter) getBean("jacksonAdapter");
         }
         return objectMapper;
     }
 
     /**
-     * 符号转换类
-     * @author Administrator
+     * 将字符串从 空白或者标点处 分割，返回为 Set
+     * 自带去重功能
      *
+     * @param str 字符串
+     * @return 返回 list
      */
-    public static String Symbol(String s){
-        if(s==null){
-            s="";
+    public static Set<String> collectToSet(String str) {
+        Set<String> result = new HashSet<>();
+        if (null != str && !("".equals(str.trim()))) {
+            String[] ss = str.split("[^a-zA-z0-9\\u4E00-\\u9FA5]+");
+            result.addAll(Arrays.asList(ss));
         }
-        String str = s.trim().replaceAll("[' ']+"," ");
-        String strChange = "";
-        String change = "";
-        if(str.contains(",") && str.contains("，")){
-            change = str.replace(",", " ");
-            strChange = change.replace("，", " ");
-        }else if(str.contains(",")){
-            strChange = str.replace(",", " ");
-        }else if(str.contains("，")){
-            strChange = str.replace("，", " ");
-        }else if(str.contains(" ")){
-            strChange = str.replace(" ", " ");
-        }else{
-            strChange=str;
-        }
-        return strChange;
+        return result;
     }
 }
