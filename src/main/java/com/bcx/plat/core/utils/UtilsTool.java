@@ -25,6 +25,16 @@ public class UtilsTool {
     }
 
     /**
+     * 判断对象是否有效
+     *
+     * @param obj 对象
+     * @return 返回
+     */
+    public static boolean isValid(Object obj) {
+        return null != obj && !"".equals(obj);
+    }
+
+    /**
      * 返回指定长度的随机字符串
      *
      * @param length 长度

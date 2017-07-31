@@ -1,5 +1,6 @@
 package com.bcx.plat.core.base;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
@@ -24,6 +25,8 @@ public class BaseEntity<T extends BaseEntity> {
     private String deleteDate;
     private String deleteFlag;
     private String rowId;
+
+    private Map etc = new HashMap();
 
     /**
      * 构建 - 创建信息
@@ -84,6 +87,11 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public T fromMap(Map<String, Object> map) {
+        if (isValid(map.get("etc")) && !(map.get("etc") instanceof Map)) {
+            map.put("etc", jsonToObj(map.get("etc").toString(), Map.class));
+        } else {
+            map.put("etc", new HashMap<>());
+        }
         return (T) jsonToObj(objToJson(map), getClass());
     }
 
@@ -189,5 +197,13 @@ public class BaseEntity<T extends BaseEntity> {
 
     public void setRowId(String rowId) {
         this.rowId = rowId;
+    }
+
+    public Map getEtc() {
+        return etc;
+    }
+
+    public void setEtc(Map etc) {
+        this.etc = etc;
     }
 }
