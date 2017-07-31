@@ -1,7 +1,6 @@
 package com.bcx.plat.core.service;
 
-import com.bcx.plat.core.domain.MaintTablePojo;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.entity.MaintTableInfo;
 
 import java.util.List;
 
@@ -21,5 +20,5 @@ public interface MaintTableService {
      * @param rowId
      * @return
      */
-    List<MaintTablePojo> selectById(int rowId);
+    List<MaintTableInfo> selectById(int rowId);
 }

@@ -1,10 +1,9 @@
 package com.bcx.plat.core.service.Impl;
 
-import com.bcx.plat.core.domain.MaintTablePojo;
+import com.bcx.plat.core.entity.MaintTableInfo;
+import com.bcx.plat.core.mapper.MaintTableMapper;
 import com.bcx.plat.core.service.MaintTableService;
-import com.bcx.plat.core.sqlmapper.MaintTableMapper;
-import com.bcx.plat.core.utils.ServiceResult;
-import com.bcx.plat.core.utils.SymbolChange;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +28,12 @@ public class MaintTableServiceImpl implements MaintTableService {
     public List selectMaint(String str) {
         try {
             if (str != null) {
-                String symbol = SymbolChange.Symbol(str);
+                String symbol = UtilsTool.Symbol(str);
                 String[] split = symbol.split(",");
                 Map<String, Object> map = new HashMap<>();
                 map.put("strArr", split);
-                List<MaintTablePojo> maintTablePojos = maintTableMapperImpl.selectMaint(map);
-                return maintTablePojos;
+                List<MaintTableInfo> maintTableInfos = maintTableMapperImpl.selectMaint(map);
+                return maintTableInfos;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,11 +47,11 @@ public class MaintTableServiceImpl implements MaintTableService {
      * @return
      */
     @Override
-    public List<MaintTablePojo> selectById(int rowId) {
+    public List<MaintTableInfo> selectById(int rowId) {
         try {
             if (rowId != 0) {
-                List<MaintTablePojo> maintTablePojos = maintTableMapperImpl.selectById(rowId);
-                return maintTablePojos;
+                List<MaintTableInfo> maintTableInfos = maintTableMapperImpl.selectById(rowId);
+                return maintTableInfos;
             }
         } catch (Exception e) {
             e.printStackTrace();

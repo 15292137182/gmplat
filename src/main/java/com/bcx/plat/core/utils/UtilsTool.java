@@ -34,6 +34,9 @@ public class UtilsTool {
         return null != obj && !"".equals(obj);
     }
 
+
+
+
     /**
      * 返回指定长度的随机字符串
      *
@@ -122,5 +125,32 @@ public class UtilsTool {
             objectMapper = (JacksonAdapter) getBean("longToStringAdapter");
         }
         return objectMapper;
+    }
+
+    /**
+     * 符号转换类
+     * @author Administrator
+     *
+     */
+    public static String Symbol(String s){
+        if(s==null){
+            s="";
+        }
+        String str = s.trim().replaceAll("[' ']+"," ");
+        String strChange = "";
+        String change = "";
+        if(str.contains(",") && str.contains("，")){
+            change = str.replace(",", " ");
+            strChange = change.replace("，", " ");
+        }else if(str.contains(",")){
+            strChange = str.replace(",", " ");
+        }else if(str.contains("，")){
+            strChange = str.replace("，", " ");
+        }else if(str.contains(" ")){
+            strChange = str.replace(" ", " ");
+        }else{
+            strChange=str;
+        }
+        return strChange;
     }
 }

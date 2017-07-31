@@ -1,6 +1,6 @@
 package com.bcx.plat.core.mapper;
 
-import com.bcx.plat.core.domain.MaintTablePojo;
+import com.bcx.plat.core.entity.MaintTableInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,12 +17,12 @@ public interface MaintTableMapper {
      * @param map
      * @return
      */
-    List<MaintTablePojo> selectMaint(Map<String, Object> map);
+    List<MaintTableInfo> selectMaint(Map<String, Object> map);
 
     /**
      * 根据id查询数据库表字段
      * @param rowId
      * @return
      */
-    List<MaintTablePojo> selectById(int rowId);
+    List<MaintTableInfo> selectById(int rowId);
 }
