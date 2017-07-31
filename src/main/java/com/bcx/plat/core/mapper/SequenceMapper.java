@@ -1,4 +1,4 @@
-package com.bcx.plat.core.sqlmapper;
+package com.bcx.plat.core.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

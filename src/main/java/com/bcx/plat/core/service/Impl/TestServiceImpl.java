@@ -1,7 +1,7 @@
 package com.bcx.plat.core.service.Impl;
 
 import com.bcx.plat.core.service.TestService;
-import com.bcx.plat.core.sqlmapper.TestMapper;
+import com.bcx.plat.core.mapper.TestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
