@@ -3,7 +3,7 @@ package com.bcx.plat.core.database;
 /**
  * 使用本地线程控制数据库类型
  */
-public class DbContextHolder {
+public class DBContextHolder {
 
     private static final ThreadLocal contextHolder = new ThreadLocal<>();
 
