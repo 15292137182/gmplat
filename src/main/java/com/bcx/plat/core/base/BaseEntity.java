@@ -76,7 +76,7 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public Map<String, Object> toMap() {
-        return jsonToObj(objToJson(this), Map.class);
+        return jsonToObj(objToJson(this), HashMap.class);
     }
 
     /**
@@ -89,7 +89,7 @@ public class BaseEntity<T extends BaseEntity> {
     public T fromMap(Map<String, Object> map) {
         if (isValid(map.get("etc"))) {
             if (!(map.get("etc") instanceof Map)) {
-                map.put("etc", jsonToObj(map.get("etc").toString(), Map.class));
+                map.put("etc", jsonToObj(map.get("etc").toString(), HashMap.class));
             }
         } else {
             map.put("etc", new HashMap<>());
