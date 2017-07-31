@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serializable {
 
     private String schema;//表schema
-    private String tableEname;//表中文名
-    private String tableCname;//表英文名
+    private String tableEName;//表中文名
+    private String tableCName;//表英文名
     private String explain;//说明
 
     public String getSchema() {
@@ -23,20 +23,20 @@ public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serial
         this.schema = schema;
     }
 
-    public String getTableEname() {
-        return tableEname;
+    public String getTableEName() {
+        return tableEName;
     }
 
-    public void setTableEname(String tableEname) {
-        this.tableEname = tableEname;
+    public void setTableEName(String tableEName) {
+        this.tableEName = tableEName;
     }
 
-    public String getTableCname() {
-        return tableCname;
+    public String getTableCName() {
+        return tableCName;
     }
 
-    public void setTableCname(String tableCname) {
-        this.tableCname = tableCname;
+    public void setTableCName(String tableCName) {
+        this.tableCName = tableCName;
     }
 
     public String getExplain() {
