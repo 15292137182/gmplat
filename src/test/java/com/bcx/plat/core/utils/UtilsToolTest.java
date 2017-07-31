@@ -29,6 +29,10 @@ public class UtilsToolTest extends BaseTest {
         String uuid32 = lengthUUID(32);
         assert uuid32.length() == 32;
         System.out.println(getDateBy10());
+
+        // 测试 isValid方法，确保返回合适的结果
+        assert !isValid(null);
+        assert isValid(new HashMap<>());
     }
 
 }

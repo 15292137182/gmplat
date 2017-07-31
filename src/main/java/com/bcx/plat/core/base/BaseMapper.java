@@ -11,7 +11,7 @@ import java.util.List;
 public interface BaseMapper<T> {
 
     /**
-     * 查询方法,返回记录List；
+     * 查询方法,返回记录 List
      * 参数: entity
      * <p>
      * 2015年12月17日
