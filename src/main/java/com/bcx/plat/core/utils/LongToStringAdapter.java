@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
- * 处理 springmvc 在处理数字类型的时候造成的精度丢失问题
+ * 处理 springMVC 在处理数字类型的时候造成的精度丢失问题
  */
 public class LongToStringAdapter extends ObjectMapper {
 
