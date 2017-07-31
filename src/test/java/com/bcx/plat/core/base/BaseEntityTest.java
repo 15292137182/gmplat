@@ -28,6 +28,9 @@ public class BaseEntityTest extends BaseTest{
 
         Map<String,Object> map2 = new HashMap<>();
         map2.put("etc","{\"id\":\"00001\"}");
-        entity1.fromMap(map2);
+        entity1 = entity1.fromMap(map2);
+        map2.put("etc",map);
+        entity1 = entity1.fromMap(map2);
+        assert entity1.getEtc().size() == map.size();
     }
 }
