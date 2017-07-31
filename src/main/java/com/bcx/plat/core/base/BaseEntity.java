@@ -15,14 +15,14 @@ public class BaseEntity<T extends BaseEntity> {
     private String status;//状态
     private String version;//版本
     private String createUser;//创建人
-    private String createName;//创建名称
-    private String createDate;//创建时间
+    private String createUserName;//创建名称
+    private String createTime;//创建时间
     private String modifyUser;//修改人
-    private String modifyName;//修改名称
-    private String modifyDate;//修改时间
+    private String modifyUserName;//修改名称
+    private String modifyTime;//修改时间
     private String deleteUser;//删除人
-    private String deleteName;//删除名称
-    private String deleteDate;//删除时间
+    private String deleteUserName;//删除名称
+    private String deleteTime;//删除时间
     private String deleteFlag;//删除标记
     private String rowId;//id
 
@@ -35,9 +35,9 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public T buildCreateInfo() {
-        setCreateDate(getDateTimeNow());
+        setCreateTime(getDateTimeNow());
         setCreateUser("admin");
-        setCreateName("系统管理员");
+        setCreateUserName("系统管理员");
         setRowId(lengthUUID(32));
         return (T) this;
     }
@@ -49,9 +49,9 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public T buildModifyInfo() {
-        setModifyDate(getDateTimeNow());
+        setModifyTime(getDateTimeNow());
         setModifyUser("admin");
-        setModifyName("系统管理员");
+        setModifyUserName("系统管理员");
         return (T) this;
     }
 
@@ -62,9 +62,9 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public T buildDeleteInfo() {
-        setDeleteDate(getDateTimeNow());
+        setDeleteTime(getDateTimeNow());
         setDeleteUser("admin");
-        setDeleteName("系统管理员");
+        setDeleteUserName("系统管理员");
         setDeleteFlag(DELETE_FLAG);
         return (T) this;
     }
@@ -121,20 +121,20 @@ public class BaseEntity<T extends BaseEntity> {
         this.createUser = createUser;
     }
 
-    public String getCreateName() {
-        return createName;
+    public String getCreateUserName() {
+        return createUserName;
     }
 
-    public void setCreateName(String createName) {
-        this.createName = createName;
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
     }
 
-    public String getCreateDate() {
-        return createDate;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public String getModifyUser() {
@@ -145,20 +145,20 @@ public class BaseEntity<T extends BaseEntity> {
         this.modifyUser = modifyUser;
     }
 
-    public String getModifyName() {
-        return modifyName;
+    public String getModifyUserName() {
+        return modifyUserName;
     }
 
-    public void setModifyName(String modifyName) {
-        this.modifyName = modifyName;
+    public void setModifyUserName(String modifyUserName) {
+        this.modifyUserName = modifyUserName;
     }
 
-    public String getModifyDate() {
-        return modifyDate;
+    public String getModifyTime() {
+        return modifyTime;
     }
 
-    public void setModifyDate(String modifyDate) {
-        this.modifyDate = modifyDate;
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 
     public String getDeleteUser() {
@@ -169,20 +169,20 @@ public class BaseEntity<T extends BaseEntity> {
         this.deleteUser = deleteUser;
     }
 
-    public String getDeleteName() {
-        return deleteName;
+    public String getDeleteUserName() {
+        return deleteUserName;
     }
 
-    public void setDeleteName(String deleteName) {
-        this.deleteName = deleteName;
+    public void setDeleteUserName(String deleteUserName) {
+        this.deleteUserName = deleteUserName;
     }
 
-    public String getDeleteDate() {
-        return deleteDate;
+    public String getDeleteTime() {
+        return deleteTime;
     }
 
-    public void setDeleteDate(String deleteDate) {
-        this.deleteDate = deleteDate;
+    public void setDeleteTime(String deleteTime) {
+        this.deleteTime = deleteTime;
     }
 
     public String getDeleteFlag() {

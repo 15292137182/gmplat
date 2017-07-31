@@ -1,6 +1,9 @@
 package com.bcx.plat.core.base;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * mybatis sql映射自定义接口
@@ -8,7 +11,8 @@ import java.util.List;
  * @author wzp
  * 2015年12月17日
  */
-public interface BaseMapper<T> {
+@Mapper
+public interface BaseMapper<T extends BaseEntity> {
 
     /**
      * 查询方法,返回记录 List
@@ -16,7 +20,7 @@ public interface BaseMapper<T> {
      * <p>
      * 2015年12月17日
      */
-    List<T> select(T entity);
+    List<T> select(Map map);
 
     /**
      * 插入方法
