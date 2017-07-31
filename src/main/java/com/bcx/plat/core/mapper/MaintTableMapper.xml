@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bcx.plat.core.sqlmapper.MaintTableMapper">
+<mapper namespace="com.bcx.plat.core.mapper.MaintTableMapper">
 
-    <select id="selectMaint" resultType="com.bcx.plat.core.domain.MaintTablePojo" parameterType="map">
+    <select id="selectMaint" resultType="com.bcx.plat.core.entity.MaintTableInfo" parameterType="map">
         SELECT row_id,schema,table_chinese,table_english,explain FROM bcx_maint_table
         <where>
             <if test="strArr!=null and strArr.length!=0">
@@ -12,11 +12,10 @@
                 </foreach>
             </if>
         </where>
-
     </select>
 
-    <select id="selectById" parameterType="int" resultType="com.bcx.plat.core.domain.MaintTablePojo">
-        SELECT row_id,schema,table_chinese,table_english,explain FROM bcx_maint_table WHERE row_id=#{rowId}
+    <select id="selectById" parameterType="int" resultType="com.bcx.plat.core.entity.MaintTableInfo">
+        SELECT row_id,schema,table_chinese,table_english,"explain" FROM bcx_maint_table WHERE row_id=#{rowId}
     </select>
 
 

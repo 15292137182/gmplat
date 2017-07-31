@@ -3,7 +3,6 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.MaintTableInfo;
 import com.bcx.plat.core.service.MaintTableService;
-import com.bcx.plat.core.utils.JsonCallback;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;

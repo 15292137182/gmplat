@@ -2,8 +2,6 @@ package com.bcx.plat.core.controller;
 
 
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.service.TestService;
-import com.bcx.plat.core.utils.JsonCallback;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,12 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
 /**
  * Created by Went on 2017/7/30.
