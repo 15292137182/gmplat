@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bcx.plat.core.mapper.BusinessObjectMapper">
+<mapper namespace="com.bcx.plat.core.mapper.BusinessObjectProMapper">
 
 
     <select id="selectById" resultType="com.bcx.plat.core.entity.BusinessObjectPro" parameterType="String">
