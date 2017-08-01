@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bcx.plat.core.database.action.mapper.TempSuitMapper">
+    <select id="select" parameterType="com.bcx.plat.core.database.action.QueryActionLite" resultType="hashmap">
+        SELECT
+        <trim suffixOverrides=",">
+            <foreach collection="columns" item="column">
+                ${column.columnSqlFragment},
+            </foreach>
+        </trim>
+        FROM ${tableSource.tableSourceSqlFragment}
+        WHERE
+        <trim suffixOverrides="AND">
+            <foreach collection="where" item="condition">
+                ${condition.field.fieldName}
+                <choose>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@EQUAL">
+                        = ${condition.value}
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_LEFT">
+                        like concat('%',${condition.value})
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_RIGHT">
+                        like concat(${condition.value},'%')
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_FULL">
+                        like concat('%',concat(${condition.value},'%'))
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@IN">
+                        in <foreach collection="condition.value" item="v" open="(" close="'呵呵x2d')">
+                        #{v},
+                    </foreach>
+                    </when>
+                    <otherwise>
+                        it must throw an error
+                    </otherwise>
+                </choose>
+            </foreach>
+            AND
+        </trim>
+    </select>
+</mapper>
