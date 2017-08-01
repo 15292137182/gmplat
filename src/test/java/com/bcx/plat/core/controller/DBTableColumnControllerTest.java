@@ -3,6 +3,8 @@ package com.bcx.plat.core.controller;
 import com.bcx.BaseTest;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
+import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,10 +18,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -51,11 +53,14 @@ public class DBTableColumnControllerTest extends BaseTest {
     @Test
     public void test() throws Exception {
         // 使用方法： 发起请求 plat/dbTableColumn/select 查询数据
-        mockMvc.perform(get("/plat/dbTableColumn/select"))
+        MvcResult mvcResult = mockMvc.perform(get("/plat/dbTableColumn/select"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("state").value(1))
-                .andExpect(jsonPath("message").isString())
-                .andExpect(jsonPath("data").isArray());
+                .andReturn();
+
+        StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
+        sb.delete(0, sb.indexOf("{"))
+                .delete(sb.lastIndexOf("}") + 1, sb.length());
+        ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
     }
 }
