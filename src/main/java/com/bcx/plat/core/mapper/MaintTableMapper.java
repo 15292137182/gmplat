@@ -26,5 +26,5 @@ public interface MaintTableMapper extends BaseMapper<MaintTableInfo>{
      * @param rowId
      * @return
      */
-    List<MaintTableInfo> selectById(int rowId);
+    List<MaintTableInfo> selectById(String rowId);
 }

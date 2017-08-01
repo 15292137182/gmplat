@@ -47,9 +47,9 @@ public class MaintTableServiceImpl implements MaintTableService {
      * @return
      */
     @Override
-    public List<MaintTableInfo> selectById(int rowId) {
+    public List<MaintTableInfo> selectById(String rowId) {
         try {
-            if (rowId != 0) {
+            if (rowId != null) {
                 List<MaintTableInfo> maintTableInfos = maintTableMapperImpl.selectById(rowId);
                 return maintTableInfos;
             }

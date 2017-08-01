@@ -10,40 +10,49 @@ import java.io.Serializable;
  */
 public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serializable {
 
-    private String schema;//表schema
-    private String tableEname;//表中文名
-    private String tableCname;//表英文名
-    private String explain;//说明
+    private String rowId;//id
+    private String tableSchema;//表schema
+    private String tableEName;//表中文名
+    private String tableCName;//表英文名
+    private String desp;//说明
 
-    public String getSchema() {
-        return schema;
+    public String getRowId() {
+        return rowId;
     }
 
-    public void setSchema(String schema) {
-        this.schema = schema;
+    public void setRowId(String rowId) {
+        this.rowId = rowId;
     }
 
-    public String getTableEname() {
-        return tableEname;
+    public String getTableSchema() {
+        return tableSchema;
     }
 
-    public void setTableEname(String tableEname) {
-        this.tableEname = tableEname;
+    public void setTableSchema(String tableSchema) {
+        this.tableSchema = tableSchema;
     }
 
-    public String getTableCname() {
-        return tableCname;
+    public String getTableEName() {
+        return tableEName;
     }
 
-    public void setTableCname(String tableCname) {
-        this.tableCname = tableCname;
+    public void setTableEName(String tableEName) {
+        this.tableEName = tableEName;
     }
 
-    public String getExplain() {
-        return explain;
+    public String getTableCName() {
+        return tableCName;
     }
 
-    public void setExplain(String explain) {
-        this.explain = explain;
+    public void setTableCName(String tableCName) {
+        this.tableCName = tableCName;
+    }
+
+    public String getDesp() {
+        return desp;
+    }
+
+    public void setDesp(String desp) {
+        this.desp = desp;
     }
 }

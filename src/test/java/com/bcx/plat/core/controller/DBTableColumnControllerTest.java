@@ -61,6 +61,8 @@ public class DBTableColumnControllerTest extends BaseTest {
         StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
         sb.delete(0, sb.indexOf("{"))
                 .delete(sb.lastIndexOf("}") + 1, sb.length());
+        // 客户端获得 serviceResult
         ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+        assert (null != serviceResult && serviceResult.getState() == 1);
     }
 }

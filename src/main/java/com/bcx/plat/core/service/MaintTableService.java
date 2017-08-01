@@ -20,5 +20,5 @@ public interface MaintTableService {
      * @param rowId
      * @return
      */
-    List<MaintTableInfo> selectById(int rowId);
+    List<MaintTableInfo> selectById(String rowId);
 }
