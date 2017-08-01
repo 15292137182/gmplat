@@ -1,5 +1,7 @@
 package com.bcx.plat.core.base;
 
+import com.bcx.plat.core.database.action.annotations.TablePK;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class BaseEntity<T extends BaseEntity> {
     private String deleteTime;//删除时间
     private String deleteFlag;//删除标记
 
-    private Map etc = new HashMap();
+    private Map etc;
 
     /**
      * 构建 - 创建信息
@@ -85,13 +87,6 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public T fromMap(Map<String, Object> map) {
-        if (isValid(map.get("etc"))) {
-            if (!(map.get("etc") instanceof Map)) {
-                map.put("etc", jsonToObj(map.get("etc").toString(), HashMap.class));
-            }
-        } else {
-            map.put("etc", new HashMap<>());
-        }
         return (T) jsonToObj(objToJson(map), getClass());
     }
 

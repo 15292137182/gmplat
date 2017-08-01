@@ -30,4 +30,15 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
     public List<DBTableColumn> select(Map<String, Object> map) {
         return dbTableColumnMapper.select(map);
     }
+
+    /**
+     * 新建 数据库字段信息
+     *
+     * @param bean 数据表bean
+     * @return 操作结果状态
+     */
+    @Override
+    public int insert(DBTableColumn bean) {
+        return 0;
+    }
 }

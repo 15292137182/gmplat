@@ -1,9 +1,12 @@
 package com.bcx.plat.core.utils;
 
+import com.bcx.plat.core.database.action.annotations.TablePK;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -140,5 +143,25 @@ public class UtilsTool {
             result.addAll(Arrays.asList(ss));
         }
         return result;
+    }
+
+    /**
+     * 获取 class 内带有某注解的字段名称
+     *
+     * @param clazz class
+     * @param anno  注解class
+     * @return 返回list
+     */
+    public static List<String> getAnnoFieldName(Class<?> clazz, Class<? extends Annotation> anno) {
+        List<String> fs = new ArrayList<>();
+        Field[] fields = clazz.getDeclaredFields();
+        if (null != fields && fields.length != 0) {
+            for (Field field : fields) {
+                if (field.getAnnotation(anno) != null) {
+                    fs.add(field.getName());
+                }
+            }
+        }
+        return fs;
     }
 }

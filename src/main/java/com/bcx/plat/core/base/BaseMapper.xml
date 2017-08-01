@@ -4,8 +4,33 @@
 <mapper namespace="com.bcx.plat.core.base.BaseMapper">
 
     <sql id="common_columns">
-        "status", "version", create_user, create_user_name, create_time, modify_user,
-        modify_user_name, modify_time, delete_user, delete_user_name, delete_time, delete_flag
+        "status"
+        , "version"
+        , create_user
+        , create_user_name
+        , create_time
+        , modify_user
+        , modify_user_name
+        , modify_time
+        , delete_user
+        , delete_user_name
+        , delete_time
+        , delete_flag
+    </sql>
+
+    <sql id="common_columns_#">
+        #{status}
+        , #{version}
+        , #{createUser}
+        , #{createUserName}
+        , #{createTime}
+        , #{modifyUser}
+        , #{modifyUserName}
+        , #{modifyTime}
+        , #{deleteUser}
+        , #{deleteUserName}
+        , #{deleteTime}
+        , #{deleteFlag}
     </sql>
 
 </mapper>
