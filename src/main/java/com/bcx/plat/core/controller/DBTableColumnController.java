@@ -5,7 +5,6 @@ import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,7 +54,7 @@ public class DBTableColumnController {
      * @return 返回
      */
     @RequestMapping("/insert")
-    public MappingJacksonValue insert(@ModelAttribute DBTableColumn dbTableColumn, HttpServletRequest request) {
+    public MappingJacksonValue insert(DBTableColumn dbTableColumn, HttpServletRequest request) {
         int status = dbTableColumnService.insert(dbTableColumn);
         ServiceResult serviceResult;
         if (status == 1) {
@@ -68,5 +67,43 @@ public class DBTableColumnController {
         return value;
     }
 
+    /**
+     * 更新数据
+     *
+     * @param dbTableColumn javaBean
+     * @return 返回
+     */
+    @RequestMapping("/update")
+    public MappingJacksonValue update(DBTableColumn dbTableColumn, HttpServletRequest request) {
+        int status = dbTableColumnService.update(dbTableColumn);
+        ServiceResult serviceResult;
+        if (status == 1) {
+            serviceResult = new ServiceResult(STATUS_SUCCESS, "数据更新成功");
+        } else {
+            serviceResult = new ServiceResult(STATUS_FAIL, "数据更新失败！");
+        }
+        MappingJacksonValue value = new MappingJacksonValue(serviceResult);
+        value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
+        return value;
+    }
 
+    /**
+     * 删除数据
+     *
+     * @param dbTableColumn javaBean
+     * @return 返回
+     */
+    @RequestMapping("/delete")
+    public MappingJacksonValue delete(DBTableColumn dbTableColumn, HttpServletRequest request) {
+        int status = dbTableColumnService.delete(dbTableColumn);
+        ServiceResult serviceResult;
+        if (status == 1) {
+            serviceResult = new ServiceResult(STATUS_SUCCESS, "数据删除成功");
+        } else {
+            serviceResult = new ServiceResult(STATUS_FAIL, "数据删除失败！");
+        }
+        MappingJacksonValue value = new MappingJacksonValue(serviceResult);
+        value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
+        return value;
+    }
 }

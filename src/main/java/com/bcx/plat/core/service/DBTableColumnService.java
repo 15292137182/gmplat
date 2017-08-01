@@ -25,4 +25,20 @@ public interface DBTableColumnService {
      * @return 返回是否成功
      */
     int insert(DBTableColumn bean);
+
+    /**
+     * 更新数据库字段信息
+     *
+     * @param bean 数据表bean
+     * @return 返回是否成功
+     */
+    int update(DBTableColumn bean);
+
+    /**
+     * 删除数据库字段信息
+     *
+     * @param bean 数据表bean
+     * @return 返回是否成功
+     */
+    int delete(DBTableColumn bean);
 }

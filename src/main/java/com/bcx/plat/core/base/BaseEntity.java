@@ -204,8 +204,8 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     public void setEtc(String str) {
         try {
             setEtc(jsonToObj(str, Map.class));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+
         }
     }
 }
