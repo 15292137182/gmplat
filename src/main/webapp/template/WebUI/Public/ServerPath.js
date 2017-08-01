@@ -48,4 +48,4 @@ function optimizationPath(path) {
 //var serverHead = getBPBasePath();
 
 //完整路径
- var serverPath = serverHead + "/QRS/report/";
+ var serverPath = serverHead + "/GMPlat";

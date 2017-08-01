@@ -1,8 +1,8 @@
 package com.bcx.plat.core.service.Impl;
 
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.mapper.BusinessObjectMapper;
-import com.bcx.plat.core.service.BusinessObjectService;
+import com.bcx.plat.core.mapper.BusinessObjectProMapper;
+import com.bcx.plat.core.service.BusinessObjectProService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +17,9 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
  * Created by Went on 2017/8/1.
  */
 @Service
-public class BusinessObjectProServiceImpl implements BusinessObjectService{
+public class BusinessObjectProServiceImpl implements BusinessObjectProService {
     @Autowired
-    private BusinessObjectMapper businessObjectMapperImpl;
+    private BusinessObjectProMapper businessObjectProMapper;
     /**
      * 查询业务对象
      * 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
@@ -32,7 +32,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectService{
 
         try {
             if (map.size() != 0) {
-                List<BusinessObject> select = businessObjectMapperImpl.select(map);
+                List<BusinessObject> select = businessObjectProMapper.select(map);
                 return select;
             }
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectService{
             //业务对象版本号默认从1.0开始
             businessObject.setVersion("1.0");
             businessObject.buildCreateInfo();
-            businessObjectMapperImpl.insert(businessObject);
+            businessObjectProMapper.insert(businessObject);
             //将用户新增的rowId返回
             return rowId;
         }catch (Exception e){
@@ -75,7 +75,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectService{
     public String update(BusinessObject businessObject) {
         try{
             businessObject.buildModifyInfo();
-            businessObjectMapperImpl.update(businessObject);
+            businessObjectProMapper.update(businessObject);
             String rowId = businessObject.getRowId();
             return rowId;
         }catch (Exception e){
@@ -94,7 +94,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectService{
     @Override
     public int delete(String rowId) {
         try{
-            businessObjectMapperImpl.delete(rowId);
+            businessObjectProMapper.delete(rowId);
             return STATUS_SUCCESS;
         }catch (Exception e){
             e.printStackTrace();
