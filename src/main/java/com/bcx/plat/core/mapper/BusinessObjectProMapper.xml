@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcx.plat.core.mapper.BusinessObjectMapper">
+
+
+    <select id="selectById" resultType="com.bcx.plat.core.entity.BusinessObjectPro" parameterType="String">
+        SELECT
+            row_id,property_code,property_name,relate_table_column,value_type,
+            value_resource_type,value_resource_content,wether_expand_pro
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+        FROM t_business_object_pro
+    </select>
+
+    <insert id="insert" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">
+        INSERT INTO
+                t_business_object_pro
+            ( row_id,property_code,property_name,relate_table_column,value_type,
+               value_resource_type,value_resource_content,wether_expand_pro
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>)
+        VALUES
+            (#{rowId},#{objectCode},#{objectName},#{relateTableRowId},
+        #{rowId},#{objectCode},#{objectName},#{relateTableRowId},
+        #{rowId},#{objectCode},#{objectName},#{relateTableRowId},
+        #{status},#{version},#{createUser},#{createUserName},#{createTime},#{modifyUser},#{modifyUserName},
+        #{modifyTime},#{deleteUser},#{deleteUserName},#{deleteTime},#{deleteFlag}
+        )
+    </insert>
+
+    <update id="ipdate" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">
+        UPDATE
+          t_business_object
+            SET
+        object_code=#{objectCode},
+        object_name=#{objectName},
+        relate_table_row_id=#{relateTableRowId},
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_u"/>
+        WHERE
+            row_id = #{rowId}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM t_business_object_pro WHERE row_id=#{rowId}
+    </delete>
+</mapper>

@@ -12,4 +12,14 @@ public class BaseConstants {
     public static final int STATUS_FAIL = -1;
     public static final int STATUS_WARNING = 2;
 
+    /**  业务对象状态 **/
+    //生效状态
+    public static final String TAKE_EFFECT ="20";
+    //失效状态
+    public static final String INVALID ="40";
+    //状态不可用
+    public static final String UNAVAILABLE ="50";
+
+
+
 }

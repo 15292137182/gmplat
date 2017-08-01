@@ -21,13 +21,13 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * Created by Went on 2017/8/1.
  */
 @Controller
-@RequestMapping("/businObj")
-public class BusinessObjectController {
+@RequestMapping("/businObjPro")
+public class BusinessObjectProController {
 
     @Autowired
     private BusinessObjectService businessObjectService;
     /**
-     * 查询业务对象
+     * 查询业务对象属性
      * 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
      * @param str
      * @return
