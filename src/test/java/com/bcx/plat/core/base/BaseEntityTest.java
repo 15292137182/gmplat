@@ -24,7 +24,7 @@ public class BaseEntityTest extends BaseTest{
         @SuppressWarnings("unchecked")
         Map<String, Object> map = entity.toMap();
         BaseEntity entity1 = new BaseEntity().fromMap(map);
-        assert (entity1.getRowId().equals(entity.getRowId()));
+        assert (entity1.getCreateTime().equals(entity.getCreateTime()));
 
         Map<String,Object> map2 = new HashMap<>();
         map2.put("etc","{\"id\":\"00001\"}");
