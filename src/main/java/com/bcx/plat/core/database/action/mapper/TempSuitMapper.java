@@ -1,7 +1,9 @@
 package com.bcx.plat.core.database.action.mapper;
 
+import com.bcx.plat.core.database.action.DeleteAction;
 import com.bcx.plat.core.database.action.InsertAction;
 import com.bcx.plat.core.database.action.QueryAction;
+import com.bcx.plat.core.database.action.UpdateAction;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,5 +22,7 @@ public interface TempSuitMapper {
 	 */
 	List<Map<String,Object>> select(QueryAction queryActionLite);
 	int insert(InsertAction insertAction);
+	int delete(DeleteAction deleteAction);
+	int update(UpdateAction deleteAction);
 }
 

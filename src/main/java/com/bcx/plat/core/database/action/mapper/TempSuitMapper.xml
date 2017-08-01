@@ -12,10 +12,9 @@
             </foreach>
         </trim>
         FROM ${tableSource.tableSourceSqlFragment}
-        WHERE
-        <trim suffixOverrides="AND">
+        <where>
             <foreach collection="where" item="condition">
-                ${condition.field.fieldName}
+                AND ${condition.field.fieldName}
                 <choose>
                     <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@EQUAL">
                         = ${condition.value}
@@ -43,18 +42,94 @@
                         unsupported operator error
                     </otherwise>
                 </choose>
-                AND
             </foreach>
-        </trim>
+        </where>
     </select>
 
     <insert id="insert" parameterType="com.bcx.plat.core.database.action.InsertAction">
+         ${valuesRefresh}
         insert into ${tableSource.tableSourceSqlFragment}
-                <foreach collection="columns" open="(" separator="," close=")" item="column">${column}</foreach>
+                <foreach collection="columns" open="(" separator="," close=")" item="column">${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(column)}</foreach>
         VALUES
-        <foreach collection="rows" open="(" close=")" separator="," item="row">
-            <foreach collection="columns" separator="," item="column">#{row.get(column)}</foreach>
+        <foreach collection="values" separator="," item="row">
+            <foreach collection="row" open="(" close=")" separator="," item="rowValue">
+                #{rowValue}
+            </foreach>
         </foreach>
-
     </insert>
+
+    <update id="update" parameterType="com.bcx.plat.core.database.action.UpdateAction">
+        UPDATE ${tableSource.tableSourceSqlFragment} SET
+        <foreach collection="values" item="value" separator="," index="field">
+            ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(field)} = #{value}
+        </foreach>
+        <where>
+            <foreach collection="where" item="condition">
+                AND ${condition.field.fieldName}
+                <choose>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@EQUAL">
+                        = ${condition.value}
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_LEFT">
+                        like concat('%',${condition.value})
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_RIGHT">
+                        like concat(${condition.value},'%')
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_FULL">
+                        like concat('%',concat(${condition.value},'%'))
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@IN">
+                        <choose>
+                            <when test="condition.value.size>0">
+                                in <foreach collection="condition.value" item="v" open="(" separator="," close=")">#{v}</foreach>
+                            </when>
+                            <otherwise>
+                                !=${condition.field.fieldName}
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        unsupported operator error
+                    </otherwise>
+                </choose>
+            </foreach>
+        </where>
+    </update>
+
+    <delete id="delete">
+        delete FROM ${tableSource.tableSourceSqlFragment}
+        <where>
+            <foreach collection="where" item="condition">
+                AND ${condition.field.fieldName}
+                <choose>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@EQUAL">
+                        = ${condition.value}
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_LEFT">
+                        like concat('%',${condition.value})
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_RIGHT">
+                        like concat(${condition.value},'%')
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@LIKE_FULL">
+                        like concat('%',concat(${condition.value},'%'))
+                    </when>
+                    <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@IN">
+                        <choose>
+                            <when test="condition.value.size>0">
+                                in <foreach collection="condition.value" item="v" open="(" separator="," close=")">#{v}</foreach>
+                            </when>
+                            <otherwise>
+                                !=${condition.field.fieldName}
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        unsupported operator error
+                    </otherwise>
+                </choose>
+            </foreach>
+        </where>
+    </delete>
 </mapper>

@@ -8,6 +8,24 @@ public class InsertAction {
     private TableSource tableSource;
     private Collection<String> columns;
     private List<Map<String,Object>> rows;
+    private List<List<Object>> values;
+
+    public List<List<Object>> getValues() {
+        return values;
+    }
+
+    public String getValuesRefresh(){
+        LinkedList<List<Object>> values=new LinkedList<>();
+        for (Map<String, Object> row : rows) {
+            List<Object> rowValue=new LinkedList<>();
+            for (String column : columns) {
+                rowValue.add(row.get(column));
+            }
+            values.add(rowValue);
+        }
+        this.values=values;
+        return "";
+    }
 
     public TableSource getTableSource() {
         return tableSource;
