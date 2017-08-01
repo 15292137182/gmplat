@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        /*#twoTable{*/
+            /*margin-top: 10px;*/
+        /*}*/
+        .el-table th{
+            text-align: center;
+        }
+        h2{
+            margin:2px 0;
+            float: left;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="app">
+    <!--搜索框 搜索按钮 所有事件按钮-->
+    <el-row type="flex" class="row-bg" justify="end">
+        <el-col :span="5">
+            <el-col :xs="8" :sm="8" :md="8" style="text-align: right">
+                <el-button type="success" icon="plus">新增</el-button>
+            </el-col>
+            <el-col :xs="8" :sm="8" :md="8" style="text-align: right">
+                <el-button type="info" icon="edit">编辑</el-button>
+            </el-col>
+            <el-col :xs="8" :sm="8" :md="8" style="text-align: right">
+                <el-button type="danger" icon="delete">删除</el-button>
+            </el-col>
+        </el-col>
+    </el-row>
+    <!--头部-->
+    <el-row>
+            <el-col :span="12">
+                <el-col :xs="7" :sm="7" :md="7">
+                    <h2>数据库表信息</h2>
+                </el-col>
+                <el-col :xs="8" :sm="8" :md="8" :offset="6">
+                    <div class="grid-content bg-purple-dark">
+                        <el-input v-model="input" placeholder="请输入内容多条件请以空格分隔"></el-input>
+                    </div>
+                </el-col>
+                <el-col :xs="2" :sm="2" :md="2">
+                    <div class="grid-content">
+                        <el-button type="primary" icon="search" @click.native="get">搜索</el-button>
+                    </div>
+                </el-col>
+            </el-col>
+            <el-col :span="11" :offset="1">
+                <h2>表字段信息</h2>
+            </el-col>
+        </el-row>
+    <!--table    -->
+    <el-row id="twoTable" style="margin-top: 5px">
+        <el-col :span="12">
+            <template>
+                <el-table :data="myData" border style="width: 100%">
+                    <el-table-column  prop="" label="表Schema" width="">
+                    </el-table-column>
+                    <el-table-column  prop="" label="表中英文名称" width="">
+                    </el-table-column>
+                    <el-table-column  prop="" label="说明" width="">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </el-col>
+        <el-col :span="11" :offset="1">
+            <template>
+                <el-table :data="myData" border style="width: 100%;">
+                    <el-table-column  prop="" label="字段名" width="">
+                    </el-table-column>
+                    <el-table-column  prop="" label="说明" width="">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            input:'',
+            myData:[]
+        },
+        methods:{
+            get(){
+                this.$http.jsonp('url',{
+                    "key":this.input
+                },{
+                    jsonp:'cb'
+                }).then(function (res) {
+                    this.myData=res.data;
+                },function(){
+
+                })
+            }
+        }
+    })
+</script>
+</html>

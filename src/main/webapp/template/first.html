@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Vue Element</title>
+    <script src="WebUI/Public/publicjs.js"></script>
+    <style>
+        .el-row {
+            /*margin-bottom: 20px;*/
+        }
+        .el-col {
+            border-radius: 4px;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .row-bg {
+            padding: 10px 0;
+            /*background-color: #f9fafc;*/
+        }
+        h1{
+            margin:0
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!--头部-->
+        <el-row>
+            <el-col :span="12">
+                <h2>hello ElementUi</h2>
+            </el-col>
+        </el-row>
+        <!--搜索框 搜索按钮 所有事件按钮-->
+        <el-row type="flex" class="row-bg" justify="end">
+            <el-col :span="6">
+                <div class="grid-content bg-purple-dark">
+                    <el-input v-model="input" placeholder="请输入内容多条件请以空格分隔"></el-input>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content">
+                    <el-button type="primary" icon="search" @click.native="get">搜索</el-button>
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <el-button type="success" icon="plus">新增</el-button>
+                <el-button type="info" icon="edit">编辑</el-button>
+                <el-button type="danger" icon="delete">删除</el-button>
+            </el-col>
+        </el-row>
+            <el-col :span="24">
+                <template>
+                    <el-table :data="myData" border style="width: 100%">
+                        <el-table-column fixed prop="data" label="数据" width="">
+                        </el-table-column>
+                    </el-table>
+                </template>
+                </el-col>
+        </el-row>
+    </div>
+</body>
+<script src="vue/vue-resource.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data:{
+            myData:[],
+            input:''
+        },
+        methods:{
+            get:function(){
+                this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+                    wd:this.input
+                },{
+                    jsonp:'cb'
+                }).then(function(res){
+                    for(var i=0;i<res.data.s.length;i++){
+                        var obj = {};
+                        obj.data=res.data.s[i];
+                        this.myData.push(obj);
+                    }
+                },function(){
+
+                });
+            }
+        }
+    })
+</script>
+</html>

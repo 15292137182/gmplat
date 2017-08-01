@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        html{
+            overflow: hidden;
+        }
+        /*.bg-purple-light {*/
+            /*background: #f0f0f0;*/
+            /*color:white;*/
+            /*vertical-align: middle;*/
+        /*}*/
+        /*.grid-content {*/
+            /*border-radius: 4px;*/
+            /*min-height: 36px;*/
+
+        /*}*/
+        .el-table th{
+            text-align: center;
+        }
+        h2{
+            margin:2px 0;
+            float: left;
+        }
+    </style>
+
+</head>
+<body>
+<div id="app">
+    <!--搜索框 搜索按钮 所有事件按钮-->
+    <el-row type="flex" justify="end" style="padding:15px 0">
+        <el-col :span="11">
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right">
+                <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增</el-button>
+            </el-col>
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right">
+                <el-button type="info" icon="edit" size="small">编辑</el-button>
+            </el-col>
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right">
+                <el-button type="danger" icon="delete" size="small">删除</el-button>
+            </el-col>
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right">
+                <el-button type="success" icon="plus" size="small">新增</el-button>
+            </el-col>
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right" >
+                <el-button type="danger" icon="delete" size="small">删除</el-button>
+            </el-col>
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right">
+                <el-button type="success" icon="plus" size="small">生效</el-button>
+            </el-col>
+            <el-col :xs="3" :sm="3" :md="3" style="text-align: right" >
+                <el-button type="danger" icon="delete" size="small">变更</el-button>
+            </el-col>
+        </el-col>
+    </el-row>
+    <el-row :gutter="20">
+        <el-col :span="12">
+            <el-row >
+                <el-col>
+                    <div class=""><h3>业务对象信息</h3></div>
+                </el-col>
+            </el-row>
+            <el-row style="padding:15px 0">
+                <el-col :xs="24" :sm="24" :md="24">
+                    <div>
+                        <el-input placeholder="请输入内容" v-model="input">
+                            <el-button slot="append" icon="search"></el-button>
+                        </el-input>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row id="leftTable">
+                <el-col :span="24">
+                    <template>
+                        <el-table :data="myLeftData" :height="leftHeight"  border style="width: 100%">
+                            <el-table-column  prop="" label="对象代码" width="" >
+                            </el-table-column>
+                            <el-table-column  prop="" label="对象名称" width="">
+                            </el-table-column>
+                            <el-table-column  prop="" label="关联表" width="">
+                            </el-table-column>
+                            <el-table-column  prop="" label="版本" width="">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-col>
+            </el-row>
+        </el-col>
+        <el-col :span="12">
+            <el-row>
+                <el-col :span="24"><h3>业务对象信息</h3></el-col>
+            </el-row>
+            <el-row id="rightTable" style="padding-top:15px">
+                <el-col :span="24">
+                    <template>
+                        <el-table :data="myRightData" :height="rightHeight" border style="width: 100%">
+                            <el-table-column  prop="" label="表Schema" width="">
+                            </el-table-column>
+                            <el-table-column  prop="" label="表中英文名称" width="">
+                            </el-table-column>
+                            <el-table-column  prop="" label="说明" width="">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-col>
+            </el-row>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            input:'',
+            leftHeight:'',
+            rightHeight:'',
+            myLeftData:[],
+            myRightData:[]
+        },
+        methods:{
+            get(){
+                this.$http.jsonp('url',{
+                    "key":this.input
+                },{
+                    jsonp:'cb'
+                }).then(function (res) {
+                    this.myData=res.data;
+                },function(){
+
+                })
+            },
+            addEvent(){
+                var htmlUrl = 'MetadataAdd.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px', function(){
+
+                });
+            },
+
+        }
+    })
+    $(document).ready(function(){
+        vm.leftHeight=$(window).height()-165;
+        vm.rightHeight=$(window).height()-115;
+    });
+    $(window).resize(function(){
+        vm.leftHeight=$(window).height()-165;
+        vm.rightHeight=$(window).height()-115;
+    })
+</script>
+</html>
