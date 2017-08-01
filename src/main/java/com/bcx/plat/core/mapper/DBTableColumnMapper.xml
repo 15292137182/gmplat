@@ -5,11 +5,13 @@
 
     <select id="select" resultType="com.bcx.plat.core.entity.DBTableColumn" parameterType="hashmap">
         SELECT
-        relate_table_row_id
+        row_id
+        ,relate_table_row_id
         ,column_ename
         ,column_cname
         ,desp
-        ,<include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+        ,
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
         FROM public.t_db_table_column
         <where>
 

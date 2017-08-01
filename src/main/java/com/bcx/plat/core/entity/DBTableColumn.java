@@ -2,6 +2,8 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
+
 /**
  * 数据库表信息
  * Create By HCL at 2017/7/31
@@ -12,6 +14,26 @@ public class DBTableColumn extends BaseEntity<DBTableColumn> {
     private String columnEname;
     private String columnCname;
     private String desp;
+    private String rowId;
+
+    /**
+     * 重载构建 - 创建信息方法，加入rowId
+     *
+     * @return
+     */
+    @Override
+    public DBTableColumn buildCreateInfo() {
+        setRowId(lengthUUID(32));
+        return super.buildCreateInfo();
+    }
+
+    public String getRowId() {
+        return rowId;
+    }
+
+    public void setRowId(String rowId) {
+        this.rowId = rowId;
+    }
 
     public String getRelateTableRowId() {
         return relateTableRowId;

@@ -24,7 +24,6 @@ public class BaseEntity<T extends BaseEntity> {
     private String deleteUserName;//删除名称
     private String deleteTime;//删除时间
     private String deleteFlag;//删除标记
-    private String rowId;//id
 
     private Map etc = new HashMap();
 
@@ -38,7 +37,6 @@ public class BaseEntity<T extends BaseEntity> {
         setCreateTime(getDateTimeNow());
         setCreateUser("admin");
         setCreateUserName("系统管理员");
-        setRowId(lengthUUID(32));
         return (T) this;
     }
 
@@ -191,14 +189,6 @@ public class BaseEntity<T extends BaseEntity> {
 
     public void setDeleteFlag(String deleteFlag) {
         this.deleteFlag = deleteFlag;
-    }
-
-    public String getRowId() {
-        return rowId;
-    }
-
-    public void setRowId(String rowId) {
-        this.rowId = rowId;
     }
 
     public Map getEtc() {
