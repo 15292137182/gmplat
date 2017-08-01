@@ -25,12 +25,12 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 public class MaintTableController extends BaseController {
 
     @Autowired
-    private MaintTableService maintTableServiceImpl;
+    private MaintTableService maintTableService;
 
     @RequestMapping("/select")
     @ResponseBody
     public MappingJacksonValue select(String str, HttpServletRequest request, HttpServletResponse response) {
-        List result = maintTableServiceImpl.selectMaint(str);
+        List result = maintTableService.selectMaint(str);
         MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功", result)));
         value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
@@ -39,7 +39,7 @@ public class MaintTableController extends BaseController {
     @RequestMapping("/selectById")
     @ResponseBody
     public MappingJacksonValue selectById(String rowId, HttpServletRequest request, HttpServletResponse response) {
-        List<MaintTableInfo> result = maintTableServiceImpl.selectById(rowId);
+        List<MaintTableInfo> result = maintTableService.selectById(rowId);
         MappingJacksonValue value = new MappingJacksonValue(objToJson(new ServiceResult("消息传递成功", result)));
         value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
