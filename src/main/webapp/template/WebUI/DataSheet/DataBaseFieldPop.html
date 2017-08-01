@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据库表资源选择框</title>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <el-form :inline="true" :model="form">
+            <el-form-item label="字段中文名" >
+                <el-input v-model="form.name"  placeholder="请输入内容"></el-input>
+            </el-form-item>
+
+            <el-button type="primary" icon="search">搜索</el-button>
+        </el-form>
+    </div>
+
+    <div>
+        <el-table :data="gridData" border>
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="f_name" label="字段中文名" width="200"></el-table-column>
+            <el-table-column property="f_desp" label="说明" ></el-table-column>
+        </el-table>
+    </div>
+
+    <div style="margin-top: 20px;text-align:center">
+        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small">确定</el-button>
+    </div>
+</div>
+</body>
+<script>
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            form:{
+                schema:'',
+                name:''
+            },
+
+            gridData:[],
+            dialogTableVisible: true,
+            dialogFormVisible:false
+        }
+    })
+</script>
+</html>

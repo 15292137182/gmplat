@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据库表信息选择框</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        .el-row {
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h3>数据库表信息选择框</h3>
+    </div>
+    <div style="margin-top: 20px">
+        <el-row :gutter="20">
+            <el-col :span="5"><el-input v-model="tableSchema"  placeholder="请输入内容"><template slot="prepend">表schema</template></el-input></el-col>
+            <el-col :span="5"><el-input v-model="tableCName"  placeholder="请输入内容"><template slot="prepend">表中文名</template></el-input></el-col>
+            <el-col :span="4" ><el-button type="primary" icon="search" @click.native="search">搜索</el-button></el-col>
+         </el-row>
+    </div>
+    <div style="margin-top: 20px">
+        <el-table :data="gridData" border>
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="tableSchema" label="表schema" width="150"></el-table-column>
+            <el-table-column property="tableCName" label="表中文名" width="200"></el-table-column>
+            <el-table-column property="desp" label="说明"></el-table-column>
+        </el-table>
+    </div>
+    <div style="margin-top: 20px;text-align:center" >
+        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small">确定</el-button>
+    </div>
+
+</div>
+</body>
+<script>
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            tableSchema:'',
+            tableCName:'',
+            gridData:[],
+        },
+        methods:{
+            search(){
+
+                var str='{tableSchema:'+'"'+this.tableSchema+'"'+',tableCName:'+'"'+this.tableCName+'"'+'}';
+                this.$http.jsonp(serverPath+'/maint/select',{
+                    "str":''
+                },{
+                    jsonp:'callback'
+                }).then(function (res) {
+                    this.gridData=res.data.content.data;
+                })
+            }
+        }
+    })
+</script>
+</html>
