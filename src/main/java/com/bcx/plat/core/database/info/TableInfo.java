@@ -2,6 +2,7 @@ package com.bcx.plat.core.database.info;
 
 import com.bcx.plat.core.database.action.phantom.TableSource;
 import com.bcx.plat.core.database.action.substance.Table;
+import java.util.HashMap;
 
 public enum TableInfo implements TableSource{
     T_SYS_CONFIG("t_sys_config"),
@@ -15,11 +16,18 @@ public enum TableInfo implements TableSource{
     T_DB_TABLE_COLUMN("t_db_table_column"),
     T_DATASET_CONFIG("t_dataset_config"),
     T_BUSINESS_OBJECT_PRO("t_business_object_pro"),
-    T_BUSINESS_OBJECT("t_business_object");
-    public final Table table;
+    T_BUSINESS_OBJECT("t_business_object"),
+    TEST("test_only.test_table1");
+    public final TableSource table;
+    private final HashMap<String,TableSource> register=new HashMap<>();
 
-    TableInfo(String table) {
-        this.table = new Table(table);
+    TableInfo(String tableName) {
+        this.table = new Table(tableName);
+        register.put(tableName,table);
+    }
+
+    public TableSource getTableSourceByName(String tableName){
+        return register.get(tableName);
     }
 
     TableInfo(Table table) {

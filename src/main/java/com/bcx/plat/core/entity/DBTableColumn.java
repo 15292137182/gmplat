@@ -1,6 +1,9 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.action.annotations.Table;
+import com.bcx.plat.core.database.action.annotations.TablePK;
+import com.bcx.plat.core.database.info.TableInfo;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
@@ -8,12 +11,13 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  * 数据库表信息
  * Create By HCL at 2017/7/31
  */
+@Table(TableInfo.T_DB_TABLE_COLUMN)
 public class DBTableColumn extends BaseEntity<DBTableColumn> {
-
     private String relateTableRowId;
     private String columnEname;
     private String columnCname;
     private String desp;
+    @TablePK
     private String rowId;
 
     /**

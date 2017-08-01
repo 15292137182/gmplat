@@ -1,6 +1,7 @@
 package com.bcx.plat.core.database.action.mapper;
 
-import com.bcx.plat.core.database.action.QueryActionLite;
+import com.bcx.plat.core.database.action.InsertAction;
+import com.bcx.plat.core.database.action.QueryAction;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public interface TempSuitMapper {
 	 * @param queryActionLite 查询参数
 	 * @return 查询结果
 	 */
-	public List<Map<String,Object>> select(QueryActionLite queryActionLite);
+	List<Map<String,Object>> select(QueryAction queryActionLite);
+	int insert(InsertAction insertAction);
 }
 

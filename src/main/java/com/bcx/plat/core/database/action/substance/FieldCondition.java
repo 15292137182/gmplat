@@ -14,6 +14,12 @@ public class FieldCondition implements Condition{
         this.value = value;
     }
 
+    public FieldCondition(String fieldName, Operator operator, Object value) {
+        this.field = new Field(fieldName);
+        this.operator = operator;
+        this.value = value;
+    }
+
     public Field getField() {
         return field;
     }
