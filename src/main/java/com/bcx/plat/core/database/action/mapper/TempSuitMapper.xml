@@ -30,9 +30,14 @@
                         like concat('%',concat(${condition.value},'%'))
                     </when>
                     <when test="condition.operator==@com.bcx.plat.core.database.action.substance.condition.Operator@IN">
-                        in <foreach collection="condition.value" item="v" open="(" close="'呵呵x2d')">
-                        #{v},
-                    </foreach>
+                        <choose>
+                            <when test="condition.value.size>0">
+                                in <foreach collection="condition.value" item="v" open="(" separator="," close=")">#{v}</foreach>
+                            </when>
+                            <otherwise>
+                                false
+                            </otherwise>
+                        </choose>
                     </when>
                     <otherwise>
                         it must throw an error

@@ -1,4 +1,4 @@
-package com.bcx.plat.database.action;
+package com.bcx.plat.core.database.action;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.database.action.QueryActionLite;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class QueryTest extends BaseTest {
+public class QueryActionLiteTest extends BaseTest {
     class TestTable implements TableSource {
         public String getTableSourceSqlFragment() {
             return "test_only.test_table1";
@@ -34,7 +34,7 @@ public class QueryTest extends BaseTest {
         final Field fieldDemo1 = new Field("demo1", "测试字段1");
         final Field fieldDemo2 = new Field("demo2", "测试字段2");
         QueryActionLite queryActionLite=new QueryActionLite().select(fieldId, fieldDemo1, fieldDemo2).from(new TestTable())
-                .where(new FieldCondition(fieldId, Operator.IN, Arrays.asList(new Integer[]{})));
+                .where(new FieldCondition(fieldId, Operator.IN, Arrays.asList(1,2)));
         queryActionLite.setTableSource(new TestTable());
         List<Map<String, Object>> result = dao.getMapper(TempSuitMapper.class).select(queryActionLite);
         result.size();
