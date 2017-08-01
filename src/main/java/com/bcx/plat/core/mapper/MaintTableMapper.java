@@ -1,6 +1,5 @@
 package com.bcx.plat.core.mapper;
 
-import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.base.BaseMapper;
 import com.bcx.plat.core.entity.MaintTableInfo;
 import org.apache.ibatis.annotations.Mapper;

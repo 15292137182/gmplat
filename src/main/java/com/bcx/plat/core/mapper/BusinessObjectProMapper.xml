@@ -8,7 +8,7 @@
         SELECT
             row_id,property_code,property_name,relate_table_column,value_type,
             value_resource_type,value_resource_content,wether_expand_pro
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
         FROM t_business_object_pro
     </select>
 
@@ -16,12 +16,11 @@
         INSERT INTO
                 t_business_object_pro
             ( row_id,property_code,property_name,relate_table_column,value_type,
-               value_resource_type,value_resource_content,wether_expand_pro
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>)
+               value_resource_type,value_resource_content,wether_expand_pro,
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>)
         VALUES
-            (#{rowId},#{objectCode},#{objectName},#{relateTableRowId},
-        #{rowId},#{objectCode},#{objectName},#{relateTableRowId},
-        #{rowId},#{objectCode},#{objectName},#{relateTableRowId},
+            (#{rowId},#{propertyCode},#{propertyName},#{relateTableColumn},
+        #{valueType},#{valueResourceType},#{valueResourceContent},#{wetherExpandPro},
         #{status},#{version},#{createUser},#{createUserName},#{createTime},#{modifyUser},#{modifyUserName},
         #{modifyTime},#{deleteUser},#{deleteUserName},#{deleteTime},#{deleteFlag}
         )
@@ -34,7 +33,7 @@
         object_code=#{objectCode},
         object_name=#{objectName},
         relate_table_row_id=#{relateTableRowId},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_u"/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_update"/>
         WHERE
             row_id = #{rowId}
     </update>

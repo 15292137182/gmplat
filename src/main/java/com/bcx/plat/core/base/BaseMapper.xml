@@ -3,17 +3,17 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bcx.plat.core.base.BaseMapper">
 
-    <sql id="common_columns">
+    <sql id="common_columns_select">
         "status", version, create_user, create_user_name, create_time, modify_user,
         modify_user_name, modify_time, delete_user, delete_user_name, delete_time, delete_flag
     </sql>
 
-    <sql id="common_columns_#">
+    <sql id="common_columns_insert">
         #{status}, #{version}, #{createUser}, #{createUserName}, #{createTime}, #{modifyUser}, #{modifyUserName},
         #{modifyTime}, #{deleteUser}, #{deleteUserName}, #{deleteTime}, #{deleteFlag}
     </sql>
 
-    <sql id="common_columns_=">
+    <sql id="common_columns_update">
         "status"=#{status},
         "version"=#{version},
         create_user=#{createUser},

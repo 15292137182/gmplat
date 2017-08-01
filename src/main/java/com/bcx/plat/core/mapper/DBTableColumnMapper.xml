@@ -11,7 +11,7 @@
         ,column_cname
         ,desp
         ,
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
         FROM public.t_db_table_column
         <where>
             <if test="strArr != null and strArr.size() != 0">
@@ -30,10 +30,10 @@
         INSERT INTO public.t_db_table_column
         (
         row_id, relate_table_row_id, column_ename, column_cname, desp,
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
         )VALUE (
         #{rowId},#{relateTableRowId},#{columnEname},#{columnCname},#{desp},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_#"/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
         )
     </insert>
 </mapper>
