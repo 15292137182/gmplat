@@ -1,45 +1,31 @@
 package com.bcx.plat.core.database.action.singleton;
 
 import com.bcx.plat.core.database.action.phantom.Column;
+import com.bcx.plat.core.database.action.substance.Field;
 
 
 /**
- * 不可变字段
+ * 供单例模式使用的不可变字段
  */
 public class ImmuteField implements Column {
-    /**
-     * 字段名
-     */
-    protected String fieldName;
-    /**
-     * 别名
-     */
-    protected String alies;
+   Column field;
 
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getAlies() {
-        return alies;
-    }
-
-    protected ImmuteField(){
-
+    public ImmuteField(Field field) {
+        this.field = field;
     }
 
     @Override
     public String getColumnSqlFragment() {
-        String alies=getAlies();
-        if (alies==null||alies.isEmpty()) {
-            return getFieldSource();
-        }else{
-            return getFieldSource()+" as "+getAlies();
-        }
+        return field.getColumnSqlFragment();
+    }
+
+    @Override
+    public String getAlies() {
+        return field.getAlies();
     }
 
     @Override
     public String getFieldSource() {
-        return getFieldName();
+        return field.getFieldSource();
     }
 }

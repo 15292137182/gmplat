@@ -1,10 +1,22 @@
 package com.bcx.plat.core.database.action.substance;
 
+import com.bcx.plat.core.database.action.phantom.TableSource;
 import com.bcx.plat.core.database.action.singleton.ImmuteTable;
 
-public class Table extends ImmuteTable {
+public class Table implements TableSource {
+    protected String tableName;
+
     public Table(String tableName) {
-        super(tableName);
+        this.tableName = tableName;
+    }
+
+    @Override
+    public String getTableSourceSqlFragment() {
+        return getTableName();
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 
     public void setTableName(String tableName){

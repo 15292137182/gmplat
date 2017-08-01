@@ -1,13 +1,14 @@
 package com.bcx.plat.core.database.action.substance;
 
 import com.bcx.plat.core.database.action.phantom.Condition;
+import com.bcx.plat.core.database.action.substance.condition.Operator;
 
 public class FieldCondition implements Condition{
     Field field;
-    int operator;
+    Operator operator;
     Object value;
 
-    public FieldCondition(Field field, int operator, Object value) {
+    public FieldCondition(Field field, Operator operator, Object value) {
         this.field = field;
         this.operator = operator;
         this.value = value;
@@ -21,11 +22,11 @@ public class FieldCondition implements Condition{
         this.field = field;
     }
 
-    public int getOperator() {
+    public Operator getOperator() {
         return operator;
     }
 
-    public void setOperator(int operator) {
+    public void setOperator(Operator operator) {
         this.operator = operator;
     }
 

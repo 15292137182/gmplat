@@ -2,6 +2,7 @@ package com.bcx.plat.core.database.action;
 
 import com.bcx.plat.core.database.action.phantom.Column;
 import com.bcx.plat.core.database.action.phantom.TableSource;
+import com.bcx.plat.core.database.action.substance.Field;
 import com.bcx.plat.core.database.action.substance.FieldCondition;
 
 import java.util.Arrays;
@@ -9,11 +10,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class QueryActionLite{
+    private static final Field ALL_FIELD=new Field("*");
     List<Column> columns;
     TableSource tableSource;
     List<FieldCondition> where;
-    Integer page;
-    Integer pageSize;
+//    Integer page;
+//    Integer pageSize;
 
     public QueryActionLite() {
         where=new LinkedList<>();
@@ -37,17 +39,21 @@ public class QueryActionLite{
     }
 
     public QueryActionLite select(List<Column> column){
-        columns.addAll(column);
+        setColumns(column);
         return this;
     }
 
+    public QueryActionLite selectAll(){
+        return select(ALL_FIELD);
+    }
+
     public QueryActionLite where(List<FieldCondition> fieldCondition){
-        where.addAll(fieldCondition);
+        setWhere(fieldCondition);
         return this;
     }
 
     public QueryActionLite from(TableSource tableSource){
-        this.tableSource=tableSource;
+        setTableSource(tableSource);
         return this;
     }
 
@@ -65,21 +71,5 @@ public class QueryActionLite{
 
     public void setWhere(List<FieldCondition> where) {
         this.where = where;
-    }
-
-    public Integer getPage() {
-        return page;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
     }
 }

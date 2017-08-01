@@ -35,16 +35,16 @@
                                 in <foreach collection="condition.value" item="v" open="(" separator="," close=")">#{v}</foreach>
                             </when>
                             <otherwise>
-                                false
+                                !=${condition.field.fieldName}
                             </otherwise>
                         </choose>
                     </when>
                     <otherwise>
-                        it must throw an error
+                        unsupported operator error
                     </otherwise>
                 </choose>
+                AND
             </foreach>
-            AND
         </trim>
     </select>
 </mapper>
