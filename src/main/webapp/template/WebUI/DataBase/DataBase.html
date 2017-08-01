@@ -65,7 +65,7 @@
                     </el-row>
                 </div>
                 <template>
-                    <el-table ref="myTable" :data="myData" @current-change="SelectChange"  @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
+                    <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
                         <el-table-column  prop="tableSchema" label="表Schema" width="110">
                         </el-table-column>
                         <el-table-column  prop="tableCName" label="表中文名称" width="250">

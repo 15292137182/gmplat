@@ -22,7 +22,6 @@
             },
             click(row, event, column){
                 this.FindData(row.rowId);
-                this.FindOk(row);
             },
             FindData(id){
                 this.$http.jsonp('http://192.168.100.193/GMPlat/maint/selectById',{
@@ -49,6 +48,6 @@
             })
         },
         updated(){
-
+             this.FindOk(this.myData[0]);
         }
     });
