@@ -7,7 +7,7 @@
     <select id="select" resultType="com.bcx.plat.core.entity.BusinessObject" parameterType="hashMap">
         SELECT
             row_id,object_code,object_name,relate_table_row_id,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
         FROM t_business_object
         <where>
             <if test="strArr!=null and strArr.size()!=0">
@@ -22,7 +22,7 @@
         INSERT INTO
                 t_business_object
             (row_id,object_code,object_name,relate_table_row_id,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>)
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
         VALUES
             (#{rowId},#{objectCode},#{objectName},#{relateTableRowId},
         #{status},#{version},#{createUser},#{createUserName},#{createTime},#{modifyUser},#{modifyUserName},
@@ -37,7 +37,7 @@
         object_code=#{objectCode},
         object_name=#{objectName},
         relate_table_row_id=#{relateTableRowId},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_="/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_update"/>
         WHERE
             row_id = #{rowId}
     </update>

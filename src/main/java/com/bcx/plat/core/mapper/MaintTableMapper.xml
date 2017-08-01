@@ -7,7 +7,7 @@
     <select id="selectMaint" resultType="com.bcx.plat.core.entity.MaintTableInfo" parameterType="map">
         SELECT
             row_id,table_schema,table_ename,table_cname,desp,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
         FROM t_db_tables
         <where>
             <if test="strArr!=null and strArr.size()!=0">
@@ -21,7 +21,7 @@
     <select id="selectById" parameterType="String" resultType="com.bcx.plat.core.entity.MaintTableInfo">
         SELECT
               row_id,table_schema,table_ename,table_cname,desp ,
-              <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+              <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
         FROM t_db_tables
         WHERE row_id=#{rowId}
     </select>
