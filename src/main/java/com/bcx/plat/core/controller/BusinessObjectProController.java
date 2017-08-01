@@ -1,6 +1,7 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 public class BusinessObjectProController {
 
     @Autowired
-    private BusinessObjectService businessObjectService;
+    private BusinessObjectProService businessObjectProService;
     /**
      * 查询业务对象属性
      * 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
@@ -35,9 +36,9 @@ public class BusinessObjectProController {
     @RequestMapping("/select")
     @ResponseBody
     public MappingJacksonValue select(String str, HttpServletRequest request){
-        Map<String, Object> cond = new HashMap<>();
-        cond.put("strArr", collectToSet(str));
-        List<BusinessObject> result = businessObjectService.select(cond);
+        Map<String, Object> map = new HashMap<>();
+        map.put("strArr", collectToSet(str));
+        List<BusinessObject> result = businessObjectProService.select(map);
         MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("查询业务对象成功", result));
         value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
@@ -51,7 +52,7 @@ public class BusinessObjectProController {
     @RequestMapping("/insert")
     @ResponseBody
     public MappingJacksonValue insert(BusinessObject businessObject,HttpServletRequest request){
-        String insert = businessObjectService.insert(businessObject);
+        String insert = businessObjectProService.insert(businessObject);
         MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("新增业务对象成功",insert));
         value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return value;
@@ -66,7 +67,7 @@ public class BusinessObjectProController {
     @RequestMapping("/update")
     @ResponseBody
    public MappingJacksonValue update(BusinessObject businessObject,HttpServletRequest request){
-       String update = businessObjectService.update(businessObject);
+       String update = businessObjectProService.update(businessObject);
        MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("修改数据成功",update));
        value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
        return value;
@@ -80,7 +81,7 @@ public class BusinessObjectProController {
     @RequestMapping("/delete")
     @ResponseBody
     public MappingJacksonValue dalete(String rowId,HttpServletRequest request){
-        int dalete = businessObjectService.delete(rowId);
+        int dalete = businessObjectProService.delete(rowId);
         MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("删除数据成功",dalete));
         value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return value;

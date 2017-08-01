@@ -1,6 +1,5 @@
 package com.bcx.plat.core.service.Impl;
 
-import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.mapper.BusinessObjectMapper;
 import com.bcx.plat.core.service.BusinessObjectService;
@@ -20,7 +19,7 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 @Service
 public class BusinessObjectServiceImpl implements BusinessObjectService{
     @Autowired
-    private BusinessObjectMapper businessObjectMapperImpl;
+    private BusinessObjectMapper businessObjectMapper;
     /**
      * 查询业务对象
      * 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
@@ -33,7 +32,7 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
 
         try {
             if (map.size() != 0) {
-                List<BusinessObject> select = businessObjectMapperImpl.select(map);
+                List<BusinessObject> select = businessObjectMapper.select(map);
                 return select;
             }
         } catch (Exception e) {
@@ -57,7 +56,7 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
             //业务对象版本号默认从1.0开始
             businessObject.setVersion("1.0");
             businessObject.buildCreateInfo();
-            businessObjectMapperImpl.insert(businessObject);
+            businessObjectMapper.insert(businessObject);
             //将用户新增的rowId返回
             return rowId;
         }catch (Exception e){
@@ -76,7 +75,7 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
     public String update(BusinessObject businessObject) {
         try{
             businessObject.buildModifyInfo();
-            businessObjectMapperImpl.update(businessObject);
+            businessObjectMapper.update(businessObject);
             String rowId = businessObject.getRowId();
             return rowId;
         }catch (Exception e){
@@ -95,7 +94,7 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
     @Override
     public int delete(String rowId) {
         try{
-            businessObjectMapperImpl.delete(rowId);
+            businessObjectMapper.delete(rowId);
             return STATUS_SUCCESS;
         }catch (Exception e){
             e.printStackTrace();
