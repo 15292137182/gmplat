@@ -4,24 +4,19 @@
 <mapper namespace="com.bcx.plat.core.base.BaseMapper">
 
     <sql id="common_columns">
-        status, version, create_user, create_user_name, create_time, modify_user,
+        "status", version, create_user, create_user_name, create_time, modify_user,
         modify_user_name, modify_time, delete_user, delete_user_name, delete_time, delete_flag
     </sql>
 
-    <sql id="common_columns_i">
-        #{status},#{version},#{createUser},#{createUserName},#{createTime},#{modifyUser},#{modifyUserName},
-        #{modifyTime},#{deleteUser},#{deleteUserName},#{deleteTime},#{deleteFlag}
+    <sql id="common_columns_#">
+        #{status}, #{version}, #{createUser}, #{createUserName}, #{createTime}, #{modifyUser}, #{modifyUserName},
+        #{modifyTime}, #{deleteUser}, #{deleteUserName}, #{deleteTime}, #{deleteFlag}
     </sql>
 
-    <sql id="common_columns_p">
-        "status", "version", create_user, create_user_name, create_time, modify_user,
-        modify_user_name, modify_time, delete_user, delete_user_name, delete_time, delete_flag
-    </sql>
-
-    <sql id="common_columns_u">
-        "status"= #{status},
+    <sql id="common_columns_=">
+        "status"=#{status},
         "version"=#{version},
-        create_user=#{createUser}},
+        create_user=#{createUser},
         create_user_name=#{createUserName},
         create_time=#{createTime},
         modify_user=#{modifyUser},

@@ -37,7 +37,7 @@
         object_code=#{objectCode},
         object_name=#{objectName},
         relate_table_row_id=#{relateTableRowId},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_u"/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_="/>
         WHERE
             row_id = #{rowId}
     </update>
