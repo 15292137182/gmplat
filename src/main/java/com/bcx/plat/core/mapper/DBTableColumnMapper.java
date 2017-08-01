@@ -11,5 +11,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DBTableColumnMapper extends BaseMapper<DBTableColumn> {
 
+    /**
+     * 逻辑删除的方法
+     *
+     * @param bean 数据Bean
+     * @return 返回操作结果标识
+     */
     int logicDelete(DBTableColumn bean);
 }
