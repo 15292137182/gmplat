@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class QueryTest extends BaseTest {
     class TestTable implements TableSource {
-
-        @Override
         public String getTableSourceSqlFragment() {
             return "test";
         }
