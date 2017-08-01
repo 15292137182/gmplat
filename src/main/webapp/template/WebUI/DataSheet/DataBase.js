@@ -40,12 +40,12 @@
         created(){
             this.get();
             $(document).ready(function(){
-                vm.leftHeight=$(window).height()-120;
-                vm.rightHeight=$(window).height()-120;
+                vm.leftHeight=$(window).height()-107;
+                vm.rightHeight=$(window).height()-107;
             });
             $(window).resize(function(){
-                vm.leftHeight=$(window).height()-120;
-                vm.rightHeight=$(window).height()-120;
+                vm.leftHeight=$(window).height()-107;
+                vm.rightHeight=$(window).height()-107;
             })
         },
         updated(){
