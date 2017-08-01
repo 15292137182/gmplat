@@ -14,7 +14,12 @@
         <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
         FROM public.t_db_table_column
         <where>
-
+            <if test="strArr != null and strArr.size() != 0">
+                AND
+                <foreach collection="strArr" close=")" index="index" item="item" open="(" separator="OR">
+                    (column_ename like '%${item}%' OR column_cname like '%${item}%' OR desp like '%${item}%')
+                </foreach>
+            </if>
         </where>
     </select>
 
