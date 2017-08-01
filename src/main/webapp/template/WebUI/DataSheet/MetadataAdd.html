@@ -14,7 +14,7 @@
     <el-row justify="center" type="flex">
         <el-col :span="22">
             <div>
-                <el-input placeholder="请输入对象代码" v-model="input">
+                <el-input placeholder="请输入对象代码" v-model="input"  ref="input">
                     <template slot="prepend">对象代码</template>
                 </el-input>
             </div>
@@ -23,7 +23,7 @@
     <el-row justify="center" type="flex">
         <el-col :span="22">
             <div>
-                <el-input placeholder="请输入对象名称" v-model="input1">
+                <el-input placeholder="请输入对象名称" v-model="input1" ref="input1">
                     <template slot="prepend">对象名称</template>
                 </el-input>
             </div>
@@ -32,8 +32,8 @@
     <el-row justify="center" type="flex">
         <el-col :span="22">
             <div>
-                <el-input placeholder="请选择关联表" v-model="input2">
-                    <el-button slot="append" icon="search"></el-button>
+                <el-input placeholder="请选择关联表" v-model="input2" ref="input2">
+                    <el-button slot="append" icon="search" @click="searchConnectTable"></el-button>
                 </el-input>
             </div>
         </el-col>
@@ -63,15 +63,36 @@
             return { input:'',input1:'',input2:''}
         },
         methods:{
+            searchConnectTable(){
+                    var htmlUrl = 'connectTable.html';
+                    littledivIndex = ibcpLayer.ShowDiv(htmlUrl, '关联表数据', '600px', '540px', function(){
+
+
+                    })
+            },
             conformEvent(){
-                if(em.input == ''|| em.input == undefined){
-                    ibcpLayer.ShowTips("请填入对象代码");
-//                    alert('请填入对象代码');
-                    return;
+                var datas=[this.$refs.input,this.$refs.input1,this.$refs.input2];
+                for(var i=0;i<datas.length;i++){
+                    if(datas[i].value==''){
+                        ibcpLayer.ShowMsg(datas[i].placeholder);
+                        return;
+                    }
                 }
+                this.$http.jsonp(serverPath+"/busin/insert",{
+                    objectCode:em.input,
+                    objectName:em.input1,
+                    relateTableRowId:em.input2,
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    console.log(res);
+
+                },function(){
+                    alert("error")
+                });
             },
             cancel(){
-
+                ibcpLayer.Close(divIndex);
             }
         }
     })
