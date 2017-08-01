@@ -39,6 +39,7 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
      */
     @Override
     public int insert(DBTableColumn bean) {
-        return 0;
+        bean.buildCreateInfo();
+        return dbTableColumnMapper.insert(bean);
     }
 }

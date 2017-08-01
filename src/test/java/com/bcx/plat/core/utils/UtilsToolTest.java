@@ -38,6 +38,11 @@ public class UtilsToolTest extends BaseTest {
         String s = "123    456   qwer;sdjr";
         Set<String> set = collectToSet(s);
         assert set.size() == 4;
+
+        String underLine = "_abc_came_def";
+        assert ("AbcCameDef".equals(underlineToCamel(underLine, true)));
+        assert ("abcCameDef".equals(underlineToCamel(underLine, false)));
+        assert ("abc_came_def".equals(camelToUnderline("abcCameDef")));
     }
 
 }

@@ -1,7 +1,6 @@
 package com.bcx.plat.core.base;
 
-import com.bcx.plat.core.database.action.annotations.TablePK;
-
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  * 基础 entity 类，建议所有实体类均继承此类
  * Create By HCL at 2017/7/31
  */
-public class BaseEntity<T extends BaseEntity> {
+public class BaseEntity<T extends BaseEntity> implements Serializable {
 
     private String status;//状态
     private String version;//版本
@@ -87,6 +86,9 @@ public class BaseEntity<T extends BaseEntity> {
      */
     @SuppressWarnings("unchecked")
     public T fromMap(Map<String, Object> map) {
+        if (map != null && map.get("etc") instanceof Map) {
+            map.put("etc", objToJson(map.get("etc")));
+        }
         return (T) jsonToObj(objToJson(map), getClass());
     }
 
@@ -192,5 +194,18 @@ public class BaseEntity<T extends BaseEntity> {
 
     public void setEtc(Map etc) {
         this.etc = etc;
+    }
+
+    /**
+     * 对json自动填充的特殊类型字段进行指定方法
+     *
+     * @param str 字符串
+     */
+    public void setEtc(String str) {
+        try {
+            setEtc(jsonToObj(str, Map.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

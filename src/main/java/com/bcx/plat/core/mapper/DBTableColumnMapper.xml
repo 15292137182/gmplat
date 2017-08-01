@@ -29,12 +29,11 @@
     <insert id="insert" parameterType="com.bcx.plat.core.entity.DBTableColumn">
         INSERT INTO public.t_db_table_column
         (
-            row_id
-            , relate_table_row_id
-            , column_ename
-            , column_cname
-            , desp
-            ,<include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+        row_id, relate_table_row_id, column_ename, column_cname, desp,
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns"/>
+        )VALUE (
+        #{rowId},#{relateTableRowId},#{columnEname},#{columnCname},#{desp},
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_#"/>
         )
     </insert>
 </mapper>

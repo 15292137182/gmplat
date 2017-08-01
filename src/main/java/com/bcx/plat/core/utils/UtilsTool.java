@@ -149,7 +149,7 @@ public class UtilsTool {
      * 获取 class 内带有某注解的字段名称
      *
      * @param clazz class
-     * @param anno  注解class
+     * @param anno  注解 class
      * @return 返回list
      */
     public static List<String> getAnnoFieldName(Class<?> clazz, Class<? extends Annotation> anno) {
@@ -163,5 +163,45 @@ public class UtilsTool {
             }
         }
         return fs;
+    }
+
+    /**
+     * 下划线转驼峰
+     *
+     * @param underline 下划线字符串
+     * @param bigCamel  是否大驼峰
+     * @return 返回字符串
+     */
+    public static String underlineToCamel(String underline, boolean bigCamel) {
+        StringBuilder sb = new StringBuilder(underline);
+        while (sb.indexOf("_") != -1) {
+            sb.replace(sb.indexOf("_"), sb.indexOf("_") + 2, (sb.charAt(sb.indexOf("_") + 1) + "").toUpperCase());
+        }
+        if (bigCamel) {
+            sb.replace(0, 1, (sb.charAt(0) + "").toUpperCase());
+        } else {
+            sb.replace(0, 1, (sb.charAt(0) + "").toLowerCase());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 驼峰转下划线方法
+     *
+     * @param camel 驼峰
+     * @return 返回
+     */
+    public static String camelToUnderline(String camel) {
+        StringBuilder sb = new StringBuilder(camel);
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < sb.length(); i++) {
+            if (sb.charAt(i) >= 'A' && sb.charAt(i) <= 'Z') {
+                // 将该字符替换为下划线规则
+                result.append(("_" + sb.charAt(i)).toLowerCase());
+            }else{
+                result.append(sb.charAt(i));
+            }
+        }
+        return result.toString();
     }
 }

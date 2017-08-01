@@ -5,6 +5,7 @@ import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
+import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -44,5 +47,26 @@ public class DBTableColumnController {
         value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
     }
+
+    /**
+     * 新建数据
+     *
+     * @param dbTableColumn javaBean
+     * @return 返回
+     */
+    @RequestMapping("/insert")
+    public MappingJacksonValue insert(@ModelAttribute DBTableColumn dbTableColumn, HttpServletRequest request) {
+        int status = dbTableColumnService.insert(dbTableColumn);
+        ServiceResult serviceResult;
+        if (status == 1) {
+            serviceResult = new ServiceResult(STATUS_SUCCESS, "数据新建成功");
+        } else {
+            serviceResult = new ServiceResult(STATUS_FAIL, "数据新建失败！");
+        }
+        MappingJacksonValue value = new MappingJacksonValue(serviceResult);
+        value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
+        return value;
+    }
+
 
 }

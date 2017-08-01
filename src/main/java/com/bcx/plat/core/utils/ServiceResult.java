@@ -40,6 +40,17 @@ public class ServiceResult<T extends BaseEntity> implements Serializable {
     }
 
     /**
+     * 接受状态和消息的构造函数
+     *
+     * @param state   消息
+     * @param message 消息
+     */
+    public ServiceResult(int state, String message) {
+        setState(state);
+        setMessage(message);
+    }
+
+    /**
      * 接受消息和对象的构造函数
      *
      * @param message 消息
