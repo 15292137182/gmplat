@@ -47,4 +47,14 @@
             </foreach>
         </trim>
     </select>
+
+    <insert id="insert" parameterType="com.bcx.plat.core.database.action.InsertAction">
+        insert into ${tableSource.tableSourceSqlFragment}
+                <foreach collection="columns" open="(" separator="," close=")" item="column">${column}</foreach>
+        VALUES
+        <foreach collection="rows" open="(" close=")" separator="," item="row">
+            <foreach collection="columns" separator="," item="column">#{row.get(column)}</foreach>
+        </foreach>
+
+    </insert>
 </mapper>
