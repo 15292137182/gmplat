@@ -4,27 +4,27 @@
 <mapper namespace="com.bcx.plat.core.mapper.MaintTableMapper">
 
     <sql id="template_column">
-        row_id,status,'version',create_user,create_name,create_date,modify_user,
-        modify_name,modify_date,delete_uer,delete_name,delete_date,delete_flag
+        status,'version',create_user,create_user_name,create_time,modify_user,
+        modify_user_name,modify_time,delete_user,delete_user_name,delete_time,delete_flag
     </sql>
     <sql id="template_column_p">
-        #{rowId},#{status},#{version},#{createUser},#{createName},#{createDate},#{modifyUser},#{modifyName},
-        #{modifyDate},#{deleteUser},#{deleteName},#{deleteDate},#{deleteFlag}
+       #{status},#{version},#{createUser},#{createUserName},#{createTime},#{modifyUser},#{modifyUserName},
+        #{modifyTime},#{deleteUser},#{deleteUserName},#{deleteTime},#{deleteFlag}
     </sql>
 
     <select id="selectMaint" resultType="com.bcx.plat.core.entity.MaintTableInfo" parameterType="map">
-        SELECT schema,table_ename,table_cname,explain ,<include refid="template_column"/> FROM bcx_maint_table
+        SELECT row_id,table_schema,table_ename,table_cname,desp,<include refid="template_column"/> FROM t_db_tables
         <where>
             <if test="strArr!=null and strArr.size()!=0">
                 <foreach collection="strArr" item="str" index="index" open="(" close=")" separator="or">
-                    schema like '%${str}%' or table_ename like '%${str}%' or table_cname like '%${str}%'
+                    table_schema like '%${str}%' or table_ename like '%${str}%' or table_cname like '%${str}%'
                 </foreach>
             </if>
         </where>
     </select>
 
     <select id="selectById" parameterType="int" resultType="com.bcx.plat.core.entity.MaintTableInfo">
-        SELECT schema,table_ename,table_cname,explain ,<include refid="template_column"/> FROM bcx_maint_table WHERE row_id=#{rowId}
+        SELECT table_schema,table_ename,table_cname,desp ,<include refid="template_column"/> FROM t_db_tables WHERE row_id=#{rowId}
     </select>
 
 </mapper>
