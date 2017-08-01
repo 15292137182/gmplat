@@ -28,8 +28,7 @@ public class MixedDbActionTest extends BaseTest {
         final FieldCondition idCondition = new FieldCondition("id", Operator.EQUAL, 999);
         final QueryAction queryAction=new QueryAction()
                 .selectAll()
-                .from(TableInfo.TEST)
-                .where(idCondition);
+                .from(TableInfo.TEST).where(idCondition);
         int sizeBefore=tempSuitMapper.select(queryAction).size();
         final Set<String> columns = Sets.newSet("id", "testFirst", "testSecond");
         Map<String,Object> row;
