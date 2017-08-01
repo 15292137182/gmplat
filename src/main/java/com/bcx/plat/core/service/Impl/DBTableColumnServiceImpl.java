@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+import static com.bcx.plat.core.base.BaseConstants.LOGIC_DELETE;
+
 /**
  * 数据库字段服务类
  * Create By HCL at 2017/8/1
@@ -41,5 +43,32 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
     public int insert(DBTableColumn bean) {
         bean.buildCreateInfo();
         return dbTableColumnMapper.insert(bean);
+    }
+
+    /**
+     * 更新 数据库字段信息
+     *
+     * @param bean 数据表bean
+     * @return 操作结果状态
+     */
+    @Override
+    public int update(DBTableColumn bean) {
+        return dbTableColumnMapper.update(bean);
+    }
+
+    /**
+     * 删除 数据库字段信息
+     *
+     * @param bean 数据表bean
+     * @return 操作结果状态
+     */
+    @Override
+    public int delete(DBTableColumn bean) {
+        if(LOGIC_DELETE){
+            bean.buildDeleteInfo();
+            return dbTableColumnMapper.logicDelete(bean);
+        }else{
+            return dbTableColumnMapper.delete(bean);
+        }
     }
 }
