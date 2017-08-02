@@ -25,7 +25,7 @@ public interface BusinessObjectProMapper extends BaseMapper<BusinessObjectPro>{
      * @param rowId
      * @return
      */
-    List<BusinessObject> select(String rowId);
+    List<BusinessObject> selectById(String rowId);
 
 
 }

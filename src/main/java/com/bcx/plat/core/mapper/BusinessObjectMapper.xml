@@ -6,9 +6,10 @@
 
     <select id="select" resultType="com.bcx.plat.core.entity.BusinessObject" parameterType="hashMap">
         SELECT
-            row_id,object_code,object_name,relate_table_row_id,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
-        ,ts.table_schema,ts.table_cname
+            tt.row_id,tt.object_code,tt.object_name,tt.relate_table_row_id,
+        tt."status",tt.version, tt.create_user, tt.create_user_name, tt.create_time,tt.modify_user,
+        tt.modify_user_name, tt.modify_time, tt.delete_user, tt.delete_user_name, tt.delete_time, tt.delete_flag
+        ,ts.table_schema,ts.table_cname,ts.row_id as proRowId
         FROM t_business_object tt LEFT JOIN t_db_tables ts ON tt.relate_table_row_id = ts.row_id
         <where>
             <if test="strArr!=null and strArr.size()!=0">
@@ -24,10 +25,10 @@
         INSERT INTO
                 t_business_object
             (row_id,object_code,object_name,relate_table_row_id,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
         VALUES
             (#{rowId},#{objectCode},#{objectName},#{relateTableRowId},
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
         )
     </insert>
 
@@ -35,12 +36,12 @@
         UPDATE
           t_business_object
             SET
-        object_code=#{objectCode},
-        object_name=#{objectName},
-        relate_table_row_id=#{relateTableRowId},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_update"/>
+        object_name = #{objectName},
+        modify_user = #{modifyUser},
+        modify_user_name  = #{modifyUserName},
+        modify_time= #{modifyTime}
         WHERE
-            row_id = #{rowId}
+        row_id  = #{rowId}
     </update>
 
     <delete id="delete" parameterType="string">
@@ -48,7 +49,7 @@
     </delete>
 
     <update id="updateExecuChange" parameterType="String">
-        UPDATE t_business_object SET status=#{status} WHERE row_id=#{rowId}
+        UPDATE t_business_object SET status = #{status} WHERE row_id=#{rowId}
     </update>
 
     <select id="selectById" parameterType="String" resultType="com.bcx.plat.core.entity.BusinessObject">

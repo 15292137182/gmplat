@@ -30,7 +30,7 @@ public class FrontFuncController {
     public MappingJacksonValue select(String str, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
         map.put("StrArr", str);
-        List<FrontFunc> select = frontFuncService.select(map);
+        ServiceResult<FrontFunc> select = frontFuncService.select(map);
         MappingJacksonValue mapjack = new MappingJacksonValue(new ServiceResult<FrontFunc>(select));
         mapjack.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return mapjack;

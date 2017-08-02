@@ -24,7 +24,7 @@ public class BusinessObjectProMapperTest extends BaseTest{
      */
     @Test
     public void selectTest(){
-        List<BusinessObject> select = businessObjectProMapper.select("");
+        List<BusinessObject> select = businessObjectProMapper.selectById("");
             logger.info("++++++++++++"+select);
         }
 

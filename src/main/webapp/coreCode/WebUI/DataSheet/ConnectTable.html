@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event_Add</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        #connectTable .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<el-row id="connectTable" style="padding:0 10px 10px 10px">
+    <el-col :span="24">
+        <template>
+            <el-table :data="myLeftData"  highlight-current-row @current-change="handleCurrentChange" :height="400"  border style="width: 100%;border-radius: 5px;margin-top:10px">
+                <el-table-column  prop="tableSchema" label="对象代码" width="">
+                </el-table-column>
+                <el-table-column  prop="tableCName" label="对象名称" width="">
+                </el-table-column>
+            </el-table>
+        </template>
+    </el-col>
+    <el-col style="margin-top:15px">
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click.native="conformEvent">确定</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-col>
+</el-row>
+</body>
+<script>
+    var em=new Vue({
+        el:'#connectTable',
+        data:{
+            myLeftData:[]
+        },
+        created(){
+            this.$http.jsonp(serverPath+"/maint/select",{
+                str:''
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                for(var i=0;i<res.data.content.data.length;i++){
+                    var obj = {};
+                    obj.data=res.data.content.data[i];
+                    this.myLeftData.push(obj.data);
+                }
+            });
+        },
+        methods:{
+            handleCurrentChange(val){
+                //选中行的数据
+                this.currentRow = val.tableSchema+"("+val.tableCName+")";
+                //选中行的ID
+                this.currentId = val.rowId;
+            },
+            conformEvent(){
+                //将数据渲染到外面的input里面
+                window.parent.em.tableInput=this.currentRow;
+                window.parent.em.dataId=this.currentId;
+                //执行关闭
+                parent.layer.close(window.parent.littledivIndex);
+            },
+            cancel(){
+                parent.layer.close(window.parent.littledivIndex)
+            }
+        }
+    })
+</script>
+</html>

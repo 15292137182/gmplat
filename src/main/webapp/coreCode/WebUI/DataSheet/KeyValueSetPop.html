@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>键值集合选择框</title>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <el-form :inline="true" :model="form">
+            <el-form-item label="代码" >
+                <el-input v-model="form.code"  placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="名称" >
+                <el-input v-model="form.name"  placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-button type="primary" icon="search">搜索</el-button>
+        </el-form>
+    </div>
+    <div>
+        <el-table :data="gridData" border style="width: 100%">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="s_code" label="代码" width="200"></el-table-column>
+            <el-table-column property="s_name" label="名称" width="200"></el-table-column>
+            <el-table-column property="s_key" label="键" width="200"></el-table-column>
+            <el-table-column property="s_value" label="值" width="200"></el-table-column>
+            <el-table-column property="s_desp" label="说明" width="200"></el-table-column>
+            <el-table-column property="s_version" label="版本" width="200"></el-table-column>
+        </el-table>
+    </div>
+    <div style="margin-top: 20px;text-align:center">
+        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small">确定</el-button>
+    </div>
+</div>
+</body>
+<script>
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            form:{
+                code:'',
+                name:''
+            },
+
+            gridData:[],
+            dialogTableVisible: true,
+            dialogFormVisible:false
+        }
+    })
+</script>
+</html>

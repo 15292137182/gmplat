@@ -19,6 +19,8 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
     private String objectCode;//对象代码
     private String objectName;//对象名称
     private String relateTableRowId;//关联表
+
+    private String proRowId;//业务对象属性表rowId
     private String tableSchema;//表schema
     private String tableCname;//关联数据中文名
     private String tables;//关联数据
@@ -32,6 +34,14 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
     public BusinessObject buildCreateInfo() {
         setRowId(lengthUUID(32));
         return super.buildCreateInfo();
+    }
+
+    public String getProRowId() {
+        return proRowId;
+    }
+
+    public void setProRowId(String proRowId) {
+        this.proRowId = proRowId;
     }
 
     public String getTables() {

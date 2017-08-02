@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
@@ -37,7 +36,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
     public ServiceResult<BusinessObjectPro> select(String rowId) {
         try {
             if (rowId != null) {
-                List<BusinessObject> select = businessObjectProMapper.select(rowId);
+                List<BusinessObject> select = businessObjectProMapper.selectById(rowId);
                 return new ServiceResult<>("查询数据成功",select);
             }
         } catch (Exception e) {
