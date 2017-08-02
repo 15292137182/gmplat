@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bcx.plat.core.mapper.DBTableColumnMapper">
 
-    <select id="select" resultType="com.bcx.plat.core.entity.DBTableColumn" parameterType="hashMap">
-        SELECT
-        row_id
-        ,relate_table_row_id
-        ,column_ename
-        ,column_cname
-        ,desp
-        ,
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
-        FROM public.t_db_table_column
-        <where>
-            (delete_flag IS NULL OR delete_flag!='1')
-            <if test="strArr != null and strArr.size() != 0">
-                AND
-                <foreach collection="strArr" close=")" index="index" item="item" open="(" separator="OR">
-                    (column_ename like '%${item}%' OR column_cname like '%${item}%' OR desp like '%${item}%')
-                </foreach>
-            </if>
-            <if test="rowId != null and rowId != ''">
-                AND row_id = #{rowId}
-            </if>
-        </where>
-        ORDER BY create_time DESC
-    </select>
+  <select id="select" resultType="com.bcx.plat.core.entity.DBTableColumn" parameterType="hashMap">
+    SELECT
+    row_id
+    ,relate_table_row_id
+    ,column_ename
+    ,column_cname
+    ,desp
+    ,
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+    FROM public.t_db_table_column
+    <where>
+      (delete_flag IS NULL OR delete_flag!='1')
+      <if test="strArr != null and strArr.size() != 0">
+        AND
+        <foreach collection="strArr" close=")" index="index" item="item" open="(" separator="OR">
+          (column_ename like '%${item}%' OR column_cname like '%${item}%' OR desp like '%${item}%')
+        </foreach>
+      </if>
+      <if test="rowId != null and rowId != ''">
+        AND row_id = #{rowId}
+      </if>
+    </where>
+    ORDER BY create_time DESC
+  </select>
 
-    <insert id="insert" parameterType="com.bcx.plat.core.entity.DBTableColumn">
-        INSERT INTO public.t_db_table_column
-        (
-        row_id, relate_table_row_id, column_ename, column_cname, desp,
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
-        )VALUES (
-        #{rowId},#{relateTableRowId},#{columnEname},#{columnCname},#{desp},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
-        )
-    </insert>
+  <insert id="insert" parameterType="com.bcx.plat.core.entity.DBTableColumn">
+    INSERT INTO public.t_db_table_column
+    (
+    row_id, relate_table_row_id, column_ename, column_cname, desp,
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+    )VALUES (
+    #{rowId},#{relateTableRowId},#{columnEname},#{columnCname},#{desp},
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
+    )
+  </insert>
 
-    <update id="update" parameterType="com.bcx.plat.core.entity.DBTableColumn">
-        UPDATE public.t_db_table_column
-        SET
-            relate_table_row_id = #{relateTableRowId},
-            column_ename        = #{columnEname},
-            column_cname        = #{columnCname},
-            desp                = #{desp},
-            modify_user         = #{modifyUser},
-            modify_user_name    = #{modifyUserName},
-            modify_time         = #{modifyTime}
-        WHERE
-            row_id = #{rowId}
-    </update>
+  <update id="update" parameterType="com.bcx.plat.core.entity.DBTableColumn">
+    UPDATE public.t_db_table_column
+    SET
+    relate_table_row_id = #{relateTableRowId},
+    column_ename = #{columnEname},
+    column_cname = #{columnCname},
+    desp = #{desp},
+    modify_user = #{modifyUser},
+    modify_user_name = #{modifyUserName},
+    modify_time = #{modifyTime}
+    WHERE
+    row_id = #{rowId}
+  </update>
 
-    <delete id="delete" parameterType="com.bcx.plat.core.entity.DBTableColumn">
-        DELETE FROM public.t_db_table_column
-        WHERE row_id = #{rowId}
-    </delete>
+  <delete id="delete" parameterType="com.bcx.plat.core.entity.DBTableColumn">
+    DELETE FROM public.t_db_table_column
+    WHERE row_id = #{rowId}
+  </delete>
 
-    <delete id="logicDelete" parameterType="com.bcx.plat.core.entity.DBTableColumn">
-        UPDATE public.t_db_table_column
-        SET
-            delete_user      = #{deleteUser},
-            delete_user_name = #{deleteUserName},
-            delete_time      = #{deleteTime},
-            delete_flag      = #{deleteFlag}
-        WHERE
-            row_id = #{rowId}
-    </delete>
+  <delete id="logicDelete" parameterType="com.bcx.plat.core.entity.DBTableColumn">
+    UPDATE public.t_db_table_column
+    SET
+    delete_user = #{deleteUser},
+    delete_user_name = #{deleteUserName},
+    delete_time = #{deleteTime},
+    delete_flag = #{deleteFlag}
+    WHERE
+    row_id = #{rowId}
+  </delete>
 </mapper>

@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bcx.plat.core.base.BaseMapper">
 
-    <sql id="common_columns_select">
-        "status", version, create_user, create_user_name, create_time, modify_user,
-        modify_user_name, modify_time, delete_user, delete_user_name, delete_time, delete_flag
-    </sql>
+  <sql id="common_columns_select">
+    "status", version, create_user, create_user_name, create_time, modify_user,
+    modify_user_name, modify_time, delete_user, delete_user_name, delete_time, delete_flag
+  </sql>
 
-    <sql id="common_columns_insert">
-        #{status}, #{version}, #{createUser}, #{createUserName}, #{createTime}, #{modifyUser},
-        #{modifyUserName},#{modifyTime}, #{deleteUser}, #{deleteUserName}, #{deleteTime}, #{deleteFlag}
-    </sql>
+  <sql id="common_columns_insert">
+    #{status}, #{version}, #{createUser}, #{createUserName}, #{createTime}, #{modifyUser},
+    #{modifyUserName},#{modifyTime}, #{deleteUser}, #{deleteUserName}, #{deleteTime}, #{deleteFlag}
+  </sql>
 
-    <sql id="common_columns_update">
-        <if test="status!=null">
-            "status"=#{status},
-        </if>
-        <if test="version!=null">
-            "version"=#{version},
-        </if>
-        <if test="createUser!=null">
-            create_user=#{createUser},
-        </if>
-        <if test="createUserName!=null">
-            create_user_name=#{createUserName},
-        </if>
-        <if test="createTime!=null">
-            create_time=#{createTime},
-        </if>
-        <if test="modifyUser!=null">
-            modify_user=#{modifyUser},
-        </if>
-        <if test="modifyUserName!=null">
-            modify_user_name=#{modifyUserName},
-        </if>
-        <if test="modifyTime!=null">
-            modify_time= #{modifyTime},
-        </if>
-        <if test="deleteUser!=null">
-            delete_user=#{deleteUser},
-        </if>
-        <if test="deleteUserName!=null">
-            delete_user_name=#{deleteUserName},
-        </if>
-        <if test="deleteTime!=null">
-            delete_time=#{deleteTime},
-        </if>
-        <if test="deleteFlag!=null">
-            delete_flag=#{deleteFlag}
-        </if>
-    </sql>
+  <sql id="common_columns_update">
+    <if test="status!=null">
+      "status"=#{status},
+    </if>
+    <if test="version!=null">
+      "version"=#{version},
+    </if>
+    <if test="createUser!=null">
+      create_user=#{createUser},
+    </if>
+    <if test="createUserName!=null">
+      create_user_name=#{createUserName},
+    </if>
+    <if test="createTime!=null">
+      create_time=#{createTime},
+    </if>
+    <if test="modifyUser!=null">
+      modify_user=#{modifyUser},
+    </if>
+    <if test="modifyUserName!=null">
+      modify_user_name=#{modifyUserName},
+    </if>
+    <if test="modifyTime!=null">
+      modify_time= #{modifyTime},
+    </if>
+    <if test="deleteUser!=null">
+      delete_user=#{deleteUser},
+    </if>
+    <if test="deleteUserName!=null">
+      delete_user_name=#{deleteUserName},
+    </if>
+    <if test="deleteTime!=null">
+      delete_time=#{deleteTime},
+    </if>
+    <if test="deleteFlag!=null">
+      delete_flag=#{deleteFlag}
+    </if>
+  </sql>
 
 </mapper>
