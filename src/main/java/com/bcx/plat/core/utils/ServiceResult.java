@@ -127,16 +127,6 @@ public class ServiceResult<T extends BaseEntity> implements Serializable {
     return messageSource;
   }
 
-  /**
-   * 重写 toString 方法
-   *
-   * @return 返回 json 字符串
-   */
-  @Override
-  public String toString() {
-    return objToJson(this);
-  }
-
   public int getState() {
     return state;
   }

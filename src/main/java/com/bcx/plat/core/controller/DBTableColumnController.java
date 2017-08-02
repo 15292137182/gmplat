@@ -4,21 +4,20 @@ package com.bcx.plat.core.controller;
  * Create By HCL at 2017/8/1
  */
 
+import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.service.DBTableColumnService;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 @RestController
 @RequestMapping("/plat/dbTableColumn")
@@ -37,7 +36,7 @@ public class DBTableColumnController extends BaseController {
    */
   @RequestMapping("/select")
   public MappingJacksonValue select(String str, String rowId, HttpServletRequest request,
-                                    Locale locale) {
+      Locale locale) {
     Map<String, Object> cond = new HashMap<>();
     cond.put("strArr", collectToSet(str));
     cond.put("rowId", rowId);
@@ -56,7 +55,7 @@ public class DBTableColumnController extends BaseController {
    */
   @RequestMapping("/insert")
   public MappingJacksonValue insert(DBTableColumn dbTableColumn, HttpServletRequest request,
-                                    Locale locale) {
+      Locale locale) {
     MappingJacksonValue value = new MappingJacksonValue(
         dbTableColumnService.insert(dbTableColumn).convertMsg(locale));
     value.setJsonpFunction(
