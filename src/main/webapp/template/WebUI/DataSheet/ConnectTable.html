@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Event_Add</title>
+    <script src="../Public/publicjs.js"></script>
     <style>
         #connectTable .el-row {
             margin-top: 20px;
@@ -13,14 +14,10 @@
 <el-row id="connectTable" style="padding:0 10px 10px 10px">
     <el-col :span="24">
         <template>
-            <el-table :data="myLeftData" :height="400"  border style="width: 100%;border-radius: 5px;margin-top:10px">
-                <el-table-column  prop="desp" label="对象代码" width="">
+            <el-table :data="myLeftData"  highlight-current-row @current-change="handleCurrentChange" :height="400"  border style="width: 100%;border-radius: 5px;margin-top:10px">
+                <el-table-column  prop="tableSchema" label="对象代码" width="">
                 </el-table-column>
                 <el-table-column  prop="tableCName" label="对象名称" width="">
-                </el-table-column>
-                <el-table-column  prop="tableEName" label="关联表" width="">
-                </el-table-column>
-                <el-table-column  prop="tableSchema" label="版本" width="">
                 </el-table-column>
             </el-table>
         </template>
@@ -47,21 +44,29 @@
             },{
                 jsonp:'callback'
             }).then(function(res){
-                console.log(res.data.content.data);
                 for(var i=0;i<res.data.content.data.length;i++){
                     var obj = {};
                     obj.data=res.data.content.data[i];
-                    console.log(obj)
                     this.myLeftData.push(obj.data);
                 }
             });
         },
         methods:{
+            handleCurrentChange(val){
+                //选中行的数据
+                this.currentRow = val.tableSchema+"("+val.tableCName+")";
+                //选中行的ID
+                this.currentId = val.rowId;
+            },
             conformEvent(){
-
+                //将数据渲染到外面的input里面
+                window.parent.em.tableInput=this.currentRow;
+                window.parent.em.dataId=this.currentId;
+                //执行关闭
+                parent.layer.close(window.parent.littledivIndex);
             },
             cancel(){
-                ibcpLayer.Close(littledivIndex);
+                parent.layer.close(window.parent.littledivIndex)
             }
         }
     })

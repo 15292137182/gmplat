@@ -38,8 +38,8 @@
     <el-row  type="flex" justify="end" style="padding:5px 0 10px 0">
         <el-col :span="24">
             <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增业务对象</el-button>
-            <el-button type="info" icon="edit" size="small">编辑业务对象</el-button>
-            <el-button type="danger" icon="delete" size="small">删除业务对象</el-button>
+            <el-button type="info" icon="edit" size="small" @click.native="editEvent">编辑业务对象</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">删除业务对象</el-button>
             <el-button type="success" icon="plus" size="small">新增对象属性</el-button>
             <el-button type="info" icon="delete" size="small">编辑对象属性</el-button>
             <el-button type="info" icon="plus" size="small">生效</el-button>
@@ -63,10 +63,10 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-row id="leftTable" style="padding:0 10px 10px 10px">
+            <el-row style="padding:0 10px 10px 10px">
                 <el-col :span="24">
                     <template>
-                        <el-table :data="myLeftData" :height="leftHeight"  border style="width: 100%;border-radius: 5px">
+                        <el-table :data="myLeftData" highlight-current-row @current-change="handleCurrentChange" :height="leftHeight"  border style="width: 100%;border-radius: 5px">
                             <el-table-column  prop="objectCode" label="对象代码" width="">
                             </el-table-column>
                             <el-table-column  prop="objectName" label="对象名称" width="">
@@ -88,15 +88,24 @@
                         <div class="bg-color"><span style="margin-left:20px">对象的属性</span></div>
                     </el-col>
                 </el-row>
-                <el-row id="rightTable" style="padding:15px 10px 10px 10px">
+
+                <el-row  style="padding:15px 10px 10px 10px">
                     <el-col :span="24">
                         <template>
                             <el-table :data="myRightData" :height="rightHeight" border style="width: 100%;border-radius: 5px">
-                                <el-table-column  prop="" label="表Schema" width="">
+                                <el-table-column  prop="propertyCode" label="属性代码" width="">
                                 </el-table-column>
-                                <el-table-column  prop="" label="表中英文名称" width="">
+                                <el-table-column  prop="propertyName" label="属性名称" width="">
                                 </el-table-column>
-                                <el-table-column  prop="" label="说明" width="">
+                                <el-table-column  prop="wetherExpandPro" label="是否为扩展属性" width="132px">
+                                </el-table-column>
+                                <el-table-column  prop="relateTableColumn" label="关联表字段" width="">
+                                </el-table-column>
+                                <el-table-column  prop="valueType" label="值类型" width="">
+                                </el-table-column>
+                                <el-table-column  prop="valueResourceType" label="值来源类型" width="">
+                                </el-table-column>
+                                <el-table-column  prop="valueResourceContent" label="值来源内容" width="">
                                 </el-table-column>
                             </el-table>
                         </template>
@@ -106,51 +115,6 @@
         </el-col>
     </el-row>
 </div>
+<script src="MetadataManage.js"></script>
 </body>
-<script>
-    var vm=new Vue({
-        el:"#app",
-        data:{
-            input:'',
-            leftHeight:'',
-            rightHeight:'',
-            myLeftData:[],
-            myRightData:[]
-        },
-        methods:{
-            searchTable(){
-                this.$http.jsonp(serverPath+"/busin/select",{
-                    str:this.input
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
-                    console.log(res.data.content.data);
-                    for(var i=0;i<res.data.content.data.length;i++){
-                        var obj = {};
-                        obj.data=res.data.content.data[i];
-                        console.log(obj)
-                        this.myLeftData.push(obj.data);
-                    }
-                },function(){
-
-                });
-            },
-            addEvent(){
-                var htmlUrl = 'MetadataAdd.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px', function(){
-
-                });
-            },
-
-        }
-    })
-    $(document).ready(function(){
-        vm.leftHeight=$(window).height()-165;
-        vm.rightHeight=$(window).height()-120;
-    });
-    $(window).resize(function(){
-        vm.leftHeight=$(window).height()-165;
-        vm.rightHeight=$(window).height()-120;
-    })
-</script>
 </html>
