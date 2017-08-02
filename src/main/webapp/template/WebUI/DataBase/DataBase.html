@@ -29,78 +29,78 @@
     </style>
 </head>
 <body>
-    <div id="app">
-    <!--所有事件按钮-->
-    <el-row type="flex" class="row-bg" justify="end">
-        <el-col :span="6">
-            <el-col :xs="8" :sm="8" :md="8" style="text-align: right">
-                <el-button type="success" icon="plus">新增</el-button>
+    <el-col :span="24" id="myButton">
+        <!--所有事件按钮-->
+        <el-row type="flex" class="row-bg" justify="end">
+            <el-col :span="24" style="text-align: right">
+                    <el-button type="success" icon="plus">表信息</el-button>
+                    <el-button type="info" icon="edit">表信息</el-button>
+                    <el-button type="danger" icon="delete">表信息</el-button>
             </el-col>
-            <el-col :xs="8" :sm="8" :md="8" style="text-align: right">
-                <el-button type="info" icon="edit">编辑</el-button>
-            </el-col>
-            <el-col :xs="8" :sm="8" :md="8" style="text-align: right">
-                <el-button type="danger" icon="delete">删除</el-button>
-            </el-col>
-        </el-col>
-    </el-row>
-    <!--table    -->
-    <el-row id="twoTable" style="margin-top: 5px">
-        <el-col :span="12" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
-            <el-col :span="24">
-                <div class="headerDiv">
-                    <el-row>
-                        <el-col :span="24">
-                            <el-col :xs="8" :sm="8" :md="8">
-                                <h2>数据库表信息</h2>
+        </el-row>
+    </el-col>
+    <el-col :span="12" id="app">
+        <!--table    -->
+        <el-row style="margin-top: 5px">
+            <el-col :span="24" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
+                <el-col :span="24">
+                    <div class="headerDiv">
+                        <el-row>
+                            <el-col :span="24">
+                                <el-col :xs="8" :sm="8" :md="8">
+                                    <h2>数据库表信息</h2>
+                                </el-col>
+                                <el-col :xs="12" :sm="12" :md="12" :offset="4">
+                                    <div>
+                                        <el-input placeholder="请输入内容" v-model="input">
+                                            <el-button slot="append" icon="search"  @click.native="get"></el-button>
+                                        </el-input>
+                                    </div>
+                                </el-col>
                             </el-col>
-                            <el-col :xs="12" :sm="12" :md="12" :offset="4">
-                                <div>
-                                    <el-input placeholder="请输入内容" v-model="input">
-                                        <el-button slot="append" icon="search"  @click.native="get"></el-button>
-                                    </el-input>
-                                </div>
+                        </el-row>
+                    </div>
+                    <template>
+                        <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
+                            <el-table-column  prop="tableSchema" label="表Schema" width="110">
+                            </el-table-column>
+                            <el-table-column  prop="tableCName" label="表中文名称" width="250">
+                            </el-table-column>
+                            <el-table-column  prop="tableEName" label="表英文名称" width="">
+                            </el-table-column>
+                            <el-table-column  prop="desp" label="说明" width="">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-col>
+            </el-col>
+        </el-row>
+    </el-col>
+    <el-col :span="11" :offset="1" id="right">
+        <el-row style="margin-top: 5px">
+            <el-col :span="24"style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
+                <el-col :span="24">
+                    <div class="headerDiv">
+                        <el-row>
+                            <el-col :span="24">
+                                <h2>表字段信息</h2>
                             </el-col>
-                        </el-col>
-                    </el-row>
-                </div>
-                <template>
-                    <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
-                        <el-table-column  prop="tableSchema" label="表Schema" width="110">
-                        </el-table-column>
-                        <el-table-column  prop="tableCName" label="表中文名称" width="250">
-                        </el-table-column>
-                        <el-table-column  prop="tableEName" label="表英文名称" width="">
-                        </el-table-column>
-                        <el-table-column  prop="desp" label="说明" width="">
-                        </el-table-column>
-                    </el-table>
-                </template>
+                        </el-row>
+                    </div>
+                    <template>
+                        <el-table :data="rightData" border style="width: 100%;" :height="rightHeight">
+                            <el-table-column  prop="tableCName" label="字段中文名称" width="">
+                            </el-table-column>
+                            <el-table-column  prop="tableEName" label="字段英文名称" width="">
+                            </el-table-column>
+                            <el-table-column  prop="desp" label="说明" width="">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-col>
             </el-col>
-        </el-col>
-        <el-col :span="11" :offset="1" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
-            <el-col :span="24">
-                <div class="headerDiv">
-                    <el-row>
-                        <el-col :span="24">
-                            <h2>表字段信息</h2>
-                        </el-col>
-                    </el-row>
-                </div>
-                <template>
-                    <el-table :data="rightData" border style="width: 100%;" :height="rightHeight">
-                        <el-table-column  prop="tableCName" label="字段中文名称" width="">
-                        </el-table-column>
-                        <el-table-column  prop="tableEName" label="字段英文名称" width="">
-                        </el-table-column>
-                        <el-table-column  prop="desp" label="说明" width="">
-                        </el-table-column>
-                    </el-table>
-                </template>
-            </el-col>
-        </el-col>
-    </el-row>
-</div>
+        </el-row>
+    </el-col>
 </body>
 <script src="DataBase.js"></script>
 </html>
