@@ -2,7 +2,7 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.entity.DBTableColumn;
 
-import java.util.List;
+import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Map;
 
 /**
@@ -16,7 +16,7 @@ public interface DBTableColumnService {
      * @param map 查询条件
      * @return 返回类型
      */
-    List<DBTableColumn> select(Map<String, Object> map);
+    ServiceResult<DBTableColumn> select(Map<String, Object> map);
 
     /**
      * 查询数据库表字段信息
@@ -24,7 +24,7 @@ public interface DBTableColumnService {
      * @param bean 数据表bean
      * @return 返回是否成功
      */
-    int insert(DBTableColumn bean);
+    ServiceResult<DBTableColumn> insert(DBTableColumn bean);
 
     /**
      * 更新数据库字段信息
@@ -32,7 +32,7 @@ public interface DBTableColumnService {
      * @param bean 数据表bean
      * @return 返回是否成功
      */
-    int update(DBTableColumn bean);
+    ServiceResult<DBTableColumn> update(DBTableColumn bean);
 
     /**
      * 删除数据库字段信息
@@ -40,5 +40,5 @@ public interface DBTableColumnService {
      * @param bean 数据表bean
      * @return 返回是否成功
      */
-    int delete(DBTableColumn bean);
+    ServiceResult<DBTableColumn> delete(DBTableColumn bean);
 }

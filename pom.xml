@@ -1,153 +1,154 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.sp.plat</groupId>
-    <artifactId>GMPlat</artifactId>
-    <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>GMPlat Maven Webapp</name>
-    <url>http://maven.apache.org</url>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.sp.plat</groupId>
+  <artifactId>GMPlat</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>GMPlat Maven Webapp</name>
+  <url>http://maven.apache.org</url>
 
-    <properties>
-        <junit-version>4.12</junit-version><!-- 单元测试依赖 -->
-        <mockito-version>1.10.19</mockito-version>
-        <json-path-version>2.4.0</json-path-version>
-        <postgres-jdbc-version>42.1.3</postgres-jdbc-version><!-- postgresql驱动包 -->
-        <spring-version>4.3.10.RELEASE</spring-version>
-        <mybatis-version>3.4.4</mybatis-version>
-        <mybatis-spring-version>1.3.1</mybatis-spring-version>
-        <druid-version>1.1.2</druid-version>
-        <logback-version>1.2.3</logback-version>
-        <logback-extensions-version>0.1.4</logback-extensions-version>
-        <jcl-over-slf4j-version>1.7.25</jcl-over-slf4j-version>
-        <f-jackson-version>2.8.8.1</f-jackson-version>
-        <pagehelper-version>4.2.1</pagehelper-version>
-    </properties>
+  <properties>
+    <junit-version>4.12</junit-version><!-- 单元测试依赖 -->
+    <mockito-version>1.10.19</mockito-version>
+    <json-path-version>2.4.0</json-path-version>
+    <postgres-jdbc-version>42.1.3</postgres-jdbc-version><!-- postgresql驱动包 -->
+    <spring-version>4.3.10.RELEASE</spring-version>
+    <mybatis-version>3.4.4</mybatis-version>
+    <mybatis-spring-version>1.3.1</mybatis-spring-version>
+    <druid-version>1.1.2</druid-version>
+    <logback-version>1.2.3</logback-version>
+    <logback-extensions-version>0.1.4</logback-extensions-version>
+    <jcl-over-slf4j-version>1.7.25</jcl-over-slf4j-version>
+    <f-jackson-version>2.8.8.1</f-jackson-version>
+    <pagehelper-version>4.2.1</pagehelper-version>
+  </properties>
 
-    <dependencies>
-        <!-- 单元测试依赖 -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring-version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito-version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>${json-path-version}</version>
-        </dependency>
-        <!-- spring 全家桶 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${f-jackson-version}</version>
-        </dependency>
+  <dependencies>
+    <!-- 单元测试依赖 -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>${mockito-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <version>${json-path-version}</version>
+    </dependency>
+    <!-- spring 全家桶 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${f-jackson-version}</version>
+    </dependency>
 
-        <!-- 数据库部分 -->
-        <!-- mybatis 集成 -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>${mybatis-spring-version}</version>
-        </dependency>
-        <!-- postgresql驱动包 -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgres-jdbc-version}</version>
-        </dependency>
-        <!-- 阿里德鲁伊连接池 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>${pagehelper-version}</version>
-        </dependency>
-        <!-- 日志依赖 START -->
-        <!--logback-classic包含了logback本身所需的slf4j-api.jar、logback-core.jar及logback-classsic.jar-->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback-version}</version>
-        </dependency>
-        <!--logback-ext-spring是由官方提供的对Spring的支持，它的作用就相当于log4j中的Log4jConfigListener-->
-        <dependency>
-            <groupId>org.logback-extensions</groupId>
-            <artifactId>logback-ext-spring</artifactId>
-            <version>${logback-extensions-version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>logback-classic</artifactId>
-                    <groupId>ch.qos.logback</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--jcl-over-slf4j是用来把Spring源代码中大量使用到的commons-logging替换成slf4j
-        只有在添加了这个依赖之后才能看到Spring框架本身打印的日志，否则只能看到开发者自己打印的日志-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${jcl-over-slf4j-version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- 日志依赖 STOP -->
-    </dependencies>
+    <!-- 数据库部分 -->
+    <!-- mybatis 集成 -->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>${mybatis-spring-version}</version>
+    </dependency>
+    <!-- postgresql驱动包 -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgres-jdbc-version}</version>
+    </dependency>
+    <!-- 阿里德鲁伊连接池 -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>${druid-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>${pagehelper-version}</version>
+    </dependency>
+    <!-- 日志依赖 START -->
+    <!--logback-classic包含了logback本身所需的slf4j-api.jar、logback-core.jar及logback-classsic.jar-->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback-version}</version>
+    </dependency>
+    <!--logback-ext-spring是由官方提供的对Spring的支持，它的作用就相当于log4j中的Log4jConfigListener-->
+    <dependency>
+      <groupId>org.logback-extensions</groupId>
+      <artifactId>logback-ext-spring</artifactId>
+      <version>${logback-extensions-version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>logback-classic</artifactId>
+          <groupId>ch.qos.logback</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!--jcl-over-slf4j是用来把Spring源代码中大量使用到的commons-logging替换成slf4j
+    只有在添加了这个依赖之后才能看到Spring框架本身打印的日志，否则只能看到开发者自己打印的日志-->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${jcl-over-slf4j-version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- 日志依赖 STOP -->
+  </dependencies>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-                <!-- 是否替换资源中的属性 -->
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-        <finalName>GMPlat</finalName>
-    </build>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+        <!-- 是否替换资源中的属性 -->
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+    <finalName>GMPlat</finalName>
+  </build>
 </project>

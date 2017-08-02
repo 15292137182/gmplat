@@ -136,7 +136,7 @@ public class UtilsTool {
      */
     public static Set<String> collectToSet(String str) {
         Set<String> result = new HashSet<>();
-        if (null != str && !("".equals(str.trim()))) {
+        if (isValid(str)) {
             String[] ss = str.split("[^a-zA-z0-9\\u4E00-\\u9FA5]+");
             result.addAll(Arrays.asList(ss));
         }

@@ -43,7 +43,6 @@ public class DBTableColumnControllerTest extends BaseTest {
     public void before() {
         MockitoAnnotations.initMocks(this);
         Map<String, Object> map = new HashMap<>();
-        when(dbTableColumnService.select(map)).thenReturn(dbTableColumnMapper.select(map));
         mockMvc = MockMvcBuilders.standaloneSetup(dbTableColumnController).build();
     }
 
