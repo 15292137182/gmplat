@@ -29,7 +29,7 @@
         )
     </insert>
 
-    <update id="ipdate" parameterType="com.bcx.plat.core.entity.BusinessObject">
+    <update id="update" parameterType="com.bcx.plat.core.entity.BusinessObject">
         UPDATE
           t_business_object
             SET
