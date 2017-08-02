@@ -18,7 +18,7 @@
         <!-- 设置本地缓存范围 session:就会有数据的共享  statement:语句范围 (这样就不会有数据的共享 ) default:session -->
         <setting name="localCacheScope" value="SESSION"/>
         <!-- 打印查询语句-->
-        <setting name="logImpl" value="SLF4J" />
+        <setting name="logImpl" value="SLF4J"/>
     </settings>
 
     <!-- 扫描包下的类注解@Alias -->
