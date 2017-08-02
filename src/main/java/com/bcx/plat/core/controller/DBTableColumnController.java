@@ -1,8 +1,11 @@
 package com.bcx.plat.core.controller;
 
+<<<<<<< f527fe4ae6c4051abecf375f2312e3ea8964fe72
 import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
+=======
+>>>>>>> 1cf730ea6bd4c7300b31759ea1b7498723282afa
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.service.DBTableColumnService;
@@ -15,15 +18,33 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< f527fe4ae6c4051abecf375f2312e3ea8964fe72
+=======
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
+import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
+>>>>>>> 1cf730ea6bd4c7300b31759ea1b7498723282afa
 /**
  * Create By HCL at 2017/8/1
  */
 @RestController
 @RequestMapping("/plat/dbTableColumn")
+<<<<<<< f527fe4ae6c4051abecf375f2312e3ea8964fe72
 public class DBTableColumnController extends BaseController {
 
   @Autowired
   private DBTableColumnService dbTableColumnService;
+=======
+public class DBTableColumnController extends BaseController{
+>>>>>>> 1cf730ea6bd4c7300b31759ea1b7498723282afa
 
   /**
    * 数据库字段信息查询接口

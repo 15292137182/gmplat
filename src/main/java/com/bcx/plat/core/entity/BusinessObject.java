@@ -1,19 +1,55 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.action.annotations.Table;
+import com.bcx.plat.core.database.info.TableInfo;
 
 import java.io.Serializable;
+
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 业务对象实体类
  * Created by Went on 2017/8/1.
  */
+@Table(TableInfo.T_BUSINESS_OBJECT)
 public class BusinessObject extends BaseEntity<BusinessObject> implements Serializable{
 
     private String rowId;//唯一标识
     private String objectCode;//对象代码
     private String objectName;//对象名称
     private String relateTableRowId;//关联表
+    private String tableSchema;//表schema
+    private String tableCname;//关联数据中文名
+    private String tables;//关联数据
+
+    /**
+     * 构建 - 创建信息
+     *
+     * @return 返回自身
+     */
+    @Override
+    public BusinessObject buildCreateInfo() {
+        setRowId(lengthUUID(32));
+        return super.buildCreateInfo();
+    }
+
+
+    public String getTableSchema() {
+        return tableSchema;
+    }
+
+    public void setTableSchema(String tableSchema) {
+        this.tableSchema = tableSchema;
+    }
+
+    public String getTableCname() {
+        return tableCname;
+    }
+
+    public void setTableCname(String tableCname) {
+        this.tableCname = tableCname;
+    }
 
     public String getRowId() {
         return rowId;

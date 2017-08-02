@@ -6,10 +6,15 @@
 
     <select id="selectById" resultType="com.bcx.plat.core.entity.BusinessObjectPro" parameterType="String">
         SELECT
-            row_id,property_code,property_name,relate_table_column,value_type,
-            value_resource_type,value_resource_content,wether_expand_pro
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
-        FROM t_business_object_pro
+              tp.row_id,tp.property_code,tp.property_name,tp.relate_table_column,tp.value_type,
+              tp.value_resource_type,tp.value_resource_content,tp.wether_expand_pro
+        FROM t_business_object_pro AS tp
+        LEFT JOIN t_business_object as tt
+        ON tt.row_id=tp.relate_table_column
+        WHERE tt.row_id=#{rowId}
+        <where>
+
+        </where>
     </select>
 
     <insert id="insert" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">

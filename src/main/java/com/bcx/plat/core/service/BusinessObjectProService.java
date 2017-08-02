@@ -1,6 +1,7 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.utils.ServiceResult;
 
 import java.util.List;
 import java.util.Map;
@@ -13,17 +14,17 @@ public interface BusinessObjectProService {
     /**
      * 查询业务对象属性
      * 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
-     * @param map
+     * @param rowId
      * @return
      */
-    List<BusinessObjectPro> select(Map map);
+    ServiceResult<BusinessObjectPro> select(String rowId);
 
     /**
      * 新增业务对象录入框，包括：对象代码，对象名称，关联表(单选)，版本(系统生成)
      * @param businessObjectPro
      * @return
      */
-    String insert(BusinessObjectPro businessObjectPro);
+    ServiceResult<BusinessObjectPro> insert(BusinessObjectPro businessObjectPro);
 
 
     /**
@@ -31,5 +32,5 @@ public interface BusinessObjectProService {
      * @param rowId
      * @return
      */
-    int delete(String rowId);
+    ServiceResult<BusinessObjectPro> delete(String rowId);
 }
