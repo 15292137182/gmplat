@@ -42,13 +42,13 @@ public class BusinessObjectControllerTest extends BaseTest{
     @Mock
     private BusinessObjectService businessObjectService;
 
-    @Before
-    public void before() {
-        MockitoAnnotations.initMocks(this);
-        Map<String, Object> map = new HashMap<>();
-        when(businessObjectService.select(map)).thenReturn(businessObjectMapper.select(map));
-        mockMvc = MockMvcBuilders.standaloneSetup(businessObjectController).build();
-    }
+//    @Before
+//    public void before() {
+//        MockitoAnnotations.initMocks(this);
+//        Map<String, Object> map = new HashMap<>();
+//        when(businessObjectService.select(map)).thenReturn(businessObjectMapper.select(map));
+//        mockMvc = MockMvcBuilders.standaloneSetup(businessObjectController).build();
+//    }
     @Test
     public void test() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/businObj/select"))

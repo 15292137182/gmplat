@@ -31,17 +31,23 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
      * @return
      */
     @Override
-    public List<BusinessObject> select(Map map) {
-
+    public  ServiceResult<BusinessObject> select(Map map) {
         try {
             if (map.size() != 0) {
                 List<BusinessObject> select = businessObjectMapper.select(map);
-                return select;
+
+                for(int i=0;i<select.size();i++){
+                    String tableCname = select.get(i).getTableCname();
+                    String tableSchema = select.get(i).getTableSchema();
+                    String string = tableSchema+"("+tableCname+")";
+                    select.get(i).setTables(string);
+                    return new ServiceResult<>("消息查询成功",select);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new ServiceResult<>("消息查询失败","");
     }
 
     /**
@@ -51,23 +57,21 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
      * @return
      */
     @Override
-    public String insert(BusinessObject businessObject) {
+    public ServiceResult<BusinessObject> insert(BusinessObject businessObject) {
         try{
-            //唯一标示用uuid生成
-            String rowId = UUID.randomUUID().toString();
-            businessObject.setRowId(rowId);
             //业务对象版本号默认从1.0开始
             businessObject.setVersion("1.0");
             businessObject.buildCreateInfo();
             //新增数默认状态为不可用
             businessObject.setStatus(UNAVAILABLE);
+            String rowId = businessObject.getRowId();
             businessObjectMapper.insert(businessObject);
             //将用户新增的rowId返回
-            return rowId;
+            return new ServiceResult<>("新增数据成功",rowId);
         }catch (Exception e){
             e.printStackTrace();
+            return new ServiceResult<>("新增数据失败","");
         }
-        return null;
     }
 
     /**
@@ -77,17 +81,16 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
      * @return
      */
     @Override
-    public String update(BusinessObject businessObject) {
+    public ServiceResult<BusinessObject> update(BusinessObject businessObject) {
         try{
             businessObject.buildModifyInfo();
             businessObjectMapper.update(businessObject);
             String rowId = businessObject.getRowId();
-            return rowId;
+            return new ServiceResult<>("编辑数据成功",rowId);
         }catch (Exception e){
             e.printStackTrace();
+            return new ServiceResult<>("编辑数据失败","");
         }
-
-        return null;
     }
 
     /**
@@ -97,14 +100,14 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
      * @return
      */
     @Override
-    public int delete(String rowId) {
+    public ServiceResult<BusinessObject> delete(String rowId) {
         try{
             businessObjectMapper.delete(rowId);
-            return STATUS_SUCCESS;
+            return new ServiceResult<>(STATUS_SUCCESS,"删除数据成功","");
         }catch (Exception e){
             e.printStackTrace();
         }
-        return STATUS_FAIL;
+        return new ServiceResult<>(STATUS_FAIL,"删除数据失败","");
     }
 
     /**

@@ -24,13 +24,9 @@ public class BusinessObjectProMapperTest extends BaseTest{
      */
     @Test
     public void selectTest(){
-        List<BusinessObjectPro> select = businessObjectProMapper.select(null);
-        for (int i=0;i<select.size();i++){
-            BusinessObjectPro businessObjectPro = select.get(i);
-            String rowId = businessObjectPro.getRowId();
-            logger.info("++++++++++++"+rowId);
+        List<BusinessObject> select = businessObjectProMapper.select("");
+            logger.info("++++++++++++"+select);
         }
-    }
 
     /**
      * 测试业务对象属性Mapper接口的新增

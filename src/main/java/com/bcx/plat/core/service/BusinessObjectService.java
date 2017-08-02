@@ -17,33 +17,33 @@ public interface BusinessObjectService {
      * @param map
      * @return
      */
-    List<BusinessObject> select(Map map);
+    ServiceResult<BusinessObject> select(Map map);
 
     /**
      * 新增业务对象录入框，包括：对象代码，对象名称，关联表(单选)，版本(系统生成)
      * @param businessObject
      * @return
      */
-    String insert(BusinessObject businessObject);
+    ServiceResult<BusinessObject> insert(BusinessObject businessObject);
 
     /**
      * 编辑对象名称字段
      * @param businessObject
      * @return
      */
-    String update(BusinessObject businessObject);
+    ServiceResult<BusinessObject> update(BusinessObject businessObject);
 
     /**
      * 删除业务对象
      * @param rowId
      * @return
      */
-    int delete(String rowId);
+    ServiceResult<BusinessObject> delete(String rowId);
 
     /**
      * 获取ID对该条记录执行变更,没有生效的不能执行变更
      * @param rowId
      * @return
      */
-    ServiceResult updateExecuChange(String rowId);
+    ServiceResult<BusinessObject> updateExecuChange(String rowId);
 }

@@ -5,9 +5,8 @@ import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 /**
  * Created by Went on 2017/8/1.
  */
-@Controller
+@RestController
 @RequestMapping("/businObj")
 public class BusinessObjectController {
 
@@ -33,12 +32,11 @@ public class BusinessObjectController {
      * @return
      */
     @RequestMapping("/select")
-    @ResponseBody
     public MappingJacksonValue select(String str, HttpServletRequest request){
         Map<String, Object> cond = new HashMap<>();
         cond.put("strArr", collectToSet(str));
-        List<BusinessObject> result = businessObjectService.select(cond);
-        MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("查询业务对象成功", result));
+        ServiceResult<BusinessObject> result = businessObjectService.select(cond);
+        MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
     }
@@ -49,10 +47,9 @@ public class BusinessObjectController {
      * @return
      */
     @RequestMapping("/insert")
-    @ResponseBody
     public MappingJacksonValue insert(BusinessObject businessObject,HttpServletRequest request){
-        String insert = businessObjectService.insert(businessObject);
-        MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("新增业务对象成功",insert));
+        ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
+        MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return value;
     }
@@ -64,10 +61,9 @@ public class BusinessObjectController {
      * @return
      */
     @RequestMapping("/update")
-    @ResponseBody
    public MappingJacksonValue update(BusinessObject businessObject,HttpServletRequest request){
-       String update = businessObjectService.update(businessObject);
-       MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("修改数据成功",update));
+       ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
+       MappingJacksonValue value = new MappingJacksonValue(result);
        value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
        return value;
    }
@@ -78,10 +74,9 @@ public class BusinessObjectController {
      * @return
      */
     @RequestMapping("/delete")
-    @ResponseBody
-    public MappingJacksonValue dalete(String rowId,HttpServletRequest request){
-        int dalete = businessObjectService.delete(rowId);
-        MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("删除数据成功",dalete));
+    public MappingJacksonValue delete(String rowId,HttpServletRequest request){
+        ServiceResult<BusinessObject> result = businessObjectService.delete(rowId);
+        MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return value;
     }

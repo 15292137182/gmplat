@@ -20,5 +20,12 @@ public interface BusinessObjectProMapper extends BaseMapper<BusinessObjectPro>{
      */
     int delete(String rowId);
 
+    /**
+     * 根据业务对象ID来查询业务对象属性
+     * @param rowId
+     * @return
+     */
+    List<BusinessObject> select(String rowId);
+
 
 }

@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
  */
 public class BaseService {
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
-
+  /**
+   * 日志
+   */
+  protected Logger logger = LoggerFactory.getLogger(getClass());
 }
