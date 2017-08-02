@@ -5,7 +5,7 @@ var navs = [{
 	"children": [{
 		"title": "数据库表信息管理",
 		"icon": "&#xe641;",
-		"href": "WebUI/DataSheet/DataBase.html"
+		"href": "WebUI/DataBase/DataBase.html"
 	},{
 		"title": "业务对象管理",
 		"icon": " fa-external-link",
