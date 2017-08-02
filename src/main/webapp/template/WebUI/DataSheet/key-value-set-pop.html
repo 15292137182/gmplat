@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>键值集合选择框</title>
+    <script src="../Public/publicjs.js"></script>
+    <script src="key-value-set-pop.js"></script>
+    <style>
+        .el-row {
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h3>键值集合选择框</h3>
+    </div>
+    <div style="margin-top: 20px">
+        <el-row :gutter="20">
+            <el-col :span="20"><el-input placeholder="请输入内容" icon="search" v-model="input" :on-icon-click="search"></el-input></el-col>
+
+        </el-row>
+    </div>
+    <div>
+        <el-table :data="gridData" border style="width: 100%">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="keysetCod" label="代码" width="200"></el-table-column>
+            <el-table-column property="keysetName" label="名称" width="200"></el-table-column>
+            <el-table-column property="confKey" label="键" width="200"></el-table-column>
+            <el-table-column property="confValue" label="值" width="200"></el-table-column>
+            <el-table-column property="desp" label="说明" width="200"></el-table-column>
+            <el-table-column property="version" label="版本" ></el-table-column>
+        </el-table>
+    </div>
+    <div style="margin-top: 20px;text-align:center">
+        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small">确定</el-button>
+    </div>
+</div>
+</body>
+</html>
