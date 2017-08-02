@@ -2,22 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>键值集合选择框</title>
+    <title>数据库表信息选择框</title>
 </head>
 <body>
 
-<el-row id="kvsInfo" style="padding:0 10px 10px 10px">
+<el-row id="dsInfo" style="padding:0 10px 10px 10px">
     <el-col :span="20" style="margin-top: 10px"><el-input placeholder="请输入内容" icon="search" v-model="input" :on-icon-click="search"></el-input></el-col>
     <el-col :span="24">
         <template>
             <el-table :data="gridData" :height="400"  border style="width: 100%;border-radius: 5px;margin-top:10px">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column property="keysetCod" label="代码" width="200"></el-table-column>
-                <el-table-column property="keysetName" label="名称" width="200"></el-table-column>
-                <el-table-column property="confKey" label="键" width="200"></el-table-column>
-                <el-table-column property="confValue" label="值" width="200"></el-table-column>
-                <el-table-column property="desp" label="说明" width="200"></el-table-column>
-                <el-table-column property="version" label="版本" ></el-table-column>
+                <el-table-column prop="tableSchema" label="表schema" width="150"></el-table-column>
+                <el-table-column prop="tableCName" label="表中文名" width="200"></el-table-column>
+                <el-table-column prop="desp" label="说明"></el-table-column>
             </el-table>
         </template>
     </el-col>
@@ -30,33 +27,34 @@
         </el-col>
     </el-col>
 </el-row>
+
 </body>
 <script>
-    var vm=new Vue({
-        el:'#kvsInfo',
+    var em=new Vue({
+        el:'#dsInfo',
         data:{
             input:'',
-            gridData:[],
+            gridData:[]
+        },
+        created(){
+            this.search();
         },
         methods:{
             search(){
-                this.$http.jsonp(serverPath+'/plat/dbTableColumn/select',{
-                    "str":this.input
+                this.$http.jsonp(serverPath+"/maint/select",{
+                    str:this.input
                 },{
                     jsonp:'callback'
-                }).then(function (res) {
+                }).then(function(res){
                     this.gridData=res.data.content.data;
-                })
+                });
             },
             conformEvent(){
 
             },
             cancel(){
-
+                ibcpLayer.Close(divIndex);
             }
-        },
-        created(){
-            this.search();
         }
     })
 </script>
