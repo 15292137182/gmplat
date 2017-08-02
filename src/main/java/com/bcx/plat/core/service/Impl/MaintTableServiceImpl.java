@@ -6,6 +6,7 @@ import com.bcx.plat.core.service.MaintTableService;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
  * Created by Went on 2017/7/31.
  */
 @Service
+@Transactional
 public class MaintTableServiceImpl implements MaintTableService {
     @Autowired
     private MaintTableMapper maintTableMapperImpl;

@@ -25,8 +25,7 @@
             <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
         VALUES
             (#{rowId},#{objectCode},#{objectName},#{relateTableRowId},
-        #{status},#{version},#{createUser},#{createUserName},#{createTime},#{modifyUser},#{modifyUserName},
-        #{modifyTime},#{deleteUser},#{deleteUserName},#{deleteTime},#{deleteFlag}
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
         )
     </insert>
 
@@ -45,4 +44,16 @@
     <delete id="delete" parameterType="string">
         DELETE FROM t_business_object WHERE row_id=#{rowId}
     </delete>
+
+    <update id="updateExecuChange" parameterType="String">
+        UPDATE t_business_object SET status=#{status} WHERE row_id=#{rowId}
+    </update>
+
+    <select id="selectById" parameterType="String" resultType="com.bcx.plat.core.entity.BusinessObject">
+        SELECT
+        row_id,object_code,object_name,relate_table_row_id,
+        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+        FROM t_business_object WHERE row_id=#{rowId}
+
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.utils.ServiceResult;
 
 import java.util.List;
 import java.util.Map;
@@ -38,4 +39,11 @@ public interface BusinessObjectService {
      * @return
      */
     int delete(String rowId);
+
+    /**
+     * 获取ID对该条记录执行变更,没有生效的不能执行变更
+     * @param rowId
+     * @return
+     */
+    ServiceResult updateExecuChange(String rowId);
 }

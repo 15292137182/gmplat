@@ -1,8 +1,8 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.service.BusinessObjectProService;
-import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -38,43 +38,28 @@ public class BusinessObjectProController {
     public MappingJacksonValue select(String str, HttpServletRequest request){
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
-        List<BusinessObject> result = businessObjectProService.select(map);
+        List<BusinessObjectPro> result = businessObjectProService.select(map);
         MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("查询业务对象成功", result));
         value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
     }
 
     /**
-     * 新增业务对象:对象代码，对象名称，关联表(单选)，版本(系统生成)
-     * @param businessObject
+     * 新增业务对象属性
+     * @param businessObjectPro
      * @return
      */
     @RequestMapping("/insert")
     @ResponseBody
-    public MappingJacksonValue insert(BusinessObject businessObject,HttpServletRequest request){
-        String insert = businessObjectProService.insert(businessObject);
+    public MappingJacksonValue insert(BusinessObjectPro businessObjectPro, HttpServletRequest request){
+        String insert = businessObjectProService.insert(businessObjectPro);
         MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("新增业务对象成功",insert));
         value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return value;
     }
-    
 
     /**
-     * 编辑业务对象名称字段
-     * @param businessObject
-     * @return
-     */
-    @RequestMapping("/update")
-    @ResponseBody
-   public MappingJacksonValue update(BusinessObject businessObject,HttpServletRequest request){
-       String update = businessObjectProService.update(businessObject);
-       MappingJacksonValue value = new MappingJacksonValue(new ServiceResult("修改数据成功",update));
-       value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
-       return value;
-   }
-
-    /**
-     * 删除业务对象
+     * 删除业务对象属性
      * @param rowId
      * @return
      */

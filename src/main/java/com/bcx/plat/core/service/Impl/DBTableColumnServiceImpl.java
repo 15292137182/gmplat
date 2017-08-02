@@ -6,6 +6,7 @@ import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import static com.bcx.plat.core.base.BaseConstants.LOGIC_DELETE;
  * Create By HCL at 2017/8/1
  */
 @Service
+@Transactional
 public class DBTableColumnServiceImpl extends BaseService implements DBTableColumnService {
 
     @Autowired

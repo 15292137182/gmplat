@@ -3,20 +3,23 @@ package com.bcx.plat.core.service.Impl;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.mapper.BusinessObjectMapper;
 import com.bcx.plat.core.service.BusinessObjectService;
+import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
-import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+import static com.bcx.plat.core.base.BaseConstants.*;
 
 /**
+ * 业务对象业务层
  * Created by Went on 2017/8/1.
  */
 @Service
+@Transactional
 public class BusinessObjectServiceImpl implements BusinessObjectService{
     @Autowired
     private BusinessObjectMapper businessObjectMapper;
@@ -56,6 +59,8 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
             //业务对象版本号默认从1.0开始
             businessObject.setVersion("1.0");
             businessObject.buildCreateInfo();
+            //新增数默认状态为不可用
+            businessObject.setStatus(UNAVAILABLE);
             businessObjectMapper.insert(businessObject);
             //将用户新增的rowId返回
             return rowId;
@@ -100,5 +105,22 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
             e.printStackTrace();
         }
         return STATUS_FAIL;
+    }
+
+    /**
+     * 获取ID对该条记录执行变更,没有生效的不能执行变更
+     * @param rowId
+     * @return
+     */
+    @Override
+    public ServiceResult updateExecuChange(String rowId) {
+        BusinessObject select = businessObjectMapper.selectById(rowId);
+        String status = select.getStatus();
+        if(!(status==TAKE_EFFECT)){
+            return new ServiceResult("状态没有生效,不能执行变更","");
+        }else{
+            businessObjectMapper.updateExecuChange(rowId);
+            return new ServiceResult();
+        }
     }
 }

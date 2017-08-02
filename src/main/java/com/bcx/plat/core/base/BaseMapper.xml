@@ -9,8 +9,8 @@
     </sql>
 
     <sql id="common_columns_insert">
-        #{status}, #{version}, #{createUser}, #{createUserName}, #{createTime}, #{modifyUser}, #{modifyUserName},
-        #{modifyTime}, #{deleteUser}, #{deleteUserName}, #{deleteTime}, #{deleteFlag}
+        #{status}, #{version}, #{createUser}, #{createUserName}, #{createTime}, #{modifyUser},
+        #{modifyUserName},#{modifyTime}, #{deleteUser}, #{deleteUserName}, #{deleteTime}, #{deleteFlag}
     </sql>
 
     <sql id="common_columns_update">
