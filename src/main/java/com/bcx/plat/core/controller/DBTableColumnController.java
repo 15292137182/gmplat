@@ -31,7 +31,7 @@ public class DBTableColumnController {
     /**
      * 数据库字段信息查询接口
      *
-     * @param str     空格条件的察徐某
+     * @param str     空格条件
      * @param rowId   主键编号
      * @param request 请求
      * @return 返回查询信息
