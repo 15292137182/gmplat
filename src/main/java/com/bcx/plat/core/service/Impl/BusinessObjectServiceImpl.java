@@ -40,7 +40,7 @@ public class BusinessObjectServiceImpl implements BusinessObjectService{
                     String tableCname = select.get(i).getTableCname();
                     String tableSchema = select.get(i).getTableSchema();
                     String string = tableSchema+"("+tableCname+")";
-//                    select.set(i,tables);/**/
+                    select.get(i).setTables(string);
                     return new ServiceResult<>("消息查询成功",select);
                 }
             }

@@ -74,7 +74,7 @@ public class BusinessObjectController {
      * @return
      */
     @RequestMapping("/delete")
-    public MappingJacksonValue dalete(String rowId,HttpServletRequest request){
+    public MappingJacksonValue delete(String rowId,HttpServletRequest request){
         ServiceResult<BusinessObject> result = businessObjectService.delete(rowId);
         MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");

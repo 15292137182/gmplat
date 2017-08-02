@@ -34,6 +34,13 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
         return super.buildCreateInfo();
     }
 
+    public String getTables() {
+        return tables;
+    }
+
+    public void setTables(String tables) {
+        this.tables = tables;
+    }
 
     public String getTableSchema() {
         return tableSchema;
