@@ -22,6 +22,8 @@ public class BaseConstants {
     public static final String INVALID = "40";
     //状态不可用
     public static final String UNAVAILABLE = "50";
+    //状态可用
+    public static final String AVAILABLE = "20";
 
 
 }

@@ -14,18 +14,42 @@
     </sql>
 
     <sql id="common_columns_update">
-        "status"=#{status},
-        "version"=#{version},
-        create_user=#{createUser},
-        create_user_name=#{createUserName},
-        create_time=#{createTime},
-        modify_user=#{modifyUser},
-        modify_user_name=#{modifyUserName},
-        modify_time= #{modifyTime},
-        delete_user=#{deleteUser},
-        delete_user_name=#{deleteUserName},
-        delete_time=#{deleteTime},
-        delete_flag=#{deleteFlag}
+        <if test="status!=null">
+            "status"=#{status},
+        </if>
+        <if test="version!=null">
+            "version"=#{version},
+        </if>
+        <if test="createUser!=null">
+            create_user=#{createUser},
+        </if>
+        <if test="createUserName!=null">
+            create_user_name=#{createUserName},
+        </if>
+        <if test="createTime!=null">
+            create_time=#{createTime},
+        </if>
+        <if test="modifyUser!=null">
+            modify_user=#{modifyUser},
+        </if>
+        <if test="modifyUserName!=null">
+            modify_user_name=#{modifyUserName},
+        </if>
+        <if test="modifyTime!=null">
+            modify_time= #{modifyTime},
+        </if>
+        <if test="deleteUser!=null">
+            delete_user=#{deleteUser},
+        </if>
+        <if test="deleteUserName!=null">
+            delete_user_name=#{deleteUserName},
+        </if>
+        <if test="deleteTime!=null">
+            delete_time=#{deleteTime},
+        </if>
+        <if test="deleteFlag!=null">
+            delete_flag=#{deleteFlag}
+        </if>
     </sql>
 
 </mapper>

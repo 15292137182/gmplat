@@ -37,7 +37,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
     public ServiceResult<BusinessObjectPro> select(String rowId) {
         try {
             if (rowId != null) {
-                List<BusinessObject> select = businessObjectProMapper.select(rowId);
+                List<BusinessObject> select = businessObjectProMapper.selectById(rowId);
                 return new ServiceResult<>("查询数据成功",select);
             }
         } catch (Exception e) {

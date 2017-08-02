@@ -3,6 +3,7 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseMapper;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.FrontFunc;
+import com.bcx.plat.core.utils.ServiceResult;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public interface FrontFuncService{
      * @param map
      * @return
      */
-    List<FrontFunc> select(Map<String,Object> map);
+    ServiceResult<FrontFunc> select(Map<String,Object> map);
 
     /**
      * 新增数据

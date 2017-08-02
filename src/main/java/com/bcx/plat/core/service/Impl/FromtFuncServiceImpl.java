@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.mapper.FrontFuncMapper;
 import com.bcx.plat.core.service.FrontFuncService;
+import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +28,16 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
      * @return    返回查询结果
      */
     @Override
-    public List<FrontFunc> select(Map<String, Object> map) {
-        return frontFuncMapper.select(map);
+    public ServiceResult<FrontFunc> select(Map<String, Object> map) {
+        List<FrontFunc> result = frontFuncMapper.select(map);
+        for (int i = 0; i < result.size(); i++) {
+            String objectCode = result.get(i).getObjectCode();
+            String objectName = result.get(i).getObjectName();
+            String tables = objectCode+"("+objectName+")";
+            result.get(i).setTables(tables);
+            return new ServiceResult("查询成功",result);
+        }
+        return new ServiceResult<>("查询失败","");
     }
 
     /**

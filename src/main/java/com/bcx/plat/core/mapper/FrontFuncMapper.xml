@@ -4,10 +4,12 @@
 <mapper namespace="com.bcx.plat.core.mapper.FrontFuncMapper">
     <select id="select" resultType="com.bcx.plat.core.entity.FrontFunc" parameterType="hashMap">
         SELECT
-            row_id,func_code,func_name,func_type,
-            relate_busi_obj,wether_available,desp,
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
-        FROM t_front_func
+        tc.row_id,tc.func_code,tc.func_name,tc.func_type,
+        tc.relate_busi_obj,tc.wether_available,tc.desp,
+        tc."status",tc.version, tc.create_user, tc.create_user_name, tc.create_time,tc.modify_user,
+        tc.modify_user_name, tc.modify_time, tc.delete_user, tc.delete_user_name, tc.delete_time, tc.delete_flag,
+        tt.object_code,tt.object_name
+        FROM t_front_func as tc LEFT JOIN t_business_object as tt ON tc.relate_busi_obj=tt.row_id
         <where>
             <if test="strArr!=null and strArr.size!=0">
                 <foreach collection="strArr" item="str" index="index" separator="or" open="(" close=")">
@@ -42,7 +44,9 @@
               relate_busi_obj = #{relateBusiObj},
               wether_available = #{wetherAvailableObj},
               desp  = #{desp},
-              <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_update"/>
+              modify_user = #{modifyUser},
+              modify_user_name  = #{modifyUserName},
+              modify_time= #{modifyTime}
         WHERE row_id  = #{rowId}
     </update>
 
