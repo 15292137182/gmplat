@@ -17,8 +17,7 @@ import static java.time.LocalDateTime.now;
  * Created by hcl at 2017/07/28
  */
 public class UtilsTool {
-
-
+    
     private static ObjectMapper objectMapper;
 
     /**
