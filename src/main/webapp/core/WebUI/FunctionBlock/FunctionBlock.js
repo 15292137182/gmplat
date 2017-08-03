@@ -19,8 +19,10 @@ var vm = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                this.myData=res.data.content.data;
-                //vm1.FindData(vm.myData[0].rowId);
+                if(res.data.content.data!==''){
+                    this.myData=res.data.content.data;
+                    //vm1.FindData(vm.myData[0].rowId);
+                }
             })
         },
         delete(){
