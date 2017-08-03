@@ -62,7 +62,7 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
   /**
    * 删除 数据库字段信息
    *
-   * @param bean 数据表bean
+   * @param bean 数据表 bean
    * @return 操作结果状态
    */
   @Override

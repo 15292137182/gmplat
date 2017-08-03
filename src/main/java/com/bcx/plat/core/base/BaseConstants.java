@@ -1,7 +1,7 @@
 package com.bcx.plat.core.base;
 
 /**
- * 平台常量类 Create By HCL at 2017/7/31
+ * 平台常量类 Create By HCL at 2017/7/31.
  */
 public class BaseConstants {
 
