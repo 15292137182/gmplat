@@ -8,15 +8,9 @@
   <!-- 配置全局扫描设置,不扫描带有Controller,RestController注解的class -->
   <context:component-scan base-package="com.bcx"/>
 
-  <!-- 获取properties属性的值,存在父子容器的问题,单独获取信息 -->
   <!-- 获取properties中的值 -->
-  <bean id="configProperties"
-    class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-    <property name="locations">
-      <list>
-        <value>classpath:properties/sequence.properties</value>
-      </list>
-    </property>
+  <bean id="conf" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="location" value="classpath:properties/sequence.properties"/>
   </bean>
 
   <!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->

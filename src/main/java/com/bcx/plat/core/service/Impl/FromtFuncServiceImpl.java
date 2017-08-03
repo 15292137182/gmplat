@@ -30,14 +30,15 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
   @Override
   public ServiceResult<FrontFunc> select(Map<String, Object> map) {
     List<FrontFunc> result = frontFuncMapper.select(map);
+    ServiceResult serviceResult =null;
     for (int i = 0; i < result.size(); i++) {
       String objectCode = result.get(i).getObjectCode();
       String objectName = result.get(i).getObjectName();
       String tables = objectCode + "(" + objectName + ")";
       result.get(i).setTables(tables);
-      return new ServiceResult("查询成功", result);
+      serviceResult=  new ServiceResult("查询成功", result);
     }
-    return new ServiceResult<>("查询失败", "");
+    return serviceResult;
   }
 
   /**

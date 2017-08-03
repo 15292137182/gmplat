@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BusinessObjectProServiceImpl implements BusinessObjectProService {
 
-  @Value("BusinessObjectPro")
+  @Value("#{conf.BusinessObjectPro}")
   private String BusinessObjectPro;
 
   @Autowired

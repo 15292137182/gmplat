@@ -30,22 +30,26 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
    */
   @Override
   public ServiceResult<BusinessObject> select(Map map) {
+    ServiceResult<BusinessObject> result = new ServiceResult<>();
     try {
       if (map.size() != 0) {
         List<BusinessObject> select = businessObjectMapper.select(map);
-
         for (int i = 0; i < select.size(); i++) {
           String tableCname = select.get(i).getTableCname();
           String tableSchema = select.get(i).getTableSchema();
           String string = tableSchema + "(" + tableCname + ")";
           select.get(i).setTables(string);
-          return new ServiceResult<>("消息查询成功", select);
+          result.setData(select);
         }
+        result.setMessage("消息查询成功");
+        return result;
       }
     } catch (Exception e) {
       e.printStackTrace();
+
     }
-    return new ServiceResult<>("消息查询失败", "");
+    result.setMessage("消息查询失败");
+    return result;
   }
 
   /**
