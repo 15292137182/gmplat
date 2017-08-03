@@ -5,8 +5,6 @@
 	"children": [{
 		"title": "数据库表信息管理",
 		"icon": "&#xe641;",
-		"href": "WebUI/DataBase/DataBase.html"
-=======
 		"href": "WebUI/DataBase/Demo.html"
 	},{
 		"title": "业务对象管理",

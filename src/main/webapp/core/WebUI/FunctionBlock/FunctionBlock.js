@@ -3,100 +3,115 @@
  */
 //左边table
 var vm = new Vue({
-  el: "#app",
-  data: {
-    input: '',
-    myData: [],
-    leftHeight: '',
-    url: serverPath + '/fronc/select',
-    deleteId: ''
-  },
-  methods: {
-    get () {
-      this.$http.jsonp(this.url, {
-        str: this.input
-      }, {
-        jsonp: 'callback'
-      }).then(function (res) {
-        this.myData = res.data.content.data.content.data;
-        console.log(res.data.content.data.content.data);
-        //vm1.FindData(vm.myData[0].rowId);
-      })
+    el:"#app",
+    data:{
+        input:'',
+        myData:[],
+        leftHeight:'',
+        url:serverPath+'/fronc/select',
+        deleteId:'',
+        editObj:''
     },
-    delete() {
-      this.$http.jsonp(serverPath + "/fronc/delete", {
-        rowId: this.deleteId
-      }, {
-        jsonp: 'callback'
-      }).then(function (res) {
-        console.log(res);
-        vm.get();
-      })
+    methods:{
+        get(){
+            this.$http.jsonp(this.url,{
+                str:this.input
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                this.myData=res.data.content.data;
+                //vm1.FindData(vm.myData[0].rowId);
+            })
+        },
+        delete(){
+            this.$http.jsonp(serverPath+"/fronc/delete",{
+                rowId:this.deleteId
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                console.log(res);
+                vm.get();
+            })
+        },
+        click(row, event, column){
+            //vm1.FindData(row.rowId);
+            this.deleteId = row.rowId;
+            this.editObj = row;
+        },
+        FindOk(row){
+            this.$refs.myTable.setCurrentRow(row);
+        }
     },
-    click(row, event, column) {
-      //vm1.FindData(row.rowId);
-      this.deleteId = row.rowId;
-      console.log(this.deleteId);
+    created(){
+        this.get();
+        $(document).ready(function(){
+            vm.leftHeight=$(window).height()-90;
+        });
+        $(window).resize(function(){
+            vm.leftHeight=$(window).height()-90;
+        })
     },
-    FindOk(row) {
-      this.$refs.myTable.setCurrentRow(row);
+    updated(){
+        this.FindOk(this.myData[0]);
     }
-  },
-  created() {
-    this.get();
-    $(document).ready(function () {
-      vm.leftHeight = $(window).height() - 107;
-    });
-    $(window).resize(function () {
-      vm.leftHeight = $(window).height() - 107;
-    })
-  },
-  updated() {
-    this.FindOk(this.myData[0]);
-  }
 });
 
 //右边table
 var vm1 = new Vue({
-  el: '#right',
-  data: {
-    rightData: [],
-    rightHeight: '',
-  },
-  methods: {
-    FindData(id) {
-      this.$http.jsonp('url', {
-        "key": id
-      }, {
-        jsonp: 'callback'
-      }).then(function (res) {
-        this.rightData = res.data.content.data;
-      })
-    }
-  },
-  created() {
-    $(document).ready(function () {
-      vm1.rightHeight = $(window).height() - 107;
-    });
-    $(window).resize(function () {
-      vm1.rightHeight = $(window).height() - 107;
-    })
-  },
+    el:'#right',
+    data:{
+        rightData:[],
+        rightHeight:'',
+    },
+    methods:{
+        FindData(id){
+            this.$http.jsonp('url',{
+                "key":id
+            },{
+                jsonp:'callback'
+            }).then(function (res) {
+                this.rightData=res.data.content.data;
+            })
+        }
+    },
+    created(){
+        $(document).ready(function(){
+            vm1.rightHeight=$(window).height()-90;
+        });
+        $(window).resize(function(){
+            vm1.rightHeight=$(window).height()-90;
+        })
+    },
 });
 
 //按钮
 var mb = new Vue({
-  el: '#myButton',
-  data: {
-    divIndex: ''
-  },
-  methods: {
-    addBlock() {
-      this.divIndex = ibcpLayer.ShowDiv('AddBlock.html', '新增功能块', '400px',
-          '500px')
+    el:'#myButton',
+    data:{
+        divIndex:'',
     },
-    del() {
-      vm.delete();
+    methods: {
+        addBlock(){
+            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','新增功能块','400px', '500px',function(){
+                em.isEdit = false;
+            });
+        },
+        editBlock(){
+            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','编辑功能块','400px', '500px',function(){
+                em.isEdit = true;
+                var obj = vm.editObj;
+                em.codeInput = obj.funcCode;
+                em.nameInput = obj.funcName;
+                em.typeInput = obj.funcType;
+                em.tableInput = obj.tables;
+                em.dataId = obj.relateBusiObj;
+                em.desp = obj.desp;
+                em.rowId = obj.rowId;
+            });
+
+        },
+        del(){
+            vm.delete();
+        }
     }
-  }
 })
