@@ -4,11 +4,16 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.base.BaseConstants.TAKE_EFFECT;
 import static com.bcx.plat.core.base.BaseConstants.UNAVAILABLE;
+import static com.bcx.plat.core.constants.Message.*;
 
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.mapper.BusinessObjectMapper;
+import com.bcx.plat.core.mapper.BusinessObjectProMapper;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +29,14 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
 
   @Autowired
   private BusinessObjectMapper businessObjectMapper;
-
+  @Autowired
+  private BusinessObjectProMapper businessObjectProMapper;
   /**
    * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
    */
   @Override
   public ServiceResult<BusinessObject> select(Map map) {
     ServiceResult<BusinessObject> result = new ServiceResult<>();
-    try {
       if (map.size() != 0) {
         List<BusinessObject> select = businessObjectMapper.select(map);
         for (int i = 0; i < select.size(); i++) {
@@ -39,17 +44,14 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
           String tableSchema = select.get(i).getTableSchema();
           String string = tableSchema + "(" + tableCname + ")";
           select.get(i).setTables(string);
-          result.setData(select);
+          result = new ServiceResult<>(QUERY_SUCCESS,select);
         }
-        result.setMessage("消息查询成功");
-        return result;
+        if(result==null){
+          result = new ServiceResult<>(QUERY_FAIL,"");
+          return result;
+        }
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-
-    }
-    result.setMessage("消息查询失败");
-    return result;
+      return new ServiceResult<>(QUERY_FAIL,"");
   }
 
   /**
@@ -66,10 +68,10 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
       String rowId = businessObject.getRowId();
       businessObjectMapper.insert(businessObject);
       //将用户新增的rowId返回
-      return new ServiceResult<>("新增数据成功", rowId);
+      return new ServiceResult<>(NEW_ADD_SUCCESS, rowId);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult<>("新增数据失败", "");
+      return new ServiceResult<>(NEW_ADD_FAIL, "");
     }
   }
 
@@ -82,10 +84,10 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
       businessObject.buildModifyInfo();
       businessObjectMapper.update(businessObject);
       String rowId = businessObject.getRowId();
-      return new ServiceResult<>("编辑数据成功", rowId);
+      return new ServiceResult<>(UPDATE_SUCCESS, rowId);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult<>("编辑数据失败", "");
+      return new ServiceResult<>(UPDATE_FAIL, "");
     }
   }
 
@@ -95,12 +97,17 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
   @Override
   public ServiceResult<BusinessObject> delete(String rowId) {
     try {
+      Map<String,Object> map = new HashMap<>();
+      map.put("rowId", rowId);
+      List<BusinessObjectPro> select = businessObjectProMapper.select(null);
+
+      businessObjectProMapper.deleteRelateCol(map);
       businessObjectMapper.delete(rowId);
-      return new ServiceResult<>(STATUS_SUCCESS, "删除数据成功", "");
+      return new ServiceResult<>(STATUS_SUCCESS, DELETE_SUCCESS, "");
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return new ServiceResult<>(STATUS_FAIL, "删除数据失败", "");
+    return new ServiceResult<>(STATUS_FAIL, DELETE_FAIL, "");
   }
 
   /**

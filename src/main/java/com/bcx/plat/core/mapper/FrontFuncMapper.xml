@@ -12,10 +12,14 @@
     tt.object_code,tt.object_name
     FROM t_front_func as tc LEFT JOIN t_business_object as tt ON tc.relate_busi_obj=tt.row_id
     <where>
-      <if test="strArr!=null and strArr.size!=0">
+      <if test="strArr!=null and strArr.size()!=0">
+        AND
         <foreach collection="strArr" item="str" index="index" separator="or" open="(" close=")">
           func_code like '%${str}%' or func_name like '%${str}%' or func_type like '%${str}%'
         </foreach>
+      </if>
+      <if test="rowId!=null and rowId.length()!=0">
+        AND tc.row_id = #{rowId}
       </if>
     </where>
     order by create_time DESC
@@ -43,7 +47,7 @@
     func_name = #{funcName},
     func_type = #{funcType},
     relate_busi_obj = #{relateBusiObj},
-    wether_available = #{wetherAvailableObj},
+    wether_available = #{wetherAvailable},
     desp = #{desp},
     modify_user = #{modifyUser},
     modify_user_name = #{modifyUserName},

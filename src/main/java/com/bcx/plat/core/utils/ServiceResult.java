@@ -75,6 +75,15 @@ public class ServiceResult<T extends BaseEntity> implements Serializable {
   }
 
   /**
+   * 接受 message 的构造方法
+   *
+   * @param message 数据
+   */
+  public ServiceResult(String message) {
+    setMessage(message);
+  }
+
+  /**
    * 设置页面信息
    *
    * @param pageNum 当前页面

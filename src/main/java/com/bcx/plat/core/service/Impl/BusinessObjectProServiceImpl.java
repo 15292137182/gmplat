@@ -9,6 +9,8 @@ import com.bcx.plat.core.mapper.BusinessObjectProMapper;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,21 +29,20 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   @Autowired
   private BusinessObjectProMapper businessObjectProMapper;
 
+
+
   /**
    * 查询业务对象属性
    */
   @Override
-  public ServiceResult<BusinessObjectPro> select(String rowId) {
+  public ServiceResult<BusinessObjectPro> select(Map<String,Object> map) {
     try {
-      if (rowId != null) {
-        List<BusinessObject> select = businessObjectProMapper.selectById(rowId);
-        return new ServiceResult<>("查询数据成功", select);
-      }
+      List<BusinessObjectPro> select = businessObjectProMapper.select(map);
+      return new ServiceResult<>("查询数据成功", select);
     } catch (Exception e) {
       e.printStackTrace();
       return new ServiceResult<>("查询数据失败", "");
     }
-    return null;
   }
 
   /**

@@ -19,14 +19,6 @@ public class BusinessObjectProMapperTest extends BaseTest{
 
     @Autowired
     private BusinessObjectProMapper businessObjectProMapper;
-    /**
-     * 测试业务对象属性Mapper接口的查询
-     */
-    @Test
-    public void selectTest(){
-        List<BusinessObject> select = businessObjectProMapper.selectById("");
-            logger.info("++++++++++++"+select);
-        }
 
     /**
      * 测试业务对象属性Mapper接口的新增

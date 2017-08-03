@@ -3,19 +3,25 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bcx.plat.core.mapper.BusinessObjectProMapper">
 
-
-  <select id="selectById" resultType="com.bcx.plat.core.entity.BusinessObjectPro"
-    parameterType="String">
+  <select id="select" resultType="com.bcx.plat.core.entity.BusinessObjectPro" parameterType="hashMap">
     SELECT
     tp.row_id,tp.property_code,tp.property_name,tp.relate_table_column,tp.value_type,
-    tp.value_resource_type,tp.value_resource_content,tp.wether_expand_pro
+    tp.value_resource_type,tp.value_resource_content,tp.wether_expand_pro,tp.create_time
     FROM t_business_object_pro AS tp
     LEFT JOIN t_business_object as tt
     ON tt.row_id=tp.relate_table_column
-    WHERE tt.row_id=#{rowId}
     <where>
-
+      <if test="strArr!=null and strArr.size()!=0">
+        AND
+        <foreach collection="strArr" index="index" separator="or" item="item" open="(" close=")">
+           tp.property_code like '%${item}%' or tp.property_name like '%${item}%'
+        </foreach>
+      </if>
+      <if test="rowId!=null and rowId.length()!=0">
+        AND tt.row_id=#{rowId}
+      </if>
     </where>
+    order by tt.create_time desc
   </select>
 
   <insert id="insert" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">
@@ -33,4 +39,15 @@
   <delete id="delete" parameterType="string">
     DELETE FROM t_business_object_pro WHERE row_id=#{rowId}
   </delete>
+
+
+  <delete id="deleteRelateCol" parameterType="hashMap">
+    DELETE FROM t_business_object_pro where relate_table_column IN
+    <if test="rowId!=null and rowId.length()!=0">
+      <foreach collection="rowId" separator="or" index="index" item="rowId" open="(" close=")">
+        #{rowId}
+      </foreach>
+    </if>
+  </delete>
+
 </mapper>

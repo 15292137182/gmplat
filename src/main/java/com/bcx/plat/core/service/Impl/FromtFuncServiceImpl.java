@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.bcx.plat.core.constants.Message.*;
+
 /**
  * Created by Went on 2017/8/2.
  */
@@ -36,7 +38,10 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
       String objectName = result.get(i).getObjectName();
       String tables = objectCode + "(" + objectName + ")";
       result.get(i).setTables(tables);
-      serviceResult=  new ServiceResult("查询成功", result);
+      serviceResult=  new ServiceResult(QUERY_SUCCESS, result);
+    }
+    if(serviceResult == null){
+     serviceResult = new ServiceResult(QUERY_FAIL,"");
     }
     return serviceResult;
   }
@@ -48,30 +53,37 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
    * @return 返回新增数据ID
    */
   @Override
-  public String insert(FrontFunc frontFunc) {
+  public ServiceResult<FrontFunc> insert(FrontFunc frontFunc) {
     frontFunc.buildCreateInfo();
     String rowId = frontFunc.getRowId();
-    frontFuncMapper.insert(frontFunc);
-    return rowId;
+    int insert = frontFuncMapper.insert(frontFunc);
+    if(insert!=1){
+      return  new ServiceResult<>(NEW_ADD_FAIL ,"");
+    }
+    return  new ServiceResult<>(NEW_ADD_SUCCESS ,rowId);
+
   }
 
   /**
    * 根据id修改数据
-   *
    * @param frontFunc 接受修改参数
    */
   @Override
-  public int update(FrontFunc frontFunc) {
+  public ServiceResult<FrontFunc> update(FrontFunc frontFunc) {
+    frontFunc.buildModifyInfo();
     int update = frontFuncMapper.update(frontFunc);
-    return update;
+    if(update != 1){
+      return  new ServiceResult<>(UPDATE_FAIL ,"");
+    }
+    return  new ServiceResult<>(UPDATE_SUCCESS ,"");
   }
 
   /**
    * 根据ID删除数据
    */
   @Override
-  public int delete(FrontFunc frontFunc) {
+  public ServiceResult<FrontFunc> delete(FrontFunc frontFunc) {
     frontFuncMapper.delete(frontFunc);
-    return 0;
+    return new ServiceResult<>(DELETE_SUCCESS,"");
   }
 }

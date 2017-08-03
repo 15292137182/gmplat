@@ -17,17 +17,17 @@ public interface FrontFuncService {
   /**
    * 新增数据
    */
-  String insert(FrontFunc frontFunc);
+  ServiceResult<FrontFunc> insert(FrontFunc frontFunc);
 
   /**
    * 根据id修改数据
    */
-  int update(FrontFunc frontFunc);
+  ServiceResult<FrontFunc> update(FrontFunc frontFunc);
 
   /**
    * 根据ID删除数据
    */
-  int delete(FrontFunc frontFunc);
+  ServiceResult<FrontFunc> delete(FrontFunc frontFunc);
 
 
 }
