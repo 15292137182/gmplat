@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div class="form-group" style="margin-top: 10px;">
+  <div class="col-sm-9">
+    <input type="text" class="form-control" id="productSearchInput" placeholder="多条件请以 逗号 或 空格 分开">
+  </div>
+  <div class="col-sm-3">
+    <button type="button" id="btnProSearch" class="btn btn-custom" style="width: 100%">搜索</button>
+  </div>
+</div>
+<div class="bootstrap-table table col-sm-12" style="margin-top: 8px;">
+  <div class="table-responsive">
+    <table id="SelectProductTable" data-toggle="table"
+           data-click-to-select="true"
+           data-striped="true"
+           data-pagination="false"
+           data-row-style="rowStyle"
+           data-cell-style="cellStyle"
+           data-unique-id="id"
+           data-height="400">
+      <thead>
+      <tr>
+        <th data-field="state" data-radio="true"></th>
+        <th data-field="id" data-visible="false"></th>
+        <th data-field="code">产品代码</th>
+        <th data-field="name">产品名称</th>
+        <th data-field="typeName">产品类型</th>
+        <th data-field="spec">产品规格</th>
+      </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+<div class="form-group col-sm-12" style="margin-top: 10px;">
+  <div class="col-xs-6" style="text-align: right">
+    <button type="button" id="btnProSelectOK" class="btn btn-custom close-submit">确定</button>
+  </div>
+  <div class="col-xs-6">
+    <button type="button" id="btnProSelectCancel" class="btn btn-custom close-layer">取消</button>
+  </div>
+</div>
+</body>
+</html>

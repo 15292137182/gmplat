@@ -1,122 +1,121 @@
 package com.bcx.plat.core.entity;
 
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
+
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.database.action.annotations.Table;
 import com.bcx.plat.core.database.action.annotations.TablePK;
 import com.bcx.plat.core.database.info.TableInfo;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 /**
- * 前端功能块实体类
- * Created by Went on 2017/8/2.
+ * 前端功能块实体类 Created by Went on 2017/8/2.
  */
 @Table(TableInfo.T_FRONT_FUNC)
 public class FrontFunc extends BaseEntity<FrontFunc> {
 
-    @TablePK
-    private String rowId;//唯一标示
-    private String funcCode;//功能代码
-    private String funcName;//功能名称
-    private String funcType;//功能类型
-    private String relateBusiObj;//关联业务对象
-    private String wetherAvailable;//是否可用
-    private String desp;//说明
+  @TablePK
+  private String rowId;//唯一标示
+  private String funcCode;//功能代码
+  private String funcName;//功能名称
+  private String funcType;//功能类型
+  private String relateBusiObj;//关联业务对象
+  private String wetherAvailable;//是否可用
+  private String desp;//说明
 
-    private String objectCode;//关联业务对象代码
-    private String objectName;//关联业务对象名称
-    private String tables;
-
-
-    /**
-     * 构建 - 创建信息
-     *
-     * @return 返回自身
-     */
-    @Override
-    public FrontFunc buildCreateInfo() {
-        setRowId(lengthUUID(32));
-        return super.buildCreateInfo();
-    }
+  private String objectCode;//关联业务对象代码
+  private String objectName;//关联业务对象名称
+  private String tables;
 
 
-    public String getObjectCode() {
-        return objectCode;
-    }
+  /**
+   * 构建 - 创建信息
+   *
+   * @return 返回自身
+   */
+  @Override
+  public FrontFunc buildCreateInfo() {
+    setRowId(lengthUUID(32));
+    return super.buildCreateInfo();
+  }
 
-    public void setObjectCode(String objectCode) {
-        this.objectCode = objectCode;
-    }
 
-    public String getObjectName() {
-        return objectName;
-    }
+  public String getObjectCode() {
+    return objectCode;
+  }
 
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
-    }
+  public void setObjectCode(String objectCode) {
+    this.objectCode = objectCode;
+  }
 
-    public String getTables() {
-        return tables;
-    }
+  public String getObjectName() {
+    return objectName;
+  }
 
-    public void setTables(String tables) {
-        this.tables = tables;
-    }
+  public void setObjectName(String objectName) {
+    this.objectName = objectName;
+  }
 
-    public String getRowId() {
-        return rowId;
-    }
+  public String getTables() {
+    return tables;
+  }
 
-    public void setRowId(String rowId) {
-        this.rowId = rowId;
-    }
+  public void setTables(String tables) {
+    this.tables = tables;
+  }
 
-    public String getFuncCode() {
-        return funcCode;
-    }
+  public String getRowId() {
+    return rowId;
+  }
 
-    public void setFuncCode(String funcCode) {
-        this.funcCode = funcCode;
-    }
+  public void setRowId(String rowId) {
+    this.rowId = rowId;
+  }
 
-    public String getFuncName() {
-        return funcName;
-    }
+  public String getFuncCode() {
+    return funcCode;
+  }
 
-    public void setFuncName(String funcName) {
-        this.funcName = funcName;
-    }
+  public void setFuncCode(String funcCode) {
+    this.funcCode = funcCode;
+  }
 
-    public String getFuncType() {
-        return funcType;
-    }
+  public String getFuncName() {
+    return funcName;
+  }
 
-    public void setFuncType(String funcType) {
-        this.funcType = funcType;
-    }
+  public void setFuncName(String funcName) {
+    this.funcName = funcName;
+  }
 
-    public String getRelateBusiObj() {
-        return relateBusiObj;
-    }
+  public String getFuncType() {
+    return funcType;
+  }
 
-    public void setRelateBusiObj(String relateBusiObj) {
-        this.relateBusiObj = relateBusiObj;
-    }
+  public void setFuncType(String funcType) {
+    this.funcType = funcType;
+  }
 
-    public String getWetherAvailable() {
-        return wetherAvailable;
-    }
+  public String getRelateBusiObj() {
+    return relateBusiObj;
+  }
 
-    public void setWetherAvailable(String wetherAvailable) {
-        this.wetherAvailable = wetherAvailable;
-    }
+  public void setRelateBusiObj(String relateBusiObj) {
+    this.relateBusiObj = relateBusiObj;
+  }
 
-    public String getDesp() {
-        return desp;
-    }
+  public String getWetherAvailable() {
+    return wetherAvailable;
+  }
 
-    public void setDesp(String desp) {
-        this.desp = desp;
-    }
+  public void setWetherAvailable(String wetherAvailable) {
+    this.wetherAvailable = wetherAvailable;
+  }
+
+  public String getDesp() {
+    return desp;
+  }
+
+  public void setDesp(String desp) {
+    this.desp = desp;
+  }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+<form class="form-horizontal" role="form" style="padding: 15px">
+  <div class="form-group">
+    <label for="sGroupName" class="col-xs-4 control-label">签名组</label>
+    <div class="col-xs-8">
+      <select id="sGroupName" class="form-control">
+
+      </select>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <label for="sUsers" class="col-xs-4 control-label">签名人</label>
+    <div class="col-xs-8">
+      <select id="sUsers" class="form-control">
+
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="sPassword" class="col-xs-4 control-label">密码</label>
+    <div class="col-xs-8">
+      <input type="password" class="form-control" id="sPassword">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="sDescription" class="col-xs-4 control-label">签名含义</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" id="sDescription" readonly="readonly">
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <label for="comment" class="col-xs-4 control-label">备注</label>
+    <div class="col-xs-8">
+            <textarea class="form-control" id="comment" rows="3"
+                      placeholder="必填" style="margin-top: 0px"></textarea>
+    </div>
+  </div>
+  <div class="form-group" style="margin-bottom: 0px">
+    <div class="col-xs-6" style="text-align: right">
+      <button type="button" id="sigBtn" class="btn btn-custom">签名</button>
+    </div>
+    <div class="col-xs-6">
+      <button type="button" id="cancelSigBtn" class="btn btn-default close-layer">取消</button>
+    </div>
+  </div>
+</form>
+
+</body>
+</html>
+

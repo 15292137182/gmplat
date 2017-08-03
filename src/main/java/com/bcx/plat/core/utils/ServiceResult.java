@@ -1,7 +1,6 @@
 package com.bcx.plat.core.utils;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;

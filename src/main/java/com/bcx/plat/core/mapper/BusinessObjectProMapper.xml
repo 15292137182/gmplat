@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bcx.plat.core.mapper.BusinessObjectProMapper">
 
 
-    <select id="selectById" resultType="com.bcx.plat.core.entity.BusinessObjectPro" parameterType="String">
-        SELECT
-              tp.row_id,tp.property_code,tp.property_name,tp.relate_table_column,tp.value_type,
-              tp.value_resource_type,tp.value_resource_content,tp.wether_expand_pro
-        FROM t_business_object_pro AS tp
-        LEFT JOIN t_business_object as tt
-        ON tt.row_id=tp.relate_table_column
-        WHERE tt.row_id=#{rowId}
-        <where>
+  <select id="selectById" resultType="com.bcx.plat.core.entity.BusinessObjectPro"
+    parameterType="String">
+    SELECT
+    tp.row_id,tp.property_code,tp.property_name,tp.relate_table_column,tp.value_type,
+    tp.value_resource_type,tp.value_resource_content,tp.wether_expand_pro
+    FROM t_business_object_pro AS tp
+    LEFT JOIN t_business_object as tt
+    ON tt.row_id=tp.relate_table_column
+    WHERE tt.row_id=#{rowId}
+    <where>
 
-        </where>
-    </select>
+    </where>
+  </select>
 
-    <insert id="insert" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">
-        INSERT INTO
-                t_business_object_pro
-            ( row_id,property_code,property_name,relate_table_column,value_type,
-               value_resource_type,value_resource_content,wether_expand_pro,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
-        VALUES
-            (#{rowId},#{propertyCode},#{propertyName},#{relateTableColumn},
-        #{valueType},#{valueResourceType},#{valueResourceContent},#{wetherExpandPro},
-        <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>)
-    </insert>
+  <insert id="insert" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">
+    INSERT INTO
+    t_business_object_pro
+    ( row_id,property_code,property_name,relate_table_column,value_type,
+    value_resource_type,value_resource_content,wether_expand_pro,
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
+    VALUES
+    (#{rowId},#{propertyCode},#{propertyName},#{relateTableColumn},
+    #{valueType},#{valueResourceType},#{valueResourceContent},#{wetherExpandPro},
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>)
+  </insert>
 
-    <delete id="delete" parameterType="string">
-        DELETE FROM t_business_object_pro WHERE row_id=#{rowId}
-    </delete>
+  <delete id="delete" parameterType="string">
+    DELETE FROM t_business_object_pro WHERE row_id=#{rowId}
+  </delete>
 </mapper>

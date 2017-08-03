@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>数据库表信息选择框</title>
+</head>
+<body>
+
+<el-row id="dsInfo" style="padding:0 10px 10px 10px">
+  <el-col :span="20" style="margin-top: 10px"><el-input placeholder="请输入内容" icon="search" v-model="input" :on-icon-click="search"></el-input></el-col>
+  <el-col :span="24">
+    <template>
+      <el-table :data="gridData" :height="400"  border style="width: 100%;border-radius: 5px;margin-top:10px">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="tableSchema" label="表schema" width="150"></el-table-column>
+        <el-table-column prop="tableCName" label="表中文名" width="200"></el-table-column>
+        <el-table-column prop="desp" label="说明"></el-table-column>
+      </el-table>
+    </template>
+  </el-col>
+  <el-col style="margin-top:15px">
+    <el-col :span="11" style="text-align:right">
+      <el-button type="primary" @click.native="conformEvent">确定</el-button>
+    </el-col>
+    <el-col :span="11" style="text-align: left" :offset="2">
+      <el-button type="primary" @click.native="cancel">取消</el-button>
+    </el-col>
+  </el-col>
+</el-row>
+
+</body>
+<script>
+    var em=new Vue({
+        el:'#dsInfo',
+        data:{
+            input:'',
+            gridData:[]
+        },
+        created(){
+            this.search();
+        },
+        methods:{
+            search(){
+                this.$http.jsonp(serverPath+"/maint/select",{
+                    str:this.input
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    this.gridData=res.data.content.data;
+                });
+            },
+            conformEvent(){
+
+            },
+            cancel(){
+                ibcpLayer.Close(divIndex);
+            }
+        }
+    })
+</script>
+</html>

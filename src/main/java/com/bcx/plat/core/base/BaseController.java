@@ -10,14 +10,14 @@ import org.springframework.context.support.ResourceBundleMessageSource;
  */
 public class BaseController {
 
-    /**
-     * logger 日志操作
-     */
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+  /**
+   * logger 日志操作
+   */
+  protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * messageSource 资源文件管理器
-     */
-    @Autowired
-    protected ResourceBundleMessageSource messageSource;
+  /**
+   * messageSource 资源文件管理器
+   */
+  @Autowired
+  protected ResourceBundleMessageSource messageSource;
 }

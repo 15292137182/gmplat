@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SelectRecipe</title>
+  <!--<link href="../../webjar/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet">-->
+  <!--<link href="../../webjar/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">-->
+  <!--<link href="../../webjar/css/mystyle.css" rel="stylesheet">-->
+
+  <!--<script src="../../webjar/jquery/3.1.1/jquery.min.js"></script>-->
+  <!--<script src="../../webjar/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>-->
+  <!--<script src="../../webjar/bootstrap-table/bootstrap-table.min.js"></script>-->
+
+</head>
+<body>
+<div class="form-group" style="margin-top:10px;">
+  <div class="col-sm-9">
+    <input type="text" class="form-control" id="txtPSCcontent" placeholder="多条件请以 逗号 或 空格 分开">
+  </div>
+  <div class="col-sm-3">
+    <button type="button" id="PSCSearch" class="btn btn-custom" style="width:100%;">搜索</button>
+  </div>
+</div>
+<div class="bootstrap-table table col-sm-12" style="margin-top: 8px;">
+  <div class="table-responsive">
+    <table id="Recipe_Select_Table" class="bootstrap-table table"
+           data-toggle="table"
+           data-click-to-select="true"
+           data-striped="true"
+           data-row-style="rowStyle"
+           data-cell-style="cellStyle"
+           data-height="380">
+      <thead>
+      <tr>
+        <th data-field="state" data-radio="true"></th>
+        <th data-field="id" data-visible="false"></th>
+        <th data-field="code">代码</th>
+        <th data-field="name">名称</th>
+        <th data-field="version">版本</th>
+        <th data-field="statusName">状态</th>
+        <th data-field="quantity">批量</th>
+        <th data-field="symbol">单位</th>
+        <th data-field="minQuantity">最小批量</th>
+        <th data-field="maxQuantity">最大批量</th>
+        <th data-field="description">备注</th>
+      </thead>
+    </table>
+  </div>
+</div>
+<div class="form-group col-sm-12" style="margin-top: 10px;">
+  <div class="col-sm-6" style="text-align: right">
+    <button type="button" id="Recipe_Info_Confirm" class="btn btn-custom">确定</button>
+  </div>
+  <div class="col-sm-6">
+    <button type="button" id="Recipe_Info_Cancel" class="btn btn-custom close-layer">取消</button>
+  </div>
+</div>
+</body>
+</html>
