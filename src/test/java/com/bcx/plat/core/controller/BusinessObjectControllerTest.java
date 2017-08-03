@@ -31,24 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class BusinessObjectControllerTest extends BaseTest{
 
-
-    @Autowired
-    private BusinessObjectMapper businessObjectMapper;
-
     private MockMvc mockMvc;
 
-    @InjectMocks
+    @Autowired
     private BusinessObjectController businessObjectController;
-    @Mock
-    private BusinessObjectService businessObjectService;
 
-//    @Before
-//    public void before() {
-//        MockitoAnnotations.initMocks(this);
-//        Map<String, Object> map = new HashMap<>();
-//        when(businessObjectService.select(map)).thenReturn(businessObjectMapper.select(map));
-//        mockMvc = MockMvcBuilders.standaloneSetup(businessObjectController).build();
-//    }
+    @Before
+    public void before() {
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(businessObjectController).build();
+    }
     @Test
     public void test() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/businObj/select"))
