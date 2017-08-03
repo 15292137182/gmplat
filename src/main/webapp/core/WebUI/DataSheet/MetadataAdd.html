@@ -34,7 +34,7 @@
     <el-col :span="22">
       <div>
         <el-input placeholder="请选择关联表" v-model="tableInput" ref="tableInput" disabled data-id="">
-          <el-button slot="append" icon="search" @click="searchConnectTable"></el-button>
+          <el-button slot="append" icon="search" @click="searchConnectTable"  v-bind:disabled="firstIconEvent"></el-button>
         </el-input>
       </div>
     </el-col>
@@ -67,13 +67,14 @@
         tableInput: '',
         dataId: '',
         versionInput: '',
-        disabled: false
+        disabled: false,
+        firstIconEvent:false,
       }
     },
     methods: {
       searchConnectTable() {
         var htmlUrl = 'connectTable.html';
-        littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表数据', '600px', '540px', false)
+        littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表数据', '600px', '560px', false)
       },
       conformEvent() {
         var datas = [this.$refs.codeInput, this.$refs.nameInput, this.$refs.tableInput];
@@ -90,16 +91,16 @@
             relateTableRowId: em.dataId
           }, {
             jsonp: 'callback'
-          }).then(function () {
-            ibcpLayer.ShowOK('新增成功');
-            vm.searchTable();
+          }).then(function (res) {
+            ibcpLayer.ShowOK(res.data.message);
+            basLeft.searchLeftTable();
             ibcpLayer.Close(divIndex);
           });
         }
         if (operate == 2) {
           this.$http.jsonp(serverPath + "/businObj/update", {
             //拿到这条数据的ID
-            rowId: vm.currentVal.rowId,
+            rowId: basLeft.currentVal.rowId,
             objectName: em.nameInput
           }, {
             jsonp: 'callback'

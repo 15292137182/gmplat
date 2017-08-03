@@ -12,13 +12,23 @@
 </head>
 <body>
 <el-row id="connectTable" style="padding:0 10px 10px 10px">
+    <el-col :xs="18" :sm="18" :md="18">
+        <el-input placeholder="请输入内容" v-model="searchInput" size="small">
+          <el-button slot="append" icon="search" @click.native="searchTable"></el-button>
+        </el-input>
+    </el-col>
   <el-col :span="24">
     <template>
       <el-table :data="myLeftData" highlight-current-row @current-change="handleCurrentChange"
                 :height="400" border style="width: 100%;border-radius: 5px;margin-top:10px">
-        <el-table-column prop="tableSchema" label="对象代码" width="">
+        表schema  表中英文名，说明
+        <el-table-column prop="tableSchema" label="表schema" width="">
         </el-table-column>
-        <el-table-column prop="tableCName" label="对象名称" width="">
+        <el-table-column prop="tableCName" label="表中文名" width="">
+        </el-table-column>
+        <el-table-column prop="tableEName" label="表英文文名" width="">
+        </el-table-column>
+        <el-table-column prop="desp" label="说明" width="">
         </el-table-column>
       </el-table>
     </template>
@@ -37,6 +47,7 @@
   var em = new Vue({
     el: '#connectTable',
     data: {
+      searchInput:'',
       myLeftData: []
     },
     created() {
@@ -45,14 +56,20 @@
       }, {
         jsonp: 'callback'
       }).then(function (res) {
-        for (var i = 0; i < res.data.content.data.length; i++) {
-          var obj = {};
-          obj.data = res.data.content.data[i];
-          this.myLeftData.push(obj.data);
-        }
+        console.log(res.data.content.data);
+        this.myLeftData = res.data.content.data;
       });
     },
     methods: {
+      searchTable(){
+        this.$http.jsonp(serverPath + "/maint/select", {
+          str: this.searchInput
+        }, {
+          jsonp: 'callback'
+        }).then(function (res) {
+          this.myLeftData = res.data.content.data;
+        });
+      },
       handleCurrentChange(val) {
         //选中行的数据
         this.currentRow = val.tableSchema + "(" + val.tableCName + ")";

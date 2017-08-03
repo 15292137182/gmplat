@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event_Add</title>
+  <style>
+    #addProEvent .el-row {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="addProEvent" style="margin-top:20px">
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+        <el-input placeholder="请输入属性代码" v-model="codeProInput" ref="codeProInput"
+                  v-bind:disabled="disabled">
+          <template slot="prepend">属性代码</template>
+        </el-input>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+        <el-input placeholder="请输入属性名称" v-model="nameProInput" ref="nameProInput">
+          <template slot="prepend">属性名称</template>
+        </el-input>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <el-col :span="4" style="margin-top:8px">
+          <el-checkbox v-model="checked" @change="changEvent">扩展属性</el-checkbox>
+      </el-col>
+      <el-col :span="17" :offset="3">
+        <el-input placeholder="请选择关联表字段" v-model="tableReaInput" ref="tableReaInput" disabled data-id="">
+          <el-button slot="append" icon="search" @click="searchProTable" v-bind:disabled="iconEvent"></el-button>
+        </el-input>
+      </el-col>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <el-col :span="11">
+          <el-select v-model="typeInput" placeholder="请选择值类型" ref="typeInput">
+            <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+            </el-option>
+          </el-select>
+      </el-col>
+      <el-col :span="11" :offset="2">
+          <el-select v-model="typeComValue" placeholder="请选择值类型来源" @click.native="demo" ref="typeComValue">
+            <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+            </el-option>
+          </el-select>
+      </el-col>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <div>
+        <el-input placeholder="请输入值来源内容" v-model="comContent" ref="comContent" >
+          <template slot="prepend">值来源内容</template>
+        </el-input>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="11" style="text-align:right">
+      <el-button type="primary" @click.native="conformEvent">确定</el-button>
+    </el-col>
+    <el-col :span="11" style="text-align: left" :offset="2">
+      <el-button type="primary" @click.native="cancel">取消</el-button>
+    </el-col>
+  </el-row>
+</div>
+<script>
+  var em = new Vue({
+    el: '#addProEvent',
+    data: function () {
+      return {
+        codeProInput:'',
+        nameProInput:'',
+        checked:false,
+        tableReaInput:'',
+        typeInput:'',
+        typeComValue:'',
+        comContent:'',
+        disabled:true,
+        iconEvent:true,
+      }
+    },
+    methods: {
+      searchProTable(){
+
+      },
+      changEvent(){
+        if(this.checked==false){
+          this.iconEvent=true
+        }else{
+          this.iconEvent=false;
+        }
+      },
+      demo(){
+        alert("张小胖！！！")
+      },
+      conformEvent() {
+        if(this.iconEvent==true){
+          var datas = [this.$refs.nameProInput,this.$refs.typeInput,this.$refs.typeComValue, this.$refs.comContent];
+        }else{
+          var datas = [this.$refs.nameProInput,this.$refs.tableReaInput, this.$refs.typeInput,this.$refs.typeComValue, this.$refs.comContent];
+        }
+        for (var i = 0; i < datas.length; i++) {
+          if (datas[i].value == '') {
+            ibcpLayer.ShowMsg(datas[i].placeholder);
+            return;
+          }
+        }
+        if (operate == 1) {
+          this.$http.jsonp(serverPath + "/businObj/insert", {
+            objectCode: em.codeInput,
+            objectName: em.nameInput,
+            relateTableRowId: em.dataId
+          }, {
+            jsonp: 'callback'
+          }).then(function (res) {
+            ibcpLayer.ShowOK(res.data.message);
+            basLeft.searchLeftTable();
+            ibcpLayer.Close(divIndex);
+          });
+        }
+        if (operate == 2) {
+          this.$http.jsonp(serverPath + "/businObj/update", {
+            //拿到这条数据的ID
+            rowId: basLeft.currentVal.rowId,
+            objectName: em.nameInput
+          }, {
+            jsonp: 'callback'
+          }).then(function (res) {
+            ibcpLayer.ShowOK(res.data.message);
+            basLeft.searchLeftTable();
+            ibcpLayer.Close(divIndex);
+          });
+        }
+      },
+      cancel() {
+        ibcpLayer.Close(divIndex);
+      }
+    }
+  })
+</script>
+</body>
+</html>

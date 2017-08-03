@@ -4,126 +4,106 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <script src="../Public/publicjs.js"></script>
-  <style>
-    html {
-      overflow: hidden;
-    }
-
-    .bg-color {
-      background: #f5f5f5;
-      vertical-align: middle;
-      height: 30px;
-      font-size: 18px;
-      line-height: 30px;
-    }
-
-    .el-table th {
-      text-align: center;
-      background-color: white;
-    }
-
-    .el-table th div {
-      background-color: white;
-    }
-
-    h2 {
-      margin: 2px 0;
-      float: left;
-    }
-
-    .el-row--flex.is-justify-end {
-      text-align: right;
-    }
-  </style>
 
 </head>
 <body>
-<div id="app">
-  <!--搜索框 搜索按钮 所有事件按钮-->
-  <el-row type="flex" justify="end" style="padding:5px 0 10px 0">
+<!--搜索框 搜索按钮 所有事件按钮-->
+<div id="basTop">
+  <el-row type="flex" justify="end">
     <el-col :span="24">
       <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增业务对象</el-button>
       <el-button type="info" icon="edit" size="small" @click.native="editEvent">编辑业务对象</el-button>
       <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">删除业务对象
       </el-button>
-      <el-button type="success" icon="plus" size="small">新增对象属性</el-button>
-      <el-button type="info" icon="delete" size="small">编辑对象属性</el-button>
-      <el-button type="info" icon="plus" size="small">生效</el-button>
-      <el-button type="info" icon="delete" size="small">变更</el-button>
-    </el-col>
-  </el-row>
-  <el-row :gutter="20">
-    <el-col :span="8">
-      <div style="border:1px solid #d1ddf9;border-radius: 5px;">
-        <el-row>
-          <el-col>
-            <div class="bg-color"><span style="margin-left:20px">业务对象信息</span></div>
-          </el-col>
-        </el-row>
-        <el-row style="padding:15px 10px 10px 10px">
-          <el-col :xs="24" :sm="24" :md="24">
-            <div>
-              <el-input placeholder="请输入内容" v-model="input">
-                <el-button slot="append" icon="search" @click.native="searchTable"></el-button>
-              </el-input>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row style="padding:0 10px 10px 10px">
-          <el-col :span="24">
-            <template>
-              <el-table :data="myLeftData" highlight-current-row
-                        @current-change="handleCurrentChange" :height="leftHeight" border
-                        style="width: 100%;border-radius: 5px">
-                <el-table-column prop="objectCode" label="对象代码" width="">
-                </el-table-column>
-                <el-table-column prop="objectName" label="对象名称" width="">
-                </el-table-column>
-                <el-table-column prop="relateTableRowId" label="关联表" width="">
-                </el-table-column>
-                <el-table-column prop="version" label="版本" width="">
-                </el-table-column>
-              </el-table>
-            </template>
-          </el-col>
-        </el-row>
-      </div>
-    </el-col>
-    <el-col :span="16">
-      <div style="border:1px solid #d1ddf9;border-radius: 5px;">
-        <el-row>
-          <el-col>
-            <div class="bg-color"><span style="margin-left:20px">对象的属性</span></div>
-          </el-col>
-        </el-row>
-
-        <el-row style="padding:15px 10px 10px 10px">
-          <el-col :span="24">
-            <template>
-              <el-table :data="myRightData" :height="rightHeight" border
-                        style="width: 100%;border-radius: 5px">
-                <el-table-column prop="propertyCode" label="属性代码" width="">
-                </el-table-column>
-                <el-table-column prop="propertyName" label="属性名称" width="">
-                </el-table-column>
-                <el-table-column prop="wetherExpandPro" label="是否为扩展属性" width="132px">
-                </el-table-column>
-                <el-table-column prop="relateTableColumn" label="关联表字段" width="">
-                </el-table-column>
-                <el-table-column prop="valueType" label="值类型" width="">
-                </el-table-column>
-                <el-table-column prop="valueResourceType" label="值来源类型" width="">
-                </el-table-column>
-                <el-table-column prop="valueResourceContent" label="值来源内容" width="">
-                </el-table-column>
-              </el-table>
-            </template>
-          </el-col>
-        </el-row>
-      </div>
+      <el-button type="success" icon="plus" size="small" @click.native="addProp">新增对象属性</el-button>
+      <el-button type="info" icon="delete" size="small" @click.native="editProp">编辑对象属性</el-button>
+      <el-button type="info" icon="plus" size="small" @click.native="affectProp">生效</el-button>
+      <el-button type="info" icon="delete" size="small" @click.native="changeProp">变更</el-button>
     </el-col>
   </el-row>
 </div>
+
+<!--左边的数据-->
+<el-col :span="8" id="basLeft">
+  <div class="allBorder">
+    <el-row>
+      <el-col>
+        <div class="bg-color"><span>业务对象信息</span></div>
+      </el-col>
+    </el-row>
+    <el-row class="inputStyle">
+      <el-col :xs="18" :sm="18" :md="18">
+        <div>
+          <el-input placeholder="请输入内容" v-model="leftInput" size="small">
+            <el-button slot="append" icon="search" @click.native="searchLeftTable"></el-button>
+          </el-input>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row style="padding:0 10px 10px 10px">
+      <el-col :span="24">
+        <template>
+          <el-table :data="myLeftData" ref="myLeftData" highlight-current-row
+                    @row-click="currentChange" :height="leftHeight" border
+                    class="tableStyle">
+            <el-table-column prop="objectCode" label="代码" width="">
+            </el-table-column>
+            <el-table-column prop="objectName" label="名称" width="">
+            </el-table-column>
+            <el-table-column prop="relateTableRowId" label="关联表" width="">
+            </el-table-column>
+            <el-table-column prop="version" label="版本" width="">
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-col>
+    </el-row>
+  </div>
+</el-col>
+
+<!--右边的数据-->
+<el-col :span="15" id="basRight" :offset="1">
+    <div class="allBorder">
+      <el-row>
+        <el-col>
+          <div class="bg-color"><span>对象的属性</span></div>
+        </el-col>
+      </el-row>
+      <el-row class="inputStyle">
+        <el-col :xs="14" :sm="14" :md="14">
+          <div>
+            <el-input placeholder="请输入内容" v-model="rightInput" size="small">
+              <el-button slot="append" icon="search" @click.native="searchRightTable"></el-button>
+            </el-input>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row style="padding:0px 10px 10px 10px">
+        <el-col :span="24">
+          <template>
+            <el-table :data="myRightData" :height="rightHeight" border ref="myRightData"
+                     class="tableStyle">
+              <el-table-column prop="propertyCode" label="代码" width="">
+              </el-table-column>
+              <el-table-column prop="propertyName" label="名称" width="">
+              </el-table-column>
+              <el-table-column prop="wetherExpandPro" label="扩展属性" width="132px">
+              </el-table-column>
+              <el-table-column prop="relateTableColumn" label="关联字段" width="">
+              </el-table-column>
+              <el-table-column prop="valueType" label="值类型" width="">
+              </el-table-column>
+              <el-table-column prop="valueResourceType" label="值来源类型" width="">
+              </el-table-column>
+              <el-table-column prop="valueResourceContent" label="值来源内容" width="">
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-col>
+      </el-row>
+    </div>
+</el-col>
+
 <script src="MetadataManage.js"></script>
 </body>
 </html>
