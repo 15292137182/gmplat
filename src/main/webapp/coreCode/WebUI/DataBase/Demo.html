@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据库表信息管理</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        .el-table__body-wrapper{
+            text-align: center;
+        }
+        .el-table th{
+            text-align: center;
+            background-color:white;
+        }
+        h2{
+            margin:2px 0;
+            float: left;
+        }
+        .headerDiv{
+            background: #f5f5f5;
+            padding: 3px;
+        }
+        .el-table__header-wrapper thead div{
+            background-color:white;
+        }
+        .el-table__body tr.current-row>td {
+            background: #50bfff;
+        }
+        .bg-color {
+            background: #f5f5f5;
+            vertical-align: middle;
+            height: 30px;
+            font-size:16px;
+            line-height:30px;
+        }
+    </style>
+</head>
+<body>
+<el-col :span="24" id="myButton">
+    <!--所有事件按钮-->
+    <el-row type="flex" class="row-bg" justify="end">
+        <el-col :span="24" style="text-align: right">
+            <el-button size="small" type="info" icon="plus">表信息</el-button>
+            <el-button size="small" type="info" icon="edit">表信息</el-button>
+            <el-button size="small" type="danger" icon="delete">表信息</el-button>
+        </el-col>
+    </el-row>
+</el-col>
+<el-col :span="24" id="app">
+    <!--table    -->
+    <el-row style="margin-top: 5px">
+        <el-col :span="24" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
+            <el-col :span="24">
+                <div class="headerDiv">
+                    <el-row>
+                        <el-col :span="24">
+                            <el-col :xs="8" :sm="8" :md="8">
+                                <div class="bg-color"><span style="margin-left:20px">数据库信息</span></div>
+                            </el-col>
+                            <el-col :xs="8" :sm="8" :md="8" :offset="8">
+                                <div>
+                                    <el-input size="small" placeholder="请输入内容" v-model="input">
+                                        <el-button slot="append" icon="search"  @click.native="get"></el-button>
+                                    </el-input>
+                                </div>
+                            </el-col>
+                        </el-col>
+                    </el-row>
+                </div>
+                <template>
+                    <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
+                        <el-table-column  prop="tableSchema" label="表Schema" width="110">
+                        </el-table-column>
+                        <el-table-column  prop="tableCName" label="表中文名称" width="250">
+                        </el-table-column>
+                        <el-table-column  prop="tableEName" label="表英文名称" width="">
+                        </el-table-column>
+                        <el-table-column  prop="desp" label="说明" width="">
+                        </el-table-column>
+                        <el-table-column  prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button @click="handleClick" type="text" size="small" icon="search"></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-col>
+        </el-col>
+    </el-row>
+</el-col>
+</body>
+<script src="Demo.js"></script>
+</html>

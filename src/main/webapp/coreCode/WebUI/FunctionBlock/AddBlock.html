@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event_Add</title>
+    <style>
+        #addBlock .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="addBlock" style="margin-top:20px">
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入代码" v-model="codeInput" :disabled="isEdit" ref="codeInput">
+                    <template slot="prepend">代码</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入名称" v-model="nameInput" ref="nameInput">
+                    <template slot="prepend">名称</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入类型" :disabled="isEdit" v-model="typeInput" ref="typeInput">
+                    <template slot="prepend">类型</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请选择关联对象" v-model="tableInput" ref="tableInput" disabled="" data-id="">
+                    <el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入说明" :disabled="isEdit" v-model="desp">
+                    <template slot="prepend">说明</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row >
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click.native="conformEvent">确定</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script>
+    var em=new Vue({
+        el:'#addBlock',
+        data: {
+            codeInput :'',//funcCode功能代码
+            nameInput:'',//funcName功能名称
+            typeInput:'',//funcType功能类型
+            tableInput:'',//relateBusiObj关联对象val
+            dataId:'',//relateBusiObj关联对象ID
+            desp:'',
+            isEdit:'',
+            rowId:''
+        },
+        methods:{
+            searchConnectObj(){
+                console.log(vm.editObj);
+                var htmlUrl = 'ShowAddBlock.html';
+                littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象数据', '600px', '540px',false);
+            },
+            conformEvent(){
+                var datas=[this.$refs.codeInput,this.$refs.nameInput,this.$refs.typeInput,this.$refs.tableInput];
+                for(var i=0;i<datas.length;i++){
+                    if(datas[i].value==''){
+                        ibcpLayer.ShowMsg(datas[i].placeholder);
+                        return;
+                    }
+                }
+                if(em.isEdit){//编辑
+                    this.$http.jsonp(serverPath+"/fronc/update",{
+                        "rowId":this.rowId,
+                        "funcCode":this.codeInput,
+                        "funcName":this.nameInput,
+                        "funcType":this.typeInput,
+                        "relateBusiObj":this.dataId,
+                        "desp":this.desp
+                    },{
+                        jsonp:'callback'
+                    }).then(function(res){
+                        console.log(res);
+                        vm.get();
+                    },function(){
+                        alert("error")
+                    });
+                }else{//新增
+                    this.$http.jsonp(serverPath+"/fronc/insert",{
+                        "funcCode":this.codeInput,
+                        "funcName":this.nameInput,
+                        "funcType":this.typeInput,
+                        "relateBusiObj":this.dataId,
+                        "desp":this.desp
+                    },{
+                        jsonp:'callback'
+                    }).then(function(res){
+                        vm.get();
+                    },function(){
+                        alert("error")
+                    });
+                }
+                ibcpLayer.Close(mb.divIndex);
+            },
+            cancel(){
+                ibcpLayer.Close(mb.divIndex);
+            }
+        }
+    })
+</script>
+</body>
+</html>
