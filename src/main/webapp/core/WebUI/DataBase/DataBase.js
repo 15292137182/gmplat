@@ -10,7 +10,7 @@ var vm = new Vue({
   },
   methods: {
     get () {
-      this.$http.jsonp('http://192.168.100.193/GMPlat/maint/select', {
+      this.$http.jsonp(serverPath+'maint/select', {
         "str": this.input
       }, {
         jsonp: 'callback'
@@ -48,7 +48,7 @@ var vm1 = new Vue({
   },
   methods: {
     FindData(id) {
-      this.$http.jsonp('http://192.168.100.193/GMPlat/maint/selectById', {
+      this.$http.jsonp(serverPath+'/maint/selectById', {
         "rowId": id
       }, {
         jsonp: 'callback'

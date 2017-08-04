@@ -1,4 +1,4 @@
-var path = getRootPath();
+var path = getRootPath()+"/core";
 
 document.write('<link href="' + path + '/webjar/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">');
 document.write('<link href="' + path + '/webjar/css/mystyle.css" rel="stylesheet">');
