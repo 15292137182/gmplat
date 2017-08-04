@@ -36,7 +36,7 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
    */
   @Override
   public ServiceResult<BusinessObject> select(Map map) {
-    ServiceResult<BusinessObject> result = new ServiceResult<>();
+    ServiceResult<BusinessObject> result = null;
       if (map.size() != 0) {
         List<BusinessObject> select = businessObjectMapper.select(map);
         for (int i = 0; i < select.size(); i++) {
@@ -46,12 +46,11 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
           select.get(i).setTables(string);
           result = new ServiceResult<>(QUERY_SUCCESS,select);
         }
-        if(result==null){
+        if(select.size()==0){
           result = new ServiceResult<>(QUERY_FAIL,"");
-          return result;
         }
       }
-      return new ServiceResult<>(QUERY_FAIL,"");
+      return result;
   }
 
   /**
@@ -100,8 +99,11 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
       Map<String,Object> map = new HashMap<>();
       map.put("rowId", rowId);
       List<BusinessObjectPro> select = businessObjectProMapper.select(null);
-
-      businessObjectProMapper.deleteRelateCol(map);
+      for (int i = 0; i <select.size(); i++) {
+        if (select.get(i).getRelateTableColumn()==rowId){
+          businessObjectProMapper.deleteRelateCol(map);
+        }
+      }
       businessObjectMapper.delete(rowId);
       return new ServiceResult<>(STATUS_SUCCESS, DELETE_SUCCESS, "");
     } catch (Exception e) {

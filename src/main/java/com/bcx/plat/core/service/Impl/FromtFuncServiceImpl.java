@@ -40,7 +40,7 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
       result.get(i).setTables(tables);
       serviceResult=  new ServiceResult(QUERY_SUCCESS, result);
     }
-    if(serviceResult == null){
+    if(result.size()==0){
      serviceResult = new ServiceResult(QUERY_FAIL,"");
     }
     return serviceResult;
