@@ -107,27 +107,32 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   public T fromMap(Map<String, Object> map) {
-    Method[] methods = getClass().getDeclaredMethods();
-    Object temp;
-    for (Method method : methods) {
-      if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
-        String fieldName = underlineToCamel(
-            method.getName().substring(3, method.getName().length()), false);
-        temp = map.get(fieldName);
-        if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
-          if (temp instanceof String) {
-            temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
-          } else {
-            temp = jsonToObj(objToJson(temp), method.getParameterTypes()[0]);
+    Class current = getClass();
+    do {
+      Method[] methods = current.getDeclaredMethods();
+      Object temp;
+      for (Method method : methods) {
+        if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
+          String fieldName = underlineToCamel(
+              method.getName().substring(3, method.getName().length()), false);
+          temp = map.get(fieldName);
+          if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
+            if (temp instanceof String) {
+              temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
+            } else {
+              temp = jsonToObj(objToJson(temp), method.getParameterTypes()[0]);
+            }
+          }
+          try {
+            method.invoke(this, temp);
+          } catch (IllegalAccessException | InvocationTargetException e) {
+            // 我拒绝抛出异常 e.printStackTrace();
           }
         }
-        try {
-          method.invoke(this, temp);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-          // 我拒绝抛出异常 e.printStackTrace();
-        }
       }
-    }
+      current = current.getSuperclass();
+    } while (current != Object.class);
+
     return (T) this;
   }
 

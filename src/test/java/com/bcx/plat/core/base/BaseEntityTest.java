@@ -1,6 +1,7 @@
 package com.bcx.plat.core.base;
 
 import com.bcx.BaseTest;
+import com.bcx.plat.core.entity.DBTableColumn;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -17,14 +18,16 @@ public class BaseEntityTest extends BaseTest{
     @Test
     public void test() {
         // 保证 toMap 方法和 fromMap 方法都能正常工作
-        BaseEntity entity = new BaseEntity();
+        DBTableColumn entity = new DBTableColumn();
         entity.buildCreateInfo()
                 .buildDeleteInfo()
                 .buildModifyInfo();
         @SuppressWarnings("unchecked")
         Map<String, Object> map = entity.toMap();
-        BaseEntity entity1 = new BaseEntity().fromMap(map);
+        DBTableColumn entity1 = new DBTableColumn().fromMap(map);
         assert (entity1.getCreateTime().equals(entity.getCreateTime()));
+
+
 
         Map<String,Object> map2 = new HashMap<>();
         map2.put("etc","{\"id\":\"00001\"}");
