@@ -37,7 +37,7 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   @Override
   public ServiceResult<BusinessObjectPro> select(Map<String,Object> map) {
     try {
-      List<BusinessObjectPro> select = businessObjectProMapper.select(map);
+        List<BusinessObjectPro> select = businessObjectProMapper.select(map);
       return new ServiceResult<>("查询数据成功", select);
     } catch (Exception e) {
       e.printStackTrace();

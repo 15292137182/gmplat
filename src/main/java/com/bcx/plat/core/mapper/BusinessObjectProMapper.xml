@@ -12,16 +12,15 @@
     ON tt.row_id=tp.relate_table_column
     <where>
       <if test="strArr!=null and strArr.size()!=0">
-        AND
         <foreach collection="strArr" index="index" separator="or" item="item" open="(" close=")">
            tp.property_code like '%${item}%' or tp.property_name like '%${item}%'
         </foreach>
       </if>
       <if test="rowId!=null and rowId.length()!=0">
-        AND tt.row_id=#{rowId}
+        AND tp.relate_table_column = '${rowId}'
       </if>
     </where>
-    order by tt.create_time desc
+    order by tp.create_time desc
   </select>
 
   <insert id="insert" parameterType="com.bcx.plat.core.entity.BusinessObjectPro">

@@ -14,7 +14,7 @@
                 </foreach>
             </if>
             <if test="rowId!=null and rowId.length()!=0">
-                AND row_id=#{rowId}
+                AND row_id='${rowId}'
             </if>
         </where>
     </select>

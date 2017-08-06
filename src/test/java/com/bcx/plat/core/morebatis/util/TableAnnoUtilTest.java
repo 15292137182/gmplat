@@ -13,5 +13,6 @@ public class TableAnnoUtilTest {
     @Test
     public void test() {
         List<String> pks = TableAnnoUtil.getPkAnnoField(BaseEntity.class);
+        System.out.println(pks);
     }
 }
