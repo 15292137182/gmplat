@@ -17,7 +17,8 @@ import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.morebatis.util.TableAnnoUtil;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -106,22 +107,25 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   public T fromMap(Map<String, Object> map) {
-    Field[] fields = getClass().getDeclaredFields();
-    Object temp = null;
-    for (Field field : fields) {
-      field.setAccessible(false);
-      temp = map.get(field.getName());
-      if (null != temp && temp.getClass() != field.getType()) {
-        if (temp instanceof String) {
-          temp = jsonToObj((String) temp, field.getType());
-        } else {
-          temp = jsonToObj(objToJson(temp), field.getType());
+    Method[] methods = getClass().getDeclaredMethods();
+    Object temp;
+    for (Method method : methods) {
+      if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
+        String fieldName = underlineToCamel(
+            method.getName().substring(3, method.getName().length()), false);
+        temp = map.get(fieldName);
+        if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
+          if (temp instanceof String) {
+            temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
+          } else {
+            temp = jsonToObj(objToJson(temp), method.getParameterTypes()[0]);
+          }
         }
-      }
-      try {
-        field.set(this, temp);
-      } catch (Exception e) {
-        // 我就不打印错误 e.printStackTrace();
+        try {
+          method.invoke(this, temp);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+          // 我拒绝抛出异常 e.printStackTrace();
+        }
       }
     }
     return (T) this;
@@ -295,7 +299,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
         _obj.put(underlineToCamel(entry.getKey(), false), entry.getValue());
       });
       return fromMap(_obj);
-    }else {
+    } else {
       return null;
     }
   }

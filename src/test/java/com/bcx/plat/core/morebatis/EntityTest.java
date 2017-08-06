@@ -2,7 +2,6 @@ package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.BusinessObject;
-import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 
