@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../Public/publicjs.js"></script>
+    <script src="KeyValueSet.js"></script>
     <style>
         html {
             overflow: hidden;
@@ -31,9 +32,6 @@
             float: left;
         }
 
-        .el-row--flex.is-justify-end {
-            text-align: right;
-        }
     </style>
 </head>
 <body>
@@ -70,15 +68,15 @@
                             <el-table :data="myLeftData" highlight-current-row
                                       @current-change="handleCurrentChange" :height="leftHeight" border
                                       style="width: 100%;border-radius: 5px">
-                                <el-table-column prop="objectCode" label="代码" width="">
+                                <el-table-column prop="keySetCode" label="代码" width="">
                                 </el-table-column>
-                                <el-table-column prop="objectName" label="名称" width="">
+                                <el-table-column prop="keySetName" label="名称" width="">
                                 </el-table-column>
-                                <el-table-column prop="relateTableRowId" label="键" width="">
+                                <el-table-column prop="confKey" label="键" width="">
                                 </el-table-column>
-                                <el-table-column prop="version" label="值" width="">
+                                <el-table-column prop="confValue" label="值" width="">
                                 </el-table-column>
-                                <el-table-column prop="version" label="说明" width="">
+                                <el-table-column prop="desp" label="说明" width="">
                                 </el-table-column>
                                 <el-table-column prop="version" label="版本" width="">
                                 </el-table-column>
