@@ -20,7 +20,7 @@ public interface TempSuitMapper {
    * @param queryActionLite 查询参数
    * @return 查询结果
    */
-  List<Map<String, Object>> select(QueryAction queryActionLite);
+  List select(QueryAction queryActionLite);
 
   int insert(InsertAction insertAction);
 

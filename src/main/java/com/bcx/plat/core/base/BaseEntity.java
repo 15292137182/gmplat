@@ -209,4 +209,9 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
 
     }
   }
+
+  public T insert(){
+
+    return (T) this;
+  }
 }
