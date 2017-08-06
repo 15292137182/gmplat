@@ -1,19 +1,20 @@
 package com.bcx.plat.core.database.action;
 
 import com.bcx.BaseTest;
-import com.bcx.plat.core.database.action.mapper.TempSuitMapper;
-import com.bcx.plat.core.database.action.substance.FieldCondition;
-import com.bcx.plat.core.database.action.substance.condition.Operator;
+import com.bcx.plat.core.morebatis.DeleteAction;
+import com.bcx.plat.core.morebatis.InsertAction;
+import com.bcx.plat.core.morebatis.QueryAction;
+import com.bcx.plat.core.morebatis.UpdateAction;
+import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
+import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 public class MixedDbActionTest extends BaseTest {
     @Autowired

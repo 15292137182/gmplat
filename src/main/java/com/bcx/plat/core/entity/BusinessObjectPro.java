@@ -3,8 +3,8 @@ package com.bcx.plat.core.entity;
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.action.annotations.Table;
-import com.bcx.plat.core.database.action.annotations.TablePK;
+import com.bcx.plat.core.morebatis.annotations.Table;
+import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.database.info.TableInfo;
 import java.io.Serializable;
 
