@@ -11,6 +11,7 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.service.DBTableColumnService;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -82,14 +83,14 @@ public class DBTableColumnController extends BaseController {
   /**
    * 删除数据
    *
-   * @param dbTableColumn javaBean
+   * @param rowIds javaBean
    * @return 返回
    */
   @RequestMapping("/delete")
-  public MappingJacksonValue delete(DBTableColumn dbTableColumn, HttpServletRequest request,
+  public MappingJacksonValue delete(List<String> rowIds, HttpServletRequest request,
       Locale locale) {
     MappingJacksonValue value = new MappingJacksonValue(
-        dbTableColumnService.delete(dbTableColumn).convertMsg(locale));
+        dbTableColumnService.batchDelete(rowIds).convertMsg(locale));
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;

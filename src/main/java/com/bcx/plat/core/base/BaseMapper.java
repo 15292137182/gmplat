@@ -34,4 +34,11 @@ public interface BaseMapper<T extends BaseEntity> {
    */
   int delete(T entity);
 
+  /**
+   * 批量删除数据
+   *
+   * Created by hcl at 2017-08-08
+   */
+  int batchDelete(Map map);
+
 }

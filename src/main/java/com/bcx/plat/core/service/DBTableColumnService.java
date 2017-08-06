@@ -2,6 +2,7 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.utils.ServiceResult;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -36,8 +37,8 @@ public interface DBTableColumnService {
   /**
    * 删除数据库字段信息
    *
-   * @param bean 数据表bean
+   * @param rowIds 数据表bean
    * @return 返回是否成功
    */
-  ServiceResult<DBTableColumn> delete(DBTableColumn bean);
+  ServiceResult<DBTableColumn> batchDelete(Collection<String> rowIds);
 }

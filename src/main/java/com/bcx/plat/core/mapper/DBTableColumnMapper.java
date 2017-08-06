@@ -2,6 +2,7 @@ package com.bcx.plat.core.mapper;
 
 import com.bcx.plat.core.base.BaseMapper;
 import com.bcx.plat.core.entity.DBTableColumn;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,8 +14,8 @@ public interface DBTableColumnMapper extends BaseMapper<DBTableColumn> {
   /**
    * 逻辑删除的方法
    *
-   * @param bean 数据Bean
+   * @param map 数据Bean
    * @return 返回操作结果标识
    */
-  int logicDelete(DBTableColumn bean);
+  int batchLogicDelete(Map map);
 }

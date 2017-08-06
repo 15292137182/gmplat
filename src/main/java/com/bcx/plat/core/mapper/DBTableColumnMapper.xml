@@ -53,19 +53,32 @@
     row_id = #{rowId}
   </update>
 
-  <delete id="delete" parameterType="com.bcx.plat.core.entity.DBTableColumn">
+  <delete id="batchDelete">
     DELETE FROM public.t_db_table_column
-    WHERE row_id = #{rowId}
+    <where>
+      <if test="null != null and rowIds.size() != 0">
+        AND row_id in
+        <foreach collection="rowIds" separator="," open="(" item="item" close=")">
+          #{item}
+        </foreach>
+      </if>
+    </where>
   </delete>
 
-  <delete id="logicDelete" parameterType="com.bcx.plat.core.entity.DBTableColumn">
+  <delete id="batchLogicDelete" parameterType="hashmap">
     UPDATE public.t_db_table_column
     SET
     delete_user = #{deleteUser},
     delete_user_name = #{deleteUserName},
     delete_time = #{deleteTime},
     delete_flag = #{deleteFlag}
-    WHERE
-    row_id = #{rowId}
+    <where>
+      <if test="null != null and rowIds.size() != 0">
+        AND row_id in
+        <foreach collection="rowIds" separator="," open="(" item="item" close=")">
+          #{item}
+        </foreach>
+      </if>
+    </where>
   </delete>
 </mapper>
