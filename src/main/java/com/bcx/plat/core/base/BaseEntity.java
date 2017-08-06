@@ -4,6 +4,7 @@ import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
+import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 import com.bcx.plat.core.morebatis.DeleteAction;
 import com.bcx.plat.core.morebatis.InsertAction;
@@ -15,8 +16,8 @@ import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.morebatis.util.TableAnnoUtil;
 import com.bcx.plat.core.utils.SpringContextHolder;
-import com.bcx.plat.core.utils.UtilsTool;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 基础 entity 类，建议所有实体类均继承此类 Create By HCL at 2017/7/31
+ * 基础 entity 类，建议所有实体类均继承此类
+ *
+ * Create By HCL at 2017/7/31
  */
 public class BaseEntity<T extends BaseEntity> implements Serializable {
 
@@ -96,15 +99,32 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   /**
    * 尝试从 map 中读取 entity 类
    *
+   * 为了满足需求，我决定造一个轮子
+   *
    * @param map map数据
    * @return 返回实体类
    */
   @SuppressWarnings("unchecked")
   public T fromMap(Map<String, Object> map) {
-    if (map != null && map.get("etc") instanceof Map) {
-      map.put("etc", objToJson(map.get("etc")));
+    Field[] fields = getClass().getDeclaredFields();
+    Object temp = null;
+    for (Field field : fields) {
+      field.setAccessible(false);
+      temp = map.get(field.getName());
+      if (null != temp && temp.getClass() != field.getType()) {
+        if (temp instanceof String) {
+          temp = jsonToObj((String) temp, field.getType());
+        } else {
+          temp = jsonToObj(objToJson(temp), field.getType());
+        }
+      }
+      try {
+        field.set(this, temp);
+      } catch (Exception e) {
+        // 我就不打印错误 e.printStackTrace();
+      }
     }
-    return (T) jsonToObj(objToJson(map), getClass());
+    return (T) this;
   }
 
   public String getStatus() {
@@ -211,19 +231,6 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     this.etc = etc;
   }
 
-  /**
-   * 对json自动填充的特殊类型字段进行指定方法
-   *
-   * @param str 字符串
-   */
-  public void setEtc(String str) {
-    try {
-      setEtc(jsonToObj(str, Map.class));
-    } catch (Exception ignored) {
-
-    }
-  }
-
   private TempSuitMapper getTemplate() {
     return (TempSuitMapper) SpringContextHolder.getBean("tempSuitMapper");
   }
@@ -254,7 +261,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     return (T) this;
   }
 
-  public T update(){
+  public T update() {
     List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
     TableSource table = TableAnnoUtil.getTableSource(this.getClass());
     Map<String, Object> values = toMap();
@@ -270,7 +277,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   }
 
 
-  public T selectByPks(){
+  public T selectByPks() {
     List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
     TableSource table = TableAnnoUtil.getTableSource(this.getClass());
     Map<String, Object> values = toMap();
@@ -282,17 +289,16 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
         .collect(Collectors.toList());
     QueryAction queryAction = new QueryAction().selectAll().from(table).where(pkConditions);
     List<Map<String, Object>> result = getTemplate().select(queryAction);
-    if (result.size()==1) {
-      HashMap<String,Object> _obj=new HashMap<>();
-      result.get(0).entrySet().stream().forEach((entry)->{
-        _obj.put(UtilsTool.underlineToCamel(entry.getKey(),false),entry.getValue());
+    if (result.size() == 1) {
+      HashMap<String, Object> _obj = new HashMap<>();
+      result.get(0).entrySet().stream().forEach((entry) -> {
+        _obj.put(underlineToCamel(entry.getKey(), false), entry.getValue());
       });
-      T entity = this.fromMap(_obj);
-      return (T) entity;
-    }else{
+      return fromMap(_obj);
+    }else {
       return null;
     }
   }
 
 
-  }
+}
