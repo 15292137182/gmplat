@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcx.plat.core.mapper.FrontFuncProMapper">
+    <select id="select" resultType="com.bcx.plat.core.entity.FrontFuncPro" parameterType="hashMap">
+        select
+            row_id,func_row_id,relate_busi_pro,display_title,wether_display,display_widget,wether_readonly,
+            allow_empty,length_interval,validate_func,display_func,sort,
+            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+        FROM
+            t_front_func_pro
+        <where>
+            <if test="strArr!=null and strArr.size()!=0">
+                <foreach collection="strArr" item="item" index="index" open="(" separator="or" close="）">
+                    func_row_id like '%${item}%' or func relate_busi_pro like '%${item}%'
+                </foreach>
+            </if>
+            <if test="rowId!=null and rowId.length()!=0">
+                row_id = #{rowId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.bcx.plat.core.entity.FrontFuncPro">
+        INSERT  INTO
+            t_front_func_pro
+            (
+                row_id, func_row_id, relate_busi_pro, display_title,
+                wether_display, display_widget, wether_readonly,
+                allow_empty, length_interval, validate_func,
+                display_func, sort,
+                <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+            )
+        VALUES
+            (
+                #{rowId},#{funcRowId},#{relateBusiPro},#{displayTitle},#{wetherDisplay}，#{displayWidget},
+                #{wetherReadOnly},#{allowEnpty},#{lengthInterVal},#{validateFunc},#{displayFunc},#{sort},
+                <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
+            )
+    </insert>
+    <update id="update" parameterType="com.bcx.plat.core.entity.FrontFuncPro">
+        UPDATE
+            t_front_func_pro
+        SET
+            func_row_id = #{funcRowId},
+            relate_busi_pro = #{relateBusiPro},
+            display_title = #{displayTitle},
+            wether_display = #{wetherDisplay},
+            display_widget = #{displayWidget},
+            wether_readonly = #{wetherReadOnly},
+            allow_empty = #{allowEnpty},
+            length_interval = #{lengthInterVal},
+            validate_func = #{validateFunc},
+            display_func = #{displayFunc},
+            sort = #{sort},
+            modify_user = #{modifyUser},
+            modify_user_name = #{modifyUserName},
+            modify_time = #{modifyTime}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        delete FROM t_front_func_pro WHERE row_id = #{rowId}
+    </delete>
+</mapper>

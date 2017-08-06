@@ -13,7 +13,7 @@
 	}, {
 		"title": "键值集合管理",
 		"icon": " &#xe641",
-		"href": "core/WebUI/StandardType/StandardType.html"
+		"href": "core/WebUI/set/KeyValueSet.html"
 	}, {
 		"title": "数据集管理",
 		"icon": " fa-edit",

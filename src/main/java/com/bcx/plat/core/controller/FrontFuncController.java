@@ -41,10 +41,10 @@ public class FrontFuncController {
     map.put("strArr", collectToSet(str));
     map.put("rowId",rowId);
     ServiceResult<FrontFunc> result = frontFuncService.select(map);
-    MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
-    mapjack.setJsonpFunction(
+    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
-    return mapjack;
+    return value;
   }
 
   /**
