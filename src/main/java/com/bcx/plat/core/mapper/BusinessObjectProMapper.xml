@@ -41,13 +41,8 @@
   </delete>
 
 
-  <delete id="deleteRelateCol" parameterType="hashMap">
-    DELETE FROM t_business_object_pro where relate_table_column IN
-    <if test="rowId!=null and rowId.length()!=0">
-      <foreach collection="rowId" separator="or" index="index" item="rowId" open="(" close=")">
-        #{rowId}
-      </foreach>
-    </if>
+  <delete id="deleteRelateCol" parameterType="String">
+    DELETE FROM t_business_object_pro where relate_table_column =#{rowId}
   </delete>
 
 </mapper>
