@@ -8,8 +8,8 @@ public class BaseConstants {
   public static final String DELETE_FLAG = "1";
   public static final boolean LOGIC_DELETE = true;
 
-  public static final int STATUS_SUCCESS = 200;
-  public static final int STATUS_FAIL = 500;
+  public static final int STATUS_SUCCESS = 1;
+  public static final int STATUS_FAIL = -1;
   public static final int STATUS_WARNING = 2;
 
   /**
