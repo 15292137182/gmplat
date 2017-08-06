@@ -18,7 +18,7 @@ public interface BusinessObjectMapper extends BaseMapper<BusinessObject> {
   /**
    * 获取ID对该条记录执行变更,没有生效的不能执行变更
    */
-  int updateExecuChange(String rowId);
+  int updateTakeEffect(String rowId);
 
   /**
    * 根据id查询所有记录

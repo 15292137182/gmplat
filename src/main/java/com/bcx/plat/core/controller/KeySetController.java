@@ -19,7 +19,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 /**
  * Created by Went on 2017/8/3.
  */
-@RequestMapping("/keySet")
+@RequestMapping("/core")
 @RestController
 public class KeySetController {
 
@@ -34,7 +34,7 @@ public class KeySetController {
      * @param locale
      * @return
      */
-    @RequestMapping("/select")
+    @RequestMapping("/queryKeySet")
     public MappingJacksonValue select(String str,String rowId, HttpServletRequest request, Locale locale){
         Map<String,Object> map = new HashMap<>();
         map.put("strArr",collectToSet(str));
@@ -52,7 +52,7 @@ public class KeySetController {
      * @param locale
      * @return
      */
-    @RequestMapping("/insert")
+    @RequestMapping("/addKeySet")
     public MappingJacksonValue insert(KeySet keySet,HttpServletRequest request,Locale locale){
         ServiceResult<KeySet> insert = keySetService.insert(keySet);
         MappingJacksonValue result = new MappingJacksonValue(insert.convertMsg(locale));
@@ -67,7 +67,7 @@ public class KeySetController {
      * @param locale
      * @return
      */
-    @RequestMapping("/update")
+    @RequestMapping("/modifyKeySet")
     public MappingJacksonValue update(KeySet keySet,HttpServletRequest request,Locale locale){
         ServiceResult<KeySet> insert = keySetService.update(keySet);
         MappingJacksonValue result = new MappingJacksonValue(insert.convertMsg(locale));
@@ -82,7 +82,7 @@ public class KeySetController {
      * @param locale
      * @return
      */
-    @RequestMapping("/delete")
+    @RequestMapping("/delKeySet")
     public MappingJacksonValue delete(KeySet keySet,HttpServletRequest request,Locale locale){
         ServiceResult<KeySet> insert = keySetService.delete(keySet);
         MappingJacksonValue result = new MappingJacksonValue(insert.convertMsg(locale));

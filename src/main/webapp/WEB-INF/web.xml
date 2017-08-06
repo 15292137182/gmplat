@@ -2,6 +2,10 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
   version="3.0">
   <display-name>GMPlat</display-name>
+  
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
 
   <!-- 添加字符编码过滤器 -->
   <filter>
@@ -53,7 +57,7 @@
   <servlet-mapping>
     <servlet-name>springMVC</servlet-name>
     <!-- / 表示所有的请求都要经过此 servlet -->
-    <url-pattern>/</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
   <!-- 设置内容配置文件 -->

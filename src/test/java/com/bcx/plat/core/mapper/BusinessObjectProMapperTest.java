@@ -3,46 +3,61 @@ package com.bcx.plat.core.mapper;
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
-import org.apache.ibatis.annotations.Mapper;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.bcx.plat.core.base.BaseConstants.UNAVAILABLE;
+import static com.bcx.plat.core.base.BaseConstants.INVALID;
 
 /**
- * Created by Went on 2017/8/1.
+ * Created by Went on 2017/8/6.
  */
-public class BusinessObjectProMapperTest extends BaseTest{
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class BusinessObjectProMapperTest extends BaseTest {
 
     @Autowired
     private BusinessObjectProMapper businessObjectProMapper;
+
+    static String newRowId = null;
+
+    /**
+     * 测试业务对象属性Mapper接口的查询
+     */
+    @Test
+    public void ATestSelect() {
+        List<BusinessObjectPro> select = businessObjectProMapper.select(null);
+        for (int i = 0; i < select.size(); i++) {
+            BusinessObjectPro result = select.get(i);
+            String rowId = result.getRowId();
+            logger.info("++++++++++++" + rowId);
+        }
+    }
 
     /**
      * 测试业务对象属性Mapper接口的新增
      */
     @Test
-    public void insertTest(){
-        BusinessObjectPro businessObjectPro = new BusinessObjectPro();
-        businessObjectPro.setRowId(UUID.randomUUID().toString());
-        businessObjectPro.setPropertyCode("00001");
-        businessObjectPro.setPropertyName("00002");
-        businessObjectPro.setRelateTableColumn("00003");
-        businessObjectPro.buildCreateInfo();
-        int select = businessObjectProMapper.insert(businessObjectPro);
+    public void BTestAdd() {
+        BusinessObjectPro result = new BusinessObjectPro();
+        result.setPropertyCode("001");
+        result.setRelateTableColumn("3232");
+        result.setPropertyName("12");
+        result.buildCreateInfo();
+        businessObjectProMapper.insert(result);
+        newRowId = result.getRowId();
     }
 
-
-   /**
-     * 测试业务对象Mapper接口的删除
+    /**
+     * 测试业务对象属性Mapper接口的删除
      */
     @Test
-    public void deleteTest(){
-        String rowId = "165d283f-cafe-4ead-8553-607ea9c3063b";
-        int select = businessObjectProMapper.delete(rowId);
-        logger.info(select+"");
+    public void DTestDel() {
+        String rowId = newRowId;
+        businessObjectProMapper.delete(rowId);
     }
 
 

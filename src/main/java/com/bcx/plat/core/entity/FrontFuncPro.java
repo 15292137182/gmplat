@@ -15,9 +15,9 @@ public class FrontFuncPro extends BaseEntity{
     private String displayTitle;//显示标题
     private String wetherDisplay;//是否显示
     private String displayWidget;//显示控件
-    private String wetherReadOnly;//只读
-    private String allowEnpty;//允许为空
-    private String lengthInterVal;//长度区间
+    private String wetherReadonly;//只读
+    private String allowEmpty;//允许为空
+    private String lengthInterval;//长度区间
     private String validateFunc;//验证函数
     private String displayFunc;//显示函数
     private String sort;//排序
@@ -81,28 +81,28 @@ public class FrontFuncPro extends BaseEntity{
         this.displayWidget = displayWidget;
     }
 
-    public String getWetherReadOnly() {
-        return wetherReadOnly;
+    public String getWetherReadonly() {
+        return wetherReadonly;
     }
 
-    public void setWetherReadOnly(String wetherReadOnly) {
-        this.wetherReadOnly = wetherReadOnly;
+    public void setWetherReadonly(String wetherReadonly) {
+        this.wetherReadonly = wetherReadonly;
     }
 
-    public String getAllowEnpty() {
-        return allowEnpty;
+    public String getAllowEmpty() {
+        return allowEmpty;
     }
 
-    public void setAllowEnpty(String allowEnpty) {
-        this.allowEnpty = allowEnpty;
+    public void setAllowEmpty(String allowEmpty) {
+        this.allowEmpty = allowEmpty;
     }
 
-    public String getLengthInterVal() {
-        return lengthInterVal;
+    public String getLengthInterval() {
+        return lengthInterval;
     }
 
-    public void setLengthInterVal(String lengthInterVal) {
-        this.lengthInterVal = lengthInterVal;
+    public void setLengthInterval(String lengthInterval) {
+        this.lengthInterval = lengthInterval;
     }
 
     public String getValidateFunc() {

@@ -33,8 +33,10 @@
             )
         VALUES
             (
-                #{rowId},#{funcRowId},#{relateBusiPro},#{displayTitle},#{wetherDisplay}，#{displayWidget},
-                #{wetherReadOnly},#{allowEnpty},#{lengthInterVal},#{validateFunc},#{displayFunc},#{sort},
+                #{rowId},#{funcRowId},#{relateBusiPro},#{displayTitle},
+                #{wetherDisplay},#{displayWidget},#{wetherReadonly},
+                #{allowEmpty},#{lengthInterval},#{validateFunc},
+                #{displayFunc},#{sort},
                 <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
             )
     </insert>
@@ -47,9 +49,9 @@
             display_title = #{displayTitle},
             wether_display = #{wetherDisplay},
             display_widget = #{displayWidget},
-            wether_readonly = #{wetherReadOnly},
-            allow_empty = #{allowEnpty},
-            length_interval = #{lengthInterVal},
+            wether_readonly = #{wetherReadonly},
+            allow_empty = #{allowEmpty},
+            length_interval = #{lengthInterval},
             validate_func = #{validateFunc},
             display_func = #{displayFunc},
             sort = #{sort},

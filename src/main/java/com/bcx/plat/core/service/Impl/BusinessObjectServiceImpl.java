@@ -1,9 +1,6 @@
 package com.bcx.plat.core.service.Impl;
 
-import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
-import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.base.BaseConstants.TAKE_EFFECT;
-import static com.bcx.plat.core.base.BaseConstants.UNAVAILABLE;
+import static com.bcx.plat.core.base.BaseConstants.*;
 import static com.bcx.plat.core.constants.Message.*;
 
 import com.bcx.plat.core.base.BaseService;
@@ -71,8 +68,8 @@ public class BusinessObjectServiceImpl extends BaseService implements BusinessOb
             //业务对象版本号默认从1.0开始
             businessObject.setVersion("1.0");
             businessObject.buildCreateInfo();
-            //新增数默认状态为不可用
-            businessObject.setStatus(UNAVAILABLE);
+            //新增状态默认为失效
+            businessObject.setStatus(INVALID);
             String rowId = businessObject.getRowId();
             businessObjectMapper.insert(businessObject);
             //将用户新增的rowId返回
@@ -126,14 +123,14 @@ public class BusinessObjectServiceImpl extends BaseService implements BusinessOb
      * 获取ID对该条记录执行变更,没有生效的不能执行变更
      */
     @Override
-    public ServiceResult updateExecuChange(String rowId) {
+    public ServiceResult updateTakeEffect(String rowId) {
         BusinessObject select = businessObjectMapper.selectById(rowId);
         String status = select.getStatus();
         if (!(status == TAKE_EFFECT)) {
-            return new ServiceResult("状态没有生效,不能执行变更", "");
+            return new ServiceResult("数据没有生效,", "");
         } else {
-            businessObjectMapper.updateExecuChange(rowId);
-            return new ServiceResult();
+            businessObjectMapper.updateTakeEffect(rowId);
+            return new ServiceResult("","");
         }
     }
 }

@@ -6,6 +6,8 @@ import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.database.info.TableInfo;
 import java.io.Serializable;
 
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
+
 /**
  * Created by Went on 2017/7/31. 维护数据库表实体类
  */
@@ -18,6 +20,18 @@ public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serial
   private String tableEName;//表中文名
   private String tableCName;//表英文名
   private String desp;//说明
+
+
+  /**
+   * 构建 - 创建信息
+   *
+   * @return 返回自身
+   */
+  @Override
+  public MaintTableInfo buildCreateInfo() {
+    this.rowId = lengthUUID(32);
+    return super.buildCreateInfo();
+  }
 
   public String getRowId() {
     return rowId;

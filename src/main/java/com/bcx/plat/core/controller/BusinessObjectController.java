@@ -75,4 +75,19 @@ public class BusinessObjectController {
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
   }
+
+  /**
+   *  对该条记录失效变为生效
+   * @param rowId  接受的唯一标示
+   * @param request
+   * @param locale
+   * @return
+   */
+  @RequestMapping("/takeEff")
+  public MappingJacksonValue updateTakeEffect(String rowId,HttpServletRequest request,Locale locale){
+    ServiceResult result = businessObjectService.updateTakeEffect(rowId);
+    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
+    return value;
+  }
 }

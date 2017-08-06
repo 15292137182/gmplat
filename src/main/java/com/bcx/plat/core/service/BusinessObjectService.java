@@ -30,7 +30,7 @@ public interface BusinessObjectService {
   ServiceResult<BusinessObject> delete(String rowId);
 
   /**
-   * 获取ID对该条记录执行变更,没有生效的不能执行变更
+   * 获取ID对该条记录,失效改为生效
    */
-  ServiceResult<BusinessObject> updateExecuChange(String rowId);
+  ServiceResult<BusinessObject> updateTakeEffect(String rowId);
 }

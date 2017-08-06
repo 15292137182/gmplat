@@ -50,7 +50,7 @@
     DELETE FROM t_business_object WHERE row_id=#{rowId}
   </delete>
 
-  <update id="updateExecuChange" parameterType="String">
+  <update id="updateTakeEffect" parameterType="String">
     UPDATE t_business_object SET status = #{status} WHERE row_id=#{rowId}
   </update>
 
@@ -60,6 +60,5 @@
     row_id,object_code,object_name,relate_table_row_id,
     <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
     FROM t_business_object WHERE row_id=#{rowId}
-
   </select>
 </mapper>

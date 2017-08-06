@@ -6,22 +6,30 @@
   <script src="jquery.js"></script>
   <script>
 
-    $.ajax({
-      url: 'http://localhost:8088/GMPlat/report/he/wo',
-      type: 'get',
-      data: 'str',
-      dataType: "json",
-      success: function (result) {
-        console.log(result.功能)
-      },
-      error: function () {
-        alert("提示错误");
-      }
-    });
+//    $.ajax({
+//      url: 'http://localhost:8088/GMPlat/report/he/wo',
+//      type: 'get',
+//      data: 'str',
+//      dataType: "json",
+//      success: function (result) {
+//        console.log(result.功能)
+//      },
+//      error: function () {
+//        alert("提示错误");
+//      }
+//    });
 
+function oc(obj) {
+    var aa =  $("#myfile").val();
+    alert(aa);
+}
+
+alert(getRootPath());
   </script>
 </head>
 <body>
+<input type="file" id="myfile" onchange="oc(this)"/>
+
 <h1>hello</h1>
 </body>
 </html>
