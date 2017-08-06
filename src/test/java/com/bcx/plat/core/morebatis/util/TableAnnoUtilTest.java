@@ -1,7 +1,6 @@
-package com.bcx.morebatis.util;
+package com.bcx.plat.core.morebatis.util;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.morebatis.util.TableAnnoUtil;
 import org.junit.Test;
 
 import java.util.List;

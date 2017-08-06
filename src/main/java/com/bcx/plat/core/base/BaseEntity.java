@@ -5,9 +5,23 @@ import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
+import com.bcx.plat.core.morebatis.DeleteAction;
+import com.bcx.plat.core.morebatis.InsertAction;
+import com.bcx.plat.core.morebatis.QueryAction;
+import com.bcx.plat.core.morebatis.UpdateAction;
+import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.morebatis.substance.condition.Operator;
+import com.bcx.plat.core.morebatis.util.TableAnnoUtil;
+import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.UtilsTool;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 基础 entity 类，建议所有实体类均继承此类 Create By HCL at 2017/7/31
@@ -210,8 +224,75 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     }
   }
 
-  public T insert(){
+  private TempSuitMapper getTemplate() {
+    return (TempSuitMapper) SpringContextHolder.getBean("tempSuitMapper");
+  }
 
+  public T insert() {
+    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
+    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
+    Map<String, Object> values = toMap();
+    Map etc = (Map) values.remove("etc");
+    InsertAction insertAction = new InsertAction().into(table).cols(values.keySet())
+        .values(Arrays.asList(values));
+    getTemplate().insert(insertAction);
     return (T) this;
   }
-}
+
+  public T delete() {
+    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
+    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
+    Map<String, Object> values = toMap();
+    Map etc = (Map) values.remove("etc");
+    List<FieldCondition> pkConditions = pks.stream()
+        .map((pk) -> {
+          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
+        })
+        .collect(Collectors.toList());
+    DeleteAction deleteAction = new DeleteAction().from(table).where(pkConditions);
+    getTemplate().delete(deleteAction);
+    return (T) this;
+  }
+
+  public T update(){
+    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
+    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
+    Map<String, Object> values = toMap();
+    Map etc = (Map) values.remove("etc");
+    List<FieldCondition> pkConditions = pks.stream()
+        .map((pk) -> {
+          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
+        })
+        .collect(Collectors.toList());
+    UpdateAction updateAction = new UpdateAction().from(table).set(values).where(pkConditions);
+    getTemplate().update(updateAction);
+    return (T) this;
+  }
+
+
+  public T selectByPks(){
+    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
+    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
+    Map<String, Object> values = toMap();
+    Map etc = (Map) values.remove("etc");
+    List<FieldCondition> pkConditions = pks.stream()
+        .map((pk) -> {
+          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
+        })
+        .collect(Collectors.toList());
+    QueryAction queryAction = new QueryAction().selectAll().from(table).where(pkConditions);
+    List<Map<String, Object>> result = getTemplate().select(queryAction);
+    if (result.size()==1) {
+      HashMap<String,Object> _obj=new HashMap<>();
+      result.get(0).entrySet().stream().forEach((entry)->{
+        _obj.put(UtilsTool.underlineToCamel(entry.getKey(),false),entry.getValue());
+      });
+      this.fromMap(_obj);
+      return (T) this;
+    }else{
+      return null;
+    }
+  }
+
+
+  }

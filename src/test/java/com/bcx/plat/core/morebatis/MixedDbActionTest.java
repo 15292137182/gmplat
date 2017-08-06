@@ -1,11 +1,7 @@
-package com.bcx.plat.core.database.action;
+package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.DeleteAction;
-import com.bcx.plat.core.morebatis.InsertAction;
-import com.bcx.plat.core.morebatis.QueryAction;
-import com.bcx.plat.core.morebatis.UpdateAction;
 import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
@@ -94,7 +90,6 @@ public class MixedDbActionTest extends BaseTest {
     Assert.assertTrue(id1000SizeBefore > id1000SizeAfter);
   }
 
-  @Test
   public void jsonTest() {
     final FieldCondition jsonFieldCondition = new FieldCondition("testFirst", Operator.EQUAL,
         "json works");
@@ -104,9 +99,10 @@ public class MixedDbActionTest extends BaseTest {
     jsonTest.put("OK", 1);
     row.put("id", 1024);
     row.put("testFirst", "json works");
+    row.put("testSecond", "json works2");
     row.put("jsonTest", jsonTest);
     InsertAction insertAction = new InsertAction().into(TableInfo.TEST)
-        .cols(Arrays.asList("id", "testFirst", "jsonTest"))
+        .cols(Arrays.asList("id", "testFirst","testSecond", "jsonTest"))
         .values(Arrays.asList(row));
     QueryAction queryAction = new QueryAction().selectAll().from(TableInfo.TEST)
         .where(jsonFieldCondition);

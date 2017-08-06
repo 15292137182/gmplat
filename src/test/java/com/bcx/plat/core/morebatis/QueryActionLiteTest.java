@@ -1,7 +1,6 @@
-package com.bcx.plat.core.database.action;
+package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
-import com.bcx.plat.core.morebatis.QueryAction;
 import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
 import com.bcx.plat.core.morebatis.substance.Field;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;

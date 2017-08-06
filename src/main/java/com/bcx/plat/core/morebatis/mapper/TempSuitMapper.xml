@@ -59,15 +59,7 @@
     VALUES
     <foreach collection="values" item="row" separator=",">
       <foreach close=")" collection="row" item="rowValue" open="(" separator=",">
-        <choose>
-          <when test="rowValue instanceof java.util.Map">
-            #{rowValue}::jsonb
-          </when>
-          <otherwise>
             #{rowValue}
-          </otherwise>
-        </choose>
-
       </foreach>
     </foreach>
   </insert>

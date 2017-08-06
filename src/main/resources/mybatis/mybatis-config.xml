@@ -27,10 +27,6 @@
     <package name="com.bcx"/>
   </typeAliases>
 
-  <typeHandlers>
-    <typeHandler handler="com.bcx.plat.core.morebatis.typehandler.MapTypeHandler" />
-  </typeHandlers>
-
   <plugins>
     <plugin interceptor="com.github.pagehelper.PageHelper">
       <!-- 设置为true时，会将RowBounds第一个参数offset当成pageNum页码使用 -->
