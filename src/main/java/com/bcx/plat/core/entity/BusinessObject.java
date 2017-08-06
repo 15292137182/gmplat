@@ -6,6 +6,8 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
+
+import com.bcx.plat.core.morebatis.annotations.TablePK;
 import java.io.Serializable;
 
 /**

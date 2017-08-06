@@ -1,13 +1,18 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.morebatis.annotations.Table;
+import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * Created by Went on 2017/8/3.
  */
+@Table(TableInfo.T_KEYSET)
 public class KeySet extends BaseEntity<KeySet>{
+    @TablePK
     private String rowId;//唯一标示
     private String keySetCode;//键值代码
     private String keySetName;//键值名称

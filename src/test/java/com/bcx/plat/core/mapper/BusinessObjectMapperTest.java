@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import static com.bcx.plat.core.base.BaseConstants.INVALID;
 import static com.bcx.plat.core.base.BaseConstants.UNAVAILABLE;
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * Created by Went on 2017/8/1.
@@ -45,7 +46,7 @@ public class BusinessObjectMapperTest extends BaseTest{
     public void BinsertTest(){
         BusinessObject businessObject = new BusinessObject();
         businessObject.setObjectCode("001");
-        businessObject.setRowId(UUID.randomUUID().toString());
+        businessObject.setRowId(lengthUUID(32));
         businessObject.setObjectName("002");
         businessObject.setStatus(INVALID);
         businessObject.setRelateTableRowId("1112");

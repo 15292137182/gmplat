@@ -4,21 +4,24 @@
 <mapper namespace="com.bcx.plat.core.mapper.FrontFuncProMapper">
     <select id="select" resultType="com.bcx.plat.core.entity.FrontFuncPro" parameterType="hashMap">
         select
-            row_id,func_row_id,relate_busi_pro,display_title,wether_display,display_widget,wether_readonly,
-            allow_empty,length_interval,validate_func,display_func,sort,
-            <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+            tp.row_id,tp.func_row_id,tp.relate_busi_pro,tp.display_title,tp.wether_display,
+            tp.display_widget,tp.wether_readonly,
+            tp.allow_empty,tp.length_interval,tp.validate_func,tp.display_func,tp.sort
         FROM
-            t_front_func_pro
+            t_front_func_pro AS tp
+        LEFT JOIN t_front_func AS tc
+        ON tc.row_id=tp.func_row_id
         <where>
             <if test="strArr!=null and strArr.size()!=0">
                 <foreach collection="strArr" item="item" index="index" open="(" separator="or" close="）">
-                    func_row_id like '%${item}%' or func relate_busi_pro like '%${item}%'
+                    tp.func_row_id like '%${item}%' or tp.func relate_busi_pro like '%${item}%'
                 </foreach>
             </if>
             <if test="rowId!=null and rowId.length()!=0">
-                row_id = #{rowId}
+                tc.row_id = #{rowId}
             </if>
         </where>
+        ORDER BY tp.create_time desc
     </select>
 
     <insert id="insert" parameterType="com.bcx.plat.core.entity.FrontFuncPro">

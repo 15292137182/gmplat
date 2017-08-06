@@ -4,6 +4,9 @@ import com.bcx.plat.core.base.BaseMapper;
 import com.bcx.plat.core.entity.BusinessObject;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Went on 2017/8/1.
  */
@@ -24,5 +27,9 @@ public interface BusinessObjectMapper extends BaseMapper<BusinessObject> {
    * 根据id查询所有记录
    */
   BusinessObject selectById(String rowId);
+  /**
+   * 根据id查询所有记录
+   */
+  HashMap selects(Map<String ,Object> map);
 
 }

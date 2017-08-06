@@ -1,14 +1,18 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.morebatis.annotations.Table;
+import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * Created by Went on 2017/8/4.
  */
+@Table(TableInfo.T_FRONT_FUNC_PRO)
 public class FrontFuncPro extends BaseEntity{
-
+    @TablePK
     private String rowId;//唯一标识
     private String funcRowId;//功能块唯一标识
     private String relateBusiPro;//关联业务对象属性
