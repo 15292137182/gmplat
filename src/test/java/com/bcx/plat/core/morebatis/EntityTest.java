@@ -10,20 +10,20 @@ public class EntityTest extends BaseTest{
   @Test
   public void entityTest(){
     BusinessObject businessObject=new BusinessObject();
-    final String rowId = UUID.randomUUID().toString();
-    businessObject.setRowId(rowId);
     businessObject.setObjectName("testObject");
     businessObject.buildCreateInfo().insert();
+
+    final String rowId=businessObject.getRowId();
     BusinessObject businessObject1=new BusinessObject();
     businessObject1.setRowId(rowId);
-    businessObject1.selectByPks();
+    businessObject1=businessObject1.selectByPks();
     //查找与新增测试
     Assert.assertTrue(businessObject1.getObjectName().equals("testObject"));
 
     businessObject1.setObjectName("secondName");
     businessObject1.update();
     businessObject1.setObjectName("anotherName");
-    businessObject1.selectByPks();
+    businessObject1=businessObject1.selectByPks();
     //更新测试
     Assert.assertTrue(businessObject1.getObjectName().equals("secondName"));
 

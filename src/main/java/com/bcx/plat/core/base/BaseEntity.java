@@ -287,8 +287,8 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
       result.get(0).entrySet().stream().forEach((entry)->{
         _obj.put(UtilsTool.underlineToCamel(entry.getKey(),false),entry.getValue());
       });
-      this.fromMap(_obj);
-      return (T) this;
+      T entity = this.fromMap(_obj);
+      return (T) entity;
     }else{
       return null;
     }

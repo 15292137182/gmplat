@@ -5,6 +5,7 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.morebatis.annotations.TablePK;
 import java.io.Serializable;
 
 /**
@@ -12,7 +13,7 @@ import java.io.Serializable;
  */
 @Table(TableInfo.T_BUSINESS_OBJECT)
 public class BusinessObject extends BaseEntity<BusinessObject> implements Serializable {
-
+  @TablePK
   private String rowId;//唯一标识
   private String objectCode;//对象代码
   private String objectName;//对象名称
@@ -32,38 +33,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   public BusinessObject buildCreateInfo() {
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
-  }
-
-  public String getProRowId() {
-    return proRowId;
-  }
-
-  public void setProRowId(String proRowId) {
-    this.proRowId = proRowId;
-  }
-
-  public String getTables() {
-    return tables;
-  }
-
-  public void setTables(String tables) {
-    this.tables = tables;
-  }
-
-  public String getTableSchema() {
-    return tableSchema;
-  }
-
-  public void setTableSchema(String tableSchema) {
-    this.tableSchema = tableSchema;
-  }
-
-  public String getTableCname() {
-    return tableCname;
-  }
-
-  public void setTableCname(String tableCname) {
-    this.tableCname = tableCname;
   }
 
   public String getRowId() {
