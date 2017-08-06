@@ -68,4 +68,36 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   public void setRelateTableRowId(String relateTableRowId) {
     this.relateTableRowId = relateTableRowId;
   }
+
+  public String getProRowId() {
+    return proRowId;
+  }
+
+  public void setProRowId(String proRowId) {
+    this.proRowId = proRowId;
+  }
+
+  public String getTableSchema() {
+    return tableSchema;
+  }
+
+  public void setTableSchema(String tableSchema) {
+    this.tableSchema = tableSchema;
+  }
+
+  public String getTableCname() {
+    return tableCname;
+  }
+
+  public void setTableCname(String tableCname) {
+    this.tableCname = tableCname;
+  }
+
+  public String getTables() {
+    return tables;
+  }
+
+  public void setTables(String tables) {
+    this.tables = tables;
+  }
 }
