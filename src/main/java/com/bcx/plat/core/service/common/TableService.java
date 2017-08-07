@@ -2,6 +2,8 @@ package com.bcx.plat.core.service.common;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.BaseService;
+import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.morebatis.DeleteAction;
 import com.bcx.plat.core.morebatis.InsertAction;
@@ -14,6 +16,7 @@ import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.TableAnnoUtil;
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,39 +25,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class TableService<T extends BaseEntity<T>> {
-//  public Class entityClass=this.getClass().getGenericSuperclass().getClass();
-//  public Set<String> fieldNames= new HashSet<String>(
-//      Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
-//    return field.getName();
-//  }).collect(Collectors.toList())
-//  );
-//  private TableSource table=TableAnnoUtil.getTableSource(entityClass);
-//  private List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
+public class TableService<T extends BaseEntity<T>> implements BaseService<T> {
+  private final Class entityClass= (Class) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+  private final Set<String> fieldNames=getFieldNamesFromClass(entityClass);
+  private final TableSource table=TableAnnoUtil.getTableSource(entityClass);
+  private final List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
 
-public Class entityClass=this.getClass().getGenericSuperclass().getClass();
-  public Set<String> fieldNames= new HashSet<String>(
-      Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
-    return field.getName();
-  }).collect(Collectors.toList())
-  );
-  private TableSource table=TableAnnoUtil.getTableSource(entityClass);
-  private List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
-
-  protected abstract SuitMapper getSuitMapper();
-
-  public TableService() {
-    Class entityClass=this.getClass().getGenericSuperclass().getClass();
-    Set<String> fieldNames= new HashSet<String>(
-        Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
-          return field.getName();
-        }).collect(Collectors.toList())
-    );
-    TableSource table=TableAnnoUtil.getTableSource(entityClass);
-    List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
+  protected SuitMapper getSuitMapper() {
+    return null;
   }
 
-  public ServiceResult<PageResult<Map<String, Object>>> select(Map<String,Object> args,int pageNum,int pageSize){
+//  public void TableService() {
+//    Class entityClass=this.getClass().getGenericSuperclass().getClass();
+//    Set<String> fieldNames= new HashSet<String>(
+//        Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
+//          return field.getName();
+//        }).collect(Collectors.toList())
+//    );
+//    TableSource table=TableAnnoUtil.getTableSource(entityClass);
+//    List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
+//  }
+
+  public ServiceResult select(T entity,int pageNum,int pageSize){
+    Map<String, Object> args = entity.toMap();
     QueryAction queryAction=new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(convertMapToFieldConditions(args));
@@ -71,7 +64,8 @@ public Class entityClass=this.getClass().getGenericSuperclass().getClass();
     return serviceResult;
   }
 
-  public ServiceResult insert(Map<String,Object> args){
+  public ServiceResult insert(T entity){
+    Map<String, Object> args = entity.toMap();
     InsertAction insertAction=new InsertAction().into(table).cols(fieldNames).values(args);
     try {
       getSuitMapper().insert(insertAction);
@@ -82,7 +76,8 @@ public Class entityClass=this.getClass().getGenericSuperclass().getClass();
     return ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS);
   }
 
-  public ServiceResult update(Map<String,Object> args){
+  public ServiceResult update(T entity){
+    Map<String, Object> args = entity.toMap();
     UpdateAction updateAction=new UpdateAction()
         .from(table)
         .set(args)
@@ -98,7 +93,8 @@ public Class entityClass=this.getClass().getGenericSuperclass().getClass();
     return ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
   }
 
-  public ServiceResult delete(Map<String,Object> args){
+  public ServiceResult delete(T entity){
+    Map<String, Object> args = entity.toMap();
     DeleteAction deleteAction=new DeleteAction()
         .from(table)
         .where(convertMapToFieldConditions(args));
@@ -122,5 +118,15 @@ public Class entityClass=this.getClass().getGenericSuperclass().getClass();
         return new FieldCondition(entry.getKey(), Operator.EQUAL, value);
       }
     }).collect(Collectors.toList());
+  }
+
+  private Set<String> getFieldNamesFromClass(Class clz){
+    HashSet<String> result=new HashSet<>();
+    while (clz!=Object.class){
+      result.addAll(Arrays.stream(clz.getDeclaredFields()).map((field -> field.getName())).collect(
+          Collectors.toList()));
+      clz=clz.getSuperclass();
+    }
+    return result;
   }
 }
