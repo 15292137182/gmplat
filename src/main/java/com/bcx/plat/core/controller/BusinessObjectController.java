@@ -3,6 +3,7 @@ package com.bcx.plat.core.controller;
 import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
+import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -24,12 +25,20 @@ public class BusinessObjectController {
 
   @Autowired
   private BusinessObjectService businessObjectService;
+  @Autowired
+  private BaseService businessObjectServiceA;
+
+  public void setBusinessObjectServiceA(BaseService businessObjectServiceA) {
+    this.businessObjectServiceA = businessObjectServiceA;
+  }
 
   /**
    * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
    */
   @RequestMapping("/query")
   public MappingJacksonValue select(String str, HttpServletRequest request, Locale locale) {
+
+
     Map<String, Object> cond = new HashMap<>();
     cond.put("strArr", collectToSet(str));
     ServiceResult<BusinessObject> result = businessObjectService.select(cond);
@@ -44,7 +53,8 @@ public class BusinessObjectController {
    */
   @RequestMapping("/add")
   public MappingJacksonValue insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
-    ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
+    ServiceResult<BusinessObject> result=businessObjectServiceA.insert(businessObject.toMap());
+//    ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
     MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
@@ -57,7 +67,8 @@ public class BusinessObjectController {
    */
   @RequestMapping("/modify")
   public MappingJacksonValue update(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
-    ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
+    ServiceResult<BusinessObject> result=businessObjectServiceA.update(businessObject.toMap());
+//    ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
     MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
@@ -69,7 +80,10 @@ public class BusinessObjectController {
    */
   @RequestMapping("/delete")
   public MappingJacksonValue delete(String rowId, HttpServletRequest request, Locale locale) {
-    ServiceResult<BusinessObject> result = businessObjectService.delete(rowId);
+    Map<String,Object> args=new HashMap<>();
+    args.put("rowId",rowId);
+    ServiceResult<BusinessObject> result=businessObjectServiceA.delete(args);
+//    ServiceResult<BusinessObject> result = businessObjectService.delete(rowId);
     MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");

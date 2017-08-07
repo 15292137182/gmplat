@@ -14,8 +14,11 @@
         <where>
             <if test="strArr!=null and strArr.size()!=0">
                 <foreach collection="strArr" item="item" index="index" open="(" separator="or" close="）">
-                    tp.func_row_id like '%${item}%' or tp.func relate_busi_pro like '%${item}%' or tp.row_id like '%${item}%'
+                    tp.func_row_id like '%${item}%' or tp.func relate_busi_pro like '%${item}%'
                 </foreach>
+            </if>
+            <if test="rowIds!=null and rowIds.length()!=0">
+                tp.row_id = #{rowIds}
             </if>
             <if test="rowId!=null and rowId.length()!=0">
                 tc.row_id = #{rowId}
@@ -47,17 +50,7 @@
         UPDATE
             t_front_func_pro
         SET
-            func_row_id = #{funcRowId},
             relate_busi_pro = #{relateBusiPro},
-            display_title = #{displayTitle},
-            wether_display = #{wetherDisplay},
-            display_widget = #{displayWidget},
-            wether_readonly = #{wetherReadonly},
-            allow_empty = #{allowEmpty},
-            length_interval = #{lengthInterval},
-            validate_func = #{validateFunc},
-            display_func = #{displayFunc},
-            sort = #{sort},
             modify_user = #{modifyUser},
             modify_user_name = #{modifyUserName},
             modify_time = #{modifyTime}

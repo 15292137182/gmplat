@@ -35,10 +35,11 @@ public class FrontFuncProController {
      * @return 返回查询数据以及状态
      */
     @RequestMapping("/query")
-    public MappingJacksonValue queryFronFuncPro(String str , String rowId, HttpServletRequest request, Locale locale){
+    public MappingJacksonValue queryFronFuncPro(String str ,String rowIds, String rowId, HttpServletRequest request, Locale locale){
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
         map.put("rowId",rowId);
+        map.put("rowIds",rowIds);
         ServiceResult<FrontFuncPro> query = frontFuncProService.queryFronFuncPro(map);
         MappingJacksonValue result = new MappingJacksonValue(query);
         result.setJsonpFunction(

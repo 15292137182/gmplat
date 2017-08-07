@@ -23,6 +23,7 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
   private String valueResourceType;//值来源类型
   private String valueResourceContent;//值来源内容
   private String wetherExpandPro;//是否为扩展属性
+  private String objRowId;//业务对象关联rowId
 
   /**
    * 构建 - 创建信息
@@ -33,6 +34,14 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
   public BusinessObjectPro buildCreateInfo() {
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
+  }
+
+  public String getObjRowId() {
+    return objRowId;
+  }
+
+  public void setObjRowId(String objRowId) {
+    this.objRowId = objRowId;
   }
 
   public String getRowId() {
