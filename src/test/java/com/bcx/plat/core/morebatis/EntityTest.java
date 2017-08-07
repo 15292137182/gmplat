@@ -5,10 +5,7 @@ import com.bcx.plat.core.entity.BusinessObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class EntityTest
-//    extends BaseTest
-{
-//  @Test
+public class EntityTest extends BaseTest{
   public void entityTest(){
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectName("testObject");
