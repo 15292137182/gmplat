@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Went on 2017/8/1.
  */
 @RestController
-@RequestMapping("/businObjPro")
+@RequestMapping("/core/businObjPro")
 public class BusinessObjectProController {
 
     @Autowired
@@ -36,7 +36,7 @@ public class BusinessObjectProController {
      * @param request 请求
      * @return
      */
-    @RequestMapping("/select")
+    @RequestMapping("/query")
     public MappingJacksonValue select(String str, String rowId, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
         map.put("rowId", rowId);
@@ -51,7 +51,7 @@ public class BusinessObjectProController {
     /**
      * 新增业务对象属性
      */
-    @RequestMapping("/insert")
+    @RequestMapping("/add")
     public MappingJacksonValue insert(BusinessObjectPro businessObjectPro,
                                       HttpServletRequest request) {
         ServiceResult<BusinessObjectPro> result = businessObjectProService.insert(businessObjectPro);

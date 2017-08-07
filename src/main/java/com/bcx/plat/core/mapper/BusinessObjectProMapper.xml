@@ -17,7 +17,7 @@
         </foreach>
       </if>
       <if test="rowId!=null and rowId.length()!=0">
-        AND tp.relate_table_column = '${rowId}'
+        AND tp.relate_table_column = #{rowId}
       </if>
     </where>
     order by tp.create_time desc
