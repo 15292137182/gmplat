@@ -2,12 +2,16 @@ package com.bcx.plat.core.service.Impl;
 
 import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
 
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.MaintTableInfo;
 import com.bcx.plat.core.mapper.MaintTableMapper;
 import com.bcx.plat.core.service.MaintTableService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,34 +32,34 @@ public class MaintTableServiceImpl implements MaintTableService {
    * @param str 根据条件查询
    */
   @Override
-  public List selectMaint(String str) {
+  public ServiceResult<MaintTableInfo> selectMaint(String str) {
     try {
       if (str != null) {
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
-        List<MaintTableInfo> maintTableInfos = maintTableMapperImpl.selectMaint(map);
-        return maintTableInfos;
+        List<MaintTableInfo> result = maintTableMapperImpl.selectMaint(map);
+        return new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return null;
+    return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
   }
 
   /**
    * 根据Id查询维护数据库字段
    */
   @Override
-  public List<MaintTableInfo> selectById(String rowId) {
+  public ServiceResult<MaintTableInfo> selectById(String rowId) {
     try {
       if (rowId != null) {
-        List<MaintTableInfo> maintTableInfos = maintTableMapperImpl.selectById(rowId);
-        return maintTableInfos;
+        List<MaintTableInfo> result = maintTableMapperImpl.selectById(rowId);
+        return new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return null;
+    return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
   }
 
 

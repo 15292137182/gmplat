@@ -1,5 +1,7 @@
 package com.bcx.plat.core.service.Impl;
 
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
 import com.bcx.plat.core.mapper.KeySetMapper;
 import com.bcx.plat.core.service.KeySetService;
@@ -35,7 +37,7 @@ public class KeySetServiceImpl implements KeySetService{
     @Override
     public ServiceResult<KeySet> selete(Map<String, Object> map) {
         List<KeySet> select = keySetMapper.select(map);
-        return new ServiceResult(select,QUERY_SUCCESS);
+        return  new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,select);
     }
 
     /**
@@ -51,9 +53,9 @@ public class KeySetServiceImpl implements KeySetService{
         keySet.setVersion("1.0");
         int insert = keySetMapper.insert(keySet);
         if (insert != 1) {
-            return new ServiceResult(null,NEW_ADD_FAIL);
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
-        return new ServiceResult(null,NEW_ADD_SUCCESS);
+        return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
     }
 
     /**
@@ -66,8 +68,9 @@ public class KeySetServiceImpl implements KeySetService{
     public ServiceResult<KeySet> update(KeySet keySet) {
         keySet.buildModifyInfo();
         int update = keySetMapper.update(keySet);
-        if (update != 1) return new ServiceResult(null,UPDATE_FAIL);
-        return new ServiceResult(UPDATE_SUCCESS);
+        if (update != 1)       return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
+        return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
+
     }
 
     /**
@@ -79,7 +82,8 @@ public class KeySetServiceImpl implements KeySetService{
     @Override
     public ServiceResult<KeySet> delete(KeySet keySet) {
         int delete = keySetMapper.delete(keySet);
-        if (delete != 1) return new ServiceResult(null,DELETE_FAIL);
-        return new ServiceResult(null,DELETE_SUCCESS);
+        if (delete != 1)       return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
+        return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
+
     }
 }

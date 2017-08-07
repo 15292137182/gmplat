@@ -36,7 +36,7 @@ public class FrontFuncController {
     map.put("strArr", collectToSet(str));
     map.put("rowId", rowId);
     ServiceResult<FrontFunc> result = frontFuncService.select(map);
-    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
@@ -49,7 +49,7 @@ public class FrontFuncController {
   public MappingJacksonValue insert(FrontFunc frontFunc, HttpServletRequest request,
       Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.insert(frontFunc);
-    MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue mapjack = new MappingJacksonValue(result);
     mapjack.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return mapjack;
@@ -62,7 +62,7 @@ public class FrontFuncController {
   public MappingJacksonValue update(FrontFunc frontFunc, HttpServletRequest request,
       Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.update(frontFunc);
-    MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue mapjack = new MappingJacksonValue(result);
     mapjack.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return mapjack;
@@ -75,7 +75,7 @@ public class FrontFuncController {
   public MappingJacksonValue delete(FrontFunc frontFunc, HttpServletRequest request,
       Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.delete(frontFunc);
-    MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue mapjack = new MappingJacksonValue(result);
     mapjack.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return mapjack;

@@ -40,7 +40,7 @@ public class KeySetController {
         map.put("strArr",collectToSet(str));
         map.put("rowId",rowId);
         ServiceResult<KeySet> selete = keySetService.selete(map);
-        MappingJacksonValue result = new MappingJacksonValue(selete.convertMsg(locale));
+        MappingJacksonValue result = new MappingJacksonValue(selete);
         result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return result;
     }
@@ -55,7 +55,7 @@ public class KeySetController {
     @RequestMapping("/add")
     public MappingJacksonValue insert(KeySet keySet,HttpServletRequest request,Locale locale){
         ServiceResult<KeySet> insert = keySetService.insert(keySet);
-        MappingJacksonValue result = new MappingJacksonValue(insert.convertMsg(locale));
+        MappingJacksonValue result = new MappingJacksonValue(insert);
         result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return result;
     }
@@ -70,7 +70,7 @@ public class KeySetController {
     @RequestMapping("/modify")
     public MappingJacksonValue update(KeySet keySet,HttpServletRequest request,Locale locale){
         ServiceResult<KeySet> insert = keySetService.update(keySet);
-        MappingJacksonValue result = new MappingJacksonValue(insert.convertMsg(locale));
+        MappingJacksonValue result = new MappingJacksonValue(insert);
         result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return result;
     }
@@ -85,7 +85,7 @@ public class KeySetController {
     @RequestMapping("/delete")
     public MappingJacksonValue delete(KeySet keySet,HttpServletRequest request,Locale locale){
         ServiceResult<KeySet> insert = keySetService.delete(keySet);
-        MappingJacksonValue result = new MappingJacksonValue(insert.convertMsg(locale));
+        MappingJacksonValue result = new MappingJacksonValue(insert);
         result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
         return result;
     }

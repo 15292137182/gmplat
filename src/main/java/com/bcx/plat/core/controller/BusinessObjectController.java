@@ -33,7 +33,7 @@ public class BusinessObjectController {
     Map<String, Object> cond = new HashMap<>();
     cond.put("strArr", collectToSet(str));
     ServiceResult<BusinessObject> result = businessObjectService.select(cond);
-    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
@@ -45,7 +45,7 @@ public class BusinessObjectController {
   @RequestMapping("/add")
   public MappingJacksonValue insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
-    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
@@ -58,7 +58,7 @@ public class BusinessObjectController {
   @RequestMapping("/modify")
   public MappingJacksonValue update(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
-    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
@@ -70,7 +70,7 @@ public class BusinessObjectController {
   @RequestMapping("/delete")
   public MappingJacksonValue delete(String rowId, HttpServletRequest request, Locale locale) {
     ServiceResult<BusinessObject> result = businessObjectService.delete(rowId);
-    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
@@ -86,7 +86,7 @@ public class BusinessObjectController {
   @RequestMapping("/takeEff")
   public MappingJacksonValue updateTakeEffect(String rowId,HttpServletRequest request,Locale locale){
     ServiceResult result = businessObjectService.updateTakeEffect(rowId);
-    MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+    MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
   }

@@ -41,10 +41,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   public ServiceResult<BusinessObjectPro> select(Map<String,Object> map) {
     try {
         List<BusinessObjectPro> select = businessObjectProMapper.select(map);
-      return new ServiceResult(select,BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS);
+      return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,select);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL );
+      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL );
     }
   }
 
@@ -59,10 +59,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
       businessObjectPro.buildCreateInfo();
       businessObjectProMapper.insert(businessObjectPro);
       //将用户新增的rowId返回
-      return new ServiceResult(rowId,BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS);
+      return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL);
+      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
     }
   }
 
@@ -74,10 +74,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   public ServiceResult<BusinessObjectPro> delete(String rowId) {
     try {
       businessObjectProMapper.delete(rowId);
-      return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.DELETE_SUCCESS);
+      return new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL, Message.OPERATOR_FAIL);
     }
   }
 }
