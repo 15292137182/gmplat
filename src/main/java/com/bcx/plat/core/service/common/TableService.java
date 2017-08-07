@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class TableService<T extends BaseEntity<T>> {
-  public Class entityClass=this.getClass().getGenericSuperclass().getClass();
+  public Class entityClass=this.getClass().getSuperclass().getGenericSuperclass().getClass();
   public Set<String> fieldNames= new HashSet<String>(
       Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
     return field.getName();
