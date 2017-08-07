@@ -4,9 +4,10 @@ import com.bcx.plat.core.base.BaseEntity;
 
 /**
  * 序列号规则配置 pojo 类
+ *
  * Create By HCL at 2017/8/6
  */
-public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig>{
+public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
 
   private String rowId;
   private String seqCode;

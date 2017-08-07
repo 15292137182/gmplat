@@ -59,4 +59,21 @@
       </if>
     </where>
   </delete>
+
+  <delete id="batchLogicDelete" parameterType="hashMap">
+    UPDATE public.t_sequence_rule_config
+    SET
+    delete_user = #{deleteUser},
+    delete_user_name = #{deleteUserName},
+    delete_time = #{deleteTime},
+    delete_flag = #{deleteFlag}
+    <where>
+      <if test="null != null and rowIds.size() != 0">
+        AND row_id in
+        <foreach collection="rowIds" separator="," open="(" item="item" close=")">
+          #{item}
+        </foreach>
+      </if>
+    </where>
+  </delete>
 </mapper>
