@@ -8,15 +8,15 @@
         FROM  t_keyset
         <where>
             <if test="strArr!=null and strArr.size()!=0">
-                And
                 <foreach collection="strArr" separator="or" item="item" index="index" open="(" close=")">
-                    keyset_code like '%${keySetCode}%' or keyset_name like '%${keySetName}%'
+                    keyset_code like '%${item}%' or keyset_name like '%${item}%'
                 </foreach>
             </if>
             <if test="rowId!=null and rowId.length()!=0">
                 AND row_id='${rowId}'
             </if>
         </where>
+        order by create_time desc
     </select>
 
     <insert id="insert" parameterType="com.bcx.plat.core.entity.KeySet">
