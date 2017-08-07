@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>数据库表字段选择框</title>
+  <script src="../Public/public.js"></script>
 </head>
 <body>
 
@@ -42,7 +43,7 @@
         },
         methods:{
             search(){
-                this.$http.jsonp(serverPath+'/plat/dbTableColumn/select',{
+                this.$http.jsonp(serverPath+'/core/dbTableColumn/query',{
                     "str":this.input
                 },{
                     jsonp:'callback'
@@ -54,7 +55,7 @@
 
             },
             cancel(){
-                ibcpLayer.Close(divIndex);
+                ibcpLayer.Close(window.parent.littledivIndex);
             }
         },
         created(){

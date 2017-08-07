@@ -15,8 +15,8 @@
       <el-table :data="gridData" :height="400" border
                 style="width: 100%;border-radius: 5px;margin-top:10px">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column property="keysetCod" label="代码" width="200"></el-table-column>
-        <el-table-column property="keysetName" label="名称" width="200"></el-table-column>
+        <el-table-column property="keySetCode" label="代码" width="200"></el-table-column>
+        <el-table-column property="keySetName" label="名称" width="200"></el-table-column>
         <el-table-column property="confKey" label="键" width="200"></el-table-column>
         <el-table-column property="confValue" label="值" width="200"></el-table-column>
         <el-table-column property="desp" label="说明" width="200"></el-table-column>
@@ -43,12 +43,12 @@
     },
     methods: {
       search() {
-        this.$http.jsonp(serverPath + '/plat/dbTableColumn/select', {
+        this.$http.jsonp(serverPath + '/core/keySet/query', {
           "str": this.input
         }, {
           jsonp: 'callback'
         }).then(function (res) {
-          this.gridData = res.data.data.data;
+          this.gridData = res.data.data;
         })
       },
       conformEvent() {

@@ -1,6 +1,11 @@
 /**
  * Created by jms on 2017/8/6.
  */
+var str="/core/keySet";
+const query=str+"/query";
+const insert=str+"/add";
+const modify=str+"modify";
+const del=str+"/delete";
 
 var keyValueSet=new Vue({
     el:"#kvsInfo",
@@ -10,12 +15,12 @@ var keyValueSet=new Vue({
     },
     methods: {
         search(){
-            this.$http.jsonp(serverPath + "/core/queryKeySet", {
+            this.$http.jsonp(serverPath + query, {
                 "str": this.input
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                this.keyValueSetdata = res.data.content;
+                this.keyValueSetdata = res.data.data;
             });
         },
         handleCurrentChange(val){
@@ -43,7 +48,7 @@ var keyValueSet=new Vue({
             });
         },
         deleteEvent(){
-            this.$http.jsonp(serverPath + "/core/delKeySet", {
+            this.$http.jsonp(serverPath + del, {
                 rowId: keyValueSet.currentVal.rowId,
                 keySetCode: keyValueSet.currentVal.keySetCode,
                 keySetName: keyValueSet.currentVal.keySetName,
@@ -54,7 +59,7 @@ var keyValueSet=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                ibcpLayer.ShowOK('删除成功');
+                ibcpLayer.ShowOK(res.data.message);
                 keyValueSet.search();
             });
         }

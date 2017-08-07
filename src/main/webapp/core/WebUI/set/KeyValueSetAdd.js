@@ -1,6 +1,7 @@
 /**
  * Created by jms on 2017/8/7.
  */
+
 var keyValueSetAdd = new Vue({
     el: '#keyValueSetAdd',
     data: function () {
@@ -29,7 +30,7 @@ var keyValueSetAdd = new Vue({
                 }
             }
             if (operate == 1) {
-                this.$http.jsonp(serverPath + "/core/addKeySet", {
+                this.$http.jsonp(serverPath + insert, {
                     keySetCode: keyValueSetAdd.keySetCodeInput,
                     keySetName: keyValueSetAdd.keySetNameInput,
                     confKey: keyValueSetAdd.confKeyInput,
@@ -45,7 +46,7 @@ var keyValueSetAdd = new Vue({
                 });
             }
             if (operate == 2) {
-                this.$http.jsonp(serverPath + "/core/modifyKeySet", {
+                this.$http.jsonp(serverPath + modify, {
                     //拿到这条数据的ID
                     rowId: keyValueSet.currentVal.rowId,
                     keySetCode: keyValueSetAdd.keySetCodeInput,
