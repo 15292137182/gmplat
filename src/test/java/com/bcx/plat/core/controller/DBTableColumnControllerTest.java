@@ -37,7 +37,7 @@ public class DBTableColumnControllerTest extends BaseTest {
   @Test
   public void test() throws Exception {
     // 使用方法： 发起请求 plat/dbTableColumn/select 查询数据
-    MvcResult mvcResult = mockMvc.perform(get("/plat/dbTableColumn/select"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/dbTableColumn/query"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
