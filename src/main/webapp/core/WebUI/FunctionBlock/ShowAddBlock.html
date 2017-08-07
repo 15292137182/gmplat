@@ -58,8 +58,8 @@
       }, {
         jsonp: 'callback'
       }).then(function (res) {
-          if(res.data.content.data!=''){
-              this.myLeftData = res.data.content.data;
+          if(res.data.data.data!=''){
+              this.myLeftData = res.data.data.data;
           }
       });
     },

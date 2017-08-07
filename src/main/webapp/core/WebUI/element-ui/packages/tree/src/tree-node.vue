@@ -25,14 +25,14 @@
         v-if="node.loading"
         class="el-tree-node__loading-icon el-icon-loading">
       </span>
-      <node-content :node="node"></node-content>
+      <node-data :node="node"></node-data>
     </div>
     <el-collapse-transition>
       <div
         class="el-tree-node__children"
         v-show="expanded">
         <el-tree-node
-          :render-content="renderContent"
+          :render-data="renderContent"
           v-for="child in node.childNodes"
           :key="getNodeKey(child)"
           :node="child"

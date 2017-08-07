@@ -8,6 +8,10 @@ public class PageResult<T> {
   int pageSize;
   List<T> result;
 
+  public PageResult(List<T> result) {
+    this.result = result;
+  }
+
   public PageResult(long total, int pageNum, int pageSize, List<T> result) {
     this.total = total;
     this.pageNum = pageNum;

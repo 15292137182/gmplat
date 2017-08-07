@@ -17,36 +17,36 @@ public class ServiceResult<T> implements Serializable {
   private static final long serialVersionUID = 812376774103405857L;
   private int state = STATUS_SUCCESS;
   private String message;
-  private T content;
+  private T data;
   private Map additional;
 
   public ServiceResult() {
   }
 
-  public ServiceResult(T content) {
-    this.content = content;
+  public ServiceResult(T data) {
+    this.data = data;
   }
 
-  public ServiceResult(T content, int state) {
+  public ServiceResult(T data, int state) {
     this.state = state;
-    this.content = content;
+    this.data = data;
   }
 
-  public ServiceResult(T content, String message) {
-    this.content = content;
+  public ServiceResult(T data, String message) {
+    this.data = data;
     this.message = message;
   }
 
-  public ServiceResult(T content, int state, String message) {
+  public ServiceResult(T data, int state, String message) {
     this.state = state;
     this.message = message;
-    this.content = content;
+    this.data = data;
   }
 
-  public ServiceResult(int state, String message, T content, Map additional) {
+  public ServiceResult(int state, String message, T data, Map additional) {
     this.state = state;
     this.message = message;
-    this.content = content;
+    this.data = data;
     this.additional = additional;
   }
 
@@ -94,12 +94,12 @@ public class ServiceResult<T> implements Serializable {
     this.message = message;
   }
 
-  public T getContent() {
-    return content;
+  public T getData() {
+    return data;
   }
 
-  public void setContent(T content) {
-    this.content = content;
+  public void setData(T data) {
+    this.data = data;
   }
 
   public static ServiceResult Msg(int status, String msg) {

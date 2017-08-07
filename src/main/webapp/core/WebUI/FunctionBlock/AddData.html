@@ -185,7 +185,7 @@
                 }, {
                     jsonp: 'callback'
                 }).then(function (res) {
-                        console.log(res.data.content.data);
+                        console.log(res.data.data.data);
                         window.parent.vm1.FindData(this.funcRowId);
                     parent.layer.close(window.parent.mb.divIndex);
                 });

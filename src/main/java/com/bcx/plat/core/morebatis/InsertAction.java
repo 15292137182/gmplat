@@ -1,6 +1,7 @@
 package com.bcx.plat.core.morebatis;
 
 import com.bcx.plat.core.morebatis.phantom.TableSource;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +67,11 @@ public class InsertAction {
 
   public InsertAction values(List<Map<String, Object>> rows) {
     setRows(rows);
+    return this;
+  }
+
+  public InsertAction values(Map<String, Object> ... row) {
+    setRows(Arrays.asList(row));
     return this;
   }
 }

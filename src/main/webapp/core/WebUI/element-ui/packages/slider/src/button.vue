@@ -8,7 +8,7 @@
     :style="wrapperStyle"
     ref="button">
     <el-tooltip placement="top" ref="tooltip" :disabled="!showTooltip">
-      <span slot="content">{{ formatValue }}</span>
+      <span slot="data">{{ formatValue }}</span>
       <div class="el-slider__button" :class="{ 'hover': hovering, 'dragging': dragging }"></div>
     </el-tooltip>
   </div>

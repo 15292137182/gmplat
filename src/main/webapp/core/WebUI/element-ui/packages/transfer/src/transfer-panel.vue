@@ -24,7 +24,7 @@
           :disabled="item[disabledProp]"
           :key="item[keyProp]"
           v-for="item in filteredData">
-          <option-content :option="item"></option-content>
+          <option-data :option="item"></option-data>
         </el-checkbox>
       </el-checkbox-group>
       <p
