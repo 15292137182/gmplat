@@ -21,7 +21,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * Created by Wen Tiehu on 2017/8/4.
  */
 @RestController
-@RequestMapping("/core")
+@RequestMapping("/core/sysConfig")
 public class SysConfigController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class SysConfigController {
      * @param rowId 接受传入进来的rowId
      * @return 返回查询数据以及状态
      */
-    @RequestMapping("/querySysConfig")
+    @RequestMapping("/query")
     public MappingJacksonValue querySysConfig(String str , String rowId, HttpServletRequest request, Locale locale){
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
@@ -50,7 +50,7 @@ public class SysConfigController {
      * @param sysConfig 资源配置信息实体
      * @return 返回新增状态
      */
-    @RequestMapping("/addSysConfig")
+    @RequestMapping("/add")
     public MappingJacksonValue addSysConfig(SysConfig sysConfig,HttpServletRequest request,Locale locale){
         ServiceResult result = sysConfigService.addSysConfig(sysConfig);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
@@ -64,7 +64,7 @@ public class SysConfigController {
      * @param sysConfig 资源配置信息实体
      * @return 返回修改状态
      */
-    @RequestMapping("/modifySysConfig")
+    @RequestMapping("/modify")
     public MappingJacksonValue modifySysConfig(SysConfig sysConfig , HttpServletRequest request,Locale locale){
         ServiceResult result = sysConfigService.modifySysConfig(sysConfig);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
@@ -78,7 +78,7 @@ public class SysConfigController {
      * @param delData 接受需要删除数据的id
      * @return 返回删除的状态
      */
-    @RequestMapping("/delSysConfig")
+    @RequestMapping("/delete")
     public MappingJacksonValue delete(String delData, HttpServletRequest request,Locale locale){
         ServiceResult<SysConfig> result = sysConfigService.deleteSysConfig(delData);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));

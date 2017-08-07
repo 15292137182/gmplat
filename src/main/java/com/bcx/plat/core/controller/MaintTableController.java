@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Went on 2017/7/31.
  */
 @RestController
-@RequestMapping("/maint")
+@RequestMapping("core/maintTable")
 public class MaintTableController extends BaseController {
 
   @Autowired
   private MaintTableService maintTableService;
 
-  @RequestMapping("/select")
+  @RequestMapping("/query")
   public MappingJacksonValue select(String str, HttpServletRequest request,
       HttpServletResponse response) {
     List result = maintTableService.selectMaint(str);
@@ -36,7 +36,7 @@ public class MaintTableController extends BaseController {
     return value;
   }
 
-  @RequestMapping("/selectById")
+  @RequestMapping("/queryBuId")
   public MappingJacksonValue selectById(String rowId, HttpServletRequest request,
       HttpServletResponse response) {
     List<MaintTableInfo> result = maintTableService.selectById(rowId);

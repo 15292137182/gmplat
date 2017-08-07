@@ -23,7 +23,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * Created by Wen Tiehu on 2017/8/4.
  */
 @RestController
-@RequestMapping("/core")
+@RequestMapping("/core/fronFuncPro")
 public class FrontFuncProController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class FrontFuncProController {
      * @param rowId 接受传入进来的rowId
      * @return 返回查询数据以及状态
      */
-    @RequestMapping("/queryFronFuncPro")
+    @RequestMapping("/query")
     public MappingJacksonValue queryFronFuncPro(String str , String rowId, HttpServletRequest request, Locale locale){
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
@@ -52,7 +52,7 @@ public class FrontFuncProController {
      * @param frontFuncPro 前端功能块属性实体
      * @return 返回新增状态
      */
-    @RequestMapping("/addFronFuncPro")
+    @RequestMapping("/add")
     public MappingJacksonValue addFronFuncPro(FrontFuncPro frontFuncPro,HttpServletRequest request,Locale locale){
         ServiceResult result = frontFuncProService.addFronFuncPro(frontFuncPro);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
@@ -66,7 +66,7 @@ public class FrontFuncProController {
      * @param frontFuncPro 前端功能块属性实体
      * @return 返回修改状态
      */
-    @RequestMapping("/modifyFronFuncPro")
+    @RequestMapping("/modify")
     public MappingJacksonValue modifyFronFuncPro(FrontFuncPro frontFuncPro , HttpServletRequest request,Locale locale){
         ServiceResult result = frontFuncProService.modifyFronFuncPro(frontFuncPro);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
@@ -80,7 +80,7 @@ public class FrontFuncProController {
      * @param delData 接受需要删除数据的id
      * @return 返回删除的状态
      */
-    @RequestMapping("/delFrontFuncPro")
+    @RequestMapping("/delete")
     public MappingJacksonValue delete(String delData, HttpServletRequest request,Locale locale){
         ServiceResult<FrontFuncPro> result = frontFuncProService.delete(delData);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
