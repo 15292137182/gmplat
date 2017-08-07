@@ -9,7 +9,14 @@ import java.util.Map;
  */
 public interface BaseService<T extends BaseEntity> {
 
-  ServiceResult select(Map map);
+  /**
+   * 查询方法
+   *
+   * @param map 查询参数
+   * @param page 是否分页
+   * @return 返回
+   */
+  ServiceResult select(Map map, boolean isPage, int page, int limit);
 
   ServiceResult update(T bean);
 

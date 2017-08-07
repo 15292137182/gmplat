@@ -15,7 +15,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
   protected Logger logger = LoggerFactory.getLogger(getClass());
 
   @Override
-  public ServiceResult select(Map map) {
+  public ServiceResult select(Map map, boolean isPage, int pageNo, int pageSize) {
     return null;
   }
 
