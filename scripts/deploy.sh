@@ -30,9 +30,13 @@ echo "scan no tomcat pid.$PROJECT publishing"
 tar -czf $WAR_HOME/bak/$PROJECT-bak`date +%y%m%d%H%M`.tar.gz $TOMCAT_HOME/webapps/$PROJECT
 sleep 10
 
+#remove 5 days ago project.war
+find $WAR_HOME/bak -mtime +5 -type f -name *.$PROJECT -exec rm -rf {} \;
+
+#remove old project
 rm -rf $TOMCAT_HOME/webapps/$PROJECT $TOMCAT_HOME/webapps/$PROJECT.war
 
-#publish project
+#publish new project
 cp $WAR_HOME/$PROJECT.war $TOMCAT_HOME/webapps/$PROJECT.war
 
 #remove tmp
