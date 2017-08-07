@@ -34,15 +34,15 @@ public abstract class TableService<T extends BaseEntity<T>> {
   }
 
   public ServiceResult insert(Map<String,Object> args){
-
+    return null;
   }
 
   public ServiceResult update(Map<String,Object> args){
-
+    return null;
   }
 
   public ServiceResult delete(Map<String,Object> args){
-
+    return null;
   }
 
   protected List<FieldCondition> convertMapToFieldConditions(Map<String,Object> args){
