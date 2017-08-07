@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../Public/publicjs.js"></script>
-    <script src="KeyValueSet.js"></script>
+
     <style>
         html {
             overflow: hidden;
@@ -57,7 +57,7 @@
                     <el-col :xs="24" :sm="24" :md="24">
                         <div>
                             <el-input placeholder="请输入内容" v-model="input">
-                                <el-button slot="append" icon="search" @click.native="searchTable"></el-button>
+                                <el-button slot="append" icon="search" @click.native="search"></el-button>
                             </el-input>
                         </div>
                     </el-col>
@@ -65,8 +65,7 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <el-col :span="24">
                         <template>
-                            <el-table :data="myLeftData" highlight-current-row
-                                      @current-change="handleCurrentChange" :height="leftHeight" border
+                            <el-table :data="keyValueSetdata" border
                                       style="width: 100%;border-radius: 5px">
                                 <el-table-column prop="keySetCode" label="代码" width="">
                                 </el-table-column>
@@ -89,4 +88,5 @@
     </el-row>
 </div>
 </body>
+<script src="KeyValueSet.js"></script>
 </html>

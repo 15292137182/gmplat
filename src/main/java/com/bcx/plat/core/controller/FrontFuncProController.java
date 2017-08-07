@@ -39,7 +39,7 @@ public class FrontFuncProController {
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
         map.put("rowId",rowId);
-        ServiceResult<FrontFunc> query = frontFuncProService.queryFronFuncPro(map);
+        ServiceResult<FrontFuncPro> query = frontFuncProService.queryFronFuncPro(map);
         MappingJacksonValue result = new MappingJacksonValue(query.convertMsg(locale));
         result.setJsonpFunction(
                 isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
@@ -82,7 +82,7 @@ public class FrontFuncProController {
      */
     @RequestMapping("/delFrontFuncPro")
     public MappingJacksonValue delete(String delData, HttpServletRequest request,Locale locale){
-        ServiceResult<FrontFunc> result = frontFuncProService.delete(delData);
+        ServiceResult<FrontFuncPro> result = frontFuncProService.delete(delData);
         MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
         value.setJsonpFunction(
                 isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");

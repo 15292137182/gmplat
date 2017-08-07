@@ -31,6 +31,10 @@ public class BusinessObjectControllerTest extends BaseTest {
     mockMvc = MockMvcBuilders.standaloneSetup(businessObjectController).build();
   }
 
+  /**
+   * 业务对象查询
+   * @throws Exception
+   */
   @Test
   public void test() throws Exception {
     MvcResult mvcResult = mockMvc.perform(get("/businObj/select"))
@@ -48,4 +52,66 @@ public class BusinessObjectControllerTest extends BaseTest {
     ServiceResult serviceResult = jsonToObj(json, ServiceResult.class);
     assert (null != serviceResult && serviceResult.getState() == 1);
   }
+
+  /**
+   * 业务对象新增
+   * @throws Exception
+   */
+  @Test
+  public void testInsert() throws Exception {
+    MvcResult mvcResult = mockMvc.perform(get("/businObj/insert"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+
+
+    StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
+    sb.delete(0, sb.indexOf("{"))
+        .delete(sb.lastIndexOf("}") + 1, sb.length());
+    // 客户端获得 serviceResult
+    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+    assert (null != serviceResult && serviceResult.getState() == 1);
+  }
+
+  /**
+   * 业务对象修改
+   * @throws Exception
+   */
+  @Test
+  public void testUpdate() throws Exception {
+    MvcResult mvcResult = mockMvc.perform(get("/businObj/update"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
+    sb.delete(0, sb.indexOf("{"))
+        .delete(sb.lastIndexOf("}") + 1, sb.length());
+    // 客户端获得 serviceResult
+    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+    assert (null != serviceResult && serviceResult.getState() == 1);
+  }
+
+
+  /**
+   * 业务对象删除
+   * @throws Exception
+   */
+  @Test
+  public void testDelete() throws Exception {
+    MvcResult mvcResult = mockMvc.perform(get("/businObj/delete"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
+    sb.delete(0, sb.indexOf("{"))
+        .delete(sb.lastIndexOf("}") + 1, sb.length());
+    // 客户端获得 serviceResult
+    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+    assert (null != serviceResult && serviceResult.getState() == 1);
+  }
+
+
 }

@@ -1,5 +1,6 @@
 package com.bcx.plat.core.service.Impl;
 
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.mapper.FrontFuncProMapper;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -30,7 +31,7 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
     public ServiceResult queryFronFuncPro(Map map) {
         List<FrontFuncPro> result = frontFuncProMapper.select(map);
         if (result.size()==0){
-            return new ServiceResult(QUERY_FAIL,"");
+            return new ServiceResult(Message.QUERY_FAIL,"");
         }
         return new ServiceResult( result,QUERY_SUCCESS);
     }
