@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Went on 2017/8/1.
  */
 @RestController
-@RequestMapping("core/businObj")
+@RequestMapping("/core/businObj")
 public class BusinessObjectController {
 
   @Autowired

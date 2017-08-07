@@ -59,7 +59,7 @@ public class BusinessObjectControllerTest extends BaseTest {
    */
   @Test
   public void testInsert() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(get("core/businObj/insert"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/businObj/add"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -80,7 +80,7 @@ public class BusinessObjectControllerTest extends BaseTest {
    */
   @Test
   public void testUpdate() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(get("/businObj/update"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/businObj/modify"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
