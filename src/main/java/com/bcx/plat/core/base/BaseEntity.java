@@ -14,7 +14,7 @@ import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
-import com.bcx.plat.core.morebatis.util.TableAnnoUtil;
+import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -103,10 +103,11 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    * 为了满足需求，我决定造一个轮子
    *
    * @param map map数据
+   * @param isUnderline 传入map的key是否为下划线命名
    * @return 返回实体类
    */
   @SuppressWarnings("unchecked")
-  public T fromMap(Map<String, Object> map) {
+  public T fromMap(Map<String, Object> map,boolean isUnderline) {
     Class current = getClass();
     do {
       Method[] methods = current.getDeclaredMethods();
@@ -115,7 +116,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
         if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
           String fieldName = underlineToCamel(
               method.getName().substring(3, method.getName().length()), false);
-          temp = map.get(fieldName);
+          temp = isUnderline?map.get(underlineToCamel(fieldName,false)):map.get(fieldName);
           if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
             if (temp instanceof String) {
               temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
@@ -134,6 +135,18 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     } while (current != Object.class);
 
     return (T) this;
+  }
+
+  /**
+   * 尝试从 map 中读取 entity 类
+   *
+   * 为了满足需求，我决定造一个轮子
+   *
+   * @param map map数据
+   * @return 返回实体类
+   */
+  public T fromMap(Map<String, Object> map){
+    return fromMap(map,false);
   }
 
   public String getStatus() {

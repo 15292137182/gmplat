@@ -1,10 +1,13 @@
 package com.bcx.plat.core.morebatis;
 
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.mapper.SuitMapper;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.Field;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.utils.SpringContextHolder;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -74,6 +77,10 @@ public class QueryAction {
     this.tableSource = tableSource;
   }
 
-//  public PageResult<Map<String,Object>> pageQue
+  public Page<Map<String, Object>> pageQuery(SuitMapper suitMapper,int pageNum,int pageSize){
+    Page<Map<String,Object>> pageTask = PageHelper.startPage(pageNum, pageSize);
+    suitMapper.select(this);
+    return pageTask;
+  }
 
 }

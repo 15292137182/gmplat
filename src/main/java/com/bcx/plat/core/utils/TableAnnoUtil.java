@@ -1,4 +1,4 @@
-package com.bcx.plat.core.morebatis.util;
+package com.bcx.plat.core.utils;
 
 import static com.bcx.plat.core.utils.UtilsTool.getAnnoFieldName;
 
