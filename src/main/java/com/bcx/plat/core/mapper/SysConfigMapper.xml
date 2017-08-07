@@ -38,7 +38,6 @@
         UPDATE
             t_sys_config
         SET
-            conf_key = #{confKey},
             conf_value = #{confValue},
             desp = #{desp},
             modify_user = #{modifyUser},

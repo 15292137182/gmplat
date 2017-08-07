@@ -31,16 +31,17 @@ public class BusinessObjectProController {
     /**
      * 查询业务对象属性
      *
-     * @param str     根据代码和名称查询数据
-     * @param rowId   业务对象rowId
-     * @param request 请求
+     * @param str   根据代码和名称查询数据
+     * @param rowId 根据rowId查询出业务对象关联的数据
+     * @param rowIds 根据roeIds查询属性数据
      * @return
      */
     @RequestMapping("/query")
-    public MappingJacksonValue select(String str, String rowId, HttpServletRequest request) {
+    public MappingJacksonValue select(String str, String rowId,String rowIds, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
         map.put("rowId", rowId);
         map.put("strArr", collectToSet(str));
+        map.put("rowIds", rowIds);
         ServiceResult<BusinessObjectPro> result = businessObjectProService.select(map);
         MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(
