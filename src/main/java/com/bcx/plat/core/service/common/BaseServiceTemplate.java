@@ -164,6 +164,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
           Collectors.toList()));
       clz = clz.getSuperclass();
     }
+    result.remove("etc");
     return result;
   }
 
