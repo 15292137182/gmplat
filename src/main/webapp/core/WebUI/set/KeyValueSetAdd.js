@@ -10,7 +10,7 @@ var keyValueSetAdd = new Vue({
             confKeyInput: '',
             confValueInput: '',
             despInput: '',
-            versionInput: false,
+            versionInput: '',
             disabled:''
         }
     },
@@ -56,8 +56,8 @@ var keyValueSetAdd = new Vue({
                     version: keyValueSetAdd.version
                  }, {
                     jsonp: 'callback'
-                }).then(function () {
-                    ibcpLayer.ShowOK('编辑成功');
+                }).then(function (res) {
+                    ibcpLayer.ShowOK(res.data.message);
                     keyValueSet.search();
                     ibcpLayer.Close(divIndex);
                 });
