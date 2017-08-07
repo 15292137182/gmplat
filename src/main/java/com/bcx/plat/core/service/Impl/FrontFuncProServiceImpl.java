@@ -32,7 +32,7 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
         if (result.size()==0){
             return new ServiceResult(QUERY_FAIL,"");
         }
-        return new ServiceResult(QUERY_SUCCESS, result);
+        return new ServiceResult( result,QUERY_SUCCESS);
     }
 
     /**
@@ -47,9 +47,9 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
         String rowId = entity.getRowId();
         int result = frontFuncProMapper.insert(entity);
         if (result!=1){
-            return new ServiceResult(NEW_ADD_FAIL,"");
+            return new ServiceResult(null,NEW_ADD_FAIL);
         }
-        return new ServiceResult(NEW_ADD_SUCCESS,rowId);
+        return new ServiceResult(rowId,NEW_ADD_SUCCESS);
     }
 
     /**

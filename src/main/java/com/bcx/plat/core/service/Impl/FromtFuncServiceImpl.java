@@ -38,10 +38,10 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
       String objectName = result.get(i).getObjectName();
       String tables = objectCode + "(" + objectName + ")";
       result.get(i).setTables(tables);
-      serviceResult=  new ServiceResult(QUERY_SUCCESS, result);
+      serviceResult=  new ServiceResult(result,QUERY_SUCCESS);
     }
     if(result.size()==0){
-     serviceResult = new ServiceResult(QUERY_FAIL,"");
+     serviceResult = new ServiceResult(null,QUERY_FAIL);
     }
     return serviceResult;
   }
@@ -58,9 +58,9 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
     String rowId = frontFunc.getRowId();
     int insert = frontFuncMapper.insert(frontFunc);
     if(insert!=1){
-      return  new ServiceResult<>(NEW_ADD_FAIL ,"");
+      return  new ServiceResult(null,NEW_ADD_FAIL );
     }
-    return  new ServiceResult<>(NEW_ADD_SUCCESS ,rowId);
+    return  new ServiceResult(rowId,NEW_ADD_SUCCESS);
 
   }
 
@@ -73,9 +73,9 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
     frontFunc.buildModifyInfo();
     int update = frontFuncMapper.update(frontFunc);
     if(update != 1){
-      return  new ServiceResult<>(UPDATE_FAIL ,"");
+      return  new ServiceResult(null,UPDATE_FAIL );
     }
-    return  new ServiceResult<>(UPDATE_SUCCESS ,"");
+    return  new ServiceResult(null,UPDATE_SUCCESS );
   }
 
   /**
@@ -84,6 +84,6 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
   @Override
   public ServiceResult<FrontFunc> delete(FrontFunc frontFunc) {
     frontFuncMapper.delete(frontFunc);
-    return new ServiceResult<>(DELETE_SUCCESS,"");
+    return new ServiceResult<>(null,DELETE_SUCCESS);
   }
 }

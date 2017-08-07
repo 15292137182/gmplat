@@ -13,106 +13,49 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
  * 返回结果 Create By HCL at 2017/7/31
- */
-public class ServiceResult<T extends BaseEntity> implements Serializable {
+ */public class ServiceResult<T> implements Serializable {
 
   private static ResourceBundleMessageSource messageSource;
 
   private static final long serialVersionUID = 812376774103405857L;
   private int state = STATUS_SUCCESS;
   private String message;
-  private Map<String, Object> content = new HashMap<>();
+  private T content;
+  private Map additional;
 
-  public ServiceResult() {
-
+  public ServiceResult(T content) {
+    this.content = content;
   }
 
-  /**
-   * 常用参数构造方法
-   *
-   * @param state 状态
-   * @param message 消息
-   * @param data 数据
-   */
-  public ServiceResult(int state, String message, Object data) {
-    setState(state);
-    setMessage(message);
-    setData(data);
+  public ServiceResult(T content,int state) {
+    this.state = state;
+    this.content = content;
   }
 
-  /**
-   * 接受状态和消息的构造函数
-   *
-   * @param state 消息
-   * @param message 消息
-   */
-  public ServiceResult(int state, String message) {
-    setState(state);
-    setMessage(message);
+  public ServiceResult(T content,String message) {
+    this.content = content;
+    this.message = message;
   }
 
-  /**
-   * 接受消息和对象的构造函数
-   *
-   * @param message 消息
-   * @param data 数据
-   */
-  public ServiceResult(String message, Object data) {
-    setState(STATUS_SUCCESS);
-    setData(data);
-    setMessage(message);
+  public ServiceResult(T content,int state, String message) {
+    this.state = state;
+    this.message = message;
+    this.content = content;
   }
 
-  /**
-   * 接受 data 的构造方法
-   *
-   * @param data 数据
-   */
-  public ServiceResult(Object data) {
-    setState(STATUS_SUCCESS);
-    setData(data);
-    setMessage("");
+  public ServiceResult(int state, String message, T content, Map additional) {
+    this.state = state;
+    this.message = message;
+    this.content = content;
+    this.additional = additional;
   }
 
-  /**
-   * 接受 message 的构造方法
-   *
-   * @param message 数据
-   */
-  public ServiceResult(String message) {
-    setMessage(message);
+  public Map getAdditional() {
+    return additional;
   }
 
-  /**
-   * 设置页面信息
-   *
-   * @param pageNum 当前页面
-   * @param pageSize 页面大小
-   * @param pages 总页数
-   * @param total 总条数
-   * @return 返回自身
-   */
-  public ServiceResult<T> setPageInfo(int pageNum, int pageSize, int pages, int total) {
-    getContent().put("pageNum", pageNum);
-    getContent().put("pageSize", pageSize);
-    getContent().put("pages", pages);
-    getContent().put("total", total);
-    return this;
-  }
-
-  /**
-   * 设置页面信息
-   *
-   * @param pageInfo 查询的页面信息
-   * @return 返回自身
-   */
-  public ServiceResult<T> setPageInfo(PageInfo<T> pageInfo) {
-    getContent().put("pageNum", pageInfo.getPageNum());
-    getContent().put("pageSize", pageInfo.getPageSize());
-    getContent().put("pages", pageInfo.getPages());
-    getContent().put("total", pageInfo.getTotal());
-    setData(pageInfo.getList());
-    return this;
+  public void setAdditional(Map additional) {
+    this.additional = additional;
   }
 
   /**
@@ -151,20 +94,15 @@ public class ServiceResult<T extends BaseEntity> implements Serializable {
     this.message = message;
   }
 
-  public Map<String, Object> getContent() {
+  public T getContent() {
     return content;
   }
 
-  public void setContent(Map<String, Object> content) {
+  public void setContent(T content) {
     this.content = content;
   }
 
-  public void setData(Object data) {
-    getContent().put("data", data);
-  }
-
-  @JsonIgnore
-  public Object getData() {
-    return getContent().get("data");
+  public static ServiceResult Msg(int status,String msg){
+    return new ServiceResult(null,status,msg);
   }
 }

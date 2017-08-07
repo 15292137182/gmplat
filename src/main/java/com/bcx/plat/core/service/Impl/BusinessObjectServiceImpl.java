@@ -47,10 +47,10 @@ public class BusinessObjectServiceImpl extends BaseService implements BusinessOb
                 String string = tableSchema + "(" + tableCname + ")";
                 select.get(i).setTables(string);
                 logger.info(QUERY_SUCCESS);
-                result = new ServiceResult<>(QUERY_SUCCESS, select);
+                result = new ServiceResult(select,QUERY_SUCCESS);
             }
             if (select.size() == 0) {
-                result = new ServiceResult<>(QUERY_FAIL, "");
+                result = new ServiceResult("",QUERY_FAIL);
             }
         }
         return result;
@@ -73,10 +73,10 @@ public class BusinessObjectServiceImpl extends BaseService implements BusinessOb
             String rowId = businessObject.getRowId();
             businessObjectMapper.insert(businessObject);
             //将用户新增的rowId返回
-            return new ServiceResult<>(NEW_ADD_SUCCESS, rowId);
+            return new ServiceResult(rowId,NEW_ADD_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ServiceResult<>(NEW_ADD_FAIL, "");
+            return new ServiceResult("",NEW_ADD_FAIL);
         }
     }
 
@@ -89,10 +89,10 @@ public class BusinessObjectServiceImpl extends BaseService implements BusinessOb
             businessObject.buildModifyInfo();
             businessObjectMapper.update(businessObject);
             String rowId = businessObject.getRowId();
-            return new ServiceResult<>(UPDATE_SUCCESS, rowId);
+            return new ServiceResult(rowId,UPDATE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ServiceResult<>(UPDATE_FAIL, "");
+            return new ServiceResult("",UPDATE_FAIL);
         }
     }
 
@@ -112,11 +112,11 @@ public class BusinessObjectServiceImpl extends BaseService implements BusinessOb
                 }
             }
             businessObjectMapper.delete(rowId);
-            return new ServiceResult<>(STATUS_SUCCESS, DELETE_SUCCESS, "");
+            return new ServiceResult("",STATUS_SUCCESS, DELETE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ServiceResult<>(STATUS_FAIL, DELETE_FAIL, "");
+        return new ServiceResult("",STATUS_FAIL, DELETE_FAIL);
     }
 
     /**

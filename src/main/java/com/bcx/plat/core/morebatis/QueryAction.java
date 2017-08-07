@@ -1,5 +1,6 @@
 package com.bcx.plat.core.morebatis;
 
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.Field;
@@ -7,6 +8,7 @@ import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QueryAction {
 
@@ -14,8 +16,6 @@ public class QueryAction {
   private List<Column> columns;
   private TableSource tableSource;
   private List<FieldCondition> where;
-//    Integer page;
-//    Integer pageSize;
 
   public QueryAction() {
     where = new LinkedList<>();
@@ -73,5 +73,7 @@ public class QueryAction {
   public void setTableSource(TableSource tableSource) {
     this.tableSource = tableSource;
   }
+
+//  public PageResult<Map<String,Object>> pageQue
 
 }

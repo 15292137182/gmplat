@@ -30,7 +30,7 @@ public class MaintTableController extends BaseController {
       HttpServletResponse response) {
     List result = maintTableService.selectMaint(str);
     MappingJacksonValue value = new MappingJacksonValue(
-        objToJson(new ServiceResult("消息传递成功", result)));
+        objToJson(new ServiceResult(result,"消息传递成功")));
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;
@@ -41,7 +41,7 @@ public class MaintTableController extends BaseController {
       HttpServletResponse response) {
     List<MaintTableInfo> result = maintTableService.selectById(rowId);
     MappingJacksonValue value = new MappingJacksonValue(
-        objToJson(new ServiceResult("消息传递成功", result)));
+        objToJson(new ServiceResult(result,"消息传递成功")));
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;

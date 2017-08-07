@@ -38,10 +38,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   public ServiceResult<BusinessObjectPro> select(Map<String,Object> map) {
     try {
         List<BusinessObjectPro> select = businessObjectProMapper.select(map);
-      return new ServiceResult<>("查询数据成功", select);
+      return new ServiceResult(select,"查询数据成功");
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult<>("查询数据失败", "");
+      return new ServiceResult("","查询数据失败" );
     }
   }
 
@@ -56,10 +56,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
       businessObjectPro.buildCreateInfo();
       businessObjectProMapper.insert(businessObjectPro);
       //将用户新增的rowId返回
-      return new ServiceResult<BusinessObjectPro>("新增数据成功", rowId);
+      return new ServiceResult(rowId,STATUS_SUCCESS,"新增数据成功");
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult<>("新增数据失败", "");
+      return new ServiceResult( "","新增数据失败");
     }
   }
 
@@ -71,10 +71,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   public ServiceResult<BusinessObjectPro> delete(String rowId) {
     try {
       businessObjectProMapper.delete(rowId);
-      return new ServiceResult<>(STATUS_SUCCESS, "删除数据成功", "");
+      return new ServiceResult(null, STATUS_SUCCESS,"删除数据成功");
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult<>(STATUS_FAIL, "删除数据失败", "");
+      return new ServiceResult(null,STATUS_FAIL, "删除数据失败");
     }
   }
 }

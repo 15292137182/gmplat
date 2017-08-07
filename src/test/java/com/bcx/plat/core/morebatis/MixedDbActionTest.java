@@ -3,6 +3,7 @@ package com.bcx.plat.core.morebatis;
 import com.bcx.BaseTest;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
+import com.bcx.plat.core.morebatis.substance.Field;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import java.util.Arrays;
@@ -31,7 +32,8 @@ public class MixedDbActionTest extends BaseTest {
     final FieldCondition idCondition = new FieldCondition("id", Operator.EQUAL, 999);
     final QueryAction queryAction = new QueryAction()
         .selectAll()
-        .from(TableInfo.TEST).where(idCondition);
+        .from(TableInfo.TEST)
+        .where(idCondition);
     int sizeBefore = tempSuitMapper.select(queryAction).size();
     final Set<String> columns = Sets.newSet("id", "testFirst", "testSecond");
     Map<String, Object> row;
@@ -84,7 +86,10 @@ public class MixedDbActionTest extends BaseTest {
         .from(TableInfo.TEST)
         .where(id1000);
     final int id1000SizeBefore = tempSuitMapper.select(updatedQuery).size();
-    UpdateAction updateAction = new UpdateAction().from(TableInfo.TEST).set(args).where(id1000);
+    UpdateAction updateAction = new UpdateAction()
+        .from(TableInfo.TEST)
+        .set(args)
+        .where(id1000);
     tempSuitMapper.update(updateAction);
     final int id1000SizeAfter = tempSuitMapper.select(updatedQuery).size();
     Assert.assertTrue(id1000SizeBefore > id1000SizeAfter);

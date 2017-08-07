@@ -38,7 +38,7 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
    */
   @Override
   public ServiceResult<DBTableColumn> select(Map<String, Object> map) {
-    return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS, dbTableColumnMapper.select(map));
+    return new ServiceResult(dbTableColumnMapper.select(map),STATUS_SUCCESS, OPERATOR_SUCCESS);
   }
 
   /**
@@ -50,7 +50,7 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
   @Override
   public ServiceResult<DBTableColumn> insert(DBTableColumn bean) {
     bean.buildCreateInfo();
-    return new ServiceResult<>(dbTableColumnMapper.insert(bean), OPERATOR_SUCCESS);
+    return new ServiceResult(dbTableColumnMapper.insert(bean), OPERATOR_SUCCESS);
   }
 
   /**
@@ -62,7 +62,7 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
   @Override
   public ServiceResult<DBTableColumn> update(DBTableColumn bean) {
     bean.buildModifyInfo();
-    return new ServiceResult<>(dbTableColumnMapper.update(bean), OPERATOR_SUCCESS);
+    return new ServiceResult(dbTableColumnMapper.update(bean), OPERATOR_SUCCESS);
   }
 
   /**
@@ -78,11 +78,11 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
       map.put("rowIds",rowIds);
       if (LOGIC_DELETE) {
         map.putAll(new BaseEntity<>().buildDeleteInfo().toMap());
-        return new ServiceResult<>(dbTableColumnMapper.batchLogicDelete(map), OPERATOR_SUCCESS);
+        return new ServiceResult(dbTableColumnMapper.batchLogicDelete(map), OPERATOR_SUCCESS);
       } else {
-        return new ServiceResult<>(dbTableColumnMapper.batchDelete(map), OPERATOR_SUCCESS);
+        return new ServiceResult(dbTableColumnMapper.batchDelete(map), OPERATOR_SUCCESS);
       }
     }
-    return new ServiceResult<>(STATUS_FAIL, INVALID_REQUEST);
+    return new ServiceResult(null,STATUS_FAIL, INVALID_REQUEST);
   }
 }

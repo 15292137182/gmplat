@@ -35,7 +35,7 @@ public class KeySetServiceImpl implements KeySetService{
     @Override
     public ServiceResult<KeySet> selete(Map<String, Object> map) {
         List<KeySet> select = keySetMapper.select(map);
-        return new ServiceResult<>(QUERY_SUCCESS,select);
+        return new ServiceResult(select,QUERY_SUCCESS);
     }
 
     /**
@@ -51,9 +51,9 @@ public class KeySetServiceImpl implements KeySetService{
         keySet.setVersion("1.0");
         int insert = keySetMapper.insert(keySet);
         if (insert != 1) {
-            return new ServiceResult<>(NEW_ADD_FAIL);
+            return new ServiceResult(null,NEW_ADD_FAIL);
         }
-        return new ServiceResult<>(NEW_ADD_SUCCESS);
+        return new ServiceResult(null,NEW_ADD_SUCCESS);
     }
 
     /**
@@ -66,8 +66,8 @@ public class KeySetServiceImpl implements KeySetService{
     public ServiceResult<KeySet> update(KeySet keySet) {
         keySet.buildModifyInfo();
         int update = keySetMapper.update(keySet);
-        if (update != 1) return new ServiceResult<>(UPDATE_FAIL);
-        return new ServiceResult<>(UPDATE_SUCCESS);
+        if (update != 1) return new ServiceResult(null,UPDATE_FAIL);
+        return new ServiceResult(UPDATE_SUCCESS);
     }
 
     /**
@@ -79,7 +79,7 @@ public class KeySetServiceImpl implements KeySetService{
     @Override
     public ServiceResult<KeySet> delete(KeySet keySet) {
         int delete = keySetMapper.delete(keySet);
-        if (delete != 1) return new ServiceResult<>(DELETE_FAIL);
-        return new ServiceResult<>(DELETE_SUCCESS);
+        if (delete != 1) return new ServiceResult(null,DELETE_FAIL);
+        return new ServiceResult(null,DELETE_SUCCESS);
     }
 }
