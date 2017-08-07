@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.utils.ServiceResult;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -45,7 +44,8 @@ public class BusinessObjectControllerTest extends BaseTest {
     String json = sb.toString();
     json=json.substring("/**/callback(".length(),json.length());
     json=json.substring(0,json.length()-");".length());
-    ServiceResult<List> serviceResult = jsonToObj(json, ServiceResult.class);
-//    assert (null != serviceResult && serviceResult.getState() == 1);
+
+    ServiceResult serviceResult = jsonToObj(json, ServiceResult.class);
+    assert (null != serviceResult && serviceResult.getState() == 1);
   }
 }

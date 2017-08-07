@@ -4,6 +4,7 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.github.pagehelper.PageInfo;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -22,6 +23,9 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   private String message;
   private T content;
   private Map additional;
+
+  public ServiceResult() {
+  }
 
   public ServiceResult(T content) {
     this.content = content;
@@ -53,7 +57,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public Map getAdditional() {
     return additional;
   }
-
   public void setAdditional(Map additional) {
     this.additional = additional;
   }
@@ -81,7 +84,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public int getState() {
     return state;
   }
-
   public void setState(int state) {
     this.state = state;
   }
@@ -89,7 +91,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public String getMessage() {
     return message;
   }
-
   public void setMessage(String message) {
     this.message = message;
   }
@@ -97,7 +98,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public T getContent() {
     return content;
   }
-
   public void setContent(T content) {
     this.content = content;
   }
