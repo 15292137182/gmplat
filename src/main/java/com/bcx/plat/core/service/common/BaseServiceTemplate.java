@@ -81,6 +81,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
   public ServiceResult insert(Map args) {
     args=mapFilter(args);
+    args.remove("etc");
     InsertAction insertAction = new InsertAction().into(table).cols(fieldNames).values(args);
     try {
       getSuitMapper().insert(insertAction);
@@ -93,6 +94,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
   public ServiceResult update(Map args) {
     args=mapFilter(args);
+    args.remove("etc");
     final Map<String,Object> finalCopy=args;
     UpdateAction updateAction = new UpdateAction()
         .from(table)
@@ -111,6 +113,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
   public ServiceResult delete(Map args) {
     args=mapFilter(args);
+    args.remove("etc");
     DeleteAction deleteAction = new DeleteAction()
         .from(table)
         .where(convertMapToFieldConditions(args));

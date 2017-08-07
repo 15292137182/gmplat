@@ -39,7 +39,7 @@ public class CommonServiceTest extends BaseTest{
   public void testPageQuery(){
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectName(testName);
-    for(int i=0;i<40;i++) businessObject.buildCreateInfo().insert();
+    for(int i=0;i<40;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
     Map<String,Object> args=new HashMap<>();
     args.put("objectName",testName);
     ServiceResult<PageResult<Map<String, Object>>> result = testTableService
@@ -61,7 +61,7 @@ public class CommonServiceTest extends BaseTest{
   @Rollback
   public void testConditionalPageQuery(){
     businessObject.setObjectCode("for test2");
-    for(int i=0;i<10;i++) businessObject.buildCreateInfo().insert();
+    for(int i=0;i<10;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
     args.put("objectCode","for test2");
     ServiceResult<PageResult<Map<String, Object>>> result = testTableService.select(args, 1, 20);
     Assert.assertEquals(10,result.getData().getResult().size());
@@ -111,7 +111,7 @@ public class CommonServiceTest extends BaseTest{
     businessObject = new BusinessObject();
     testName = UUID.randomUUID().toString();
     businessObject.setObjectName(testName);
-    for(int i=0;i<20;i++) businessObject.buildCreateInfo().insert();
+    for(int i=0;i<20;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
     args = new HashMap<>();
     args.put("objectName", testName);
   }
