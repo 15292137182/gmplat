@@ -27,7 +27,7 @@ public class DBTableColumnServiceTest extends BaseTest {
   @Rollback
   public void test() {
     // 测试查询方法
-    List<DBTableColumn> list = (List<DBTableColumn>) dbTableColumnService.select(null).getContent();
+    List<DBTableColumn> list = (List<DBTableColumn>) dbTableColumnService.select(null).getData();
     assert (null != list);
     // 测试新增方法
     DBTableColumn dbTableColumn = new DBTableColumn();

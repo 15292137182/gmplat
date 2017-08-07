@@ -3,8 +3,8 @@
     <slot></slot>
     <transition name="el-zoom-in-center">
       <sup
-        v-show="!hidden && ( content || isDot )"
-        v-text="content"
+        v-show="!hidden && ( data || isDot )"
+        v-text="data"
         class="el-badge__content"
         :class="{ 'is-fixed': $slots.default, 'is-dot': isDot }">
       </sup>
@@ -24,7 +24,7 @@ export default {
   },
 
   computed: {
-    content() {
+    data() {
       if (this.isDot) return;
 
       const value = this.value;

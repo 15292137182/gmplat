@@ -5,7 +5,7 @@
       :node="child"
       :props="props"
       :key="getNodeKey(child)"
-      :render-content="renderContent"
+      :render-data="renderContent"
       @node-expand="handleNodeExpand">
     </el-tree-node>
     <div class="el-tree__empty-block" v-if="!root.childNodes || root.childNodes.length === 0">
