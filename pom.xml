@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bcx.plat</groupId>
-  <artifactId>GMPlat</artifactId>
+  <artifactId>gmplat</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GMPlat Maven Webapp</name>
@@ -178,6 +178,6 @@
         <filtering>false</filtering>
       </resource>
     </resources>
-    <finalName>GMPlat</finalName>
+    <finalName>gmplat</finalName>
   </build>
 </project>

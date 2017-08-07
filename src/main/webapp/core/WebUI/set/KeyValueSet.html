@@ -65,7 +65,7 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <el-col :span="24">
                         <template>
-                            <el-table :data="keyValueSetdata" border
+                            <el-table :data="keyValueSetdata" border highlight-current-row @current-change="handleCurrentChange"
                                       style="width: 100%;border-radius: 5px">
                                 <el-table-column prop="keySetCode" label="代码" width="">
                                 </el-table-column>
