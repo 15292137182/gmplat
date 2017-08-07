@@ -16,6 +16,8 @@ public interface SuitMapper {
    */
   List<Map<String,Object>> select(QueryAction queryActionLite);
 
+  List<Map<String,Object>> selectByOr(QueryAction queryActionLite);
+
   int insert(InsertAction insertAction);
 
   int delete(DeleteAction deleteAction);

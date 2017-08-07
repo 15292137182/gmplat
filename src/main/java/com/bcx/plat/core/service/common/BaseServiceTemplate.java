@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -71,6 +72,38 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     ServiceResult<List<Map<String, Object>>> serviceResult;
     try {
       List<Map<String, Object>> pageResult = getSuitMapper().select(queryAction);
+      serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
+          pageResult);
+    } catch (Exception e) {
+      serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+    }
+    return serviceResult;
+  }
+
+
+  public ServiceResult blankSelect(List<String> column,List<String> value, int pageNum, int pageSize) {
+    QueryAction queryAction = new QueryAction().selectAll()
+        .from(TableAnnoUtil.getTableSource(entityClass))
+        .where(createBlankQuery(column,value));
+    ServiceResult<PageResult<Map<String, Object>>> serviceResult;
+    try {
+      PageResult<Map<String, Object>> pageResult = queryAction
+          .pageQuery(getSuitMapper(), pageNum, pageSize);
+      serviceResult = new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
+          pageResult);
+    } catch (Exception e) {
+      serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+    }
+    return serviceResult;
+  }
+
+  public ServiceResult blankSelectList(List<String> column,List<String> value) {
+    QueryAction queryAction = new QueryAction().selectAll()
+        .from(TableAnnoUtil.getTableSource(entityClass))
+        .where(createBlankQuery(column,value));
+    ServiceResult<List<Map<String, Object>>> serviceResult;
+    try {
+      List<Map<String, Object>> pageResult = getSuitMapper().selectByOr(queryAction);
       serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
           pageResult);
     } catch (Exception e) {
@@ -139,6 +172,16 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return new FieldCondition(entry.getKey(), Operator.EQUAL, value);
       }
     }).collect(Collectors.toList());
+  }
+
+  protected List<FieldCondition> createBlankQuery(List<String> columns,List<String> values) {
+    List<FieldCondition> conditions=new LinkedList<>();
+    for (String column : columns) {
+      for (String value : values) {
+        conditions.add(new FieldCondition(column,Operator.LIKE_FULL,value));
+      }
+    }
+    return conditions;
   }
 
   private Map<String,Object> mapFilter(Map<String,Object> map){

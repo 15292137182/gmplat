@@ -50,6 +50,53 @@
     </where>
   </select>
 
+  <select id="selectByOr" parameterType="com.bcx.plat.core.morebatis.QueryAction"
+    resultType="hashmap">
+    SELECT
+    <trim suffixOverrides=",">
+      <foreach collection="columns" item="column">
+        ${column.columnSqlFragment},
+      </foreach>
+    </trim>
+    FROM ${tableSource.tableSourceSqlFragment}
+    <where>
+      <foreach collection="where" item="condition">
+        OR ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(condition.field.fieldName)}
+        <choose>
+          <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@EQUAL">
+            = #{condition.value}
+          </when>
+          <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@LIKE_LEFT">
+            like concat('%',#{condition.value})
+          </when>
+          <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@LIKE_RIGHT">
+            like concat(#{condition.value},'%')
+          </when>
+          <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@LIKE_FULL">
+            like concat('%',#{condition.value},'%')
+          </when>
+          <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@IN">
+            <choose>
+              <when test="condition.value.size>0">
+                in
+                <foreach close=")" collection="condition.value" item="v" open="(" separator=",">
+                  #{v}
+                </foreach>
+              </when>
+              <otherwise>
+                !=${condition.field.fieldName}
+              </otherwise>
+            </choose>
+          </when>
+          <otherwise>
+            unsupported operator error
+          </otherwise>
+        </choose>
+      </foreach>
+    </where>
+  </select>
+
+
   <insert id="insert" parameterType="com.bcx.plat.core.morebatis.InsertAction">
     ${valuesRefresh}
     insert into ${tableSource.tableSourceSqlFragment}
