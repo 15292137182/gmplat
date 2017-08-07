@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  version="3.0">
-  <display-name>GMPlat</display-name>
-  
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  version="2.5">
+  <display-name>gmplat</display-name>
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
@@ -40,7 +42,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>DruidStatView</servlet-name>
-    <url-pattern>/druid/*</url-pattern>
+    <url-pattern>/druid/</url-pattern>
   </servlet-mapping>
   <!-- =================================德鲁伊数据源 end================================= -->
 
@@ -57,7 +59,7 @@
   <servlet-mapping>
     <servlet-name>springMVC</servlet-name>
     <!-- / 表示所有的请求都要经过此 servlet -->
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
 
   <!-- 设置内容配置文件 -->
@@ -75,5 +77,4 @@
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
-
 </web-app>
