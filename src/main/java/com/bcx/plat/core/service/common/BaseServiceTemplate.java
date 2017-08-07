@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
   private final Class entityClass= (Class) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -30,8 +31,15 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   private final TableSource table=TableAnnoUtil.getTableSource(entityClass);
   private final List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
 
-  protected SuitMapper getSuitMapper() {
-    return null;
+  @Autowired
+  private SuitMapper suitMapper;
+
+  public SuitMapper getSuitMapper() {
+    return suitMapper;
+  }
+
+  public void setSuitMapper(SuitMapper suitMapper) {
+    this.suitMapper = suitMapper;
   }
 
   public ServiceResult select(Map args,int pageNum,int pageSize){
