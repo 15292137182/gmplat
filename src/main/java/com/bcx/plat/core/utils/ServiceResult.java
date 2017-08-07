@@ -71,4 +71,8 @@ public class ServiceResult<T> implements Serializable {
   public void setExtra(Map extra) {
     this.extra = extra;
   }
+
+  public static ServiceResult Msg(int state,String message){
+    return new ServiceResult(state,message,null);
+  }
 }

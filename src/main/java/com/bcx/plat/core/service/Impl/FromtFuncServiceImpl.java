@@ -1,6 +1,5 @@
 package com.bcx.plat.core.service.Impl;
 
-import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.mapper.FrontFuncMapper;
 import com.bcx.plat.core.service.FrontFuncService;
@@ -18,7 +17,7 @@ import static com.bcx.plat.core.constants.Message.*;
  */
 @Service
 @Transactional
-public class FromtFuncServiceImpl extends BaseServiceImpl implements FrontFuncService {
+public class FromtFuncServiceImpl implements FrontFuncService {
 
   @Autowired
   private FrontFuncMapper frontFuncMapper;

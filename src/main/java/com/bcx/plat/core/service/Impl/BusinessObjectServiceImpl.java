@@ -2,8 +2,6 @@ package com.bcx.plat.core.service.Impl;
 
 import static com.bcx.plat.core.base.BaseConstants.*;
 import static com.bcx.plat.core.constants.Message.*;
-
-import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.mapper.BusinessObjectMapper;
@@ -26,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class BusinessObjectServiceImpl extends BaseServiceImpl implements BusinessObjectService {
+public class BusinessObjectServiceImpl implements BusinessObjectService {
 
     @Autowired
     private BusinessObjectMapper businessObjectMapper;

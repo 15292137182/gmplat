@@ -3,7 +3,6 @@ package com.bcx.plat.core.service.common;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.base.BaseService;
-import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.morebatis.DeleteAction;
 import com.bcx.plat.core.morebatis.InsertAction;
@@ -25,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TableService<T extends BaseEntity<T>> implements BaseService<T> {
+public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
   private final Class entityClass= (Class) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   private final Set<String> fieldNames=getFieldNamesFromClass(entityClass);
   private final TableSource table=TableAnnoUtil.getTableSource(entityClass);
@@ -35,37 +34,35 @@ public class TableService<T extends BaseEntity<T>> implements BaseService<T> {
     return null;
   }
 
-//  public void TableService() {
-//    Class entityClass=this.getClass().getGenericSuperclass().getClass();
-//    Set<String> fieldNames= new HashSet<String>(
-//        Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
-//          return field.getName();
-//        }).collect(Collectors.toList())
-//    );
-//    TableSource table=TableAnnoUtil.getTableSource(entityClass);
-//    List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
-//  }
-
-  public ServiceResult select(T entity,int pageNum,int pageSize){
-    Map<String, Object> args = entity.toMap();
+  public ServiceResult select(Map args,int pageNum,int pageSize){
     QueryAction queryAction=new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(convertMapToFieldConditions(args));
-    ServiceResult<PageResult<Map<String, Object>>> serviceResult = new ServiceResult<>();
+    ServiceResult<PageResult<Map<String, Object>>> serviceResult ;
     try {
       PageResult<Map<String, Object>> pageResult = queryAction.pageQuery(getSuitMapper(), pageNum, pageSize);
-      serviceResult = new ServiceResult<>(pageResult);
-      serviceResult.setMessage(Message.QUERY_SUCCESS);
-      serviceResult.setState(BaseConstants.STATUS_SUCCESS);
+      serviceResult = new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,pageResult);
     }catch (Exception e){
-      serviceResult.setMessage(Message.QUERY_FAIL);
-      serviceResult.setState(BaseConstants.STATUS_FAIL);
+      serviceResult=ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
     return serviceResult;
   }
 
-  public ServiceResult insert(T entity){
-    Map<String, Object> args = entity.toMap();
+  public ServiceResult selectList(Map args) {
+    QueryAction queryAction=new QueryAction().selectAll()
+        .from(TableAnnoUtil.getTableSource(entityClass))
+        .where(convertMapToFieldConditions(args));
+    ServiceResult<List<Map<String, Object>>> serviceResult;
+    try {
+      List<Map<String, Object>> pageResult = getSuitMapper().select(queryAction);
+      serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,pageResult);
+    }catch (Exception e){
+      serviceResult=ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
+    }
+    return serviceResult;
+  }
+
+  public ServiceResult insert(Map args){
     InsertAction insertAction=new InsertAction().into(table).cols(fieldNames).values(args);
     try {
       getSuitMapper().insert(insertAction);
@@ -76,8 +73,7 @@ public class TableService<T extends BaseEntity<T>> implements BaseService<T> {
     return ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS);
   }
 
-  public ServiceResult update(T entity){
-    Map<String, Object> args = entity.toMap();
+  public ServiceResult update(Map args){
     UpdateAction updateAction=new UpdateAction()
         .from(table)
         .set(args)
@@ -93,8 +89,7 @@ public class TableService<T extends BaseEntity<T>> implements BaseService<T> {
     return ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
   }
 
-  public ServiceResult delete(T entity){
-    Map<String, Object> args = entity.toMap();
+  public ServiceResult delete(Map args){
     DeleteAction deleteAction=new DeleteAction()
         .from(table)
         .where(convertMapToFieldConditions(args));

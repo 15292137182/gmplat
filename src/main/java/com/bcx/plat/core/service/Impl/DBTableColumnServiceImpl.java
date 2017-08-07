@@ -7,7 +7,6 @@ import static com.bcx.plat.core.constants.Message.INVALID_REQUEST;
 import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
@@ -24,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class DBTableColumnServiceImpl extends BaseServiceImpl<DBTableColumn> implements DBTableColumnService {
+public class DBTableColumnServiceImpl implements DBTableColumnService {
 
   @Autowired
   private DBTableColumnMapper dbTableColumnMapper;
