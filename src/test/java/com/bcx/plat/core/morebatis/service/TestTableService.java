@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 //@Transactional
-//@Service
+@Service
 public class TestTableService extends TableService<BusinessObject> {
   @Autowired
   SuitMapper suitMapper;
 
   public TestTableService(){
+    super();
     System.out.println("it works!");
   }
 

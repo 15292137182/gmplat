@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.substance.Field;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,11 +81,11 @@ public class QueryAction {
   public PageResult<Map<String, Object>> pageQuery(SuitMapper suitMapper,int pageNum,int pageSize){
     Page<Map<String,Object>> pageTask = PageHelper.startPage(pageNum, pageSize);
     List<Map<String, Object>> result = suitMapper.select(this);
+    PageInfo pageInfo = new PageInfo(result);
     PageResult<Map<String, Object>> pageResult = new PageResult<>(result);
-    pageResult.setTotal(pageTask.getTotal());
-    pageResult.setPageNum(pageTask.getPageNum());
-    pageResult.setPageSize(pageTask.getPageSize());
+    pageResult.setTotal(pageInfo.getTotal());
+    pageResult.setPageNum(pageInfo.getPageNum());
+    pageResult.setPageSize(pageInfo.getPageSize());
     return pageResult;
   }
-
 }
