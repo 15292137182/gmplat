@@ -13,6 +13,10 @@ public class TestTableService extends TableService<BusinessObject> {
   @Autowired
   SuitMapper suitMapper;
 
+  public TestTableService(){
+    System.out.println("it works!");
+  }
+
   public SuitMapper getSuitMapper() {
     return suitMapper;
   }

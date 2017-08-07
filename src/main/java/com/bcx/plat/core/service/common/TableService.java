@@ -23,7 +23,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class TableService<T extends BaseEntity<T>> {
-  public Class entityClass=this.getClass().getSuperclass().getGenericSuperclass().getClass();
+//  public Class entityClass=this.getClass().getGenericSuperclass().getClass();
+//  public Set<String> fieldNames= new HashSet<String>(
+//      Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
+//    return field.getName();
+//  }).collect(Collectors.toList())
+//  );
+//  private TableSource table=TableAnnoUtil.getTableSource(entityClass);
+//  private List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
+
+public Class entityClass=this.getClass().getGenericSuperclass().getClass();
   public Set<String> fieldNames= new HashSet<String>(
       Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
     return field.getName();
@@ -33,6 +42,17 @@ public abstract class TableService<T extends BaseEntity<T>> {
   private List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
 
   protected abstract SuitMapper getSuitMapper();
+
+  public TableService() {
+    Class entityClass=this.getClass().getGenericSuperclass().getClass();
+    Set<String> fieldNames= new HashSet<String>(
+        Arrays.asList(this.getClass().getGenericSuperclass().getClass().getFields()).stream().map((field)->{
+          return field.getName();
+        }).collect(Collectors.toList())
+    );
+    TableSource table=TableAnnoUtil.getTableSource(entityClass);
+    List<String> pkFields=TableAnnoUtil.getPkAnnoField(entityClass);
+  }
 
   public ServiceResult<PageResult<Map<String, Object>>> select(Map<String,Object> args,int pageNum,int pageSize){
     QueryAction queryAction=new QueryAction().selectAll()
