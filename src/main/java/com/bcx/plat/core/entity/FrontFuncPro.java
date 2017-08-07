@@ -11,7 +11,7 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  * Created by Went on 2017/8/4.
  */
 @Table(TableInfo.T_FRONT_FUNC_PRO)
-public class FrontFuncPro extends BaseEntity{
+public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
     @TablePK
     private String rowId;//唯一标识
     private String funcRowId;//功能块唯一标识
@@ -32,7 +32,7 @@ public class FrontFuncPro extends BaseEntity{
      * @return 返回自身
      */
     @Override
-    public BaseEntity buildCreateInfo() {
+    public FrontFuncPro buildCreateInfo() {
         setRowId(lengthUUID(32));
         return super.buildCreateInfo();
     }

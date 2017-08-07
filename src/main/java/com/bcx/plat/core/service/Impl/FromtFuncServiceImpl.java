@@ -1,5 +1,7 @@
 package com.bcx.plat.core.service.Impl;
 
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.mapper.FrontFuncMapper;
 import com.bcx.plat.core.service.FrontFuncService;
@@ -37,10 +39,10 @@ public class FromtFuncServiceImpl implements FrontFuncService {
       String objectName = result.get(i).getObjectName();
       String tables = objectCode + "(" + objectName + ")";
       result.get(i).setTables(tables);
-      serviceResult=  new ServiceResult(result,QUERY_SUCCESS);
+      serviceResult=  new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
     }
     if(result.size()==0){
-     serviceResult = new ServiceResult(null,QUERY_FAIL);
+     serviceResult = new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
     }
     return serviceResult;
   }
@@ -57,9 +59,9 @@ public class FromtFuncServiceImpl implements FrontFuncService {
     String rowId = frontFunc.getRowId();
     int insert = frontFuncMapper.insert(frontFunc);
     if(insert!=1){
-      return  new ServiceResult(null,NEW_ADD_FAIL );
+      return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
     }
-    return  new ServiceResult(rowId,NEW_ADD_SUCCESS);
+    return  new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);
 
   }
 
@@ -72,9 +74,9 @@ public class FromtFuncServiceImpl implements FrontFuncService {
     frontFunc.buildModifyInfo();
     int update = frontFuncMapper.update(frontFunc);
     if(update != 1){
-      return  new ServiceResult(null,UPDATE_FAIL );
+      return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
     }
-    return  new ServiceResult(null,UPDATE_SUCCESS );
+    return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
   }
 
   /**
@@ -83,6 +85,6 @@ public class FromtFuncServiceImpl implements FrontFuncService {
   @Override
   public ServiceResult<FrontFunc> delete(FrontFunc frontFunc) {
     frontFuncMapper.delete(frontFunc);
-    return new ServiceResult<>(null,DELETE_SUCCESS);
+    return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
   }
 }

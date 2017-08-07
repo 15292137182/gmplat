@@ -14,7 +14,7 @@
         <where>
             <if test="strArr!=null and strArr.size()!=0">
                 <foreach collection="strArr" item="item" index="index" open="(" separator="or" close="）">
-                    tp.func_row_id like '%${item}%' or tp.func relate_busi_pro like '%${item}%'
+                    tp.func_row_id like '%${item}%' or tp.func relate_busi_pro like '%${item}%' or tp.row_id like '%${item}%'
                 </foreach>
             </if>
             <if test="rowId!=null and rowId.length()!=0">

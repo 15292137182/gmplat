@@ -1,6 +1,9 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.entity.MaintTableInfo;
+import com.bcx.plat.core.utils.ServiceResult;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,10 +16,10 @@ public interface MaintTableService {
    *
    * @param str 根据条件查询
    */
-  List selectMaint(String str);
+  ServiceResult<MaintTableInfo> selectMaint(String str);
 
   /**
    * 根据ID查询维护数据库字段
    */
-  List<MaintTableInfo> selectById(String rowId);
+  ServiceResult<MaintTableInfo> selectById(String rowId);
 }

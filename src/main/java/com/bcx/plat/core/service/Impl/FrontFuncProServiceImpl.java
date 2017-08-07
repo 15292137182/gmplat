@@ -1,5 +1,6 @@
 package com.bcx.plat.core.service.Impl;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.mapper.FrontFuncProMapper;
@@ -31,9 +32,9 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
     public ServiceResult queryFronFuncPro(Map map) {
         List<FrontFuncPro> result = frontFuncProMapper.select(map);
         if (result.size()==0){
-            return new ServiceResult(Message.QUERY_FAIL,"");
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
-        return new ServiceResult( result,QUERY_SUCCESS);
+        return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,result);
     }
 
     /**
@@ -48,9 +49,9 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
         String rowId = entity.getRowId();
         int result = frontFuncProMapper.insert(entity);
         if (result!=1){
-            return new ServiceResult(null,NEW_ADD_FAIL);
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
-        return new ServiceResult(rowId,NEW_ADD_SUCCESS);
+        return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);
     }
 
     /**
@@ -64,9 +65,9 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
         entity.buildModifyInfo();
         int update = frontFuncProMapper.update(entity);
         if(update != 1){
-            return  new ServiceResult<>(UPDATE_FAIL ,"");
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
-        return  new ServiceResult<>(UPDATE_SUCCESS ,"");
+        return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
     }
 
     /**
@@ -78,6 +79,7 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
     @Override
     public ServiceResult delete(String delData) {
         frontFuncProMapper.delete(delData);
-        return new ServiceResult<>(DELETE_SUCCESS,"");
+        return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
+
     }
 }

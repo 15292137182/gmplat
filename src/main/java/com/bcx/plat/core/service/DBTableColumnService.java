@@ -9,15 +9,17 @@ import java.util.Map;
 /**
  * Create By HCL at 2017/8/1
  */
-public interface DBTableColumnService extends BaseService<DBTableColumn>{
+public interface DBTableColumnService {
+
 
   /**
-   * 查询数据方法
+   * 查询方法
    *
-   * @param map 查询条件
-   * @return 返回查询结果
+   * @param map   查询参数
+   * @return 返回
    */
   ServiceResult select(Map map);
+
 
   /**
    * 新建 数据库字段信息

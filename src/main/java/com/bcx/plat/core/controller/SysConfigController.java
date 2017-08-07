@@ -38,7 +38,7 @@ public class SysConfigController {
         map.put("strArr", collectToSet(str));
         map.put("rowId",rowId);
         ServiceResult<SysConfig> query = sysConfigService.querySysConfig(map);
-        MappingJacksonValue result = new MappingJacksonValue(query.convertMsg(locale));
+        MappingJacksonValue result = new MappingJacksonValue(query);
         result.setJsonpFunction(
                 isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return result;
@@ -53,7 +53,7 @@ public class SysConfigController {
     @RequestMapping("/add")
     public MappingJacksonValue addSysConfig(SysConfig sysConfig,HttpServletRequest request,Locale locale){
         ServiceResult result = sysConfigService.addSysConfig(sysConfig);
-        MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+        MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(
                 isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
@@ -67,7 +67,7 @@ public class SysConfigController {
     @RequestMapping("/modify")
     public MappingJacksonValue modifySysConfig(SysConfig sysConfig , HttpServletRequest request,Locale locale){
         ServiceResult result = sysConfigService.modifySysConfig(sysConfig);
-        MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+        MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(
                 isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;
@@ -81,7 +81,7 @@ public class SysConfigController {
     @RequestMapping("/delete")
     public MappingJacksonValue delete(String delData, HttpServletRequest request,Locale locale){
         ServiceResult<SysConfig> result = sysConfigService.deleteSysConfig(delData);
-        MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
+        MappingJacksonValue value = new MappingJacksonValue(result);
         value.setJsonpFunction(
                 isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
         return value;

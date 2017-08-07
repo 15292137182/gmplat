@@ -2,6 +2,9 @@ package com.bcx.plat.core.service.Impl;
 
 import static com.bcx.plat.core.base.BaseConstants.*;
 import static com.bcx.plat.core.constants.Message.*;
+
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.mapper.BusinessObjectMapper;
@@ -44,11 +47,10 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
                 String tableSchema = select.get(i).getTableSchema();
                 String string = tableSchema + "(" + tableCname + ")";
                 select.get(i).setTables(string);
-                logger.info(QUERY_SUCCESS);
-                result = new ServiceResult(select,QUERY_SUCCESS);
+                result = new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,select);
             }
             if (select.size() == 0) {
-                result = new ServiceResult("",QUERY_FAIL);
+                result = new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
             }
         }
         return result;
@@ -71,10 +73,10 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
             String rowId = businessObject.getRowId();
             businessObjectMapper.insert(businessObject);
             //将用户新增的rowId返回
-            return new ServiceResult(rowId,NEW_ADD_SUCCESS);
+            return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ServiceResult("",NEW_ADD_FAIL);
+            return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
     }
 
@@ -87,10 +89,10 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
             businessObject.buildModifyInfo();
             businessObjectMapper.update(businessObject);
             String rowId = businessObject.getRowId();
-            return new ServiceResult(rowId,UPDATE_SUCCESS);
+            return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ServiceResult("",UPDATE_FAIL);
+            return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
     }
 
@@ -110,11 +112,11 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
                 }
             }
             businessObjectMapper.delete(rowId);
-            return new ServiceResult("",STATUS_SUCCESS, DELETE_SUCCESS);
+            return new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ServiceResult("",STATUS_FAIL, DELETE_FAIL);
+        return new ServiceResult().Msg(BaseConstants.STATUS_FAIL, Message.OPERATOR_FAIL);
     }
 
     /**
@@ -125,10 +127,10 @@ public class BusinessObjectServiceImpl implements BusinessObjectService {
         BusinessObject select = businessObjectMapper.selectById(rowId);
         String status = select.getStatus();
         if (!(status == TAKE_EFFECT)) {
-            return new ServiceResult("数据没有生效,", "");
+            return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,"数据没有生效");
         } else {
             businessObjectMapper.updateTakeEffect(rowId);
-            return new ServiceResult("","");
+            return new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS);
         }
     }
 }

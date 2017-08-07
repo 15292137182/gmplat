@@ -37,7 +37,7 @@ public class BusinessObjectControllerTest extends BaseTest {
    */
   @Test
   public void test() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(get("/businObj/select"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/businObj/query"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -59,7 +59,7 @@ public class BusinessObjectControllerTest extends BaseTest {
    */
   @Test
   public void testInsert() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(get("/businObj/insert"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/businObj/add"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -80,7 +80,7 @@ public class BusinessObjectControllerTest extends BaseTest {
    */
   @Test
   public void testUpdate() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(get("/businObj/update"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/businObj/modify"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -100,7 +100,7 @@ public class BusinessObjectControllerTest extends BaseTest {
    */
   @Test
   public void testDelete() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(get("/businObj/delete"))
+    MvcResult mvcResult = mockMvc.perform(get("/core/businObj/delete"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();

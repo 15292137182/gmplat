@@ -32,9 +32,9 @@ public class SysConfigServiceImpl implements SysConfigService {
     public ServiceResult querySysConfig(Map map) {
         List<SysConfig> result = sysConfigMapper.select(map);
         if (result.size()==0){
-            return new ServiceResult(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
-        return new ServiceResult(result,Message.QUERY_SUCCESS);
+        return  new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,result);
 
     }
 
@@ -50,9 +50,9 @@ public class SysConfigServiceImpl implements SysConfigService {
         String rowId = entity.getRowId();
         int result = sysConfigMapper.insert(entity);
         if (result!=1){
-            return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL);
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
-        return new ServiceResult(rowId,Message.NEW_ADD_SUCCESS);
+        return  new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);
     }
 
     /**
@@ -66,7 +66,7 @@ public class SysConfigServiceImpl implements SysConfigService {
         entity.buildModifyInfo();
         int update = sysConfigMapper.update(entity);
         if(update != 1){
-            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.UPDATE_FAIL );
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
         }
         return  new ServiceResult().Msg(BaseConstants.STATUS_SUCCESS,Message.UPDATE_SUCCESS );
     }
