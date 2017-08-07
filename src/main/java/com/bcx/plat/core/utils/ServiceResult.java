@@ -2,19 +2,15 @@ package com.bcx.plat.core.utils;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 
-import com.bcx.plat.core.base.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.github.pagehelper.PageInfo;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
  * 返回结果 Create By HCL at 2017/7/31
- */public class ServiceResult<T> implements Serializable {
+ */
+public class ServiceResult<T> implements Serializable {
 
   private static ResourceBundleMessageSource messageSource;
 
@@ -31,17 +27,17 @@ import org.springframework.context.support.ResourceBundleMessageSource;
     this.content = content;
   }
 
-  public ServiceResult(T content,int state) {
+  public ServiceResult(T content, int state) {
     this.state = state;
     this.content = content;
   }
 
-  public ServiceResult(T content,String message) {
+  public ServiceResult(T content, String message) {
     this.content = content;
     this.message = message;
   }
 
-  public ServiceResult(T content,int state, String message) {
+  public ServiceResult(T content, int state, String message) {
     this.state = state;
     this.message = message;
     this.content = content;
@@ -57,6 +53,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public Map getAdditional() {
     return additional;
   }
+
   public void setAdditional(Map additional) {
     this.additional = additional;
   }
@@ -84,6 +81,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public int getState() {
     return state;
   }
+
   public void setState(int state) {
     this.state = state;
   }
@@ -91,6 +89,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public String getMessage() {
     return message;
   }
+
   public void setMessage(String message) {
     this.message = message;
   }
@@ -98,11 +97,12 @@ import org.springframework.context.support.ResourceBundleMessageSource;
   public T getContent() {
     return content;
   }
+
   public void setContent(T content) {
     this.content = content;
   }
 
-  public static ServiceResult Msg(int status,String msg){
-    return new ServiceResult(null,status,msg);
+  public static ServiceResult Msg(int status, String msg) {
+    return new ServiceResult("", status, msg);
   }
 }

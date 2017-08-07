@@ -1,6 +1,6 @@
 package com.bcx.plat.core.service.Impl;
 
-import com.bcx.plat.core.base.BaseService;
+import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.mapper.FrontFuncMapper;
 import com.bcx.plat.core.service.FrontFuncService;
@@ -18,7 +18,7 @@ import static com.bcx.plat.core.constants.Message.*;
  */
 @Service
 @Transactional
-public class FromtFuncServiceImpl extends BaseService implements FrontFuncService {
+public class FromtFuncServiceImpl extends BaseServiceImpl implements FrontFuncService {
 
   @Autowired
   private FrontFuncMapper frontFuncMapper;
@@ -30,7 +30,7 @@ public class FromtFuncServiceImpl extends BaseService implements FrontFuncServic
    * @return 返回查询结果
    */
   @Override
-  public ServiceResult<FrontFunc> select(Map<String, Object> map) {
+  public ServiceResult<FrontFunc> select(Map map) {
     List<FrontFunc> result = frontFuncMapper.select(map);
     ServiceResult serviceResult =null;
     for (int i = 0; i < result.size(); i++) {

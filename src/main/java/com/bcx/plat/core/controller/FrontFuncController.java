@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 前端功能模块
- * Created by Went on 2017/8/2.
+ * 前端功能模块 Created by Went on 2017/8/2.
  */
 @RequestMapping("/fronc")
 @RestController
@@ -29,17 +28,13 @@ public class FrontFuncController {
 
   /**
    * 查询前端功能模块
-   * @param str
-   * @param rowId
-   * @param request
-   * @param locale
-   * @return
    */
   @RequestMapping("/select")
-  public MappingJacksonValue select(String str,String rowId, HttpServletRequest request, Locale locale) {
+  public MappingJacksonValue select(String str, String rowId, HttpServletRequest request,
+      Locale locale) {
     Map<String, Object> map = new HashMap<>();
     map.put("strArr", collectToSet(str));
-    map.put("rowId",rowId);
+    map.put("rowId", rowId);
     ServiceResult<FrontFunc> result = frontFuncService.select(map);
     MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
     value.setJsonpFunction(
@@ -49,13 +44,10 @@ public class FrontFuncController {
 
   /**
    * 新增前端功能模块
-   * @param frontFunc
-   * @param request
-   * @param locale
-   * @return
    */
   @RequestMapping("/insert")
-  public MappingJacksonValue insert(FrontFunc frontFunc, HttpServletRequest request, Locale locale) {
+  public MappingJacksonValue insert(FrontFunc frontFunc, HttpServletRequest request,
+      Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.insert(frontFunc);
     MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
     mapjack.setJsonpFunction(
@@ -65,13 +57,10 @@ public class FrontFuncController {
 
   /**
    * 更新前端功能模块
-   * @param frontFunc
-   * @param request
-   * @param locale
-   * @return
    */
   @RequestMapping("/update")
-  public MappingJacksonValue update(FrontFunc frontFunc, HttpServletRequest request, Locale locale) {
+  public MappingJacksonValue update(FrontFunc frontFunc, HttpServletRequest request,
+      Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.update(frontFunc);
     MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
     mapjack.setJsonpFunction(
@@ -81,13 +70,10 @@ public class FrontFuncController {
 
   /**
    * 删除前端功能模块
-   * @param frontFunc
-   * @param request
-   * @param locale
-   * @return
    */
   @RequestMapping("/delete")
-  public MappingJacksonValue delete(FrontFunc frontFunc, HttpServletRequest request, Locale locale) {
+  public MappingJacksonValue delete(FrontFunc frontFunc, HttpServletRequest request,
+      Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.delete(frontFunc);
     MappingJacksonValue mapjack = new MappingJacksonValue(result.convertMsg(locale));
     mapjack.setJsonpFunction(

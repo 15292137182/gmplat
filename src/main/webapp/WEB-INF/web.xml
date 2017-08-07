@@ -47,7 +47,7 @@
   <!-- 启用 DispatchServlet,加载mvc，并指定所有URL都经过此servlet -->
   <servlet>
     <servlet-name>springMVC</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <servlet-class>com.bcx.plat.core.servlet.SplatServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>classpath:spring/spring-mvc.xml</param-value>

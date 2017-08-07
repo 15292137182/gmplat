@@ -1,6 +1,5 @@
 package com.bcx.plat.core.service.Impl;
 
-import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.base.BaseConstants.LOGIC_DELETE;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
@@ -8,7 +7,7 @@ import static com.bcx.plat.core.constants.Message.INVALID_REQUEST;
 import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.base.BaseService;
+import com.bcx.plat.core.base.impl.BaseServiceImpl;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
@@ -25,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class DBTableColumnServiceImpl extends BaseService implements DBTableColumnService {
+public class DBTableColumnServiceImpl extends BaseServiceImpl<DBTableColumn> implements DBTableColumnService {
 
   @Autowired
   private DBTableColumnMapper dbTableColumnMapper;
@@ -37,7 +36,7 @@ public class DBTableColumnServiceImpl extends BaseService implements DBTableColu
    * @return 返回查询结果
    */
   @Override
-  public ServiceResult<DBTableColumn> select(Map<String, Object> map) {
+  public ServiceResult select(Map map) {
     return new ServiceResult(dbTableColumnMapper.select(map),STATUS_SUCCESS, OPERATOR_SUCCESS);
   }
 
