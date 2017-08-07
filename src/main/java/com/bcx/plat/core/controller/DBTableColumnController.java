@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/plat/dbTableColumn")
+@RequestMapping("/core/dbTableColumn")
 public class DBTableColumnController extends BaseController {
 
   @Autowired
@@ -35,7 +35,7 @@ public class DBTableColumnController extends BaseController {
    * @param request 请求
    * @return 返回查询信息
    */
-  @RequestMapping("/select")
+  @RequestMapping("/query")
   public MappingJacksonValue select(String str, String rowId, HttpServletRequest request,
       Locale locale) {
     Map<String, Object> cond = new HashMap<>();
@@ -54,7 +54,7 @@ public class DBTableColumnController extends BaseController {
    * @param dbTableColumn javaBean
    * @return 返回
    */
-  @RequestMapping("/insert")
+  @RequestMapping("/add")
   public MappingJacksonValue insert(DBTableColumn dbTableColumn, HttpServletRequest request,
       Locale locale) {
     MappingJacksonValue value = new MappingJacksonValue(
@@ -70,7 +70,7 @@ public class DBTableColumnController extends BaseController {
    * @param dbTableColumn javaBean
    * @return 返回
    */
-  @RequestMapping("/update")
+  @RequestMapping("/modify")
   public MappingJacksonValue update(DBTableColumn dbTableColumn, HttpServletRequest request,
       Locale locale) {
     MappingJacksonValue value = new MappingJacksonValue(
