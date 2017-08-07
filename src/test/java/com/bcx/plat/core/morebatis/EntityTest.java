@@ -4,10 +4,13 @@ import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.BusinessObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
-public class EntityTest
-//    extends BaseTest
-{
+public class EntityTest extends BaseTest{
+  @Test
+  @Transactional
+  @Rollback
   public void entityTest(){
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectName("testObject");

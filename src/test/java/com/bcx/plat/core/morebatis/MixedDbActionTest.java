@@ -17,6 +17,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 public class MixedDbActionTest extends BaseTest {
 
@@ -28,6 +30,8 @@ public class MixedDbActionTest extends BaseTest {
   }
 
   @Test
+  @Transactional
+  @Rollback
   public void MixedTest() {
     final FieldCondition idCondition = new FieldCondition("id", Operator.EQUAL, 999);
     final QueryAction queryAction = new QueryAction()

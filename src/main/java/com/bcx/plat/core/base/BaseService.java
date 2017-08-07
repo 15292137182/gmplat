@@ -16,13 +16,13 @@ public interface BaseService<T extends BaseEntity> {
    * @param page 是否分页
    * @return 返回
    */
-  ServiceResult select(Map map, int page, int limit);
+  ServiceResult select(Map condition, int page, int limit);
 
-  ServiceResult selectList(Map map);
+  ServiceResult selectList(Map condition);
 
-  ServiceResult update(Map map);
+  ServiceResult update(Map value);
 
-  ServiceResult insert(Map map);
+  ServiceResult insert(Map value);
 
-  ServiceResult delete(Map map);
+  ServiceResult delete(Map condition);
 }
