@@ -19,7 +19,7 @@
         </foreach>
       </if>
       <if test="rowId!=null and rowId.length()!=0">
-        AND tc.row_id = '${rowId}'
+        AND tc.row_id = #{rowId}
       </if>
     </where>
     order by create_time DESC

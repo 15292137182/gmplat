@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 前端功能模块 Created by Went on 2017/8/2.
  */
-@RequestMapping("/fronc")
+@RequestMapping("/core/fronc")
 @RestController
 public class FrontFuncController {
 
@@ -29,7 +29,7 @@ public class FrontFuncController {
   /**
    * 查询前端功能模块
    */
-  @RequestMapping("/select")
+  @RequestMapping("/query")
   public MappingJacksonValue select(String str, String rowId, HttpServletRequest request,
       Locale locale) {
     Map<String, Object> map = new HashMap<>();
@@ -45,7 +45,7 @@ public class FrontFuncController {
   /**
    * 新增前端功能模块
    */
-  @RequestMapping("/insert")
+  @RequestMapping("/add")
   public MappingJacksonValue insert(FrontFunc frontFunc, HttpServletRequest request,
       Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.insert(frontFunc);
@@ -58,7 +58,7 @@ public class FrontFuncController {
   /**
    * 更新前端功能模块
    */
-  @RequestMapping("/update")
+  @RequestMapping("/modify")
   public MappingJacksonValue update(FrontFunc frontFunc, HttpServletRequest request,
       Locale locale) {
     ServiceResult<FrontFunc> result = frontFuncService.update(frontFunc);

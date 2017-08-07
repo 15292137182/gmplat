@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Went on 2017/8/1.
  */
 @RestController
-@RequestMapping("/businObj")
+@RequestMapping("core/businObj")
 public class BusinessObjectController {
 
   @Autowired
@@ -28,7 +28,7 @@ public class BusinessObjectController {
   /**
    * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
    */
-  @RequestMapping("/select")
+  @RequestMapping("/query")
   public MappingJacksonValue select(String str, HttpServletRequest request, Locale locale) {
     Map<String, Object> cond = new HashMap<>();
     cond.put("strArr", collectToSet(str));
@@ -42,7 +42,7 @@ public class BusinessObjectController {
   /**
    * 新增业务对象:对象代码，对象名称，关联表(单选)，版本(系统生成)
    */
-  @RequestMapping("/insert")
+  @RequestMapping("/add")
   public MappingJacksonValue insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
     MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));
@@ -55,7 +55,7 @@ public class BusinessObjectController {
   /**
    * 编辑业务对象名称字段
    */
-  @RequestMapping("/update")
+  @RequestMapping("/modify")
   public MappingJacksonValue update(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
     MappingJacksonValue value = new MappingJacksonValue(result.convertMsg(locale));

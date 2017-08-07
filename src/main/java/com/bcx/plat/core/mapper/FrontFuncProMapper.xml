@@ -18,7 +18,7 @@
                 </foreach>
             </if>
             <if test="rowId!=null and rowId.length()!=0">
-                tc.row_id = '${rowId}'
+                tc.row_id = #{rowId}
             </if>
         </where>
         ORDER BY tp.create_time desc
