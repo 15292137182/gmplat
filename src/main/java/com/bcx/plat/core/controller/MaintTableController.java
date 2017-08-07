@@ -4,6 +4,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
 import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.MaintTableInfo;
 import com.bcx.plat.core.service.MaintTableService;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -30,7 +31,7 @@ public class MaintTableController extends BaseController {
       HttpServletResponse response) {
     List result = maintTableService.selectMaint(str);
     MappingJacksonValue value = new MappingJacksonValue(
-        objToJson(new ServiceResult(result,"消息传递成功")));
+        objToJson(new ServiceResult(result, Message.OPERATOR_SUCCESS)));
     value.setJsonpFunction(
         isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
     return value;

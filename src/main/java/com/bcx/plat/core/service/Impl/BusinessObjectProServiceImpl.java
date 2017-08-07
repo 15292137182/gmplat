@@ -3,6 +3,9 @@ package com.bcx.plat.core.service.Impl;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseService;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.mapper.BusinessObjectProMapper;
@@ -38,10 +41,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   public ServiceResult<BusinessObjectPro> select(Map<String,Object> map) {
     try {
         List<BusinessObjectPro> select = businessObjectProMapper.select(map);
-      return new ServiceResult(select,"查询数据成功");
+      return new ServiceResult(select,BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult("","查询数据失败" );
+      return new ServiceResult(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL );
     }
   }
 
@@ -56,10 +59,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
       businessObjectPro.buildCreateInfo();
       businessObjectProMapper.insert(businessObjectPro);
       //将用户新增的rowId返回
-      return new ServiceResult(rowId,STATUS_SUCCESS,"新增数据成功");
+      return new ServiceResult(rowId,BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult( "","新增数据失败");
+      return new ServiceResult(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL);
     }
   }
 
@@ -71,10 +74,10 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   public ServiceResult<BusinessObjectPro> delete(String rowId) {
     try {
       businessObjectProMapper.delete(rowId);
-      return new ServiceResult(null, STATUS_SUCCESS,"删除数据成功");
+      return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.DELETE_SUCCESS);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult(null,STATUS_FAIL, "删除数据失败");
+      return new ServiceResult(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
     }
   }
 }
