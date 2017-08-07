@@ -1,13 +1,28 @@
 package com.bcx.plat.core.base;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.bcx.plat.core.utils.ServiceResult;
+import java.util.Map;
 
 /**
  * Create By HCL at 2017/8/1
  */
-public class BaseService {
+public interface BaseService<T extends BaseEntity> {
 
-  protected Logger logger = LoggerFactory.getLogger(getClass());
+  /**
+   * 查询方法
+   *
+   * @param map 查询参数
+   * @param page 是否分页
+   * @return 返回
+   */
+  ServiceResult select(Map map, int page, int limit);
 
+  ServiceResult selectList(Map map);
+
+  ServiceResult update(Map map);
+
+  ServiceResult insert(Map map);
+
+  ServiceResult delete(Map map);
 }

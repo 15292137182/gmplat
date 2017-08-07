@@ -10,6 +10,7 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
+import com.bcx.plat.core.service.common.BaseServiceImpl;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class DBTableColumnServiceImpl implements DBTableColumnService {
+public class DBTableColumnServiceImpl extends BaseServiceImpl<DBTableColumn> implements
+    DBTableColumnService {
 
   @Autowired
   private DBTableColumnMapper dbTableColumnMapper;
@@ -34,9 +36,8 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
    * @param map 查询条件
    * @return 返回查询结果
    */
-  @Override
   public ServiceResult select(Map map) {
-    return new ServiceResult(dbTableColumnMapper.select(map),STATUS_SUCCESS, OPERATOR_SUCCESS);
+    return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS, dbTableColumnMapper.select(map));
   }
 
   /**
@@ -45,10 +46,9 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
    * @param bean 数据表bean
    * @return 操作结果状态
    */
-  @Override
-  public ServiceResult<DBTableColumn> insert(DBTableColumn bean) {
+  public ServiceResult insert(DBTableColumn bean) {
     bean.buildCreateInfo();
-    return new ServiceResult(dbTableColumnMapper.insert(bean), OPERATOR_SUCCESS);
+    return new ServiceResult<>(dbTableColumnMapper.insert(bean), OPERATOR_SUCCESS, bean.getRowId());
   }
 
   /**
@@ -57,10 +57,9 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
    * @param bean 数据表bean
    * @return 操作结果状态
    */
-  @Override
-  public ServiceResult<DBTableColumn> update(DBTableColumn bean) {
+  public ServiceResult update(DBTableColumn bean) {
     bean.buildModifyInfo();
-    return new ServiceResult(dbTableColumnMapper.update(bean), OPERATOR_SUCCESS);
+    return new ServiceResult<>(dbTableColumnMapper.update(bean), OPERATOR_SUCCESS, bean.getRowId());
   }
 
   /**
@@ -69,18 +68,19 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
    * @param rowIds 数据表 bean
    * @return 操作结果状态
    */
-  @Override
-  public ServiceResult<DBTableColumn> batchDelete(Collection<String> rowIds) {
+  public ServiceResult batchDelete(Collection<String> rowIds) {
     if (null != rowIds && rowIds.size() != 0) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("rowIds",rowIds);
+      Map<Object, Object> map = new HashMap<>();
+      map.put("rowIds", rowIds);
       if (LOGIC_DELETE) {
         map.putAll(new BaseEntity<>().buildDeleteInfo().toMap());
-        return new ServiceResult(dbTableColumnMapper.batchLogicDelete(map), OPERATOR_SUCCESS);
+        return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+            dbTableColumnMapper.batchLogicDelete(map));
       } else {
-        return new ServiceResult(dbTableColumnMapper.batchDelete(map), OPERATOR_SUCCESS);
+        return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+            dbTableColumnMapper.batchDelete(map));
       }
     }
-    return new ServiceResult(null,STATUS_FAIL, INVALID_REQUEST);
+    return new ServiceResult<>(STATUS_FAIL, INVALID_REQUEST, "");
   }
 }

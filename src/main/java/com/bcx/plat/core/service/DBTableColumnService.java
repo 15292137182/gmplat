@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Create By HCL at 2017/8/1
@@ -11,26 +12,34 @@ import java.util.Collection;
 public interface DBTableColumnService extends BaseService<DBTableColumn>{
 
   /**
-   * 查询数据库表字段信息
+   * 查询数据方法
    *
-   * @param bean 数据表bean
-   * @return 返回是否成功
+   * @param map 查询条件
+   * @return 返回查询结果
    */
-  ServiceResult<DBTableColumn> insert(DBTableColumn bean);
+  ServiceResult select(Map map);
 
   /**
-   * 更新数据库字段信息
+   * 新建 数据库字段信息
    *
    * @param bean 数据表bean
-   * @return 返回是否成功
+   * @return 操作结果状态
    */
-  ServiceResult<DBTableColumn> update(DBTableColumn bean);
+  ServiceResult insert(DBTableColumn bean) ;
 
   /**
-   * 删除数据库字段信息
+   * 更新 数据库字段信息
    *
-   * @param rowIds 数据表bean
-   * @return 返回是否成功
+   * @param bean 数据表bean
+   * @return 操作结果状态
    */
-  ServiceResult<DBTableColumn> batchDelete(Collection<String> rowIds);
+  ServiceResult update(DBTableColumn bean);
+
+  /**
+   * 删除 数据库字段信息
+   *
+   * @param rowIds 数据表 bean
+   * @return 操作结果状态
+   */
+  ServiceResult batchDelete(Collection<String> rowIds);
 }
