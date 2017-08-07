@@ -38,14 +38,22 @@ public class CommonServiceTest extends BaseTest{
   @Rollback
   public void testPageQuery(){
     BusinessObject businessObject=new BusinessObject();
-    businessObject.setObjectName("for test");
+    businessObject.setObjectName(testName);
     for(int i=0;i<40;i++) businessObject.buildCreateInfo().insert();
     Map<String,Object> args=new HashMap<>();
-    args.put("objectName","for test");
+    args.put("objectName",testName);
     ServiceResult<PageResult<Map<String, Object>>> result = testTableService
         .select(args, 1, 20);
     Assert.assertEquals(20,result.getData().getResult().size());
-    Assert.assertEquals(40,result.getData().getTotal());
+    Assert.assertEquals(60,result.getData().getTotal());
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void emptyConditionTest(){
+    args.put("objectName","");
+    Assert.assertTrue(((List)testTableService.selectList(args).getData()).size()>0);
   }
 
   @Test

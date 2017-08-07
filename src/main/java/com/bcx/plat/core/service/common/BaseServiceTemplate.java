@@ -18,9 +18,11 @@ import com.bcx.plat.core.utils.TableAnnoUtil;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
   public ServiceResult select(Map args, int pageNum, int pageSize) {
+    args=mapFilter(args);
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(convertMapToFieldConditions(args));
@@ -61,6 +64,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
   public ServiceResult selectList(Map args) {
+    args=mapFilter(args);
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(convertMapToFieldConditions(args));
@@ -76,6 +80,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
   public ServiceResult insert(Map args) {
+    args=mapFilter(args);
     InsertAction insertAction = new InsertAction().into(table).cols(fieldNames).values(args);
     try {
       getSuitMapper().insert(insertAction);
@@ -87,11 +92,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
   public ServiceResult update(Map args) {
+    args=mapFilter(args);
+    final Map<String,Object> finalCopy=args;
     UpdateAction updateAction = new UpdateAction()
         .from(table)
         .set(args)
         .where(pkFields.stream().map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, args.get(pk));
+          return new FieldCondition(pk, Operator.EQUAL, finalCopy.get(pk));
         }).collect(Collectors.toList()));
     try {
       getSuitMapper().update(updateAction);
@@ -103,6 +110,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
   public ServiceResult delete(Map args) {
+    args=mapFilter(args);
     DeleteAction deleteAction = new DeleteAction()
         .from(table)
         .where(convertMapToFieldConditions(args));
@@ -117,7 +125,9 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
   protected List<FieldCondition> convertMapToFieldConditions(Map<String, Object> args) {
     return args.entrySet().stream().filter((entry) -> {
-      return fieldNames.contains(entry.getKey());
+      final String key = entry.getKey();
+      final Object value = entry.getValue();
+      return fieldNames.contains(key);
     }).map((entry) -> {
       final Object value = entry.getValue();
       if (value instanceof Collection) {
@@ -128,6 +138,22 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }).collect(Collectors.toList());
   }
 
+  private Map<String,Object> mapFilter(Map<String,Object> map){
+    return mapFilter(map,isRemoveNull(),isRemoveBlank());
+  }
+
+  private Map<String,Object> mapFilter(Map<String,Object> map,boolean removeNull,boolean removeBlank){
+    Map<String,Object> outputMap=new HashMap<>();
+    if (removeBlank==false&&removeNull==false) return outputMap;
+    for (Entry<String, Object> entry : map.entrySet()) {
+      Object value=entry.getValue();
+      if (value==null&&removeNull) continue;
+      if (value.equals("")&&removeBlank) continue;
+      outputMap.put(entry.getKey(),entry.getValue());
+    }
+    return outputMap;
+  }
+
   private Set<String> getFieldNamesFromClass(Class clz) {
     HashSet<String> result = new HashSet<>();
     while (clz != Object.class) {
@@ -136,5 +162,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       clz = clz.getSuperclass();
     }
     return result;
+  }
+
+  public boolean isRemoveBlank() {
+    return true;
+  }
+
+  private boolean isRemoveNull() {
+    return true;
   }
 }
