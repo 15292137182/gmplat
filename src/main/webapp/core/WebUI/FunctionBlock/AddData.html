@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event_Add</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        #addData .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="addData" style="margin-top:20px">
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请选择关联对象属性" v-model="tableInput" ref="tableInput" disabled="">
+                    <el-button slot="append" type="primary" @click="searchConnectObj">查询</el-button>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入名称" v-model="nameTitle" ref="nameTitle">
+                    <template slot="prepend">显示标题</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="8" >
+            <template >
+                <el-checkbox v-model="checked" @change="isChecked" style="margin-top: 5px;">是否显示</el-checkbox>
+            </template>
+        </el-col>
+        <el-col :span="14" >
+                <div>
+                    <el-input placeholder="请输入显示控件名称" v-model="nameInput" ref="nameInput" :disabled="checkType">
+                        <template slot="prepend">显示控件</template>
+                    </el-input>
+                </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="11">
+            <template>
+                <el-checkbox v-model="checkedNull">允许为空</el-checkbox>
+            </template>
+        </el-col>
+        <el-col :span="11">
+            <template>
+                <el-checkbox v-model="checkedReady">只读</el-checkbox>
+            </template>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入长度5-12" v-model="lengthSection" ref="lengthSection">
+                    <template slot="prepend">长度区间</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入验证函数" v-model="testFunction" ref="testFunction">
+                    <template slot="prepend">验证函数</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入显示函数" v-model="displayFunction" ref="displayFunction">
+                    <template slot="prepend">显示函数</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入排序顺序" v-model="sortNumber" ref="sortNumber">
+                    <template slot="prepend">排序序号</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row >
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click.native="conformEvent">确定</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script>
+    var em=new Vue({
+        el:'#addData',
+        data: {
+            funcRowId:'',//功能块ID
+            nameTitle:'',//显示标题
+            nameInput:'',//显示控件
+            lengthSection:'',//长度区间
+            testFunction:'',//验证函数
+            displayFunction:'',//显示函数
+            sortNumber:'',//排序
+            tableInput:'',//关联对象属性
+            dataId:'',//关联对象属性ID
+            isEdit:'',//是否编辑
+            rowId:'',//行ID
+            checked:'',//是否显示
+            checkedNull:'',//允许为空
+            checkedReady:'',//只读
+            checkType:true,//判断显示控件禁用或者启用
+            relateBusiObjId:'',//业务对象ID
+            sortArr:[],//排序数组
+            url:serverPath+'/core/addFronFuncPro'
+        },
+        methods:{
+            searchConnectObj(){//查询所有对象属性，弹出对象属性表
+                var htmlUrl = 'choose-0bject-properties.html';
+                littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象属性', '400px', '300px',false);
+            },
+            isChecked(){//判断是否显示，选中
+                if(this.checked){
+                    this.checkType=false;
+                }else{
+                    this.checkType=true;
+                }
+            },
+            conformEvent(){
+                var data = [
+                    this.$refs.tableInput,
+                    this.$refs.nameTitle,
+                    this.$refs.lengthSection,
+                    this.$refs.testFunction,
+                    this.$refs.displayFunction,
+                    this.$refs.sortNumber
+                ];
+                for(var i=0;i<data.length;i++){
+                    if(data[i].value==''){
+                        ibcpLayer.ShowMsg(data[i].placeholder);
+                        return;
+                    }
+                }
+                if(!this.checkType && this.$refs.nameInput==''){
+                    ibcpLayer.ShowMsg(this.$refs.nameInput.placeholder);
+                    return;
+                }
+                //this.sortArrFun(this.sortNumber);//排序
+                this.funcRowId = window.parent.mb.rowObjId;
+                this.addObjectProperties();//新增
+            },
+            cancel(){
+                parent.layer.close(window.parent.mb.divIndex);
+            },
+            sortArrFun(str){
+                var arr=str.split(',');
+                for(var i=0;i<arr.length;i++){
+                    this.sortArr.push(arr[i]);
+                }
+            },
+            addObjectProperties(){
+                this.$http.jsonp(this.url, {
+                    //rowId:'',//新增成功后返回的ID
+                    funcRowId:this.funcRowId,//功能块ID
+                    relateBusiPro:this.dataId,//业务对象属性ID
+                    displayTitle:this.nameTitle,//显示标题
+                    wetherDisplay:this.checked,//是否显示
+                    displayWidget:this.nameInput,//显示控件
+                    wetherReadonly:this.checkedReady,//只读
+                    allowEmpty:this.checkedNull,//允许为空
+                    lengthInterval:this.lengthSection,//长度区间
+                    validateFunc:this.testFunction,//验证函数
+                    displayFunc:this.displayFunction,//显示函数
+                    sort:this.sortNumber,//排序
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                        console.log(res.data.content.data);
+                        window.parent.vm1.FindData(this.funcRowId);
+                    parent.layer.close(window.parent.mb.divIndex);
+                });
+            }
+        },
+        created(){
+            this.relateBusiObjId = window.parent.mb.objId;
+            console.log(this.relateBusiObjId);
+        }
+    })
+</script>
+</body>
+</html>

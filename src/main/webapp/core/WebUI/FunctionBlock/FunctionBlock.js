@@ -21,7 +21,7 @@ var vm = new Vue({
             }).then(function(res){
                 if(res.data.content.data!==''){
                     this.myData=res.data.content.data;
-                    //vm1.FindData(vm.myData[0].rowId);
+                    vm1.FindData(vm.myData[0].rowId);
                 }
             })
         },
@@ -36,7 +36,8 @@ var vm = new Vue({
             })
         },
         click(row, event, column){
-            //vm1.FindData(row.rowId);
+            console.log(row);
+            vm1.FindData(row.rowId);
             this.deleteId = row.rowId;
             this.editObj = row;
         },
@@ -64,16 +65,26 @@ var vm1 = new Vue({
     data:{
         rightData:[],
         rightHeight:'',
+        url:serverPath+'/core/queryFronFuncPro'
     },
     methods:{
         FindData(id){
-            this.$http.jsonp('url',{
-                "key":id
+            this.$http.jsonp(this.url,{
+                "str":'',
+                "rowId":id
             },{
                 jsonp:'callback'
             }).then(function (res) {
-                this.rightData=res.data.content.data;
+                if(res.data.content.data!=''){
+                    this.rightData=res.data.content.data;
+                    console.log(res.data.content.data);
+                }
+            },function(){
+                alert("error")
             })
+        },
+        handleClick(){
+            console.log("success");
         }
     },
     created(){
@@ -91,6 +102,8 @@ var mb = new Vue({
     el:'#myButton',
     data:{
         divIndex:'',
+        rowObjId:'',
+        objId:''
     },
     methods: {
         addBlock(){
@@ -101,19 +114,17 @@ var mb = new Vue({
         editBlock(){
             this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','编辑功能块','400px', '500px',function(){
                 em.isEdit = true;
-                var obj = vm.editObj;
-                em.codeInput = obj.funcCode;
-                em.nameInput = obj.funcName;
-                em.typeInput = obj.funcType;
-                em.tableInput = obj.tables;
-                em.dataId = obj.relateBusiObj;
-                em.desp = obj.desp;
-                em.rowId = obj.rowId;
+
             });
 
         },
         del(){
             vm.delete();
+        },
+        addData(){
+            mb.rowObjId = vm.editObj.rowId;
+            mb.objId = vm.editObj.relateBusiObj
+            mb.divIndex = ibcpLayer.ShowIframe('AddData.html','新增属性','500px', '550px')
         }
     }
 })
