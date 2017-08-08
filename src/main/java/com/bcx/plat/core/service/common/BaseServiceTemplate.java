@@ -82,7 +82,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
 
-  public ServiceResult<PageResult<Map<String, Object>>> blankSelect(List<String> column,List<String> value, int pageNum, int pageSize) {
+  public ServiceResult<PageResult<Map<String, Object>>> blankSelect(Collection<String> column,Collection<String> value, int pageNum, int pageSize) {
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(createBlankQuery(column,value));
@@ -97,7 +97,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return serviceResult;
   }
 
-  public ServiceResult<List<Map<String, Object>>> blankSelectList(List<String> column,List<String> value) {
+  public ServiceResult<List<Map<String, Object>>> blankSelectList(Collection<String> column,Collection<String> value) {
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(createBlankQuery(column,value));
@@ -174,7 +174,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }).collect(Collectors.toList());
   }
 
-  protected List<FieldCondition> createBlankQuery(List<String> columns,List<String> values) {
+  protected List<FieldCondition> createBlankQuery(Collection<String> columns,Collection<String> values) {
     List<FieldCondition> conditions=new LinkedList<>();
     for (String column : columns) {
       for (String value : values) {
