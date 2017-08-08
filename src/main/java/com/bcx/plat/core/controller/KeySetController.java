@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.KeySet;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -21,72 +22,70 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 @RequestMapping("/core/keySet")
 @RestController
-public class KeySetController {
+public class KeySetController extends BaseController {
 
     @Autowired
     private KeySetService keySetService;
 
     /**
-     *
-     * @param str  根据条件查询数据
-     * @param rowId 根据ID查询数据
+     * @param str     根据条件查询数据
+     * @param rowId   根据ID查询数据
      * @param request
      * @param locale
      * @return
      */
     @RequestMapping("/query")
-    public MappingJacksonValue select(String str,String rowId, HttpServletRequest request, Locale locale){
-        Map<String,Object> map = new HashMap<>();
-        map.put("strArr",collectToSet(str));
-        map.put("rowId",rowId);
-        ServiceResult<KeySet> selete = keySetService.selete(map);
-        MappingJacksonValue result = new MappingJacksonValue(selete);
-        result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
-        return result;
+    public Object select(String str, String rowId, HttpServletRequest request, Locale locale) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("strArr", collectToSet(str));
+        map.put("rowId", rowId);
+        ServiceResult<KeySet> result = keySetService.selete(map);
+        return super.result(request, result, locale);
+
     }
 
     /**
      * 新增键值集合信息
-     * @param keySet 键值集合信息实体
+     *
+     * @param keySet  键值集合信息实体
      * @param request
      * @param locale
      * @return
      */
     @RequestMapping("/add")
-    public MappingJacksonValue insert(KeySet keySet,HttpServletRequest request,Locale locale){
-        ServiceResult<KeySet> insert = keySetService.insert(keySet);
-        MappingJacksonValue result = new MappingJacksonValue(insert);
-        result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
-        return result;
+    public Object insert(KeySet keySet, HttpServletRequest request, Locale locale) {
+        ServiceResult<KeySet> result = keySetService.insert(keySet);
+        return super.result(request, result, locale);
+
     }
 
     /**
      * 修改键值集合信息
-     * @param keySet 键值集合信息实体
+     *
+     * @param keySet  键值集合信息实体
      * @param request
      * @param locale
      * @return
      */
     @RequestMapping("/modify")
-    public MappingJacksonValue update(KeySet keySet,HttpServletRequest request,Locale locale){
-        ServiceResult<KeySet> insert = keySetService.update(keySet);
-        MappingJacksonValue result = new MappingJacksonValue(insert);
-        result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
-        return result;
+    public Object update(KeySet keySet, HttpServletRequest request, Locale locale) {
+        ServiceResult<KeySet> result = keySetService.update(keySet);
+        return super.result(request, result, locale);
+
     }
 
     /**
      * 删除键值集合信息
-     * @param keySet 键值集合信息实体
+     *
+     * @param keySet  键值集合信息实体
      * @param request
      * @param locale
      * @return
      */
     @RequestMapping("/delete")
-    public MappingJacksonValue delete(KeySet keySet,HttpServletRequest request,Locale locale){
-        ServiceResult<KeySet> insert = keySetService.delete(keySet);
-        MappingJacksonValue result = new MappingJacksonValue(insert);
-        result.setJsonpFunction(isValid(request.getParameter("callback"))?request.getParameter("callback"):"callback");
-        return result;
+    public Object delete(KeySet keySet, HttpServletRequest request, Locale locale) {
+        ServiceResult<KeySet> result = keySetService.delete(keySet);
+        return super.result(request, result, locale);
+
     }
 }

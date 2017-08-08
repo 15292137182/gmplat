@@ -3,6 +3,7 @@ package com.bcx.plat.core.controller;
 import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -22,7 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/core/businObjPro")
-public class BusinessObjectProController {
+public class BusinessObjectProController extends BaseController {
 
     @Autowired
     private BusinessObjectProService businessObjectProService;
@@ -31,46 +33,37 @@ public class BusinessObjectProController {
     /**
      * 查询业务对象属性
      *
-     * @param str   根据代码和名称查询数据
-     * @param rowId 根据rowId查询出业务对象关联的数据
+     * @param str    根据代码和名称查询数据
+     * @param rowId  根据rowId查询出业务对象关联的数据
      * @param rowIds 根据roeIds查询属性数据
      * @return
      */
     @RequestMapping("/query")
-    public MappingJacksonValue select(String str, String rowId,String rowIds, HttpServletRequest request) {
+    public Object select(String str, String rowId, String rowIds, HttpServletRequest request, Locale locale) {
         Map<String, Object> map = new HashMap<>();
         map.put("rowId", rowId);
         map.put("strArr", collectToSet(str));
         map.put("rowIds", rowIds);
         ServiceResult<BusinessObjectPro> result = businessObjectProService.select(map);
-        MappingJacksonValue value = new MappingJacksonValue(result);
-        value.setJsonpFunction(
-                isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
-        return value;
+        return super.result(request, result, locale);
     }
 
     /**
      * 新增业务对象属性
      */
     @RequestMapping("/add")
-    public MappingJacksonValue insert(BusinessObjectPro businessObjectPro,
-                                      HttpServletRequest request) {
+    public Object insert(BusinessObjectPro businessObjectPro,
+                         HttpServletRequest request, Locale locale) {
         ServiceResult<BusinessObjectPro> result = businessObjectProService.insert(businessObjectPro);
-        MappingJacksonValue value = new MappingJacksonValue(result);
-        value.setJsonpFunction(
-                isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
-        return value;
+        return super.result(request, result, locale);
     }
 
     /**
      * 删除业务对象属性
      */
     @RequestMapping("/delete")
-    public MappingJacksonValue dalete(String rowId, HttpServletRequest request) {
+    public Object dalete(String rowId, HttpServletRequest request, Locale locale) {
         ServiceResult<BusinessObjectPro> result = businessObjectProService.delete(rowId);
-        MappingJacksonValue value = new MappingJacksonValue(result);
-        value.setJsonpFunction(
-                isValid(request.getParameter("callback")) ? request.getParameter("callback") : "callback");
-        return value;
+        return super.result(request, result, locale);
     }
 }
