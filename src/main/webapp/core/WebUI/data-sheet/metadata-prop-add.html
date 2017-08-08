@@ -32,7 +32,7 @@
   <el-row justify="center" type="flex">
     <el-col :span="22">
       <el-col :span="4" style="margin-top:8px">
-          <el-checkbox v-model="checked" @change.native="changEvent">扩展属性</el-checkbox>
+          <el-checkbox v-model="checked" @change.native="changEvent" v-bind:disabled="checkEvent">扩展属性</el-checkbox>
       </el-col>
       <el-col :span="17" :offset="3">
         <el-input placeholder="请选择关联表字段" v-model="tableReaInput" ref="tableReaInput" data-id="">
@@ -96,7 +96,8 @@
         disabled:true,
         iconEvent:false,
         optionLeft:[],
-        optionRight:[]
+        optionRight:[],
+        checkEvent:false
       }
     },
     methods: {
@@ -145,8 +146,10 @@
         ibcpLayer.Close(divIndex);
       }
     },
-    created() {
-
+    updated() {
+      if(this.tableReaInput!=''){
+        this.checkEvent=true;
+      }
     }
 
   })

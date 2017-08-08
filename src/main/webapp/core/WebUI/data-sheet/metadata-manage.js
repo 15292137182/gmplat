@@ -66,7 +66,7 @@ var basTop=new Vue({
       //拿到ID
       var deleteId = basRight.rightVal
       this.$http.jsonp(serverPath + "/businObjPro/delete", {
-        delData: deleteId
+        rowId: deleteId
       }, {
         jsonp: 'callback'
       }).then(function (ref) {
@@ -109,13 +109,14 @@ var basLeft=new Vue({
     },
     currentChange(row, event, column) {
       //点击拿到这条数据的值
-        console.log(row)
+       // console.log(row)
         this.currentVal = row;
         //关联表的数据
         this.relateTableRowId=row.relateTableRowId;
 
         //左边这一行的数据
         this.currentId = row.rowId;
+      console.log(this.currentId);
         //查找右侧表的数据
         this.$http.jsonp(serverPath + "/businObjPro/query", {
           rowId: this.currentId
@@ -171,9 +172,9 @@ var basRight=new Vue({
     currentRChange(row, event, column) {
       //点击拿到这条数据的值
       if(row!=undefined){
-        console.log(row)
+        //console.log(row)
         this.rightVal = row.rowId;
-        console.log(this.rightVal)
+       // console.log(this.rightVal)
       }
 
     },
