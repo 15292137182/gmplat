@@ -99,6 +99,23 @@ public class MixedDbActionTest extends BaseTest {
     Assert.assertTrue(id1000SizeBefore > id1000SizeAfter);
   }
 
+  @Test
+  @Transactional
+  @Rollback
+  public void notConditionTest(){
+    QueryAction queryAction=new QueryAction()
+        .selectAll()
+        .from(TableInfo.TEST);
+    int total=tempSuitMapper.select(queryAction).size();
+    queryAction.where(new FieldCondition("testFirst",Operator.EQUAL,"json works"));
+    int j=tempSuitMapper.select(queryAction).size();
+    queryAction.where(new FieldCondition("testFirst",Operator.EQUAL,"json works",true));
+    int notJ=tempSuitMapper.select(queryAction).size();
+    Assert.assertNotEquals("没有测试数据",0,total);
+    Assert.assertNotEquals("至少准备几条测试查询的数据",0,j);
+    Assert.assertEquals("程序逻辑错误",total,j+notJ);
+  }
+
   public void jsonTest() {
     final FieldCondition jsonFieldCondition = new FieldCondition("testFirst", Operator.EQUAL,
         "json works");
