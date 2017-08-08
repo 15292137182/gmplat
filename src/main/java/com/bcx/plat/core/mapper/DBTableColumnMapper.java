@@ -2,6 +2,8 @@ package com.bcx.plat.core.mapper;
 
 import com.bcx.plat.core.base.BaseMapper;
 import com.bcx.plat.core.entity.DBTableColumn;
+
+import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,4 +20,11 @@ public interface DBTableColumnMapper extends BaseMapper<DBTableColumn> {
    * @return 返回操作结果标识
    */
   int batchLogicDelete(Map map);
+
+  /**
+   * 查询方法,返回记录
+   *
+   * @param rowId
+   */
+  List<DBTableColumn> selectByTableId(String rowId);
 }

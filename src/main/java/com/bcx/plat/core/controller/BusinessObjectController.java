@@ -53,7 +53,7 @@ public class BusinessObjectController {
    */
   @RequestMapping("/add")
   public MappingJacksonValue insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
-    ServiceResult<BusinessObject> result=businessObjectServiceA.insert(businessObject.toMap());
+    ServiceResult<BusinessObject> result=businessObjectServiceA.insert(businessObject.buildCreateInfo().toMap());
 //    ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
     MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(
@@ -67,7 +67,7 @@ public class BusinessObjectController {
    */
   @RequestMapping("/modify")
   public MappingJacksonValue update(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
-    ServiceResult<BusinessObject> result=businessObjectServiceA.update(businessObject.toMap());
+    ServiceResult<BusinessObject> result=businessObjectServiceA.update(businessObject.buildModifyInfo().toMap());
 //    ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
     MappingJacksonValue value = new MappingJacksonValue(result);
     value.setJsonpFunction(

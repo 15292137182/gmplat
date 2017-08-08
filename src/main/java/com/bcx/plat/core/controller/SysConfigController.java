@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.SysConfig;
 import com.bcx.plat.core.service.SysConfigService;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -22,7 +23,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 @RestController
 @RequestMapping("/core/sysConfig")
-public class SysConfigController {
+public class SysConfigController extends BaseController{
 
     @Autowired
     private SysConfigService sysConfigService;

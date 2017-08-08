@@ -43,6 +43,20 @@ public class DBTableColumnController extends BaseController {
   }
 
   /**
+   * 查询数据库表中关联数据中字段信息
+   *
+   * @param rowId 查询条件
+   * @return 返回查询结果
+   */
+  @RequestMapping("/queryByTableId")
+  public Object selectByTableId(String rowId, HttpServletRequest request,
+      Locale locale) {
+    Map<String, Object> cond = new HashMap<>();
+    cond.put("rowId", rowId);
+    return super.result(request, dbTableColumnService.select(cond), locale);
+  }
+
+  /**
    * 新建数据
    *
    * @param dbTableColumn javaBean

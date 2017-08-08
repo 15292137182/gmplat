@@ -43,6 +43,7 @@
             modify_user = #{modifyUser},
             modify_user_name = #{modifyUserName},
             modify_time = #{modifyTime}
+        where row_id = #{rowId}
     </update>
 
     <delete id="delete" parameterType="string">

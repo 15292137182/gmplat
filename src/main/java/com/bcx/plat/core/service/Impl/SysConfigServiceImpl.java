@@ -32,7 +32,7 @@ public class SysConfigServiceImpl implements SysConfigService {
     public ServiceResult querySysConfig(Map map) {
         List<SysConfig> result = sysConfigMapper.select(map);
         if (result.size()==0){
-            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
         }
         return  new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,result);
 

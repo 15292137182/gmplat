@@ -20,6 +20,16 @@ public interface DBTableColumnService {
   ServiceResult select(Map map);
 
 
+
+  /**
+   * 查询方法
+   *
+   * @param rowId   查询参数
+   * @return 返回
+   */
+  ServiceResult selectByTableId(String rowId);
+
+
   /**
    * 新建 数据库字段信息
    *

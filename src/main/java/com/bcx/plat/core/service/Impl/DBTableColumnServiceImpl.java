@@ -39,6 +39,15 @@ public class DBTableColumnServiceImpl extends BaseServiceImpl<DBTableColumn> imp
   public ServiceResult select(Map map) {
     return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS, dbTableColumnMapper.select(map));
   }
+  /**
+   * 查询数据库表中关联数据中字段信息
+   *
+   * @param rowId 查询条件
+   * @return 返回查询结果
+   */
+  public ServiceResult selectByTableId(String rowId) {
+    return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS, dbTableColumnMapper.selectByTableId(rowId));
+  }
 
   /**
    * 新建 数据库字段信息
