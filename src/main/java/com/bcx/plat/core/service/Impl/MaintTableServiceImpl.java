@@ -34,16 +34,14 @@ public class MaintTableServiceImpl implements MaintTableService {
   @Override
   public ServiceResult<MaintTableInfo> selectMaint(String str) {
     try {
-      if (str != null) {
         Map<String, Object> map = new HashMap<>();
         map.put("strArr", collectToSet(str));
         List<MaintTableInfo> result = maintTableMapperImpl.selectMaint(map);
         return new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
-      }
     } catch (Exception e) {
       e.printStackTrace();
+      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
-    return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
   }
 
   /**
@@ -52,14 +50,12 @@ public class MaintTableServiceImpl implements MaintTableService {
   @Override
   public ServiceResult<MaintTableInfo> selectById(String rowId) {
     try {
-      if (rowId != null) {
         List<MaintTableInfo> result = maintTableMapperImpl.selectById(rowId);
         return new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
-      }
     } catch (Exception e) {
       e.printStackTrace();
+      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
-    return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
   }
 
 

@@ -8,6 +8,7 @@ import com.bcx.plat.core.service.SysConfigService;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  * Created by Wen Tiehu on 2017/8/7.
  */
 @Service
+@Transactional
 public class SysConfigServiceImpl implements SysConfigService {
 
     @Autowired
