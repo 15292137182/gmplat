@@ -44,7 +44,7 @@ var config=new Vue({
             });
         },
         deleteEvent(){
-            var list=new Array();
+            var list=[];
             list.push(config.currentVal.rowId);
             this.$http.jsonp(serverPath+del,{
                 rowIds:list
