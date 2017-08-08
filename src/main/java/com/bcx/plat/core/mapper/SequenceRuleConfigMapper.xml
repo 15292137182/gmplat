@@ -54,8 +54,8 @@
   <delete id="batchDelete" parameterType="hashMap">
     DELETE FROM public.t_sequence_rule_config
     where
-    row_id in ('++--'
-    <foreach collection="rowIds" separator="," open="" item="item" close="">
+    row_id in ('呵呵'
+    <foreach collection="rowIds" separator="," open="," item="item" close="">
       #{item}
     </foreach>
     )
@@ -69,8 +69,8 @@
     delete_time = #{deleteTime},
     delete_flag = #{deleteFlag}
     where
-    row_id in ('++--'
-    <foreach collection="rowIds" separator="," open="" item="item" close="">
+    row_id in ('呵呵'
+    <foreach collection="rowIds" separator="," open="," item="item" close="">
       #{item}
     </foreach>
     )

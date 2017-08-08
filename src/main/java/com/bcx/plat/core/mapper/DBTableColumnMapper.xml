@@ -68,7 +68,7 @@
     DELETE FROM public.t_db_table_column
     where
     row_id in ('++--'
-    <foreach collection="rowIds" separator="," open="" item="item" close="">
+    <foreach collection="rowIds" separator="," open="," item="item" close="">
       #{item}
     </foreach>
     )
@@ -83,7 +83,7 @@
     delete_flag = #{deleteFlag}
     where
     row_id in ('++--'
-    <foreach collection="rowIds" separator="," open="" item="item" close="">
+    <foreach collection="rowIds" separator="," open="," item="item" close="">
       #{item}
     </foreach>
     )
