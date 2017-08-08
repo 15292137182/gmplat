@@ -10,7 +10,6 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
-import com.bcx.plat.core.service.common.BaseServiceImpl;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class DBTableColumnServiceImpl extends BaseServiceImpl<DBTableColumn> implements
-    DBTableColumnService {
+public class DBTableColumnServiceImpl implements DBTableColumnService {
 
   @Autowired
   private DBTableColumnMapper dbTableColumnMapper;

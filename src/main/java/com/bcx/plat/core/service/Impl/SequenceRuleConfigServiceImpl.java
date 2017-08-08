@@ -8,7 +8,6 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.mapper.SequenceRuleConfigMapper;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
-import com.bcx.plat.core.service.common.BaseServiceImpl;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class SequenceRuleConfigServiceImpl extends BaseServiceImpl<SequenceRuleConfig> implements
+public class SequenceRuleConfigServiceImpl implements
     SequenceRuleConfigService {
 
   @Autowired
