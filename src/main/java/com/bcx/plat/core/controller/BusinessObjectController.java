@@ -6,6 +6,7 @@ import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/core/businObj")
-public class BusinessObjectController extends BaseControllerTemplate<BusinessObjectService,BusinessObject>{
+public class BusinessObjectController extends BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
     @Autowired
     BusinessObjectService businessObjectService;
@@ -46,22 +47,31 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @RequestMapping("/query")
     @Override
     public Object select(String rowId, HttpServletRequest request, Locale locale) {
-        ServiceResult<List<Map<String, Object>>> selectList = businessObjectService.blankSelectList(Arrays.asList("rowId"), Arrays.asList("rowId"));
+//        if (str.length()!=0) {
+//            ServiceResult<List<Map<String, Object>>> result = businessObjectProService
+//                    .blankSelectList(blankSelectFields(), UtilsTool.collectToSet(str));
+//            return super.result(request, result, locale);
+//        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("rowId",rowId);
+        ServiceResult<List<Map<String, Object>>> selectList = businessObjectService.selectList(map);
         List<Map<String, Object>> data = selectList.getData();
-        if (data!=null) {
+        if (data != null) {
             ServiceResult<List<Map<String, Object>>> result = businessObjectProService.blankSelectList(Arrays.asList("rowId"), Arrays.asList("rowId"));
-            return super.result(request,result, locale);
+            return super.result(request, result, locale);
         }
-        return super.result(request,null,locale);
+        return super.result(request, selectList, locale);
     }
 
     @Override
     protected List<String> blankSelectFields() {
-        return Arrays.asList("objectCode","objectName");
+        return Arrays.asList("objectCode", "objectName");
     }
+
 
     /**
      * 新增
+     *
      * @param businessObject
      * @param request
      * @param locale
@@ -87,12 +97,12 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         ServiceResult<List<Map<String, Object>>> list = businessObjectProService.blankSelectList(Arrays.asList("objRowId"), Arrays.asList(rowId));
         List<Map<String, Object>> data = list.getData();
-        if (data!=null) {
+        if (data != null) {
             List<String> rowIds = data.stream().map((row) -> {
                 return (String) row.get("rowId");
             }).collect(Collectors.toList());
             Map<String, Object> argsSub = new HashMap<>();
-            argsSub.put("rowId",rowIds);
+            argsSub.put("rowId", rowIds);
             businessObjectProService.delete(argsSub);
         }
         Map<String, Object> args = new HashMap<>();
@@ -100,7 +110,6 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
         ServiceResult<Object> result = businessObjectService.delete(args);
         return super.result(request, result, locale);
     }
-
 
 
 }
