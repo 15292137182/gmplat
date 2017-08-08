@@ -9,7 +9,7 @@
 	},{
 		"title": "业务对象管理",
 		"icon": " fa-external-link",
-		"href": "core/WebUI/DataSheet/MetadataManage.html"
+		"href": "core/WebUI/data-sheet/metadata-manage.html"
 	}, {
 		"title": "键值集合管理",
 		"icon": " &#xe641",

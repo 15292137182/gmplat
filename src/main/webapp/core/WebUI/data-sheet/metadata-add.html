@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event_Add</title>
+  <style>
+    #addEvent .el-row {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="addEvent" style="margin-top:20px">
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <div>
+        <el-input placeholder="请输入对象代码" v-model="codeInput" ref="codeInput"
+                  v-bind:disabled="disabled">
+          <template slot="prepend">对象代码</template>
+        </el-input>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <div>
+        <el-input placeholder="请输入对象名称" v-model="nameInput" ref="nameInput">
+          <template slot="prepend">对象名称</template>
+        </el-input>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <div>
+        <el-input placeholder="请选择关联表" v-model="tableInput" ref="tableInput" disabled data-id="">
+          <el-button slot="append" icon="search" @click="searchConnectTable"  v-bind:disabled="firstIconEvent"></el-button>
+        </el-input>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row justify="center" type="flex">
+    <el-col :span="22">
+      <div>
+        <el-input placeholder="版本号" disabled v-model="versionInput">
+          <template slot="prepend">版&nbsp;本&nbsp;号&nbsp;</template>
+        </el-input>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="11" style="text-align:right">
+      <el-button type="primary" @click.native="conformEvent">确定</el-button>
+    </el-col>
+    <el-col :span="11" style="text-align: left" :offset="2">
+      <el-button type="primary" @click.native="cancel">取消</el-button>
+    </el-col>
+  </el-row>
+</div>
+<script>
+  var em = new Vue({
+    el: '#addEvent',
+    data: function () {
+      return {
+        codeInput: '',
+        nameInput: '',
+        tableInput: '',
+        dataId: '',
+        versionInput: '',
+        disabled: false,
+        firstIconEvent:false,
+      }
+    },
+    methods: {
+      searchConnectTable() {
+        var htmlUrl = 'connect-table.html';
+        littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表数据', '600px', '560px', false)
+      },
+      conformEvent() {
+        var datas = [this.$refs.codeInput, this.$refs.nameInput, this.$refs.tableInput];
+        for (var i = 0; i < datas.length; i++) {
+          if (datas[i].value == '') {
+            ibcpLayer.ShowMsg(datas[i].placeholder);
+            return;
+          }
+        }
+        if (operate == 1) {
+          this.$http.jsonp(serverPath + "/businObj/add", {
+            objectCode: em.codeInput,
+            objectName: em.nameInput,
+            relateTableRowId: em.dataId
+          }, {
+            jsonp: 'callback'
+          }).then(function (res) {
+            ibcpLayer.ShowOK(res.data.message);
+            basLeft.searchLeftTable();
+            ibcpLayer.Close(divIndex);
+          });
+        }
+        if (operate == 2) {
+          this.$http.jsonp(serverPath + "/businObj/modify", {
+            //拿到这条数据的ID
+            rowId: basLeft.currentVal.rowId,
+            objectName: em.nameInput
+          }, {
+            jsonp: 'callback'
+          }).then(function () {
+            ibcpLayer.ShowOK('编辑成功');
+            basLeft.searchLeftTable();
+            ibcpLayer.Close(divIndex);
+          });
+        }
+      },
+      cancel() {
+        ibcpLayer.Close(divIndex);
+      }
+    }
+  })
+</script>
+</body>
+</html>

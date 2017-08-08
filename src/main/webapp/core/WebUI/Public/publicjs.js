@@ -1,14 +1,14 @@
-var path = getRootPath()+"/core";
+var path = getRootPath();
 
 document.write('<link href="' + path + '/webjar/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">');
 document.write('<link href="' + path + '/webjar/css/mystyle.css" rel="stylesheet">');
-document.write('<link href="' + path + '/WebUI/element-ui/lib/theme-default/index.css" rel="stylesheet">');
+document.write('<link href="' + path + '/webjar/element-ui/lib/theme-default/index.css" rel="stylesheet">');
 //自定义样式
 document.write('<link href="' + path + '/webjar/css/coreStyle.css" rel="stylesheet">');
 
-document.write('<script type="text/javascript" src="' + path + '/WebUI/vue/dist/vue.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/element-ui/lib/index.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/vue/vue-resource.js" charset="UTF-8"></script>');
+document.write('<script type="text/javascript" src="' + path + '/webjar/vue/dist/vue.js" charset="UTF-8"></script>');
+document.write('<script type="text/javascript" src="' + path + '/webjar/element-ui/lib/index.js" charset="UTF-8"></script>');
+document.write('<script type="text/javascript" src="' + path + '/webjar/vue/vue-resource.js" charset="UTF-8"></script>');
 
 document.write('<script type="text/javascript" src="' + path + '/webjar/jquery/3.1.1/jquery.min.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/layer/layer.js" charset="UTF-8"></script>');
