@@ -5,6 +5,7 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.mapper.SequenceRuleConfigMapper;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
@@ -22,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class SequenceRuleConfigServiceImpl implements
+public class SequenceRuleConfigServiceImpl extends
+    BaseServiceTemplate<SequenceRuleConfig> implements
     SequenceRuleConfigService {
 
   @Autowired
@@ -36,6 +38,7 @@ public class SequenceRuleConfigServiceImpl implements
    */
   @Override
   public ServiceResult select(Map map) {
+
     return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
         sequenceRuleConfigMapper.select(map));
   }

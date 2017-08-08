@@ -1,23 +1,21 @@
 package com.bcx.plat.core.controller;
 
 import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.service.BusinessObjectService;
-import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.utils.ServiceResult;
-
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-
 import com.bcx.plat.core.utils.UtilsTool;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by Went on 2017/8/1.
@@ -29,7 +27,7 @@ public class BusinessObjectController extends BaseController {
     @Autowired
     private BusinessObjectService businessObjectService;
     @Autowired
-    private BaseServiceTemplate<BusinessObject> businessObjectServiceA;
+    private BaseService businessObjectServiceA;
 
     /**
      * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）

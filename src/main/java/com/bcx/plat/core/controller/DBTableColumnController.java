@@ -10,7 +10,6 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.service.DBTableColumnService;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +86,7 @@ public class DBTableColumnController extends BaseController {
    * @return 返回
    */
   @RequestMapping("/delete")
-  public Object delete(List<String> rowIds, HttpServletRequest request,
+  public Object delete(String[] rowIds, HttpServletRequest request,
       Locale locale) {
     return super.result(request, dbTableColumnService.batchDelete(rowIds), locale);
   }

@@ -2,7 +2,6 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.utils.ServiceResult;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -52,5 +51,5 @@ public interface DBTableColumnService {
    * @param rowIds 数据表 bean
    * @return 操作结果状态
    */
-  ServiceResult batchDelete(Collection<String> rowIds);
+  ServiceResult batchDelete(String[] rowIds);
 }

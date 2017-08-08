@@ -6,6 +6,7 @@ package com.bcx.plat.core.base;
 public class BaseConstants {
 
   public static final String DELETE_FLAG = "1";
+  public static final String NOT_DELETE_FLAG = "0";
   public static final boolean LOGIC_DELETE = true;
 
   public static final int STATUS_SUCCESS = 1;

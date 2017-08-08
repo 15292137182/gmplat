@@ -11,7 +11,6 @@ import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.ServiceResult;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +74,8 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
    * @param rowIds 数据表 bean
    * @return 操作结果状态
    */
-  public ServiceResult batchDelete(Collection<String> rowIds) {
-    if (null != rowIds && rowIds.size() != 0) {
+  public ServiceResult batchDelete(String[] rowIds) {
+    if (null != rowIds && rowIds.length != 0) {
       Map<Object, Object> map = new HashMap<>();
       map.put("rowIds", rowIds);
       if (LOGIC_DELETE) {
