@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+
+<!--搜索框 搜索按钮 所有事件按钮-->
+<div id="resTop">
+    <el-row type="flex" justify="end">
+        <el-col :span="24">
+            <el-button type="info" icon="plus" size="small" @click.native="addResEvent">资源配置</el-button>
+            <el-button type="info" icon="edit" size="small" @click.native="editResEvent">资源配置</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="deleteResEvent">资源配置</el-button>
+        </el-col>
+    </el-row>
+</div>
+
+<!--表格数据-->
+<el-col :span="24" id="resCol">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color"><span>资源配置信息</span></div>
+            </el-col>
+        </el-row>
+        <el-row class="inputStyle">
+            <el-col :xs="10" :sm="10" :md="10">
+                <div>
+                    <el-input placeholder="请输入内容" v-model="resInput" size="small">
+                        <el-button slot="append" icon="search" @click.native="searchResTable"></el-button>
+                    </el-input>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row style="padding:0 10px 10px 10px">
+            <el-col :span="24">
+                <template>
+                    <el-table :data="myResData" ref="myResData" highlight-current-row
+                              @row-click="currentChange" :height="Height" border
+                              class="tableStyle">
+                        <el-table-column prop="confKey" label="键" width="">
+                        </el-table-column>
+                        <el-table-column prop="confValue" label="值" width="">
+                        </el-table-column>
+                        <el-table-column prop="desp" label="说明" width="">
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+<script src="ResourceCollocation.js"></script>
+</body>
+</html>
