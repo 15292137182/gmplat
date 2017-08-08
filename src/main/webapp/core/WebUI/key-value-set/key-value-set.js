@@ -1,7 +1,7 @@
 /**
  * Created by jms on 2017/8/6.
  */
-var str="/core/keySet";
+var str="/keySet";
 const query=str+"/query";
 const insert=str+"/add";
 const modify=str+"modify";
