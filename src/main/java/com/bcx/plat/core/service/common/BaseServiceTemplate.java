@@ -15,6 +15,7 @@ import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.TableAnnoUtil;
+import com.bcx.plat.core.utils.UtilsTool;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +48,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     this.suitMapper = suitMapper;
   }
 
-  public ServiceResult select(Map args, int pageNum, int pageSize) {
+  public ServiceResult<PageResult<Map<String, Object>>> select(Map args, int pageNum, int pageSize) {
     args=mapFilter(args);
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
@@ -57,14 +58,14 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       PageResult<Map<String, Object>> pageResult = queryAction
           .pageQuery(getSuitMapper(), pageNum, pageSize);
       serviceResult = new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
-          pageResult);
+          underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return serviceResult;
   }
 
-  public ServiceResult selectList(Map args) {
+  public ServiceResult<List<Map<String, Object>>> selectList(Map args) {
     args=mapFilter(args);
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
@@ -73,7 +74,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     try {
       List<Map<String, Object>> pageResult = getSuitMapper().select(queryAction);
       serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
-          pageResult);
+          underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
@@ -81,23 +82,22 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
 
-  public ServiceResult blankSelect(List<String> column,List<String> value, int pageNum, int pageSize) {
+  public ServiceResult<PageResult<Map<String, Object>>> blankSelect(List<String> column,List<String> value, int pageNum, int pageSize) {
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(createBlankQuery(column,value));
     ServiceResult<PageResult<Map<String, Object>>> serviceResult;
     try {
-      PageResult<Map<String, Object>> pageResult = queryAction
-          .pageQuery(getSuitMapper(), pageNum, pageSize);
+      PageResult<Map<String, Object>> pageResult = queryAction.pageQuery(getSuitMapper(), pageNum, pageSize);
       serviceResult = new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
-          pageResult);
+          underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return serviceResult;
   }
 
-  public ServiceResult blankSelectList(List<String> column,List<String> value) {
+  public ServiceResult<List<Map<String, Object>>> blankSelectList(List<String> column,List<String> value) {
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(createBlankQuery(column,value));
@@ -105,14 +105,14 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     try {
       List<Map<String, Object>> pageResult = getSuitMapper().selectByOr(queryAction);
       serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
-          pageResult);
+          underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return serviceResult;
   }
 
-  public ServiceResult insert(Map args) {
+  public ServiceResult<Map<String,Object>> insert(Map args) {
     args=mapFilter(args);
     args.remove("etc");
     InsertAction insertAction = new InsertAction().into(table).cols(fieldNames).values(args);
@@ -120,12 +120,12 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       getSuitMapper().insert(insertAction);
     } catch (Exception e) {
       e.printStackTrace();
-      return ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+      return ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL);
     }
-    return ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS);
+    return new ServiceResult<>(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL,args);
   }
 
-  public ServiceResult update(Map args) {
+  public ServiceResult<Map<String,Object>> update(Map args) {
     args=mapFilter(args);
     args.remove("etc");
     final Map<String,Object> finalCopy=args;
@@ -141,10 +141,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       e.printStackTrace();
       return ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
     }
-    return ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+    return new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,args);
   }
 
-  public ServiceResult delete(Map args) {
+  public ServiceResult<Object> delete(Map args) {
     args=mapFilter(args);
     args.remove("etc");
     DeleteAction deleteAction = new DeleteAction()
@@ -182,6 +182,21 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       }
     }
     return conditions;
+  }
+
+  private PageResult<Map<String,Object>> underlineKeyMapListToCamel(PageResult<Map<String,Object>> origin){
+    origin.setResult(underlineKeyMapListToCamel(origin.getResult()));
+    return origin;
+  }
+
+  private List<Map<String,Object>> underlineKeyMapListToCamel(List<Map<String,Object>> origin){
+    return origin.stream().map((row)->{
+      HashMap<String,Object> out=new HashMap<>();
+      for (Entry<String, Object> entry : row.entrySet()) {
+        out.put(UtilsTool.underlineToCamel(entry.getKey(),false),entry.getValue());
+      }
+      return out;
+    }).collect(Collectors.toList());
   }
 
   private Map<String,Object> mapFilter(Map<String,Object> map){

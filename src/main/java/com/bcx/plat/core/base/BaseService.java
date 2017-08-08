@@ -1,7 +1,9 @@
 package com.bcx.plat.core.base;
 
 
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.utils.ServiceResult;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,13 +18,17 @@ public interface BaseService<T extends BaseEntity> {
    * @param page 是否分页
    * @return 返回
    */
-  ServiceResult select(Map condition, int page, int limit);
+  ServiceResult<PageResult<Map<String,Object>>> select(Map condition, int page, int limit);
 
-  ServiceResult selectList(Map condition);
+  ServiceResult<List<Map<String,Object>>> selectList(Map condition);
 
-  ServiceResult update(Map value);
+  ServiceResult<List<Map<String, Object>>> blankSelectList(List<String> column,List<String> value);
 
-  ServiceResult insert(Map value);
+  ServiceResult<PageResult<Map<String, Object>>> blankSelect(List<String> column,List<String> value, int pageNum, int pageSize);
 
-  ServiceResult delete(Map condition);
+  ServiceResult<Map<String,Object>> update(Map value);
+
+  ServiceResult<Map<String,Object>> insert(Map value);
+
+  ServiceResult<Object> delete(Map condition);
 }
