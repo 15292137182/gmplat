@@ -47,7 +47,7 @@
     <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
     VALUES
     (#{rowId}, #{seqCode}, #{seqName}, #{seqContent}, #{desp},
-    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
     )
   </insert>
 
