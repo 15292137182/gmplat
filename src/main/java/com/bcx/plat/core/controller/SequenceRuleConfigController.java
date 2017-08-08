@@ -66,14 +66,13 @@ public class SequenceRuleConfigController extends BaseController {
   /**
    * 删除数据
    *
-   * @param rowIds javaBean
    * @return 返回
    */
   @RequestMapping("/delete")
-  public Object delete(String[] rowIds, HttpServletRequest request,
+  public Object delete(HttpServletRequest request,
       Locale locale) {
     Map<String, Object> cond = new HashMap<>();
-    cond.put("rowIds", rowIds);
+    cond.put("rowIds", collectToSet(request.getParameter("rowIds")));
     return super.result(request, sequenceRuleConfigService.delete(cond), locale);
   }
 }

@@ -85,10 +85,10 @@ public class DBTableColumnController extends BaseController {
    * @return 返回
    */
   @RequestMapping("/delete")
-  public Object delete(String[] rowIds, HttpServletRequest request,
+  public Object delete(HttpServletRequest request,
       Locale locale) {
     Map map = new HashMap();
-    map.put("rowIds", rowIds);
+    map.put("rowIds", collectToSet(request.getParameter("rowIds")));
     return super.result(request, dbTableColumnService.batchDelete(map), locale);
   }
 
