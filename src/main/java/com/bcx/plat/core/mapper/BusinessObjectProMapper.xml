@@ -17,7 +17,7 @@
         </foreach>
       </if>
       <if test="rowId!=null and rowId.length()!=0">
-        AND tp.relate_table_column = #{rowId}
+        AND tp.obj_row_id= #{rowId}
       </if>
       <if test="rowIds!=null and rowIds.length()!=0">
         and tp.row_id = #{rowIds}
@@ -30,11 +30,11 @@
     INSERT INTO
     t_business_object_pro
     ( row_id,property_code,property_name,relate_table_column,value_type,
-    value_resource_type,value_resource_content,wether_expand_pro,"obj_rowId",
+    value_resource_type,value_resource_content,wether_expand_pro,"obj_row_id",
     <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>)
     VALUES
     (#{rowId},#{propertyCode},#{propertyName},#{relateTableColumn},
-    #{valueType},#{valueResourceType},#{valueResourceContent},#{wetherExpandPro},#{objRowId}
+    #{valueType},#{valueResourceType},#{valueResourceContent},#{wetherExpandPro},#{objRowId},
     <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>)
   </insert>
 
