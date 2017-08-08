@@ -47,7 +47,7 @@ var config=new Vue({
             var list=[];
             list.push(config.currentVal.rowId);
             this.$http.jsonp(serverPath+del,{
-                rowIds:list
+                rowIds:list.join(" ")
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
