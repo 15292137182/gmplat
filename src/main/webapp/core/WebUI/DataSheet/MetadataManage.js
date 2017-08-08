@@ -35,19 +35,44 @@ var basTop=new Vue({
       }, {
         jsonp: 'callback'
       }).then(function (ref) {
-        console.log(ref);
         ibcpLayer.ShowOK(ref.data.message);
         basLeft.searchLeftTable();
+
       });
     },
     addProp(){
       var htmlUrl = 'MetadataPropAdd.html';
       divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '440px',function(){
-          this.$http.jsonp()
+        //键值类型(键值集合)
+        proEm.$http.jsonp(serverPath + '/keySet/query', {
+          str: ''
+        }, {
+          jsonp: 'callback'
+        }).then(function (ref) {
+          proEm.optionLeft=ref.data.data;
+        });
+        //值来源类型(键值集合)
+        proEm.$http.jsonp(serverPath +'/keySet/query', {
+          str: ''
+        }, {
+          jsonp: 'callback'
+        }).then(function (ref) {
+          proEm.optionRight=ref.data.data;
+        });
       });
-    },
-    editProp(){
 
+    },
+    deleteProp(){
+      //拿到ID
+      var deleteId = basRight.rightVal
+      this.$http.jsonp(serverPath + "/businObjPro/delete", {
+        delData: deleteId
+      }, {
+        jsonp: 'callback'
+      }).then(function (ref) {
+        ibcpLayer.ShowOK(ref.data.message);
+        basLeft.searchLeftTable();
+      });
     },
     affectProp(){
 
@@ -67,34 +92,47 @@ var basLeft=new Vue({
   },
   methods:{
     searchLeftTable() {
-      this.$http.jsonp(serverPath + "/businObj/select", {
+      this.$http.jsonp(serverPath + "/businObj/query", {
         str: this.leftInput
       }, {
         jsonp: 'callback'
       }).then(function (res) {
-        if(res.data.content.data!==''){
-          console.log(res);
-          this.myLeftData = res.data.content.data;
+        console.log(res);
+        if(res.data.data!==null){
+          this.myLeftData = res.data.data;
           //默认查找第一行右边的数据
           this.currentChange(this.myLeftData[0])
+        }else{
+          this.myLeftData=[];
         }
       });
     },
     currentChange(row, event, column) {
       //点击拿到这条数据的值
-      //console.log(row)
-      this.currentVal = row;
-      this.currentId = row.rowId;
-      //查找右侧表的数据
-      this.$http.jsonp(serverPath + "/businObjPro/select", {
-        rowId: this.currentId
-      }, {
-        jsonp: 'callback'
-      }).then(function (res) {
-          basRight.myRightData = res.data.content.data;
-      });
+        console.log(row)
+        this.currentVal = row;
+        //关联表的数据
+        this.relateTableRowId=row.relateTableRowId;
+
+        //左边这一行的数据
+        this.currentId = row.rowId;
+        //查找右侧表的数据
+        this.$http.jsonp(serverPath + "/businObjPro/query", {
+          rowId: this.currentId
+        }, {
+          jsonp: 'callback'
+        }).then(function (res) {
+          if(res.data.data!==null) {
+            basRight.myRightData = res.data.data;
+            //右边有数据 默认点击第一行
+            basRight.currentRChange(basRight.myRightData[0])
+
+          }else{
+            basRight.myRightData=[];
+          }
+        });
     },
-    FindFirstDate(row){
+    FindLFirstDate(row){
       this.$refs.myLeftData.setCurrentRow(row);
     }
   },
@@ -108,7 +146,7 @@ var basLeft=new Vue({
     })
   },
   updated() {
-    this.FindFirstDate(this.myLeftData[0]);
+    this.FindLFirstDate(this.myLeftData[0]);
   }
 });
 
@@ -121,16 +159,25 @@ var basRight=new Vue({
   },
   methods:{
     searchRightTable() {
-      this.$http.jsonp(serverPath + "/businObjPro/select", {
+      this.$http.jsonp(serverPath + "/businObjPro/query", {
         str: this.rightInput,
         rowId:basLeft.currentId
       }, {
         jsonp: 'callback'
       }).then(function (res) {
-        basRight.myRightData= res.data.content.data;
+        basRight.myRightData= res.data.data;
       });
     },
-    FindFirstDate(row){
+    currentRChange(row, event, column) {
+      //点击拿到这条数据的值
+      if(row!=undefined){
+        console.log(row)
+        this.rightVal = row.rowId;
+        console.log(this.rightVal)
+      }
+
+    },
+    FindRFirstDate(row){
       this.$refs.myRightData.setCurrentRow(row);
     }
   },
@@ -144,6 +191,6 @@ var basRight=new Vue({
     })
   },
   updated() {
-    this.FindFirstDate(this.myRightData[0]);
+    this.FindRFirstDate(this.myRightData[0]);
   }
 })

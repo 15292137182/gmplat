@@ -31,10 +31,6 @@ public class BusinessObjectController extends BaseController {
     @Autowired
     private BaseServiceTemplate<BusinessObject> businessObjectServiceA;
 
-    public void setBusinessObjectServiceA(BaseServiceTemplate<BusinessObject> businessObjectServiceA) {
-        this.businessObjectServiceA = businessObjectServiceA;
-    }
-
     /**
      * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
      */
@@ -45,10 +41,7 @@ public class BusinessObjectController extends BaseController {
         Map<String, Object> cond = new HashMap<>();
         cond.put("strArr", collectToSet(str));
 //        ServiceResult<BusinessObject> result = businessObjectService.select(cond);
-        List<String> ts = Arrays.asList("objectCode", "objectName");
-        Set<String> strings = UtilsTool.collectToSet(str);
-        LinkedList<String> strs=new LinkedList<>(strings);
-        ServiceResult<List<Map<String,Object>>> result = businessObjectServiceA.blankSelectList(ts, strs);
+        ServiceResult<List<Map<String,Object>>> result = businessObjectServiceA.blankSelectList(Arrays.asList("objectCode", "objectName"), UtilsTool.collectToSet(str));
         return super.result(request, result, locale);
     }
 

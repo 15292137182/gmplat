@@ -11,16 +11,19 @@ var vm = new Vue({
         myData:[],
         leftHeight:'',
         rowObj:'',
-        divIndex:''
+        divIndex:'',
+        url:serverPath+'/maintTable/query'
     },
     methods:{
         get(){
-            this.$http.jsonp('http://192.168.100.193/GMPlat/maint/select',{
+            this.$http.jsonp(this.url,{
                 "str":this.input
             },{
                 jsonp:'callback'
             }).then(function (res) {
-                this.myData=res.data.content.data;
+                if(res.data.data!=null){
+                    this.myData=res.data.data;
+                }
             })
         },
         click(row, event, column){
@@ -30,7 +33,7 @@ var vm = new Vue({
             this.$refs.myTable.setCurrentRow(row);
         },
         handleClick(){
-            this.divIndex = ibcpLayer.ShowDiv('dataDemo.html','表字段信息','600px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','600px', '400px',function(){
                 vm1.Robj = vm.rowObj;
                 vm1.FindData(vm1.Robj.rowId);
                 console.log(vm1.Robj);
@@ -40,10 +43,10 @@ var vm = new Vue({
     created(){
         this.get();
         $(document).ready(function(){
-            vm.leftHeight=$(window).height()-90;
+            vm.leftHeight=$(window).height()-100;
         });
         $(window).resize(function(){
-            vm.leftHeight=$(window).height()-90;
+            vm.leftHeight=$(window).height()-100;
         })
     },
     updated(){

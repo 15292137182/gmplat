@@ -62,8 +62,8 @@ public class BusinessObjectProController extends BaseController {
      * 删除业务对象属性
      */
     @RequestMapping("/delete")
-    public Object dalete(String rowId, HttpServletRequest request, Locale locale) {
-        ServiceResult<BusinessObjectPro> result = businessObjectProService.delete(rowId);
+    public Object dalete(String delData, HttpServletRequest request, Locale locale) {
+        ServiceResult<BusinessObjectPro> result = businessObjectProService.delete(delData);
         return super.result(request, result, locale);
     }
 }

@@ -54,9 +54,9 @@ public class BusinessObjectProServiceImpl implements BusinessObjectProService {
   @Override
   public ServiceResult<BusinessObjectPro> insert(BusinessObjectPro businessObjectPro) {
     try {
-      String rowId = businessObjectPro.getRowId();
       businessObjectPro.setPropertyCode(BusinessObjectPro);
       businessObjectPro.buildCreateInfo();
+      String rowId = businessObjectPro.getRowId();
       businessObjectProMapper.insert(businessObjectPro);
       //将用户新增的rowId返回
       return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,rowId);

@@ -11,14 +11,13 @@
 <div id="basTop">
   <el-row type="flex" justify="end">
     <el-col :span="24">
-      <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增业务对象</el-button>
-      <el-button type="info" icon="edit" size="small" @click.native="editEvent">编辑业务对象</el-button>
-      <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">删除业务对象
-      </el-button>
-      <el-button type="success" icon="plus" size="small" @click.native="addProp">新增对象属性</el-button>
-      <el-button type="info" icon="delete" size="small" @click.native="editProp">编辑对象属性</el-button>
-      <el-button type="info" icon="plus" size="small" @click.native="affectProp">生效</el-button>
-      <el-button type="info" icon="delete" size="small" @click.native="changeProp">变更</el-button>
+      <el-button type="info" icon="plus" size="small" @click.native="addEvent">业务对象</el-button>
+      <el-button type="info" icon="edit" size="small" @click.native="editEvent">业务对象</el-button>
+      <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">业务对象</el-button>
+      <el-button type="info" icon="plus" size="small" @click.native="addProp">对象属性</el-button>
+      <el-button type="danger" icon="delete" size="small" @click.native="deleteProp">对象属性</el-button>
+      <el-button type="warning" icon="plus" size="small" @click.native="affectProp">生效</el-button>
+      <el-button type="warning" icon="delete" size="small" @click.native="changeProp">变更</el-button>
     </el-col>
   </el-row>
 </div>
@@ -81,8 +80,8 @@
       <el-row style="padding:0px 10px 10px 10px">
         <el-col :span="24">
           <template>
-            <el-table :data="myRightData" :height="rightHeight" border ref="myRightData"
-                     class="tableStyle">
+            <el-table :data="myRightData" :height="rightHeight" border ref="myRightData" highlight-current-row
+                      @row-click="currentRChange" class="tableStyle">
               <el-table-column prop="propertyCode" label="代码" width="">
               </el-table-column>
               <el-table-column prop="propertyName" label="名称" width="">

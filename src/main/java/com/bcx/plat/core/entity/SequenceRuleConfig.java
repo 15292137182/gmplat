@@ -1,5 +1,7 @@
 package com.bcx.plat.core.entity;
 
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
+
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.Table;
@@ -19,6 +21,12 @@ public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
   private String seqName;
   private String seqContent;
   private String desp;
+
+  @Override
+  public SequenceRuleConfig buildCreateInfo() {
+    setRowId(lengthUUID(32));
+    return super.buildCreateInfo();
+  }
 
   public String getRowId() {
     return rowId;

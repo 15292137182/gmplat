@@ -35,16 +35,19 @@
         data:{
             rightData:[],
             //rightHeight:'',
-            Robj:''
+            Robj:'',
+            url:serverPath+'/maint/queryById'
         },
         methods:{
             FindData(id){
-                this.$http.jsonp('http://192.168.100.193/GMPlat/maint/selectById',{
+                this.$http.jsonp(vm1.url,{
                     "rowId":id
                 },{
                     jsonp:'callback'
                 }).then(function (res) {
-                    this.rightData=res.data.data.data;
+                    if(res.data.data!=null){
+                        this.rightData=res.data.data;
+                    }
                 })
             },
             conformEvent(){

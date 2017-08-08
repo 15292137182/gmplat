@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>attributeDetails</title>
+</head>
+<body>
+<div id="attributeDetails">
+    <el-col :span="24">
+        <el-row style="margin: 5px 10px;">
+            <el-col :span="24" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
+                <el-col :span="24">
+                    <div class="headerDiv">
+                        <el-row>
+                            <el-col :span="24">
+                                <el-col :xs="16" :sm="16" :md="16">
+                                    <div>
+                                        <el-input size="small" placeholder="请输入搜索内容" v-model="input">
+                                            <el-button slot="append" icon="search"  @click="getAttribute"></el-button>
+                                        </el-input>
+                                    </div>
+                                </el-col>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <template>
+                        <el-table ref="myTable" :data="attributeData"  border style="width: 100%" :highlight-current-row="true" :height="250">
+                            <el-table-column  prop="lengthInterval" label="长度区间" width="">
+                            </el-table-column>
+                            <el-table-column  prop="validateFunc" label="验证函数" width="">
+                            </el-table-column>
+                            <el-table-column  prop="displayFunc" label="显示函数" width="">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-col>
+            </el-col>
+        </el-row>
+    </el-col>
+    <el-col style="margin-top:10px">
+        <el-col :span="14" style="text-align:right">
+            <el-button type="primary" @click.native="conformEventClose">确定</el-button>
+        </el-col>
+    </el-col>
+</div>
+</body>
+<script src="attribute-details.js"></script>
+</html>

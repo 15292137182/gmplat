@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #SequenceRuleConfigAdd .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="SequenceRuleConfigAdd" style="margin-top:20px">
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入代码" v-model="seqCodeInput" disabled ref="seqCodeInput">
+                    <template slot="prepend">代码</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入名称" v-model="seqNameInput" ref="seqNameInput">
+                    <template slot="prepend">名称</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="请输入内容" v-model="seqContentInput" ref="seqContentInput" >
+                    <template slot="prepend">内容</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="说明" v-model="despInput" ref="despInput" >
+                    <template slot="prepend">说明</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex">
+        <el-col :span="22">
+            <div>
+                <el-input placeholder="版本号" disabled v-model="versionInput" ref="versionInput">
+                    <template slot="prepend">版&nbsp;本&nbsp;号&nbsp;</template>
+                </el-input>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click.native="confirm">确定</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script src="SequenceRuleConfigAdd.js"></script>
+</body>
+</html>

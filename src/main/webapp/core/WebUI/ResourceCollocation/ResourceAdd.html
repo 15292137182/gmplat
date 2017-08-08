@@ -14,9 +14,9 @@
   <el-row justify="center" type="flex">
     <el-col :span="22">
       <div>
-        <el-input placeholder="请输入对象代码" v-model="codeInput" ref="codeInput"
+        <el-input placeholder="请输入键" v-model="codeInput" ref="codeInput"
                   v-bind:disabled="disabled">
-          <template slot="prepend">对象代码</template>
+          <template slot="prepend">&nbsp;键&nbsp;</template>
         </el-input>
       </div>
     </el-col>
@@ -24,8 +24,8 @@
   <el-row justify="center" type="flex">
     <el-col :span="22">
       <div>
-        <el-input placeholder="请输入对象名称" v-model="nameInput" ref="nameInput">
-          <template slot="prepend">对象名称</template>
+        <el-input placeholder="请输入值" v-model="nameInput" ref="nameInput">
+          <template slot="prepend">&nbsp;值&nbsp;</template>
         </el-input>
       </div>
     </el-col>
@@ -33,17 +33,8 @@
   <el-row justify="center" type="flex">
     <el-col :span="22">
       <div>
-        <el-input placeholder="请选择关联表" v-model="tableInput" ref="tableInput" disabled data-id="">
-          <el-button slot="append" icon="search" @click="searchConnectTable"  v-bind:disabled="firstIconEvent"></el-button>
-        </el-input>
-      </div>
-    </el-col>
-  </el-row>
-  <el-row justify="center" type="flex">
-    <el-col :span="22">
-      <div>
-        <el-input placeholder="版本号" disabled v-model="versionInput">
-          <template slot="prepend">版&nbsp;本&nbsp;号&nbsp;</template>
+        <el-input placeholder="请输入说明" v-model="tableInput" ref="tableInput">
+           <template slot="prepend">名称</template>
         </el-input>
       </div>
     </el-col>
@@ -58,24 +49,17 @@
   </el-row>
 </div>
 <script>
-  var em = new Vue({
+  var resAdd = new Vue({
     el: '#addEvent',
     data: function () {
       return {
         codeInput: '',
         nameInput: '',
         tableInput: '',
-        dataId: '',
-        versionInput: '',
-        disabled: false,
-        firstIconEvent:false,
+        disabled:false
       }
     },
     methods: {
-      searchConnectTable() {
-        var htmlUrl = 'DataBaseInfoPop.html';
-        littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表数据', '600px', '800px', false)
-      },
       conformEvent() {
         var datas = [this.$refs.codeInput, this.$refs.nameInput, this.$refs.tableInput];
         for (var i = 0; i < datas.length; i++) {
@@ -85,28 +69,29 @@
           }
         }
         if (operate == 1) {
-          this.$http.jsonp(serverPath + "/businObj/add", {
-            objectCode: em.codeInput,
-            objectName: em.nameInput,
-            relateTableRowId: em.dataId
+          this.$http.jsonp(serverPath + "/sysConfig/add", {
+            confKey: resAdd.codeInput,
+            confValue: resAdd.nameInput,
+            desp: resAdd.tableInput
           }, {
             jsonp: 'callback'
           }).then(function (res) {
             ibcpLayer.ShowOK(res.data.message);
-            basLeft.searchLeftTable();
+            resCol.searchResTable();
             ibcpLayer.Close(divIndex);
           });
         }
         if (operate == 2) {
-          this.$http.jsonp(serverPath + "/businObj/modify", {
+          this.$http.jsonp(serverPath + "/sysConfig/modify", {
             //拿到这条数据的ID
-            rowId: basLeft.currentVal.rowId,
-            objectName: em.nameInput
+            rowId: resCol.currentValue.rowId,
+            confValue: resAdd.nameInput,
+            desp: resAdd.tableInput
           }, {
             jsonp: 'callback'
           }).then(function () {
             ibcpLayer.ShowOK('编辑成功');
-            basLeft.searchLeftTable();
+            resCol.searchResTable();
             ibcpLayer.Close(divIndex);
           });
         }
