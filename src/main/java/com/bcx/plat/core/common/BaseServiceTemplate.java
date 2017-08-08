@@ -1,4 +1,4 @@
-package com.bcx.plat.core.service.common;
+package com.bcx.plat.core.common;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;

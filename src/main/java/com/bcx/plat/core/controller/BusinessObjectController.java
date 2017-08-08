@@ -7,13 +7,13 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.service.BusinessObjectService;
-import com.bcx.plat.core.service.common.BaseServiceTemplate;
 import com.bcx.plat.core.utils.ServiceResult;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +29,9 @@ public class BusinessObjectController extends BaseController {
     @Autowired
     private BusinessObjectService businessObjectService;
     @Autowired
-    private BaseServiceTemplate<BusinessObject> businessObjectServiceA;
+    private BaseService businessObjectServiceA;
 
-    public void setBusinessObjectServiceA(BaseServiceTemplate<BusinessObject> businessObjectServiceA) {
+    public void setBusinessObjectServiceA(BaseService businessObjectServiceA) {
         this.businessObjectServiceA = businessObjectServiceA;
     }
 
@@ -40,15 +40,9 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/query")
     public Object select(String str, HttpServletRequest request, Locale locale) {
-
-
         Map<String, Object> cond = new HashMap<>();
         cond.put("strArr", collectToSet(str));
-//        ServiceResult<BusinessObject> result = businessObjectService.select(cond);
-        List<String> ts = Arrays.asList("objectCode", "objectName");
-        Set<String> strings = UtilsTool.collectToSet(str);
-        LinkedList<String> strs=new LinkedList<>(strings);
-        ServiceResult<List<Map<String,Object>>> result = businessObjectServiceA.blankSelectList(ts, strs);
+        ServiceResult<BusinessObject> result = businessObjectService.select(cond);
         return super.result(request, result, locale);
     }
 
@@ -57,8 +51,7 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/add")
     public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
-        ServiceResult<Map<String, Object>> result = businessObjectServiceA.insert(businessObject.buildCreateInfo().toMap());
-//    ServiceResult<BusinessObject> result = businessObjectService.insert(businessObject);
+        ServiceResult<BusinessObject> result = businessObjectServiceA.insert(businessObject.buildCreateInfo().toMap());
         return super.result(request, result, locale);
     }
 
@@ -68,8 +61,7 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/modify")
     public Object update(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
-        ServiceResult<Map<String, Object>> result = businessObjectServiceA.update(businessObject.buildModifyInfo().toMap());
-//    ServiceResult<BusinessObject> result = businessObjectService.update(businessObject);
+        ServiceResult<BusinessObject> result = businessObjectServiceA.update(businessObject.buildModifyInfo().toMap());
         return super.result(request, result, locale);
     }
 
@@ -80,8 +72,7 @@ public class BusinessObjectController extends BaseController {
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         Map<String, Object> args = new HashMap<>();
         args.put("rowId", rowId);
-        ServiceResult<Object> result = businessObjectServiceA.delete(args);
-//    ServiceResult<BusinessObject> result = businessObjectService.delete(rowId);
+        ServiceResult<BusinessObject> result = businessObjectServiceA.delete(args);
         return super.result(request, result, locale);
     }
 
