@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>功能块维护信息</title>
     <script src="../Public/publicjs.js"></script>
     <style>
         .el-table__body-wrapper{
@@ -102,7 +102,7 @@
                     </el-row>
                 </div>
                 <template>
-                    <el-table :data="rightData" @row-click="clickRightTable" :highlight-current-row="true" border style="width: 100%;" :height="rightHeight">
+                    <el-table :data="rightData" ref="myTable" @row-click="clickRightTable" :highlight-current-row="true" border style="width: 100%;" :height="rightHeight">
                         <el-table-column  prop="relateBusiPro" label="业务对象属性" width="118">
                         </el-table-column>
                         <el-table-column  prop="displayTitle" label="标题" width="">

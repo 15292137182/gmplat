@@ -21,7 +21,10 @@ var vm = new Vue({
             }).then(function(res){
                 if(res.data.data!==null){
                     this.myData=res.data.data;
+                    this.click(this.myData[0]);
                     vm1.FindData(vm.myData[0].rowId);
+                }else{
+                    this.myData=[];
                 }
             })
         },
@@ -47,10 +50,10 @@ var vm = new Vue({
     created(){
         this.get();
         $(document).ready(function(){
-            vm.leftHeight=$(window).height()-90;
+            vm.leftHeight=$(window).height()-100;
         });
         $(window).resize(function(){
-            vm.leftHeight=$(window).height()-90;
+            vm.leftHeight=$(window).height()-100;
         })
     },
     updated(){
@@ -81,6 +84,7 @@ var vm1 = new Vue({
             }).then(function (res) {
                 if(res.data.data!=null){
                     this.rightData=res.data.data;
+                    this.clickRightTable(this.rightData[0]);
                 }else{
                     this.rightData=[];
                 }
@@ -96,16 +100,25 @@ var vm1 = new Vue({
         clickRightTable(row, event, column){
             this.rowId = row.rowId;
             this.funcId = row.funcRowId;
+            console.log(row);
+        },
+        FindOk(row){
+            this.$refs.myTable.setCurrentRow(row);
         }
     },
     created(){
         $(document).ready(function(){
-            vm1.rightHeight=$(window).height()-90;
+            vm1.rightHeight=$(window).height()-100;
         });
         $(window).resize(function(){
-            vm1.rightHeight=$(window).height()-90;
+            vm1.rightHeight=$(window).height()-100;
         })
     },
+    updated(){
+        if(this.rightData.length>0){
+            this.FindOk(this.rightData[0]);
+        }
+    }
 });
 
 //按钮
@@ -151,6 +164,7 @@ var mb = new Vue({
         editData(){
             mb.rowObjId = vm.editObj.rowId;
             mb.objId = vm.editObj.relateBusiObj;
+            console.log(mb.rowObjId+'--1'+mb.objId);
             this.isEdit = true;
             mb.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
         },
