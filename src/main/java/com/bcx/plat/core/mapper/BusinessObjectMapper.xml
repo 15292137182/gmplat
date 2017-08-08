@@ -15,8 +15,7 @@
     <where>
       <if test="strArr!=null and strArr.size()!=0">
         <foreach collection="strArr" item="str" index="index" open="(" close=")" separator="or">
-          object_code like '%${str}%' or object_name like '%${str}%' or relate_table_row_id like
-          '%${str}%'
+          object_code like '%${str}%' or object_name like '%${str}%'
         </foreach>
       </if>
     </where>
