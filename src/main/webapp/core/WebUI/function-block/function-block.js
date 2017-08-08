@@ -121,13 +121,20 @@ var mb = new Vue({
     methods: {
         //功能块
         addBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','新增功能块','400px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','新增功能块','400px', '400px',function(){
                 em.isEdit = false;
             });
         },
         editBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','编辑功能块','400px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '400px',function(){
                 em.isEdit = true;
+                em.codeInput=vm.editObj.funcCode;
+                em.nameInput=vm.editObj.funcName;
+                em.typeInput=vm.editObj.funcType;
+                em.dataId=vm.editObj.relateBusiObj;
+                em.tableInput=vm.editObj.tables;
+                em.desp=vm.editObj.desp;
+                em.rowId=vm.editObj.rowId;
             });
 
         },
@@ -139,13 +146,13 @@ var mb = new Vue({
             mb.rowObjId = vm.editObj.rowId;
             mb.objId = vm.editObj.relateBusiObj;
             this.isEdit = false;
-            mb.divIndex = ibcpLayer.ShowIframe('AddData.html','新增属性','500px', '550px')
+            mb.divIndex = ibcpLayer.ShowIframe('add-data.html','新增属性','500px', '550px')
         },
         editData(){
             mb.rowObjId = vm.editObj.rowId;
             mb.objId = vm.editObj.relateBusiObj;
             this.isEdit = true;
-            mb.divIndex = ibcpLayer.ShowIframe('AddData.html','编辑属性','600px', '550px')
+            mb.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
         },
         delData(){
             this.$http.jsonp(this.delUrl,{

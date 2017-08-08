@@ -58,7 +58,6 @@
                 jsonp: 'callback'
             }).then(function (res) {
                 if(res.data.data!=null){
-                    ibcpLayer.ShowOK(res.data.message);
                     this.objectPropertiesData = res.data.data;
                 }
             });

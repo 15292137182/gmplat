@@ -16,7 +16,7 @@ var em=new Vue({
     methods:{
         searchConnectObj(){
             console.log(vm.editObj);
-            var htmlUrl = 'ShowAddBlock.html';
+            var htmlUrl = 'show-add-block.html';
             littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象数据', '400px', '420px',false);
         },
         conformEvent(){
@@ -63,17 +63,6 @@ var em=new Vue({
         },
         cancel(){
             ibcpLayer.Close(mb.divIndex);
-        }
-    },
-    created(){
-        if(this.isEdit){
-            this.codeInput=vm.editObj.funcCode;
-            this.nameInput=vm.editObj.funcName;
-            this.typeInput=vm.editObj.funcType;
-            this.dataId=vm.editObj.relateBusiObj;
-            this.tableInput=vm.editObj.tables;
-            this.desp=vm.editObj.desp;
-            this.rowId=vm.editObj.rowId;
         }
     }
 })
