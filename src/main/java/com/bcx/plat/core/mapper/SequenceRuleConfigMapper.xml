@@ -54,7 +54,7 @@
   <delete id="batchDelete" parameterType="hashMap">
     DELETE FROM public.t_sequence_rule_config
     <where>
-      <if test="null != null and rowIds.size() != 0">
+      <if test="null != null and rowIds.length != 0">
         AND row_id in
         <foreach collection="rowIds" separator="," open="(" item="item" close=")">
           #{item}
@@ -71,7 +71,7 @@
     delete_time = #{deleteTime},
     delete_flag = #{deleteFlag}
     <where>
-      <if test="null != null and rowIds.size() != 0">
+      <if test="null != null and rowIds.length != 0">
         AND row_id in
         <foreach collection="rowIds" separator="," open="(" item="item" close=")">
           #{item}

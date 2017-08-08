@@ -82,13 +82,14 @@ public class DBTableColumnController extends BaseController {
   /**
    * 删除数据
    *
-   * @param rowIds javaBean
    * @return 返回
    */
   @RequestMapping("/delete")
   public Object delete(String[] rowIds, HttpServletRequest request,
       Locale locale) {
-    return super.result(request, dbTableColumnService.batchDelete(rowIds), locale);
+    Map map = new HashMap();
+    map.put("rowIds", rowIds);
+    return super.result(request, dbTableColumnService.batchDelete(map), locale);
   }
 
 }

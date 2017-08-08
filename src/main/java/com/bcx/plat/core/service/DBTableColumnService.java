@@ -48,8 +48,8 @@ public interface DBTableColumnService {
   /**
    * 删除 数据库字段信息
    *
-   * @param rowIds 数据表 bean
+   * @param cond 数据
    * @return 操作结果状态
    */
-  ServiceResult batchDelete(String[] rowIds);
+  ServiceResult batchDelete(Map cond);
 }

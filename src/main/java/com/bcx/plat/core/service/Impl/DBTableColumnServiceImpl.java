@@ -1,9 +1,7 @@
 package com.bcx.plat.core.service.Impl;
 
 import static com.bcx.plat.core.base.BaseConstants.LOGIC_DELETE;
-import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.constants.Message.INVALID_REQUEST;
 import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 
 import com.bcx.plat.core.base.BaseEntity;
@@ -11,7 +9,6 @@ import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.mapper.DBTableColumnMapper;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.ServiceResult;
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +33,7 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
   public ServiceResult select(Map map) {
     return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS, dbTableColumnMapper.select(map));
   }
+
   /**
    * 查询数据库表中关联数据中字段信息
    *
@@ -43,7 +41,8 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
    * @return 返回查询结果
    */
   public ServiceResult selectByTableId(String rowId) {
-    return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS, dbTableColumnMapper.selectByTableId(rowId));
+    return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+        dbTableColumnMapper.selectByTableId(rowId));
   }
 
   /**
@@ -71,22 +70,17 @@ public class DBTableColumnServiceImpl implements DBTableColumnService {
   /**
    * 删除 数据库字段信息
    *
-   * @param rowIds 数据表 bean
+   * @param map 数据表 bean
    * @return 操作结果状态
    */
-  public ServiceResult batchDelete(String[] rowIds) {
-    if (null != rowIds && rowIds.length != 0) {
-      Map<Object, Object> map = new HashMap<>();
-      map.put("rowIds", rowIds);
-      if (LOGIC_DELETE) {
-        map.putAll(new BaseEntity<>().buildDeleteInfo().toMap());
-        return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
-            dbTableColumnMapper.batchLogicDelete(map));
-      } else {
-        return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
-            dbTableColumnMapper.batchDelete(map));
-      }
+  public ServiceResult batchDelete(Map map) {
+    if (LOGIC_DELETE) {
+      map.putAll(new BaseEntity<>().buildDeleteInfo().toMap());
+      return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+          dbTableColumnMapper.batchLogicDelete(map));
+    } else {
+      return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+          dbTableColumnMapper.batchDelete(map));
     }
-    return new ServiceResult<>(STATUS_FAIL, INVALID_REQUEST, "");
   }
 }
