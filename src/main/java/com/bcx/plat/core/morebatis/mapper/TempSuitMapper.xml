@@ -15,7 +15,7 @@
     FROM ${tableSource.tableSourceSqlFragment}
     <where>
       <foreach collection="where" item="condition">
-        AND ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(condition.field.fieldName)}
+        AND ${condition["not"]?"not":""} ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(condition.field.fieldName)}
         <choose>
           <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@EQUAL">
             = #{condition.value}
@@ -61,7 +61,7 @@
     FROM ${tableSource.tableSourceSqlFragment}
     <where>
       <foreach collection="where" item="condition">
-        OR ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(condition.field.fieldName)}
+        OR ${condition["not"]?"not":""} ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(condition.field.fieldName)}
         <choose>
           <when test="condition.operator==@com.bcx.plat.core.morebatis.substance.condition.Operator@EQUAL">
             = #{condition.value}
