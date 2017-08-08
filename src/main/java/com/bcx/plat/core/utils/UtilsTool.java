@@ -131,7 +131,9 @@ public class UtilsTool {
   }
 
   /**
-   * 将字符串从 空白或者标点处 分割，返回为 Set 自带去重功能
+   * 将字符串从 指定字符 分割，返回为 Set 自带去重功能
+   *
+   * 自指定字符包括： 空白，（圆角和半角）逗号，句号
    *
    * @param str 字符串
    * @return 返回 list
@@ -139,7 +141,7 @@ public class UtilsTool {
   public static Set<String> collectToSet(String str) {
     Set<String> result = new HashSet<>();
     if (isValid(str)) {
-      String[] ss = str.split("[^a-zA-z0-9\\u4E00-\\u9FA5]+");
+      String[] ss = str.split("[\\s;,；，]+");
       result.addAll(Arrays.asList(ss));
     }
     return result;
