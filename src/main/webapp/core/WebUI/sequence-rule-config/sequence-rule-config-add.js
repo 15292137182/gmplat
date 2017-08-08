@@ -30,9 +30,9 @@ var add=new Vue({
                 this.$http.jsonp(serverPath + insert, {
                     seqCode: add.seqCodeInput,
                     seqName: add.seqNameInput,
-                    seqContent: add.confKeyInput,
+                    seqContent: add.seqContentInput,
                     desp: add.despInput,
-                    version: add.version
+                    version: add.versionInput
                 }, {
                     jsonp: 'callback'
                 }).then(function (res) {
@@ -41,6 +41,25 @@ var add=new Vue({
                     ibcpLayer.Close(divIndex);
                 });
             }
+            if(operate==2){
+                this.$http.jsonp(serverPath+modify,{
+                    rowId:config.currentVal.rowId,
+                    seqCode: add.seqCodeInput,
+                    seqName: add.seqNameInput,
+                    seqContent: add.seqContentInput,
+                    desp: add.despInput,
+                    version: add.versionInput
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    ibcpLayer.ShowOK(res.data.message);
+                    config.search();
+                    ibcpLayer.Close(divIndex);
+                })
+            }
+        },
+        cancel() {
+            ibcpLayer.Close(divIndex);
         }
     }
 })

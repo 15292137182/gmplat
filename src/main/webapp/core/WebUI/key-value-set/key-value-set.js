@@ -28,12 +28,12 @@ var keyValueSet=new Vue({
         },
         addEvent(){
             operate = 1;
-            var htmlUrl = 'KeyValueSetAdd.html';
+            var htmlUrl = 'key-value-set-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增键值集合', '400px', '450px');
         },
         editEvent(){
             operate = 2;
-            var htmlUrl = 'KeyValueSetAdd.html';
+            var htmlUrl = 'key-value-set-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '450px', function () {
                 //code值
                 keyValueSetAdd.keySetCodeInput = keyValueSet.currentVal.keySetCode;
