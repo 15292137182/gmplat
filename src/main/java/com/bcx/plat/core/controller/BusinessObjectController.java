@@ -36,6 +36,25 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
         this.businessObjectProService = businessObjectProService;
     }
 
+    /**
+     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
+     *
+     * @param rowId
+     * @param request
+     * @param locale
+     */
+    @RequestMapping("/query")
+    @Override
+    public Object select(String rowId, HttpServletRequest request, Locale locale) {
+        ServiceResult<List<Map<String, Object>>> selectList = businessObjectService.blankSelectList(Arrays.asList("rowId"), Arrays.asList("rowId"));
+        List<Map<String, Object>> data = selectList.getData();
+        if (data!=null) {
+            ServiceResult<List<Map<String, Object>>> result = businessObjectProService.blankSelectList(Arrays.asList("rowId"), Arrays.asList("rowId"));
+            return super.result(request,result, locale);
+        }
+        return super.result(request,null,locale);
+    }
+
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode","objectName");
@@ -66,7 +85,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        ServiceResult<List<Map<String, Object>>> list = businessObjectProService.blankSelectList(Arrays.asList("relateTableColumn"), Arrays.asList(rowId));
+        ServiceResult<List<Map<String, Object>>> list = businessObjectProService.blankSelectList(Arrays.asList("objRowId"), Arrays.asList(rowId));
         List<Map<String, Object>> data = list.getData();
         if (data!=null) {
             List<String> rowIds = data.stream().map((row) -> {

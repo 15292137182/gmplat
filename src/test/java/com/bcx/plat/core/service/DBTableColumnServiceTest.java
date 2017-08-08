@@ -6,6 +6,8 @@ import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.DBTableColumn;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -42,6 +44,6 @@ public class DBTableColumnServiceTest extends BaseTest {
     dbTableColumnService.update(upaData);
     // 测试删除方法
     List<String> list1 = Collections.singletonList(upaData.getRowId());
-    dbTableColumnService.batchDelete((String[]) list1.toArray());
+    dbTableColumnService.batchDelete((Map) list1);
   }
 }
