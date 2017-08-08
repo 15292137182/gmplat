@@ -191,6 +191,8 @@ var basRight=new Vue({
     })
   },
   updated() {
-    this.FindRFirstDate(this.myRightData[0]);
+    if(this.myRightData!=null){
+      this.FindRFirstDate(this.myRightData[0]);
+    }
   }
 })

@@ -10,19 +10,19 @@ layui.config({
 		$ = layui.jquery,
 		layer = layui.layer,
 		navbar = layui.navbar();
-		tab = layui.tab({
-			elem: '.admin-nav-card' //设置选项卡容器
-				,
-			//maxSetting: {
-			//	max: 5,
-			//	tipMsg: '只能开5个哇，不能再开了。真的。'
-			//},
-			contextMenu:true
-		});
+	tab = layui.tab({
+		elem: '.admin-nav-card' //设置选项卡容器
+		,
+		//maxSetting: {
+		//	max: 5,
+		//	tipMsg: '只能开5个哇，不能再开了。真的。'
+		//},
+		contextMenu:true
+	});
 	//iframe自适应
 	$(window).on('resize', function() {
 		var $content = $('.admin-nav-card .layui-tab-content');
-		$content.height($(this).height() - 147);
+		$content.height($(this).height() - 120);
 		$content.find('iframe').each(function() {
 			$(this).height($content.height());
 		});
@@ -35,7 +35,7 @@ layui.config({
 		cached: true,
 		data: navs
 		/*cached:true,
-		url: 'datas/nav.json'*/
+		 url: 'datas/nav.json'*/
 	});
 	//渲染navbar
 	navbar.render();
@@ -61,7 +61,7 @@ layui.config({
 			//top:890%;
 			//background-color:#393d49;
 			//color:#00aaee;
-		//}")
+			//}")
 		} else {
 			$('#admin-body').animate({
 				left: '200px'
@@ -107,8 +107,8 @@ layui.config({
 			document.msExitFullscreen();
 		}
 	});
-	
-	
+
+
 
 	//锁屏
 	$(document).on('keydown', function() {
@@ -161,9 +161,9 @@ function lock($, layer) {
 						$this.attr('type', 'text').val('输入密码解锁..');
 					}
 				});
-			//在此处可以写一个请求到服务端删除相关身份认证，因为考虑到如果浏览器被强制刷新的时候，身份验证还存在的情况			
+			//在此处可以写一个请求到服务端删除相关身份认证，因为考虑到如果浏览器被强制刷新的时候，身份验证还存在的情况
 			//do something...
-			//e.g. 
+			//e.g.
 			/*
 			 $.post(url,params,callback,'json');
 			 */
@@ -190,15 +190,15 @@ function lock($, layer) {
 			var unlock = function(un, pwd) {
 				//这里可以使用ajax方法解锁
 				/*$.post('api/xx',{username:un,password:pwd},function(data){
-				 	//验证成功
-					if(data.success){
-						//关闭锁屏层
-						layer.close(lockIndex);
-					}else{
-						layer.msg('密码输入错误..',{icon:2,time:1000});
-					}					
-				},'json');
-				*/
+				 //验证成功
+				 if(data.success){
+				 //关闭锁屏层
+				 layer.close(lockIndex);
+				 }else{
+				 layer.msg('密码输入错误..',{icon:2,time:1000});
+				 }
+				 },'json');
+				 */
 				isShowLock = false;
 				//演示：默认输入密码都算成功
 				//关闭锁屏层

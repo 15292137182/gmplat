@@ -10,18 +10,29 @@
 		"title": "业务对象管理",
 		"icon": " fa-external-link",
 		"href": "core/WebUI/data-sheet/metadata-manage.html"
-	}, {
+	},
+	{
+		"title": "前端功能块维护",
+		"icon": " fa-sun-o",
+		"href": "core/WebUI/function-block/function-block.html"
+	},
+	{
+		"title": "数据集配置",
+		"icon": "fa-wrench",
+		"href": "core/WebUI/StandardType/StandardType.html"
+	},
+	{
+		"title": "系统资源配置",
+		"icon": " fa-edit",
+		"href": "core/WebUI/resource-collocation/resource-collocation.html"
+	},{
 		"title": "键值集合管理",
 		"icon": " &#xe641",
 		"href": "core/WebUI/set/KeyValueSet.html"
 	}, {
-		"title": "数据集管理",
-		"icon": " fa-edit",
-		"href": "core/WebUI/StandardType/StandardType.html"
-	}, {
 		"title": "序列规则管理",
 		"icon": " fa-navicon",
-		"href": "core/WebUI/StandardType/StandardType.html"
+		"href": "core/WebUI/sequence-rule/sequence-rule-config.html"
 	}
   ]}
 ];
