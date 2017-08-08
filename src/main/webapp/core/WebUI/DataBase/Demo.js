@@ -11,16 +11,19 @@ var vm = new Vue({
         myData:[],
         leftHeight:'',
         rowObj:'',
-        divIndex:''
+        divIndex:'',
+        url:serverPath+'/maintTable/query'
     },
     methods:{
         get(){
-            this.$http.jsonp('http://192.168.100.193/GMPlat/maint/select',{
+            this.$http.jsonp(this.url,{
                 "str":this.input
             },{
                 jsonp:'callback'
             }).then(function (res) {
-                this.myData=res.data.content.data;
+                if(res.data.data!=null){
+                    this.myData=res.data.data;
+                }
             })
         },
         click(row, event, column){

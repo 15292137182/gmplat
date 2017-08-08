@@ -52,15 +52,14 @@
             objectPropertiesData: []
         },
         created() {
-            this.$http.jsonp(serverPath + "/businObjPro/select", {
-                str: '',
+            this.$http.jsonp(serverPath + "/businObjPro/query", {
                 rowId:window.parent.em.relateBusiObjId
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                if(res.data.data.data!=''){
-                    console.log(res.data.data.data);
-                    this.objectPropertiesData = res.data.data.data;
+                if(res.data.data!=null){
+                    ibcpLayer.ShowOK(res.data.message);
+                    this.objectPropertiesData = res.data.data;
                 }
             });
         },

@@ -45,14 +45,13 @@
             <el-button size="small" type="info" @click="editBlock" icon="edit">功能块</el-button>
             <el-button size="small" type="danger" @click="del" icon="delete">功能块</el-button>
             <el-button size="small" type="info" @click="addData" icon="plus">属性项</el-button>
-            <el-button size="small" type="info" icon="edit">属性项</el-button>
-            <el-button size="small" type="danger" icon="delete">属性项</el-button>
+            <el-button size="small" type="info" @click="editData" icon="edit">属性项</el-button>
+            <el-button size="small" type="danger" @click="delData" icon="delete">属性项</el-button>
         </el-col>
     </el-row>
 </el-col>
 <!--左边table-->
-<el-col :span="10" id="app">
-    <!--table    -->
+<el-col :span="8" id="app">
     <el-row style="margin-top: 5px">
         <el-col :span="24" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
             <el-col :span="24">
@@ -80,9 +79,9 @@
                         </el-table-column>
                         <el-table-column  prop="funcType" label="类型" width="">
                         </el-table-column>
-                        <el-table-column  prop="tables" label="业务对象" width="">
+                        <el-table-column  prop="tables" label="业务对象" width="95">
                         </el-table-column>
-                        <el-table-column  prop="wetherAvailable" label="是否可用" width="">
+                        <el-table-column  prop="wetherAvailable" label="是否可用" width="95">
                         </el-table-column>
                     </el-table>
                 </template>
@@ -91,7 +90,7 @@
     </el-row>
 </el-col>
 <!--右边table-->
-<el-col :span="13" :offset="1" id="right">
+<el-col :span="15" :offset="1" id="right">
     <el-row style="margin-top: 5px">
         <el-col :span="24"style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
             <el-col :span="24">
@@ -103,7 +102,7 @@
                     </el-row>
                 </div>
                 <template>
-                    <el-table :data="rightData" border style="width: 100%;" :height="rightHeight">
+                    <el-table :data="rightData" @row-click="clickRightTable" :highlight-current-row="true" border style="width: 100%;" :height="rightHeight">
                         <el-table-column  prop="relateBusiPro" label="业务对象属性" width="118">
                         </el-table-column>
                         <el-table-column  prop="displayTitle" label="标题" width="">
@@ -112,7 +111,9 @@
                         </el-table-column>
                         <el-table-column  prop="displayWidget" label="控件" width="">
                         </el-table-column>
-                        <el-table-column  prop="wetherReadonly" label="只读" width="">
+                        <el-table-column  prop="wetherReadonly" label="是否只读" width="">
+                        </el-table-column>
+                        <el-table-column  prop="allowEmpty" label="是否为空" width="">
                         </el-table-column>
                         <el-table-column  prop="sort" label="排序" width="">
                         </el-table-column>

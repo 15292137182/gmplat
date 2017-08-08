@@ -28,7 +28,7 @@
   <el-col :span="24">
     <template>
       <el-table :data="myLeftData" highlight-current-row @current-change="handleCurrentChange"
-                :height="400" border style="width: 100%;border-radius: 5px;margin-top:10px">
+                :height="300" border style="width: 100%;border-radius: 5px;margin-top:10px">
         <el-table-column prop="objectCode" label="对象代码" width="">
         </el-table-column>
         <el-table-column prop="objectName" label="对象名称" width="">
@@ -53,13 +53,14 @@
       myLeftData: []
     },
     created() {
-      this.$http.jsonp(serverPath + "/businObj/select", {
+      this.$http.jsonp(serverPath + "/businObj/query", {
         str: ''
       }, {
         jsonp: 'callback'
       }).then(function (res) {
-          if(res.data.data.data!=''){
-              this.myLeftData = res.data.data.data;
+          if(res.data.data!=null){
+              ibcpLayer.ShowOK(res.data.message);
+              this.myLeftData = res.data.data;
           }
       });
     },

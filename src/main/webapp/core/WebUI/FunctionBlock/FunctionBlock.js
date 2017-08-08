@@ -8,7 +8,7 @@ var vm = new Vue({
         input:'',
         myData:[],
         leftHeight:'',
-        url:serverPath+'/fronc/select',
+        url:serverPath+'/fronc/query',
         deleteId:'',
         editObj:''
     },
@@ -19,8 +19,8 @@ var vm = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                if(res.data.content.data!==''){
-                    this.myData=res.data.content.data;
+                if(res.data.data!==null){
+                    this.myData=res.data.data;
                     vm1.FindData(vm.myData[0].rowId);
                 }
             })
@@ -31,12 +31,11 @@ var vm = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                console.log(res);
+                ibcpLayer.ShowOK(res.data.message);
                 vm.get();
             })
         },
         click(row, event, column){
-            console.log(row);
             vm1.FindData(row.rowId);
             this.deleteId = row.rowId;
             this.editObj = row;
@@ -55,7 +54,9 @@ var vm = new Vue({
         })
     },
     updated(){
-        this.FindOk(this.myData[0]);
+        if(this.myData.length>0){
+            this.FindOk(this.myData[0]);
+        }
     }
 });
 
@@ -65,7 +66,10 @@ var vm1 = new Vue({
     data:{
         rightData:[],
         rightHeight:'',
-        url:serverPath+'/core/queryFronFuncPro'
+        url:serverPath+'/fronFuncPro/query',//查询功能块
+        rowId:'',//选中属性行ID
+        funcId:'',//功能块ID
+        divIndex:''
     },
     methods:{
         FindData(id){
@@ -75,16 +79,23 @@ var vm1 = new Vue({
             },{
                 jsonp:'callback'
             }).then(function (res) {
-                if(res.data.content.data!=''){
-                    this.rightData=res.data.content.data;
-                    console.log(res.data.content.data);
+                if(res.data.data!=null){
+                    this.rightData=res.data.data;
+                }else{
+                    this.rightData=[];
                 }
             },function(){
                 alert("error")
             })
         },
-        handleClick(){
-            console.log("success");
+        handleClick(){//查看按钮
+            this.divIndex = ibcpLayer.ShowDiv('attribute-details.html','属性明细','400px', '400px',function(){
+
+            });
+        },
+        clickRightTable(row, event, column){
+            this.rowId = row.rowId;
+            this.funcId = row.funcRowId;
         }
     },
     created(){
@@ -102,29 +113,52 @@ var mb = new Vue({
     el:'#myButton',
     data:{
         divIndex:'',
-        rowObjId:'',
-        objId:''
+        rowObjId:'',//功能块ID
+        objId:'',//关联业务对象ID
+        isEdit:'',//是否编辑
+        delUrl:serverPath+'/fronFuncPro/delete'//删除属性接口
     },
     methods: {
+        //功能块
         addBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','新增功能块','400px', '500px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','新增功能块','400px', '400px',function(){
                 em.isEdit = false;
             });
         },
         editBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','编辑功能块','400px', '500px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('AddBlock.html','编辑功能块','400px', '400px',function(){
                 em.isEdit = true;
-
             });
 
         },
         del(){
             vm.delete();
         },
+        //功能块属性
         addData(){
             mb.rowObjId = vm.editObj.rowId;
-            mb.objId = vm.editObj.relateBusiObj
+            mb.objId = vm.editObj.relateBusiObj;
+            this.isEdit = false;
             mb.divIndex = ibcpLayer.ShowIframe('AddData.html','新增属性','500px', '550px')
+        },
+        editData(){
+            mb.rowObjId = vm.editObj.rowId;
+            mb.objId = vm.editObj.relateBusiObj;
+            this.isEdit = true;
+            mb.divIndex = ibcpLayer.ShowIframe('AddData.html','编辑属性','600px', '550px')
+        },
+        delData(){
+            this.$http.jsonp(this.delUrl,{
+                delData:vm1.rowId
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                vm1.FindData(vm1.funcId);
+                ibcpLayer.ShowOK(res.data.message);
+                console.log(res.data.data);
+            },function(){
+                alert("删除失败")
+            })
         }
     }
 })

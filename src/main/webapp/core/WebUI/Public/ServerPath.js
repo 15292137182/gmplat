@@ -50,4 +50,4 @@ var serverHead = 'http://192.168.100.193';
 //var serverHead = getBPBasePath();
 
 //完整路径
-var serverPath = serverHead + "/GMPlat";
+var serverPath = serverHead + "/gmplat/core";
