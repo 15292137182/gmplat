@@ -5,6 +5,7 @@ import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.service.TestTableService;
 import com.bcx.plat.core.utils.ServiceResult;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +107,38 @@ public class CommonServiceTest extends BaseTest{
     result = testTableService.selectList(args);
     Assert.assertEquals(19,result.getData().size());
   }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void testBlankSelect(){
+    BusinessObject businessObject=new BusinessObject();
+    businessObject.setObjectCode("aaa1aaa");
+    businessObject.setObjectName("aaa1aaa");
+    businessObject.buildCreateInfo().insert();
+    businessObject.setObjectCode("aaa1aaa");
+    businessObject.setObjectName("aaa2aaa");
+    businessObject.buildCreateInfo().insert();
+    businessObject.setObjectCode("aaa2aaa");
+    businessObject.setObjectName("aaa1aaa");
+    businessObject.buildCreateInfo().insert();
+    businessObject.setObjectCode("aaa2aaa");
+    businessObject.setObjectName("aaa2aaa");
+    businessObject.buildCreateInfo().insert();
+    ServiceResult<List<Map<String,Object>>> result = testTableService
+        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1", "a2"));
+    Assert.assertEquals(4,result.getData().size());
+    result = testTableService
+        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1"));
+    Assert.assertEquals(3,result.getData().size());
+    result = testTableService
+        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList("a2"));
+    Assert.assertEquals(3,result.getData().size());
+    result = testTableService
+        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList());
+    Assert.assertEquals(24,result.getData().size());
+  }
+
   @Before
   public void setUp() {
     businessObject = new BusinessObject();
