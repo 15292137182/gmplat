@@ -1,7 +1,6 @@
 package com.bcx.plat.core.base;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Locale;
@@ -10,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.converter.json.MappingJacksonValue;
 
 /**
  * 基础控制器
@@ -42,8 +42,9 @@ public class BaseController {
         serviceResult.setMessage(message);
       }
       if (isValid(request.getParameter("callback"))) {
-        StringBuilder sb = new StringBuilder(request.getParameter("callback"));
-        return sb.append("(").append(objToJson(serviceResult)).append(")");
+        MappingJacksonValue value = new MappingJacksonValue(serviceResult);
+        value.setJsonpFunction(request.getParameter("callback"));
+        return value;
       }
     }
     return serviceResult;

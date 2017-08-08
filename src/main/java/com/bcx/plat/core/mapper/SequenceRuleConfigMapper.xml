@@ -20,6 +20,9 @@
       <if test="rowId != null and rowId != ''">
         AND row_id = #{rowId}
       </if>
+      <if test="seqCode != null and seqCode != ''">
+        AND seq_code LIKE '%${seqCode}%'
+      </if>
     </where>
   </select>
 

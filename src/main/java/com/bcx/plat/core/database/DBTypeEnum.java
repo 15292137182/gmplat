@@ -6,7 +6,7 @@ package com.bcx.plat.core.database;
 public enum DBTypeEnum {
 
   /**
-   * postgreSQL 数据库
+   * postgreSQL 数据库切面
    */
   PSQL("dataSourcePSQL");
 

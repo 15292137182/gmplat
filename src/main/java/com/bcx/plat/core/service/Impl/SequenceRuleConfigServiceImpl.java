@@ -1,9 +1,19 @@
 package com.bcx.plat.core.service.Impl;
 
+import static com.bcx.plat.core.base.BaseConstants.LOGIC_DELETE;
+import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
+
+import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
+import com.bcx.plat.core.mapper.SequenceRuleConfigMapper;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
+import com.bcx.plat.core.service.common.BaseServiceImpl;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -11,26 +21,55 @@ import java.util.Map;
  *
  * Create By HCL at 2017/8/6
  */
-public class SequenceRuleConfigServiceImpl implements
+@Service
+@Transactional
+public class SequenceRuleConfigServiceImpl extends BaseServiceImpl<SequenceRuleConfig> implements
     SequenceRuleConfigService {
 
+  @Autowired
+  private SequenceRuleConfigMapper sequenceRuleConfigMapper;
+
+  /**
+   * 查询数据事件
+   *
+   * @param map 查询条件
+   * @return 返回
+   */
   @Override
-  public ServiceResult<SequenceRuleConfig> select(Map map) {
-    return null;
+  public ServiceResult select(Map map) {
+    return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+        sequenceRuleConfigMapper.select(map));
+  }
+
+  /**
+   * 新建数据事件
+   *
+   * @param bean 数据
+   * @return 返回
+   */
+  @Override
+  public ServiceResult insert(SequenceRuleConfig bean) {
+    bean.buildCreateInfo();
+    return new ServiceResult<>(sequenceRuleConfigMapper.insert(bean), OPERATOR_SUCCESS,
+        bean.getRowId());
   }
 
   @Override
-  public ServiceResult<SequenceRuleConfig> insert(SequenceRuleConfig bean) {
-    return null;
+  public ServiceResult update(SequenceRuleConfig bean) {
+    bean.buildModifyInfo();
+    return new ServiceResult<>(sequenceRuleConfigMapper.update(bean), OPERATOR_SUCCESS,
+        bean.getRowId());
   }
 
   @Override
-  public ServiceResult<SequenceRuleConfig> update(SequenceRuleConfig bean) {
-    return null;
-  }
-
-  @Override
-  public ServiceResult<SequenceRuleConfig> delete(Map map) {
-    return null;
+  public ServiceResult delete(Map map) {
+    if (LOGIC_DELETE) {
+      map.putAll(new BaseEntity<>().buildDeleteInfo().toMap());
+      return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+          sequenceRuleConfigMapper.batchLogicDelete(map));
+    } else {
+      return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
+          sequenceRuleConfigMapper.batchDelete(map));
+    }
   }
 }

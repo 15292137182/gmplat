@@ -14,20 +14,20 @@ public interface SequenceRuleConfigService {
   /**
    * 查询数据事件
    */
-  ServiceResult<SequenceRuleConfig> select(Map map);
+  ServiceResult select(Map map);
 
   /**
    * 新建数据
    */
-  ServiceResult<SequenceRuleConfig> insert(SequenceRuleConfig bean);
+  ServiceResult insert(SequenceRuleConfig bean);
 
   /**
    * 更新数据事件
    */
-  ServiceResult<SequenceRuleConfig> update(SequenceRuleConfig bean);
+  ServiceResult update(SequenceRuleConfig bean);
 
   /**
    * 删除数据事件
    */
-  ServiceResult<SequenceRuleConfig> delete(Map map);
+  ServiceResult delete(Map map);
 }

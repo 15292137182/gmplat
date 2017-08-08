@@ -1,6 +1,5 @@
 package com.bcx.plat.core.service;
 
-import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Collection;
