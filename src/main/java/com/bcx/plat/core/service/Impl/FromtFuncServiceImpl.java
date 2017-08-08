@@ -42,7 +42,7 @@ public class FromtFuncServiceImpl implements FrontFuncService {
       serviceResult=  new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
     }
     if(result.size()==0){
-     serviceResult = new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
+     serviceResult = new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
     return serviceResult;
   }

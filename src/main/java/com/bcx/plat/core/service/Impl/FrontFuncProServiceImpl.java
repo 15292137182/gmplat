@@ -32,7 +32,7 @@ public class FrontFuncProServiceImpl implements FrontFuncProService {
     public ServiceResult queryFronFuncPro(Map map) {
         List<FrontFuncPro> result = frontFuncProMapper.select(map);
         if (result.size()==0){
-            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.OPERATOR_FAIL);
+            return  new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
         }
         return new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,result);
     }
