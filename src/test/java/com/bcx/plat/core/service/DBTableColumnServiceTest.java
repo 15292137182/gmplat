@@ -4,9 +4,8 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.DBTableColumn;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -42,10 +41,7 @@ public class DBTableColumnServiceTest extends BaseTest {
     DBTableColumn upaData = list.get(0);
     dbTableColumnService.update(upaData);
     // 测试删除方法
-    String[] rowIds = new String[1];
-    rowIds[0] = upaData.getRowId();
-    Map cond = new HashMap();
-    cond.put("rowIds", rowIds);
-    dbTableColumnService.batchDelete(cond);
+    List<String> list1 = Collections.singletonList(upaData.getRowId());
+    dbTableColumnService.batchDelete((String[]) list1.toArray());
   }
 }

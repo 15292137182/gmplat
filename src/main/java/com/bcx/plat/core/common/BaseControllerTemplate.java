@@ -2,7 +2,7 @@ package com.bcx.plat.core.common;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-public abstract class BaseControllerTemplate<T extends BaseServiceTemplate> extends BaseController {
+public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y extends BaseEntity<Y>> extends BaseController {
   @Autowired
   private T entityService;
 
@@ -38,9 +38,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate> exte
    * 新增业务对象:对象代码，对象名称，关联表(单选)，版本(系统生成)
    */
   @RequestMapping("/add")
-  public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
+  public Object insert(Y entity, HttpServletRequest request, Locale locale) {
     ServiceResult<Map<String, Object>> result = entityService
-        .insert(businessObject.buildCreateInfo().toMap());
+        .insert(entity.buildCreateInfo().toMap());
     return super.result(request, result, locale);
   }
 
@@ -49,9 +49,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate> exte
    * 编辑业务对象名称字段
    */
   @RequestMapping("/modify")
-  public Object update(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
+  public Object update(Y entity, HttpServletRequest request, Locale locale) {
     ServiceResult<Map<String, Object>> result = entityService
-        .update(businessObject.buildModifyInfo().toMap());
+        .update(entity.buildModifyInfo().toMap());
     return super.result(request, result, locale);
   }
 

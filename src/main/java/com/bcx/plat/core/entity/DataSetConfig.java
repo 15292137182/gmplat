@@ -1,14 +1,18 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.morebatis.annotations.Table;
+import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * 数据集配置实体类
  * Created by Wen Tiehu on 2017/8/8.
  */
+@Table(TableInfo.T_DATASET_CONFIG)
 public class DataSetConfig extends BaseEntity<DataSetConfig> {
-
+    @TablePK
     private String rowId;//唯一标示
     private String dataSetCode;//数据集代码
     private String dataSetName;//数据集名称

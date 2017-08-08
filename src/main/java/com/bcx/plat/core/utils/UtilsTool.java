@@ -3,18 +3,14 @@ package com.bcx.plat.core.utils;
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
 
+import com.bcx.plat.core.base.BaseEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 基本工具类 Created by hcl at 2017/07/28
@@ -22,6 +18,15 @@ import java.util.UUID;
 public class UtilsTool {
 
   private static ObjectMapper objectMapper;
+
+//  public static class BaseEntityUtil{
+//    public  static <T extends BaseEntity<T>> T buildCreateInfo(T entity){
+//      entity.setCreateTime(getDateTimeNow());
+//      entity.setCreateUser("admin");
+//      entity.setCreateUserName("系统管理员");
+//      return entity;
+//    }
+//  }
 
   /**
    * 禁止使用 new 的方法构造该类
@@ -155,7 +160,7 @@ public class UtilsTool {
    * @return 返回list
    */
   public static List<String> getAnnoFieldName(Class<?> clazz, Class<? extends Annotation> anno) {
-    List<String> fs = new ArrayList<>();
+    List<String> fs = new LinkedList<>();
     Field[] fields = clazz.getDeclaredFields();
     if (null != fields && fields.length != 0) {
       for (Field field : fields) {
@@ -163,6 +168,9 @@ public class UtilsTool {
           fs.add(field.getName());
         }
       }
+    }
+    if (fs.isEmpty()) {
+      throw new NullPointerException("检查一下实体类是不是没有加@TablePK注解");
     }
     return fs;
   }

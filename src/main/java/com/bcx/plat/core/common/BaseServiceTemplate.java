@@ -105,7 +105,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     try {
       List<Map<String, Object>> pageResult = getSuitMapper().selectByOr(queryAction);
       serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
-          underlineKeyMapListToCamel(pageResult));
+          pageResult.size()==0?null:underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
@@ -122,7 +122,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       e.printStackTrace();
       return ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL);
     }
-    return new ServiceResult<>(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL,args);
+    return new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,args);
   }
 
   public ServiceResult<Map<String,Object>> update(Map args) {

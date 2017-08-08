@@ -42,7 +42,9 @@ public class TableAnnoUtil {
   public static TableSource getTableSource(Class<?> clazz) {
     TableSource result = tableSourceRegister.get(clazz);
     if (result == null) {
-      result = clazz.getAnnotation(Table.class).value();
+      Table annotation = clazz.getAnnotation(Table.class);
+      if (annotation==null) throw new NullPointerException("检查一下实体类是不是没有加@Table注解");
+      result = annotation.value();
       tableSourceRegister.put(clazz, result);
     }
     return result;

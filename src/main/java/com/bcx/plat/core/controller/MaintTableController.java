@@ -36,7 +36,7 @@ public class MaintTableController extends BaseController {
 
     }
 
-    @RequestMapping("/queryBuId")
+    @RequestMapping("/queryById")
     public Object selectById(String rowId, HttpServletRequest request, Locale locale) {
         ServiceResult<MaintTableInfo> result = maintTableService.selectById(rowId);
         return super.result(request, result, locale);
