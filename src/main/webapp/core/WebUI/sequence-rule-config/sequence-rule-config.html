@@ -13,6 +13,7 @@
         <el-col :span="24">
             <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增</el-button>
             <el-button type="info" icon="edit" size="small" @click.native="editEvent">编辑</el-button>
+            <el-button type="warning" icon="setting" size="small" @click.native="reset" :disabled="true">重置</el-button>
             <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">删除</el-button>
 
         </el-col>

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Create By HCL at 2017/8/8
  */
 @RestController
-@RequestMapping("/code/sequenceRule")
+@RequestMapping("/core/sequenceRule")
 public class SequenceRuleConfigController extends BaseController {
 
   @Autowired

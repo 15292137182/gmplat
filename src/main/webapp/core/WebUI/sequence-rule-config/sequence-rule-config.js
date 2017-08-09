@@ -1,7 +1,7 @@
 /**
  * Created by jms on 2017/8/7.
  */
-var str="/code/sequenceRule";
+var str="/sequenceRule";
 const query=str+"/query";
 const insert=str+"/add";
 const modify=str+"/modify";
