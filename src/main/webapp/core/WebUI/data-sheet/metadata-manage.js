@@ -4,7 +4,13 @@
 var basTop=new Vue({
   el:'#basTop',
   data:{
-
+    addOpe:false,
+    editOpe:true,
+    deleteOpe:true,
+    addAttr:false,
+    deleteAttr:false,
+    takeEffect:false,
+    change:false,
   },
   methods:{
     addEvent() {
@@ -29,7 +35,7 @@ var basTop=new Vue({
     },
     deleteEvent() {
       var deleteId = basLeft.currentVal.rowId;
-      console.log(deleteId);
+      //console.log(deleteId);
       this.$http.jsonp(serverPath + "/businObj/delete", {
         rowId: deleteId
       }, {
@@ -37,7 +43,7 @@ var basTop=new Vue({
       }).then(function (ref) {
         ibcpLayer.ShowOK(ref.data.message);
         basLeft.searchLeftTable();
-
+        basRight.searchRightTable();
       });
     },
     addProp(){
@@ -75,7 +81,13 @@ var basTop=new Vue({
       });
     },
     affectProp(){
-
+      this.$http.jsonp(serverPath + "/businObj/takeEffect", {
+        rowId: basLeft.currentId
+      }, {
+        jsonp: 'callback'
+      }).then(function (ref) {
+        ibcpLayer.ShowOK(ref.data.message);
+      });
     },
     changeProp(){
 
@@ -88,7 +100,8 @@ var basLeft=new Vue({
    data:{
     leftInput: '',
     leftHeight: '',
-    myLeftData: []
+    myLeftData: [],
+    //currentPage4: 1
   },
   methods:{
     searchLeftTable() {
@@ -97,32 +110,42 @@ var basLeft=new Vue({
       }, {
         jsonp: 'callback'
       }).then(function (res) {
-        console.log(res);
+        //console.log(res);
         if(res.data.data!==null){
           this.myLeftData = res.data.data;
-          //默认查找第一行右边的数据
-          this.currentChange(this.myLeftData[0])
+          //默认选中第一行的数据
+          this.currentChange(this.myLeftData[0]);
+          basTop.editOpe=false;
+          basTop.deleteOpe=false;
         }else{
           this.myLeftData=[];
+          basTop.editOpe=true;
+          basTop.deleteOpe=true;
         }
       });
     },
     currentChange(row, event, column) {
       //点击拿到这条数据的值
-       // console.log(row)
+        console.log(row);
+      //判断是否生效
+      if(row.status==40){
+        basTop.takeEffect=false;
+      }else if(row.status==20){
+        basTop.takeEffect=true;
+      }
         this.currentVal = row;
         //关联表的数据
         this.relateTableRowId=row.relateTableRowId;
-
         //左边这一行的数据
         this.currentId = row.rowId;
-      console.log(this.currentId);
         //查找右侧表的数据
         this.$http.jsonp(serverPath + "/businObjPro/query", {
+          str:'',
           rowId: this.currentId
         }, {
           jsonp: 'callback'
         }).then(function (res) {
+          console.log(res)
           if(res.data.data!==null) {
             basRight.myRightData = res.data.data;
             //右边有数据 默认点击第一行
@@ -135,7 +158,13 @@ var basLeft=new Vue({
     },
     FindLFirstDate(row){
       this.$refs.myLeftData.setCurrentRow(row);
-    }
+    },
+    //handleSizeChange(val) {
+    //  console.log(`每页 ${val} 条`);
+    //},
+    //handleCurrentChange(val) {
+    //  console.log(`当前页: ${val}`);
+    //}
   },
   created() {
     this.searchLeftTable();
@@ -145,6 +174,7 @@ var basLeft=new Vue({
     $(window).resize(function () {
       basLeft.leftHeight = $(window).height() - 154;
     })
+
   },
   updated() {
     this.FindLFirstDate(this.myLeftData[0]);
@@ -183,7 +213,7 @@ var basRight=new Vue({
     }
   },
   created() {
-    this.searchRightTable();
+    //this.searchRightTable();
     $(document).ready(function () {
       basRight.rightHeight = $(window).height() - 154;
     });
