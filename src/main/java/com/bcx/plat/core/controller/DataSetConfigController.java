@@ -4,6 +4,7 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.DataSetConfig;
 import com.bcx.plat.core.service.DataSetConfigService;
 import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +32,7 @@ public class DataSetConfigController extends BaseControllerTemplate<DataSetConfi
 
     @Override
     protected List<String> blankSelectFields() {
-        return Arrays.asList("dataSetCode","dataSetName","dataSetTypee");
+        return Arrays.asList("datasetCode","datasetName","datasetType");
     }
 
 
@@ -45,6 +46,7 @@ public class DataSetConfigController extends BaseControllerTemplate<DataSetConfi
     @RequestMapping("/add")
     @Override
     public Object insert(DataSetConfig entity, HttpServletRequest request, Locale locale) {
+        entity.setDatasetCode("A00"+UtilsTool.lengthUUID(3).toUpperCase());
         entity.setVersion("1.0");
         ServiceResult<Map<String, Object>> result = dataSetConfigService.insert(entity.buildCreateInfo().toMap());
         return super.result(request,result, locale);

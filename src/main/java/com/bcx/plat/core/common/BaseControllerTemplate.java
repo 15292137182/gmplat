@@ -57,7 +57,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
   protected abstract List<String> blankSelectFields();
 
   /**
-   * 新增业务对象:对象代码，对象名称，关联表(单选)，版本(系统生成)
+   * 新增业务对象
    */
   @RequestMapping("/add")
   public Object insert(Y entity, HttpServletRequest request, Locale locale) {

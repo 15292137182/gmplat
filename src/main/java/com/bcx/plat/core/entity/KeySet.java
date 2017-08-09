@@ -14,8 +14,8 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 public class KeySet extends BaseEntity<KeySet>{
     @TablePK
     private String rowId;//唯一标示
-    private String keySetCode;//键值代码
-    private String keySetName;//键值名称
+    private String keysetCode;//键值代码
+    private String keysetName;//键值名称
     private String confKey;//键
     private String confValue;//值
     private String desp;//说明
@@ -39,20 +39,20 @@ public class KeySet extends BaseEntity<KeySet>{
         this.rowId = rowId;
     }
 
-    public String getKeySetCode() {
-        return keySetCode;
+    public String getKeysetCode() {
+        return keysetCode;
     }
 
-    public void setKeySetCode(String keySetCode) {
-        this.keySetCode = keySetCode;
+    public void setKeysetCode(String keysetCode) {
+        this.keysetCode = keysetCode;
     }
 
-    public String getKeySetName() {
-        return keySetName;
+    public String getKeysetName() {
+        return keysetName;
     }
 
-    public void setKeySetName(String keySetName) {
-        this.keySetName = keySetName;
+    public void setKeysetName(String keysetName) {
+        this.keysetName = keysetName;
     }
 
     public String getConfKey() {

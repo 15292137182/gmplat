@@ -44,7 +44,7 @@ public class BusinessObjectProController extends BaseControllerTemplate<Business
     @RequestMapping("/add")
     @Override
     public Object insert(BusinessObjectPro entity, HttpServletRequest request, Locale locale) {
-        entity.setPropertyCode("C000001");
+        entity.setPropertyCode("A00"+UtilsTool.lengthUUID(3).toUpperCase());
         businessObjectProService.insert(entity.toMap());
         return super.insert(entity, request, locale);
     }

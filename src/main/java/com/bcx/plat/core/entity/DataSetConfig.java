@@ -14,10 +14,10 @@ import com.bcx.plat.core.utils.UtilsTool;
 public class DataSetConfig extends BaseEntity<DataSetConfig> {
     @TablePK
     private String rowId;//唯一标示
-    private String dataSetCode;//数据集代码
-    private String dataSetName;//数据集名称
-    private String dataSetTypee;//数据集类型
-    private String dataSetContent;//数据集内容
+    private String datasetCode;//数据集代码
+    private String datasetName;//数据集名称
+    private String datasetType;//数据集类型
+    private String datasetContent;//数据集内容
     private String desp;//说明
 
     /**
@@ -39,36 +39,36 @@ public class DataSetConfig extends BaseEntity<DataSetConfig> {
         this.rowId = rowId;
     }
 
-    public String getDataSetCode() {
-        return dataSetCode;
+    public String getDatasetCode() {
+        return datasetCode;
     }
 
-    public void setDataSetCode(String dataSetCode) {
-        this.dataSetCode = dataSetCode;
+    public void setDatasetCode(String datasetCode) {
+        this.datasetCode = datasetCode;
     }
 
-    public String getDataSetName() {
-        return dataSetName;
+    public String getDatasetName() {
+        return datasetName;
     }
 
-    public void setDataSetName(String dataSetName) {
-        this.dataSetName = dataSetName;
+    public void setDatasetName(String datasetName) {
+        this.datasetName = datasetName;
     }
 
-    public String getDataSetTypee() {
-        return dataSetTypee;
+    public String getDatasetType() {
+        return datasetType;
     }
 
-    public void setDataSetTypee(String dataSetTypee) {
-        this.dataSetTypee = dataSetTypee;
+    public void setDatasetType(String datasetType) {
+        this.datasetType = datasetType;
     }
 
-    public String getDataSetContent() {
-        return dataSetContent;
+    public String getDatasetContent() {
+        return datasetContent;
     }
 
-    public void setDataSetContent(String dataSetContent) {
-        this.dataSetContent = dataSetContent;
+    public void setDatasetContent(String datasetContent) {
+        this.datasetContent = datasetContent;
     }
 
     public String getDesp() {
