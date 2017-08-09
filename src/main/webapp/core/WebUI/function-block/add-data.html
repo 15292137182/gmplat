@@ -227,14 +227,15 @@
         created(){
             this.relateBusiObjId = window.parent.mb.objId;//业务对象Id
             this.rightRowId = window.parent.vm1.rowId;
-            console.log(this.rightRowId);
             if(window.parent.mb.isEdit){//编辑
                 this.funcRowId = window.parent.mb.rowObjId;
                 this.$http.jsonp(this.queryUrl,{
-                    "rowIds":this.rightRowId
+                    str:'',
+                    "rowId":this.rightRowId
                 },{
                     jsonp:'callback'
                 }).then(function (res) {
+                    console.log(res.data.data);
                     this.rowId=res.data.data[0].rowId;//新增成功后返回的ID
                     this.funcRowId=res.data.data[0].funcRowId;//功能块ID
                     this.dataId=res.data.data[0].relateBusiPro;//业务对象属性ID
@@ -255,7 +256,9 @@
                     this.sortNumber=res.data.data[0].sort;//排序
                     this.isDisabled=true;
                     this.$http.jsonp(this.queryDataUrl,{
-                        "rowIds":this.dataId
+                        "rowIds":this.dataId,
+                        "str":'',
+                        "rowId":''
                     },{
                         jsonp:'callback'
                     }).then(function(res){

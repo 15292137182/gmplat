@@ -10,7 +10,7 @@ var vm = new Vue({
         leftHeight:'',
         url:serverPath+'/fronc/query',
         deleteId:'',
-        editObj:''
+        editObj:'',
     },
     methods:{
         get(){
@@ -20,8 +20,10 @@ var vm = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 if(res.data.data!==null){
+                    console.log(res.data.data);
                     this.myData=res.data.data;
                     this.click(this.myData[0]);
+                    this.deleteId = this.myData[0].rowId;
                     vm1.FindData(vm.myData[0].rowId);
                 }else{
                     this.myData=[];
@@ -42,6 +44,7 @@ var vm = new Vue({
             vm1.FindData(row.rowId);
             this.deleteId = row.rowId;
             this.editObj = row;
+            console.log(row);
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
@@ -50,10 +53,10 @@ var vm = new Vue({
     created(){
         this.get();
         $(document).ready(function(){
-            vm.leftHeight=$(window).height()-100;
+            vm.leftHeight=$(window).height()-150;
         });
         $(window).resize(function(){
-            vm.leftHeight=$(window).height()-100;
+            vm.leftHeight=$(window).height()-150;
         })
     },
     updated(){
@@ -69,15 +72,16 @@ var vm1 = new Vue({
     data:{
         rightData:[],
         rightHeight:'',
+        rightInput:'',//右边表输入框
         url:serverPath+'/fronFuncPro/query',//查询功能块
         rowId:'',//选中属性行ID
         funcId:'',//功能块ID
-        divIndex:''
+        divIndex:'',
     },
     methods:{
         FindData(id){
             this.$http.jsonp(this.url,{
-                "str":'',
+                "str":this.rightInput,
                 "rowId":id
             },{
                 jsonp:'callback'
@@ -104,14 +108,17 @@ var vm1 = new Vue({
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
+        },
+        getRightData(){
+            this.FindData(vm.deleteId);
         }
     },
     created(){
         $(document).ready(function(){
-            vm1.rightHeight=$(window).height()-100;
+            vm1.rightHeight=$(window).height()-150;
         });
         $(window).resize(function(){
-            vm1.rightHeight=$(window).height()-100;
+            vm1.rightHeight=$(window).height()-150;
         })
     },
     updated(){
