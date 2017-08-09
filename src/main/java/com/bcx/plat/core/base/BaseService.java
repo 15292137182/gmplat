@@ -14,12 +14,12 @@ public interface BaseService<T extends BaseEntity> {
 
   ServiceResult<PageResult<Map<String, Object>>> select(Map condition, int page, int limit);
 
-  ServiceResult<List<Map<String, Object>>> selectList(Map condition);
+  ServiceResult<List<Map<String, Object>>> select(Map condition);
 
-  ServiceResult<List<Map<String, Object>>> blankSelectList(Collection<String> column,
+  ServiceResult<List<Map<String, Object>>> singleInputSelect(Collection<String> column,
       Collection<String> value);
 
-  ServiceResult<PageResult<Map<String, Object>>> blankSelect(Collection<String> column,
+  ServiceResult<PageResult<Map<String, Object>>> singleInputSelect(Collection<String> column,
       Collection<String> value, int pageNum, int pageSize);
 
   ServiceResult<Map<String, Object>> update(Map value);

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +53,7 @@ public class CommonServiceTest extends BaseTest{
   @Rollback
   public void emptyConditionTest(){
     args.put("objectName","");
-    Assert.assertTrue(((List)testTableService.selectList(args).getData()).size()>0);
+    Assert.assertTrue(((List)testTableService.select(args).getData()).size()>0);
   }
 
   @Test
@@ -73,10 +72,10 @@ public class CommonServiceTest extends BaseTest{
   @Transactional
   @Rollback
   public void testCommonDelete(){
-    ServiceResult<List<Map<String, Object>>> result = testTableService.selectList(args);
+    ServiceResult<List<Map<String, Object>>> result = testTableService.select(args);
     Assert.assertEquals(20,result.getData().size());
     testTableService.delete(args);
-    result = testTableService.selectList(args);
+    result = testTableService.select(args);
     Assert.assertEquals(0,result.getData().size());
   }
 
@@ -84,7 +83,7 @@ public class CommonServiceTest extends BaseTest{
   @Transactional
   @Rollback
   public void testCommonInsert(){
-    ServiceResult<List<Map<String, Object>>> result = testTableService.selectList(args);
+    ServiceResult<List<Map<String, Object>>> result = testTableService.select(args);
     Assert.assertEquals(20,result.getData().size());    
   }
 
@@ -92,19 +91,15 @@ public class CommonServiceTest extends BaseTest{
   @Transactional
   @Rollback
   public void testCommonUpdate(){
-    ServiceResult<List<Map<String, Object>>> result = testTableService.selectList(args);
+    ServiceResult<List<Map<String, Object>>> result = testTableService.select(args);
     Assert.assertEquals(20,result.getData().size());
-    List<String> rowIds = result.getData().subList(0, 10).stream().map((row) -> {
-      return (String)row.get("row_id");
-    }).collect(Collectors.toList());
-
     HashMap<String,Object> updateMap=new HashMap<>();
-    updateMap.put("rowId",rowIds.get(0));
+    updateMap.put("rowId",result.getData().get(0).get("rowId"));
     updateMap.put("objectName","这是一个全新的名字");
 
     testTableService.update(updateMap);
 
-    result = testTableService.selectList(args);
+    result = testTableService.select(args);
     Assert.assertEquals(19,result.getData().size());
   }
 
@@ -126,16 +121,16 @@ public class CommonServiceTest extends BaseTest{
     businessObject.setObjectName("aaa2aaa");
     businessObject.buildCreateInfo().insert();
     ServiceResult<List<Map<String,Object>>> result = testTableService
-        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1", "a2"));
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1", "a2"));
     Assert.assertEquals(4,result.getData().size());
     result = testTableService
-        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1"));
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1"));
     Assert.assertEquals(3,result.getData().size());
     result = testTableService
-        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList("a2"));
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("a2"));
     Assert.assertEquals(3,result.getData().size());
     result = testTableService
-        .blankSelectList(Arrays.asList("objectName", "objectCode"), Arrays.asList());
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList());
     Assert.assertEquals(24,result.getData().size());
   }
 

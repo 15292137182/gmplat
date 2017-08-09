@@ -48,6 +48,7 @@
         </choose>
       </foreach>
     </where>
+    order by create_time desc
   </select>
 
   <select id="selectByOr" parameterType="com.bcx.plat.core.morebatis.QueryAction"
@@ -94,6 +95,7 @@
         </choose>
       </foreach>
     </where>
+    order by create_time desc
   </select>
 
 
