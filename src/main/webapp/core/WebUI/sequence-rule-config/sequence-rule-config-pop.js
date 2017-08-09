@@ -9,7 +9,7 @@ var pop=new Vue({
     },
     methods: {
         search(){
-            this.$http.jsonp(serverPath + "/code/sequenceRule/query", {
+            this.$http.jsonp(serverPath + "/sequenceRule/query", {
                 "str": this.input
             }, {
                 jsonp: 'callback'

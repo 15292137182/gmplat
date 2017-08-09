@@ -32,6 +32,10 @@
             float: left;
         }
 
+        .paging{
+            float:right
+        }
+
     </style>
 </head>
 <body>
@@ -67,9 +71,9 @@
                         <template>
                             <el-table :data="keyValueSetdata" border highlight-current-row @current-change="handleCurrentChange"
                                       style="width: 100%;border-radius: 5px">
-                                <el-table-column prop="keySetCode" label="代码" width="">
+                                <el-table-column prop="keysetCode" label="代码" width="">
                                 </el-table-column>
-                                <el-table-column prop="keySetName" label="名称" width="">
+                                <el-table-column prop="keysetName" label="名称" width="">
                                 </el-table-column>
                                 <el-table-column prop="confKey" label="键" width="">
                                 </el-table-column>
@@ -81,6 +85,19 @@
                                 </el-table-column>
                             </el-table>
                         </template>
+
+                    </el-col>
+                </el-row>
+                <el-row style="padding:15px 10px 10px 10px">
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div class="paging">
+                            <el-pagination layout="total,sizes,prev,pager,next,jumper"
+                                           @size-change="handleNumChange"
+                                           @current-change="handleSizeChange"
+                                           :current-page.sync="pageSize"
+                                           :page-sizes="pageNums"
+                                           :total="total"></el-pagination>
+                        </div>
                     </el-col>
                 </el-row>
             </div>
