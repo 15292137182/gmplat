@@ -5,7 +5,6 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -26,9 +25,32 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
    */
   @RequestMapping("/query")
-  public Object select(String str, HttpServletRequest request, Locale locale) {
+  public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
     ServiceResult<List<Map<String,Object>>> result = entityService
-        .blankSelectList(blankSelectFields(), UtilsTool.collectToSet(str));
+        .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
+
+    return super.result(request, result, locale);
+  }
+
+  /**
+   * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
+   */
+  @RequestMapping("/queryPage")
+  public Object singleInputSelect(String args,int pageNum,int pageSize, HttpServletRequest request, Locale locale) {
+    ServiceResult<List<Map<String,Object>>> result = entityService
+        .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args),pageNum,pageSize);
+    return super.result(request, result, locale);
+  }
+
+  @RequestMapping("/select")
+  public Object select(Map<String,Object> args, HttpServletRequest request, Locale locale) {
+    ServiceResult<List<Map<String,Object>>> result = entityService.select(args);
+    return super.result(request, result, locale);
+  }
+
+  @RequestMapping("/selectPage")
+  public Object select(Map<String,Object> args,int pageNum,int pageSize, HttpServletRequest request, Locale locale) {
+    ServiceResult<List<Map<String,Object>>> result = entityService.select(args,pageNum,pageSize);
     return super.result(request, result, locale);
   }
 
@@ -74,7 +96,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    * @param locale
    * @return
    */
-  @RequestMapping("/takeEff")
+  @RequestMapping("/takeEffect")
   public Object updateTakeEffect(String rowId, HttpServletRequest request, Locale locale) {
     HashMap<String,Object> map=new HashMap<>();
     map.put("rowId",rowId);

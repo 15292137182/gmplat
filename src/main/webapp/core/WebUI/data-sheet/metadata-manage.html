@@ -11,13 +11,13 @@
 <div id="basTop">
   <el-row type="flex" justify="end">
     <el-col :span="24">
-      <el-button type="info" icon="plus" size="small" @click.native="addEvent">业务对象</el-button>
-      <el-button type="info" icon="edit" size="small" @click.native="editEvent">业务对象</el-button>
-      <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">业务对象</el-button>
-      <el-button type="info" icon="plus" size="small" @click.native="addProp">对象属性</el-button>
-      <el-button type="danger" icon="delete" size="small" @click.native="deleteProp">对象属性</el-button>
-      <el-button type="warning" icon="plus" size="small" @click.native="affectProp">生效</el-button>
-      <el-button type="warning" icon="delete" size="small" @click.native="changeProp">变更</el-button>
+      <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">业务对象</el-button>
+      <el-button type="info" icon="edit" size="small" @click.native="editEvent" v-bind:disabled="editOpe">业务对象</el-button>
+      <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent" v-bind:disabled="deleteOpe">业务对象</el-button>
+      <el-button type="warning" icon="plus" size="small" @click.native="affectProp" v-bind:disabled="takeEffect">生效</el-button>
+      <el-button type="warning" icon="delete" size="small" @click.native="changeProp" v-bind:disabled="change">变更</el-button>
+      <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">对象属性</el-button>
+      <el-button type="danger" icon="delete" size="small" @click.native="deleteProp" v-bind:disabled="deleteAttr">对象属性</el-button>
     </el-col>
   </el-row>
 </div>
@@ -54,6 +54,19 @@
             <el-table-column prop="version" label="版本" width="">
             </el-table-column>
           </el-table>
+        </template>
+        <!--<div class="block">-->
+          <!--<span class="demonstration">完整功能</span>-->
+          <!--<el-pagination-->
+                  <!--@size-change="handleSizeChange"-->
+                  <!--@current-change="handleCurrentChange"-->
+                  <!--:current-page="currentPage4"-->
+                  <!--:page-sizes="[100, 200, 300, 400]"-->
+                  <!--:page-size="100"-->
+                  <!--layout="total, sizes, prev, pager, next, jumper"-->
+                  <!--:total="400">-->
+          <!--</el-pagination>-->
+        <!--</div>-->
         </template>
       </el-col>
     </el-row>

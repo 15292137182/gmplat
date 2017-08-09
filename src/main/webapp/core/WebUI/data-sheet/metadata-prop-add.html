@@ -35,7 +35,7 @@
           <el-checkbox v-model="checked" @change.native="changEvent" v-bind:disabled="checkEvent">扩展属性</el-checkbox>
       </el-col>
       <el-col :span="17" :offset="3">
-        <el-input placeholder="请选择关联表字段" v-model="tableReaInput" ref="tableReaInput" data-id="">
+        <el-input placeholder="请选择关联表字段" v-model="tableReaInput" ref="tableReaInput" data-id="" disabled>
           <el-button slot="append" icon="search" @click="searchProTable" v-bind:disabled="iconEvent"></el-button>
         </el-input>
       </el-col>

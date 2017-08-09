@@ -65,7 +65,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return serviceResult;
   }
 
-  public ServiceResult<List<Map<String, Object>>> selectList(Map args) {
+  public ServiceResult<List<Map<String, Object>>> select(Map args) {
     args=mapFilter(args);
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
@@ -82,7 +82,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   }
 
 
-  public ServiceResult<PageResult<Map<String, Object>>> blankSelect(Collection<String> column,Collection<String> value, int pageNum, int pageSize) {
+  public ServiceResult<PageResult<Map<String, Object>>> singleInputSelect(Collection<String> column,Collection<String> value, int pageNum, int pageSize) {
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(createBlankQuery(column,value));
@@ -97,7 +97,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return serviceResult;
   }
 
-  public ServiceResult<List<Map<String, Object>>> blankSelectList(Collection<String> column,Collection<String> value) {
+  public ServiceResult<List<Map<String, Object>>> singleInputSelect(Collection<String> column,Collection<String> value) {
     QueryAction queryAction = new QueryAction().selectAll()
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(createBlankQuery(column,value));

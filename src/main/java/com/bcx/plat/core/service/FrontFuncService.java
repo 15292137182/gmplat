@@ -1,33 +1,12 @@
 package com.bcx.plat.core.service;
 
+import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.FrontFunc;
-import com.bcx.plat.core.utils.ServiceResult;
-import java.util.Map;
+import org.springframework.stereotype.Service;
 
 /**
- * 前端功能块service层 Created by Went on 2017/8/2.
+ * Created by Wen Tiehu on 2017/8/9.
  */
-public interface FrontFuncService {
-
-  /**
-   * 按照名称、代码、类型 条件查询
-   */
-  ServiceResult<FrontFunc> select(Map<String, Object> map);
-
-  /**
-   * 新增数据
-   */
-  ServiceResult<FrontFunc> insert(FrontFunc frontFunc);
-
-  /**
-   * 根据id修改数据
-   */
-  ServiceResult<FrontFunc> update(FrontFunc frontFunc);
-
-  /**
-   * 根据ID删除数据
-   */
-  ServiceResult<FrontFunc> delete(FrontFunc frontFunc);
-
-
+@Service
+public class FrontFuncService extends BaseServiceTemplate<FrontFunc>{
 }
