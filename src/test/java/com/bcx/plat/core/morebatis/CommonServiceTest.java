@@ -108,30 +108,27 @@ public class CommonServiceTest extends BaseTest{
   @Rollback
   public void testBlankSelect(){
     BusinessObject businessObject=new BusinessObject();
-    businessObject.setObjectCode("aaa1aaa");
-    businessObject.setObjectName("aaa1aaa");
+    businessObject.setObjectCode("aaax1aaa");
+    businessObject.setObjectName("aaax1aaa");
     businessObject.buildCreateInfo().insert();
-    businessObject.setObjectCode("aaa1aaa");
-    businessObject.setObjectName("aaa2aaa");
+    businessObject.setObjectCode("aaax1aaa");
+    businessObject.setObjectName("aaax2aaa");
     businessObject.buildCreateInfo().insert();
-    businessObject.setObjectCode("aaa2aaa");
-    businessObject.setObjectName("aaa1aaa");
+    businessObject.setObjectCode("aaax2aaa");
+    businessObject.setObjectName("aaax1aaa");
     businessObject.buildCreateInfo().insert();
-    businessObject.setObjectCode("aaa2aaa");
-    businessObject.setObjectName("aaa2aaa");
+    businessObject.setObjectCode("aaax2aaa");
+    businessObject.setObjectName("aaax2aaa");
     businessObject.buildCreateInfo().insert();
     ServiceResult<List<Map<String,Object>>> result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1", "a2"));
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2"));
     Assert.assertEquals(4,result.getData().size());
     result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("a1"));
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1"));
     Assert.assertEquals(3,result.getData().size());
     result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("a2"));
+        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2"));
     Assert.assertEquals(3,result.getData().size());
-    result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList());
-    Assert.assertEquals(24,result.getData().size());
   }
 
   @Before
