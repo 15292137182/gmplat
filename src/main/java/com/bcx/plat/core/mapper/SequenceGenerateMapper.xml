@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcx.plat.core.mapper.SequenceGenerateMapper">
+
+  <select id="select" parameterType="hashMap"
+    resultType="com.bcx.plat.core.entity.SequenceGenerate">
+    SELECT
+    *
+    FROM public.t_sequence_generate
+    <where>
+      (delete_flag IS NULL OR delete_flag!='1')
+      <if test="seqRowId != null and seqRowId != ''">
+        AND seq_row_id = #{seqRowId}
+      </if>
+      <if test="variableKey != null and variableKey != ''">
+        AND variable_key LIKE '%${variableKey}%'
+      </if>
+      <if test="branchSign != null and branchSign != ''">
+        AND branch_sign = #{branchSign}
+      </if>
+    </where>
+  </select>
+
+  <insert id="insert" parameterType="com.bcx.plat.core.entity.SequenceGenerate">
+    INSERT INTO public.t_sequence_generate
+    (
+    row_id, seq_row_id, variable_key, current_value, branch_sign,
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_select"/>
+    )VALUES (
+    #{rowId},#{seqRowId},#{variableKey},#{currentValue},#{branchSign},
+    <include refid="com.bcx.plat.core.base.BaseMapper.common_columns_insert"/>
+    )
+  </insert>
+
+  <update id="updateCurrentValue" parameterType="com.bcx.plat.core.entity.SequenceGenerate">
+    UPDATE public.t_sequence_generate
+    SET
+      current_value    = #{currentValue},
+      modify_user      = #{modifyUser},
+      modify_user_name = #{modifyUserName},
+      modify_time      = #{modifyTime}
+    WHERE
+      (delete_flag IS NULL OR delete_flag != '1') AND
+      seq_row_id = #{seqRowId} AND
+      variable_key = #{variableKey} AND
+      branch_sign = #{branchSign}
+  </update>
+
+</mapper>

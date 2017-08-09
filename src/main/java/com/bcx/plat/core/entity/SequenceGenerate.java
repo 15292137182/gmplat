@@ -1,5 +1,7 @@
 package com.bcx.plat.core.entity;
 
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
+
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.Table;
@@ -19,6 +21,12 @@ public class SequenceGenerate extends BaseEntity<SequenceGenerate> {
   private String variableKey;
   private String currentValue;
   private String branchSign;  // 分支标志
+
+  @Override
+  public SequenceGenerate buildCreateInfo() {
+    setRowId(lengthUUID(64));
+    return super.buildCreateInfo();
+  }
 
   public String getRowId() {
     return rowId;

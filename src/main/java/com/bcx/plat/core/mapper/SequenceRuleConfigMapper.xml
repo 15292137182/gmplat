@@ -23,6 +23,9 @@
       <if test="seqCode != null and seqCode != ''">
         AND seq_code LIKE '%${seqCode}%'
       </if>
+      <if test="seqCodeS != null and seqCodeS != ''">
+        AND seq_code = #{seqCodeS}
+      </if>
     </where>
   </select>
 
