@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.BusinessObject;
@@ -36,33 +37,6 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     public void setBusinessObjectProService(BusinessObjectProService businessObjectProService) {
         this.businessObjectProService = businessObjectProService;
     }
-
-//    /**
-//     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
-//     *
-//     * @param rowId
-//     * @param request
-//     * @param locale
-//     */
-//    @RequestMapping("/query")
-//    @Override
-//    public Object select(String rowId, HttpServletRequest request, Locale locale) {
-////        if (str.length()!=0) {
-////            ServiceResult<List<Map<String, Object>>> result = businessObjectProService
-////                    .blankSelectList(blankSelectFields(), UtilsTool.collectToSet(str));
-////            return super.result(request, result, locale);
-////        }
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("rowId",rowId);
-//        ServiceResult<List<Map<String, Object>>> selectList = businessObjectService.selectList(map);
-//        List<Map<String, Object>> data = selectList.getData();
-//        if (data != null) {
-//            ServiceResult<List<Map<String, Object>>> result = businessObjectProService.blankSelectList(Arrays.asList("rowId"), Arrays.asList("rowId"));
-//            return super.result(request, result, locale);
-//        }
-//        return super.result(request, selectList, locale);
-//    }
-
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
@@ -80,6 +54,8 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @RequestMapping("/add")
     @Override
     public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
+        //默认新增数据为失效状态
+        businessObject.setStatus(BaseConstants.INVALID);
         businessObject.setVersion("1.0");
         ServiceResult<Map<String, Object>> result = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
         return super.result(request, result, locale);
@@ -95,7 +71,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        ServiceResult<List<Map<String, Object>>> list = businessObjectProService.blankSelectList(Arrays.asList("objRowId"), Arrays.asList(rowId));
+        ServiceResult<List<Map<String, Object>>> list = businessObjectProService.singleInputSelect(Arrays.asList("objRowId"), Arrays.asList(rowId));
         List<Map<String, Object>> data = list.getData();
         if (data != null) {
             List<String> rowIds = data.stream().map((row) -> {

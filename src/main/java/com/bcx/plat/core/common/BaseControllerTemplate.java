@@ -28,6 +28,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
   public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
     ServiceResult<List<Map<String,Object>>> result = entityService
         .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
+
     return super.result(request, result, locale);
   }
 
@@ -95,7 +96,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    * @param locale
    * @return
    */
-  @RequestMapping("/takeEff")
+  @RequestMapping("/takeEffect")
   public Object updateTakeEffect(String rowId, HttpServletRequest request, Locale locale) {
     HashMap<String,Object> map=new HashMap<>();
     map.put("rowId",rowId);
