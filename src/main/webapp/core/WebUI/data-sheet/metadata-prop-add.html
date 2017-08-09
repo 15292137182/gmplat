@@ -46,18 +46,18 @@
       <el-col :span="11">
           <el-select v-model="typeInput" placeholder="请选择值类型" ref="typeInput">
             <el-option v-for="item in optionLeft"
-                    :key="item.rowId"
+                    :key="item.confKey"
                     :label="item.rowId"
-                    :value="item.keySetName">
+                    :value="item.confValue">
             </el-option>
           </el-select>
       </el-col>
       <el-col :span="11" :offset="2">
           <el-select v-model="typeComValue" placeholder="请选择值类型来源" ref="typeComValue">
             <el-option v-for="item in optionRight"
-                    :key="item.rowId"
+                    :key="item.confKey"
                     :label="item.rowId"
-                    :value="item.keySetName">
+                    :value="item.confValue">
             </el-option>
           </el-select>
       </el-col>
@@ -113,6 +113,9 @@
         }
       },
       conformEvent() {
+        console.log(proEm.nameProInput);
+        console.log(proEm.typeInput);
+        console.log(proEm.typeComValue);
         if(this.iconEvent==true){
           var datas = [this.$refs.nameProInput,this.$refs.typeInput,this.$refs.typeComValue, this.$refs.comContent];
         }else{
