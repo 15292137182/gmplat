@@ -132,7 +132,7 @@ public class SequenceManager {
           }
         }
         while (num-- != 0) {
-          analysisSerialNo(ruleConfig.getRowId(), serialMap, rm);
+          analysisSerialNo(ruleConfig, serialMap, rm);
           StringBuilder sb = new StringBuilder();
           for (String modular : modules) {
             sb.append(rm.get(modular));
@@ -149,7 +149,7 @@ public class SequenceManager {
   /**
    * 解析变量模块
    */
-  private void analysisSerialNo(String seqRowId, Map<String, Object> serialMap,
+  private void analysisSerialNo(SequenceRuleConfig ruleConfig, Map<String, Object> serialMap,
       Map<String, Object> rm) {
     if (!serialMap.isEmpty()) {
       for (String modular : serialMap.keySet()) {
@@ -171,7 +171,8 @@ public class SequenceManager {
         } else {
           branchValue = new StringBuilder(branchValues.get(a[0]).toString());
         }
-        int nextValue = getCurrentVariableValue(seqRowId, a[0], branchValue.toString()) + 1;
+        int nextValue =
+            getCurrentVariableValue(ruleConfig.getRowId(), a[0], branchValue.toString()) + 1;
         keys.put(a[0], nextValue);
         branchValues.put(a[0], branchValue);
         StringBuilder nv = new StringBuilder(String.valueOf(nextValue));
@@ -181,7 +182,8 @@ public class SequenceManager {
           }
           // 若数据溢出时有异常，在此处追加 异常
         } else {
-          throw Lang.makeThrow("该流水号已经用尽！请修改流水号规则或联系管理员！");
+          throw Lang.makeThrow("Class [%s]: [%s] 该流水号已经用尽！请修改流水号规则或联系管理员！", getClass(),
+              ruleConfig.getSeqCode());
         }
         rm.put(modular, nv);
       }
