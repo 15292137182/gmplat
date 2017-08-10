@@ -147,6 +147,7 @@ var basLeft=new Vue({
         this.relateTableRowId=row.relateTableRowId;
         //左边这一行的数据
         this.currentId = row.rowId;
+      console.log(this.currentId);
         //查找右侧表的数据
         this.$http.jsonp(serverPath + "/businObjPro/query", {
           str:'',
@@ -154,7 +155,7 @@ var basLeft=new Vue({
         }, {
           jsonp: 'callback'
         }).then(function (res) {
-          console.log(res)
+         // console.log(res)
           if(res.data.data!==null) {
             basRight.myRightData = res.data.data;
             //右边有数据 默认点击第一行
@@ -216,10 +217,26 @@ var basRight=new Vue({
     },
     handleSizeChange(val) {
       //每页多少条数变化时
+      this.pageNum=10;
       console.log(`每页 ${val} 条`);
+      this.searchPage();
     },
     handleCurrentChange(val) {
+      this.pageSize=val;
       console.log(`当前页: ${val}`);
+      this.searchPage();
+    },//分页点击事件
+    searchPage(){
+      //this.$http.jsonp(serverPath + queryPage, {
+      //  "args":this.input,
+      //  "pageSize": this.pageSize,
+      //  "pageNum":this.pageNum,
+      //}, {
+      //  jsonp: 'callback'
+      //}).then(function (res) {
+      //  this.keyValueSetdata = res.data.data.result;
+      //
+      //});
     }
   },
   created() {

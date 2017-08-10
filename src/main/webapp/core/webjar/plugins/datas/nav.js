@@ -19,7 +19,7 @@
 	{
 		"title": "数据集配置",
 		"icon": "fa-wrench",
-		"href": "core/WebUI/StandardType/StandardType.html"
+		"href": "core/WebUI/data-set-configuration/data-set-configuration.html"
 	},
 	{
 		"title": "系统资源配置",
