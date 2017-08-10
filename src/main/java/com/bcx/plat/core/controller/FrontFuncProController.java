@@ -72,7 +72,23 @@ public class FrontFuncProController extends BaseControllerTemplate<FrontFuncProS
             map.put("rowId",proRowId);
             ServiceResult<List<Map<String, Object>>> result = frontFuncProService.select(map);
             return super.result(request,result,locale);
-        }
+        } else if (rowId.length()!=0) {
+             Map<String, Object> map = new HashMap<>();
+             map.put("funcRowId", rowId);
+             ServiceResult<List<Map<String, Object>>> result = frontFuncProService.select(map);
+             for (int i = 0; i < result.getData().size(); i++) {
+                 String relateBusiPro = (String) result.getData().get(i).get("relateBusiPro");
+                 Map<String, Object> args = new HashMap<>();
+                 args.put("rowId", relateBusiPro);
+                 ServiceResult<List<Map<String, Object>>> select = businessObjectProService.select(args);
+                 String propertyName=null;
+                 for (int j = 0; j < select.getData().size(); j++) {
+                     propertyName = (String) select.getData().get(j).get("propertyName");
+                 }
+                 result.getData().get(i).put("tables", propertyName);
+             }
+             return super.result(request, result, locale);
+         }
          ServiceResult<List<Map<String, Object>>> result =
                 frontFuncProService.singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
         return super.result(request,result, locale);

@@ -71,23 +71,17 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         Map<String,Object> map1 = new HashMap<>();
         if (rowIds.length()==0){
             ServiceResult<List<Map<String, Object>>> result = frontFuncService.select(map1);
+
             List<Map<String, Object>> data = result.getData();
             Map<String, Object>map = new HashMap<>();
-            for (int i = 0; i < data.size(); i++) {
+            for (int i =0;i<data.size();i++) {
+                result.getData().get(i).get("relateBusiObj");
                 Object relateBusiPro = data.get(i).get("relateBusiPro");
                 map.put("rowId",relateBusiPro);
-                ServiceResult<List<Map<String, Object>>> select = businessObjectProService.select(map);
-                List<Map<String, Object>> data1 = select.getData();
-                for (int j = 0; j <data1.size() ; j++) {
-                    String propertyName = (String)data1.get(i).get("propertyName");
-                    result.getData().get(i).put("tables",propertyName);
-                }
+                ServiceResult<List<Map<String, Object>>> select = businessObjectService.select(map);
+//                   String objectName =(String) select.getData().get(i).get();
+//                   result.getData().get(i).put("tables",objectName);
             }
-            return super.result(request,result,locale);
-        } else if (rowId.length()!=0){
-            Map<String,Object> map = new HashMap<>();
-            map.put("funcRowId",rowId);
-            ServiceResult<List<Map<String, Object>>> result = frontFuncProService.select(map);
             return super.result(request,result,locale);
         }
         ServiceResult<List<Map<String, Object>>> result = frontFuncService
@@ -100,8 +94,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
             ServiceResult<List<Map<String, Object>>> select = businessObjectService.select(map);
             List<Map<String, Object>> data1 = select.getData();
             for (int j = 0; j < data1.size(); j++) {
-                String propertyName = (String) data1.get(i).get("objectName");
-                result.getData().get(i).put("tables", propertyName);
+                String objectName = (String) data1.get(i).get("objectName");
+                result.getData().get(i).put("tables", objectName);
             }
             return super.result(request, result, locale);
         }
