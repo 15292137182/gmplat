@@ -3,7 +3,7 @@ package com.bcx.plat.core.morebatis.substance;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 
-public class FieldCondition implements Condition {
+public class FieldCondition implements Condition<FieldCondition> {
   Field field;
   boolean not=false;
   Operator operator;
@@ -65,16 +65,6 @@ public class FieldCondition implements Condition {
 
   public void setNot(boolean not) {
     this.not = not;
-  }
-
-  public FieldCondition not(){
-    setNot(true);
-    return this;
-  }
-
-  public FieldCondition normal(){
-    setNot(false);
-    return this;
   }
 
   @Override
