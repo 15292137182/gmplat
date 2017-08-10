@@ -28,7 +28,7 @@
 
   <!--level是日志显示等级，DEBUG等级最低，可以显示所有level的日志，WARN等级居中，可以显示WARN及其以上level的日志，ERROR等级最高，只能显示ERROR这个level的日志。所以一般用DEBUG就行。
 　　level等级顺序：error>warn>info>debug-->
-  <root level="info">
+  <root level="debug">
     <appender-ref ref="stdout"/>
     <appender-ref ref="logfile"/>
   </root>

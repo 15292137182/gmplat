@@ -22,8 +22,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String relateTableRowId;//关联表
 
   private String proRowId;//业务对象属性表rowId
-  private String tableSchema;//表schema
-  private String tableCname;//关联数据中文名
   private String tables;//关联数据
 
   /**
@@ -75,22 +73,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
 
   public void setProRowId(String proRowId) {
     this.proRowId = proRowId;
-  }
-
-  public String getTableSchema() {
-    return tableSchema;
-  }
-
-  public void setTableSchema(String tableSchema) {
-    this.tableSchema = tableSchema;
-  }
-
-  public String getTableCname() {
-    return tableCname;
-  }
-
-  public void setTableCname(String tableCname) {
-    this.tableCname = tableCname;
   }
 
   public String getTables() {
