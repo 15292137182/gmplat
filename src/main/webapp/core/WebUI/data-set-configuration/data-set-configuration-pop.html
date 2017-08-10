@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据集配置信息弹出框</title>
+
+</head>
+<body>
+
+<!--表格数据-->
+<el-col :span="24" id="dataSetConfigPop">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color"><span>数据集配置信息弹出框</span></div>
+            </el-col>
+        </el-row>
+        <el-row class="inputStyle">
+            <el-col :xs="10" :sm="10" :md="10">
+                <div>
+                    <el-input placeholder="请输入内容" v-model="input" size="small">
+                        <el-button slot="append" icon="search" @click.native="search"></el-button>
+                    </el-input>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row style="padding:0 10px 10px 10px">
+            <el-col :span="24">
+                <template>
+                    <el-table :data="dataSetConfigTable" ref="dataSetConfigTable" highlight-current-row
+                              @row-click="clickTable" :height="Height" border
+                              class="tableStyle">
+                        <el-table-column prop="datasetCode" label="代码" width="">
+                        </el-table-column>
+                        <el-table-column prop="datasetName" label="名称" width="">
+                        </el-table-column>
+                        <el-table-column prop="datasetType" label="类型" width="">
+                        </el-table-column>
+                        <el-table-column prop="datasetContent" label="内容" width="">
+                        </el-table-column>
+                        <el-table-column prop="desp" label="说明" width="">
+                        </el-table-column>
+                        <el-table-column prop="version" label="版本" width="">
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+<script src="data-set-configuration-pop.js"></script>
+</body>
+</html>

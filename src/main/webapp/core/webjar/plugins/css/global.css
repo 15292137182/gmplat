@@ -348,10 +348,10 @@ body .site-demo-nav .layui-nav-item{line-height: 40px}
     background-color: #5FB878;
 }
 .admin-side-full{
-    left: 190px;
+    left: 156px;
 }
 .admin-login-box{
-    width: 185px; height: 70px; position: relative;
+    width: 185px; height: 40px; position: relative;
 }
 
 .beg-navbar .layui-nav-child dd a{
@@ -436,20 +436,22 @@ body .site-demo-nav .layui-nav-item{line-height: 40px}
 }
 
 /*自定义*/
-.logo{ top: 11px;}
-.admin-side-toggle, .admin-side-full {top:16%}
+.logo{ top: 9px;}
+.admin-side-toggle, .admin-side-full {
+    top:20%
+}
 .admin-header-user img {
-    width: 30px;
-    height:30px;
+    width: 26px;
+    height:26px;
 }
 .header-demo .layui-nav .layui-nav-item {
-    line-height: 52px;
+    line-height: 40px;
 }
 .layui-nav .layui-nav-more {
-    top: 25px;
+    top: 19px;
 }
 .layui-nav .layui-nav-mored {
-    top: 18px;
+    top: 13px;
 }
 
 
@@ -472,10 +474,16 @@ body .site-demo-nav .layui-nav-item{line-height: 40px}
 
 .admin-side-toggle{
     left: 160px;
-    top:95%;
+    top:96%;
     background-color:transparent;
     color:#00aaee;
 }
 .admin-side-toggle:hover{
     background-color:transparent;
+}
+
+ .admin-side-full {
+    width: 25px;
+    height: 25px;
+    line-height:25px;
 }

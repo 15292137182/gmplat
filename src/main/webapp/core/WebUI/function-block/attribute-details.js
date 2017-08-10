@@ -11,12 +11,11 @@ var attributeDetails = new Vue({
     methods:{
         getAttribute(){
             this.$http.jsonp(this.url, {
-                "rowIds":vm1.rowId
+                "rowId":vm1.rowId
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
                 if(res.data.data!=null){
-                    ibcpLayer.ShowOK(res.data.message);
                     this.attributeData=res.data.data;
                 }
             });

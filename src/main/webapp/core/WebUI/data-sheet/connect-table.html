@@ -11,7 +11,7 @@
   </style>
 </head>
 <body>
-<el-row id="connectTable" style="padding:0 10px 10px 10px">
+<el-row id="connectTable" style="padding:5px 10px 10px 10px">
     <el-col :xs="18" :sm="18" :md="18">
         <el-input placeholder="请输入内容" v-model="searchInput" size="small">
           <el-button slot="append" icon="search" @click.native="searchTable"></el-button>
@@ -21,23 +21,23 @@
     <template>
       <el-table :data="myLeftData" highlight-current-row @current-change="handleCurrentChange"
                 :height="400" border style="width: 100%;border-radius: 5px;margin-top:10px">
-        <el-table-column prop="tableSchema" label="表schema" width="">
+        <el-table-column prop="tableSchema" label="表schema" width="" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="tableCName" label="表中文名" width="">
+        <el-table-column prop="tableCName" label="表中文名" width="" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="tableEName" label="表英文文名" width="">
+        <el-table-column prop="tableEName" label="表英文文名" width="" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="desp" label="说明" width="">
+        <el-table-column prop="desp" label="说明" width="" show-overflow-tooltip>
         </el-table-column>
       </el-table>
     </template>
   </el-col>
   <el-col style="margin-top:15px">
     <el-col :span="11" style="text-align:right">
-      <el-button type="primary" @click.native="conformEvent">确定</el-button>
+      <el-button type="primary" size="small" @click.native="conformEvent">确定</el-button>
     </el-col>
     <el-col :span="11" style="text-align: left" :offset="2">
-      <el-button type="primary" @click.native="cancel">取消</el-button>
+      <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
     </el-col>
   </el-col>
 </el-row>

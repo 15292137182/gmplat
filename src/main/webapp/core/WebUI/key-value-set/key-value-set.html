@@ -32,6 +32,11 @@
             float: left;
         }
 
+        #paging{
+            float:right;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -42,9 +47,9 @@
             <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增</el-button>
             <el-button type="info" icon="edit" size="small" @click.native="editEvent">编辑</el-button>
             <el-button type="danger" icon="delete" size="small" @click.native="deleteEvent">删除</el-button>
-
         </el-col>
     </el-row>
+
     <el-row :gutter="20">
         <el-col >
             <div style="border:1px solid #d1ddf9;border-radius: 5px;">
@@ -65,11 +70,11 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <el-col :span="24">
                         <template>
-                            <el-table :data="keyValueSetdata" border highlight-current-row @current-change="handleCurrentChange"
+                            <el-table :data="keyValueSetdata" border :height="height" highlight-current-row @current-change="handleCurrentChange"
                                       style="width: 100%;border-radius: 5px">
-                                <el-table-column prop="keySetCode" label="代码" width="">
+                                <el-table-column prop="keysetCode" label="代码" width="">
                                 </el-table-column>
-                                <el-table-column prop="keySetName" label="名称" width="">
+                                <el-table-column prop="keysetName" label="名称" width="">
                                 </el-table-column>
                                 <el-table-column prop="confKey" label="键" width="">
                                 </el-table-column>
@@ -87,6 +92,21 @@
         </el-col>
     </el-row>
 </div>
+
+    <el-row style="padding:15px 10px 10px 10px">
+        <el-col :xs="24" :sm="24" :md="24">
+            <div id="paging" >
+                <el-pagination layout="total,sizes,prev,pager,next,jumper"
+                               @size-change="handleSizeChange"
+                               @current-change="handleNumChange"
+                               :current-page.sync="pageNum"
+                               :page-size="pageSize"
+                               :page-sizes="pageSizes"
+                               :total="total"></el-pagination>
+            </div>
+        </el-col>
+    </el-row>
+
 </body>
 <script src="key-value-set.js"></script>
 </html>

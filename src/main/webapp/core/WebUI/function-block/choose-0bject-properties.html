@@ -53,7 +53,9 @@
         },
         created() {
             this.$http.jsonp(serverPath + "/businObjPro/query", {
-                rowId:window.parent.em.relateBusiObjId
+                rowIds:window.parent.em.relateBusiObjId,
+                str:'',
+                "rowId":''
             }, {
                 jsonp: 'callback'
             }).then(function (res) {

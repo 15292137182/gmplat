@@ -2,6 +2,32 @@
 html {
     overflow: hidden;
 }
+body{
+    margin:2px 8px
+}
+.el-button+.el-button {
+     margin-left: 0;
+}
+.el-button.el-button--info.is-disabled {
+    color: #fff;
+    background-color: #adddf9;
+    border-color: #adddf9;
+}
+.el-button.el-button--danger.is-disabled {
+    color: #fff;
+    background-color: #f99b9b;
+    border-color: #f99b9b;
+}
+.el-button.el-button--warning.is-disabled {
+    color: #fff;
+    background-color: #fdd77c;
+    border-color: #fdd77c;
+}
+.el-button.el-button--warning {
+    color: #fff;
+    background-color: #ffbf27;
+    border-color: #ffbf27;
+}
 /*标题头部*/
 .bg-color {
     background: #f5f5f5;
@@ -26,7 +52,7 @@ html {
 /*上方搜索框往右对齐*/
 .el-row--flex.is-justify-end {
     text-align: right;
-    padding:5px 0 8px 0
+    padding:2px 0 8px 0
 }
 /*大框加颜色圆角*/
 .allBorder{

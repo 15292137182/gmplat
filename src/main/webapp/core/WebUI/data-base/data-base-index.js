@@ -43,10 +43,10 @@ var vm = new Vue({
     created(){
         this.get();
         $(document).ready(function(){
-            vm.leftHeight=$(window).height()-100;
+            vm.leftHeight=$(window).height()-150;
         });
         $(window).resize(function(){
-            vm.leftHeight=$(window).height()-100;
+            vm.leftHeight=$(window).height()-150;
         })
     },
     updated(){

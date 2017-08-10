@@ -23,9 +23,9 @@
         .el-table__header-wrapper thead div{
             background-color:white;
         }
-        .el-table__body tr.current-row>td {
-            background: #50bfff;
-        }
+        /*.el-table__body tr.current-row>td {*/
+            /*background: #50bfff;*/
+        /*}*/
         .bg-color {
             background: #f5f5f5;
             vertical-align: middle;
@@ -48,45 +48,49 @@
 </el-col>
 <el-col :span="24" id="app">
     <!--table    -->
-    <el-row style="margin-top: 5px">
-        <el-col :span="24" style="border: 1px solid #9F9F9F;padding: 3px;border-radius: 5px">
+    <div class="allBorder">
+        <el-row>
             <el-col :span="24">
-                <div class="headerDiv">
+                <el-col :span="24">
                     <el-row>
                         <el-col :span="24">
-                            <el-col :xs="8" :sm="8" :md="8">
+                            <el-col :xs="24" :sm="24" :md="24">
                                 <div class="bg-color"><span style="margin-left:20px">数据库信息</span></div>
-                            </el-col>
-                            <el-col :xs="8" :sm="8" :md="8" :offset="8">
-                                <div>
-                                    <el-input size="small" placeholder="请输入内容" v-model="input">
-                                        <el-button slot="append" icon="search"  @click.native="get"></el-button>
-                                    </el-input>
-                                </div>
                             </el-col>
                         </el-col>
                     </el-row>
-                </div>
-                <template>
-                    <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
-                        <el-table-column  prop="tableSchema" label="表Schema" width="110">
-                        </el-table-column>
-                        <el-table-column  prop="tableCName" label="表中文名称" width="250">
-                        </el-table-column>
-                        <el-table-column  prop="tableEName" label="表英文名称" width="">
-                        </el-table-column>
-                        <el-table-column  prop="desp" label="说明" width="">
-                        </el-table-column>
-                        <el-table-column  prop="" label="操作" width="100">
-                            <template scope="scope">
-                                <el-button @click="handleClick" type="text" size="small" icon="search"></el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </template>
+                    <el-row>
+                        <el-col :xs="8" :sm="8" :md="8">
+                            <div class="inputStyle">
+                                <el-input size="small" placeholder="请输入内容" v-model="input">
+                                    <el-button slot="append" icon="search"  @click.native="get"></el-button>
+                                </el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row style="padding:0 10px 10px 10px">
+                        <template>
+                            <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
+                                <el-table-column  prop="tableSchema" label="表Schema" width="110">
+                                </el-table-column>
+                                <el-table-column  prop="tableCName" label="表中文名称" width="250">
+                                </el-table-column>
+                                <el-table-column  prop="tableEName" label="表英文名称" width="">
+                                </el-table-column>
+                                <el-table-column  prop="desp" label="说明" width="">
+                                </el-table-column>
+                                <el-table-column  prop="" label="操作" width="100">
+                                    <template scope="scope">
+                                        <el-button @click="handleClick" type="text" size="small" icon="search"></el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                    </el-row>
+                </el-col>
             </el-col>
-        </el-col>
-    </el-row>
+        </el-row>
+    </div>
 </el-col>
 </body>
 <script src="data-base-index.js"></script>

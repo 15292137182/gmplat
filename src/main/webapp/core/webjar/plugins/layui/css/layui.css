@@ -12,13 +12,13 @@ height: 50px;
   height:3px;
 }
 .layui-nav-child {
-    top: 53px;
+    top: 43px;
 }
 .layui-layout-admin .layui-side {
-    top: 52px;
+    top: 42px;
 }
 .layui-layout-admin .layui-body {
-    top: 50px;
+    top: 40px;
 }
 
 
@@ -31,4 +31,18 @@ height: 50px;
 
 .layui-nav-tree .layui-nav-bar {
     background-color: #00aaee;
+}
+
+.layui-header {
+    height: 40px;
+}
+
+.layui-tab-title {
+    height: 30px;
+}
+.layui-tab-title li {
+    line-height: 30px;
+}
+.layui-tab-title li cite{
+    font-size:12px;
 }

@@ -38,7 +38,7 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <el-col :span="24">
                         <template>
-                            <el-table :data="seqRuleConfigdata" border highlight-current-row @current-change="handleCurrentChange"
+                            <el-table :data="seqRuleConfigdata" border :height="Height" highlight-current-row @current-change="handleCurrentChange"
                                       style="width: 100%;border-radius: 5px">
                                 <el-table-column prop="seqCode" label="代码" width="">
                                 </el-table-column>

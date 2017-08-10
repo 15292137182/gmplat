@@ -6,8 +6,8 @@ var keyValueSetAdd = new Vue({
     el: '#keyValueSetAdd',
     data: function () {
         return {
-            keySetCodeInput: '',
-            keySetNameInput: '',
+            keysetCodeInput: '',
+            keysetNameInput: '',
             confKeyInput: '',
             confValueInput: '',
             despInput: '',
@@ -18,7 +18,7 @@ var keyValueSetAdd = new Vue({
     methods: {
         confirm() {
             var datas = [
-                this.$refs.keySetNameInput,
+                this.$refs.keysetNameInput,
                 this.$refs.confKeyInput,
                 this.$refs.confValueInput,
                 this.$refs.despInput
@@ -31,8 +31,8 @@ var keyValueSetAdd = new Vue({
             }
             if (operate == 1) {
                 this.$http.jsonp(serverPath + insert, {
-                    keySetCode: keyValueSetAdd.keySetCodeInput,
-                    keySetName: keyValueSetAdd.keySetNameInput,
+                    keysetCode: keyValueSetAdd.keysetCodeInput,
+                    keysetName: keyValueSetAdd.keysetNameInput,
                     confKey: keyValueSetAdd.confKeyInput,
                     confValue: keyValueSetAdd.confValueInput,
                     desp: keyValueSetAdd.despInput,
@@ -49,8 +49,8 @@ var keyValueSetAdd = new Vue({
                 this.$http.jsonp(serverPath + modify, {
                     //拿到这条数据的ID
                     rowId: keyValueSet.currentVal.rowId,
-                    keySetCode: keyValueSetAdd.keySetCodeInput,
-                    keySetName: keyValueSetAdd.keySetNameInput,
+                    keysetCode: keyValueSetAdd.keysetCodeInput,
+                    keysetName: keyValueSetAdd.keysetNameInput,
                     confKey: keyValueSetAdd.confKeyInput,
                     confValue: keyValueSetAdd.confValueInput,
                     desp: keyValueSetAdd.despInput,

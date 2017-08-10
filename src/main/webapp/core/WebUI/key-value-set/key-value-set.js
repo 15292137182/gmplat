@@ -6,12 +6,14 @@ const query=str+"/query";
 const insert=str+"/add";
 const modify=str+"modify";
 const del=str+"/delete";
+const queryPage=str+"/queryPage"
 
 var keyValueSet=new Vue({
     el:"#kvsInfo",
     data:{
         keyValueSetdata:[],
         input:'',
+        height:''
     },
     methods: {
         search(){
@@ -36,8 +38,8 @@ var keyValueSet=new Vue({
             var htmlUrl = 'key-value-set-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '450px', function () {
                 //code值
-                keyValueSetAdd.keySetCodeInput = keyValueSet.currentVal.keySetCode;
-                keyValueSetAdd.keySetNameInput = keyValueSet.currentVal.keySetName;
+                keyValueSetAdd.keysetCodeInput = keyValueSet.currentVal.keysetCode;
+                keyValueSetAdd.keysetNameInput = keyValueSet.currentVal.keysetName;
                 keyValueSetAdd.confKeyInput = keyValueSet.currentVal.confKey;
                 keyValueSetAdd.confValueInput = keyValueSet.currentVal.confValue;
                 keyValueSetAdd.despInput = keyValueSet.currentVal.desp;
@@ -50,8 +52,8 @@ var keyValueSet=new Vue({
         deleteEvent(){
             this.$http.jsonp(serverPath + del, {
                 rowId: keyValueSet.currentVal.rowId,
-                keySetCode: keyValueSet.currentVal.keySetCode,
-                keySetName: keyValueSet.currentVal.keySetName,
+                keySetCode: keyValueSet.currentVal.keysetCode,
+                keySetName: keyValueSet.currentVal.keysetName,
                 confKey: keyValueSet.currentVal.confKey,
                 confValue: keyValueSet.currentVal.confValue,
                 desp: keyValueSet.currentVal.desp,
@@ -62,11 +64,53 @@ var keyValueSet=new Vue({
                 ibcpLayer.ShowOK(res.data.message);
                 keyValueSet.search();
             });
+        },
+    },
+    created(){
+        $(document).ready(function(){
+            keyValueSet.height=$(window).height()-200;
+        });
+        $(window).resize(function(){
+            keyValueSet.height=$(window).height()-200;
+        })
+    }
+})
+
+/*
+ * 分页
+ */
+var page=new Vue({
+    el:"#paging",
+    data:{
+        total:0,
+        pageSizes:[1,2,3,4],
+        pageNum:1,
+        pageSize:1
+    },
+    methods:{
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.searchPage();
+        },
+
+        handleNumChange(val){
+            this.pageNum=val;
+            this.searchPage();
+        },
+        searchPage(){
+            this.$http.jsonp(serverPath + queryPage, {
+                "args":this.input,
+                "pageSize": this.pageSize,
+                "pageNum":this.pageNum,
+            }, {
+                jsonp: 'callback'
+            }).then(function (res) {
+                keyValueSet.keyValueSetdata = res.data.data.result;
+                this.total=Number(res.data.data.total);
+            });
         }
     },
     created(){
-        this.search();
-    },
-
-
+        this.searchPage();
+    }
 })

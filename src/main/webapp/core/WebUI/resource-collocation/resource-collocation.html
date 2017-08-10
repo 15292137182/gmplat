@@ -41,11 +41,11 @@
                     <el-table :data="myResData" ref="myResData" highlight-current-row
                               @row-click="currentChange" :height="Height" border
                               class="tableStyle">
-                        <el-table-column prop="confKey" label="键" width="">
+                        <el-table-column prop="confKey" label="键" show-overflow-tooltip>
                         </el-table-column>
-                        <el-table-column prop="confValue" label="值" width="">
+                        <el-table-column prop="confValue" label="值" show-overflow-tooltip>
                         </el-table-column>
-                        <el-table-column prop="desp" label="说明" width="">
+                        <el-table-column prop="desp" label="说明" show-overflow-tooltip>
                         </el-table-column>
                     </el-table>
                 </template>

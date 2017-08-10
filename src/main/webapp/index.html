@@ -11,13 +11,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" data="black">
   <meta name="apple-mobile-web-app-capable" data="yes">
   <meta name="format-detection" data="telephone=no">
-
   <link rel="stylesheet" href="core/webjar/plugins/layui/css/layui.css" media="all"/>
   <link rel="stylesheet" href="core/webjar/plugins/css/global.css" media="all">
   <link rel="stylesheet" href="core/webjar/plugins/font-awesome/css/font-awesome.min.css">
-
-
 </head>
+<style>
+  html {
+    overflow: hidden;
+  }
+</style>
 
 <body>
 <div class="admin-side-toggle">
@@ -28,7 +30,7 @@
     <div class="layui-main">
       <div class="admin-login-box">
         <a class="logo" style="left: 0;" href="http://beginner.zhengjinfan.cn/demo/beginner_admin/">
-          <span style="font-size: 24px;">GMPlat信息管理</span>
+          <span style="font-size: 18px;">GMPlat信息管理</span>
         </a>
         <div class="admin-side-full">
           <i class="fa  fa-arrows-alt" aria-hidden="true"></i>
@@ -90,7 +92,7 @@
           <cite>主页</cite>
         </li>
       </ul>
-      <div class="layui-tab-content" style="min-height: 150px; padding: 5px 0 0 0;">
+      <div class="layui-tab-content" style="min-height: 150px; padding: 2px 0 0 0;">
         <div class="layui-tab-item layui-show">
           <iframe src="core/main.html" style="height:526px"></iframe>
         </div>
@@ -152,7 +154,7 @@
     window.onload = function ()//用window的onload事件，窗体加载完毕的时候
     {
       $('li.layui-nav-item').mouseover(function () {
-        $(".layui-nav-bar").css("top", 50);
+        $(".layui-nav-bar").css("top", 40);
       })
       $(".layui-tab-item .layui-show>iframe").height(500);
 //					$('.layui-show>iframe').css('height','600px');
