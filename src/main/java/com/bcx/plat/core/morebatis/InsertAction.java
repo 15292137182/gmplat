@@ -1,6 +1,8 @@
 package com.bcx.plat.core.morebatis;
 
+import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.utils.SpringContextHolder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -13,6 +15,15 @@ public class InsertAction {
   private Collection<String> columns;
   private List<Map<String, Object>> rows;
   private List<List<Object>> values;
+  private ConditionTranslator translator;
+
+  public InsertAction() {
+    translator= SpringContextHolder.getBean("conditionTranslator");
+  }
+
+  public ConditionTranslator getTranslator() {
+    return translator;
+  }
 
   public List<List<Object>> getValues() {
     return values;

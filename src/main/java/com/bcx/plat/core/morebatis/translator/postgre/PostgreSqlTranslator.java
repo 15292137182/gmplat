@@ -1,6 +1,6 @@
 package com.bcx.plat.core.morebatis.translator.postgre;
 
-import com.bcx.plat.core.morebatis.cctv1.Argument;
+import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
@@ -9,6 +9,7 @@ import com.bcx.plat.core.morebatis.substance.condition.And;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.morebatis.substance.condition.Or;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,40 +30,48 @@ public class PostgreSqlTranslator implements ConditionTranslator {
       final String fieldSource = ((FieldCondition) condition).getField().getFieldSource();
       final Operator operator = ((FieldCondition) condition).getOperator();
       final Object value=((FieldCondition)condition).getValue();
-      list.add(fieldSource);
+      addSqlSegment(fieldSource,list);
       switch (operator) {
         case IN:
-          list.add(condition.isNot()?"NOT IN":"IN");
-          list.add(new Argument(value));
+          if (value instanceof Collection) {
+            if (((Collection) value).size()==0) {
+              if (!condition.isNot()) addSqlSegment("false",list);
+            }else {
+              addSqlSegment(condition.isNot()?"not in":"in",list);
+              addSqlParameter(value,list);
+            }
+          }else{
+            //预留给子表查询
+          }
           break;
         case EQUAL:
-          list.add(condition.isNot()?"!=":"=");
-          list.add(new Argument(value));
+          addSqlSegment(condition.isNot()?"!=":"=",list);
+          addSqlParameter(value,list);
           break;
         case LIKE_FULL:
-          list.add(condition.isNot()?"NOT LIKE":"LIKE");
-          list.add("concat('%',");
-          list.add(value);
-          list.add(",'%')");
+          addSqlSegment(condition.isNot()?"not like":"like",list);
+          addSqlSegment("concat('%',",list);
+          addSqlParameter(value,list);
+          addSqlSegment(",'%')",list);
           break;
         case LIKE_LEFT:
-          list.add(condition.isNot()?"NOT LIKE":"LIKE");
-          list.add("concat('%',");
-          list.add(value);
-          list.add(")");
+          addSqlSegment(condition.isNot()?"not like":"like",list);
+          addSqlSegment("concat('%',",list);
+          addSqlParameter(value,list);
+          addSqlSegment(")",list);
           break;
         case LIKE_RIGHT:
-          list.add(condition.isNot()?"NOT LIKE":"LIKE");
-          list.add("concat(");
-          list.add(value);
-          list.add(",'%')");
+          addSqlSegment(condition.isNot()?"not like":"like",list);
+          addSqlSegment("concat(",list);
+          addSqlParameter(value,list);
+          addSqlSegment(",'%')",list);
           break;
         case BETWEEN:
-          list.add(condition.isNot()?"NOT BETWEEN":"BETWEEN");
+          addSqlSegment(condition.isNot()?"not between":"between",list);
           final Object[] values = (Object[]) value;
-          list.add(new Argument(values[0]));
-          list.add("AND");
-          list.add(new Argument(values[1]));
+          addSqlParameter(values[0],list);
+          addSqlSegment("and",list);
+          addSqlParameter(values[1],list);
           break;
       }
     }
@@ -70,37 +79,48 @@ public class PostgreSqlTranslator implements ConditionTranslator {
   }
 
   public LinkedList<Object> translate(And andCondition,LinkedList<Object> list){
-    return translateChainCondition(andCondition, list,"AND");
+    return translateChainCondition(andCondition, list,"and");
   }
 
   public LinkedList<Object> translate(Or andCondition,LinkedList<Object> list){
-    return translateChainCondition(andCondition, list,"OR");
+    return translateChainCondition(andCondition, list,"or");
   }
 
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition, LinkedList<Object> list,String seperator){
-    if (chainCondition.isNot()) list.add("NOT");
-    list.add("(");
+    if (chainCondition.isNot()) addSqlSegment("NOT",list);
+    addSqlSegment("(",list);
     final List<Condition> conditions = chainCondition.getConditions();
     for (Condition condition : conditions) {
       translate(condition,list);
-      list.add(seperator);
+      addSqlSegment(seperator,list);
     }
     if (conditions.size()>0) list.removeLast();
-    list.add(")");
+    addSqlSegment(")",list);
     return list;
   }
 
+  private LinkedList<Object> addSqlSegment(String sql,LinkedList<Object> list){
+    list.add(new SqlSegment(sql));
+    return list;
+  }
+  
+  private LinkedList<Object> addSqlParameter(Object parameter,LinkedList<Object> list){
+    list.add(parameter);
+    return list;
+  }
+  
   public static void main(String[] args) {
     PostgreSqlTranslator postgreSqlTranslator=new PostgreSqlTranslator();
     And and=new And(
         new FieldCondition("satrurn",Operator.EQUAL,10086).not()
-        ,new FieldCondition("jupiter",Operator.IN,Arrays.asList(1,2,3,4,5)).not()
+        ,new FieldCondition("jupiter",Operator.IN, Arrays.asList(1,2,3,4,5)).not()
         ,new Or(   new FieldCondition("earth",Operator.BETWEEN,new Object[]{"venus","mars"})
                   ,new FieldCondition("sun",Operator.EQUAL,"star")
                   ,new And(new FieldCondition("a",Operator.EQUAL,"b").not(),
                             new FieldCondition("b",Operator.EQUAL,"a").not())
         )
     );
+
     LinkedList<Object> result = postgreSqlTranslator.translate(and);
     result.size();
   }

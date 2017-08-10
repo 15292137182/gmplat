@@ -1,37 +1,45 @@
 package com.bcx.plat.core.morebatis;
 
+import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.utils.SpringContextHolder;
 import java.util.Arrays;
 import java.util.List;
 
 public class DeleteAction {
 
   private TableSource tableSource;
-  private List<FieldCondition> where;
+  private Condition where;
+  private ConditionTranslator translator;
+
+  public DeleteAction() {
+    translator= SpringContextHolder.getBean("conditionTranslator");
+  }
 
   public TableSource getTableSource() {
     return tableSource;
+  }
+
+  public ConditionTranslator getTranslator() {
+    return translator;
   }
 
   public void setTableSource(TableSource tableSource) {
     this.tableSource = tableSource;
   }
 
-  public List<FieldCondition> getWhere() {
+  public Condition getWhere() {
     return where;
   }
 
-  public void setWhere(List<FieldCondition> where) {
+  public void setWhere(Condition where) {
     this.where = where;
   }
 
-  public DeleteAction where(FieldCondition... fieldCondition) {
-    return where(Arrays.asList(fieldCondition));
-  }
-
-  public DeleteAction where(List<FieldCondition> fieldCondition) {
-    setWhere(fieldCondition);
+  public DeleteAction where(Condition condition) {
+    setWhere(condition);
     return this;
   }
 

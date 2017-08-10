@@ -3,9 +3,12 @@ package com.bcx.plat.core.morebatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
 import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.Field;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.morebatis.substance.condition.And;
+import com.bcx.plat.core.utils.SpringContextHolder;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -19,11 +22,20 @@ public class QueryAction {
   private static final Field ALL_FIELD = new Field("*");
   private List<Column> columns;
   private TableSource tableSource;
-  private List<FieldCondition> where;
+  private Condition where;
+  private ConditionTranslator translator;
 
-  public QueryAction() {
-    where = new LinkedList<>();
-    columns = new LinkedList<>();
+  public QueryAction(){
+    translator= SpringContextHolder.getBean("conditionTranslator");
+  }
+
+//  public List<Object> getTranslatedCondition(){
+//    return translator.translate(where);
+//  }
+
+
+  public ConditionTranslator getTranslator() {
+    return translator;
   }
 
   public List<Column> getColumns() {
@@ -38,7 +50,6 @@ public class QueryAction {
     return select(Arrays.asList(column));
   }
 
-
   public QueryAction select(List<Column> column) {
     setColumns(column);
     return this;
@@ -48,12 +59,8 @@ public class QueryAction {
     return select(ALL_FIELD);
   }
 
-  public QueryAction where(FieldCondition... fieldCondition) {
-    return where(Arrays.asList(fieldCondition));
-  }
-
-  public QueryAction where(List<FieldCondition> fieldCondition) {
-    setWhere(fieldCondition);
+  public QueryAction where(Condition condition) {
+    setWhere(condition);
     return this;
   }
 
@@ -62,11 +69,11 @@ public class QueryAction {
     return this;
   }
 
-  public List<FieldCondition> getWhere() {
+  public Condition getWhere() {
     return where;
   }
 
-  public void setWhere(List<FieldCondition> where) {
+  public void setWhere(Condition where) {
     this.where = where;
   }
 

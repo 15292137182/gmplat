@@ -1,17 +1,17 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
-public class Argument {
+public class SqlSegment {
   private Object argument;
 
-  public Object getArgument() {
+  public Object getSegment() {
     return argument;
   }
 
-  public void setArgument(Object argument) {
+  public void setSegment(Object argument) {
     this.argument = argument;
   }
 
-  public Argument(Object argument) {
+  public SqlSegment(Object argument) {
     this.argument = argument;
   }
 }

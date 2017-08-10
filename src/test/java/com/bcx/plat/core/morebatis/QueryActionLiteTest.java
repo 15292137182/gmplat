@@ -5,6 +5,7 @@ import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
 import com.bcx.plat.core.morebatis.substance.Field;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.Table;
+import com.bcx.plat.core.morebatis.substance.condition.And;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +40,8 @@ public class QueryActionLiteTest extends BaseTest {
   public void andConditionTest() {
     QueryAction queryActionLite = new QueryAction().select(fieldId, fieldDemo1, fieldDemo2)
         .from(new Table("test_only.test_table1"))
-        .where(new FieldCondition(fieldId, Operator.IN, Arrays.asList(1, 2, 3)),
-            new FieldCondition(fieldId, Operator.EQUAL, 1));
+        .where(new And(new FieldCondition(fieldId, Operator.IN, Arrays.asList(1, 2, 3)),
+            new FieldCondition(fieldId, Operator.EQUAL, 1)));
     Assert.assertTrue(tempSuitMapper.select(queryActionLite).size() == 1);
   }
 

@@ -16,6 +16,8 @@
   <!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
   <bean class="com.bcx.plat.core.utils.SpringContextHolder"/>
 
+  <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
+
   <bean id="jacksonAdapter" class="com.bcx.plat.core.utils.JacksonAdapter">
     <property name="dateFormat">
       <bean class="java.text.SimpleDateFormat">

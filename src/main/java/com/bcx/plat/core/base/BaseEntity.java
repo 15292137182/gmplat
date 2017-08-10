@@ -11,8 +11,10 @@ import com.bcx.plat.core.morebatis.InsertAction;
 import com.bcx.plat.core.morebatis.QueryAction;
 import com.bcx.plat.core.morebatis.UpdateAction;
 import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.morebatis.substance.condition.And;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.SpringContextHolder;
@@ -273,12 +275,12 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     TableSource table = TableAnnoUtil.getTableSource(this.getClass());
     Map<String, Object> values = toMap();
     Map etc = (Map) values.remove("etc");
-    List<FieldCondition> pkConditions = pks.stream()
+    List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
         })
         .collect(Collectors.toList());
-    DeleteAction deleteAction = new DeleteAction().from(table).where(pkConditions);
+    DeleteAction deleteAction = new DeleteAction().from(table).where(new And(pkConditions));
     getTemplate().delete(deleteAction);
     return (T) this;
   }
@@ -288,12 +290,12 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     TableSource table = TableAnnoUtil.getTableSource(this.getClass());
     Map<String, Object> values = toMap();
     Map etc = (Map) values.remove("etc");
-    List<FieldCondition> pkConditions = pks.stream()
+    List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
         })
         .collect(Collectors.toList());
-    UpdateAction updateAction = new UpdateAction().from(table).set(values).where(pkConditions);
+    UpdateAction updateAction = new UpdateAction().from(table).set(values).where(new And(pkConditions));
     getTemplate().update(updateAction);
     return (T) this;
   }
@@ -304,12 +306,12 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     TableSource table = TableAnnoUtil.getTableSource(this.getClass());
     Map<String, Object> values = toMap();
     Map etc = (Map) values.remove("etc");
-    List<FieldCondition> pkConditions = pks.stream()
+    List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
         })
         .collect(Collectors.toList());
-    QueryAction queryAction = new QueryAction().selectAll().from(table).where(pkConditions);
+    QueryAction queryAction = new QueryAction().selectAll().from(table).where(new And(pkConditions));
     List<Map<String, Object>> result = getTemplate().select(queryAction);
     if (result.size() == 1) {
       HashMap<String, Object> _obj = new HashMap<>();
