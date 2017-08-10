@@ -1,13 +1,11 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.ServiceResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

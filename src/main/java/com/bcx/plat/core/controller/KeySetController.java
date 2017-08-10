@@ -37,20 +37,4 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
         return Arrays.asList("keysetCode", "keysetName");
     }
 
-    /**
-     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
-     *
-     * @param args
-     * @param pageNum
-     * @param pageSize
-     * @param request
-     * @param locale
-     */
-    @RequestMapping("/queryPage")
-    @Override
-    public Object singleInputSelect(String args, int pageNum, int pageSize, HttpServletRequest request, Locale locale) {
-        ServiceResult<PageResult<Map<String, Object>>> result = keySetService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize);
-        return super.result(request, result, locale);
-    }
 }

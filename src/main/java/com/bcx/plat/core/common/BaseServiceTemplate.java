@@ -27,9 +27,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
+
+
+  /**
+   * logger 日志操作
+   */
+  protected Logger logger = LoggerFactory.getLogger(getClass());
+
 
   private final Class entityClass = (Class) ((ParameterizedType) this.getClass()
       .getGenericSuperclass()).getActualTypeArguments()[0];
@@ -60,6 +70,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       serviceResult = new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
           underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
+      logger.warn(Message.QUERY_FAIL);
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return serviceResult;
@@ -76,6 +87,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
           underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
+      logger.warn(Message.QUERY_FAIL);
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return serviceResult;
@@ -93,6 +105,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
           underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      logger.warn(Message.QUERY_FAIL);
     }
     return serviceResult;
   }
@@ -107,6 +120,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
       serviceResult = new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,
           pageResult.size()==0?null:underlineKeyMapListToCamel(pageResult));
     } catch (Exception e) {
+      logger.warn(Message.QUERY_FAIL);
       serviceResult = ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return serviceResult;
@@ -119,6 +133,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     try {
       getSuitMapper().insert(insertAction);
     } catch (Exception e) {
+      logger.warn(Message.QUERY_FAIL);
       e.printStackTrace();
       return ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL);
     }
@@ -138,6 +153,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     try {
       getSuitMapper().update(updateAction);
     } catch (Exception e) {
+      logger.warn(Message.QUERY_FAIL);
       e.printStackTrace();
       return ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
     }
@@ -153,6 +169,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     try {
       getSuitMapper().delete(deleteAction);
     } catch (Exception e) {
+      logger.warn(Message.QUERY_FAIL);
       e.printStackTrace();
       return ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
     }

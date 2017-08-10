@@ -50,7 +50,7 @@ public class BusinessObjectProController extends BaseControllerTemplate<Business
     }
 
     /**
-     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
+     * 查询业务对象
      *
      * @param str
      * @param request
@@ -59,18 +59,30 @@ public class BusinessObjectProController extends BaseControllerTemplate<Business
     @RequestMapping("/query")
     @Override
     public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-            if(str.length()!=0){
-                ServiceResult<List<Map<String, Object>>> result = businessObjectProService.singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
-                return super.result(request, result, locale);
-            }else if (request.getParameter("rowId").length() != 0) {
-                Map<String, Object> args = new HashMap<>();
-                args.put("objRowId", request.getParameter("rowId"));
-                ServiceResult<List<Map<String, Object>>> result = businessObjectProService.select(args);
-                return super.result(request, result, locale);
-            } else {
+       String rowId =  request.getParameter("rowId");
+       String rowIds =  request.getParameter("rowIds");
+        if (str.length() != 0 && rowId.length() != 0) {
+            Map<String, Object> args = new HashMap<>();
+            args.put("objRowId", request.getParameter("rowId"));
+            ServiceResult<List<Map<String, Object>>> result = businessObjectProService.select(args);
+            return super.result(request, new ServiceResult().Msg(BaseConstants.STATUS_FAIL, Message.OPERATOR_FAIL), locale);
+        }  else  if (str.length() != 0) {
+            ServiceResult<List<Map<String, Object>>> result = businessObjectProService.singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
+            return super.result(request, result, locale);
+        } else if (request.getParameter("rowId").length() != 0) {
+            Map<String, Object> args = new HashMap<>();
+            args.put("objRowId", rowId);
+            ServiceResult<List<Map<String, Object>>> result = businessObjectProService.select(args);
+            return super.result(request, result, locale);
+        } else if (rowIds.length() != 0) {
+            Map<String, Object> args = new HashMap<>();
+            args.put("rowId", rowIds);
+            ServiceResult<List<Map<String, Object>>> result = businessObjectProService.select(args);
+            return super.result(request, result, locale);
+        } else {
+            return super.result(request, new ServiceResult().Msg(BaseConstants.STATUS_FAIL, Message.OPERATOR_FAIL), locale);
 
-                return super.result(request, new ServiceResult().Msg(BaseConstants.STATUS_FAIL, Message.OPERATOR_FAIL), locale);
-            }
+        }
 
     }
 }

@@ -60,8 +60,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    * 新增业务对象
    */
   @RequestMapping("/add")
-  public Object insert(Y entity, HttpServletRequest request, Locale locale) {
-    ServiceResult<Map<String, Object>> result = entityService
+  public Object insert(Y entity, HttpServletRequest request, Locale locale) {ServiceResult<Map<String, Object>> result = entityService
         .insert(entity.buildCreateInfo().toMap());
     return super.result(request, result, locale);
   }
