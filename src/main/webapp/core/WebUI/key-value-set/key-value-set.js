@@ -13,9 +13,7 @@ var keyValueSet=new Vue({
     data:{
         keyValueSetdata:[],
         input:'',
-        total:3,
-        pageNums:[1,2,3,4],
-        pageSize:1
+        height:''
     },
     methods: {
         search(){
@@ -67,14 +65,36 @@ var keyValueSet=new Vue({
                 keyValueSet.search();
             });
         },
-        handleNumChange(val1){
-            this.pageNum=val1;
-            this.searchPage();
+    },
+    created(){
+        $(document).ready(function(){
+            keyValueSet.height=$(window).height()-200;
+        });
+        $(window).resize(function(){
+            keyValueSet.height=$(window).height()-200;
+        })
+    }
+})
 
-        },
-
+/*
+ * 分页
+ */
+var page=new Vue({
+    el:"#paging",
+    data:{
+        total:0,
+        pageSizes:[1,2,3,4],
+        pageNum:1,
+        pageSize:1
+    },
+    methods:{
         handleSizeChange(val){
             this.pageSize=val;
+            this.searchPage();
+        },
+
+        handleNumChange(val){
+            this.pageNum=val;
             this.searchPage();
         },
         searchPage(){
@@ -85,15 +105,12 @@ var keyValueSet=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                this.keyValueSetdata = res.data.data.result;
-
+                keyValueSet.keyValueSetdata = res.data.data.result;
+                this.total=Number(res.data.data.total);
             });
-        },
+        }
     },
     created(){
-        this.pageNum=this.pageNums["0"];
         this.searchPage();
-    },
-
-
+    }
 })

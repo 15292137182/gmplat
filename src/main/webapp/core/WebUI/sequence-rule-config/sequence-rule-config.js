@@ -11,7 +11,8 @@ var config=new Vue({
     el:'#srconfig',
     data:{
         input:'',
-        seqRuleConfigdata:[]
+        seqRuleConfigdata:[],
+        Height:''
     },
     methods:{
         search(){
@@ -58,5 +59,11 @@ var config=new Vue({
     },
     created(){
         this.search();
+        $(document).ready(function () {
+            config.Height = $(window).height() - 150;
+        });
+        $(window).resize(function () {
+            config.Height = $(window).height() - 150;
+        })
     }
 })
