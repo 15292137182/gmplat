@@ -11,12 +11,12 @@ var resTop=new Vue({
         addResEvent() {
             operate = 1;
             var htmlUrl = 'resource-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增系统资源配置', '400px', '340px');
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增系统资源配置', '400px', '300px');
         },
         editResEvent() {
             operate = 2;
             var htmlUrl = 'resource-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑系统资源配置', '400px', '340px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑系统资源配置', '400px', '300px', function () {
                 //code值
                 resAdd.codeInput = resCol.currentValue.confKey;
                 resAdd.nameInput = resCol.currentValue.confValue;
