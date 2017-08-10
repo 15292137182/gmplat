@@ -1,10 +1,11 @@
 package com.bcx.plat.core.morebatis.substance.condition;
 
+import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import java.util.Arrays;
 import java.util.List;
 
-public class And implements Condition<And> {
+public class And implements ChainCondition<And> {
 
   List<Condition> conditions;
 

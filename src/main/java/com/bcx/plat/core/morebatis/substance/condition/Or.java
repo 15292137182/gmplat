@@ -1,12 +1,13 @@
 package com.bcx.plat.core.morebatis.substance.condition;
 
+import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import java.util.Arrays;
 import java.util.List;
 
-public class Or implements Condition<Or> {
+public class Or implements ChainCondition<Or> {
 
   List<Condition> conditions;
-
   boolean not=false;
 
   @Override
@@ -14,9 +15,24 @@ public class Or implements Condition<Or> {
     return not;
   }
 
-  @Override
   public void setNot(boolean not) {
-    this.not=not;
+    this.not = not;
+  }
+
+  public List<Condition> getConditions() {
+    return conditions;
+  }
+
+  public void setConditions(List<Condition> conditions) {
+    this.conditions = conditions;
+  }
+
+  public Or(Condition ... conditions) {
+    this.conditions = Arrays.asList(conditions);
+  }
+
+  public Or(List<Condition> conditions) {
+    this.conditions = conditions;
   }
 
   @Override
