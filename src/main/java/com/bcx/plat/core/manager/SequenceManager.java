@@ -8,6 +8,7 @@ import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.mapper.SequenceGenerateMapper;
 import com.bcx.plat.core.mapper.SequenceRuleConfigMapper;
 import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.extra.lang.Lang;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,7 +179,10 @@ public class SequenceManager {
           while (nv.length() < length) {
             nv.insert(0, 0);
           }
-        }// 若数据溢出时有异常，在此处追加 异常
+          // 若数据溢出时有异常，在此处追加 异常
+        } else {
+          throw Lang.makeThrow("该流水号已经用尽！请修改流水号规则或联系管理员！");
+        }
         rm.put(modular, nv);
       }
     }
