@@ -42,10 +42,10 @@ public class CommonServiceTest extends BaseTest{
     for(int i=0;i<40;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
     Map<String,Object> args=new HashMap<>();
     args.put("objectName",testName);
-    ServiceResult<PageResult<Map<String, Object>>> result = testTableService
+    PageResult<Map<String, Object>> result = testTableService
         .select(args, 1, 20);
-    Assert.assertEquals(20,result.getData().getResult().size());
-    Assert.assertEquals(60,result.getData().getTotal());
+    Assert.assertEquals(20,result.getResult().size());
+    Assert.assertEquals(60,result.getTotal());
   }
 
   @Test
@@ -53,7 +53,7 @@ public class CommonServiceTest extends BaseTest{
   @Rollback
   public void emptyConditionTest(){
     args.put("objectName","");
-//    Assert.assertTrue(((List)testTableService.select(args).getData()).size()>0);
+    Assert.assertTrue(testTableService.select(args).size()>0);
   }
 
   @Test
@@ -63,44 +63,44 @@ public class CommonServiceTest extends BaseTest{
     businessObject.setObjectCode("for test2");
     for(int i=0;i<10;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
     args.put("objectCode","for test2");
-    ServiceResult<PageResult<Map<String, Object>>> result = testTableService.select(args, 1, 20);
-    Assert.assertEquals(10,result.getData().getResult().size());
-    Assert.assertEquals(10,result.getData().getTotal());
+    PageResult<Map<String, Object>> result = testTableService.select(args, 1, 20);
+    Assert.assertEquals(10,result.getResult().size());
+    Assert.assertEquals(10,result.getTotal());
   }
   
   @Test
   @Transactional
   @Rollback
   public void testCommonDelete(){
-    ServiceResult<List<Map<String, Object>>> result = testTableService.select(args);
-    Assert.assertEquals(20,result.getData().size());
+    List<Map<String, Object>> result = testTableService.select(args);
+    Assert.assertEquals(20,result.size());
     testTableService.delete(args);
     result = testTableService.select(args);
-    Assert.assertEquals(0,result.getData().size());
+    Assert.assertEquals(0,result.size());
   }
 
   @Test
   @Transactional
   @Rollback
   public void testCommonInsert(){
-    ServiceResult<List<Map<String, Object>>> result = testTableService.select(args);
-    Assert.assertEquals(20,result.getData().size());    
+    List<Map<String, Object>> result = testTableService.select(args);
+    Assert.assertEquals(20,result.size());    
   }
 
   @Test
   @Transactional
   @Rollback
   public void testCommonUpdate(){
-    ServiceResult<List<Map<String, Object>>> result = testTableService.select(args);
-    Assert.assertEquals(20,result.getData().size());
+    List<Map<String, Object>> result = testTableService.select(args);
+    Assert.assertEquals(20,result.size());
     HashMap<String,Object> updateMap=new HashMap<>();
-    updateMap.put("rowId",result.getData().get(0).get("rowId"));
+    updateMap.put("rowId",result.get(0).get("rowId"));
     updateMap.put("objectName","这是一个全新的名字");
 
     testTableService.update(updateMap);
 
     result = testTableService.select(args);
-    Assert.assertEquals(19,result.getData().size());
+    Assert.assertEquals(19,result.size());
   }
 
   @Test
@@ -120,15 +120,15 @@ public class CommonServiceTest extends BaseTest{
     businessObject.setObjectCode("aaax2aaa");
     businessObject.setObjectName("aaax2aaa");
     businessObject.buildCreateInfo().insert();
-    ServiceResult<List<Map<String,Object>>> result = testTableService
+    List<Map<String,Object>> result = testTableService
         .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2"));
-    Assert.assertEquals(4,result.getData().size());
+    Assert.assertEquals(4,result.size());
     result = testTableService
         .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1"));
-    Assert.assertEquals(3,result.getData().size());
+    Assert.assertEquals(3,result.size());
     result = testTableService
         .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2"));
-    Assert.assertEquals(3,result.getData().size());
+    Assert.assertEquals(3,result.size());
   }
 
   @Before

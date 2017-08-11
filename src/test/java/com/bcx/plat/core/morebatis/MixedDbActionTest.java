@@ -2,8 +2,12 @@ package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
-import com.bcx.plat.core.morebatis.substance.Field;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.command.DeleteAction;
+import com.bcx.plat.core.morebatis.command.InsertAction;
+import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.command.UpdateAction;
+import com.bcx.plat.core.morebatis.mapper.PostgreSuitMapper;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import java.util.Arrays;
@@ -23,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class MixedDbActionTest extends BaseTest {
 
   @Autowired
-  TempSuitMapper tempSuitMapper;
+  MoreBatis moreBatis;
 
-  public void setTempSuitMapper(TempSuitMapper tempSuitMapper) {
-    this.tempSuitMapper = tempSuitMapper;
+  public void setMoreBatis(MoreBatis moreBatis) {
+    this.moreBatis = moreBatis;
   }
 
   @Test
@@ -34,11 +38,11 @@ public class MixedDbActionTest extends BaseTest {
   @Rollback
   public void MixedTest() {
     final FieldCondition idCondition = new FieldCondition("id", Operator.EQUAL, 999);
-    final QueryAction queryAction = new QueryAction()
+    final QueryAction queryAction = moreBatis.select()
         .selectAll()
         .from(TableInfo.TEST)
         .where(idCondition);
-    int sizeBefore = tempSuitMapper.select(queryAction).size();
+    int sizeBefore = queryAction.execute().size();
     final Set<String> columns = Sets.newSet("id", "testFirst", "testSecond");
     Map<String, Object> row;
     List<Map<String, Object>> rows = new LinkedList<>();
@@ -73,29 +77,29 @@ public class MixedDbActionTest extends BaseTest {
     row.put("testSecond", UUID.randomUUID().toString());
     rows.add(row);
 
-    InsertAction insertAction = new InsertAction()
+    InsertAction insertAction = moreBatis.insert()
         .into(TableInfo.TEST)
         .cols(columns)
         .values(rows);
-    tempSuitMapper.insert(insertAction);
-    int sizeAfter = tempSuitMapper.select(queryAction).size();
+    insertAction.execute();
+    int sizeAfter = queryAction.execute().size();
     Assert.assertEquals(sizeAfter - sizeBefore, 4);
-    DeleteAction deleteAction = new DeleteAction().from(TableInfo.TEST).where(idCondition);
+    DeleteAction deleteAction = moreBatis.delete().from(TableInfo.TEST).where(idCondition);
     Map<String, Object> args = new HashMap<>();
     args.put("id", 2017);
-    tempSuitMapper.delete(deleteAction);
-    Assert.assertEquals(tempSuitMapper.select(queryAction).size(), 0);
+    deleteAction.execute();
+    Assert.assertEquals(queryAction.execute().size(), 0);
     final FieldCondition id1000 = new FieldCondition("id", Operator.EQUAL, 1000);
-    QueryAction updatedQuery = new QueryAction().selectAll()
+    QueryAction updatedQuery = moreBatis.select().selectAll()
         .from(TableInfo.TEST)
         .where(id1000);
-    final int id1000SizeBefore = tempSuitMapper.select(updatedQuery).size();
-    UpdateAction updateAction = new UpdateAction()
+    final int id1000SizeBefore = updatedQuery.execute().size();
+    UpdateAction updateAction = moreBatis.update()
         .from(TableInfo.TEST)
         .set(args)
         .where(id1000);
-    tempSuitMapper.update(updateAction);
-    final int id1000SizeAfter = tempSuitMapper.select(updatedQuery).size();
+    updateAction.execute();
+    final int id1000SizeAfter = updatedQuery.execute().size();
     Assert.assertTrue(id1000SizeBefore > id1000SizeAfter);
   }
 
@@ -103,14 +107,14 @@ public class MixedDbActionTest extends BaseTest {
   @Transactional
   @Rollback
   public void notConditionTest(){
-    QueryAction queryAction=new QueryAction()
+    QueryAction queryAction=moreBatis.select()
         .selectAll()
         .from(TableInfo.TEST);
-    int total=tempSuitMapper.select(queryAction).size();
+    int total=queryAction.execute().size();
     queryAction.where(new FieldCondition("testFirst",Operator.EQUAL,"json works"));
-    int j=tempSuitMapper.select(queryAction).size();
+    int j=queryAction.execute().size();
     queryAction.where(new FieldCondition("testFirst",Operator.EQUAL,"json works",true));
-    int notJ=tempSuitMapper.select(queryAction).size();
+    int notJ=queryAction.execute().size();
     Assert.assertNotEquals("没有测试数据",0,total);
     Assert.assertNotEquals("至少准备几条测试查询的数据",0,j);
     Assert.assertEquals("程序逻辑错误",total,j+notJ);
@@ -127,17 +131,17 @@ public class MixedDbActionTest extends BaseTest {
     row.put("testFirst", "json works");
     row.put("testSecond", "json works2");
     row.put("jsonTest", jsonTest);
-    InsertAction insertAction = new InsertAction().into(TableInfo.TEST)
+    InsertAction insertAction = moreBatis.insert().into(TableInfo.TEST)
         .cols(Arrays.asList("id", "testFirst","testSecond", "jsonTest"))
         .values(Arrays.asList(row));
-    QueryAction queryAction = new QueryAction().selectAll().from(TableInfo.TEST)
+    QueryAction queryAction = moreBatis.select().selectAll().from(TableInfo.TEST)
         .where(jsonFieldCondition);
-    DeleteAction deleteAction = new DeleteAction().from(TableInfo.TEST)
+    DeleteAction deleteAction = moreBatis.delete().from(TableInfo.TEST)
         .where(jsonFieldCondition);
-    tempSuitMapper.insert(insertAction);
-    List result = tempSuitMapper.select(queryAction);
+    insertAction.execute();
+    List result = queryAction.execute();
     result.size();
     result.get(0);
-    tempSuitMapper.delete(deleteAction);
+    deleteAction.execute();
   }
 }

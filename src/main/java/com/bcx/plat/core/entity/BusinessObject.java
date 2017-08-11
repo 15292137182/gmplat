@@ -2,6 +2,7 @@ package com.bcx.plat.core.entity;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.database.info.TableInfo;
@@ -32,6 +33,8 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   @Override
   public BusinessObject buildCreateInfo() {
     setRowId(lengthUUID(32));
+    setVersion("1.0");
+    setStatus(BaseConstants.INVALID);
     return super.buildCreateInfo();
   }
 

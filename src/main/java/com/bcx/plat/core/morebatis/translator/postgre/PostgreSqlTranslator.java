@@ -87,6 +87,7 @@ public class PostgreSqlTranslator implements ConditionTranslator {
   }
 
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition, LinkedList<Object> list,String seperator){
+    if (chainCondition.getConditions().size()==0) return list;
     if (chainCondition.isNot()) addSqlSegment("NOT",list);
     addSqlSegment("(",list);
     final List<Condition> conditions = chainCondition.getConditions();

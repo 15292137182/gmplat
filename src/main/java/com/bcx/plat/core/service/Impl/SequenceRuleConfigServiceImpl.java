@@ -23,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class SequenceRuleConfigServiceImpl extends
-    BaseServiceTemplate<SequenceRuleConfig> implements
-    SequenceRuleConfigService {
+public class SequenceRuleConfigServiceImpl implements SequenceRuleConfigService {
 
   @Autowired
   private SequenceRuleConfigMapper sequenceRuleConfigMapper;
@@ -38,7 +36,6 @@ public class SequenceRuleConfigServiceImpl extends
    */
   @Override
   public ServiceResult select(Map map) {
-
     return new ServiceResult<>(STATUS_SUCCESS, OPERATOR_SUCCESS,
         sequenceRuleConfigMapper.select(map));
   }

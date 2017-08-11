@@ -6,18 +6,14 @@ import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
-import com.bcx.plat.core.morebatis.DeleteAction;
-import com.bcx.plat.core.morebatis.InsertAction;
-import com.bcx.plat.core.morebatis.QueryAction;
-import com.bcx.plat.core.morebatis.UpdateAction;
-import com.bcx.plat.core.morebatis.mapper.TempSuitMapper;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.And;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
-import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.TableAnnoUtil;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -109,7 +105,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    * @return 返回实体类
    */
   @SuppressWarnings("unchecked")
-  public T fromMap(Map<String, Object> map,boolean isUnderline) {
+  public T fromMap(Map<String, Object> map, boolean isUnderline) {
     Class current = getClass();
     do {
       Method[] methods = current.getDeclaredMethods();
@@ -118,7 +114,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
         if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
           String fieldName = underlineToCamel(
               method.getName().substring(3, method.getName().length()), false);
-          temp = isUnderline?map.get(underlineToCamel(fieldName,false)):map.get(fieldName);
+          temp = isUnderline ? map.get(underlineToCamel(fieldName, false)) : map.get(fieldName);
           if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
             if (temp instanceof String) {
               temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
@@ -147,8 +143,8 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    * @param map map数据
    * @return 返回实体类
    */
-  public T fromMap(Map<String, Object> map){
-    return fromMap(map,false);
+  public T fromMap(Map<String, Object> map) {
+    return fromMap(map, false);
   }
 
   public String getStatus() {
@@ -255,8 +251,8 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     this.etc = etc;
   }
 
-  private TempSuitMapper getTemplate() {
-    return (TempSuitMapper) SpringContextHolder.getBean("tempSuitMapper");
+  private MoreBatis getMoreBatis() {
+    return (MoreBatis) SpringContextHolder.getBean("moreBatis");
   }
 
   public T insert() {
@@ -264,9 +260,8 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     TableSource table = TableAnnoUtil.getTableSource(this.getClass());
     Map<String, Object> values = toMap();
     Map etc = (Map) values.remove("etc");
-    InsertAction insertAction = new InsertAction().into(table).cols(values.keySet())
-        .values(Arrays.asList(values));
-    getTemplate().insert(insertAction);
+    getMoreBatis().insert().into(table).cols(values.keySet()).values(Arrays.asList(values))
+        .execute();
     return (T) this;
   }
 
@@ -280,8 +275,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
         })
         .collect(Collectors.toList());
-    DeleteAction deleteAction = new DeleteAction().from(table).where(new And(pkConditions));
-    getTemplate().delete(deleteAction);
+    getMoreBatis().delete().from(table).where(new And(pkConditions)).execute();
     return (T) this;
   }
 
@@ -295,8 +289,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
         })
         .collect(Collectors.toList());
-    UpdateAction updateAction = new UpdateAction().from(table).set(values).where(new And(pkConditions));
-    getTemplate().update(updateAction);
+    getMoreBatis().update().from(table).set(values).where(new And(pkConditions)).execute();
     return (T) this;
   }
 
@@ -311,8 +304,8 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
         })
         .collect(Collectors.toList());
-    QueryAction queryAction = new QueryAction().selectAll().from(table).where(new And(pkConditions));
-    List<Map<String, Object>> result = getTemplate().select(queryAction);
+    List<Map<String, Object>> result = getMoreBatis().select().selectAll().from(table)
+        .where(new And(pkConditions)).execute();
     if (result.size() == 1) {
       HashMap<String, Object> _obj = new HashMap<>();
       result.get(0).entrySet().stream().forEach((entry) -> {

@@ -4,6 +4,10 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFunc;
+import com.bcx.plat.core.morebatis.substance.Field;
+import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.morebatis.substance.condition.And;
+import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -26,15 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/core/fronc")
 @RestController
 public class FrontFuncController extends BaseControllerTemplate<FrontFuncService, FrontFunc> {
-
-    @Autowired
-    private FrontFuncService frontFuncService;
     @Autowired
     private FrontFuncProService frontFuncProService;
     @Autowired
     private BusinessObjectService businessObjectService;
-    @Autowired
-    private BusinessObjectProService businessObjectProService;
 
     public void setBusinessObjectService(BusinessObjectService businessObjectService) {
         this.businessObjectService = businessObjectService;
@@ -42,14 +41,6 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
 
     public void setFrontFuncProService(FrontFuncProService frontFuncProService) {
         this.frontFuncProService = frontFuncProService;
-    }
-
-    public void setBusinessObjectProService(BusinessObjectProService businessObjectProService) {
-        this.businessObjectProService = businessObjectProService;
-    }
-
-    public void setFrontFuncService(FrontFuncService frontFuncService) {
-        this.frontFuncService = frontFuncService;
     }
 
     @Override
@@ -61,55 +52,39 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
      */
     @RequestMapping("/query")
-    public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-        String rowId = request.getParameter("rowId");
-        String rowIds = request.getParameter("rowIds");
-        if (rowId == null && rowIds ==null) {
-            ServiceResult serviceResult = new ServiceResult().Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-            return super.result(request, serviceResult, locale);
-        }
-        Map<String,Object> map1 = new HashMap<>();
-        if (rowIds.length()==0){
-            ServiceResult<List<Map<String, Object>>> result = frontFuncService.select(map1);
-            List<Map<String, Object>> data = result.getData();
-            Map<String, Object>map = new HashMap<>();
-            for (int i = 0; i < data.size(); i++) {
-                Object relateBusiPro = data.get(i).get("relateBusiPro");
-                map.put("rowId",relateBusiPro);
-                ServiceResult<List<Map<String, Object>>> select = businessObjectProService.select(map);
-                List<Map<String, Object>> data1 = select.getData();
-                for (int j = 0; j <data1.size() ; j++) {
-                    String propertyName = (String)data1.get(i).get("propertyName");
-                    result.getData().get(i).put("tables",propertyName);
-                }
-            }
-            return super.result(request,result,locale);
-        } else if (rowId.length()!=0){
-            Map<String,Object> map = new HashMap<>();
-            map.put("funcRowId",rowId);
-            ServiceResult<List<Map<String, Object>>> result = frontFuncProService.select(map);
-            return super.result(request,result,locale);
-        }
-        ServiceResult<List<Map<String, Object>>> result = frontFuncService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
-        List<Map<String, Object>> data = result.getData();
-        Map<String, Object> map = new HashMap<>();
-        for (int i = 0; i < data.size(); i++) {
-            Object relateBusiObj = data.get(i).get("relateBusiObj");
-            map.put("rowId", relateBusiObj);
-            ServiceResult<List<Map<String, Object>>> select = businessObjectService.select(map);
-            List<Map<String, Object>> data1 = select.getData();
-            for (int j = 0; j < data1.size(); j++) {
-                String propertyName = (String) data1.get(i).get("objectName");
-                result.getData().get(i).put("tables", propertyName);
-            }
-            return super.result(request, result, locale);
-        }
-        ServiceResult<List<Map<String, Object>>> result1 =
-                frontFuncService.singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
-        return super.result(request, result1, locale);
+    public Object singleInputSelect(String str,String rowId ,HttpServletRequest request, Locale locale) {
+        final FrontFuncService entityService = getEntityService();
+        List<Map<String, Object>> result = entityService
+            .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+        result=queryResultProcess(result);
+        return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
     }
 
+    /**
+     * TODO 这个方法后面会有大用处
+     * 暂时先放这里 以后再重构
+     * @param result
+     * @return
+     */
+    @Override
+    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+        List<String> rowIds = result.stream().map((row) -> {
+            return (String) row.get("relateBusiObj");
+        }).collect(Collectors.toList());
+        List<Map<String, Object>> results = businessObjectService
+            .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                , new Field("row_id", "rowId")
+                , new Field("object_name", "objectName"));
+        HashMap<String,Object> map=new HashMap<>();
+        for (Map<String, Object> row : results) {
+            map.put((String) row.get("rowId"),row.get("objectName"));
+        }
+        for (Map<String, Object> row : result) {
+            row.put("objectName",map.get(row.get("relateBusiObj")));
+        }
+        return result;
+    }
 
     /**
      * 删除
@@ -121,19 +96,14 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        ServiceResult<List<Map<String, Object>>> list = frontFuncProService.singleInputSelect(Arrays.asList("funcRowId"), Arrays.asList(rowId));
-        List<Map<String, Object>> data = list.getData();
-        if (data != null) {
-            List<String> rowIds = data.stream().map((row) -> {
+        List<Map<String, Object>> list = frontFuncProService
+            .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
+        if (UtilsTool.isValid(list)) {
+            List<String> rowIds = list.stream().map((row) -> {
                 return (String) row.get("rowId");
             }).collect(Collectors.toList());
-            Map<String, Object> argsSub = new HashMap<>();
-            argsSub.put("rowId", rowIds);
-            frontFuncProService.delete(argsSub);
+            frontFuncProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
         }
-        Map<String, Object> args = new HashMap<>();
-        args.put("rowId", rowId);
-        ServiceResult<Object> result = frontFuncService.delete(args);
-        return super.result(request, result, locale);
+        return super.delete(rowId, request, locale);
     }
 }

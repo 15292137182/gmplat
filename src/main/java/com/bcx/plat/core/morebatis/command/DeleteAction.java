@@ -1,21 +1,21 @@
-package com.bcx.plat.core.morebatis;
+package com.bcx.plat.core.morebatis.command;
 
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.utils.SpringContextHolder;
-import java.util.Arrays;
-import java.util.List;
 
 public class DeleteAction {
 
   private TableSource tableSource;
   private Condition where;
+  private MoreBatis app;
   private ConditionTranslator translator;
 
-  public DeleteAction() {
-    translator= SpringContextHolder.getBean("conditionTranslator");
+  public DeleteAction(MoreBatis app,ConditionTranslator translator) {
+    this.app = app;
+    this.translator = translator;
   }
 
   public TableSource getTableSource() {
@@ -46,5 +46,9 @@ public class DeleteAction {
   public DeleteAction from(TableSource tableSource) {
     setTableSource(tableSource);
     return this;
+  }
+
+  public int execute(){
+    return app.execute(this);
   }
 }

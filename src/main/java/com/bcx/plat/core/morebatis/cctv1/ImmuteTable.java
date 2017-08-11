@@ -1,4 +1,4 @@
-package com.bcx.plat.core.morebatis.singleton;
+package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 

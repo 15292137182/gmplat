@@ -1,12 +1,10 @@
-package com.bcx.plat.core.morebatis;
+package com.bcx.plat.core.morebatis.command;
 
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.utils.SpringContextHolder;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class UpdateAction {
@@ -14,10 +12,12 @@ public class UpdateAction {
   private TableSource tableSource;
   private Map<String, Object> values;
   private Condition where;
+  private MoreBatis app;
   private ConditionTranslator translator;
 
-  public UpdateAction() {
-    translator= SpringContextHolder.getBean("conditionTranslator");
+  public UpdateAction(MoreBatis app,ConditionTranslator translator) {
+    this.app = app;
+    this.translator = translator;
   }
 
   public ConditionTranslator getTranslator() {
@@ -61,5 +61,9 @@ public class UpdateAction {
   public UpdateAction set(Map<String, Object> row) {
     setValues(row);
     return this;
+  }
+
+  public int execute(){
+    return app.execute(this);
   }
 }

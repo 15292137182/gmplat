@@ -40,7 +40,7 @@ public class MaintTableServiceImpl implements MaintTableService {
         return new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
+      return ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
   }
 
@@ -54,7 +54,7 @@ public class MaintTableServiceImpl implements MaintTableService {
         return new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,result);
     } catch (Exception e) {
       e.printStackTrace();
-      return new ServiceResult().Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
+      return ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
   }
 

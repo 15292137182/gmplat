@@ -1,11 +1,11 @@
-package com.bcx.plat.core.morebatis.singleton;
+package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.substance.Field;
 
 
 /**
- * 供单例模式使用的不可变字段
+ * 只读字段包装器
  */
 public class ImmuteField implements Column {
 

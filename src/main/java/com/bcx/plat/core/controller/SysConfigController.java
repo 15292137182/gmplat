@@ -25,26 +25,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 @RestController
 @RequestMapping("/core/sysConfig")
 public class SysConfigController extends BaseControllerTemplate<SysConfigService,SysConfig> {
-
-    @Autowired
-    private SysConfigService sysConfigService;
-
-    public void setSysConfigService(SysConfigService sysConfigService) {
-        this.sysConfigService = sysConfigService;
-    }
-
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("confKey","confValue");
-    }
-
-    /**
-     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
-     */
-    @RequestMapping("/queryPage")
-    public Object singleInputSelect(String args,int pageNum,int pageSize, HttpServletRequest request, Locale locale) {
-        ServiceResult<PageResult<Map<String, Object>>> result = sysConfigService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize);
-        return super.result(request, result, locale);
     }
 }

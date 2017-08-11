@@ -48,7 +48,6 @@ public class DataSetConfigController extends BaseControllerTemplate<DataSetConfi
     public Object insert(DataSetConfig entity, HttpServletRequest request, Locale locale) {
         entity.setDatasetCode("A00"+UtilsTool.lengthUUID(3).toUpperCase());
         entity.setVersion("1.0");
-        ServiceResult<Map<String, Object>> result = dataSetConfigService.insert(entity.buildCreateInfo().toMap());
-        return super.result(request,result, locale);
+        return super.insert(entity,request,locale);
     }
 }

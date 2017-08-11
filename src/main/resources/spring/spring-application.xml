@@ -18,6 +18,11 @@
 
   <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
 
+  <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatis">
+    <constructor-arg ref="postgreSuitMapper"/>
+    <constructor-arg ref="conditionTranslator"/>
+  </bean>
+
   <bean id="jacksonAdapter" class="com.bcx.plat.core.utils.JacksonAdapter">
     <property name="dateFormat">
       <bean class="java.text.SimpleDateFormat">

@@ -44,6 +44,10 @@ public class UtilsTool {
     return null != obj && !"".equals(obj);
   }
 
+  public static boolean isValid(List list) {
+    return null != list && list.size()>0;
+  }
+
 
   /**
    * 返回指定长度的随机字符串

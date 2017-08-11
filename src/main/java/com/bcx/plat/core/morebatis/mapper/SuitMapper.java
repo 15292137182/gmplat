@@ -1,9 +1,9 @@
 package com.bcx.plat.core.morebatis.mapper;
 
-import com.bcx.plat.core.morebatis.DeleteAction;
-import com.bcx.plat.core.morebatis.InsertAction;
-import com.bcx.plat.core.morebatis.QueryAction;
-import com.bcx.plat.core.morebatis.UpdateAction;
+import com.bcx.plat.core.morebatis.command.DeleteAction;
+import com.bcx.plat.core.morebatis.command.InsertAction;
+import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.command.UpdateAction;
 import java.util.List;
 import java.util.Map;
 

@@ -12,19 +12,19 @@ import java.util.Map;
  */
 public interface BaseService<T extends BaseEntity> {
 
-  ServiceResult<PageResult<Map<String, Object>>> select(Map condition, int page, int limit);
+  PageResult<Map<String, Object>> select(Map condition, int page, int limit);
 
-  ServiceResult<List<Map<String, Object>>> select(Map condition);
+  List<Map<String, Object>> select(Map condition);
 
-  ServiceResult<List<Map<String, Object>>> singleInputSelect(Collection<String> column,
+  List<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value);
 
-  ServiceResult<PageResult<Map<String, Object>>> singleInputSelect(Collection<String> column,
+  PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value, int pageNum, int pageSize);
 
-  ServiceResult<Map<String, Object>> update(Map value);
+  int update(Map value);
 
-  ServiceResult<Map<String, Object>> insert(Map value);
+  int insert(Map value);
 
-  ServiceResult<Object> delete(Map condition);
+  int delete(Map condition);
 }

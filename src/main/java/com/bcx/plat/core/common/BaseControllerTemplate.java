@@ -3,6 +3,8 @@ package com.bcx.plat.core.common;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import java.util.HashMap;
@@ -17,8 +19,27 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
   @Autowired
   private T entityService;
 
+  protected abstract List<String> blankSelectFields();
+
+  protected List<Map<String,Object>> queryResultProcess(List<Map<String,Object>> result){
+    return UtilsTool.isValid(result)?queryResultProcessAction(result):result;
+  }
+
+  protected PageResult<Map<String,Object>> queryResultProcess(PageResult<Map<String,Object>> result){
+    result.setResult(queryResultProcess(result.getResult()));
+    return result;
+  }
+
+  protected List<Map<String,Object>> queryResultProcessAction(List<Map<String,Object>> result){
+    return result;
+  }
+
   public void setEntityService(T entityService) {
     this.entityService = entityService;
+  }
+
+  protected T getEntityService(){
+    return entityService;
   }
 
   /**
@@ -26,10 +47,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    */
   @RequestMapping("/query")
   public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-    ServiceResult<List<Map<String,Object>>> result = entityService
+    List<Map<String,Object>> result = entityService
         .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
-
-    return super.result(request, result, locale);
+    return super.result(request, commonServiceResult(queryResultProcess(result),Message.QUERY_SUCCESS), locale);
   }
 
   /**
@@ -37,32 +57,30 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    */
   @RequestMapping("/queryPage")
   public Object singleInputSelect(String args,int pageNum,int pageSize, HttpServletRequest request, Locale locale) {
-    ServiceResult<List<Map<String,Object>>> result = entityService
-        .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args),pageNum,pageSize);
-    return super.result(request, result, locale);
+    PageResult<Map<String,Object>> result = entityService
+        .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize);
+    return super.result(request, commonServiceResult(queryResultProcess(result),Message.QUERY_SUCCESS), locale);
   }
 
   @RequestMapping("/select")
   public Object select(Map<String,Object> args, HttpServletRequest request, Locale locale) {
-    ServiceResult<List<Map<String,Object>>> result = entityService.select(args);
-    return super.result(request, result, locale);
+    List<Map<String,Object>> result = entityService.select(args);
+    return super.result(request, commonServiceResult(queryResultProcess(result),Message.QUERY_SUCCESS), locale);
   }
 
   @RequestMapping("/selectPage")
   public Object select(Map<String,Object> args,int pageNum,int pageSize, HttpServletRequest request, Locale locale) {
-    ServiceResult<List<Map<String,Object>>> result = entityService.select(args,pageNum,pageSize);
-    return super.result(request, result, locale);
+    PageResult<Map<String,Object>> result = entityService.select(args, pageNum, pageSize);
+    return super.result(request, commonServiceResult(queryResultProcess(result),Message.QUERY_SUCCESS), locale);
   }
-
-  protected abstract List<String> blankSelectFields();
 
   /**
    * 新增业务对象
    */
   @RequestMapping("/add")
-  public Object insert(Y entity, HttpServletRequest request, Locale locale) {ServiceResult<Map<String, Object>> result = entityService
-        .insert(entity.buildCreateInfo().toMap());
-    return super.result(request, result, locale);
+  public Object insert(Y entity, HttpServletRequest request, Locale locale) {
+    int result = entityService.insert(entity.buildCreateInfo().toMap());
+    return super.result(request, commonServiceResult(result,Message.NEW_ADD_SUCCESS), locale);
   }
 
 
@@ -71,9 +89,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    */
   @RequestMapping("/modify")
   public Object update(Y entity, HttpServletRequest request, Locale locale) {
-    ServiceResult<Map<String, Object>> result = entityService
-        .update(entity.buildModifyInfo().toMap());
-    return super.result(request, result, locale);
+    entityService.update(entity.buildModifyInfo().toMap());
+    return super.result(request, commonServiceResult(entity,Message.UPDATE_SUCCESS), locale);
   }
 
   /**
@@ -83,8 +100,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
     Map<String, Object> args = new HashMap<>();
     args.put("rowId", rowId);
-    ServiceResult<Object> result = entityService.delete(args);
-    return super.result(request, result, locale);
+    entityService.delete(args);
+    return super.result(request, commonServiceResult(args,Message.DELETE_SUCCESS), locale);
   }
 
   /**
@@ -100,7 +117,11 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
     HashMap<String,Object> map=new HashMap<>();
     map.put("rowId",rowId);
     map.put("status",BaseConstants.TAKE_EFFECT);
-    ServiceResult result = entityService.update(map);
-    return super.result(request, result, locale);
+    entityService.update(map);
+    return super.result(request, commonServiceResult(map, Message.UPDATE_SUCCESS), locale);
+  }
+
+  private <T> ServiceResult<T> commonServiceResult(T content,String msg){
+    return new ServiceResult<>(BaseConstants.STATUS_SUCCESS,msg,content);
   }
 }
