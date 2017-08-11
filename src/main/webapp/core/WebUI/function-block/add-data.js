@@ -60,7 +60,7 @@ var em=new Vue({
                 return;
             }
             //this.sortArrFun(this.sortNumber);//排序
-            this.funcRowId = window.parent.mb.rowObjId;
+            this.funcRowId = window.parent.topButtonObj.rowObjId;
             this.addObjectProperties();//新增
         },
         newAttribute(){//新增属性
@@ -79,10 +79,9 @@ var em=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                console.log(res.data);
                 ibcpLayer.ShowOK(res.data.message);
-                window.parent.vm.getRight(this.funcRowId);
-                parent.layer.close(window.parent.mb.divIndex);
+                window.parent.functionBlock.getRight(this.funcRowId);
+                parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
                 alert("新增属性失败！")
             });
@@ -105,12 +104,12 @@ var em=new Vue({
                 jsonp: 'callback'
             }).then(function (res) {
                 ibcpLayer.ShowOK(res.data.message);
-                window.parent.vm.getRight(this.funcRowId);
-                parent.layer.close(window.parent.mb.divIndex);
+                window.parent.functionBlock.getRight(this.funcRowId);
+                parent.layer.close(window.parent.topButtonObj.divIndex);
             });
         },
         cancel(){
-            parent.layer.close(window.parent.mb.divIndex);
+            parent.layer.close(window.parent.topButtonObj.divIndex);
         },
         sortArrFun(str){
             var arr=str.split(',');
@@ -119,14 +118,14 @@ var em=new Vue({
             }
         },
         addObjectProperties(){
-            if(!window.parent.mb.isEdit){//新增
+            if(!window.parent.topButtonObj.isEdit){//新增
                 this.newAttribute();
             }else{//编辑
                 this.editAttribute();
             }
         },
         loadComplete(){
-            this.funcRowId = window.parent.mb.rowObjId;
+            this.funcRowId = window.parent.topButtonObj.rowObjId;
             this.QueryProperties();
         },
         QueryProperties(){
@@ -170,9 +169,9 @@ var em=new Vue({
         }
     },
     created(){
-        this.relateBusiObjId = window.parent.mb.objId;//业务对象Id
-        this.rightRowId = window.parent.vm1.rowId;
-        if(window.parent.mb.isEdit){//编辑
+        this.relateBusiObjId = window.parent.topButtonObj.objId;//业务对象Id
+        this.rightRowId = window.parent.properties.rowId;
+        if(window.parent.topButtonObj.isEdit){//编辑
             this.loadComplete();
         }
     }

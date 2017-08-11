@@ -2,7 +2,7 @@
  * Created by andim on 2017/8/2.
  */
 //左边table
-var vm = new Vue({
+var functionBlock = new Vue({
     el:"#app",
     data:{
         input:'',
@@ -26,7 +26,7 @@ var vm = new Vue({
                     this.myData=res.data.data;
                     this.click(this.myData[0]);
                     this.deleteId = this.myData[0].rowId;
-                    //vm1.FindData(vm.myData[0].rowId);
+                    //properties.FindData(vm.myData[0].rowId);
                     this.getRight(this.myData[0].rowId);
                 }else{
                     this.myData=[];
@@ -40,11 +40,11 @@ var vm = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 ibcpLayer.ShowOK(res.data.message);
-                vm.get();
+                functionBlock.get();
             })
         },
         click(row, event, column){
-            //vm1.FindData(row.rowId);
+            //properties.FindData(row.rowId);
             if(row){
                 this.getRight(row.rowId);
                 this.deleteId = row.rowId;
@@ -64,10 +64,10 @@ var vm = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 if(res.data.data!=null){
-                    vm1.rightData = res.data.data
-                    vm1.clickRightTable(vm1.rightData[0]);
+                    properties.rightData = res.data.data
+                    properties.clickRightTable(properties.rightData[0]);
                 }else{
-                    vm1.rightData = [];
+                    properties.rightData = [];
                 }
             })
         }
@@ -75,10 +75,10 @@ var vm = new Vue({
     created(){
         this.get();
         $(document).ready(function(){
-            vm.leftHeight=$(window).height()-150;
+            functionBlock.leftHeight=$(window).height()-150;
         });
         $(window).resize(function(){
-            vm.leftHeight=$(window).height()-150;
+            functionBlock.leftHeight=$(window).height()-150;
         })
     },
     updated(){
@@ -89,7 +89,7 @@ var vm = new Vue({
 });
 
 //右边table
-var vm1 = new Vue({
+var properties = new Vue({
     el:'#right',
     data:{
         rightData:[],
@@ -120,10 +120,10 @@ var vm1 = new Vue({
     },
     created(){
         $(document).ready(function(){
-            vm1.rightHeight=$(window).height()-150;
+            properties.rightHeight=$(window).height()-150;
         });
         $(window).resize(function(){
-            vm1.rightHeight=$(window).height()-150;
+            properties.rightHeight=$(window).height()-150;
         })
     },
     updated(){
@@ -134,7 +134,7 @@ var vm1 = new Vue({
 });
 
 //按钮
-var mb = new Vue({
+var topButtonObj = new Vue({
     el:'#myButton',
     data:{
         divIndex:'',
@@ -153,41 +153,40 @@ var mb = new Vue({
         editBlock(){
             this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '400px',function(){
                 em.isEdit = true;
-                em.codeInput=vm.editObj.funcCode;
-                em.nameInput=vm.editObj.funcName;
-                em.typeInput=vm.editObj.funcType;
-                em.dataId=vm.editObj.relateBusiObj;
-                em.tableInput=vm.editObj.tables;
-                em.desp=vm.editObj.desp;
-                em.rowId=vm.editObj.rowId;
+                em.codeInput=functionBlock.editObj.funcCode;
+                em.nameInput=functionBlock.editObj.funcName;
+                em.typeInput=functionBlock.editObj.funcType;
+                em.dataId=functionBlock.editObj.relateBusiObj;
+                em.tableInput=functionBlock.editObj.objectName;
+                em.desp=functionBlock.editObj.desp;
+                em.rowId=functionBlock.editObj.rowId;
             });
 
         },
         del(){
-            vm.delete();
+            functionBlock.delete();
         },
         //功能块属性
         addData(){
-            mb.rowObjId = vm.editObj.rowId;
-            mb.objId = vm.editObj.relateBusiObj;
+            topButtonObj.rowObjId = functionBlock.editObj.rowId;
+            topButtonObj.objId = functionBlock.editObj.relateBusiObj;
             this.isEdit = false;
-            mb.divIndex = ibcpLayer.ShowIframe('add-data.html','新增属性','500px', '550px')
+            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','新增属性','500px', '550px')
         },
         editData(){
-            mb.rowObjId = vm.editObj.rowId;
-            mb.objId = vm.editObj.relateBusiObj;
+            topButtonObj.rowObjId = functionBlock.editObj.rowId;
+            topButtonObj.objId = functionBlock.editObj.relateBusiObj;
             this.isEdit = true;
-            mb.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
+            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
         },
         delData(){
             this.$http.jsonp(this.delUrl,{
-                rowId:vm1.rowId
+                rowId:properties.rowId
             },{
                 jsonp:'callback'
             }).then(function(res){
-                vm.getRight(vm1.funcId);
+                functionBlock.getRight(properties.funcId);
                 ibcpLayer.ShowOK(res.data.message);
-                console.log(res.data.data);
             },function(){
                 alert("删除失败")
             })

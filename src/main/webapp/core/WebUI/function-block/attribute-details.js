@@ -11,7 +11,7 @@ var attributeDetails = new Vue({
     methods:{
         getAttribute(){
             this.$http.jsonp(this.url, {
-                "queryProRowId":vm1.rowId,
+                "queryProRowId":properties.rowId,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
@@ -21,7 +21,7 @@ var attributeDetails = new Vue({
             });
         },
         conformEventClose(){//确定按钮
-            ibcpLayer.Close(vm1.divIndex);
+            ibcpLayer.Close(properties.divIndex);
         }
     },
     created(){

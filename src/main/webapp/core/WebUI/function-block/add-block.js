@@ -15,7 +15,6 @@ var em=new Vue({
     },
     methods:{
         searchConnectObj(){
-            console.log(vm.editObj);
             var htmlUrl = 'show-add-block.html';
             littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象数据', '400px', '420px',false);
         },
@@ -39,7 +38,7 @@ var em=new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     ibcpLayer.ShowOK(res.data.message);
-                    vm.get();
+                    functionBlock.get();
                 },function(){
                     alert("error")
                 });
@@ -54,15 +53,15 @@ var em=new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     ibcpLayer.ShowOK(res.data.message);
-                    vm.get();
+                    functionBlock.get();
                 },function(){
                     alert("error")
                 });
             }
-            ibcpLayer.Close(mb.divIndex);
+            ibcpLayer.Close(topButtonObj.divIndex);
         },
         cancel(){
-            ibcpLayer.Close(mb.divIndex);
+            ibcpLayer.Close(topButtonObj.divIndex);
         }
     }
 })

@@ -29,31 +29,5 @@
         </el-col>
     </div>
 </body>
-<script>
-    var vm1 = new Vue({
-        el:'#right',
-        data:{
-            rightData:[],
-            //rightHeight:'',
-            Robj:'',
-            url:serverPath+'/maintTable/queryById'
-        },
-        methods:{
-            FindData(id){
-                this.$http.jsonp(vm1.url,{
-                    "rowId":id
-                },{
-                    jsonp:'callback'
-                }).then(function (res) {
-                    if(res.data.data!=null){
-                        this.rightData=res.data.data;
-                    }
-                })
-            },
-            conformEvent(){
-                ibcpLayer.Close(vm.divIndex);
-            }
-        }
-    });
-</script>
+<script src="data-base.js"></script>
 </html>

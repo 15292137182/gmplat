@@ -4,7 +4,7 @@
 /**
  * Created by andim on 2017/8/1.
  */
-var vm = new Vue({
+var dataBase = new Vue({
     el:"#app",
     data:{
         input:'',
@@ -34,25 +34,24 @@ var vm = new Vue({
         },
         handleClick(){
             this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','600px', '400px',function(){
-                vm1.Robj = vm.rowObj;
-                vm1.FindData(vm1.Robj.rowId);
-                console.log(vm1.Robj);
+                DatabaseDetails.Robj = dataBase.rowObj;
+                DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
             })
         }
     },
     created(){
         this.get();
         $(document).ready(function(){
-            vm.leftHeight=$(window).height()-150;
+            dataBase.leftHeight=$(window).height()-150;
         });
         $(window).resize(function(){
-            vm.leftHeight=$(window).height()-150;
+            dataBase.leftHeight=$(window).height()-150;
         })
     },
     updated(){
         this.FindOk(this.myData[0]);
     }
 });
-var mb = new Vue({
+var topButtonObj = new Vue({
     el:'#myButton'
 })
