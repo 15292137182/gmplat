@@ -51,7 +51,7 @@
     </el-row>
 </el-col>
 <!--左边table-->
-<el-col :span="8" id="app">
+<el-col :span="8" id="app" style="margin-left:15px">
     <div class="allBorder">
     <el-row>
         <el-col :span="24">
@@ -81,7 +81,7 @@
                             </el-table-column>
                             <el-table-column  prop="funcType" label="类型" width="68">
                             </el-table-column>
-                            <el-table-column  prop="tables" label="业务对象" width="95">
+                            <el-table-column  prop="objectName" label="业务对象" width="95">
                             </el-table-column>
                             <el-table-column  prop="wetherAvailable" label="是否可用" width="95">
                             </el-table-column>
@@ -94,7 +94,7 @@
     </div>
 </el-col>
 <!--右边table-->
-<el-col :span="15" :offset="1" id="right">
+<el-col :span="15" :offset="1" id="right" style="margin-left:25px">
     <div class="allBorder">
     <el-row>
         <el-col :span="24">
@@ -116,7 +116,7 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <template>
                         <el-table :data="rightData" ref="myTable" @row-click="clickRightTable" :highlight-current-row="true" border style="width: 100%;" :height="rightHeight">
-                            <el-table-column  prop="tables" label="业务对象属性" width="118">
+                            <el-table-column  prop="propertyName" label="业务对象属性" width="118">
                             </el-table-column>
                             <el-table-column  prop="displayTitle" label="标题" width="">
                             </el-table-column>

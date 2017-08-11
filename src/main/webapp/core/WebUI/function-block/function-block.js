@@ -9,7 +9,7 @@ var vm = new Vue({
         myData:[],
         leftHeight:'',
         url:serverPath+'/fronc/query',//查询所有功能块信息
-        findRightDataUrl:serverPath+'/fronFuncPro/query',//查询指定ID功能块的属性信息
+        findRightDataUrl:serverPath+'/fronFuncPro/queryPro',//查询指定ID功能块的属性信息
         deleteId:'',
         editObj:'',
     },
@@ -17,12 +17,11 @@ var vm = new Vue({
         get(){
             this.$http.jsonp(this.url,{
                 str:this.input,
-                rowId:'',
-                rowIds:''
+                // rowId:'',
+                // rowIds:''
             },{
                 jsonp:'callback'
             }).then(function(res){
-                console.log(res);
                 if(res.data.data!==null){
                     this.myData=res.data.data;
                     this.click(this.myData[0]);
@@ -51,7 +50,6 @@ var vm = new Vue({
                 this.deleteId = row.rowId;
                 this.editObj = row;
             }
-            console.log(row);
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
@@ -59,9 +57,9 @@ var vm = new Vue({
         getRight(id){
             this.$http.jsonp(this.findRightDataUrl,{
                 str:'',
-                rowId:id,
-                tables:'',
-                proRowId:''
+                fronByProRowId:id,
+                // tables:'',
+                // proRowId:''
             },{
                 jsonp:'callback'
             }).then(function(res){
@@ -112,7 +110,6 @@ var vm1 = new Vue({
                 this.rowId = row.rowId;
                 this.funcId = row.funcRowId;
             }
-            console.log(row);
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
@@ -179,7 +176,6 @@ var mb = new Vue({
         editData(){
             mb.rowObjId = vm.editObj.rowId;
             mb.objId = vm.editObj.relateBusiObj;
-            console.log(mb.rowObjId+'--1'+mb.objId);
             this.isEdit = true;
             mb.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
         },

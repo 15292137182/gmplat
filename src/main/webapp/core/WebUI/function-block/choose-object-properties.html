@@ -45,43 +45,5 @@
     </el-col>
 </el-row>
 </body>
-<script>
-    var em = new Vue({
-        el: '#objPropertiesTable',
-        data: {
-            objectPropertiesData: []
-        },
-        created() {
-            this.$http.jsonp(serverPath + "/businObjPro/query", {
-                rowId:window.parent.em.relateBusiObjId,
-                str:'',
-                "rowIds":''
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                if(res.data.data!=null){
-                    this.objectPropertiesData = res.data.data;
-                }
-            });
-        },
-        methods: {
-            handleCurrentChange(val) {
-                //选中行的数据
-                this.currentRow = val.propertyCode + "(" + val.propertyName + ")";
-                //选中行的ID
-                this.currentId = val.rowId;
-            },
-            conformEvent() {
-                //将数据渲染到外面的input里面
-                window.parent.em.tableInput = this.currentRow;
-                window.parent.em.dataId = this.currentId;
-                //执行关闭
-                parent.layer.close(window.parent.littledivIndex);
-            },
-            cancel() {
-                parent.layer.close(window.parent.littledivIndex)
-            }
-        }
-    })
-</script>
+<script src="choose-object-properties.js"></script>
 </html>

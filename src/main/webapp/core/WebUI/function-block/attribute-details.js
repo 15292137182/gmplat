@@ -5,16 +5,13 @@ var attributeDetails = new Vue({
     el:'#attributeDetails',
     data:{
         input:'',
-        url:serverPath+'/fronFuncPro/query',//查询功能块属性接口
+        url:serverPath+'/fronFuncPro/queryProRowId',//查询功能块属性接口
         attributeData:[],//属性数组
     },
     methods:{
         getAttribute(){
             this.$http.jsonp(this.url, {
-                "str":'',
-                "rowId":'',
-                "tables":'',
-                "proRowId":vm1.rowId,
+                "queryProRowId":vm1.rowId,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+    <button>click me</button>
+<div id="author" @click="pagingObjAjax" style="border:1px solid red">
+    {{url}}
+</div>
+</body>
+<script>
+    var pagingObj = (function(){
+        var Example = function(){
+            var author = {
+                data:function(){
+                    return{
+
+                    }
+                },
+                props : ['url','pageSize','pageNum','args'],
+                methods:{
+                    pagingObjAjax(callback){
+                        this.$http.jsonp(this.url,{
+                            args:this.args,
+                            pageSize:this.pageSize,
+                            pageNum:this.pageNum
+                        },{
+                            jsonp:'callback'
+                        }).then(function(res){
+                            console.log(res.data.data);
+                            if(callback){
+                                callback(res);
+                            }
+                        },function(){
+                            alert("错误！");
+                        })
+                    }
+                }
+            };
+            return author
+        }
+        return {
+            Example:Example
+        }
+    })()
+    //var paging =  Vue.extend(pagingObj.Example());
+    var pa = new (Vue.extend(pagingObj.Example()))({
+            propsData: {
+                url:"",//分页查询接口
+                pageSize : '',//每页数据条数
+                pageNum:'',//从第几页查
+                args:''//input输入框
+            }
+        }).$mount('#author')//分页组件ID;
+    pa.pagingObjAjax()//支持回调函数callback;
+</script>
+</html>
