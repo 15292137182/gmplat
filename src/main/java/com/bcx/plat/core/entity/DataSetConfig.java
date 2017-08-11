@@ -27,6 +27,8 @@ public class DataSetConfig extends BaseEntity<DataSetConfig> {
      */
     @Override
     public DataSetConfig buildCreateInfo() {
+        this.setDatasetCode("A00"+UtilsTool.lengthUUID(3).toUpperCase());
+        this.setVersion("1.0");
         this.rowId = UtilsTool.lengthUUID(32);
         return super.buildCreateInfo();
     }

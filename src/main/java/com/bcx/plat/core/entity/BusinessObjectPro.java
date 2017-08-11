@@ -6,6 +6,8 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.utils.UtilsTool;
+
 import java.io.Serializable;
 
 /**
@@ -32,6 +34,7 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
    */
   @Override
   public BusinessObjectPro buildCreateInfo() {
+    this.setPropertyCode("A00" + UtilsTool.lengthUUID(3).toUpperCase());
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

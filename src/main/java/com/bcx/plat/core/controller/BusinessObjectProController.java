@@ -33,20 +33,10 @@ public class BusinessObjectProController extends
   }
 
   /**
-   * 新增业务对象:对象代码，对象名称，关联表(单选)，版本(系统生成)
-   */
-  @RequestMapping("/add")
-  @Override
-  public Object insert(BusinessObjectPro entity, HttpServletRequest request, Locale locale) {
-    entity.setPropertyCode("A00" + UtilsTool.lengthUUID(3).toUpperCase());
-    return super.insert(entity, request, locale);
-  }
-
-  /**
    * 查询业务对象
    */
-  @RequestMapping("/query")
-  public Object singleInputSelect(String str, String objRowId, HttpServletRequest request,Locale locale) {
+  @RequestMapping("/querySlave")
+  public Object querySlave(String str, String objRowId, HttpServletRequest request,Locale locale) {
     final BusinessObjectProService entityService = getEntityService();
     List<Map<String, Object>> result = entityService
         .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),

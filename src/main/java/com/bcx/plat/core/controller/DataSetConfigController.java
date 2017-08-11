@@ -35,19 +35,4 @@ public class DataSetConfigController extends BaseControllerTemplate<DataSetConfi
         return Arrays.asList("datasetCode","datasetName","datasetType");
     }
 
-
-    /**
-     * 新增业务对象:对象代码，对象名称，关联表(单选)，版本(系统生成)
-     *
-     * @param entity
-     * @param request
-     * @param locale
-     */
-    @RequestMapping("/add")
-    @Override
-    public Object insert(DataSetConfig entity, HttpServletRequest request, Locale locale) {
-        entity.setDatasetCode("A00"+UtilsTool.lengthUUID(3).toUpperCase());
-        entity.setVersion("1.0");
-        return super.insert(entity,request,locale);
-    }
 }

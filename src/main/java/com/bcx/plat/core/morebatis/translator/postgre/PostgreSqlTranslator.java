@@ -8,10 +8,8 @@ import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.And;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.morebatis.substance.condition.Or;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.*;
 
 public class PostgreSqlTranslator implements ConditionTranslator {
 
@@ -86,16 +84,29 @@ public class PostgreSqlTranslator implements ConditionTranslator {
     return translateChainCondition(andCondition, list,"or");
   }
 
+
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition, LinkedList<Object> list,String seperator){
     if (chainCondition.getConditions().size()==0) return list;
     if (chainCondition.isNot()) addSqlSegment("NOT",list);
     addSqlSegment("(",list);
     final List<Condition> conditions = chainCondition.getConditions();
+    Iterator<Condition> conditionIterator = conditions.iterator();
+    boolean notFirst=false;
+    // TODO 实现为主 混乱将就
     for (Condition condition : conditions) {
+        if (notFirst) {
+            if (condition instanceof ChainCondition) {
+                if (!((ChainCondition) condition).getConditions().isEmpty()) {
+                  addSqlSegment(seperator,list);
+                }
+            }else{
+                addSqlSegment(seperator,list);
+            }
+        }else{
+            notFirst=true;
+        }
       translate(condition,list);
-      addSqlSegment(seperator,list);
     }
-    if (conditions.size()>0) list.removeLast();
     addSqlSegment(")",list);
     return list;
   }
@@ -104,12 +115,12 @@ public class PostgreSqlTranslator implements ConditionTranslator {
     list.add(new SqlSegment(sql));
     return list;
   }
-  
+
   private LinkedList<Object> addSqlParameter(Object parameter,LinkedList<Object> list){
     list.add(parameter);
     return list;
   }
-  
+
   public static void main(String[] args) {
     PostgreSqlTranslator postgreSqlTranslator=new PostgreSqlTranslator();
     And and=new And(

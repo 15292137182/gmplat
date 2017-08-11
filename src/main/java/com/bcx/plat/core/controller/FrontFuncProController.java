@@ -54,4 +54,17 @@ public class FrontFuncProController extends
     return result(request,
         new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
   }
+
+  /**
+   * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
+   *
+   * @param str
+   * @param request
+   * @param locale
+   */
+  @Override
+  @RequestMapping
+  public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
+    return super.singleInputSelect(str, request, locale);
+  }
 }
