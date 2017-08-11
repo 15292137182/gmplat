@@ -196,9 +196,12 @@
                     }, {
                         jsonp: 'callback'
                     }).then(function (res) {
+                        console.log(res.data);
                         ibcpLayer.ShowOK(res.data.message);
-                        window.parent.vm1.FindData(this.funcRowId);
+                        window.parent.vm.getRight(this.funcRowId);
                         parent.layer.close(window.parent.mb.divIndex);
+                    },function(){
+                        alert("新增属性失败！")
                     });
                 }else{//编辑
                     this.$http.jsonp(this.editUrl, {
@@ -218,7 +221,7 @@
                         jsonp: 'callback'
                     }).then(function (res) {
                         ibcpLayer.ShowOK(res.data.message);
-                        window.parent.vm1.FindData(this.funcRowId);
+                        window.parent.vm.getRight(this.funcRowId);
                         parent.layer.close(window.parent.mb.divIndex);
                     });
                 }
@@ -230,8 +233,10 @@
             if(window.parent.mb.isEdit){//编辑
                 this.funcRowId = window.parent.mb.rowObjId;
                 this.$http.jsonp(this.queryUrl,{
-                    str:'',
-                    "rowId":this.rightRowId
+                    "str":'',
+                    "rowId":'',
+                    "tables":'',
+                    "proRowId":this.rightRowId,
                 },{
                     jsonp:'callback'
                 }).then(function (res) {
@@ -256,12 +261,13 @@
                     this.sortNumber=res.data.data[0].sort;//排序
                     this.isDisabled=true;
                     this.$http.jsonp(this.queryDataUrl,{
-                        "rowIds":this.dataId,
+                        "rowId":'',
                         "str":'',
-                        "rowId":''
+                        "rowIds":this.dataId
                     },{
                         jsonp:'callback'
                     }).then(function(res){
+                        console.log(res.data.data);
                         this.tableInput = res.data.data[0].propertyName//业务对象属性中文名
                     },function(){
                         alert("错误！")

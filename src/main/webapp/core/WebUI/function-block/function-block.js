@@ -8,23 +8,27 @@ var vm = new Vue({
         input:'',
         myData:[],
         leftHeight:'',
-        url:serverPath+'/fronc/query',
+        url:serverPath+'/fronc/query',//查询所有功能块信息
+        findRightDataUrl:serverPath+'/fronFuncPro/query',//查询指定ID功能块的属性信息
         deleteId:'',
         editObj:'',
     },
     methods:{
         get(){
             this.$http.jsonp(this.url,{
-                str:this.input
+                str:this.input,
+                rowId:'',
+                rowIds:''
             },{
                 jsonp:'callback'
             }).then(function(res){
+                console.log(res);
                 if(res.data.data!==null){
-                    console.log(res.data.data);
                     this.myData=res.data.data;
                     this.click(this.myData[0]);
                     this.deleteId = this.myData[0].rowId;
-                    vm1.FindData(vm.myData[0].rowId);
+                    //vm1.FindData(vm.myData[0].rowId);
+                    this.getRight(this.myData[0].rowId);
                 }else{
                     this.myData=[];
                 }
@@ -41,13 +45,33 @@ var vm = new Vue({
             })
         },
         click(row, event, column){
-            vm1.FindData(row.rowId);
-            this.deleteId = row.rowId;
-            this.editObj = row;
+            //vm1.FindData(row.rowId);
+            if(row){
+                this.getRight(row.rowId);
+                this.deleteId = row.rowId;
+                this.editObj = row;
+            }
             console.log(row);
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
+        },
+        getRight(id){
+            this.$http.jsonp(this.findRightDataUrl,{
+                str:'',
+                rowId:id,
+                tables:'',
+                proRowId:''
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                if(res.data.data!=null){
+                    vm1.rightData = res.data.data
+                    vm1.clickRightTable(vm1.rightData[0]);
+                }else{
+                    vm1.rightData = [];
+                }
+            })
         }
     },
     created(){
@@ -73,44 +97,28 @@ var vm1 = new Vue({
         rightData:[],
         rightHeight:'',
         rightInput:'',//右边表输入框
-        url:serverPath+'/fronFuncPro/query',//查询功能块
         rowId:'',//选中属性行ID
         funcId:'',//功能块ID
         divIndex:'',
     },
     methods:{
-        FindData(id){
-            this.$http.jsonp(this.url,{
-                "str":this.rightInput,
-                "rowId":id
-            },{
-                jsonp:'callback'
-            }).then(function (res) {
-                if(res.data.data!=null){
-                    this.rightData=res.data.data;
-                    this.clickRightTable(this.rightData[0]);
-                }else{
-                    this.rightData=[];
-                }
-            },function(){
-                alert("error")
-            })
-        },
         handleClick(){//查看按钮
             this.divIndex = ibcpLayer.ShowDiv('attribute-details.html','属性明细','400px', '400px',function(){
 
             });
         },
         clickRightTable(row, event, column){
-            this.rowId = row.rowId;
-            this.funcId = row.funcRowId;
+            if(row){
+                this.rowId = row.rowId;
+                this.funcId = row.funcRowId;
+            }
             console.log(row);
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
         },
         getRightData(){
-            this.FindData(vm.deleteId);
+            //this.FindData(vm.deleteId);
         }
     },
     created(){
@@ -177,11 +185,11 @@ var mb = new Vue({
         },
         delData(){
             this.$http.jsonp(this.delUrl,{
-                delData:vm1.rowId
+                rowId:vm1.rowId
             },{
                 jsonp:'callback'
             }).then(function(res){
-                vm1.FindData(vm1.funcId);
+                vm.getRight(vm1.funcId);
                 ibcpLayer.ShowOK(res.data.message);
                 console.log(res.data.data);
             },function(){

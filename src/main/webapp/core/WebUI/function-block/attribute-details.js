@@ -6,12 +6,15 @@ var attributeDetails = new Vue({
     data:{
         input:'',
         url:serverPath+'/fronFuncPro/query',//查询功能块属性接口
-        attributeData:[]//属性数组
+        attributeData:[],//属性数组
     },
     methods:{
         getAttribute(){
             this.$http.jsonp(this.url, {
-                "rowId":vm1.rowId
+                "str":'',
+                "rowId":'',
+                "tables":'',
+                "proRowId":vm1.rowId,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {

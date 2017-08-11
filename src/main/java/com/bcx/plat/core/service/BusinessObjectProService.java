@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BusinessObjectProService extends BaseServiceTemplate<BusinessObjectPro> {
+
 }

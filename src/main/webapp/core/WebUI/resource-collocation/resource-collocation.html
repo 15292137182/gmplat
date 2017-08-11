@@ -12,8 +12,8 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addResEvent">资源配置</el-button>
-            <el-button type="info" icon="edit" size="small" @click.native="editResEvent">资源配置</el-button>
-            <el-button type="danger" icon="delete" size="small" @click.native="deleteResEvent">资源配置</el-button>
+            <el-button type="info" icon="edit" size="small" @click.native="editResEvent" v-bind:disabled="editCol">资源配置</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="deleteResEvent" v-bind:disabled="delCol">资源配置</el-button>
         </el-col>
     </el-row>
 </div>
@@ -49,6 +49,24 @@
                         </el-table-column>
                     </el-table>
                 </template>
+                <el-row type="flex" justify="end" style="padding-top: 10px">
+                    <div class="block">
+                        <!--每页条数size-->
+                        <!--当前页currentPage-->
+                        <!--当前页数，支持 .sync 修饰符-->
+                        <!--每页显示个数选择器的选项设置-->
+                        <!--每页显示条目个数-->
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page.sync="currentPage"
+                                :page-sizes="[5,10,20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="allDate">
+                        </el-pagination>
+                    </div>
+                </el-row>
             </el-col>
         </el-row>
     </div>

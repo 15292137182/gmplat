@@ -5,7 +5,8 @@
 var resTop=new Vue({
     el:'#resTop',
     data:{
-
+        editCol:true,
+        delCol:true
     },
     methods:{
         addResEvent() {
@@ -28,7 +29,7 @@ var resTop=new Vue({
             var deleteId = resCol.currentValue.rowId;
             console.log(deleteId);
             this.$http.jsonp(serverPath + "/sysConfig/delete", {
-                delData: deleteId
+                rowId: deleteId
             }, {
                 jsonp: 'callback'
             }).then(function (ref) {
@@ -44,21 +45,32 @@ var resCol=new Vue({
     data:{
         resInput: '',
         Height: '',
-        myResData: []
+        myResData: [],
+        currentPage:1,//当前为第一页
+        pageSize:10,//每页显示条数
+        //开始不能为空 否则会报错
+        allDate:0  //总共有多少条
     },
     methods:{
         searchResTable() {
-            this.$http.jsonp(serverPath + "/sysConfig/query", {
-                str: this.resInput
+            this.$http.jsonp(serverPath + "/sysConfig/queryPage", {
+                "args":this.resInput,
+                "pageSize": this.pageSize,
+                "pageNum":this.currentPage,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                if(res.data.data!=null){
-                    this.myResData = res.data.data;
-                    console.log(this.myResData);
+                console.log(res);
+                if(res.data.data.result.length!=0){
+                    this.myResData = res.data.data.result;
+                    //分页条数
+                    resCol.allDate=Number(res.data.data.total);
+                    //console.log(this.myResData);
                     this.currentChange(this.myResData[0]);
                 }else{
                     this.myResData=[];
+                    resTop.editCol=true;
+                    resTop.delCol=true;
                 }
             });
         },
@@ -67,19 +79,31 @@ var resCol=new Vue({
             console.log(row);
             this.currentValue=row;
             this.currentId = row.rowId;
-
+            resTop.editCol=false;
+            resTop.delCol=false;
         },
         FindFirstDate(row){
             this.$refs.myResData.setCurrentRow(row);
+        },
+        handleSizeChange(val) {
+            //每页多少条数变化时
+            this.pageSize=val;
+            console.log(`每页 ${val} 条`);
+            this.searchResTable();
+        },
+        handleCurrentChange(val) {
+            this.currentPage=val;
+            console.log(`当前页: ${val}`);
+            this.searchResTable();
         }
     },
     created() {
         this.searchResTable();
         $(document).ready(function () {
-            resCol.Height = $(window).height() - 150;
+            resCol.Height = $(window).height() - 195;
         });
         $(window).resize(function () {
-            resCol.Height = $(window).height() - 150;
+            resCol.Height = $(window).height() - 195;
         })
     },
     updated() {
