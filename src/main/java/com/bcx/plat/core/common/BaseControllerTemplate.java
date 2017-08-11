@@ -79,8 +79,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
    */
   @RequestMapping("/add")
   public Object insert(Y entity, HttpServletRequest request, Locale locale) {
-    int result = entityService.insert(entity.buildCreateInfo().toMap());
-    return super.result(request, commonServiceResult(result,Message.NEW_ADD_SUCCESS), locale);
+    entityService.insert(entity.buildCreateInfo().toMap());
+    return super.result(request, commonServiceResult(entity,Message.NEW_ADD_SUCCESS), locale);
   }
 
 
@@ -101,7 +101,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
     Map<String, Object> args = new HashMap<>();
     args.put("rowId", rowId);
     entityService.delete(args);
-    return super.result(request, commonServiceResult(args,Message.DELETE_SUCCESS), locale);
+    return super.result(request, commonServiceResult(rowId,Message.DELETE_SUCCESS), locale);
   }
 
   /**
@@ -118,7 +118,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate,Y ext
     map.put("rowId",rowId);
     map.put("status",BaseConstants.TAKE_EFFECT);
     entityService.update(map);
-    return super.result(request, commonServiceResult(map, Message.UPDATE_SUCCESS), locale);
+    return super.result(request, commonServiceResult(rowId, Message.UPDATE_SUCCESS), locale);
   }
 
   private <T> ServiceResult<T> commonServiceResult(T content,String msg){
