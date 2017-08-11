@@ -45,38 +45,32 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
 
     @Override
     protected List<String> blankSelectFields() {
-        return Arrays.asList("funcCode", "funcName", "funcType");
+        return Arrays.asList("funcCode", "funcName");
     }
 
     /**
-     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
-     */
-    @RequestMapping("/query")
-    public Object singleInputSelect(String str,String rowId ,HttpServletRequest request, Locale locale) {
-        final FrontFuncService entityService = getEntityService();
-        List<Map<String, Object>> result = entityService
-            .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
-        result=queryResultProcess(result);
-        return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
-    }
-
-    /**
-     * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
+     * 根据功能块rowId查询功能块属性
      *
-     * @param str
-     * @param request
-     * @param locale
+     * @param str     空格查询
+     * @param rowId   功能块rowId
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return
      */
-    @Override
-    @RequestMapping
-    public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-        return super.singleInputSelect(str, request, locale);
+    @RequestMapping("/queryPro")
+    public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
+        final FrontFuncService entityService = getEntityService();
+        List<Map<String, Object>> result = frontFuncProService
+                .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                        frontFuncProService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+        result = queryResultProcess(result);
+        return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
 
     /**
-     * TODO 这个方法后面会有大用处
+     * TODO 这个方法后面会有用处
      * 暂时先放这里 以后再重构
+     *
      * @param result
      * @return
      */
@@ -86,31 +80,31 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
             return (String) row.get("relateBusiObj");
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectService
-            .select(new FieldCondition("rowId", Operator.IN, rowIds)
-                , new Field("row_id", "rowId")
-                , new Field("object_name", "objectName"));
-        HashMap<String,Object> map=new HashMap<>();
+                .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                        , new Field("row_id", "rowId")
+                        , new Field("object_name", "objectName"));
+        HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
-            map.put((String) row.get("rowId"),row.get("objectName"));
+            map.put((String) row.get("rowId"), row.get("objectName"));
         }
         for (Map<String, Object> row : result) {
-            row.put("objectName",map.get(row.get("relateBusiObj")));
+            row.put("objectName", map.get(row.get("relateBusiObj")));
         }
         return result;
     }
 
     /**
-     * 删除
+     * 判断当前前端功能块下是否有功能块对应的属性数据,有就全部删除
      *
-     * @param rowId
-     * @param request
-     * @param locale
+     * @param rowId   功能块rowId
+     * @param request request请求
+     * @param locale  国际化参数
      */
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> list = frontFuncProService
-            .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
+                .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
         if (UtilsTool.isValid(list)) {
             List<String> rowIds = list.stream().map((row) -> {
                 return (String) row.get("rowId");

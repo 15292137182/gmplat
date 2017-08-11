@@ -22,9 +22,6 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
   private String wetherAvailable;//是否可用
   private String desp;//说明
 
-  private String objectCode;//关联业务对象代码
-  private String objectName;//关联业务对象名称
-  private String tables;
 
 
   /**
@@ -39,29 +36,6 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
   }
 
 
-  public String getObjectCode() {
-    return objectCode;
-  }
-
-  public void setObjectCode(String objectCode) {
-    this.objectCode = objectCode;
-  }
-
-  public String getObjectName() {
-    return objectName;
-  }
-
-  public void setObjectName(String objectName) {
-    this.objectName = objectName;
-  }
-
-  public String getTables() {
-    return tables;
-  }
-
-  public void setTables(String tables) {
-    this.tables = tables;
-  }
 
   public String getRowId() {
     return rowId;

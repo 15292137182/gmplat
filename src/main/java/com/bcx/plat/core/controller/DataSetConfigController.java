@@ -23,13 +23,6 @@ import java.util.Map;
 @RequestMapping("/core/dataSetConfig")
 public class DataSetConfigController extends BaseControllerTemplate<DataSetConfigService,DataSetConfig> {
 
-    @Autowired
-    private DataSetConfigService dataSetConfigService;
-    @Override
-    public void setEntityService(DataSetConfigService dataSetConfigService) {
-        super.setEntityService(dataSetConfigService);
-    }
-
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("datasetCode","datasetName","datasetType");

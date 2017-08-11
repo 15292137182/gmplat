@@ -25,7 +25,6 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
     private String validateFunc;//验证函数
     private String displayFunc;//显示函数
     private String sort;//排序
-    private String tables;
 
     /**
      * 构建 - 创建信息
@@ -38,13 +37,6 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
         return super.buildCreateInfo();
     }
 
-    public String getTables() {
-        return tables;
-    }
-
-    public void setTables(String tables) {
-        this.tables = tables;
-    }
 
     public String getRowId() {
         return rowId;

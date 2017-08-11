@@ -4,16 +4,19 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.substance.Field;
 import com.bcx.plat.core.morebatis.substance.FieldCondition;
 import com.bcx.plat.core.morebatis.substance.condition.And;
 import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
+import com.bcx.plat.core.service.FrontFuncService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class FrontFuncProController extends
     BaseControllerTemplate<FrontFuncProService, FrontFuncPro> {
 
+
+
   @Autowired
   private BusinessObjectProService businessObjectProService;
 
@@ -38,33 +43,60 @@ public class FrontFuncProController extends
 
   @Override
   protected List<String> blankSelectFields() {
-    return null;
+    return Arrays.asList("rowId");
   }
 
   /**
-   * 查询业务对象
+   * 查询
    */
-  @RequestMapping("/query")
-  public Object singleInputSelect(String str, String proRowId, HttpServletRequest request,
-      Locale locale) {
+  @RequestMapping("/queryProRowId")
+  public Object singleQuery(String queryProRowId,HttpServletRequest request, Locale locale) {
     final FrontFuncProService entityService = getEntityService();
     List<Map<String, Object>> result = entityService
-        .select(new And(new FieldCondition("relateBusiPro", Operator.EQUAL, proRowId),
-            entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
-    return result(request,
-        new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+            .select(new And(new FieldCondition("rowId", Operator.EQUAL, queryProRowId)));
+    result=queryResultProcess(result);
+    return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
   }
 
+
+
   /**
-   * 查询业务对象 输入空格分隔的查询关键字（对象代码、对象名称、关联表）
-   *
-   * @param str
-   * @param request
-   * @param locale
+   * 查询
+   */
+  @RequestMapping("/queryPro")
+  public Object singleQuery(String str,String fronByProRowId ,HttpServletRequest request, Locale locale) {
+    final FrontFuncProService entityService = getEntityService();
+    List<Map<String, Object>> result = entityService
+            .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, fronByProRowId),
+                    entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+    result=queryResultProcess(result);
+    return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
+  }
+
+
+
+  /**
+   * TODO 这个方法后面会有大用处
+   * 暂时先放这里 以后再重构
+   * @param result
+   * @return
    */
   @Override
-  @RequestMapping
-  public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-    return super.singleInputSelect(str, request, locale);
+  protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+    List<String> rowIds = result.stream().map((row) -> {
+      return (String) row.get("relateBusiPro");
+    }).collect(Collectors.toList());
+    List<Map<String, Object>> results = businessObjectProService
+            .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                    , new Field("row_id", "rowId")
+                    , new Field("property_name", "propertyName"));
+    HashMap<String,Object> map=new HashMap<>();
+    for (Map<String, Object> row : results) {
+      map.put((String) row.get("rowId"),row.get("propertyName"));
+    }
+    for (Map<String, Object> row : result) {
+      row.put("propertyName",map.get(row.get("relateBusiPro")));
+    }
+    return result;
   }
 }

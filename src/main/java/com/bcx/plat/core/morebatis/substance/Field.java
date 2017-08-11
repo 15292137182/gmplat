@@ -47,7 +47,7 @@ public class Field implements Column {
     if (alies == null || alies.isEmpty()) {
       return getFieldSource();
     } else {
-      return getFieldSource() + " as " + getAlies();
+      return getFieldSource() + " as \"" + getAlies()+"\"";
     }
   }
 
