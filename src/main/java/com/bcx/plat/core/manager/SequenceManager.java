@@ -21,13 +21,18 @@ import org.slf4j.LoggerFactory;
  *
  * 流水号模块定义：
  *
+ * BCX-TEST-SN
+ * BCX-20170810-000002
+ *
+ * @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6}
+ *
  * - @{c} 常量，不具有任何属性
  *
- * #{b:defaultValue:true}变量，从参数中取出:可设置为null时的默认值:是否显示
+ * #{b;defaultValue;true}变量，从参数中取出;可设置为null时的默认值;是否显示
  *
- * ${d:format:true}日期类型模块 可以指定格式化样式，例如:yyyy-MM-dd 是否显示
+ * ${d;format;true}日期类型模块 可以指定格式化样式，例如;yyyy-MM-dd 是否显示
  *
- * *{a:6-b&d:true} 序列号 位数 影响的变量将会使重置号重置
+ * *{a;6-b&d;true} 序列号 位数 影响的变量将会使重置号重置
  *
  * eg:
  *
@@ -40,6 +45,8 @@ public class SequenceManager {
   private static final String DEFAULT_ARG_VALUE = "";
   // 未设定流水号长度时的默认长度
   private static final int DEFAULT_SERIAL_LENGTH = 6;
+  // 内容内部分隔符
+  private static final String CONTENT_SEPARATOR_ = ";";
 
   private static SequenceGenerateMapper sequenceGenerateMapper;
 
@@ -95,7 +102,7 @@ public class SequenceManager {
             rm.put(modular, modular.substring(2, modular.length() - 1));
             // #{b:defaultValue:true} 如果是变量，直接解析
           } else if (modular.matches("^#[{].*[}]$")) {
-            String[] a = modular.substring(2, modular.length() - 1).split(":", 3);
+            String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
             String key = a[0];
             String value;
             String defaultValue = a.length >= 2 ? a[1] : DEFAULT_ARG_VALUE;
@@ -111,7 +118,7 @@ public class SequenceManager {
             }
             // ${d:format}日期类型模块 可以指定格式化样式，例如:yyyy-MM-dd，直接解析
           } else if (modular.matches("^[$][{].*[}]$")) {
-            String[] a = modular.substring(2, modular.length() - 1).split(":", 2);
+            String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 2);
             String key = a[0];
             String format = a.length >= 2 ? a[1] : "yyyy-MM-dd";
             String value = "";
@@ -153,7 +160,7 @@ public class SequenceManager {
       Map<String, Object> rm) {
     if (!serialMap.isEmpty()) {
       for (String modular : serialMap.keySet()) {
-        String[] a = modular.substring(2, modular.length() - 1).split(":", 3);
+        String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
         String rule = a.length >= 2 ? a[1] : "";
         String[] r = rule.split("-", 2);
         int length = r[0].matches("^\\d+$") ? Integer.valueOf(r[0]) : DEFAULT_SERIAL_LENGTH;
