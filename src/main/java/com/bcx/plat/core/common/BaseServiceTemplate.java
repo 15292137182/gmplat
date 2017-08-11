@@ -55,17 +55,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
    * logger 日志操作
    */
   protected Logger logger = LoggerFactory.getLogger(getClass());
+
   final public List<Map<String, Object>> select(Condition condition) {
     /**
      * 此处先将就
      * 等扩展字段完善以后再来完善
      */
     return select(condition, QueryAction.ALL_FIELD);
-  }
-
-  final public PageResult<Map<String, Object>> select(Condition condition, int pageNum,int pageSize) {
-    //同上
-    return select(condition,pageNum,pageSize,QueryAction.ALL_FIELD);
   }
 
   final public List<Map<String, Object>> select(Condition condition,Column...columns) {
@@ -76,6 +72,11 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return camelizedResult;
   }
 
+  final public PageResult<Map<String, Object>> select(Condition condition, int pageNum,int pageSize) {
+    //同上
+    return select(condition,pageNum,pageSize,QueryAction.ALL_FIELD);
+  }
+
   final public PageResult<Map<String, Object>> select(Condition condition, int pageNum,int pageSize,Column ...columns) {
     final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
         .from(TableAnnoUtil.getTableSource(entityClass))
@@ -84,21 +85,25 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return camelizedResult;
   }
 
+  @Deprecated
   public PageResult<Map<String, Object>> select(Map args, int pageNum,int pageSize) {
     args = mapFilter(args);
     return select(convertMapToFieldConditions(args),pageNum,pageSize);
   }
 
+  @Deprecated
   public List<Map<String, Object>> select(Map args) {
     args = mapFilter(args);
     return select(convertMapToFieldConditions(args));
   }
 
+  @Deprecated
   public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value, int pageNum, int pageSize) {
     return select(createBlankQuery(column, value),pageNum,pageSize);
   }
 
+  @Deprecated
   public List<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value) {
     return select(createBlankQuery(column, value));
