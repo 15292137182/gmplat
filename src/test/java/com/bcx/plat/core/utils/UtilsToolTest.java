@@ -65,10 +65,11 @@ public class UtilsToolTest extends BaseTest {
       } catch (Exception e) {
         manager.rollback(status);
       }
+      assert TXManager.isInTx();
     }));
 
     TXManager.doInNewTX(() -> {
-
+      assert TXManager.isInTx();
     });
 
   }
