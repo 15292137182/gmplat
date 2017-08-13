@@ -143,8 +143,7 @@ var basLeft = new Vue({
                     basTop.takeEffect = true;
                     basTop.change = false;
                 }
-                if(row.changeOperat==40){
-                    basTop.change = false;
+                if(row.changeOperat==50){
                     basTop.addAttr = true;
                 }else if(row.changeOperat==20){
                     basTop.addAttr = false;
