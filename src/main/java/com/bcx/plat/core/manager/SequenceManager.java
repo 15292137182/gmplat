@@ -76,6 +76,28 @@ public class SequenceManager {
     return produceSequenceNo(sequenceCode, args, 1, false).get(0);
   }
 
+  /**
+   * 重置序列号
+   *
+   * @param sequenceCode 代码
+   * @return 返回
+   */
+  public int resetSequenceNo(String sequenceCode) {
+    if (isValid(sequenceCode)) {
+      Map<String, Object> cond = new HashMap<>();
+      cond.put("seqCodeS", sequenceCode);
+      SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
+      List<SequenceRuleConfig> li = mapper.select(cond);
+      if (!li.isEmpty()) {
+        SequenceRuleConfig sequenceRuleConfig = li.get(0);
+        SequenceGenerate generate = new SequenceGenerate();
+        generate.setSeqRowId(sequenceRuleConfig.getRowId());
+        generate.buildDeleteInfo();
+        return sequenceGenerateMapper.resetSequenceValue(generate);
+      }
+    }
+    return -1;
+  }
 
   /**
    * 直接生成流水号内容进行生成模拟
