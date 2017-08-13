@@ -9,9 +9,12 @@ document.write('<link href="' + path + '/webjar/element-ui/lib/theme-default/ind
 //自定义样式
 document.write('<link href="' + path + '/webjar/css/coreStyle.css" rel="stylesheet">');
 
+
 document.write('<script type="text/javascript" src="' + path + '/webjar/vue/dist/vue.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/element-ui/lib/index.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/vue/vue-resource.js" charset="UTF-8"></script>');
+
+document.write('<script type="text/javascript" src="' + path + '/webjar/plugins/js/Tabpage.js" charset="UTF-8"></script>');
 
 document.write('<script type="text/javascript" src="' + path + '/webjar/jquery/3.1.1/jquery.min.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/layer/layer.js" charset="UTF-8"></script>');
