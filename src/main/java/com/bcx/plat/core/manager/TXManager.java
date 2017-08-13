@@ -40,9 +40,7 @@ public class TXManager {
   private static DynamicDataSource dataSource;
 
   public static void doInNewTX(DBOperate operate) {
-    doInNewTX((manager, status) -> {
-      operate.operate();
-    });
+    doInNewTX((manager, status) -> operate.operate());
   }
 
   /**
