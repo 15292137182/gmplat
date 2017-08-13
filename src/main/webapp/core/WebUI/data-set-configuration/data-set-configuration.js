@@ -36,7 +36,14 @@ var dataSetConfig = new Vue({
         },
         FindOk(row){
             this.$refs.dataSetConfigTable.setCurrentRow(row);
+        },
+        editDataSetConfig(){
+            dataSetConfigButton.editDataSetConfig();
+        },
+        deleteDataSetConfig(){
+            dataSetConfigButton.deleteDataSetConfig();
         }
+
     },
     created(){
         this.searchResTable();

@@ -11,4 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SequenceGenerateMapper extends BaseMapper<SequenceGenerate> {
 
   int updateCurrentValue(SequenceGenerate sequenceGenerate);
+
+  int resetSequenceValue(SequenceGenerate sequenceGenerate);
 }

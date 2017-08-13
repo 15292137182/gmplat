@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>数据集配置信息</title>
+    <style>
+        tr [class^=el-icon-]{
+            margin:3px;
+        }
+        .el-icon-delete{
+            color:#FF4949;
+        }
+    </style>
     <script src="../Public/publicjs.js"></script>
 </head>
 <body>
@@ -12,8 +20,8 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addDataSetConfig">数据集配置</el-button>
-            <el-button type="info" icon="edit" :disabled="dis" size="small" @click.native="editDataSetConfig">数据集配置</el-button>
-            <el-button type="danger" icon="delete" :disabled="dis" size="small" @click.native="deleteDataSetConfig">数据集配置</el-button>
+            <!--<el-button type="info" icon="edit" :disabled="dis" size="small" @click.native="editDataSetConfig">数据集配置</el-button>-->
+            <!--<el-button type="danger" icon="delete" :disabled="dis" size="small" @click.native="deleteDataSetConfig">数据集配置</el-button>-->
         </el-col>
     </el-row>
 </div>
@@ -52,6 +60,12 @@
                         <el-table-column prop="desp" label="说明" width="">
                         </el-table-column>
                         <el-table-column prop="version" label="版本" width="">
+                        </el-table-column>
+                        <el-table-column  prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button @click="editDataSetConfig" type="text" size="small" icon="edit"></el-button>
+                                <el-button @click="deleteDataSetConfig" type="text" size="small" icon="delete"></el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </template>

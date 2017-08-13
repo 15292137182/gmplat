@@ -47,4 +47,16 @@
       branch_sign = #{branchSign}
   </update>
 
+  <update id="resetSequenceValue" parameterType="com.bcx.plat.core.entity.SequenceGenerate">
+    UPDATE public.t_sequence_generate
+    SET
+      delete_user      = #{deleteUser},
+      delete_user_name = #{deleteUserName},
+      delete_time      = #{deleteTime},
+      delete_flag      = #{deleteFlag}
+    WHERE
+      (delete_flag IS NULL OR delete_flag != '1')
+      AND seq_row_id = #{seqRowId}
+  </update>
+
 </mapper>
