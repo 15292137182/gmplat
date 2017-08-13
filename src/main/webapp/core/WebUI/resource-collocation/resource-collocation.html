@@ -49,13 +49,7 @@
                         </el-table-column>
                     </el-table>
                 </template>
-                <el-row type="flex" justify="end" style="padding-top: 10px">
-                    <div class="block">
-                        <!--每页条数size-->
-                        <!--当前页currentPage-->
-                        <!--当前页数，支持 .sync 修饰符-->
-                        <!--每页显示个数选择器的选项设置-->
-                        <!--每页显示条目个数-->
+                <el-row type="flex" justify="end" style="padding-top:10px" class="block">
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
@@ -65,8 +59,7 @@
                                 layout="total, sizes, prev, pager, next, jumper"
                                 :total="allDate">
                         </el-pagination>
-                    </div>
-                </el-row>
+                 </el-row>
             </el-col>
         </el-row>
     </div>

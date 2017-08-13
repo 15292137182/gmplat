@@ -1,12 +1,18 @@
 /**
- * Created by admin on 2017/8/7.
+ * Created by zym on 2017/8/7.
  */
+
+//调用路径
+var addUrl=serverPath + "/sysConfig/add";
+var editUrl=serverPath + "/sysConfig/modify";
+var delUrl=serverPath + "/sysConfig/delete";
+var qurUrl=serverPath + "/sysConfig/queryPage";
 
 var resTop=new Vue({
     el:'#resTop',
     data:{
-        editCol:true,
-        delCol:true
+        editCol:true,//编辑按钮不可用
+        delCol:true//删除按钮不可用
     },
     methods:{
         addResEvent() {
@@ -19,16 +25,15 @@ var resTop=new Vue({
             var htmlUrl = 'resource-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑系统资源配置', '400px', '300px', function () {
                 //code值
-                resAdd.codeInput = resCol.currentValue.confKey;
-                resAdd.nameInput = resCol.currentValue.confValue;
-                resAdd.tableInput = resCol.currentValue.desp;
-                resAdd.disabled = true
+                resAdd.codeInput = resCol.currentValue.confKey;  //编辑时候的键
+                resAdd.nameInput = resCol.currentValue.confValue;//编辑时候的值
+                resAdd.tableInput = resCol.currentValue.desp;//编辑时候的名称
+                resAdd.disabled = true  //键的值不可以改变
             });
         },
         deleteResEvent() {
-            var deleteId = resCol.currentValue.rowId;
-            console.log(deleteId);
-            this.$http.jsonp(serverPath + "/sysConfig/delete", {
+            var deleteId = resCol.currentValue.rowId;  //row的ID
+            this.$http.jsonp(delUrl, {
                 rowId: deleteId
             }, {
                 jsonp: 'callback'
@@ -53,52 +58,48 @@ var resCol=new Vue({
     },
     methods:{
         searchResTable() {
-            this.$http.jsonp(serverPath + "/sysConfig/queryPage", {
-                "args":this.resInput,
-                "pageSize": this.pageSize,
-                "pageNum":this.currentPage,
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                console.log(res);
-                if(res.data.data.result.length!=0){
-                    this.myResData = res.data.data.result;
-                    //分页条数
-                    resCol.allDate=Number(res.data.data.total);
-                    //console.log(this.myResData);
-                    this.currentChange(this.myResData[0]);
-                }else{
-                    this.myResData=[];
-                    resTop.editCol=true;
-                    resTop.delCol=true;
+            var colPage = new (Vue.extend(pagingObj.Example()))({
+                propsData: {
+                    url:qurUrl,//分页查询接口
+                    pageSize :this.pageSize,//每页数据条数
+                    pageNum:this.currentPage,//从第几页查
+                    args:this.resInput,//input输入框
                 }
-            });
+            })
+            colPage.pagingObjAjax(function(res){
+                if(res.data.data.result.length!=0){ //有数据的时候
+                    resCol.myResData = res.data.data.result;//标的内容
+                    resCol.allDate=Number(res.data.data.total);  //分页条数
+                    resCol.currentChange(resCol.myResData[0]);//默认选中第一行
+                }else{
+                    resCol.myResData=[];//没有数据的的时候表内容为空
+                    resTop.editCol=true;//编辑按钮不可用
+                    resTop.delCol=true;//删除按钮不可用
+                }
+            })//支持回调函数callback;
         },
         currentChange(row, event, column) {
-            //点击拿到这条数据的值
-            console.log(row);
-            this.currentValue=row;
-            this.currentId = row.rowId;
-            resTop.editCol=false;
-            resTop.delCol=false;
+            this.currentValue=row;//点击拿到这条数据的值
+            this.currentId = row.rowId;//点击拿到这条数据的ID
+            resTop.editCol=false;//编辑按钮可用
+            resTop.delCol=false;//删除按钮可用
         },
         FindFirstDate(row){
-            this.$refs.myResData.setCurrentRow(row);
+            this.$refs.myResData.setCurrentRow(row); //将选中的行变颜色
         },
-        handleSizeChange(val) {
-            //每页多少条数变化时
+        handleSizeChange(val) {   //每页多少条数变化时
             this.pageSize=val;
-            console.log(`每页 ${val} 条`);
+            //console.log(`每页 ${val} 条`);
             this.searchResTable();
         },
-        handleCurrentChange(val) {
+        handleCurrentChange(val) {  //当前页是第几页
             this.currentPage=val;
-            console.log(`当前页: ${val}`);
+            //console.log(`当前页: ${val}`);
             this.searchResTable();
         }
     },
     created() {
-        this.searchResTable();
+        this.searchResTable(); //页面一进入调查询
         $(document).ready(function () {
             resCol.Height = $(window).height() - 195;
         });
@@ -110,3 +111,4 @@ var resCol=new Vue({
         this.FindFirstDate(this.myResData[0]);
     }
 });
+
