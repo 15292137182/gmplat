@@ -1,4 +1,4 @@
-package com.bcx.plat.core.morebatis.substance;
+package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 

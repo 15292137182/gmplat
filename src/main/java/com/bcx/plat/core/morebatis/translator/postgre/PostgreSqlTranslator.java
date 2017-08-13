@@ -4,10 +4,10 @@ import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
-import com.bcx.plat.core.morebatis.substance.condition.And;
-import com.bcx.plat.core.morebatis.substance.condition.Operator;
-import com.bcx.plat.core.morebatis.substance.condition.Or;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.condition.Operator;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 
 import java.util.*;
 

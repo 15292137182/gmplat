@@ -4,14 +4,12 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.substance.Field;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
-import com.bcx.plat.core.morebatis.substance.condition.And;
-import com.bcx.plat.core.morebatis.substance.condition.Operator;
+import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.condition.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
-import com.bcx.plat.core.service.FrontFuncService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 

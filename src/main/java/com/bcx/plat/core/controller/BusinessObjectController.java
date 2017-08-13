@@ -1,10 +1,9 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.common.BaseControllerTemplate;
-import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
-import com.bcx.plat.core.morebatis.substance.condition.Operator;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.condition.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.utils.UtilsTool;

@@ -1,4 +1,4 @@
-package com.bcx.plat.core.morebatis.substance.condition;
+package com.bcx.plat.core.morebatis.component.condition;
 
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;

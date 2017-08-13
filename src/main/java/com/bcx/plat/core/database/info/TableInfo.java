@@ -1,7 +1,7 @@
 package com.bcx.plat.core.database.info;
 
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.morebatis.substance.Table;
+import com.bcx.plat.core.morebatis.component.Table;
 import java.util.HashMap;
 
 public enum TableInfo implements TableSource {

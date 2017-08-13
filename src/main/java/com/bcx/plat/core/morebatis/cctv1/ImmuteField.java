@@ -1,7 +1,7 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.morebatis.phantom.Column;
-import com.bcx.plat.core.morebatis.substance.Field;
+import com.bcx.plat.core.morebatis.component.Field;
 
 
 /**
