@@ -21,6 +21,7 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String objectCode;//对象代码
   private String objectName;//对象名称
   private String relateTableRowId;//关联表
+  private String changeOperat;//执行变更操作
 
 
   /**
@@ -34,6 +35,14 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
     setVersion("1.0");
     setStatus(BaseConstants.INVALID);
     return super.buildCreateInfo();
+  }
+
+  public String getChangeOperat() {
+    return changeOperat;
+  }
+
+  public void setChangeOperat(String changeOperat) {
+    this.changeOperat = changeOperat;
   }
 
   public String getRowId() {

@@ -1,9 +1,10 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.database.info.TableInfo;
+
 import java.io.Serializable;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
@@ -12,7 +13,7 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  * Created by Went on 2017/7/31. 维护数据库表实体类
  */
 @Table(TableInfo.T_DB_TABLES)
-public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serializable {
+public class MaintDBTables extends BaseEntity<MaintDBTables> implements Serializable {
 
   @TablePK
   private String rowId;//id
@@ -28,7 +29,7 @@ public class MaintTableInfo extends BaseEntity<MaintTableInfo> implements Serial
    * @return 返回自身
    */
   @Override
-  public MaintTableInfo buildCreateInfo() {
+  public MaintDBTables buildCreateInfo() {
     this.rowId = lengthUUID(32);
     return super.buildCreateInfo();
   }
