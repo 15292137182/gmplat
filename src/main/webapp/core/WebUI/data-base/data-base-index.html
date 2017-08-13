@@ -23,9 +23,6 @@
         .el-table__header-wrapper thead div{
             background-color:white;
         }
-        /*.el-table__body tr.current-row>td {*/
-            /*background: #50bfff;*/
-        /*}*/
         .bg-color {
             background: #f5f5f5;
             vertical-align: middle;
@@ -74,7 +71,14 @@
                     </el-row>
                     <el-row style="padding:0 10px 10px 10px">
                         <template>
-                            <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
+                            <el-table
+                                ref="myData"
+                                :data="tableData"
+                                @row-click="click" border style="width: 100%"
+                                :highlight-current-row="true"
+                                :height="leftHeight"
+                                v-loading="loading"
+                                element-loading-text="加载中">
                                 <el-table-column  prop="tableSchema" label="表Schema" width="110">
                                 </el-table-column>
                                 <el-table-column  prop="tableCname" label="表中文名称" width="250">
@@ -92,17 +96,17 @@
                                 </el-table-column>
                             </el-table>
                         </template>
-                        <div class="block">
+                        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
-                                    :current-page="currentPage"
+                                    :current-page="pageNum"
                                     :page-sizes="[10, 20]"
-                                    :page-size="10"
+                                    :page-size="pageSize"
                                     layout="total, sizes, prev, pager, next, jumper"
-                                    :total="200">
+                                    :total="allDate">
                             </el-pagination>
-                        </div>
+                        </el-row>
                     </el-row>
                 </el-col>
             </el-col>

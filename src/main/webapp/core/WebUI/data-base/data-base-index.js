@@ -7,34 +7,27 @@
 var dataBase = new Vue({
     el:"#app",
     data:{
+        loading:true,
         input:'',
-        myData:[],
+        tableData:[],
         leftHeight:'',
         rowObj:'',
         divIndex:'',
-        currentPage:1,
-        url:serverPath+'/maintTable/query',
-        pageSize:'',//每页显示多少条
-        pageNum:''//第几页
+        url:serverPath+'/maintTable/queryPage',
+        pageSize:10,//每页显示多少条
+        pageNum:1,//第几页
+        allDate:0//共多少条
     },
     methods:{
         get(){
-            this.$http.jsonp(this.url,{
-                "str":this.input
-            },{
-                jsonp:'callback'
-            }).then(function (res) {
-                if(res.data.data!=null){
-                    this.myData=res.data.data;
-                }
-            })
+            pagingObj.Example(this.url,this.input, this.pageSize,this.pageNum,this);
         },
         click(row, event, column){
             this.rowObj = row;
             console.log(row);
         },
         FindOk(row){
-            this.$refs.myTable.setCurrentRow(row);
+            this.$refs.myData.setCurrentRow(row);
         },
         handleClick(){
             this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','600px', '400px',function(){
@@ -43,23 +36,25 @@ var dataBase = new Vue({
             })
         },
         handleSizeChange(val){//每页显示多少条
-            
+            this.pageSize=val;
+            this.get();
         },
         handleCurrentChange(val){//点击第几页
-
+            this.pageNum=val;
+            this.get();
         }
     },
     created(){
         this.get();
         $(document).ready(function(){
-            dataBase.leftHeight=$(window).height()-150;
+            dataBase.leftHeight=$(window).height()-190;
         });
         $(window).resize(function(){
-            dataBase.leftHeight=$(window).height()-150;
+            dataBase.leftHeight=$(window).height()-190;
         })
     },
     updated(){
-        this.FindOk(this.myData[0]);
+        this.FindOk(this.tableData[0]);
     }
 });
 var topButtonObj = new Vue({

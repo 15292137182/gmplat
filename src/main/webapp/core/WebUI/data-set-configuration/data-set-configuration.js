@@ -5,29 +5,20 @@
 var dataSetConfig = new Vue({
     el:'#dataSetConfig',
     data:{
-        dataSetConfigTable:[],//table数据
+        loading:true,
+        tableData:[],//table数据
         input:'',//搜索框输入
         Height:'',//表格高度
         rowObjId:'',//行内容ID
         rowObj:'',//行内容
-        selUrl:serverPath+'/dataSetConfig/query',//查询接口
+        selUrl:serverPath+'/dataSetConfig/queryPage',//分页查询接口
+        allDate:0,//共多少条数据
+        pageSize:10,//每页显示多少条数据
+        pageNum:1//当前第几页
     },
     methods:{
-        searchResTable(){//查询
-            this.$http.jsonp(this.selUrl,{
-                str:this.input
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                if(res.data.data!=null){
-                    this.dataSetConfigTable = res.data.data;
-                    this.clickTable(this.dataSetConfigTable[0]);
-                }else{
-                    this.dataSetConfigTable = [];
-                }
-            },function(){
-                alert("error")
-            })
+        searchResTable(){//分页查询
+            pagingObj.Example(this.selUrl,this.input, this.pageSize,this.pageNum,this);
         },
         clickTable(row){//表格点击事件
             this.rowObjId = row.rowId;
@@ -42,21 +33,28 @@ var dataSetConfig = new Vue({
         },
         deleteDataSetConfig(){
             dataSetConfigButton.deleteDataSetConfig();
+        },
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.searchResTable();
+        },
+        handleCurrentChange(val){
+            this.pageNum=val;
+            this.searchResTable();
         }
-
     },
     created(){
         this.searchResTable();
         $(document).ready(function(){
-            dataSetConfig.Height=$(window).height()-150;
+            dataSetConfig.Height=$(window).height()-190;
         });
         $(window).resize(function(){
-            dataSetConfig.Height=$(window).height()-150;
+            dataSetConfig.Height=$(window).height()-190;
         })
     },
     updated(){
-        if(this.dataSetConfigTable.length>0){
-            this.FindOk(this.dataSetConfigTable[0]);
+        if(this.tableData.length>0){
+            this.FindOk(this.tableData[0]);
         }
     }
 })

@@ -79,7 +79,7 @@ var em=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                ibcpLayer.ShowOK(res.data.message);
+                window.parent.ibcpLayer.ShowOK(res.data.message);
                 window.parent.functionBlock.getRight(this.funcRowId);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
@@ -103,7 +103,7 @@ var em=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                ibcpLayer.ShowOK(res.data.message);
+                window.parent.ibcpLayer.ShowOK(res.data.message);
                 window.parent.functionBlock.getRight(this.funcRowId);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             });

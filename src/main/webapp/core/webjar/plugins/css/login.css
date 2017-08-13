@@ -1,15 +1,19 @@
 .beg-login-bg {
-	/*background: url(../Images/login-bg-1.jpg) no-repeat center center fixed;*/
+	background: url(../../../../core/images/login.jpg) no-repeat center center fixed;
 	background-color: #393D49;
 }
 
 .beg-login-box {
 	width: 450px;
 	height: 330px;
-	margin: 10% auto;
-	background-color: rgba(255, 255, 255, 0.407843);
+	position: absolute;
+	top: 50%;
+	margin-top: -156px;
+	right: 20px;
+	background-color: #08a3fd;
 	border-radius: 10px;
 	color: aliceblue;
+	opacity: 0.75;
 }
 
 .beg-login-box header {

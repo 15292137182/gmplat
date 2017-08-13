@@ -33,6 +33,12 @@
             font-size:16px;
             line-height:30px;
         }
+        tr [class^=el-icon-]{
+            margin:3px;
+        }
+        .el-icon-delete{
+            color:#FF4949;
+        }
     </style>
 </head>
 <body>
@@ -42,11 +48,11 @@
     <el-row type="flex" class="row-bg" justify="end">
         <el-col :span="24" style="text-align: right">
             <el-button size="small" type="info" @click="addBlock" icon="plus">功能块</el-button>
-            <el-button size="small" type="info" @click="editBlock" icon="edit">功能块</el-button>
-            <el-button size="small" type="danger" @click="del" icon="delete">功能块</el-button>
+            <!--<el-button size="small" type="info" @click="editBlock" icon="edit">功能块</el-button>-->
+            <!--<el-button size="small" type="danger" @click="del" icon="delete">功能块</el-button>-->
             <el-button size="small" type="info" @click="addData" icon="plus">属性项</el-button>
-            <el-button size="small" type="info" @click="editData" icon="edit">属性项</el-button>
-            <el-button size="small" type="danger" @click="delData" icon="delete">属性项</el-button>
+            <!--<el-button size="small" type="info" @click="editData" icon="edit">属性项</el-button>-->
+            <!--<el-button size="small" type="danger" @click="delData" icon="delete">属性项</el-button>-->
         </el-col>
     </el-row>
 </el-col>
@@ -74,7 +80,15 @@
                     </el-row>
                 <el-row style="padding:0 10px 10px 10px">
                     <template>
-                        <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
+                        <el-table
+                            v-loading="loading"
+                            element-loading-text="加载中"
+                            ref="myTable"
+                            :data="myData"
+                            @row-click="click"
+                            border style="width: 100%"
+                            :highlight-current-row="true"
+                            :height="leftHeight">
                             <el-table-column  prop="funcCode" label="代码" width="">
                             </el-table-column>
                             <el-table-column  prop="funcName" label="名称" width="">
@@ -83,10 +97,27 @@
                             </el-table-column>
                             <el-table-column  prop="objectName" label="业务对象" width="95">
                             </el-table-column>
-                            <el-table-column  prop="wetherAvailable" label="是否可用" width="95">
+                            <!--<el-table-column  prop="wetherAvailable" label="是否可用" width="95">-->
+                            <!--</el-table-column>-->
+                            <el-table-column  prop="" label="操作" width="100">
+                                <template scope="scope">
+                                    <el-button @click="editBlock" type="text" size="small" icon="edit"></el-button>
+                                    <el-button @click="del" type="text" size="small" icon="delete"></el-button>
+                                </template>
                             </el-table-column>
                         </el-table>
                     </template>
+                    <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="pageNum"
+                                :page-sizes="[10, 20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="allDate">
+                        </el-pagination>
+                    </el-row>
                 </el-row>
             </el-col>
         </el-col>
@@ -133,6 +164,8 @@
                             <el-table-column label="操作" width="100">
                                 <template scope="scope">
                                     <el-button @click="handleClick" type="text" icon="search" size="small"></el-button>
+                                    <el-button @click="editData" type="text" icon="edit" size="small"></el-button>
+                                    <el-button @click="delData" type="text" icon="delete" size="small"></el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
