@@ -14,7 +14,7 @@ document.write('<script type="text/javascript" src="' + path + '/webjar/vue/dist
 document.write('<script type="text/javascript" src="' + path + '/webjar/element-ui/lib/index.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/vue/vue-resource.js" charset="UTF-8"></script>');
 
-document.write('<script type="text/javascript" src="' + path + '/webjar/plugins/js/Tabpage.js" charset="UTF-8"></script>');
+document.write('<script type="text/javascript" src="' + path + '/webjar/plugins/js/TabPage.js" charset="UTF-8"></script>');
 
 document.write('<script type="text/javascript" src="' + path + '/webjar/jquery/3.1.1/jquery.min.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/layer/layer.js" charset="UTF-8"></script>');
