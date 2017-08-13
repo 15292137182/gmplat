@@ -13,17 +13,36 @@ var keyValueSet=new Vue({
     data:{
         keyValueSetdata:[],
         input:'',
-        height:''
+        height:'',
+        total:0,
+        pageSizes:[1,2,3,4],
+        pageNum:1,
+        pageSize:1
     },
     methods: {
-        search(){
-            this.$http.jsonp(serverPath + query, {
-                "str": this.input
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.searchPage();
+        },
+
+        handleNumChange(val){
+            this.pageNum=val;
+            this.searchPage();
+        },
+        searchPage(){
+            this.$http.jsonp(serverPath + queryPage, {
+                "args":this.input,
+                "pageSize": this.pageSize,
+                "pageNum":this.pageNum,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                this.keyValueSetdata = res.data.data;
+                this.keyValueSetdata = res.data.data.result;
+                this.total=Number(res.data.data.total);
             });
+        },
+        search(){
+             this.searchPage();
         },
         handleCurrentChange(val){
             this.currentVal = val;
@@ -67,6 +86,7 @@ var keyValueSet=new Vue({
         },
     },
     created(){
+        this.searchPage();
         $(document).ready(function(){
             keyValueSet.height=$(window).height()-200;
         });
@@ -76,41 +96,4 @@ var keyValueSet=new Vue({
     }
 })
 
-/*
- * 分页
- */
-var page=new Vue({
-    el:"#paging",
-    data:{
-        total:0,
-        pageSizes:[1,2,3,4],
-        pageNum:1,
-        pageSize:1
-    },
-    methods:{
-        handleSizeChange(val){
-            this.pageSize=val;
-            this.searchPage();
-        },
 
-        handleNumChange(val){
-            this.pageNum=val;
-            this.searchPage();
-        },
-        searchPage(){
-            this.$http.jsonp(serverPath + queryPage, {
-                "args":this.input,
-                "pageSize": this.pageSize,
-                "pageNum":this.pageNum,
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                keyValueSet.keyValueSetdata = res.data.data.result;
-                this.total=Number(res.data.data.total);
-            });
-        }
-    },
-    created(){
-        this.searchPage();
-    }
-})

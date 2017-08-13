@@ -42,6 +42,7 @@ var config=new Vue({
                 add.seqContentInput = config.currentVal.seqContent;
                 add.despInput = config.currentVal.desp;
                 add.versionInput = config.currentVal.version;
+                add.disabled=true;
             });
         },
         deleteEvent(){

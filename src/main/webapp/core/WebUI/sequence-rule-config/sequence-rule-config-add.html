@@ -7,6 +7,16 @@
         #SequenceRuleConfigAdd .el-row {
             margin-top: 20px;
         }
+        .el-select-dropdown{
+            z-index:900000000 !important;
+        }
+        .label {
+            float: right;
+            line-height: 30px;
+        }
+        #content .el-row{
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -14,7 +24,7 @@
     <el-row justify="center" type="flex">
         <el-col :span="22">
             <div>
-                <el-input placeholder="请输入代码" v-model="seqCodeInput" disabled ref="seqCodeInput">
+                <el-input placeholder="请输入代码" v-model="seqCodeInput" :disabled="disabled" ref="seqCodeInput">
                     <template slot="prepend">代码</template>
                 </el-input>
             </div>
@@ -34,6 +44,7 @@
             <div>
                 <el-input placeholder="请输入内容" v-model="seqContentInput" ref="seqContentInput" >
                     <template slot="prepend">内容</template>
+                    <el-button slot="append" icon="plus" @click="menuClick"></el-button>
                 </el-input>
             </div>
         </el-col>
@@ -65,6 +76,60 @@
         </el-col>
     </el-row>
 </div>
+
+<el-dialog title="内容配置" :visible.sync="dialogFormVisible" id="content" ref="dialogFormVisible" size="large" :close-on-click-modal="closeOnClickModal">
+    <el-row justify="center" type="flex" :gutter="10" v-for="(domain,index) in domains" :key="domain.dokey">
+        <el-col :span="2">
+            <div class="label">名称</div>
+        </el-col>
+        <el-col :span="5">
+            <div>
+                <el-select placeholder="请选择" v-model="domain.name" ref="domain.name" :rules="{required: true, message: '请选择名称', trigger: 'blur'}">
+                    <el-option v-for="item in names" :key="item.name" :label="item.label" :value="item.name"></el-option>
+                </el-select></div>
+        </el-col>
+
+        <el-col :span="2">
+            <div class="label">键</div>
+        </el-col>
+        <el-col :span="5">
+            <div><el-input placeholder="请输入键" v-model="domain.key" ref="domain.key"
+                           :rules="{required: true, message: '键不能为空', trigger: 'blur'}"></el-input></div>
+        </el-col>
+
+        <el-col :span="2">
+            <div class="label">值</div>
+        </el-col>
+        <el-col :span="5">
+            <div><el-input placeholder="请输入值" v-model="domain.value" ref="domain.value"
+                           :rules="{required: true, message: '内容不能为空', trigger: 'blur'}"></el-input></div>
+        </el-col>
+        <el-col :span="3">
+            <div class="label">是否显示</div>
+        </el-col>
+        <el-col :span="5">
+            <div>
+                <el-select placeholder="请选择" v-model="domain.option" ref="domain.option" :rules="{required: true, message: '请选择是否显示', trigger: 'blur'}">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </div>
+
+        </el-col>
+        <el-col :span="3">
+            <div><el-button type="danger" @click.prevent="removeDomain(domain)">删除</el-button></div>
+        </el-col>
+    </el-row>
+    <el-row justify="center" type="flex" >
+        <el-col>
+            <div>
+                <el-button type="primary" @click="addDomain">新增</el-button>
+                <el-button type="primary" @click.native="confirm('dialogFormVisible')">确定</el-button>
+                <el-button type="primary" @click.native="cancel">取消</el-button>
+            </div>
+        </el-col>
+    </el-row>
+</el-dialog>
+
 <script src="sequence-rule-config-add.js"></script>
 </body>
 </html>
