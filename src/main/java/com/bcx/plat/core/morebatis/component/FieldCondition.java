@@ -1,7 +1,7 @@
 package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.component.condition.Operator;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 
 public class FieldCondition implements Condition<FieldCondition> {
   Field field;

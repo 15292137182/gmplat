@@ -7,7 +7,7 @@ import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
-import com.bcx.plat.core.morebatis.component.condition.Operator;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.ServiceResult;

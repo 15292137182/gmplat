@@ -7,7 +7,7 @@ import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.component.condition.And;
-import com.bcx.plat.core.morebatis.component.condition.Operator;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

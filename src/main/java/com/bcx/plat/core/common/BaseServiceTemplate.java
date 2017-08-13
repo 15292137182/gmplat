@@ -13,7 +13,7 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
-import com.bcx.plat.core.morebatis.component.condition.Operator;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.UtilsTool;
