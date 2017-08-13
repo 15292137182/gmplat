@@ -12,7 +12,10 @@ var dataBase = new Vue({
         leftHeight:'',
         rowObj:'',
         divIndex:'',
-        url:serverPath+'/maintTable/query'
+        currentPage:1,
+        url:serverPath+'/maintTable/query',
+        pageSize:'',//每页显示多少条
+        pageNum:''//第几页
     },
     methods:{
         get(){
@@ -28,6 +31,7 @@ var dataBase = new Vue({
         },
         click(row, event, column){
             this.rowObj = row;
+            console.log(row);
         },
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
@@ -37,6 +41,12 @@ var dataBase = new Vue({
                 DatabaseDetails.Robj = dataBase.rowObj;
                 DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
             })
+        },
+        handleSizeChange(val){//每页显示多少条
+            
+        },
+        handleCurrentChange(val){//点击第几页
+
         }
     },
     created(){

@@ -33,6 +33,12 @@
             font-size:16px;
             line-height:30px;
         }
+        tr [class^=el-icon-]{
+            margin:3px;
+        }
+        .el-icon-delete{
+            color:#FF4949;
+        }
     </style>
 </head>
 <body>
@@ -41,8 +47,6 @@
     <el-row type="flex" class="row-bg" justify="end">
         <el-col :span="24" style="text-align: right">
             <el-button size="small" type="info" icon="plus">表信息</el-button>
-            <el-button size="small" type="info" icon="edit">表信息</el-button>
-            <el-button size="small" type="danger" icon="delete">表信息</el-button>
         </el-col>
     </el-row>
 </el-col>
@@ -73,19 +77,32 @@
                             <el-table ref="myTable" :data="myData" @row-click="click" border style="width: 100%" :highlight-current-row="true" :height="leftHeight">
                                 <el-table-column  prop="tableSchema" label="表Schema" width="110">
                                 </el-table-column>
-                                <el-table-column  prop="tableCName" label="表中文名称" width="250">
+                                <el-table-column  prop="tableCname" label="表中文名称" width="250">
                                 </el-table-column>
-                                <el-table-column  prop="tableEName" label="表英文名称" width="">
+                                <el-table-column  prop="tableEname" label="表英文名称" width="">
                                 </el-table-column>
                                 <el-table-column  prop="desp" label="说明" width="">
                                 </el-table-column>
                                 <el-table-column  prop="" label="操作" width="100">
                                     <template scope="scope">
                                         <el-button @click="handleClick" type="text" size="small" icon="search"></el-button>
+                                        <el-button  type="text" size="small" icon="edit"></el-button>
+                                        <el-button  type="text" size="small" icon="delete"></el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
                         </template>
+                        <div class="block">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="currentPage"
+                                    :page-sizes="[10, 20]"
+                                    :page-size="10"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="200">
+                            </el-pagination>
+                        </div>
                     </el-row>
                 </el-col>
             </el-col>
