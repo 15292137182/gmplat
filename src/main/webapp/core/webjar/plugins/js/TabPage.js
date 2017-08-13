@@ -1,5 +1,5 @@
 var pagingObj = (function(){
-    var Example = function(url,args,pageSize,pageNum,callback){
+    var Example = function(url,args,pageSize,pageNum,obj,callback){
         $.ajax({
             url:url,
             type:"get",
@@ -10,12 +10,19 @@ var pagingObj = (function(){
             },
             dataType:"jsonp",
             success:function(res){
-                console.log(res);
-                if(callback){
+                obj.loading=false;
+                if(res.data.result.length!=0){
+                    obj.tableData = res.data.result;//数据源
+                    obj.allDate = Number(res.data.total);//总共多少条数据
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
                     callback(res);
                 }
             },
             error:function(){
+                obj.loading=false;
                 alert("错误")
             }
         })

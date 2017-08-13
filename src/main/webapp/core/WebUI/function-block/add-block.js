@@ -53,15 +53,15 @@ var em=new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     ibcpLayer.ShowOK(res.data.message);
+                    ibcpLayer.Close(topButtonObj.divIndex);
                     functionBlock.get();
                 },function(){
                     alert("error")
                 });
             }
-            ibcpLayer.Close(topButtonObj.divIndex);
         },
         cancel(){
-            ibcpLayer.Close(topButtonObj.divIndex);
+            ibcpLayer.Close(functionBlock.divIndex);
         }
     }
 })

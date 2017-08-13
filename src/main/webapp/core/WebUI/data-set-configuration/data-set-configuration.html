@@ -20,8 +20,6 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addDataSetConfig">数据集配置</el-button>
-            <!--<el-button type="info" icon="edit" :disabled="dis" size="small" @click.native="editDataSetConfig">数据集配置</el-button>-->
-            <!--<el-button type="danger" icon="delete" :disabled="dis" size="small" @click.native="deleteDataSetConfig">数据集配置</el-button>-->
         </el-col>
     </el-row>
 </div>
@@ -46,9 +44,15 @@
         <el-row style="padding:0 10px 10px 10px">
             <el-col :span="24">
                 <template>
-                    <el-table :data="dataSetConfigTable" ref="dataSetConfigTable" highlight-current-row
-                              @row-click="clickTable" :height="Height" border
-                              class="tableStyle">
+                    <el-table
+                       v-loading="loading"
+                       element-loading-text="加载中"
+                       :data="tableData"
+                       ref="dataSetConfigTable"
+                       highlight-current-row
+                       @row-click="clickTable"
+                       :height="Height" border
+                       class="tableStyle">
                         <el-table-column prop="datasetCode" label="代码" width="">
                         </el-table-column>
                         <el-table-column prop="datasetName" label="名称" width="">
@@ -69,6 +73,17 @@
                         </el-table-column>
                     </el-table>
                 </template>
+                <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="pageNum"
+                            :page-sizes="[10, 20]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="allDate">
+                    </el-pagination>
+                </el-row>
             </el-col>
         </el-row>
     </div>
