@@ -21,18 +21,15 @@ import org.slf4j.LoggerFactory;
  *
  * 流水号模块定义：
  *
- * BCX-TEST-SN
- * BCX-20170810-000002
+ * BCX-TEST-SN BCX-20170810-000002
  *
- * @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6}
- *
- * - @{c} 常量，不具有任何属性
+ * @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6} - @{c} 常量，不具有任何属性
  *
  * #{b;defaultValue;true}变量，从参数中取出;可设置为null时的默认值;是否显示
  *
  * ${d;format;true}日期类型模块 可以指定格式化样式，例如;yyyy-MM-dd 是否显示
  *
- * *{a;6-b&d;true} 序列号 位数 影响的变量将会使重置号重置
+ * *{a;6-b&d} 序列号 位数 影响的变量将会使重置号重置
  *
  * eg:
  *
@@ -47,6 +44,8 @@ public class SequenceManager {
   private static final int DEFAULT_SERIAL_LENGTH = 6;
   // 内容内部分隔符
   private static final String CONTENT_SEPARATOR_ = ";";
+  private static boolean isMock = false;
+  private String content;
 
   private static SequenceGenerateMapper sequenceGenerateMapper;
 
@@ -77,10 +76,29 @@ public class SequenceManager {
     return produceSequenceNo(sequenceCode, args, 1, false).get(0);
   }
 
+
+  /**
+   * 直接生成流水号内容进行生成模拟
+   *
+   * @param content 内容
+   * @param args 参数
+   * @param num 数量
+   * @return 返回流水号列表
+   */
+  public List<String> mockSequenceNo(String content, Map<String, Object> args, int num) {
+    List<String> result = new ArrayList<>();
+    if (isValid(content)) {
+      isMock = true;
+      this.content = content;
+      return produceSequenceNo(null, args, num, true);
+    }
+    return result;
+  }
+
   /**
    * 创建流水号方法
    *
-   * @param sequenceCode 流水号规则名称
+   * @param sequenceCode 流水号规则内容
    * @param args 参数，将参数放入 map 中
    * @param num 连续生成几个流水号
    * @param test 是否为测试？测试生成的流水号不会走动，不会对流水号本身造成影响
@@ -89,7 +107,7 @@ public class SequenceManager {
   public List<String> produceSequenceNo(String sequenceCode, Map<String, Object> args, int num,
       boolean test) {
     List<String> result = new ArrayList<>();
-    if (isValid(sequenceCode) && init()) {
+    if (init()) {
       SequenceRuleConfig ruleConfig = getRuleConfig(sequenceCode);
       if (null != ruleConfig) {
         String[] modules = ruleConfig.getSeqContent().split("&&");
@@ -118,7 +136,7 @@ public class SequenceManager {
             }
             // ${d:format}日期类型模块 可以指定格式化样式，例如:yyyy-MM-dd，直接解析
           } else if (modular.matches("^[$][{].*[}]$")) {
-            String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 2);
+            String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
             String key = a[0];
             String format = a.length >= 2 ? a[1] : "yyyy-MM-dd";
             String value = "";
@@ -142,7 +160,9 @@ public class SequenceManager {
           analysisSerialNo(ruleConfig, serialMap, rm);
           StringBuilder sb = new StringBuilder();
           for (String modular : modules) {
-            sb.append(rm.get(modular));
+            if (rm.containsKey(modular)) {
+              sb.append(rm.get(modular));
+            }
           }
           logger.info("新的流水号已生成：" + sb.toString());
           result.add(sb.toString());
@@ -225,12 +245,21 @@ public class SequenceManager {
    * 查询 序列号配置
    */
   private SequenceRuleConfig getRuleConfig(String sequenceCode) {
-    SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
-    Map<String, Object> cond = new HashMap<>();
-    cond.put("seqCodeS", sequenceCode);
-    List<SequenceRuleConfig> list = mapper.select(cond);
-    if (list.size() == 1) {
-      return list.get(0);
+    // 当处于模拟状态时，mock一个规则出来
+    if (isMock && isValid(content)) {
+      SequenceRuleConfig ruleConfig = new SequenceRuleConfig();
+      ruleConfig.setSeqContent(content);
+      ruleConfig.buildCreateInfo();
+      return ruleConfig;
+    }
+    if (isValid(sequenceCode)) {
+      SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
+      Map<String, Object> cond = new HashMap<>();
+      cond.put("seqCodeS", sequenceCode);
+      List<SequenceRuleConfig> list = mapper.select(cond);
+      if (list.size() == 1) {
+        return list.get(0);
+      }
     }
     return null;
   }
@@ -249,11 +278,14 @@ public class SequenceManager {
   }
 
   /**
-   * 销毁 历史数据
+   * 完成流水号
+   *
+   * @param seqRowId 流水号编号
+   * @param test 是否测试
    */
   private void finish(String seqRowId, boolean test) {
     // 如果不是测试，存入数据库
-    if (!test) {
+    if (!test && !isMock) {
       for (String variableKey : keys.keySet()) {
         Map<String, Object> cond = new HashMap<>();
         cond.put("seqRowId", seqRowId);

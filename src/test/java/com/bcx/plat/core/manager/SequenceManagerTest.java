@@ -18,5 +18,8 @@ public class SequenceManagerTest extends BaseTest {
     a.put("a", "测试");
     List s = SequenceManager.getInstance().produceSequenceNo(code, a, 5, true);
     System.out.println(s);
+
+    String content = "@{11111}&&${a;yyyy-MM-dd-;true}&&*{b;1}";
+    List<String> list = SequenceManager.getInstance().mockSequenceNo(content, null, 5);
   }
 }
