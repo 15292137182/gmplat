@@ -5,7 +5,6 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.mapper.SequenceRuleConfigMapper;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
@@ -13,7 +12,6 @@ import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Create By HCL at 2017/8/6
  */
 @Service
-@Transactional
 public class SequenceRuleConfigServiceImpl implements SequenceRuleConfigService {
 
   @Autowired

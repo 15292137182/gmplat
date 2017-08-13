@@ -11,6 +11,7 @@ import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.DBTableColumn;
+import com.bcx.plat.core.manager.TXManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,20 @@ public class UtilsToolTest extends BaseTest {
     assert ("AbcCameDef".equals(underlineToCamel(underLine, true)));
     assert ("abcCameDef".equals(underlineToCamel(underLine, false)));
     assert ("abc_came_def".equals(camelToUnderline("abcCameDef")));
+
+    TXManager.doInNewTX(((manager, status) -> {
+      try {
+        // do something
+        manager.commit(status);
+      } catch (Exception e) {
+        manager.rollback(status);
+      }
+    }));
+
+    TXManager.doInNewTX(() -> {
+
+    });
+
   }
 
 }
