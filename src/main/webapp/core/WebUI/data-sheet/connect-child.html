@@ -48,23 +48,13 @@
             myProChildData: []
         },
         created() {
-            this.$http.jsonp( window.parent.conChildTable, {
-                rowId: window.parent.basLeft.relateTableRowId  //左边表里面的ID
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                console.log(res);
-                if (res.data.data !== null) {
-                    this.myProChildData = res.data.data
-                } else {
-                    this.myProChildData = [];
-                }
-            });
+            this.searchTable();
         },
         methods: {
             searchTable(){
                 this.$http.jsonp(window.parent.conChildTable, {
-                    str: this.searchInput
+                    str: this.searchInput,
+                    rowId: window.parent.basLeft.relateTableRowId
                 }, {
                     jsonp: 'callback'
                 }).then(function (res) {

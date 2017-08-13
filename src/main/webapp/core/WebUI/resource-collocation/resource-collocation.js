@@ -11,14 +11,39 @@ var qurUrl=serverPath + "/sysConfig/queryPage";
 var resTop=new Vue({
     el:'#resTop',
     data:{
-        editCol:true,//编辑按钮不可用
-        delCol:true//删除按钮不可用
+
     },
     methods:{
         addResEvent() {
             operate = 1;
             var htmlUrl = 'resource-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增系统资源配置', '400px', '300px');
+        },
+    }
+});
+
+var resCol=new Vue({
+    "el":"#resCol",
+    data:{
+        resInput: '',
+        Height: '',
+        myResData: [],
+        currentPage:1,//当前为第一页
+        pageSize:10,//每页显示条数
+        //开始不能为空 否则会报错
+        allDate:0  //总共有多少条
+    },
+    methods:{
+        searchResTable() {
+            pagingObj.Example(serverPath + "/sysConfig/queryPage",this.resInput, this.pageSize,this.currentPage,function(res){
+                if(res.data.result.length!=0){ //有数据的时候
+                            resCol.myResData = res.data.result;//标的内容
+                            resCol.allDate=Number(res.data.total);  //分页条数
+                            resCol.currentChange(resCol.myResData[0]);//默认选中第一行
+                        }else{
+                            resCol.myResData=[];//没有数据的的时候表内容为空
+                        }
+            });
         },
         editResEvent() {
             operate = 2;
@@ -41,42 +66,6 @@ var resTop=new Vue({
                 resCol.searchResTable();
                 ibcpLayer.ShowOK(ref.data.message);
             });
-        }
-    }
-});
-
-var resCol=new Vue({
-    "el":"#resCol",
-    data:{
-        resInput: '',
-        Height: '',
-        myResData: [],
-        currentPage:1,//当前为第一页
-        pageSize:10,//每页显示条数
-        //开始不能为空 否则会报错
-        allDate:0  //总共有多少条
-    },
-    methods:{
-        searchResTable() {
-            var colPage = new (Vue.extend(pagingObj.Example()))({
-                propsData: {
-                    url:qurUrl,//分页查询接口
-                    pageSize :this.pageSize,//每页数据条数
-                    pageNum:this.currentPage,//从第几页查
-                    args:this.resInput,//input输入框
-                }
-            })
-            colPage.pagingObjAjax(function(res){
-                if(res.data.data.result.length!=0){ //有数据的时候
-                    resCol.myResData = res.data.data.result;//标的内容
-                    resCol.allDate=Number(res.data.data.total);  //分页条数
-                    resCol.currentChange(resCol.myResData[0]);//默认选中第一行
-                }else{
-                    resCol.myResData=[];//没有数据的的时候表内容为空
-                    resTop.editCol=true;//编辑按钮不可用
-                    resTop.delCol=true;//删除按钮不可用
-                }
-            })//支持回调函数callback;
         },
         currentChange(row, event, column) {
             this.currentValue=row;//点击拿到这条数据的值
