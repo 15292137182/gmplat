@@ -20,10 +20,10 @@ public class BaseConstants {
   public static final String TAKE_EFFECT = "20";
   //失效状态
   public static final String INVALID = "40";
-  //状态不可用
-  public static final String UNAVAILABLE = "50";
-  //状态可用
-  public static final String AVAILABLE = "20";
+  //执行变更(默认状态为50 不可用)
+  public static final String CHANGE_OPERAT_FAIL = "50";
+  //执行变更(状态可用)
+  public static final String CHANGE_OPERAT_SUCCESS = "20";
 
 
 }

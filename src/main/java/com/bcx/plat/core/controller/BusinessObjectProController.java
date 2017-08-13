@@ -55,7 +55,10 @@ public class BusinessObjectProController extends
         final BusinessObjectProService entityService = getEntityService();
         List<Map<String, Object>> result = entityService
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
-                    UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                        entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+        if (result.size()==0) {
+            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+        }
         return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
 
@@ -72,6 +75,9 @@ public class BusinessObjectProController extends
     public Object singleInputSelect(String businProrowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> mapList =
                 businessObjectProService.select(new And(new FieldCondition("rowId", Operator.EQUAL, businProrowId)));
+        if (mapList.size()==0) {
+            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+        }
         return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList), locale);
     }
 }

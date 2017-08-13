@@ -55,7 +55,10 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/query")
     public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = entityService
-                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str)));
+                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
+        if (result.size()==0) {
+            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
+        }
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 
@@ -88,6 +91,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/select")
     public Object select(Map<String, Object> args, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = entityService.select(args);
+        if (result.size()==0) {
+            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+        }
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 
@@ -104,6 +110,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/selectPage")
     public Object select(Map<String, Object> args, int pageNum, int pageSize, HttpServletRequest request, Locale locale) {
         PageResult<Map<String, Object>> result = entityService.select(args, pageNum, pageSize);
+
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 
@@ -146,10 +153,14 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/delete")
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("rowId", rowId);
-        entityService.delete(args);
-        return super.result(request, commonServiceResult(rowId, Message.DELETE_SUCCESS), locale);
+        if (rowId!=null && rowId.length()>0) {
+            Map<String, Object> args = new HashMap<>();
+            args.put("rowId", rowId);
+            entityService.delete(args);
+            return super.result(request, commonServiceResult(rowId, Message.DELETE_SUCCESS), locale);
+        }
+        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.DELETE_FAIL), locale);
+
     }
 
     /**

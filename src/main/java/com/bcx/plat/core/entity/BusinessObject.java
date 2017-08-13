@@ -31,6 +31,7 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
    */
   @Override
   public BusinessObject buildCreateInfo() {
+    setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
     setVersion("1.0");
     setStatus(BaseConstants.INVALID);

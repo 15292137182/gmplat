@@ -2,7 +2,10 @@ package com.bcx.plat.core.base;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.utils.ServiceResult;
+
+import java.util.ArrayList;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -36,6 +39,14 @@ public class BaseController {
    * @return 返回
    */
   protected Object result(HttpServletRequest request, ServiceResult serviceResult, Locale locale) {
+//
+//    if (((ArrayList) serviceResult.getData()).size()==0) {
+//      if (isValid(request.getParameter("callback"))) {
+//        MappingJacksonValue value = new MappingJacksonValue(ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+//        value.setJsonpFunction(request.getParameter("callback"));
+//        return value;
+//      }
+//    }
     if (null != serviceResult) {
       String message = messageSource.getMessage(serviceResult.getMessage(), null, locale);
       if (isValid(message)) {

@@ -1,17 +1,19 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.substance.Field;
+import com.bcx.plat.core.morebatis.substance.FieldCondition;
+import com.bcx.plat.core.morebatis.substance.condition.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
+import com.bcx.plat.core.service.MaintDBTablesService;
+import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,11 +36,37 @@ public class BusinessObjectController extends
         this.businessObjectProService = businessObjectProService;
     }
 
+    @Autowired
+    MaintDBTablesService maintDBTablesService;
+
+    public void setMaintDBTablesService(MaintDBTablesService maintDBTablesService) {
+        this.maintDBTablesService = maintDBTablesService;
+    }
+
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
 
+    /**
+     * 执行变更操作
+     *
+     * @param rowId   业务对象rowId
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return serviceResult
+     */
+    @RequestMapping("/changeOperat")
+    public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
+        Map<String, Object> map = new HashMap<>();
+        if (UtilsTool.isValid(rowId)) {
+            map.put("rowId", rowId);
+            map.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
+            getEntityService().update(map);
+            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS), locale);
+        }
+        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL), locale);
+    }
 
     /**
      * 判断当前业务对象下是否有业务对象属性数据,有就全部删除
@@ -60,5 +88,32 @@ public class BusinessObjectController extends
             businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
         }
         return super.delete(rowId, request, locale);
+    }
+
+
+    /**
+     * 暂时先放这里 以后再重构
+     *
+     * @param result
+     * @return
+     */
+    @Override
+    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+        List<String> rowIds = result.stream().map((row) -> {
+            return (String) row.get("relateTableRowId");
+        }).collect(Collectors.toList());
+        List<Map<String, Object>> results = maintDBTablesService
+                .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                        , new Field("row_id", "rowId")
+                        , new Field("table_cname", "tableCname")
+                        , new Field("table_schema", "tableSchema"));
+        HashMap<String, Object> map = new HashMap<>();
+        for (Map<String, Object> row : results) {
+            map.put((String) row.get("rowId"), row.get("tableSchema") + "(" + row.get("tableCname") + ")");
+        }
+        for (Map<String, Object> row : result) {
+            row.put("associatTable", map.get(row.get("relateTableRowId")));
+        }
+        return result;
     }
 }

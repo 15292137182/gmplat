@@ -53,6 +53,9 @@ public class FrontFuncProController extends
     List<Map<String, Object>> result = entityService
             .select(new And(new FieldCondition("rowId", Operator.EQUAL, queryProRowId)));
     result=queryResultProcess(result);
+    if (result.size()==0) {
+      return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+    }
     return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
   }
 
@@ -68,6 +71,9 @@ public class FrontFuncProController extends
             .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, fronByProRowId),
                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
     result=queryResultProcess(result);
+    if (result.size()==0) {
+      return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+    }
     return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
   }
 

@@ -30,13 +30,18 @@
 
   <select id="selectByTableId" parameterType="String" resultType="com.bcx.plat.core.entity.DBTableColumn">
     select
-      tn.row_id,tn.column_ename,tn.column_cname,tn.desp
+    tn.row_id,tn.column_ename,tn.column_cname,tn.desp
     from
-      t_db_tables as ts
+    t_db_tables as ts
     LEFT JOIN
-      t_db_table_column as tn
-        ON ts.row_id=tn.relate_table_row_id
-    WHERE ts.row_id = #{rowId}
+    t_db_table_column as tn
+    ON ts.row_id=tn.relate_table_row_id
+    <where>
+      (delete_flag IS NULL OR delete_flag!='1')
+      <if test="rowId != null and rowId != ''">
+        ts.row_id = #{rowId}
+      </if>
+    </where>
   </select>
 
   <insert id="insert" parameterType="com.bcx.plat.core.entity.DBTableColumn">
