@@ -16,8 +16,8 @@
             </foreach>
           </when>
           <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
-            -- 这个地方准备用来解析字段的解析
-            -- 函数预算预备
+          <!--这个地方以后要把column解析搬走-->
+            ${i.fieldSource}
           </when>
           <otherwise>#{i}</otherwise>
         </choose>

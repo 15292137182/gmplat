@@ -55,7 +55,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/query")
     public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = entityService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
+                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str)));
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 

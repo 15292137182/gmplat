@@ -63,7 +63,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     final List<Map<String, Object>> queryResult = moreBatis.select().select(columns)
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(condition).execute();
-    final List<Map<String, Object>> camelizedResult = underlineKeyMapListToCamel(queryResult);
+    final List<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
     return camelizedResult;
   }
 
@@ -76,32 +76,32 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
         .from(TableAnnoUtil.getTableSource(entityClass))
         .where(condition).selectPage(pageNum, pageSize);
-    final PageResult<Map<String, Object>> camelizedResult = underlineKeyMapListToCamel(queryResult);
+    final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
     return camelizedResult;
   }
 
   @Deprecated
   public PageResult<Map<String, Object>> select(Map args, int pageNum,int pageSize) {
     args = mapFilter(args);
-    return select(convertMapToFieldConditions(args),pageNum,pageSize);
+    return select(UtilsTool.convertMapToFieldConditions(args),pageNum,pageSize);
   }
 
   @Deprecated
   public List<Map<String, Object>> select(Map args) {
     args = mapFilter(args);
-    return select(convertMapToFieldConditions(args));
+    return select(UtilsTool.convertMapToFieldConditions(args));
   }
 
   @Deprecated
   public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value, int pageNum, int pageSize) {
-    return select(createBlankQuery(column, value),pageNum,pageSize);
+    return select(UtilsTool.createBlankQuery(column, value),pageNum,pageSize);
   }
 
   @Deprecated
   public List<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value) {
-    return select(createBlankQuery(column, value));
+    return select(UtilsTool.createBlankQuery(column, value));
   }
 
   public int insert(Map args) {
@@ -131,7 +131,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   public int delete(Map args) {
     args = mapFilter(args);
     args.remove("etc");
-    return delete(convertMapToFieldConditions(args));
+    return delete(UtilsTool.convertMapToFieldConditions(args));
   }
 
   public int delete(Condition condition) {
@@ -141,53 +141,12 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return deleteAction.execute();
   }
 
-  final public And convertMapToFieldConditions(Map<String, Object> args) {
-    return new And(args.entrySet().stream().filter((entry) -> {
-      final String key = entry.getKey();
-      final Object value = entry.getValue();
-      return fieldNames.contains(key);
-    }).map((entry) -> {
-      final Object value = entry.getValue();
-      if (value instanceof Collection) {
-        return new FieldCondition(entry.getKey(), Operator.IN, value);
-      } else {
-        return new FieldCondition(entry.getKey(), Operator.EQUAL, value);
-      }
-    }).collect(Collectors.toList()));
-  }
 
-  final public Or createBlankQuery(Collection<String> columns, Collection<String> values) {
-    List<Condition> conditions = new LinkedList<>();
-    for (String column : columns) {
-      for (String value : values) {
-        conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value));
-      }
-    }
-    return new Or(conditions);
-  }
-
-  final public PageResult<Map<String, Object>> underlineKeyMapListToCamel(
-      PageResult<Map<String, Object>> origin) {
-    origin.setResult(underlineKeyMapListToCamel(origin.getResult()));
-    return origin;
-  }
-
-  final public List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
-    return origin.stream().map((row) -> {
-      HashMap<String, Object> out = new HashMap<>();
-      for (Entry<String, Object> entry : row.entrySet()) {
-        out.put(UtilsTool.underlineToCamel(entry.getKey(), false), entry.getValue());
-      }
-      return out;
-    }).collect(Collectors.toList());
-  }
-
-  final public Map<String, Object> mapFilter(Map<String, Object> map) {
+  public Map<String, Object> mapFilter(Map<String, Object> map) {
     return mapFilter(map, isRemoveNull(), isRemoveBlank());
   }
 
-  final public Map<String, Object> mapFilter(Map<String, Object> map, boolean removeNull,
-      boolean removeBlank) {
+  private Map<String, Object> mapFilter(Map<String, Object> map, boolean removeNull,boolean removeBlank) {
     Map<String, Object> outputMap = new HashMap<>();
     if (removeBlank == false && removeNull == false) {
       return outputMap;

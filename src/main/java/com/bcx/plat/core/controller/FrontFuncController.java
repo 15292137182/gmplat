@@ -61,7 +61,7 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         final FrontFuncService entityService = getEntityService();
         List<Map<String, Object>> result = frontFuncProService
                 .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                        frontFuncProService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                    UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
         result = queryResultProcess(result);
         return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }

@@ -2,6 +2,7 @@ package com.bcx.plat.core.morebatis.translator.postgre;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
+import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -33,6 +34,7 @@ public class PostgreSqlTranslator implements ConditionTranslator {
         case IN:
           if (value instanceof Collection) {
             if (((Collection) value).size()==0) {
+              //空列表性能优化
               if (!condition.isNot()) addSqlSegment("false",list);
             }else {
               addSqlSegment(condition.isNot()?"not in":"in",list);
@@ -70,6 +72,9 @@ public class PostgreSqlTranslator implements ConditionTranslator {
           addSqlParameter(values[0],list);
           addSqlSegment("and",list);
           addSqlParameter(values[1],list);
+          break;
+        case IS_NULL:
+          addSqlSegment(condition.isNot()?"IS NOT NULL":"IS NULL",list);
           break;
       }
     }

@@ -4,6 +4,12 @@ import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.condition.Or;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -11,6 +17,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * 基本工具类 Created by hcl at 2017/07/28
@@ -218,5 +226,62 @@ public class UtilsTool {
       }
     }
     return result.toString();
+  }
+
+  /**
+   * 将map中的键值对转换为一组and条件
+   * @param args
+   * @return
+   */
+  public static And convertMapToFieldConditions(Map<String, Object> args) {
+    return new And(args.entrySet().stream().map((entry) -> {
+      final Object value = entry.getValue();
+      if (value instanceof Collection) {
+        return new FieldCondition(entry.getKey(), Operator.IN, value);
+      } else {
+        return new FieldCondition(entry.getKey(), Operator.EQUAL, value);
+      }
+    }).collect(Collectors.toList()));
+  }
+
+  /**
+   * 创建空格查询的查询条件
+   * @param columns 列
+   * @param values 关键字
+   * @return
+   */
+  public static Or createBlankQuery(Collection<String> columns, Collection<String> values) {
+    List<Condition> conditions = new LinkedList<>();
+    for (String column : columns) {
+      for (String value : values) {
+        conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value));
+      }
+    }
+    return new Or(conditions);
+  }
+
+  /**
+   * 将下划线风格key的map转换为驼峰法则key的map
+   * @param origin 输入的PageResult
+   * @return
+   */
+  public static PageResult<Map<String, Object>> underlineKeyMapListToCamel(PageResult<Map<String, Object>> origin) {
+    origin.setResult(underlineKeyMapListToCamel(origin.getResult()));
+    return origin;
+  }
+
+  /**
+   * 将下划线风格key的map转换为驼峰法则key的map
+   * @param origin 输入MapList
+   * @return
+   */
+  final static public List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
+    return origin.stream().map((row) -> {
+      HashMap<String, Object> out = new HashMap<>();
+      for (Entry<String, Object> entry : row.entrySet()) {
+        out.put(UtilsTool.underlineToCamel(entry.getKey(), false), entry.getValue());
+      }
+      return out;
+    }).collect(Collectors.toList());
   }
 }

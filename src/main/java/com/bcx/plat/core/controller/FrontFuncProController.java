@@ -66,7 +66,7 @@ public class FrontFuncProController extends
     final FrontFuncProService entityService = getEntityService();
     List<Map<String, Object>> result = entityService
             .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, fronByProRowId),
-                    entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
     result=queryResultProcess(result);
     return result(request,new ServiceResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result),locale);
   }
