@@ -34,10 +34,10 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
   }
 
   @Autowired
-  MaintDBTablesService maintDBTablesService;
+  DBTableColumnService dbTableColumnService;
 
-  public void setMaintDBTablesService(MaintDBTablesService maintDBTablesService) {
-    this.maintDBTablesService = maintDBTablesService;
+  public void setDbTableColumnService(DBTableColumnService dbTableColumnService) {
+    this.dbTableColumnService = dbTableColumnService;
   }
 
   /**
@@ -50,7 +50,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
    */
   @RequestMapping("/queryTabById")
   public Object singleInputSelect(String args, String rowId, HttpServletRequest request, Locale locale) {
-    List<Map<String, Object>> result = maintDBTablesService.select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
+    List<Map<String, Object>> result = dbTableColumnService.select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
             UtilsTool.createBlankQuery(Arrays.asList("columnEname", "columnCname"), UtilsTool.collectToSet(args))));
     if (result.size()==0) {
       return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL),locale);
