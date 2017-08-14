@@ -77,7 +77,7 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
           MoreBatisUtil.addSqlParameterToList(values[1],list);
           break;
         case IS_NULL:
-          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"IS NOT NULL":"IS NULL",list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"is not null":"is null",list);
           break;
       }
     }
@@ -106,7 +106,8 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
     }else if(tableSource instanceof Table){
       return translate((Table)tableSource,list);
     }else {
-      return tableSource.getTableSource(this);
+      list.addAll(tableSource.getTableSource(this));
+      return list;
     }
   }
 
@@ -117,9 +118,9 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
 
   public LinkedList<Object> translate(JoinTable joinTable,LinkedList<Object> list){
     translate(joinTable.getTableFirst(),list);
-    MoreBatisUtil.addSqlSegmentToList(joinTable.getJoinType().toString(),list);
+    MoreBatisUtil.addSqlSegmentToList(joinTable.getJoinType().getSql(),list);
     translate(joinTable.getTableSecond(),list);
-    MoreBatisUtil.addSqlSegmentToList("ON",list);
+    MoreBatisUtil.addSqlSegmentToList("on",list);
     translate(joinTable.getCondition(),list);
     return list;
   }
@@ -130,11 +131,9 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
   }
 
   /*Table系列*/
-
-
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition, LinkedList<Object> list,String seperator){
     if (chainCondition.getConditions().size()==0) return list;
-    if (chainCondition.isNot()) MoreBatisUtil.addSqlSegmentToList("NOT",list);
+    if (chainCondition.isNot()) MoreBatisUtil.addSqlSegmentToList("not",list);
     MoreBatisUtil.addSqlSegmentToList("(",list);
     final List<Condition> conditions = chainCondition.getConditions();
     Iterator<Condition> conditionIterator = conditions.iterator();

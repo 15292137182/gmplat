@@ -17,7 +17,7 @@
           </when>
           <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
           <!--这个地方以后要把column解析搬走-->
-            ${i.fieldSource}
+            ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.fieldSource)}
           </when>
           <otherwise>#{i}</otherwise>
         </choose>
@@ -36,7 +36,7 @@
           </when>
           <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
           <!--这个地方以后要把column解析搬走-->
-            ${i.fieldSource}
+            ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.fieldSource)}
           </when>
           <otherwise>#{i}</otherwise>
         </choose>
@@ -53,7 +53,9 @@
     </trim>
     FROM <include refid="solveTableSource"/>
     <include refid="solveWhereCondition"/>
-    order by create_time desc
+    order by <if test="tableSource instanceof com.bcx.plat.core.morebatis.component.JoinTable">
+    <!--目前tableJoin不支持嵌套 以后要改进这个地方-->
+      ${tableSource.tableFirst.getTableSource(translator)[0].segment}.</if>create_time desc
   </select>
 
   <insert id="insert" parameterType="com.bcx.plat.core.morebatis.command.InsertAction">
