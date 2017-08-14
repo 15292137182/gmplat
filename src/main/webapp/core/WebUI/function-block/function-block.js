@@ -5,13 +5,14 @@
 var functionBlock = new Vue({
     el:"#app",
     data:{
-        loading:false,
+        loading:true,
         input:'',
-        myData:[],
+        tableData:[],
         leftHeight:'',
-        url:serverPath+'/fronc/query',//查询所有功能块信息
-        findRightDataUrl:serverPath+'/fronFuncPro/queryPro',//查询指定ID功能块的属性信息
+        //url:serverPath+'/fronc/query',//查询所有功能块信息
+        Selurl:serverPath+'/fronc/queryPage',//查询所有功能块信息
         deleteId:'',
+        rowId:'',
         editObj:'',
         divIndex:'',
         pageNum:1,//当前页号
@@ -21,21 +22,11 @@ var functionBlock = new Vue({
     methods:{
         //查询
         get(){
-            this.$http.jsonp(this.url,{
-                str:this.input
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                if(res.data.data!==null){
-                    this.myData=res.data.data;
-                    this.click(this.myData[0]);
-                    this.deleteId = this.myData[0].rowId;
-                    //properties.FindData(vm.myData[0].rowId);
-                    this.getRight(this.myData[0].rowId);
-                }else{
-                    this.myData=[];
-                }
-            })
+            pagingObj.Example(this.Selurl,this.input,this.pageSize,this.pageNum,this,function(){
+                functionBlock.click(functionBlock.tableData[0]);
+                functionBlock.deleteId = functionBlock.tableData[0].rowId;
+                properties.getRight(functionBlock.tableData[0].rowId);
+            });
         },
         //编辑
         editBlock(){
@@ -53,20 +44,24 @@ var functionBlock = new Vue({
         },
         //删除
         del(){
-            this.$http.jsonp(serverPath+"/fronc/delete",{
-                rowId:this.deleteId
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
-                functionBlock.get();
+            deleteObj.del(function(){
+                functionBlock.$http.jsonp(serverPath+"/fronc/delete",{
+                    rowId:functionBlock.deleteId
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    ibcpLayer.ShowOK(res.data.message);
+                    functionBlock.get();
+                })
             })
         },
         //点击
         click(row, event, column){
-            //properties.FindData(row.rowId);
+            console.log(row);
             if(row){
-                this.getRight(row.rowId);
+                properties.rightInput = '';
+                this.rowId = row.rowId;
+                properties.getRight(row.rowId);
                 this.deleteId = row.rowId;
                 this.editObj = row;
             }
@@ -75,41 +70,29 @@ var functionBlock = new Vue({
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
         },
-        //查询右边table
-        getRight(id){
-            this.$http.jsonp(this.findRightDataUrl,{
-                str:'',
-                fronByProRowId:id,
-                // tables:'',
-                // proRowId:''
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                if(res.data.data!=null){
-                    properties.rightData = res.data.data
-                    properties.clickRightTable(properties.rightData[0]);
-                }else{
-                    properties.rightData = [];
-                }
-            })
-        },
         //分页显示数据条数变化
-        handleSizeChange(){},
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.get();
+        },
         //分页页数变化
-        handleCurrentChange(){}
+        handleCurrentChange(val){
+            this.pageNum=val;
+            this.get();
+        }
     },
     created(){
         this.get();
         $(document).ready(function(){
-            functionBlock.leftHeight=$(window).height()-150;
+            functionBlock.leftHeight=$(window).height()-190;
         });
         $(window).resize(function(){
-            functionBlock.leftHeight=$(window).height()-150;
+            functionBlock.leftHeight=$(window).height()-190;
         })
     },
     updated(){
-        if(this.myData.length>0){
-            this.FindOk(this.myData[0]);
+        if(this.tableData.length>0){
+            this.FindOk(this.tableData[0]);
         }
     }
 });
@@ -118,12 +101,17 @@ var functionBlock = new Vue({
 var properties = new Vue({
     el:'#right',
     data:{
-        rightData:[],
+        loading:true,
+        tableData:[],
+        findRightDataUrl:serverPath+'/fronFuncPro/queryProPage',//查询指定ID功能块的属性信息
         rightHeight:'',
         rightInput:'',//右边表输入框
         rowId:'',//选中属性行ID
         funcId:'',//功能块ID
         divIndex:'',
+        pageNum:1,//当前页号
+        pageSize:10,//每页显示数据条数
+        allDate:0//共多少条数据
     },
     methods:{
         handleClick(){//查看按钮
@@ -133,6 +121,7 @@ var properties = new Vue({
         },
         //点击右边table
         clickRightTable(row, event, column){
+             console.log(row);
             if(row){
                 this.rowId = row.rowId;
                 this.funcId = row.funcRowId;
@@ -141,6 +130,28 @@ var properties = new Vue({
         //选中
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
+        },
+        //查询
+        getRight(id){
+            pagingObj.Examples(this.findRightDataUrl,id,this.rightInput,this.pageSize,this.pageNum,this,function(){
+                properties.clickRightTable(properties.tableData[0]);
+            });
+        },
+        //分页查询
+        getRightData(){
+            pagingObj.Examples(this.findRightDataUrl,functionBlock.rowId,this.rightInput,this.pageSize,this.pageNum,this,function(){
+                properties.clickRightTable(properties.tableData[0]);
+            });
+        },
+        //分页显示数据条数变化
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.getRightData();
+        },
+        //分页页数变化
+        handleCurrentChange(val){
+            this.pageNum=val;
+            this.getRightData();
         },
         //编辑属性
         editData(){
@@ -151,29 +162,31 @@ var properties = new Vue({
         },
         //删除属性
         delData(){
-            this.$http.jsonp(topButtonObj.delUrl,{
-                rowId:properties.rowId
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                functionBlock.getRight(properties.funcId);
-                ibcpLayer.ShowOK(res.data.message);
-            },function(){
-                alert("删除失败")
+            deleteObj.del(function(){
+                properties.$http.jsonp(topButtonObj.delUrl,{
+                    rowId:properties.rowId
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    properties.getRight(properties.funcId);
+                    ibcpLayer.ShowOK(res.data.message);
+                },function(){
+                    alert("删除失败")
+                })
             })
         }
     },
     created(){
         $(document).ready(function(){
-            properties.rightHeight=$(window).height()-150;
+            properties.rightHeight=$(window).height()-190;
         });
         $(window).resize(function(){
-            properties.rightHeight=$(window).height()-150;
+            properties.rightHeight=$(window).height()-190;
         })
     },
     updated(){
-        if(this.rightData.length>0){
-            this.FindOk(this.rightData[0]);
+        if(this.tableData.length>0){
+            this.FindOk(this.tableData[0]);
         }
     }
 });
@@ -230,7 +243,7 @@ var topButtonObj = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                functionBlock.getRight(properties.funcId);
+                properties.getRight(properties.funcId);
                 ibcpLayer.ShowOK(res.data.message);
             },function(){
                 alert("删除失败")

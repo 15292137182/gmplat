@@ -93,7 +93,8 @@
             <el-col :span="24">
                 <template>
                     <!--show-overflow-tooltip-->
-                    <el-table :data="tableData" :height="rightHeight" border   ref="tableData" highlight-current-row
+                    <el-table :data="tableData" :height="rightHeight" border   ref="tableData" highlight-current-row v-loading="loading"
+                              element-loading-text="加载中"
                               @row-click="currentRChange" class="tableStyle">
                         <el-table-column prop="propertyCode" label="代码" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="propertyName" label="名称" width="" show-overflow-tooltip></el-table-column>

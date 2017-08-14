@@ -5,10 +5,6 @@
   version="2.5">
   <display-name>gmplat</display-name>
 
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
-
   <!-- 添加字符编码过滤器 -->
   <filter>
     <filter-name>encodingFilter</filter-name>
@@ -18,17 +14,9 @@
       <param-value>UTF-8</param-value>
     </init-param>
   </filter>
-  <filter>
-    <filter-name>txFilter</filter-name>
-    <filter-class>com.bcx.plat.core.filter.SpTxFilter</filter-class>
-  </filter>
 
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>txFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -56,10 +44,24 @@
   </servlet-mapping>
   <!-- =================================德鲁伊数据源 end================================= -->
 
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理-->
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <!-- 启用 DispatchServlet,加载mvc，并指定所有URL都经过此servlet -->
   <servlet>
     <servlet-name>springMVC</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <servlet-class>com.bcx.plat.core.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>classpath:spring/spring-mvc.xml</param-value>

@@ -30,7 +30,7 @@ var keyValueSetAdd = new Vue({
                 }
             }
             if (operate == 1) {
-                this.$http.jsonp(serverPath + insert, {
+                this.$http.jsonp(insert, {
                     keysetCode: keyValueSetAdd.keysetCodeInput,
                     keysetName: keyValueSetAdd.keysetNameInput,
                     confKey: keyValueSetAdd.confKeyInput,
@@ -46,7 +46,7 @@ var keyValueSetAdd = new Vue({
                 });
             }
             if (operate == 2) {
-                this.$http.jsonp(serverPath + modify, {
+                this.$http.jsonp(modify, {
                     //拿到这条数据的ID
                     rowId: keyValueSet.currentVal.rowId,
                     keysetCode: keyValueSetAdd.keysetCodeInput,

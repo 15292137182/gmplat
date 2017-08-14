@@ -80,7 +80,7 @@ var em=new Vue({
                 jsonp: 'callback'
             }).then(function (res) {
                 window.parent.ibcpLayer.ShowOK(res.data.message);
-                window.parent.functionBlock.getRight(this.funcRowId);
+                window.parent.properties.getRight(this.funcRowId);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
                 alert("新增属性失败！")
@@ -104,7 +104,7 @@ var em=new Vue({
                 jsonp: 'callback'
             }).then(function (res) {
                 window.parent.ibcpLayer.ShowOK(res.data.message);
-                window.parent.functionBlock.getRight(this.funcRowId);
+                window.parent.properties.getRight(this.funcRowId);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             });
         },
