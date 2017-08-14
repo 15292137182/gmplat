@@ -36,8 +36,12 @@
         <el-row style="padding:0 10px 10px 10px">
             <el-col :span="24">
                 <template>
-                    <el-table :data="myResData" ref="myResData" highlight-current-row
-                              @row-click="currentChange" :height="Height" border
+                    <el-table :data="tableData" ref="tableData" highlight-current-row
+                              @row-click="currentChange"
+                              :height="Height"
+                              v-loading="loading"
+                              element-loading-text="加载中"
+                              border
                               class="tableStyle">
                         <el-table-column prop="confKey" label="键" show-overflow-tooltip>
                         </el-table-column>

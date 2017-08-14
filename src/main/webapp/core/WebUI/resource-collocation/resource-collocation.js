@@ -27,7 +27,8 @@ var resCol=new Vue({
     data:{
         resInput: '',
         Height: '',
-        myResData: [],
+        tableData: [],
+        loading:true,
         currentPage:1,//当前为第一页
         pageSize:10,//每页显示条数
         //开始不能为空 否则会报错
@@ -35,15 +36,7 @@ var resCol=new Vue({
     },
     methods:{
         searchResTable() {
-            pagingObj.Example(serverPath + "/sysConfig/queryPage",this.resInput, this.pageSize,this.currentPage,function(res){
-                if(res.data.result.length!=0){ //有数据的时候
-                            resCol.myResData = res.data.result;//标的内容
-                            resCol.allDate=Number(res.data.total);  //分页条数
-                            resCol.currentChange(resCol.myResData[0]);//默认选中第一行
-                        }else{
-                            resCol.myResData=[];//没有数据的的时候表内容为空
-                        }
-            });
+            pagingObj.Example(qurUrl,this.resInput,this.pageSize,this.currentPage,this);
         },
         editResEvent() {
             operate = 2;
@@ -74,7 +67,7 @@ var resCol=new Vue({
             resTop.delCol=false;//删除按钮可用
         },
         FindFirstDate(row){
-            this.$refs.myResData.setCurrentRow(row); //将选中的行变颜色
+            this.$refs.tableData.setCurrentRow(row); //将选中的行变颜色
         },
         handleSizeChange(val) {   //每页多少条数变化时
             this.pageSize=val;
@@ -97,7 +90,7 @@ var resCol=new Vue({
         })
     },
     updated() {
-        this.FindFirstDate(this.myResData[0]);
+        this.FindFirstDate(this.tableData[0]);
     }
 });
 
