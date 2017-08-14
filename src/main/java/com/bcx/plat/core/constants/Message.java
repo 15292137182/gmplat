@@ -16,6 +16,8 @@ public class Message {
   public static final String UPDATE_FAIL = "UPDATE_FAIL";
   public static final String DELETE_SUCCESS = "DELETE_SUCCESS";
   public static final String DELETE_FAIL = "DELETE_FAIL";
+  public static final String DATA_QUOTE = "DATA_QUOTE";
+
 
   public static final String INVALID_REQUEST = "INVALID_REQUEST";
 

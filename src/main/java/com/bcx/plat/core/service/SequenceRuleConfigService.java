@@ -1,7 +1,10 @@
 package com.bcx.plat.core.service;
 
+import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.utils.ServiceResult;
+import org.springframework.stereotype.Service;
+
 import java.util.Map;
 
 /**
@@ -9,25 +12,7 @@ import java.util.Map;
  *
  * Create By HCL at 2017/8/6
  */
-public interface SequenceRuleConfigService {
+@Service
+public class SequenceRuleConfigService extends BaseServiceTemplate<SequenceRuleConfig> {
 
-  /**
-   * 查询数据事件
-   */
-  ServiceResult select(Map map);
-
-  /**
-   * 新建数据
-   */
-  ServiceResult insert(SequenceRuleConfig bean);
-
-  /**
-   * 更新数据事件
-   */
-  ServiceResult update(SequenceRuleConfig bean);
-
-  /**
-   * 删除数据事件
-   */
-  ServiceResult delete(Map map);
 }

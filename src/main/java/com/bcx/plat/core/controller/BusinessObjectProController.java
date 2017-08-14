@@ -8,18 +8,18 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
+import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by Wen Tiehu on 2017/8/8.
@@ -31,6 +31,12 @@ public class BusinessObjectProController extends
 
     @Autowired
     BusinessObjectProService businessObjectProService;
+    @Autowired
+    FrontFuncProService frontFuncProService;
+
+    public void setFrontFuncProService(FrontFuncProService frontFuncProService) {
+        this.frontFuncProService = frontFuncProService;
+    }
 
     public void setBusinessObjectProService(BusinessObjectProService businessObjectProService) {
         this.businessObjectProService = businessObjectProService;
@@ -56,7 +62,7 @@ public class BusinessObjectProController extends
         List<Map<String, Object>> result = entityService
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
                         entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
-        if (result.size()==0) {
+        if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
         return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
@@ -75,9 +81,26 @@ public class BusinessObjectProController extends
     public Object singleInputSelect(String businProrowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> mapList =
                 businessObjectProService.select(new And(new FieldCondition("rowId", Operator.EQUAL, businProrowId)));
-        if (mapList.size()==0) {
+        if (mapList.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
         return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList), locale);
+    }
+
+    /**
+     * 通用删除方法
+     *
+     * @param rowId   按照rowId查询
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return
+     */
+    @Override
+    public Object delete(String rowId, HttpServletRequest request, Locale locale) {
+        List<Map<String, Object>> busiPro = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
+        if (busiPro.size() == 0) {
+            return super.delete(rowId, request, locale);
+        }
+        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
     }
 }

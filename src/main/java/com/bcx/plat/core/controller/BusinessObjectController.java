@@ -1,25 +1,28 @@
 package com.bcx.plat.core.controller;
 
+
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.morebatis.substance.Field;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
-import com.bcx.plat.core.morebatis.substance.condition.Operator;
+import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
+import com.bcx.plat.core.service.FrontFuncService;
 import com.bcx.plat.core.service.MaintDBTablesService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.stream.Collectors;
+
+;
 
 /**
  * Created by WJF on 2017/8/8.
@@ -30,15 +33,19 @@ public class BusinessObjectController extends
         BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
     @Autowired
-    private BusinessObjectProService businessObjectProService;
+    BusinessObjectProService businessObjectProService;
+    @Autowired
+    MaintDBTablesService maintDBTablesService;
+    @Autowired
+    FrontFuncService frontFuncService;
+
+    public void setFrontFuncService(FrontFuncService frontFuncService) {
+        this.frontFuncService = frontFuncService;
+    }
 
     public void setBusinessObjectProService(BusinessObjectProService businessObjectProService) {
         this.businessObjectProService = businessObjectProService;
     }
-
-    @Autowired
-    MaintDBTablesService maintDBTablesService;
-
     public void setMaintDBTablesService(MaintDBTablesService maintDBTablesService) {
         this.maintDBTablesService = maintDBTablesService;
     }
@@ -79,15 +86,21 @@ public class BusinessObjectController extends
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> list = businessObjectProService
-                .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
-        if (UtilsTool.isValid(list)) {
-            List<String> rowIds = list.stream().map((row) -> {
-                return (String) row.get("rowId");
-            }).collect(Collectors.toList());
-            businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+        Map<String,Object> map = new HashMap<>();
+        map.put("relateBusiObj",rowId);
+        List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
+        if (businObj.size()==0) {
+            List<Map<String, Object>> list = businessObjectProService
+                    .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
+            if (UtilsTool.isValid(list)) {
+                List<String> rowIds = list.stream().map((row) -> {
+                    return (String) row.get("rowId");
+                }).collect(Collectors.toList());
+                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+            }
+            return super.delete(rowId, request, locale);
         }
-        return super.delete(rowId, request, locale);
+        return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.DATA_QUOTE),locale);
     }
 
 

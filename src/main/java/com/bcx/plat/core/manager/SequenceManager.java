@@ -1,20 +1,20 @@
 package com.bcx.plat.core.manager;
 
-import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.mapper.SequenceGenerateMapper;
-import com.bcx.plat.core.mapper.SequenceRuleConfigMapper;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.extra.lang.Lang;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 序列号生成类
@@ -75,29 +75,29 @@ public class SequenceManager {
   public String buildSequenceNo(String sequenceCode, Map<String, Object> args) {
     return produceSequenceNo(sequenceCode, args, 1, false).get(0);
   }
-
-  /**
-   * 重置序列号
-   *
-   * @param sequenceCode 代码
-   * @return 返回
-   */
-  public int resetSequenceNo(String sequenceCode) {
-    if (isValid(sequenceCode)) {
-      Map<String, Object> cond = new HashMap<>();
-      cond.put("seqCodeS", sequenceCode);
-      SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
-      List<SequenceRuleConfig> li = mapper.select(cond);
-      if (!li.isEmpty()) {
-        SequenceRuleConfig sequenceRuleConfig = li.get(0);
-        SequenceGenerate generate = new SequenceGenerate();
-        generate.setSeqRowId(sequenceRuleConfig.getRowId());
-        generate.buildDeleteInfo();
-        return sequenceGenerateMapper.resetSequenceValue(generate);
-      }
-    }
-    return -1;
-  }
+//
+//  /**
+//   * 重置序列号
+//   *
+//   * @param sequenceCode 代码
+//   * @return 返回
+//   */
+//  public int resetSequenceNo(String sequenceCode) {
+//    if (isValid(sequenceCode)) {
+//      Map<String, Object> cond = new HashMap<>();
+//      cond.put("seqCodeS", sequenceCode);
+//      SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
+//      List<SequenceRuleConfig> li = mapper.select(cond);
+//      if (!li.isEmpty()) {
+//        SequenceRuleConfig sequenceRuleConfig = li.get(0);
+//        SequenceGenerate generate = new SequenceGenerate();
+//        generate.setSeqRowId(sequenceRuleConfig.getRowId());
+//        generate.buildDeleteInfo();
+//        return sequenceGenerateMapper.resetSequenceValue(generate);
+//      }
+//    }
+//    return -1;
+//  }
 
   /**
    * 直接生成流水号内容进行生成模拟
@@ -274,15 +274,15 @@ public class SequenceManager {
       ruleConfig.buildCreateInfo();
       return ruleConfig;
     }
-    if (isValid(sequenceCode)) {
-      SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
-      Map<String, Object> cond = new HashMap<>();
-      cond.put("seqCodeS", sequenceCode);
-      List<SequenceRuleConfig> list = mapper.select(cond);
-      if (list.size() == 1) {
-        return list.get(0);
-      }
-    }
+//    if (isValid(sequenceCode)) {
+//      SequenceRuleConfigMapper mapper = SpringContextHolder.getBean("sequenceRuleConfigMapper");
+//      Map<String, Object> cond = new HashMap<>();
+//      cond.put("seqCodeS", sequenceCode);
+//      List<SequenceRuleConfig> list = mapper.select(cond);
+//      if (list.size() == 1) {
+//        return list.get(0);
+//      }
+//    }
     return null;
   }
 

@@ -4,12 +4,11 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.MaintDBTables;
-import com.bcx.plat.core.morebatis.substance.FieldCondition;
-import com.bcx.plat.core.morebatis.substance.condition.And;
-import com.bcx.plat.core.morebatis.substance.condition.Operator;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.MaintDBTablesService;
 import com.bcx.plat.core.utils.ServiceResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
