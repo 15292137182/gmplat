@@ -1,9 +1,11 @@
 package com.bcx.plat.core.morebatis.translator.postgre;
 
+import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -29,10 +31,11 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
         translate((Or)condition,list);
       }
     }else if (condition instanceof FieldCondition){
-      final String fieldSource = ((FieldCondition) condition).getField().getColumnSqlFragment(this);
+//      final String fieldSource = ((FieldCondition) condition).getField().getColumnSqlFragment(this);
+//      MoreBatisUtil.addSqlSegmentToList(fieldSource,list);
       final Operator operator = ((FieldCondition) condition).getOperator();
       final Object value=((FieldCondition)condition).getValue();
-      MoreBatisUtil.addSqlSegmentToList(fieldSource,list);
+      translate((FieldSource)((FieldCondition) condition).getField(),list);
       switch (operator) {
         case IN:
           if (value instanceof Collection) {
@@ -131,6 +134,16 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
   }
 
   /*Table系列*/
+
+
+  /*字段系列*/
+  public LinkedList<Object> translate(FieldSource fieldSource,LinkedList<Object> list){
+    list.add(new SqlSegment(fieldSource.getFieldSource()));
+    return list;
+  }
+  /*字段系列*/
+
+
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition, LinkedList<Object> list,String seperator){
     if (chainCondition.getConditions().size()==0) return list;
     if (chainCondition.isNot()) MoreBatisUtil.addSqlSegmentToList("not",list);
