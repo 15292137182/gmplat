@@ -6,7 +6,12 @@
 	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
   <!-- 配置全局扫描设置,不扫描带有Controller,RestController注解的class -->
-  <context:component-scan base-package="com.bcx"/>
+  <context:component-scan base-package="com.bcx">
+    <context:exclude-filter type="annotation"
+      expression="org.springframework.stereotype.Controller"/>
+    <context:exclude-filter type="annotation"
+      expression="org.springframework.web.bind.annotation.RestController"/>
+  </context:component-scan>
 
   <!-- 获取properties中的值 -->
   <bean id="conf" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -16,7 +21,8 @@
   <!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
   <bean class="com.bcx.plat.core.utils.SpringContextHolder"/>
 
-  <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
+  <bean id="conditionTranslator"
+    class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
 
   <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatis">
     <constructor-arg ref="postgreSuitMapper"/>
@@ -32,5 +38,9 @@
     </property>
   </bean>
 
+  <!-- 引入其他配置文件 -->
   <import resource="spring-common.xml"/>
+  <import resource="spring-mybatis.xml"/>
+  <import resource="spring-shiro.xml"/>
+
 </beans>

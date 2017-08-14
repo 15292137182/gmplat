@@ -23,6 +23,8 @@
     <jcl-over-slf4j-version>1.7.25</jcl-over-slf4j-version>
     <f-jackson-version>2.8.8.1</f-jackson-version>
     <pagehelper-version>4.2.1</pagehelper-version>
+    <javax-sevlet-api-version>3.1.0</javax-sevlet-api-version>
+    <shiro-version>1.4.0</shiro-version>
 
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -70,7 +72,18 @@
       <artifactId>jackson-databind</artifactId>
       <version>${f-jackson-version}</version>
     </dependency>
-
+    <!-- shiro 登陆权限管理,比 spring 还全家桶 -->
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-spring</artifactId>
+      <version>${shiro-version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!-- 数据库部分 -->
     <!-- mybatis 集成 -->
     <dependency>
@@ -136,7 +149,7 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <version>${javax-sevlet-api-version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -147,8 +160,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
         </configuration>
       </plugin>
 
