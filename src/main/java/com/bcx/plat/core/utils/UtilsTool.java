@@ -3,29 +3,28 @@ package com.bcx.plat.core.utils;
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
 
+import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +60,7 @@ public class UtilsTool {
   }
 
   public static boolean isValid(List list) {
-    return null != list && list.size() > 0;
+    return null != list && list.size()>0;
   }
 
 
@@ -238,6 +237,8 @@ public class UtilsTool {
 
   /**
    * 将map中的键值对转换为一组and条件
+   * @param args
+   * @return
    */
   public static And convertMapToFieldConditions(Map<String, Object> args) {
     return new And(args.entrySet().stream().map((entry) -> {
@@ -252,27 +253,13 @@ public class UtilsTool {
 
   /**
    * 创建空格查询的查询条件
-   *
    * @param columns 列
    * @param values 关键字
+   * @return
    */
-  public static Or createBlankQueryByFieldName(Collection<String> columns,
-      Collection<String> values) {
-    return createBlankQueryByColumn(columns.stream().map((fieldName) -> {
-      return new com.bcx.plat.core.morebatis.component.Field(fieldName);
-    }).collect(
-        Collectors.toList()), values);
-  }
-
-  /**
-   * 创建空格查询的查询条件
-   *
-   * @param columns 列
-   * @param values 关键字
-   */
-  public static Or createBlankQueryByColumn(Collection<Column> columns, Collection<String> values) {
+  public static Or createBlankQuery(Collection<String> columns, Collection<String> values) {
     List<Condition> conditions = new LinkedList<>();
-    for (Column column : columns) {
+    for (String column : columns) {
       for (String value : values) {
         conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value));
       }
@@ -282,22 +269,20 @@ public class UtilsTool {
 
   /**
    * 将下划线风格key的map转换为驼峰法则key的map
-   *
    * @param origin 输入的PageResult
+   * @return
    */
-  public static PageResult<Map<String, Object>> underlineKeyMapListToCamel(
-      PageResult<Map<String, Object>> origin) {
+  public static PageResult<Map<String, Object>> underlineKeyMapListToCamel(PageResult<Map<String, Object>> origin) {
     origin.setResult(underlineKeyMapListToCamel(origin.getResult()));
     return origin;
   }
 
   /**
    * 将下划线风格key的map转换为驼峰法则key的map
-   *
    * @param origin 输入MapList
+   * @return
    */
-  final static public List<Map<String, Object>> underlineKeyMapListToCamel(
-      List<Map<String, Object>> origin) {
+  final static public List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
       HashMap<String, Object> out = new HashMap<>();
       for (Entry<String, Object> entry : row.entrySet()) {
@@ -307,9 +292,9 @@ public class UtilsTool {
     }).collect(Collectors.toList());
   }
 
-  final static public And excludeDeleted(Condition condition) {
-    return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, "1"),
-        new FieldCondition("delete_flag", Operator.IS_NULL, null).not()), condition);
+  final static public And excludeDeleted(Condition condition){
+    return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL,"1"),
+            new FieldCondition("delete_flag",Operator.IS_NULL,null)),condition);
   }
 
 }

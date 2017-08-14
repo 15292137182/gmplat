@@ -2,6 +2,7 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -34,7 +35,7 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
    */
   @Override
   public BusinessObjectPro buildCreateInfo() {
-    setPropertyCode("A00"+UtilsTool.lengthUUID(3));
+    setPropertyCode(SequenceManager.getInstance().buildSequenceNo("ABCDEFG",null));
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

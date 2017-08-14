@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 public enum TableInfo implements TableSource {
   T_SYS_CONFIG("t_sys_config"),
-  T_SEQUENCE_RULE_CONFG("t_sequence_rule_confg"),
+  T_SEQUENCE_RULE_CONFG("t_sequence_rule_config"),
   T_SEQUENCE_GENERATE("t_sequence_generate"),
   T_SEQ_BUSI_GENERATE("t_seq_busi_generate"),
   T_KEYSET("t_keyset"),

@@ -69,7 +69,7 @@ public class FrontFuncProController extends
     final FrontFuncProService entityService = getEntityService();
     List<Map<String, Object>> result = entityService
             .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, fronByProRowId),
-                UtilsTool.createBlankQueryByFieldName(blankSelectFields(), UtilsTool.collectToSet(str))));
+                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
     result=queryResultProcess(result);
     if (result.size()==0) {
       return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
@@ -95,7 +95,7 @@ public class FrontFuncProController extends
     PageResult<Map<String, Object>> result =
             getEntityService().select(
                     new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                            UtilsTool.createBlankQueryByFieldName(blankSelectFields(),UtilsTool.collectToSet(args)))
+                            UtilsTool.createBlankQuery(Arrays.asList("displayTitle"),UtilsTool.collectToSet(args)))
                     ,pageNum,pageSize);
     result = queryResultProcess(result);
     return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
