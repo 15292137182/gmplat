@@ -5,7 +5,7 @@ import com.bcx.plat.core.morebatis.cctv1.ImmuteField;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.github.pagehelper.Page;
@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryAction {
-
+  //TODO 添加Context数据类型 并作为各command父类
   public static final Column ALL_FIELD = new ImmuteField(new Field("*"));
   private List<Column> columns;
   private TableSource tableSource;
   private Condition where;
-  private ConditionTranslator translator;
+  private SqlComponentTranslator translator;
   private MoreBatis app;
 
-  public QueryAction( MoreBatis app,ConditionTranslator translator) {
+  public QueryAction( MoreBatis app,SqlComponentTranslator translator) {
     this.app = app;
     this.translator = translator;
   }
@@ -33,7 +33,7 @@ public class QueryAction {
     return translator.translate(where);
   }
 
-  public ConditionTranslator getTranslator() {
+  public SqlComponentTranslator getTranslator() {
     return translator;
   }
 

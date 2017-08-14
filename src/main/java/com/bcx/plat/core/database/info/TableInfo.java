@@ -1,8 +1,10 @@
 package com.bcx.plat.core.database.info;
 
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.component.Table;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public enum TableInfo implements TableSource {
   T_SYS_CONFIG("t_sys_config"),
@@ -35,7 +37,7 @@ public enum TableInfo implements TableSource {
   }
 
   @Override
-  public String getTableSourceSqlFragment() {
-    return table.getTableSourceSqlFragment();
+  public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+    return table.getTableSource(translator);
   }
 }

@@ -5,6 +5,7 @@ import static java.time.LocalDateTime.now;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
@@ -284,4 +285,6 @@ public class UtilsTool {
       return out;
     }).collect(Collectors.toList());
   }
+
+
 }

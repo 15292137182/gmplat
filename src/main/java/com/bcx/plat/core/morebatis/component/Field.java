@@ -1,6 +1,7 @@
 package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 
 /**
  * 普通字段
@@ -42,16 +43,17 @@ public class Field implements Column {
     this.alies = alies;
   }
 
-  public String getColumnSqlFragment() {
+  public String getFieldSource() {
+    return getFieldName();
+  }
+
+  @Override
+  public String getColumnSqlFragment(SqlComponentTranslator translator) {
     String alies = getAlies();
     if (alies == null || alies.isEmpty()) {
       return getFieldSource();
     } else {
       return getFieldSource() + " as \"" + getAlies()+"\"";
     }
-  }
-
-  public String getFieldSource() {
-    return getFieldName();
   }
 }

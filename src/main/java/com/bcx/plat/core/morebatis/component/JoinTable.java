@@ -2,7 +2,10 @@ package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.morebatis.util.MoreBatisUtil;
+import java.util.LinkedList;
 
 public class JoinTable implements TableSource {
   TableSource tableFirst,tableSecond;
@@ -53,7 +56,7 @@ public class JoinTable implements TableSource {
   }
 
   @Override
-  public String getTableSourceSqlFragment() {
-    return null;
+  public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+    return translator.translate(this);
   }
 }

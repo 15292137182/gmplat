@@ -1,9 +1,8 @@
 package com.bcx.plat.core.morebatis.command;
 
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.utils.SpringContextHolder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,15 +15,15 @@ public class InsertAction {
   private Collection<String> columns;
   private List<Map<String, Object>> rows;
   private List<List<Object>> values;
-  private ConditionTranslator translator;
+  private SqlComponentTranslator translator;
   private MoreBatis app;
 
-  public InsertAction(MoreBatis app,ConditionTranslator translator) {
+  public InsertAction(MoreBatis app,SqlComponentTranslator translator) {
     this.app=app;
     this.translator=translator;
   }
 
-  public ConditionTranslator getTranslator() {
+  public SqlComponentTranslator getTranslator() {
     return translator;
   }
 

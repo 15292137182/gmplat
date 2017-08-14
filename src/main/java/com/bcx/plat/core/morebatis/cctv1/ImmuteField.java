@@ -2,6 +2,7 @@ package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 
 
 /**
@@ -16,11 +17,6 @@ public class ImmuteField implements Column {
   }
 
   @Override
-  public String getColumnSqlFragment() {
-    return field.getColumnSqlFragment();
-  }
-
-  @Override
   public String getAlies() {
     return field.getAlies();
   }
@@ -28,5 +24,10 @@ public class ImmuteField implements Column {
   @Override
   public String getFieldSource() {
     return field.getFieldSource();
+  }
+
+  @Override
+  public String getColumnSqlFragment(SqlComponentTranslator translator) {
+    return field.getColumnSqlFragment(translator);
   }
 }

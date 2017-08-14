@@ -5,7 +5,7 @@ import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
-import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MoreBatis {
   private SuitMapper suitMapper;
-  private ConditionTranslator translator;
+  private SqlComponentTranslator translator;
 
-  public MoreBatis(SuitMapper suitMapper,ConditionTranslator translator) {
+  public MoreBatis(SuitMapper suitMapper,SqlComponentTranslator translator) {
     this.suitMapper = suitMapper;
     this.translator = translator;
   }

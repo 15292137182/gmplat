@@ -25,22 +25,41 @@
     </where>
   </sql>
 
+  <sql id="solveTableSource">
+      <foreach collection="translator.translate(tableSource)" item="i">
+        <choose>
+          <when test="i instanceof com.bcx.plat.core.morebatis.cctv1.SqlSegment">${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.segment)}</when>
+          <when test="i instanceof java.util.Collection">
+            <foreach collection="i" separator="," item="item" open="(" close=")">
+              #{item}
+            </foreach>
+          </when>
+          <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
+          <!--这个地方以后要把column解析搬走-->
+            ${i.fieldSource}
+          </when>
+          <otherwise>#{i}</otherwise>
+        </choose>
+      </foreach>
+  </sql>
+
   <select id="select" parameterType="com.bcx.plat.core.morebatis.command.QueryAction"
     resultType="hashmap">
     SELECT
     <trim suffixOverrides=",">
       <foreach collection="columns" item="column">
-        ${column.columnSqlFragment},
+        ${column.getColumnSqlFragment(translator)},
       </foreach>
     </trim>
-    FROM ${tableSource.tableSourceSqlFragment}
+    FROM <include refid="solveTableSource"/>
     <include refid="solveWhereCondition"/>
     order by create_time desc
   </select>
 
   <insert id="insert" parameterType="com.bcx.plat.core.morebatis.command.InsertAction">
     ${valuesRefresh}
-    insert into ${tableSource.tableSourceSqlFragment}
+    insert into
+    <include refid="solveTableSource"/>
     <foreach close=")" collection="columns" item="column" open="(" separator=",">
       ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(column)}
     </foreach>
@@ -53,7 +72,7 @@
   </insert>
 
   <update id="update" parameterType="com.bcx.plat.core.morebatis.command.UpdateAction">
-    UPDATE ${tableSource.tableSourceSqlFragment} SET
+    UPDATE <include refid="solveTableSource"/> SET
     <foreach collection="values" index="field" item="value" separator=",">
       ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(field)} = #{value}
     </foreach>
@@ -61,7 +80,7 @@
   </update>
 
   <delete id="delete">
-    delete FROM ${tableSource.tableSourceSqlFragment}
+    delete FROM <include refid="solveTableSource"/>
     <include refid="solveWhereCondition"/>
   </delete>
 </mapper>

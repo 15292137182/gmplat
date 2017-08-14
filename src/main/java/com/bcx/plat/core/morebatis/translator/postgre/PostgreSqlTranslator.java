@@ -1,19 +1,22 @@
 package com.bcx.plat.core.morebatis.translator.postgre;
 
-import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
+import com.bcx.plat.core.morebatis.component.JoinTable;
+import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
-import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.ConditionTranslator;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 
+import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.morebatis.util.MoreBatisUtil;
 import java.util.*;
 
-public class PostgreSqlTranslator implements ConditionTranslator {
+public class PostgreSqlTranslator implements SqlComponentTranslator {
 
+  /*条件系列*/
   public LinkedList<Object> translate(Condition condition){
     return translate(condition,new LinkedList<>());
   }
@@ -29,52 +32,52 @@ public class PostgreSqlTranslator implements ConditionTranslator {
       final String fieldSource = ((FieldCondition) condition).getField().getFieldSource();
       final Operator operator = ((FieldCondition) condition).getOperator();
       final Object value=((FieldCondition)condition).getValue();
-      addSqlSegment(fieldSource,list);
+      MoreBatisUtil.addSqlSegmentToList(fieldSource,list);
       switch (operator) {
         case IN:
           if (value instanceof Collection) {
             if (((Collection) value).size()==0) {
-              //空列表性能优化
-              if (!condition.isNot()) addSqlSegment("false",list);
+              //空列表优化
+              if (!condition.isNot()) MoreBatisUtil.addSqlSegmentToList("false",list);
             }else {
-              addSqlSegment(condition.isNot()?"not in":"in",list);
-              addSqlParameter(value,list);
+              MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"not in":"in",list);
+              MoreBatisUtil.addSqlParameterToList(value,list);
             }
           }else{
             //预留给子表查询
           }
           break;
         case EQUAL:
-          addSqlSegment(condition.isNot()?"!=":"=",list);
-          addSqlParameter(value,list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"!=":"=",list);
+          MoreBatisUtil.addSqlParameterToList(value,list);
           break;
         case LIKE_FULL:
-          addSqlSegment(condition.isNot()?"not like":"like",list);
-          addSqlSegment("concat('%',",list);
-          addSqlParameter(value,list);
-          addSqlSegment(",'%')",list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"not like":"like",list);
+          MoreBatisUtil.addSqlSegmentToList("concat('%',",list);
+          MoreBatisUtil.addSqlParameterToList(value,list);
+          MoreBatisUtil.addSqlSegmentToList(",'%')",list);
           break;
         case LIKE_LEFT:
-          addSqlSegment(condition.isNot()?"not like":"like",list);
-          addSqlSegment("concat('%',",list);
-          addSqlParameter(value,list);
-          addSqlSegment(")",list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"not like":"like",list);
+          MoreBatisUtil.addSqlSegmentToList("concat('%',",list);
+          MoreBatisUtil.addSqlParameterToList(value,list);
+          MoreBatisUtil.addSqlSegmentToList(")",list);
           break;
         case LIKE_RIGHT:
-          addSqlSegment(condition.isNot()?"not like":"like",list);
-          addSqlSegment("concat(",list);
-          addSqlParameter(value,list);
-          addSqlSegment(",'%')",list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"not like":"like",list);
+          MoreBatisUtil.addSqlSegmentToList("concat(",list);
+          MoreBatisUtil.addSqlParameterToList(value,list);
+          MoreBatisUtil.addSqlSegmentToList(",'%')",list);
           break;
         case BETWEEN:
-          addSqlSegment(condition.isNot()?"not between":"between",list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"not between":"between",list);
           final Object[] values = (Object[]) value;
-          addSqlParameter(values[0],list);
-          addSqlSegment("and",list);
-          addSqlParameter(values[1],list);
+          MoreBatisUtil.addSqlParameterToList(values[0],list);
+          MoreBatisUtil.addSqlSegmentToList("and",list);
+          MoreBatisUtil.addSqlParameterToList(values[1],list);
           break;
         case IS_NULL:
-          addSqlSegment(condition.isNot()?"IS NOT NULL":"IS NULL",list);
+          MoreBatisUtil.addSqlSegmentToList(condition.isNot()?"IS NOT NULL":"IS NULL",list);
           break;
       }
     }
@@ -88,12 +91,51 @@ public class PostgreSqlTranslator implements ConditionTranslator {
   public LinkedList<Object> translate(Or andCondition,LinkedList<Object> list){
     return translateChainCondition(andCondition, list,"or");
   }
+  /*条件系列*/
+
+  /*Table系列*/
+  /**
+   * 这是真正的入口
+   * @param tableSource
+   * @return
+   */
+  @Override
+  public LinkedList<Object> translate(TableSource tableSource, LinkedList<Object> list) {
+    if (tableSource instanceof JoinTable) {
+      return translate((JoinTable)tableSource,list);
+    }else if(tableSource instanceof Table){
+      return translate((Table)tableSource,list);
+    }else {
+      return tableSource.getTableSource(this);
+    }
+  }
+
+  @Override
+  public LinkedList<Object> translate(TableSource tableSource) {
+    return translate(tableSource,new LinkedList<>());
+  }
+
+  public LinkedList<Object> translate(JoinTable joinTable,LinkedList<Object> list){
+    translate(joinTable.getTableFirst(),list);
+    MoreBatisUtil.addSqlSegmentToList(joinTable.getJoinType().toString(),list);
+    translate(joinTable.getTableSecond(),list);
+    MoreBatisUtil.addSqlSegmentToList("ON",list);
+    translate(joinTable.getCondition(),list);
+    return list;
+  }
+
+  public LinkedList<Object> translate(Table table,LinkedList<Object> list){
+    list.add(table.getSqlSegment());
+    return list;
+  }
+
+  /*Table系列*/
 
 
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition, LinkedList<Object> list,String seperator){
     if (chainCondition.getConditions().size()==0) return list;
-    if (chainCondition.isNot()) addSqlSegment("NOT",list);
-    addSqlSegment("(",list);
+    if (chainCondition.isNot()) MoreBatisUtil.addSqlSegmentToList("NOT",list);
+    MoreBatisUtil.addSqlSegmentToList("(",list);
     final List<Condition> conditions = chainCondition.getConditions();
     Iterator<Condition> conditionIterator = conditions.iterator();
     boolean notFirst=false;
@@ -102,29 +144,21 @@ public class PostgreSqlTranslator implements ConditionTranslator {
         if (notFirst) {
             if (condition instanceof ChainCondition) {
                 if (!((ChainCondition) condition).getConditions().isEmpty()) {
-                  addSqlSegment(seperator,list);
+                  MoreBatisUtil.addSqlSegmentToList(seperator,list);
                 }
             }else{
-                addSqlSegment(seperator,list);
+                MoreBatisUtil.addSqlSegmentToList(seperator,list);
             }
         }else{
             notFirst=true;
         }
       translate(condition,list);
     }
-    addSqlSegment(")",list);
+    MoreBatisUtil.addSqlSegmentToList(")",list);
     return list;
   }
 
-  private LinkedList<Object> addSqlSegment(String sql,LinkedList<Object> list){
-    list.add(new SqlSegment(sql));
-    return list;
-  }
 
-  private LinkedList<Object> addSqlParameter(Object parameter,LinkedList<Object> list){
-    list.add(parameter);
-    return list;
-  }
 
   public static void main(String[] args) {
     PostgreSqlTranslator postgreSqlTranslator=new PostgreSqlTranslator();
@@ -137,6 +171,8 @@ public class PostgreSqlTranslator implements ConditionTranslator {
                             new FieldCondition("b",Operator.EQUAL,"a").not())
         )
     );
+
+
 
     LinkedList<Object> result = postgreSqlTranslator.translate(and);
     result.size();
