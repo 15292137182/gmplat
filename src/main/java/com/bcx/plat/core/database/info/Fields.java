@@ -3,11 +3,13 @@ package com.bcx.plat.core.database.info;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteFieldInTable;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import java.util.LinkedList;
 
 public class Fields {
 
-  public enum T_BUSINESS_OBJECT implements Column {
+  public enum T_BUSINESS_OBJECT implements FieldInTable {
     ROW_ID(TableInfo.T_BUSINESS_OBJECT, "row_id", "rowId"),
     OBJECT_CODE(TableInfo.T_BUSINESS_OBJECT, "object_code", "objectCode"),
     OBJECT_NAME(TableInfo.T_BUSINESS_OBJECT, "object_name", "objectName"),
@@ -34,6 +36,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -49,7 +55,7 @@ public class Fields {
     }
   }
 
-  public enum T_SYS_CONFIG implements Column {
+  public enum T_SYS_CONFIG implements FieldInTable {
     ROW_ID(TableInfo.T_SYS_CONFIG, "row_id", "rowId"),
     CONF_KEY(TableInfo.T_SYS_CONFIG, "conf_key", "confKey"),
     CONF_VALUE(TableInfo.T_SYS_CONFIG, "conf_value", "confValue"),
@@ -71,11 +77,8 @@ public class Fields {
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
-    @Override
-    public String getColumnSqlFragment(SqlComponentTranslator translator) {
-      return field.getColumnSqlFragment(translator);
-    }
 
+    
     @Override
     public String getAlies() {
       return field.getAlies();
@@ -85,10 +88,20 @@ public class Fields {
     public String getFieldSource() {
       return field.getFieldSource();
     }
+
+    @Override
+    public String getColumnSqlFragment(SqlComponentTranslator translator) {
+      return field.getColumnSqlFragment(translator);
+    }
+
+    @Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return field.getTableSource(translator);
+    }
   }
 
 
-  public enum T_SEQUENCE_RULE_CONFIG implements Column {
+  public enum T_SEQUENCE_RULE_CONFIG implements FieldInTable {
     ROW_ID(TableInfo.T_SEQUENCE_RULE_CONFIG, "row_id", "rowId"),
     SEQ_CODE(TableInfo.T_SEQUENCE_RULE_CONFIG, "seq_code", "seqCode"),
     SEQ_NAME(TableInfo.T_SEQUENCE_RULE_CONFIG, "seq_name", "seqName"),
@@ -114,6 +127,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -130,7 +147,7 @@ public class Fields {
   }
 
 
-  public enum T_SEQUENCE_GENERATE implements Column {
+  public enum T_SEQUENCE_GENERATE implements FieldInTable {
     ROW_ID(TableInfo.T_SEQUENCE_GENERATE, "row_id", "rowId"),
     SEQ_ROW_ID(TableInfo.T_SEQUENCE_GENERATE, "seq_row_id", "seqRowId"),
     VARIABLE_KEY(TableInfo.T_SEQUENCE_GENERATE, "variable_key", "variableKey"),
@@ -157,6 +174,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -173,7 +194,7 @@ public class Fields {
   }
 
 
-  public enum T_SEQ_BUSI_GENERATE implements Column {
+  public enum T_SEQ_BUSI_GENERATE implements FieldInTable {
     ROW_ID(TableInfo.T_SEQ_BUSI_GENERATE, "row_id", "rowId"),
     SEQ_ROW_ID(TableInfo.T_SEQ_BUSI_GENERATE, "seq_row_id", "seqRowId"),
     BUSI_VARIABLE_KEY(TableInfo.T_SEQ_BUSI_GENERATE, "busi_variable_key", "busiVariableKey"),
@@ -199,6 +220,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -215,7 +240,7 @@ public class Fields {
   }
 
 
-  public enum T_KEYSET implements Column {
+  public enum T_KEYSET implements FieldInTable {
     ROW_ID(TableInfo.T_KEYSET, "row_id", "rowId"),
     KEYSET_CODE(TableInfo.T_KEYSET, "keyset_code", "keysetCode"),
     KEYSET_NAME(TableInfo.T_KEYSET, "keyset_name", "keysetName"),
@@ -243,6 +268,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -259,7 +288,7 @@ public class Fields {
   }
 
 
-  public enum T_FRONT_FUNC_PRO implements Column {
+  public enum T_FRONT_FUNC_PRO implements FieldInTable {
     ROW_ID(TableInfo.T_FRONT_FUNC_PRO, "row_id", "rowId"),
     FUNC_ROW_ID(TableInfo.T_FRONT_FUNC_PRO, "func_row_id", "funcRowId"),
     RELATE_BUSI_PRO(TableInfo.T_FRONT_FUNC_PRO, "relate_busi_pro", "relateBusiPro"),
@@ -293,6 +322,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -309,7 +342,7 @@ public class Fields {
   }
 
 
-  public enum T_FRONT_FUNC implements Column {
+  public enum T_FRONT_FUNC implements FieldInTable {
     ROW_ID(TableInfo.T_FRONT_FUNC, "row_id", "rowId"),
     FUNC_CODE(TableInfo.T_FRONT_FUNC, "func_code", "funcCode"),
     FUNC_NAME(TableInfo.T_FRONT_FUNC, "func_name", "funcName"),
@@ -338,6 +371,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -354,7 +391,7 @@ public class Fields {
   }
 
 
-  public enum T_DB_TABLES implements Column {
+  public enum T_DB_TABLES implements FieldInTable {
     ROW_ID(TableInfo.T_DB_TABLES, "row_id", "rowId"),
     TABLE_SCHEMA(TableInfo.T_DB_TABLES, "table_schema", "tableSchema"),
     TABLE_CNAME(TableInfo.T_DB_TABLES, "table_cname", "tableCname"),
@@ -381,6 +418,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -397,7 +438,7 @@ public class Fields {
   }
 
 
-  public enum T_DB_TABLE_COLUMN implements Column {
+  public enum T_DB_TABLE_COLUMN implements FieldInTable {
     ROW_ID(TableInfo.T_DB_TABLE_COLUMN, "row_id", "rowId"),
     RELATE_TABLE_ROW_ID(TableInfo.T_DB_TABLE_COLUMN, "relate_table_row_id", "relateTableRowId"),
     COLUMN_ENAME(TableInfo.T_DB_TABLE_COLUMN, "column_ename", "columnEname"),
@@ -424,6 +465,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -440,7 +485,7 @@ public class Fields {
   }
 
 
-  public enum T_DATASET_CONFIG implements Column {
+  public enum T_DATASET_CONFIG implements FieldInTable {
     ROW_ID(TableInfo.T_DATASET_CONFIG, "row_id", "rowId"),
     DATASET_CODE(TableInfo.T_DATASET_CONFIG, "dataset_code", "datasetCode"),
     DATASET_NAME(TableInfo.T_DATASET_CONFIG, "dataset_name", "datasetName"),
@@ -468,6 +513,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -484,7 +533,7 @@ public class Fields {
   }
 
 
-  public enum T_BUSINESS_OBJECT_PRO implements Column {
+  public enum T_BUSINESS_OBJECT_PRO implements FieldInTable {
     ROW_ID(TableInfo.T_BUSINESS_OBJECT_PRO, "row_id", "rowId"),
     PROPERTY_CODE(TableInfo.T_BUSINESS_OBJECT_PRO, "property_code", "propertyCode"),
     PROPERTY_NAME(TableInfo.T_BUSINESS_OBJECT_PRO, "property_name", "propertyName"),
@@ -518,6 +567,10 @@ public class Fields {
     }
 
     @Override
+      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+        return null;
+      } 
+@Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }

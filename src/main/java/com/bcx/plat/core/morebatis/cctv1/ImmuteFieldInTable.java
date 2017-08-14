@@ -2,11 +2,11 @@ package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.LinkedList;
 
-public class ImmuteFieldInTable implements TableSource, Column {
+public class ImmuteFieldInTable implements FieldInTable {
 
   private Column column;
   private TableInfo tableSource;
