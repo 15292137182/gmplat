@@ -7,7 +7,7 @@ import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 
-public class TableFields {
+public class Fields {
   public enum T_BUSINESS_OBJECT implements Column {
     ROW_ID(TableInfo.T_BUSINESS_OBJECT, "row_id", "rowId"),
     OBJECT_CODE(TableInfo.T_BUSINESS_OBJECT, "object_code", "objectCode"),
