@@ -123,7 +123,7 @@ public class BusinessObjectController extends
         PageResult<Map<String, Object>> result =
                 businessObjectProService.select(
                         new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(blankSelectFields(),UtilsTool.collectToSet(args)))
+                                UtilsTool.createBlankQueryByFieldName(blankSelectFields(),UtilsTool.collectToSet(args)))
                         ,pageNum,pageSize);
         return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }

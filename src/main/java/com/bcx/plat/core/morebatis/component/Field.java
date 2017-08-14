@@ -1,8 +1,10 @@
 package com.bcx.plat.core.morebatis.component;
 
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.utils.UtilsTool;
 import java.util.Arrays;
 
 /**
@@ -13,19 +15,15 @@ public class Field implements Column {
   /**
    * 字段名
    */
-  protected String fieldName;
+  private String fieldName;
   /**
    * 别名
    */
-  protected String alies;
+  private String alies;
 
   public Field(String fieldName) {
-    this.fieldName = fieldName;
-  }
-
-  public Field(TableSource table,String fieldName,String alies) {
-    this.fieldName = fieldName;
-    this.alies = alies;
+    this.fieldName = UtilsTool.camelToUnderline(fieldName);
+    this.alies= fieldName;
   }
 
   public Field(String fieldName, String alies) {
@@ -57,10 +55,11 @@ public class Field implements Column {
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
     String alies = getAlies();
+    final String fieldSource = getFieldSource();
     if (alies == null || alies.isEmpty()) {
-      return getFieldSource();
+      return fieldSource;
     } else {
-      return getFieldSource() + " as \"" + getAlies()+"\"";
+      return fieldSource + " as \"" + getAlies()+"\"";
     }
   }
 }

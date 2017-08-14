@@ -17,7 +17,22 @@ import java.util.Map;
 
 public class QueryAction {
   //TODO 添加Context数据类型 并作为各command父类
-  public static final Column ALL_FIELD = new ImmuteField(new Field("*"));
+  public static final Column ALL_FIELD = new Column() {
+    @Override
+    public String getColumnSqlFragment(SqlComponentTranslator translator) {
+      return "*";
+    }
+
+    @Override
+    public String getAlies() {
+      return null;
+    }
+
+    @Override
+    public String getFieldSource() {
+      return "*";
+    }
+  };
   private List<Column> columns;
   private TableSource tableSource;
   private Condition where;

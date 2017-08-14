@@ -4,11 +4,8 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -17,7 +14,6 @@ import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.usagetracker.UsageTrackerClient;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -65,7 +61,7 @@ public class BusinessObjectProController extends
         final BusinessObjectProService entityService = getEntityService();
         List<Map<String, Object>> result = entityService
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
-                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                        UtilsTool.createBlankQueryByFieldName(blankSelectFields(), UtilsTool.collectToSet(str))));
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }

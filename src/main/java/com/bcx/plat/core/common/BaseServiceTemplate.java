@@ -14,7 +14,6 @@ import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.UtilsTool;
 import java.lang.reflect.ParameterizedType;
@@ -22,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,13 +93,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   @Deprecated
   public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value, int pageNum, int pageSize) {
-    return select(UtilsTool.createBlankQuery(column, value),pageNum,pageSize);
+    return select(UtilsTool.createBlankQueryByFieldName(column, value),pageNum,pageSize);
   }
 
   @Deprecated
   public List<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value) {
-    return select(UtilsTool.createBlankQuery(column, value));
+    return select(UtilsTool.createBlankQueryByFieldName(column, value));
   }
 
   public int insert(Map args) {
