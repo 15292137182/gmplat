@@ -59,4 +59,9 @@
       AND seq_row_id = #{seqRowId}
   </update>
 
+  <delete id="delete" parameterType="hashmap">
+    DELETE FROM public.t_sequence_generate
+    WHERE row_id = #{rowId}
+  </delete>
+
 </mapper>

@@ -39,8 +39,9 @@
         <el-row style="padding:0 10px 10px 10px">
             <el-col :span="24">
                 <template>
-                    <el-table :data="myLeftData" ref="myLeftData" highlight-current-row
-                              @row-click="currentChange" :height="leftHeight" border
+                    <el-table :data="tableData" ref="tableData" highlight-current-row
+                              @row-click="currentChange" :height="leftHeight" border  v-loading="loading"
+                              element-loading-text="加载中"
                               class="tableStyle">
                         <el-table-column prop="objectCode" label="代码" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="objectName" label="名称" show-overflow-tooltip></el-table-column>
@@ -56,7 +57,14 @@
                 </template>
                 </template>
                 <el-row type="flex" justify="end" style="padding-top: 10px">
-                    <el-pagination small layout="prev, pager, next" :total="50">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page.sync="currentPage"
+                            :page-sizes="[5,10,20]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="allDate">
                     </el-pagination>
                 </el-row>
             </el-col>
@@ -85,7 +93,7 @@
             <el-col :span="24">
                 <template>
                     <!--show-overflow-tooltip-->
-                    <el-table :data="myRightData" :height="rightHeight" border ref="myRightData" highlight-current-row
+                    <el-table :data="tableData" :height="rightHeight" border   ref="tableData" highlight-current-row
                               @row-click="currentRChange" class="tableStyle">
                         <el-table-column prop="propertyCode" label="代码" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="propertyName" label="名称" width="" show-overflow-tooltip></el-table-column>
@@ -106,11 +114,11 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage"
-                                :page-sizes="[10, 20]"
-                                :page-size="10"
+                                :current-page.sync="currentPage"
+                                :page-sizes="[5,10,20]"
+                                :page-size="pageSize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="200">
+                                :total="allDate">
                         </el-pagination>
                     </div>
                 </el-row>

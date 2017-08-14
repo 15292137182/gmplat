@@ -4,10 +4,10 @@
 var addUrl=serverPath + "/businObj/add";
 var editUrl=serverPath + "/businObj/modify";
 var deleteUrl=serverPath + "/businObj/delete";
-var qurUrl=serverPath + "/businObj/query";
+var qurUrl=serverPath + "/businObj/queryPage";
 var addProUrl=serverPath + "/businObj/add";
 var deleteProUrl=serverPath + "/businObjPro/delete";
-var qurProUrl=serverPath + "/businObjPro/querySlave";
+var qurProUrl=serverPath + "/businObj/queryProPage";
 var affectPropUrl=serverPath + "/businObj/takeEffect";//生效
 var changeUrl=serverPath + "/businObj/changeOperat";//变更
 
@@ -82,9 +82,13 @@ var basLeft = new Vue({
     "el": "#basLeft",
     data: {
         leftInput: '',
+        loading:true,
         leftHeight: '',
-        myLeftData: [],
-        //currentPage4: 1
+        tableData: [],
+        currentPage:1,//当前为第一页
+        pageSize:10,//每页显示条数
+        //开始不能为空 否则会报错
+        allDate:0  //总共有多少条
     },
     methods: {
         editEvent() {
@@ -114,28 +118,33 @@ var basLeft = new Vue({
             });
         },
         searchLeftTable() {
-            this.$http.jsonp(qurUrl, {
-                str: this.leftInput
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                console.log(res);
-                if (res.data.data !== null) {
-                    this.myLeftData = res.data.data;
-                    //默认选中第一行的数据
-                    this.currentChange(this.myLeftData[0]);
-                } else {
-                    this.myLeftData = [];
+            pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.currentPage,this,function(res){
+                if(res.data.result.length!=0){
+                   // console.log(basLeft.tableData);
+                    basLeft.currentChange(basLeft.tableData[0]);
+                }else{
                     basTop.addAttr = true,
                     basTop.takeEffect = true,
                     basTop.change = true
                 }
             });
         },
+        handleSizeChange(val) {
+            //每页多少条数变化时
+            this.pageSize=val;
+            console.log(`每页 ${val} 条`);
+            this.searchLeftTable();
+        },
+        handleCurrentChange(val) {
+            this.currentPage=val;
+            console.log(`当前页: ${val}`);
+            this.searchLeftTable();
+        },
         currentChange(row, event, column) {
-           console.log(row)
+          console.log(row)
             //判断是否生效
             if (row !== undefined) {
+                //生效
                 if (row.status == 40) {
                     basTop.takeEffect = false;
                     basTop.change = true;
@@ -143,6 +152,7 @@ var basLeft = new Vue({
                     basTop.takeEffect = true;
                     basTop.change = false;
                 }
+                //变更
                 if(row.changeOperat==50){
                     basTop.addAttr = true;
                 }else if(row.changeOperat==20){
@@ -155,25 +165,11 @@ var basLeft = new Vue({
                 //左边这一行的数据
                 this.currentId = row.rowId;
                 //查找右侧表的数据
-                this.$http.jsonp(qurProUrl, {
-                    str: '',
-                    objRowId: this.currentId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    // console.log(res)
-                    if (res.data.data !== null) {
-                        basRight.myRightData = res.data.data;
-                        //右边有数据 默认点击第一行
-                        basRight.currentRChange(basRight.myRightData[0])
-                    } else {
-                        basRight.myRightData = [];
-                    }
-                });
+                basRight.searchRightTable();
             }
         },
         FindLFirstDate(row){
-            this.$refs.myLeftData.setCurrentRow(row);
+            this.$refs.tableData.setCurrentRow(row);
         },
     },
     created() {
@@ -187,7 +183,7 @@ var basLeft = new Vue({
 
     },
     updated() {
-        this.FindLFirstDate(this.myLeftData[0]);
+        this.FindLFirstDate(this.tableData[0]);
     }
 });
 
@@ -195,25 +191,38 @@ var basRight = new Vue({
     "el": "#basRight",
     data: {
         rightInput: '',
+        loading:true,
         rightHeight: '',
-        myRightData: [],
-        //默认第一行
-        currentPage: 1
+        tableData: [],
+        currentPage:1,//当前为第一页
+        pageSize:10,//每页显示条数
+        //开始不能为空 否则会报错
+        allDate:0  //总共有多少条
     },
     methods: {
         searchRightTable() {
             this.$http.jsonp(qurProUrl, {
-                str: this.rightInput,
-                objRowId: basLeft.currentId
+                args: this.rightInput,
+                rowId: basLeft.currentId,
+                pageNum:this.currentPage,
+                pageSize:this.pageSize,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
+                console.log(res)
                 if (res.data.data !== null) {
-                    basRight.myRightData = res.data.data;
+                    basRight.tableData = res.data.data.result;
+                    basRight.allDate = res.data.data.result.length;
                     //右边有数据 默认点击第一行
-                    basRight.currentRChange(basRight.myRightData[0])
+                    basRight.currentRChange(basRight.tableData[0])
                 }
             })
+            //pagingObj.Example(qurProUrl,this.rightInput,this.pageSize,this.currentPage,this,function(res){
+            //    if(res.data.result.length!=0){
+            //        basRight.currentRChange(basRight.tableData[0])
+            //    }
+            //});
+
         },
         deleteProp(){
             //拿到ID
@@ -237,22 +246,21 @@ var basRight = new Vue({
             }
         },
         FindRFirstDate(row){
-            this.$refs.myRightData.setCurrentRow(row);
+            this.$refs.tableData.setCurrentRow(row);
         },
         handleSizeChange(val) {
             //每页多少条数变化时
-            this.pageNum = 10;
+            this.pageSize=val;
             console.log(`每页 ${val} 条`);
-            this.searchPage();
+            this.searchRightTable()
         },
         handleCurrentChange(val) {
-            this.pageSize = val;
+            this.currentPage=val;
             console.log(`当前页: ${val}`);
-            this.searchPage();
+            this.searchRightTable();
         }
     },
     created() {
-        //this.searchRightTable();
         $(document).ready(function () {
             basRight.rightHeight = $(window).height() - 200;
         });
@@ -261,8 +269,8 @@ var basRight = new Vue({
         })
     },
     updated() {
-        if (this.myRightData != null) {
-            this.FindRFirstDate(this.myRightData[0]);
+        if (this.tableData != null) {
+            this.FindRFirstDate(this.tableData[0]);
         }
     }
 })

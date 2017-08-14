@@ -16,8 +16,8 @@
     <setting name="useColumnLabel" value="true"/>
     <!-- 使用驼峰命名法转换字段。 -->
     <setting name="mapUnderscoreToCamelCase" value="true"/>
-    <!-- 设置本地缓存范围 session:就会有数据的共享  statement:语句范围 (这样就不会有数据的共享 ) default:session -->
-    <setting name="localCacheScope" value="SESSION"/>
+    <!-- 设置本地缓存范围 session:就会有数据的共享  STATEMENT:语句范围 (这样就不会有数据的共享 ) default:session -->
+    <setting name="localCacheScope" value="STATEMENT"/>
     <!-- 打印查询语句-->
     <setting name="logImpl" value="SLF4J"/>
   </settings>

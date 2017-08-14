@@ -78,6 +78,7 @@ public class TXManager {
     if (null != operate && init()) {
       DefaultTransactionDefinition def = new DefaultTransactionDefinition();
       def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW); //要求开启新的事务
+      def.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);// 提交后对其他事务可读
       TransactionStatus status = transactionManager.getTransaction(def);
       lt.add(status);
       try {
