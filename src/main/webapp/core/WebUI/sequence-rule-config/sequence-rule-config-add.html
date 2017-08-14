@@ -84,7 +84,7 @@
         </el-col>
         <el-col :span="5">
             <div>
-                <el-select placeholder="请选择" v-model="domain.name" ref="domain.name" :rules="{required: true, message: '请选择名称', trigger: 'blur'}">
+                <el-select placeholder="请选择" v-model="domain.name" ref="domain.name">
                     <el-option v-for="item in names" :key="item.name" :label="item.label" :value="item.name"></el-option>
                 </el-select></div>
         </el-col>
@@ -93,23 +93,21 @@
             <div class="label">键</div>
         </el-col>
         <el-col :span="5">
-            <div><el-input placeholder="请输入键" v-model="domain.key" ref="domain.key"
-                           :rules="{required: true, message: '键不能为空', trigger: 'blur'}"></el-input></div>
+            <div><el-input placeholder="请输入键" v-model="domain.key" ref="domain.key"></el-input></div>
         </el-col>
 
         <el-col :span="2">
             <div class="label">值</div>
         </el-col>
         <el-col :span="5">
-            <div><el-input placeholder="请输入值" v-model="domain.value" ref="domain.value"
-                           :rules="{required: true, message: '内容不能为空', trigger: 'blur'}"></el-input></div>
+            <div><el-input placeholder="请输入值" v-model="domain.value" ref="domain.value" ></el-input></div>
         </el-col>
         <el-col :span="3">
             <div class="label">是否显示</div>
         </el-col>
         <el-col :span="5">
             <div>
-                <el-select placeholder="请选择" v-model="domain.option" ref="domain.option" :rules="{required: true, message: '请选择是否显示', trigger: 'blur'}">
+                <el-select placeholder="请选择" v-model="domain.option" ref="domain.option" >
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </div>

@@ -121,6 +121,10 @@ var content=new Vue({
                 var isShow1 = mains[i].option;
                 var contentInput1='';
 
+                if(name1==''||key1=='' ||value1==''){
+                    ibcpLayer.ShowMsg("不能为空!");
+                    return false;
+                }
                 if (name1 == '1') {
                     contentInput1 = '@{' + value1 + '}';
                 }
