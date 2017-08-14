@@ -19,7 +19,6 @@ var add=new Vue({
                 this.$refs.seqNameInput,
                 this.$refs.seqContentInput,
                 this.$refs.seqContentInput,
-                this.$refs.despInput
             ];
             for (var i = 0; i < datas.length; i++) {
                 if (datas[i].value == '') {
@@ -87,6 +86,9 @@ var content=new Vue({
         closeOnClickModal:false
     },
     methods:{
+        cancel(){
+            this.dialogFormVisible=false;
+        },
         addDomain(){
             this.domains.push({
                 name:'',option:'',key:'',value:'',
@@ -109,18 +111,15 @@ var content=new Vue({
                     }
                 }
             }
-
             var mains = this.$refs[formName].$root.domains;
             var count = mains.length;
             var str = '';
             for (var i = 0; i < count; i++) {
-
                 var name1 = mains[i].name;
                 var key1 = mains[i].key;
                 var value1=mains[i].value;
                 var isShow1 = mains[i].option;
                 var contentInput1='';
-
 
                 if (name1 == '1') {
                     contentInput1 = '@{' + value1 + '}';

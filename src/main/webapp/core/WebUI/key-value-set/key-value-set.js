@@ -4,7 +4,7 @@
 var str="/keySet";
 const query=str+"/query";
 const insert=str+"/add";
-const modify=str+"modify";
+const modify=str+"/modify";
 const del=str+"/delete";
 const queryPage=str+"/queryPage"
 
@@ -15,9 +15,9 @@ var keyValueSet=new Vue({
         input:'',
         height:'',
         total:0,
-        pageSizes:[1,2,3,4],
+        pageSizes:[10,20,30,40],
         pageNum:1,
-        pageSize:1
+        pageSize:10
     },
     methods: {
         handleSizeChange(val){
@@ -44,8 +44,8 @@ var keyValueSet=new Vue({
         search(){
              this.searchPage();
         },
-        handleCurrentChange(val){
-            this.currentVal = val;
+        handleCurrentChange(row, event, column){
+            this.currentVal = row;
         },
         addEvent(){
             operate = 1;
@@ -68,15 +68,9 @@ var keyValueSet=new Vue({
                 keyValueSetAdd.disabled = true;
             });
         },
-        deleteEvent(){
-            this.$http.jsonp(serverPath + del, {
-                rowId: keyValueSet.currentVal.rowId,
-                keySetCode: keyValueSet.currentVal.keysetCode,
-                keySetName: keyValueSet.currentVal.keysetName,
-                confKey: keyValueSet.currentVal.confKey,
-                confValue: keyValueSet.currentVal.confValue,
-                desp: keyValueSet.currentVal.desp,
-                version: keyValueSet.currentVal.version
+        deleteEvent(index,row){
+             this.$http.jsonp(serverPath + del, {
+                rowId: row.rowId  //row的ID
             }, {
                 jsonp: 'callback'
             }).then(function (res) {

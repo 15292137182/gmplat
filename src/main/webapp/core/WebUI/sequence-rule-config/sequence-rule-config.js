@@ -24,8 +24,8 @@ var config=new Vue({
                 this.seqRuleConfigdata = res.data.data;
             });
         },
-        handleCurrentChange(val){
-            this.currentVal=val;
+        currentChange(row, event, column){
+            this.currentVal=row;
         },
         addEvent(){
             operate = 1;
@@ -45,9 +45,9 @@ var config=new Vue({
                 add.disabled=true;
             });
         },
-        deleteEvent(){
+        deleteEvent(index, row){
             var list=[];
-            list.push(config.currentVal.rowId);
+            list.push(row.rowId);
             this.$http.jsonp(serverPath+del,{
                 rowIds:list.join(" ")
             }, {
