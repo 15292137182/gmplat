@@ -85,17 +85,19 @@ var dataSetConfigButton = new Vue({
             });
         },
         deleteDataSetConfig(){//删除
-            this.$http.jsonp(this.delUrl,{
-                rowId:dataSetConfig.rowObjId
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
-                if(res.data.state==1){
-                    dataSetConfig.searchResTable();
-                }
-            },function(){
-                alert("删除失败")
+            deleteObj.del(function(){
+                this.$http.jsonp(this.delUrl,{
+                    rowId:dataSetConfig.rowObjId
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    ibcpLayer.ShowOK(res.data.message);
+                    if(res.data.state==1){
+                        dataSetConfig.searchResTable();
+                    }
+                },function(){
+                    alert("删除失败")
+                })
             })
         }
     }
