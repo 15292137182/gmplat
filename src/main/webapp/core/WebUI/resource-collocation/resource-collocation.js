@@ -50,6 +50,12 @@ var resCol=new Vue({
             });
         },
         deleteResEvent() {
+
+            ibcpAjax.Delete(deleteUrl,datas,true,function(){
+
+            });
+
+
             var deleteId = resCol.currentValue.rowId;  //row的ID
             this.$http.jsonp(delUrl, {
                 rowId: deleteId

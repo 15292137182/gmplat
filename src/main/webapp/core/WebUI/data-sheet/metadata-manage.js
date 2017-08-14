@@ -191,7 +191,7 @@ var basRight = new Vue({
     "el": "#basRight",
     data: {
         rightInput: '',
-        loading:true,
+        loading:false,
         rightHeight: '',
         tableData: [],
         currentPage:1,//当前为第一页
