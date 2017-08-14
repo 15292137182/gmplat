@@ -12,7 +12,7 @@ var config=new Vue({
     el:'#srconfig',
     data:{
         input:'',
-        seqRuleConfigdata:[],
+        tableData:[],
         Height:'',
         loading:true,
         pageSize:10,//每页显示多少条
