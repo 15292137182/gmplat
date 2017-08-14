@@ -1,30 +1,32 @@
 /**
  * Created by jms on 2017/8/7.
  */
-var str="/sequenceRule";
+var str=serverPath+"/sequenceRule";
 const query=str+"/query";
 const insert=str+"/add";
 const modify=str+"/modify";
 const del=str+"/delete";
+const queryPage=str+"/queryPage";
 
 var config=new Vue({
     el:'#srconfig',
     data:{
         input:'',
         seqRuleConfigdata:[],
-        Height:''
+        Height:'',
+        loading:true,
+        pageSize:10,//每页显示多少条
+        pageNum:1,//第几页
+        allDate:0//共多少条
     },
     methods:{
         search(){
-            this.$http.jsonp(serverPath + query, {
-                "str": this.input
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                this.seqRuleConfigdata = res.data.data;
-            });
+           this.searchPage();
         },
-        currentChange(row, event, column){
+        searchPage(){
+            pagingObj.Example(queryPage,this.input, this.pageSize,this.pageNum,this);
+        },
+        onClick(row, event, column){
             this.currentVal=row;
         },
         addEvent(){
@@ -45,26 +47,37 @@ var config=new Vue({
                 add.disabled=true;
             });
         },
-        deleteEvent(index, row){
+        deleteEvent(){
             var list=[];
-            list.push(row.rowId);
-            this.$http.jsonp(serverPath+del,{
-                rowIds:list.join(" ")
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                ibcpLayer.ShowOK(res.data.message);
-                this.search();
-            });
-        }
+            list.push(config.currentVal.rowId);
+            deleteObj.del(function(){
+                config.$http.jsonp(del,{
+                    rowIds:list.join(" ")
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    ibcpLayer.ShowOK(res.data.message);
+                    config.searchPage();
+                });
+
+            })
+        },
+        handleSizeChange(val){//每页显示多少条
+            this.pageSize=val;
+            this.searchPage();
+        },
+        handleCurrentChange(val){//点击第几页
+            this.pageNum=val;
+            this.searchPage();
+        },
     },
     created(){
-        this.search();
-        $(document).ready(function () {
-            config.Height = $(window).height() - 150;
+        this.searchPage();
+        $(document).ready(function(){
+            config.Height=$(window).height()-190;
         });
-        $(window).resize(function () {
-            config.Height = $(window).height() - 150;
+        $(window).resize(function(){
+            config.Height=$(window).height()-190;
         })
     }
 })

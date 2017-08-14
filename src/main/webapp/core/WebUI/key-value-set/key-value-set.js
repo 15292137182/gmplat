@@ -1,7 +1,7 @@
 /**
  * Created by jms on 2017/8/6.
  */
-var str="/keySet";
+var str=serverPath+"/keySet";
 const query=str+"/query";
 const insert=str+"/add";
 const modify=str+"/modify";
@@ -11,41 +11,20 @@ const queryPage=str+"/queryPage"
 var keyValueSet=new Vue({
     el:"#kvsInfo",
     data:{
-        keyValueSetdata:[],
+        tableData:[],
         input:'',
         height:'',
-        total:0,
-        pageSizes:[10,20,30,40],
-        pageNum:1,
-        pageSize:10
+        loading:true,
+        pageSize:10,//每页显示多少条
+        pageNum:1,//第几页
+        allDate:0//共多少条
     },
     methods: {
-        handleSizeChange(val){
-            this.pageSize=val;
-            this.searchPage();
-        },
-
-        handleNumChange(val){
-            this.pageNum=val;
-            this.searchPage();
-        },
         searchPage(){
-            this.$http.jsonp(serverPath + queryPage, {
-                "args":this.input,
-                "pageSize": this.pageSize,
-                "pageNum":this.pageNum,
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                this.keyValueSetdata = res.data.data.result;
-                this.total=Number(res.data.data.total);
-            });
+            pagingObj.Example(queryPage,this.input, this.pageSize,this.pageNum,this);
         },
         search(){
              this.searchPage();
-        },
-        handleCurrentChange(row, event, column){
-            this.currentVal = row;
         },
         addEvent(){
             operate = 1;
@@ -68,15 +47,32 @@ var keyValueSet=new Vue({
                 keyValueSetAdd.disabled = true;
             });
         },
-        deleteEvent(index,row){
-             this.$http.jsonp(serverPath + del, {
-                rowId: row.rowId  //row的ID
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                ibcpLayer.ShowOK(res.data.message);
-                keyValueSet.search();
-            });
+        deleteEvent(){
+            deleteObj.del(function () {
+                keyValueSet.$http.jsonp(del, {
+                    rowId: keyValueSet.currentVal.rowId  //row的ID
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    ibcpLayer.ShowOK(res.data.message);
+                    keyValueSet.searchPage();
+                });
+            })
+
+        },
+        handleSizeChange(val){//每页显示多少条
+            this.pageSize=val;
+            this.searchPage();
+        },
+        handleCurrentChange(val){//点击第几页
+            this.pageNum=val;
+            this.searchPage();
+        },
+        //点击
+        onClick(row, event, column){
+            if(row){
+                this.currentVal=row;
+            }
         },
     },
     created(){

@@ -27,7 +27,7 @@ var add=new Vue({
                 }
             }
             if (operate == 1) {
-                this.$http.jsonp(serverPath + insert, {
+                this.$http.jsonp(insert, {
                     seqCode: add.seqCodeInput,
                     seqName: add.seqNameInput,
                     seqContent: add.seqContentInput,
@@ -42,7 +42,7 @@ var add=new Vue({
                 });
             }
             if(operate==2){
-                this.$http.jsonp(serverPath+modify,{
+                this.$http.jsonp(modify,{
                     rowId:config.currentVal.rowId,
                     seqCode: add.seqCodeInput,
                     seqName: add.seqNameInput,
