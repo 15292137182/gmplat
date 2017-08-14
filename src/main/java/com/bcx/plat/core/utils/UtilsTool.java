@@ -3,6 +3,7 @@ package com.bcx.plat.core.utils;
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
@@ -293,7 +294,7 @@ public class UtilsTool {
   }
 
   final static public And excludeDeleted(Condition condition){
-    return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL,"1"),
+    return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL, BaseConstants.DELETE_FLAG).not(),
             new FieldCondition("delete_flag",Operator.IS_NULL,null)),condition);
   }
 

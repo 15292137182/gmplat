@@ -41,7 +41,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   private String deleteUser;//删除人
   private String deleteUserName;//删除名称
   private String deleteTime;//删除时间
-  private String deleteFlag="1";//删除标记
+  private String deleteFlag=BaseConstants.NOT_DELETE_FLAG;//删除标记
 
   private Map etc;
 

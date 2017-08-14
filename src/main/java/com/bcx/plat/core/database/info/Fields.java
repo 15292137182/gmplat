@@ -1,13 +1,13 @@
 package com.bcx.plat.core.database.info;
 
-import com.bcx.plat.core.morebatis.cctv1.ImmuteField;
-import com.bcx.plat.core.morebatis.cctv1.ImmuteTable;
+import com.bcx.plat.core.morebatis.cctv1.ImmuteFieldInTable;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 
 public class Fields {
+
   public enum T_BUSINESS_OBJECT implements Column {
     ROW_ID(TableInfo.T_BUSINESS_OBJECT, "row_id", "rowId"),
     OBJECT_CODE(TableInfo.T_BUSINESS_OBJECT, "object_code", "objectCode"),
@@ -26,12 +26,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_BUSINESS_OBJECT, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_BUSINESS_OBJECT, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_BUSINESS_OBJECT, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_BUSINESS_OBJECT(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -67,12 +67,9 @@ public class Fields {
     DELETE_USER(TableInfo.T_SYS_CONFIG, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_SYS_CONFIG, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_SYS_CONFIG, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
-
+    public final ImmuteFieldInTable field;
     T_SYS_CONFIG(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -110,12 +107,11 @@ public class Fields {
     DELETE_USER(TableInfo.T_SEQUENCE_RULE_CONFIG, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_SEQUENCE_RULE_CONFIG, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_SEQUENCE_RULE_CONFIG, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+    public final ImmuteFieldInTable field;
 
     T_SEQUENCE_RULE_CONFIG(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -153,12 +149,12 @@ public class Fields {
     DELETE_USER_NAME(TableInfo.T_SEQUENCE_GENERATE, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_SEQUENCE_GENERATE, "delete_flag", "deleteFlag"),
     BRANCH_SIGN(TableInfo.T_SEQUENCE_GENERATE, "branch_sign", "branchSign");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_SEQUENCE_GENERATE(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -195,12 +191,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_SEQ_BUSI_GENERATE, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_SEQ_BUSI_GENERATE, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_SEQ_BUSI_GENERATE, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_SEQ_BUSI_GENERATE(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -239,12 +235,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_KEYSET, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_KEYSET, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_KEYSET, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_KEYSET(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -289,12 +285,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_FRONT_FUNC_PRO, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_FRONT_FUNC_PRO, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_FRONT_FUNC_PRO, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_FRONT_FUNC_PRO(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -334,12 +330,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_FRONT_FUNC, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_FRONT_FUNC, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_FRONT_FUNC, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_FRONT_FUNC(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -377,12 +373,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_DB_TABLES, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_DB_TABLES, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_DB_TABLES, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_DB_TABLES(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -420,12 +416,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_DB_TABLE_COLUMN, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_DB_TABLE_COLUMN, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_DB_TABLE_COLUMN, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_DB_TABLE_COLUMN(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -464,12 +460,12 @@ public class Fields {
     DELETE_USER(TableInfo.T_DATASET_CONFIG, "delete_user", "deleteUser"),
     DELETE_USER_NAME(TableInfo.T_DATASET_CONFIG, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_DATASET_CONFIG, "delete_flag", "deleteFlag");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_DATASET_CONFIG(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
@@ -514,12 +510,12 @@ public class Fields {
     DELETE_USER_NAME(TableInfo.T_BUSINESS_OBJECT_PRO, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_BUSINESS_OBJECT_PRO, "delete_flag", "deleteFlag"),
     OBJ_ROW_ID(TableInfo.T_BUSINESS_OBJECT_PRO, "obj_row_id", "objRowId");
-    public final ImmuteTable tableSource;
-    public final ImmuteField field;
+
+    public final ImmuteFieldInTable field;
 
     T_BUSINESS_OBJECT_PRO(TableSource tableSource, String fieldName, String alies) {
-      this.tableSource = new ImmuteTable(tableSource);
-      this.field = new ImmuteField(new Field(fieldName, alies));
+
+      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
     @Override
