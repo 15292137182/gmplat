@@ -21,7 +21,7 @@ public enum TableInfo implements TableSource {
   T_BUSINESS_OBJECT("t_business_object"),
   TEST("test_only.test_table1"),
   T_SEQUENCE_RULE_CONFIG("t_sequence_rule_config");
-  public final TableSource table;
+  public final Table table;
   private final HashMap<String, TableSource> register = new HashMap<>();
 
   TableInfo(String tableName) {

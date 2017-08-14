@@ -4,7 +4,6 @@ import com.bcx.plat.core.morebatis.cctv1.ImmuteFieldInTable;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
 
 public class Fields {
 
@@ -29,7 +28,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_BUSINESS_OBJECT(TableSource tableSource, String fieldName, String alies) {
+    T_BUSINESS_OBJECT(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -68,7 +67,7 @@ public class Fields {
     DELETE_USER_NAME(TableInfo.T_SYS_CONFIG, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_SYS_CONFIG, "delete_flag", "deleteFlag");
     public final ImmuteFieldInTable field;
-    T_SYS_CONFIG(TableSource tableSource, String fieldName, String alies) {
+    T_SYS_CONFIG(TableInfo tableSource, String fieldName, String alies) {
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
@@ -109,7 +108,7 @@ public class Fields {
     DELETE_FLAG(TableInfo.T_SEQUENCE_RULE_CONFIG, "delete_flag", "deleteFlag");
     public final ImmuteFieldInTable field;
 
-    T_SEQUENCE_RULE_CONFIG(TableSource tableSource, String fieldName, String alies) {
+    T_SEQUENCE_RULE_CONFIG(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -152,7 +151,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_SEQUENCE_GENERATE(TableSource tableSource, String fieldName, String alies) {
+    T_SEQUENCE_GENERATE(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -194,7 +193,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_SEQ_BUSI_GENERATE(TableSource tableSource, String fieldName, String alies) {
+    T_SEQ_BUSI_GENERATE(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -238,7 +237,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_KEYSET(TableSource tableSource, String fieldName, String alies) {
+    T_KEYSET(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -288,7 +287,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_FRONT_FUNC_PRO(TableSource tableSource, String fieldName, String alies) {
+    T_FRONT_FUNC_PRO(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -333,7 +332,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_FRONT_FUNC(TableSource tableSource, String fieldName, String alies) {
+    T_FRONT_FUNC(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -376,7 +375,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_DB_TABLES(TableSource tableSource, String fieldName, String alies) {
+    T_DB_TABLES(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -419,7 +418,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_DB_TABLE_COLUMN(TableSource tableSource, String fieldName, String alies) {
+    T_DB_TABLE_COLUMN(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -463,7 +462,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_DATASET_CONFIG(TableSource tableSource, String fieldName, String alies) {
+    T_DATASET_CONFIG(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
@@ -513,7 +512,7 @@ public class Fields {
 
     public final ImmuteFieldInTable field;
 
-    T_BUSINESS_OBJECT_PRO(TableSource tableSource, String fieldName, String alies) {
+    T_BUSINESS_OBJECT_PRO(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }

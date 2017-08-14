@@ -1,15 +1,17 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
+import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.LinkedList;
 
-public class ImmuteFieldInTable implements TableSource,Column{
-  private Column column;
-  private TableSource tableSource;
+public class ImmuteFieldInTable implements TableSource, Column {
 
-  public ImmuteFieldInTable(Column column,TableSource tableSource) {
+  private Column column;
+  private TableInfo tableSource;
+
+  public ImmuteFieldInTable(Column column, TableInfo tableSource) {
     this.column = column;
     this.tableSource = tableSource;
   }
@@ -18,27 +20,27 @@ public class ImmuteFieldInTable implements TableSource,Column{
     return column;
   }
 
-  public TableSource getTableSource() {
+  public TableInfo getTableInfo() {
     return tableSource;
   }
 
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
-    return null;
+    return tableSource.table.getTableName() +"."+ column.getFieldSource();
   }
 
   @Override
   public String getAlies() {
-    return null;
+    return column.getAlies();
   }
 
   @Override
   public String getFieldSource() {
-    return null;
+    return column.getFieldSource();
   }
 
   @Override
   public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-    return null;
+    return tableSource.getTableSource(translator);
   }
 }

@@ -36,7 +36,7 @@
           </when>
           <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
           <!--这个地方以后要把column解析搬走-->
-            ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.fieldSource)}
+            ${i.getColumnSqlFragment(translator)}
           </when>
           <otherwise>#{i}</otherwise>
         </choose>

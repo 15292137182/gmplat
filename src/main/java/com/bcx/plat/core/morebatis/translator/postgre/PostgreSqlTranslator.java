@@ -29,7 +29,7 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
         translate((Or)condition,list);
       }
     }else if (condition instanceof FieldCondition){
-      final String fieldSource = ((FieldCondition) condition).getField().getFieldSource();
+      final String fieldSource = ((FieldCondition) condition).getField().getColumnSqlFragment(this);
       final Operator operator = ((FieldCondition) condition).getOperator();
       final Object value=((FieldCondition)condition).getValue();
       MoreBatisUtil.addSqlSegmentToList(fieldSource,list);
