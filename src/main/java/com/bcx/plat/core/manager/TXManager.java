@@ -65,7 +65,7 @@ public class TXManager {
    *
    * @return 返回
    */
-  public static TransactionStatus getCurrentStatus() {
+  private static TransactionStatus getCurrentStatus() {
     return lt.getLast();
   }
 
