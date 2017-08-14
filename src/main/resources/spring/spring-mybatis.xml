@@ -39,7 +39,7 @@
   </bean>
 
   <!-- 这个必须配置，否则事物不起作用 -->
-  <tx:annotation-driven transaction-manager="transactionManager"/>
+  <tx:annotation-driven/>
 
   <!-- 定义 dao -->
   <bean id="dao" class="com.bcx.plat.core.utils.Dao">
