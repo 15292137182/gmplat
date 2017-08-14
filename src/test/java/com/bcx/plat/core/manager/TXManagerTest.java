@@ -25,6 +25,7 @@ public class TXManagerTest extends BaseTest {
   public void test() {
     int size1 = mapper.select(new HashMap()).size();
     SequenceGenerate delete = new SequenceGenerate();
+
     TXManager.doInNewTX(() -> { // 事务一
       SequenceGenerate generate = new SequenceGenerate();
       generate.buildCreateInfo();
@@ -48,6 +49,7 @@ public class TXManagerTest extends BaseTest {
 
         delete.setRowId(generate2.getRowId());
       });
+
       int size3 = mapper.select(new HashMap()).size();
       assert size3 - size1 == 2;
       // 制造异常

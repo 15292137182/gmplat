@@ -14,7 +14,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
 /**
- * 负责授权的 class
+ * 负责登陆和授权的 class
  *
  * Create By HCL at 2017/8/14
  */
