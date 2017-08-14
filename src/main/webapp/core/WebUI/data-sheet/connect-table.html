@@ -75,6 +75,7 @@
                 }, {
                     jsonp: 'callback'
                 }).then(function (res) {
+                    console.log(res);
                     this.myLeftData = res.data.data;
                 });
             },

@@ -53,7 +53,7 @@
         methods: {
             searchTable(){
                 this.$http.jsonp(window.parent.conChildTable, {
-                    str: this.searchInput,
+                    args: this.searchInput,
                     rowId: window.parent.basLeft.relateTableRowId
                 }, {
                     jsonp: 'callback'

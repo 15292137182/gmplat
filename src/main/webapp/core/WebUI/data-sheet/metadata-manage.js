@@ -12,7 +12,8 @@ var affectPropUrl=serverPath + "/businObj/takeEffect";//生效
 var changeUrl=serverPath + "/businObj/changeOperat";//变更
 
 var conTable=serverPath + "/maintTable/query";
-var conChildTable=serverPath + "/dbTableColumn/query";//字表左侧查右侧
+//var conChildTable=serverPath + "/dbTableColumn/query";//字表左侧查右侧
+var conChildTable=serverPath + "/dbTableColumn/queryTabById";//字表左侧查右侧
 
 
 
@@ -106,16 +107,18 @@ var basLeft = new Vue({
             });
         },
         deleteEvent() {
-            var deleteId = basLeft.currentVal.rowId;  //左侧表的row的ID
-            this.$http.jsonp(deleteUrl, {
-                rowId: deleteId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                ibcpLayer.ShowOK(ref.data.message);
-                basLeft.searchLeftTable();
-                basRight.searchRightTable();
-            });
+            deleteObj.del(function(){
+                var deleteId = basLeft.currentVal.rowId;  //左侧表的row的ID
+                basLeft.$http.jsonp(deleteUrl, {
+                    rowId: deleteId
+                }, {
+                    jsonp: 'callback'
+                }).then(function (ref) {
+                    ibcpLayer.ShowOK(ref.data.message);
+                    basLeft.searchLeftTable();
+                    basRight.searchRightTable();
+                });
+            })
         },
         searchLeftTable() {
             pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.currentPage,this,function(res){
@@ -141,6 +144,7 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
+          basRight.rightInput='';
           console.log(row)
             //判断是否生效
             if (row !== undefined) {
@@ -201,40 +205,26 @@ var basRight = new Vue({
     },
     methods: {
         searchRightTable() {
-            this.$http.jsonp(qurProUrl, {
-                args: this.rightInput,
-                rowId: basLeft.currentId,
-                pageNum:this.currentPage,
-                pageSize:this.pageSize,
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                console.log(res)
-                if (res.data.data !== null) {
-                    basRight.tableData = res.data.data.result;
-                    basRight.allDate = res.data.data.result.length;
-                    //右边有数据 默认点击第一行
+            pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.currentPage,this,function(res){
+                if(res.data.result.length!=0){
                     basRight.currentRChange(basRight.tableData[0])
                 }
-            })
-            //pagingObj.Example(qurProUrl,this.rightInput,this.pageSize,this.currentPage,this,function(res){
-            //    if(res.data.result.length!=0){
-            //        basRight.currentRChange(basRight.tableData[0])
-            //    }
-            //});
+            });
 
         },
         deleteProp(){
-            //拿到ID
-            var deleteId = basRight.rightVal
-            this.$http.jsonp(deleteProUrl, {
-                rowId: deleteId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                ibcpLayer.ShowOK(ref.data.message);
-                basLeft.searchLeftTable();
-            });
+            deleteObj.del(function(){
+                //拿到ID
+                var deleteId = basRight.rightVal
+                basRight.$http.jsonp(deleteProUrl, {
+                    rowId: deleteId
+                }, {
+                    jsonp: 'callback'
+                }).then(function (ref) {
+                    ibcpLayer.ShowOK(ref.data.message);
+                    basLeft.searchLeftTable();
+                });
+            })
         },
         currentRChange(row, event, column) {
             //console.log(row)

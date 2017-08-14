@@ -50,21 +50,17 @@ var resCol=new Vue({
             });
         },
         deleteResEvent() {
-
-            ibcpAjax.Delete(deleteUrl,datas,true,function(){
-
-            });
-
-
-            var deleteId = resCol.currentValue.rowId;  //row的ID
-            this.$http.jsonp(delUrl, {
-                rowId: deleteId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                resCol.searchResTable();
-                ibcpLayer.ShowOK(ref.data.message);
-            });
+            deleteObj.del(function(){
+                var deleteId = resCol.currentValue.rowId;  //row的ID
+                resCol.$http.jsonp(delUrl, {
+                    rowId: deleteId
+                }, {
+                    jsonp: 'callback'
+                }).then(function (ref) {
+                    resCol.searchResTable();
+                    ibcpLayer.ShowOK(ref.data.message);
+                });
+            })
         },
         currentChange(row, event, column) {
             this.currentValue=row;//点击拿到这条数据的值
