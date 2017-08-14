@@ -1,5 +1,8 @@
 package com.bcx.plat.core.manager;
 
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
@@ -10,18 +13,12 @@ import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
 import com.bcx.plat.core.utils.extra.lang.Lang;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 序列号生成类
@@ -42,13 +39,9 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * Create By HCL at 2017/8/8
  */
-public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig>{
+public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig> {
 
-    private static SequenceRuleConfigService sequenceRuleConfigService;
-
-  public void setSequenceRuleConfigService(SequenceRuleConfigService sequenceRuleConfigService) {
-    this.sequenceRuleConfigService = sequenceRuleConfigService;
-  }
+  private static SequenceRuleConfigService sequenceRuleConfigService;
 
   private Logger logger = LoggerFactory.getLogger(getClass());
   // 变量的参数值取不到的时候默认值
@@ -99,7 +92,8 @@ public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig>{
     if (isValid(sequenceCode)) {
       Map<String, Object> cond = new HashMap<>();
       cond.put("seqCodeS", sequenceCode);
-      List<Map<String, Object>> mapper = sequenceRuleConfigService.select(new FieldCondition("seq_code", Operator.EQUAL, sequenceCode));
+      List<Map<String, Object>> mapper = sequenceRuleConfigService
+          .select(new FieldCondition("seq_code", Operator.EQUAL, sequenceCode));
       if (!mapper.isEmpty()) {
         mapper.get(0);
         SequenceGenerate generate = new SequenceGenerate();
@@ -141,8 +135,8 @@ public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig>{
       boolean test) {
     List<String> result = new ArrayList<>();
     if (init()) {
-        SequenceRuleConfig ruleConfig = getRuleConfig(sequenceCode);
-        if (null != ruleConfig) {
+      SequenceRuleConfig ruleConfig = getRuleConfig(sequenceCode);
+      if (null != ruleConfig) {
         String[] modules = ruleConfig.getSeqContent().split("&&");
         // 解析之后存储数据
         Map<String, Object> rm = new HashMap<>();
@@ -286,14 +280,16 @@ public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig>{
       return ruleConfig;
     }
     if (isValid(sequenceCode)) {
-        Map<String, Object> cond = new HashMap<>();
-        cond.put("seqCodeS", sequenceCode);
-        List<Map<String, Object>> code =
-               sequenceRuleConfigService.select((new FieldCondition("seqCode",Operator.EQUAL,sequenceCode)));
+      Map<String, Object> cond = new HashMap<>();
+      cond.put("seqCodeS", sequenceCode);
+      List<Map<String, Object>> code =
+          sequenceRuleConfigService
+              .select((new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)));
       if (code.size() == 1) {
-          String toJson = UtilsTool.objToJson(code.get(0));
-          SequenceRuleConfig sequenceRuleConfig = UtilsTool.jsonToObj(toJson, SequenceRuleConfig.class);
-          return sequenceRuleConfig;
+        String toJson = UtilsTool.objToJson(code.get(0));
+        SequenceRuleConfig sequenceRuleConfig = UtilsTool
+            .jsonToObj(toJson, SequenceRuleConfig.class);
+        return sequenceRuleConfig;
       }
     }
     return null;
