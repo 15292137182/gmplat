@@ -152,7 +152,8 @@ public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig> {
             String value;
             String defaultValue = a.length >= 2 ? a[1] : DEFAULT_ARG_VALUE;
             if (isValid(key)) {
-              value = null == args ? defaultValue : (String) args.get(key);
+              value = null == args || args.isEmpty() ? defaultValue :
+                  isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
             } else {
               value = DEFAULT_ARG_VALUE;
             }

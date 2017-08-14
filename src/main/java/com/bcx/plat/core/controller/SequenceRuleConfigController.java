@@ -52,11 +52,11 @@ public class SequenceRuleConfigController extends
       } catch (Exception e) {
         e.printStackTrace();
       }
-      String _num = request.getParameter("num");
+      String _num = request.getParameter("num") == null ? "" : request.getParameter("num");
       int num = _num.matches("^\\d+$") ? Integer.parseInt(_num) : 5;
       List<String> strings = SequenceManager.getInstance().mockSequenceNo(_content, map, num);
+      _sr.setData(strings);
       _sr.setMessage("OPERATOR_SUCCESS");
-
     } else {
       _sr.setState(STATUS_FAIL);
       _sr.setMessage("INVALID_REQUEST");

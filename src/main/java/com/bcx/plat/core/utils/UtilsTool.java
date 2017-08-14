@@ -3,10 +3,7 @@ package com.bcx.plat.core.utils;
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
 
-import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
@@ -14,18 +11,20 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -34,15 +33,6 @@ import java.util.stream.Collectors;
 public class UtilsTool {
 
   private static ObjectMapper objectMapper;
-
-//  public static class BaseEntityUtil{
-//    public  static <T extends BaseEntity<T>> T buildCreateInfo(T entity){
-//      entity.setCreateTime(getDateTimeNow());
-//      entity.setCreateUser("admin");
-//      entity.setCreateUserName("系统管理员");
-//      return entity;
-//    }
-//  }
 
   /**
    * 禁止使用 new 的方法构造该类
@@ -294,7 +284,7 @@ public class UtilsTool {
   }
 
   final static public And excludeDeleted(Condition condition){
-    return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL, BaseConstants.DELETE_FLAG).not(),
+    return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL,"1"),
             new FieldCondition("delete_flag",Operator.IS_NULL,null)),condition);
   }
 
