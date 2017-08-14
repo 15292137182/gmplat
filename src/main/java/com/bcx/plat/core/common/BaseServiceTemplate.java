@@ -93,13 +93,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   @Deprecated
   public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value, int pageNum, int pageSize) {
-    return select(UtilsTool.createBlankQueryByFieldName(column, value),pageNum,pageSize);
+    return select(UtilsTool.createBlankQuery(column, value),pageNum,pageSize);
   }
 
   @Deprecated
   public List<Map<String, Object>> singleInputSelect(Collection<String> column,
       Collection<String> value) {
-    return select(UtilsTool.createBlankQueryByFieldName(column, value));
+    return select(UtilsTool.createBlankQuery(column, value));
   }
 
   public int insert(Map args) {

@@ -61,7 +61,7 @@ public class BusinessObjectProController extends
         final BusinessObjectProService entityService = getEntityService();
         List<Map<String, Object>> result = entityService
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
-                        UtilsTool.createBlankQueryByFieldName(blankSelectFields(), UtilsTool.collectToSet(str))));
+                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
