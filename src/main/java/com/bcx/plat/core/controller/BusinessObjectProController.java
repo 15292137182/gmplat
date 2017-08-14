@@ -65,7 +65,7 @@ public class BusinessObjectProController extends
         final BusinessObjectProService entityService = getEntityService();
         List<Map<String, Object>> result = entityService
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
-                        entityService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
@@ -92,30 +92,6 @@ public class BusinessObjectProController extends
         }
         return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList), locale);
     }
-
-
-
-    /**
-     * 通用查询方法
-     *
-     * @param args     按照空格查询
-     * @param pageNum  当前第几页
-     * @param pageSize 一页显示多少条
-     * @param request  request请求
-     * @param locale   国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
-                                    HttpServletRequest request, Locale locale) {
-        PageResult<Map<String, Object>> result =
-                businessObjectProService.select(
-                        new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
-                                businessObjectProService.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)))
-                        ,pageNum,pageSize);
-        return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
-    }
-
 
 
     /**

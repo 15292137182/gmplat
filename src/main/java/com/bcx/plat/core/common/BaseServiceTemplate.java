@@ -62,7 +62,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   final public List<Map<String, Object>> select(Condition condition,Column...columns) {
     final List<Map<String, Object>> queryResult = moreBatis.select().select(columns)
         .from(TableAnnoUtil.getTableSource(entityClass))
-        .where(condition).execute();
+        .where(UtilsTool.excludeDeleted(condition)).execute();
     final List<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
     return camelizedResult;
   }
@@ -75,7 +75,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
   final public PageResult<Map<String, Object>> select(Condition condition, int pageNum,int pageSize,Column ...columns) {
     final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
         .from(TableAnnoUtil.getTableSource(entityClass))
-        .where(condition).selectPage(pageNum, pageSize);
+        .where(UtilsTool.excludeDeleted(condition)).selectPage(pageNum, pageSize);
     final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
     return camelizedResult;
   }

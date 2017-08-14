@@ -1,14 +1,14 @@
 package com.bcx.plat.core.entity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.utils.UtilsTool;
 
 import java.io.Serializable;
+
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 业务对象属性实体类 Created by Went on 2017/8/1.
@@ -34,7 +34,7 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
    */
   @Override
   public BusinessObjectPro buildCreateInfo() {
-    this.setPropertyCode("A00" + UtilsTool.lengthUUID(3).toUpperCase());
+    setPropertyCode("A00"+UtilsTool.lengthUUID(3));
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFunc;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -66,6 +67,31 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         if (result.size()==0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
+        return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+    }
+
+
+
+
+    /**
+     * 根据功能块rowId查找当前对象下的所有属性并分页显示
+     *
+     * @param args     按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @param request  request请求
+     * @param locale   国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryProPage")
+    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
+                                    HttpServletRequest request, Locale locale) {
+        PageResult<Map<String, Object>> result =
+                frontFuncProService.select(
+                        new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                                UtilsTool.createBlankQuery(blankSelectFields(),UtilsTool.collectToSet(args)))
+                        ,pageNum,pageSize);
+        result = queryResultProcess(result);
         return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
 
