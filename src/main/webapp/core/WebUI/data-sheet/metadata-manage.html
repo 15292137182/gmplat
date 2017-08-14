@@ -12,11 +12,9 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">业务对象</el-button>
-            <el-button type="info" icon="edit" size="small" @click.native="editEvent" v-bind:disabled="editOpe">业务对象</el-button></el-button>
             <el-button type="warning" icon="star-off" size="small" @click.native="affectProp" v-bind:disabled="takeEffect">生效</el-button>
             <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp" v-bind:disabled="change">变更</el-button>
             <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">对象属性</el-button>
-            <el-button type="danger" icon="delete" size="small" @click.native="deleteProp" v-bind:disabled="deleteAttr">对象属性</el-button>
         </el-col>
     </el-row>
 </div>
@@ -48,6 +46,12 @@
                         <el-table-column prop="objectName" label="名称" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="relateTableRowId" label="关联表" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="version" label="版本" show-overflow-tooltip></el-table-column>
+                        <el-table-column  prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button @click.native="editEvent" type="text" size="small" icon="edit"></el-button>
+                                <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"></el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </template>
                 </template>
@@ -90,6 +94,11 @@
                         <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueResourceType" label="值来源类型" width="110" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueResourceContent" label="值来源内容" width="110" show-overflow-tooltip></el-table-column>
+                        <el-table-column  prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button @click.native="deleteProp" type="text" size="small" icon="delete"></el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </template>
                 <el-row type="flex" justify="end" style="padding-top: 10px">

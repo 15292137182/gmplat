@@ -4,7 +4,7 @@
 var str="/keySet";
 const query=str+"/query";
 const insert=str+"/add";
-const modify=str+"modify";
+const modify=str+"/modify";
 const del=str+"/delete";
 const queryPage=str+"/queryPage"
 
@@ -13,20 +13,39 @@ var keyValueSet=new Vue({
     data:{
         keyValueSetdata:[],
         input:'',
-        height:''
+        height:'',
+        total:0,
+        pageSizes:[10,20,30,40],
+        pageNum:1,
+        pageSize:10
     },
     methods: {
-        search(){
-            this.$http.jsonp(serverPath + query, {
-                "str": this.input
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.searchPage();
+        },
+
+        handleNumChange(val){
+            this.pageNum=val;
+            this.searchPage();
+        },
+        searchPage(){
+            this.$http.jsonp(serverPath + queryPage, {
+                "args":this.input,
+                "pageSize": this.pageSize,
+                "pageNum":this.pageNum,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                this.keyValueSetdata = res.data.data;
+                this.keyValueSetdata = res.data.data.result;
+                this.total=Number(res.data.data.total);
             });
         },
-        handleCurrentChange(val){
-            this.currentVal = val;
+        search(){
+             this.searchPage();
+        },
+        handleCurrentChange(row, event, column){
+            this.currentVal = row;
         },
         addEvent(){
             operate = 1;
@@ -49,15 +68,9 @@ var keyValueSet=new Vue({
                 keyValueSetAdd.disabled = true;
             });
         },
-        deleteEvent(){
-            this.$http.jsonp(serverPath + del, {
-                rowId: keyValueSet.currentVal.rowId,
-                keySetCode: keyValueSet.currentVal.keysetCode,
-                keySetName: keyValueSet.currentVal.keysetName,
-                confKey: keyValueSet.currentVal.confKey,
-                confValue: keyValueSet.currentVal.confValue,
-                desp: keyValueSet.currentVal.desp,
-                version: keyValueSet.currentVal.version
+        deleteEvent(index,row){
+             this.$http.jsonp(serverPath + del, {
+                rowId: row.rowId  //row的ID
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
@@ -67,6 +80,7 @@ var keyValueSet=new Vue({
         },
     },
     created(){
+        this.searchPage();
         $(document).ready(function(){
             keyValueSet.height=$(window).height()-200;
         });
@@ -76,41 +90,4 @@ var keyValueSet=new Vue({
     }
 })
 
-/*
- * 分页
- */
-var page=new Vue({
-    el:"#paging",
-    data:{
-        total:0,
-        pageSizes:[1,2,3,4],
-        pageNum:1,
-        pageSize:1
-    },
-    methods:{
-        handleSizeChange(val){
-            this.pageSize=val;
-            this.searchPage();
-        },
 
-        handleNumChange(val){
-            this.pageNum=val;
-            this.searchPage();
-        },
-        searchPage(){
-            this.$http.jsonp(serverPath + queryPage, {
-                "args":this.input,
-                "pageSize": this.pageSize,
-                "pageNum":this.pageNum,
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                keyValueSet.keyValueSetdata = res.data.data.result;
-                this.total=Number(res.data.data.total);
-            });
-        }
-    },
-    created(){
-        this.searchPage();
-    }
-})

@@ -5,6 +5,7 @@
 var functionBlock = new Vue({
     el:"#app",
     data:{
+        loading:false,
         input:'',
         myData:[],
         leftHeight:'',
@@ -12,13 +13,16 @@ var functionBlock = new Vue({
         findRightDataUrl:serverPath+'/fronFuncPro/queryPro',//查询指定ID功能块的属性信息
         deleteId:'',
         editObj:'',
+        divIndex:'',
+        pageNum:1,//当前页号
+        pageSize:10,//每页显示数据条数
+        allDate:0//共多少条数据
     },
     methods:{
+        //查询
         get(){
             this.$http.jsonp(this.url,{
-                str:this.input,
-                // rowId:'',
-                // rowIds:''
+                str:this.input
             },{
                 jsonp:'callback'
             }).then(function(res){
@@ -33,7 +37,22 @@ var functionBlock = new Vue({
                 }
             })
         },
-        delete(){
+        //编辑
+        editBlock(){
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '400px',function(){
+                em.isEdit = true;
+                em.codeInput=functionBlock.editObj.funcCode;
+                em.nameInput=functionBlock.editObj.funcName;
+                em.typeInput=functionBlock.editObj.funcType;
+                em.dataId=functionBlock.editObj.relateBusiObj;
+                em.tableInput=functionBlock.editObj.objectName;
+                em.desp=functionBlock.editObj.desp;
+                em.rowId=functionBlock.editObj.rowId;
+            });
+
+        },
+        //删除
+        del(){
             this.$http.jsonp(serverPath+"/fronc/delete",{
                 rowId:this.deleteId
             },{
@@ -43,6 +62,7 @@ var functionBlock = new Vue({
                 functionBlock.get();
             })
         },
+        //点击
         click(row, event, column){
             //properties.FindData(row.rowId);
             if(row){
@@ -51,9 +71,11 @@ var functionBlock = new Vue({
                 this.editObj = row;
             }
         },
+        //选中
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
         },
+        //查询右边table
         getRight(id){
             this.$http.jsonp(this.findRightDataUrl,{
                 str:'',
@@ -70,7 +92,11 @@ var functionBlock = new Vue({
                     properties.rightData = [];
                 }
             })
-        }
+        },
+        //分页显示数据条数变化
+        handleSizeChange(){},
+        //分页页数变化
+        handleCurrentChange(){}
     },
     created(){
         this.get();
@@ -105,17 +131,36 @@ var properties = new Vue({
 
             });
         },
+        //点击右边table
         clickRightTable(row, event, column){
             if(row){
                 this.rowId = row.rowId;
                 this.funcId = row.funcRowId;
             }
         },
+        //选中
         FindOk(row){
             this.$refs.myTable.setCurrentRow(row);
         },
-        getRightData(){
-            //this.FindData(vm.deleteId);
+        //编辑属性
+        editData(){
+            topButtonObj.rowObjId = functionBlock.editObj.rowId;
+            topButtonObj.objId = functionBlock.editObj.relateBusiObj;
+            topButtonObj.isEdit = true;
+            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
+        },
+        //删除属性
+        delData(){
+            this.$http.jsonp(topButtonObj.delUrl,{
+                rowId:properties.rowId
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                functionBlock.getRight(properties.funcId);
+                ibcpLayer.ShowOK(res.data.message);
+            },function(){
+                alert("删除失败")
+            })
         }
     },
     created(){
@@ -164,7 +209,7 @@ var topButtonObj = new Vue({
 
         },
         del(){
-            functionBlock.delete();
+            functionBlock.del();
         },
         //功能块属性
         addData(){

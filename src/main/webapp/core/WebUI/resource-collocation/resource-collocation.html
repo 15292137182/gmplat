@@ -12,8 +12,6 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addResEvent">资源配置</el-button>
-            <el-button type="info" icon="edit" size="small" @click.native="editResEvent" v-bind:disabled="editCol">资源配置</el-button>
-            <el-button type="danger" icon="delete" size="small" @click.native="deleteResEvent" v-bind:disabled="delCol">资源配置</el-button>
         </el-col>
     </el-row>
 </div>
@@ -46,6 +44,12 @@
                         <el-table-column prop="confValue" label="值" show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column prop="desp" label="说明" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column  prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button  icon="edit" size="small" @click.native="editResEvent" type="text"></el-button>
+                                <el-button  icon="delete" size="small" @click.native="deleteResEvent" type="text"></el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </template>

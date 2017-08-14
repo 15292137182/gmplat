@@ -12,13 +12,11 @@ import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 数据库字段服务类 Create By HCL at 2017/8/1
  */
 @Service
-@Transactional
 public class DBTableColumnServiceImpl implements DBTableColumnService {
 
   @Autowired

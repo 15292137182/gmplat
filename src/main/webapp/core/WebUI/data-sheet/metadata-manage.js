@@ -9,11 +9,10 @@ var addProUrl=serverPath + "/businObj/add";
 var deleteProUrl=serverPath + "/businObjPro/delete";
 var qurProUrl=serverPath + "/businObjPro/querySlave";
 var affectPropUrl=serverPath + "/businObj/takeEffect";//生效
-//var changeUrl=serverPath + "/businObjPro/query";//变更
+var changeUrl=serverPath + "/businObj/changeOperat";//变更
 
 var conTable=serverPath + "/maintTable/query";
-var conChildTable=serverPath + "/dbTableColumn/queryByTableId";//字表左侧查右侧
-
+var conChildTable=serverPath + "/dbTableColumn/query";//字表左侧查右侧
 
 
 
@@ -22,10 +21,7 @@ var basTop = new Vue({
     el: '#basTop',
     data: {
         addOpe: false,
-        editOpe: true,
-        deleteOpe: true,
-        addAttr: false,
-        deleteAttr: false,
+        addAttr: true,
         takeEffect: true,
         change: true,
     },
@@ -34,31 +30,6 @@ var basTop = new Vue({
             operate = 1;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px');
-        },
-        editEvent() {
-            operate = 2;
-            var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
-                em.codeInput = basLeft.currentVal.objectCode;  //对象代码
-                em.disabled = true;//对象代码不可点击
-                em.firstIconEvent = true;//选择关联表的按钮不可用
-                em.nameInput = basLeft.currentVal.objectName;//对象名称
-                em.tableInput = basLeft.currentVal.tables;//关联表
-                em.versionInput = basLeft.currentVal.relateTableRowId;//版本
-                em.dataId = basLeft.currentVal.proRowId;//关联表的ID
-            });
-        },
-        deleteEvent() {
-            var deleteId = basLeft.currentVal.rowId;  //左侧表的row的ID
-            this.$http.jsonp(deleteUrl, {
-                rowId: deleteId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                ibcpLayer.ShowOK(ref.data.message);
-                basLeft.searchLeftTable();
-                basRight.searchRightTable();
-            });
         },
         addProp(){
             var htmlUrl = 'metadata-prop-add.html';
@@ -82,18 +53,6 @@ var basTop = new Vue({
             });
 
         },
-        deleteProp(){
-            //拿到ID
-            var deleteId = basRight.rightVal
-            this.$http.jsonp(deleteProUrl, {
-                rowId: deleteId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                ibcpLayer.ShowOK(ref.data.message);
-                basLeft.searchLeftTable();
-            });
-        },
         affectProp(){
             this.$http.jsonp(affectPropUrl, {
                 rowId: basLeft.currentId
@@ -106,7 +65,16 @@ var basTop = new Vue({
             });
         },
         changeProp(){
-
+            this.$http.jsonp(changeUrl, {
+                rowId: basLeft.currentId
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                console.log(ref);
+                ibcpLayer.ShowOK(ref.data.message);
+                //刷新 不然状态不变化
+                basLeft.searchLeftTable();
+            });
         }
     }
 });
@@ -119,31 +87,53 @@ var basLeft = new Vue({
         //currentPage4: 1
     },
     methods: {
+        editEvent() {
+            operate = 2;
+            var htmlUrl = 'metadata-add.html';
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
+                console.log(basLeft.currentVal)
+                em.codeInput = basLeft.currentVal.objectCode;  //对象代码
+                em.disabled = true;//对象代码不可点击
+                em.firstIconEvent = true;//选择关联表的按钮不可用
+                em.nameInput = basLeft.currentVal.objectName;//对象名称
+                em.tableInput = basLeft.currentVal.associatTable;//关联表
+                em.versionInput = basLeft.currentVal.version;//版本
+                em.dataId = basLeft.currentVal.relateTableRowId;//关联表的ID
+            });
+        },
+        deleteEvent() {
+            var deleteId = basLeft.currentVal.rowId;  //左侧表的row的ID
+            this.$http.jsonp(deleteUrl, {
+                rowId: deleteId
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                ibcpLayer.ShowOK(ref.data.message);
+                basLeft.searchLeftTable();
+                basRight.searchRightTable();
+            });
+        },
         searchLeftTable() {
             this.$http.jsonp(qurUrl, {
                 str: this.leftInput
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                //console.log(res);
+                console.log(res);
                 if (res.data.data !== null) {
                     this.myLeftData = res.data.data;
                     //默认选中第一行的数据
                     this.currentChange(this.myLeftData[0]);
-                    basTop.editOpe = false;
-                    basTop.deleteOpe = false;
                 } else {
                     this.myLeftData = [];
-                    basTop.editOpe = true;
-                    basTop.deleteOpe = true;
                     basTop.addAttr = true,
-                        basTop.deleteAttr = true,
-                        basTop.takeEffect = true,
-                        basTop.change = true
+                    basTop.takeEffect = true,
+                    basTop.change = true
                 }
             });
         },
         currentChange(row, event, column) {
+           console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 if (row.status == 40) {
@@ -152,6 +142,12 @@ var basLeft = new Vue({
                 } else if (row.status == 20) {
                     basTop.takeEffect = true;
                     basTop.change = false;
+                }
+                if(row.changeOperat==50){
+                    basTop.addAttr = true;
+                }else if(row.changeOperat==20){
+                    basTop.addAttr = false;
+                    basTop.change = true;
                 }
                 this.currentVal = row;
                 //关联表的数据
@@ -212,10 +208,27 @@ var basRight = new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                basRight.myRightData = res.data.data;
+                if (res.data.data !== null) {
+                    basRight.myRightData = res.data.data;
+                    //右边有数据 默认点击第一行
+                    basRight.currentRChange(basRight.myRightData[0])
+                }
+            })
+        },
+        deleteProp(){
+            //拿到ID
+            var deleteId = basRight.rightVal
+            this.$http.jsonp(deleteProUrl, {
+                rowId: deleteId
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                ibcpLayer.ShowOK(ref.data.message);
+                basLeft.searchLeftTable();
             });
         },
         currentRChange(row, event, column) {
+            //console.log(row)
             //点击拿到这条数据的值
             if (row != undefined) {
                 //console.log(row)
