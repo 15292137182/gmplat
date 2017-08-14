@@ -84,7 +84,7 @@
                             v-loading="loading"
                             element-loading-text="加载中"
                             ref="myTable"
-                            :data="myData"
+                            :data="tableData"
                             @row-click="click"
                             border style="width: 100%"
                             :highlight-current-row="true"
@@ -146,7 +146,15 @@
                     </el-row>
                 <el-row style="padding:0 10px 10px 10px">
                     <template>
-                        <el-table :data="rightData" ref="myTable" @row-click="clickRightTable" :highlight-current-row="true" border style="width: 100%;" :height="rightHeight">
+                        <el-table
+                            v-loading="loading"
+                            element-loading-text="加载中"
+                            :data="tableData"
+                            ref="myTable"
+                            @row-click="clickRightTable"
+                            :highlight-current-row="true"
+                            border style="width: 100%;"
+                            :height="rightHeight">
                             <el-table-column  prop="propertyName" label="业务对象属性" width="118">
                             </el-table-column>
                             <el-table-column  prop="displayTitle" label="标题" width="">
@@ -170,6 +178,17 @@
                             </el-table-column>
                         </el-table>
                     </template>
+                    <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="pageNum"
+                                :page-sizes="[10, 20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="allDate">
+                        </el-pagination>
+                    </el-row>
                 </el-row>
             </el-col>
         </el-col>
