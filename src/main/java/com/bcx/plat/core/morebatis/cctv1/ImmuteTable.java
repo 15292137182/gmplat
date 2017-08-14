@@ -11,6 +11,10 @@ public class ImmuteTable implements TableSource {
 
   TableSource tableSource;
 
+  public ImmuteTable(TableSource tableSource) {
+    this.tableSource = tableSource;
+  }
+
   @Override
   public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
     return tableSource.getTableSource(translator);

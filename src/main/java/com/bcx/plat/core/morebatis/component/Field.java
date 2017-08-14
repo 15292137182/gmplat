@@ -2,6 +2,8 @@ package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
+import java.util.Arrays;
 
 /**
  * 普通字段
@@ -19,6 +21,11 @@ public class Field implements Column {
 
   public Field(String fieldName) {
     this.fieldName = fieldName;
+  }
+
+  public Field(TableSource table,String fieldName,String alies) {
+    this.fieldName = fieldName;
+    this.alies = alies;
   }
 
   public Field(String fieldName, String alies) {
