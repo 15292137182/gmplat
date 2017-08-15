@@ -90,13 +90,10 @@ public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig> {
    */
   public int resetSequenceNo(String sequenceCode) {
     if (isValid(sequenceCode)) {
-      Map<String, Object> cond = new HashMap<>();
-      cond.put("seqCodeS", sequenceCode);
       List<Map<String, Object>> mapper = sequenceRuleConfigService
           .select(new FieldCondition("seq_code", Operator.EQUAL, sequenceCode));
       if (!mapper.isEmpty()) {
-        mapper.get(0);
-        SequenceGenerate generate = new SequenceGenerate();
+        SequenceGenerate generate = new SequenceGenerate().fromMap(mapper.get(0));
         generate.buildDeleteInfo();
         return sequenceGenerateMapper.resetSequenceValue(generate);
       }
@@ -281,8 +278,6 @@ public class SequenceManager extends BaseServiceTemplate<SequenceRuleConfig> {
       return ruleConfig;
     }
     if (isValid(sequenceCode)) {
-      Map<String, Object> cond = new HashMap<>();
-      cond.put("seqCodeS", sequenceCode);
       List<Map<String, Object>> code =
           sequenceRuleConfigService
               .select((new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)));
