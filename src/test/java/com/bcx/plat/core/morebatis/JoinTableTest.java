@@ -10,6 +10,7 @@ import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import java.util.List;
@@ -34,13 +35,13 @@ public class JoinTableTest extends BaseTest {
   }
 
   @Before
-  public void createData(){
-    BusinessObject businessObject=new BusinessObject();
+  public void createData() {
+    BusinessObject businessObject = new BusinessObject();
     businessObject.setObjectName("join test");
     businessObject.setObjectCode("JT-10012");
     businessObject.buildCreateInfo();
     businessObject.insert();
-    BusinessObjectPro businessObjectPro=new BusinessObjectPro();
+    BusinessObjectPro businessObjectPro = new BusinessObjectPro();
     businessObjectPro.setPropertyCode("c");
     businessObjectPro.setPropertyName("tesstName");
     primaryRowId = businessObject.getRowId();
@@ -58,8 +59,10 @@ public class JoinTableTest extends BaseTest {
         .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
             TableInfo.T_BUSINESS_OBJECT_PRO)
             .on(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
-                T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID))).where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID,Operator.EQUAL,primaryRowId));
+                T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
+        .where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId))
+        .orderBy(new Order(T_BUSINESS_OBJECT_PRO.CREATE_TIME,Order.DESC));
     List<Map<String, Object>> result = joinTableTest.execute();
-    Assert.assertEquals(5,result.size());
+    Assert.assertEquals(5, result.size());
   }
 }

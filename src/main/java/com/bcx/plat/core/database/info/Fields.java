@@ -2,7 +2,6 @@ package com.bcx.plat.core.database.info;
 
 import com.bcx.plat.core.morebatis.cctv1.ImmuteFieldInTable;
 import com.bcx.plat.core.morebatis.component.Field;
-import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import java.util.LinkedList;
@@ -36,10 +35,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -73,12 +73,12 @@ public class Fields {
     DELETE_USER_NAME(TableInfo.T_SYS_CONFIG, "delete_user_name", "deleteUserName"),
     DELETE_FLAG(TableInfo.T_SYS_CONFIG, "delete_flag", "deleteFlag");
     public final ImmuteFieldInTable field;
+
     T_SYS_CONFIG(TableInfo tableSource, String fieldName, String alies) {
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
     }
 
 
-    
     @Override
     public String getAlies() {
       return field.getAlies();
@@ -127,10 +127,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -174,10 +175,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -220,10 +222,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -268,10 +271,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -322,10 +326,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -371,10 +376,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -418,10 +424,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -465,10 +472,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -513,10 +521,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }
@@ -567,10 +576,11 @@ public class Fields {
     }
 
     @Override
-      public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-        return null;
-      } 
-@Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
       return field.getColumnSqlFragment(translator);
     }

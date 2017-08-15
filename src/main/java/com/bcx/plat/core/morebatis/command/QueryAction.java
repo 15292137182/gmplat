@@ -1,13 +1,12 @@
 package com.bcx.plat.core.morebatis.command;
 
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.cctv1.ImmuteField;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.morebatis.component.Field;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -36,12 +35,21 @@ public class QueryAction {
   private List<Column> columns;
   private TableSource tableSource;
   private Condition where;
+  private List<Order> order;
   private SqlComponentTranslator translator;
   private MoreBatis app;
 
   public QueryAction( MoreBatis app,SqlComponentTranslator translator) {
     this.app = app;
     this.translator = translator;
+  }
+
+  public List<Order> getOrder() {
+    return order;
+  }
+
+  public void setOrder(List<Order> order) {
+    this.order = order;
   }
 
   public List<Object> getTranslatedCondition(){
@@ -80,6 +88,16 @@ public class QueryAction {
 
   public QueryAction from(TableSource tableSource) {
     setTableSource(tableSource);
+    return this;
+  }
+
+  public QueryAction orderBy(Order ... order) {
+    setOrder(Arrays.asList(order));
+    return this;
+  }
+
+  public QueryAction orderBy(List<Order> orders) {
+    setOrder(orders);
     return this;
   }
 

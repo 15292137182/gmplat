@@ -53,9 +53,24 @@
     </trim>
     FROM <include refid="solveTableSource"/>
     <include refid="solveWhereCondition"/>
-    order by <if test="tableSource instanceof com.bcx.plat.core.morebatis.component.JoinTable">
     <!--目前tableJoin不支持嵌套 以后要改进这个地方-->
-      ${tableSource.tableFirst.getTableSource(translator)[0].segment}.</if>create_time desc
+    <if test="order!=null and order.size>0">
+      order by
+      <foreach collection="order" item="o">
+        <choose>
+          <when test="o.column instanceof com.bcx.plat.core.morebatis.phantom.FieldInTable">
+            ${o.getColumnSqlFragment(translator)}
+          </when>
+          <otherwise>
+            ${o.fieldSource}
+          </otherwise>
+        </choose>
+        ${o.order==0?"DESC":"ASC"}
+      </foreach>
+    </if>
+    
+    <!--order by <if test="tableSource instanceof com.bcx.plat.core.morebatis.component.JoinTable">-->
+      <!--${tableSource.tableFirst.getTableSource(translator)[0].segment}.</if>create_time desc-->
   </select>
 
   <insert id="insert" parameterType="com.bcx.plat.core.morebatis.command.InsertAction">
