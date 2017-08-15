@@ -55,13 +55,13 @@ public class JoinTableTest extends BaseTest {
 
   @Test
   public void test() {
-    QueryAction joinTableTest = moreBatis.select().selectAll()
+    QueryAction joinTableTest = moreBatis.select().select(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
         .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
             TableInfo.T_BUSINESS_OBJECT_PRO)
             .on(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
                 T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
         .where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId))
-//        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID,Fields.T_BUSINESS_OBJECT.ROW_ID)
+        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
         .orderBy(new Order(T_BUSINESS_OBJECT_PRO.CREATE_TIME,Order.DESC));
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());

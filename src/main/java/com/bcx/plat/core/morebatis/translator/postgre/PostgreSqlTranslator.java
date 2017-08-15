@@ -44,6 +44,12 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
     return translate(condition, new LinkedList<>());
   }
 
+  /**
+   *
+   * @param condition
+   * @param list
+   * @return
+   */
   public LinkedList<Object> translate(Condition condition, LinkedList<Object> list) {
     if (condition instanceof ChainCondition) {
       if (condition instanceof And) {
@@ -52,8 +58,6 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
         translate((Or) condition, list);
       }
     } else if (condition instanceof FieldCondition) {
-//      final String fieldSource = ((FieldCondition) condition).getField().getColumnSqlFragment(this);
-//      MoreBatisUtil.addSqlSegmentToList(fieldSource,list);
       final Operator operator = ((FieldCondition) condition).getOperator();
       final Object value = ((FieldCondition) condition).getValue();
       translate((FieldSource) ((FieldCondition) condition).getField(), list);
