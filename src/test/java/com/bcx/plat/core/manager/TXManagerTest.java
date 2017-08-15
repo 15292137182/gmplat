@@ -2,11 +2,12 @@ package com.bcx.plat.core.manager;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.SequenceGenerate;
-import com.bcx.plat.core.mapper.SequenceGenerateMapper;
+import com.bcx.plat.core.service.SequenceGenerateService;
 import com.bcx.plat.core.utils.extra.lang.Lang;
-import java.util.HashMap;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
 
 /**
  * 对事务管理器进行单元测试
@@ -16,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TXManagerTest extends BaseTest {
 
   @Autowired
-  SequenceGenerateMapper mapper;
+  SequenceGenerateService mapper;
 
   /**
    * 测试事务
@@ -30,12 +31,12 @@ public class TXManagerTest extends BaseTest {
       SequenceGenerate generate = new SequenceGenerate();
       generate.buildCreateInfo();
       generate.buildModifyInfo();
-      mapper.insert(generate);
+      mapper.insert(generate.toMap());
       TXManager.doInNewTX(() -> { // 事务二
         SequenceGenerate generate1 = new SequenceGenerate();
         generate1.buildCreateInfo();
         generate1.buildModifyInfo();
-        mapper.insert(generate1);
+        mapper.insert(generate1.toMap());
         throw Lang.makeThrow("抛出一号异常-----");  // 抛出异常，事务二回滚，事务一不回滚
       });
       int size2 = mapper.select(new HashMap()).size();
@@ -45,7 +46,7 @@ public class TXManagerTest extends BaseTest {
         SequenceGenerate generate2 = new SequenceGenerate();
         generate2.buildCreateInfo();
         generate2.buildModifyInfo();
-        mapper.insert(generate2);
+        mapper.insert(generate2.toMap());
 
         delete.setRowId(generate2.getRowId());
       });
@@ -58,7 +59,7 @@ public class TXManagerTest extends BaseTest {
     int curr = mapper.select(new HashMap()).size();
     // 上面的情况，应该成功了一个
     assert curr - size1 == 1;
-    mapper.delete(delete); // 删除事务三产生的数据
+    mapper.delete(delete.toMap()); // 删除事务三产生的数据
   }
 
 }
