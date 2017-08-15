@@ -43,7 +43,7 @@
     <!--所有事件按钮-->
     <el-row type="flex" class="row-bg" justify="end">
         <el-col :span="24" style="text-align: right">
-            <el-button size="small" type="info" icon="plus">表信息</el-button>
+            <el-button @click="addTableBase" size="small" type="info" icon="plus">表信息</el-button>
         </el-col>
     </el-row>
 </el-col>
@@ -90,8 +90,8 @@
                                 <el-table-column  prop="" fixed="right" label="操作" width="100">
                                     <template scope="scope">
                                         <el-button @click="handleClick" type="text" size="small" icon="search"></el-button>
-                                        <el-button  type="text" size="small" icon="edit"></el-button>
-                                        <el-button  type="text" size="small" icon="delete"></el-button>
+                                        <el-button @click="editTableBase" type="text" size="small" icon="edit"></el-button>
+                                        <el-button @click="delTableBase" type="text" size="small" icon="delete"></el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>

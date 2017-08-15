@@ -13,26 +13,52 @@ var dataBase = new Vue({
         leftHeight:'',
         rowObj:'',
         divIndex:'',
+        editdivIndex:'',
         url:serverPath+'/maintTable/queryPage',
+        delUrl:serverPath+'/maintTable/delete',
         pageSize:10,//每页显示多少条
         pageNum:1,//第几页
         allDate:0//共多少条
     },
     methods:{
-        get(){
+        get(){//分页查询
             pagingObj.Example(this.url,this.input, this.pageSize,this.pageNum,this);
         },
-        click(row, event, column){
+        click(row, event, column){//点击table
             this.rowObj = row;
             console.log(row);
         },
-        FindOk(row){
+        FindOk(row){//选中table
             this.$refs.myData.setCurrentRow(row);
         },
-        handleClick(){
+        handleClick(){//查看明细
             this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','600px', '400px',function(){
                 DatabaseDetails.Robj = dataBase.rowObj;
                 DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+            })
+        },
+        editTableBase(){//编辑
+            this.editdivIndex = ibcpLayer.ShowDiv('add-tablebase.html','编辑数据库信息','400px', '440px',function(){
+                topButtonObj.isEdit=true;
+                tableBase.rowObj = dataBase.rowObj;
+                tableBase.formTable.name = dataBase.rowObj.tableSchema;
+                tableBase.formTable.Ename = dataBase.rowObj.tableEname;
+                tableBase.formTable.Cname = dataBase.rowObj.tableCname;
+                tableBase.formTable.desp = dataBase.rowObj.desp;
+            })
+        },
+        delTableBase(){
+            deleteObj.del(function(){
+                dataBase.$http.jsonp(dataBase.delUrl,{
+                    rowId:dataBase.rowObj.rowId
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    ibcpLayer.ShowOK(res.data.message);
+                    this.get();
+                },function(){
+                    alert("删除失败")
+                })
             })
         },
         handleSizeChange(val){//每页显示多少条
@@ -58,5 +84,16 @@ var dataBase = new Vue({
     }
 });
 var topButtonObj = new Vue({
-    el:'#myButton'
+    el:'#myButton',
+    data:{
+        divIndex:'',
+        isEdit:''
+    },
+    methods:{
+        addTableBase(){
+            this.divIndex = ibcpLayer.ShowDiv('add-tablebase.html','新增数据库信息','400px', '440px',function(){
+
+            })
+        }
+    }
 })

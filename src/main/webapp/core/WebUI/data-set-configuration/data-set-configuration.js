@@ -86,7 +86,7 @@ var dataSetConfigButton = new Vue({
         },
         deleteDataSetConfig(){//删除
             deleteObj.del(function(){
-                this.$http.jsonp(this.delUrl,{
+                dataSetConfigButton.$http.jsonp(dataSetConfigButton.delUrl,{
                     rowId:dataSetConfig.rowObjId
                 },{
                     jsonp:'callback'

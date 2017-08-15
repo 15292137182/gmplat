@@ -61,6 +61,9 @@ var em=new Vue({
             }
         },
         cancel(){
+            if(!em.isEdit){
+                ibcpLayer.Close(topButtonObj.divIndex);
+            }
             ibcpLayer.Close(functionBlock.divIndex);
         }
     }
