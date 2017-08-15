@@ -18,8 +18,8 @@ public class MaintDBTables extends BaseEntity<MaintDBTables> implements Serializ
   @TablePK
   private String rowId;//id
   private String tableSchema;//表schema
-  private String tableEName;//表中文名
-  private String tableCName;//表英文名
+  private String tableEname;//表英文名
+  private String tableCname;//表中文名
   private String desp;//说明
 
 
@@ -50,20 +50,20 @@ public class MaintDBTables extends BaseEntity<MaintDBTables> implements Serializ
     this.tableSchema = tableSchema;
   }
 
-  public String getTableEName() {
-    return tableEName;
+  public String getTableEname() {
+    return tableEname;
   }
 
-  public void setTableEName(String tableEName) {
-    this.tableEName = tableEName;
+  public void setTableEname(String tableEname) {
+    this.tableEname = tableEname;
   }
 
-  public String getTableCName() {
-    return tableCName;
+  public String getTableCname() {
+    return tableCname;
   }
 
-  public void setTableCName(String tableCName) {
-    this.tableCName = tableCName;
+  public void setTableCname(String tableCname) {
+    this.tableCname = tableCname;
   }
 
   public String getDesp() {

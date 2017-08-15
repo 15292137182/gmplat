@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * 业务对象属性Controller层
  * Created by Wen Tiehu on 2017/8/8.
  */
 @RequestMapping("/core/businObjPro")
@@ -29,17 +30,13 @@ import java.util.Map;
 public class BusinessObjectProController extends
         BaseControllerTemplate<BusinessObjectProService, BusinessObjectPro> {
 
-    @Autowired
-    BusinessObjectProService businessObjectProService;
-    @Autowired
-    FrontFuncProService frontFuncProService;
+    final private BusinessObjectProService businessObjectProService;
+    final private FrontFuncProService frontFuncProService;
 
-    public void setFrontFuncProService(FrontFuncProService frontFuncProService) {
-        this.frontFuncProService = frontFuncProService;
-    }
-
-    public void setBusinessObjectProService(BusinessObjectProService businessObjectProService) {
+    @Autowired
+    public BusinessObjectProController(BusinessObjectProService businessObjectProService, FrontFuncProService frontFuncProService) {
         this.businessObjectProService = businessObjectProService;
+        this.frontFuncProService = frontFuncProService;
     }
 
     @Override
@@ -65,7 +62,7 @@ public class BusinessObjectProController extends
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
 
 
@@ -86,7 +83,7 @@ public class BusinessObjectProController extends
         if (mapList.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList), locale);
+        return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList), locale);
     }
 
 
@@ -96,7 +93,7 @@ public class BusinessObjectProController extends
      * @param rowId   按照rowId查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return
+     * @return serviceResult
      */
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {

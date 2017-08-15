@@ -25,36 +25,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by WJF on 2017/8/8.
+ * 业务对象controller层
+ * Created by wth on 2017/8/8.
  */
 @RestController
 @RequestMapping("/core/businObj")
 public class BusinessObjectController extends
         BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
-    @Autowired
-    private BusinessObjectProService businessObjectProService;
-    @Autowired
-    private MaintDBTablesService maintDBTablesService;
-    @Autowired
-    private FrontFuncService frontFuncService;
+    private final BusinessObjectProService businessObjectProService;
+    private final MaintDBTablesService maintDBTablesService;
+    private final FrontFuncService frontFuncService;
 
-    public void setFrontFuncService(FrontFuncService frontFuncService) {
-        this.frontFuncService = frontFuncService;
-    }
-
-    public void setBusinessObjectProService(BusinessObjectProService businessObjectProService) {
+    @Autowired
+    public BusinessObjectController(BusinessObjectProService businessObjectProService, MaintDBTablesService maintDBTablesService, FrontFuncService frontFuncService) {
         this.businessObjectProService = businessObjectProService;
-    }
-    public void setMaintDBTablesService(MaintDBTablesService maintDBTablesService) {
         this.maintDBTablesService = maintDBTablesService;
+        this.frontFuncService = frontFuncService;
     }
 
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
-
 
 
     /**
@@ -73,11 +66,10 @@ public class BusinessObjectController extends
         PageResult<Map<String, Object>> result =
                 businessObjectProService.select(
                         new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode","propertyName"),UtilsTool.collectToSet(args)))
-                        ,pageNum,pageSize);
-        return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args)))
+                        , pageNum, pageSize);
+        return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
-
 
 
     /**
@@ -111,10 +103,10 @@ public class BusinessObjectController extends
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("relateBusiObj",rowId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("relateBusiObj", rowId);
         List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
-        if (businObj.size()==0) {
+        if (businObj.size() == 0) {
             List<Map<String, Object>> list = businessObjectProService
                     .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
             if (UtilsTool.isValid(list)) {
@@ -125,7 +117,7 @@ public class BusinessObjectController extends
             }
             return super.delete(rowId, request, locale);
         }
-        return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.DATA_QUOTE),locale);
+        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
     }
 
 

@@ -30,19 +30,20 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/core/fronc")
 @RestController
 public class FrontFuncController extends BaseControllerTemplate<FrontFuncService, FrontFunc> {
-    @Autowired
-    private FrontFuncProService frontFuncProService;
-    @Autowired
-    private BusinessObjectService businessObjectService;
+    private final FrontFuncProService frontFuncProService;
+    private final BusinessObjectService businessObjectService;
 
-    public void setBusinessObjectService(BusinessObjectService businessObjectService) {
+    @Autowired
+    public FrontFuncController(FrontFuncProService frontFuncProService, BusinessObjectService businessObjectService) {
+        this.frontFuncProService = frontFuncProService;
         this.businessObjectService = businessObjectService;
     }
 
-    public void setFrontFuncProService(FrontFuncProService frontFuncProService) {
-        this.frontFuncProService = frontFuncProService;
-    }
-
+    /**
+     * 需要模糊的搜索字段
+     *
+     * @return 表字段
+     */
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("funcCode", "funcName");
@@ -55,22 +56,19 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      * @param rowId   功能块rowId
      * @param request request请求
      * @param locale  国际化参数
-     * @return
+     * @return ServiceResult
      */
     @RequestMapping("/queryPro")
     public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
-        final FrontFuncService entityService = getEntityService();
         List<Map<String, Object>> result = frontFuncProService
                 .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                    UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
         result = queryResultProcess(result);
-        if (result.size()==0) {
+        if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
-
-
 
 
     /**
@@ -89,18 +87,18 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         PageResult<Map<String, Object>> result =
                 frontFuncProService.select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(blankSelectFields(),UtilsTool.collectToSet(args)))
-                        ,pageNum,pageSize);
+                                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)))
+                        , pageNum, pageSize);
         result = queryResultProcess(result);
-        return result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
 
     /**
      * TODO 这个方法后面会有用处
      * 暂时先放这里 以后再重构
      *
-     * @param result
-     * @return
+     * @param result 接受serviceResult封装的参数
+     * @return list
      */
     @Override
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {

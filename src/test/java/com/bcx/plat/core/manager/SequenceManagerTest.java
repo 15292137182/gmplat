@@ -13,7 +13,7 @@ public class SequenceManagerTest extends BaseTest {
 
   @Test
   public void test() {
-    String code = "ABCDEFG";
+    String code = "BusinObjectPro";
     Map<String, Object> a = new HashMap<>();
     a.put("a", "测试");
       String s = SequenceManager.getInstance().buildSequenceNo(code, null);
@@ -22,5 +22,9 @@ public class SequenceManagerTest extends BaseTest {
 
     String content = "@{11111}&&${a;yyyy-MM-dd-;true}&&*{b;1}";
     List<String> list = SequenceManager.getInstance().mockSequenceNo(content, null, 5);
+
+    int businObjectPro = SequenceManager.getInstance().resetSequenceNo("BusinObjectPro");
+
+    SequenceManager.getInstance().produceSequenceNo(code, null, 5, false);
   }
 }

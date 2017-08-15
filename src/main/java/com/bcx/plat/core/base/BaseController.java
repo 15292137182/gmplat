@@ -39,14 +39,6 @@ public class BaseController {
    * @return 返回
    */
   protected Object result(HttpServletRequest request, ServiceResult serviceResult, Locale locale) {
-//
-//    if (((ArrayList) serviceResult.getData()).size()==0) {
-//      if (isValid(request.getParameter("callback"))) {
-//        MappingJacksonValue value = new MappingJacksonValue(ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-//        value.setJsonpFunction(request.getParameter("callback"));
-//        return value;
-//      }
-//    }
     if (null != serviceResult) {
       String message = messageSource.getMessage(serviceResult.getMessage(), null, locale);
       if (isValid(message)) {

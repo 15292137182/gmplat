@@ -42,7 +42,7 @@ public class SequenceRuleConfigController extends
   @RequestMapping("/mock")
   public Object mockSequenceNo(HttpServletRequest request, Locale locale) {
     String _content = request.getParameter("content");
-    ServiceResult _sr = new ServiceResult();
+    ServiceResult<List<String>> _sr = new ServiceResult<>();
     if (isValid(_content)) {
       _sr.setState(STATUS_SUCCESS);
       String _args = request.getParameter("args");

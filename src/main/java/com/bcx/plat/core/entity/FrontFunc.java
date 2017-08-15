@@ -3,6 +3,7 @@ package com.bcx.plat.core.entity;
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.database.info.TableInfo;
@@ -31,6 +32,7 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
    */
   @Override
   public FrontFunc buildCreateInfo() {
+    this.funcCode = SequenceManager.getInstance().buildSequenceNo("fronc",null);
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }
