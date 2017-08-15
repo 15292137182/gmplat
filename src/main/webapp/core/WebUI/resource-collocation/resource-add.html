@@ -11,36 +11,22 @@
 </head>
 <body>
 <div id="addEvent" style="margin-top:20px">
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入键" v-model="codeInput" ref="codeInput" v-bind:disabled="disabled">
-                    <template slot="prepend">&nbsp;键&nbsp;</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入值" v-model="nameInput" ref="nameInput">
-                    <template slot="prepend">&nbsp;值&nbsp;</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入说明" v-model="tableInput" ref="tableInput">
-                    <template slot="prepend">名称</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
+    <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="colForm" ref='colForm'
+             style="padding:0 20px" class="demo-ruleForm">
+        <el-form-item label="请输入键:" prop="codeInput">
+            <el-input placeholder="请输入键" v-model="colForm.codeInput" ref="codeInput"
+                      v-bind:disabled="colForm.disabled"></el-input>
+        </el-form-item>
+        <el-form-item label="请输入值:" prop="nameInput">
+            <el-input placeholder="请输入值" v-model="colForm.nameInput" ref="nameInput"></el-input>
+        </el-form-item>
+        <el-form-item label="请输入说明:" prop="tableInput">
+            <el-input type="textarea" placeholder="请输入说明" v-model="colForm.tableInput" ref="tableInput"></el-input>
+        </el-form-item>
+    </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" size="small" @click.native="conformEvent">确定</el-button>
+            <el-button type="primary" size="small" @click.native="conformEvent('colForm')">确定</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
@@ -52,49 +38,63 @@
         el: '#addEvent',
         data: function () {
             return {
-                codeInput: '',  //键
-                nameInput: '',  //值
-                tableInput: '', //描述
-                disabled: false  //开始键的内容可以写
+                labelPosition: 'right',
+                colForm: {
+                    codeInput: '',  //键
+                    nameInput: '',  //值
+                    tableInput: '', //描述
+                    disabled: false  //开始键的内容可以写
+                },
+                rules: {
+                    codeInput: [
+                        {required: true, message: '请输入键', trigger: 'blur'},
+                        //{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    ],
+                    nameInput: [
+                        {required: true, message: '请输入值', trigger: 'blur'}
+                    ],
+                    tableInput: [
+                        {required: true, message: '请输入说明', trigger: 'blur'}
+                    ]
+                }
             }
+
         },
         methods: {
-            conformEvent() {
-                //判断是否都为空 空的话给出提示
-                var datas = [this.$refs.codeInput, this.$refs.nameInput, this.$refs.tableInput];
-                for (var i = 0; i < datas.length; i++) {
-                    if (datas[i].value == '') {
-                        ibcpLayer.ShowMsg(datas[i].placeholder);
-                        return;
+            conformEvent(formName) {
+                this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        if (operate == 1) { //新增的时候
+                            resAdd.$http.jsonp(addUrl, {
+                                confKey: resAdd.colForm.codeInput,
+                                confValue: resAdd.colForm.nameInput,
+                                desp: resAdd.colForm.tableInput
+                            }, {
+                                jsonp: 'callback'
+                            }).then(function (res) {
+                                ibcpLayer.ShowOK(res.data.message);
+                                resCol.searchResTable();
+                                ibcpLayer.Close(divIndex);
+                            });
+                        }
+                        if (operate == 2) {
+                            this.$http.jsonp(editUrl, {
+                                //拿到这条数据的ID
+                                rowId: resCol.currentValue.rowId,
+                                confValue: resAdd.nameInput,
+                                desp: resAdd.tableInput
+                            }, {
+                                jsonp: 'callback'
+                            }).then(function () {
+                                ibcpLayer.ShowOK('编辑成功');
+                                resCol.searchResTable();
+                                ibcpLayer.Close(divIndex);
+                            });
+                        }
+                    } else {
+                        return false;
                     }
-                }
-                if (operate == 1) { //新增的时候
-                    this.$http.jsonp(addUrl, {
-                        confKey: resAdd.codeInput,
-                        confValue: resAdd.nameInput,
-                        desp: resAdd.tableInput
-                    }, {
-                        jsonp: 'callback'
-                    }).then(function (res) {
-                        ibcpLayer.ShowOK(res.data.message);
-                        resCol.searchResTable();
-                        ibcpLayer.Close(divIndex);
-                    });
-                }
-                if (operate == 2) {
-                    this.$http.jsonp(editUrl, {
-                        //拿到这条数据的ID
-                        rowId: resCol.currentValue.rowId,
-                        confValue: resAdd.nameInput,
-                        desp: resAdd.tableInput
-                    }, {
-                        jsonp: 'callback'
-                    }).then(function () {
-                        ibcpLayer.ShowOK('编辑成功');
-                        resCol.searchResTable();
-                        ibcpLayer.Close(divIndex);
-                    });
-                }
+                });
             },
             cancel() {
                 ibcpLayer.Close(divIndex);

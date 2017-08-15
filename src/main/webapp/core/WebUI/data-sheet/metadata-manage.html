@@ -12,9 +12,9 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">业务对象</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">对象属性</el-button>
             <el-button type="warning" icon="star-off" size="small" @click.native="affectProp" v-bind:disabled="takeEffect">生效</el-button>
             <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp" v-bind:disabled="change">变更</el-button>
-            <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">对象属性</el-button>
         </el-col>
     </el-row>
 </div>
@@ -43,10 +43,10 @@
                               @row-click="currentChange" :height="leftHeight" border  v-loading="loading"
                               element-loading-text="加载中"
                               class="tableStyle">
-                        <el-table-column prop="objectCode" label="代码" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="objectName" label="名称" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="relateTableRowId" label="关联表" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="version" label="版本" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="objectName" label="名称" show-overflow-tooltip width="110"></el-table-column>
+                        <el-table-column prop="relateTableRowId" label="关联表" show-overflow-tooltip width="110" ></el-table-column>
+                        <el-table-column prop="objectCode" label="代码" show-overflow-tooltip ></el-table-column>
+                        <el-table-column prop="version" label="版本" show-overflow-tooltip ></el-table-column>
                         <el-table-column  prop="" label="操作" width="" fixed="right" >
                             <template scope="scope">
                                 <el-button @click.native="editEvent" type="text" size="small" icon="edit"></el-button>
@@ -96,9 +96,9 @@
                     <el-table :data="tableData" :height="rightHeight" border   ref="tableData" highlight-current-row v-loading="loading"
                               element-loading-text="加载中"
                               @row-click="currentRChange" class="tableStyle">
-                        <el-table-column prop="propertyCode" label="代码" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="propertyName" label="名称" width="" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="propertyName" label="名称" width="120" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="wetherExpandPro" label="扩展属性" width="100" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="propertyCode" label="代码" show-overflow-tooltip width="120"></el-table-column>
                         <el-table-column prop="relateTableColumn" label="关联字段" width="100" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueResourceType" label="值来源类型" width="110" show-overflow-tooltip></el-table-column>

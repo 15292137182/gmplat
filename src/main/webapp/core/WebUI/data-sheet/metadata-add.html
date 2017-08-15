@@ -7,110 +7,111 @@
         #addEvent .el-row {
             margin-top: 20px;
         }
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
     </style>
 </head>
 <body>
 <div id="addEvent" style="margin-top:20px">
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入对象代码" v-model="codeInput" ref="codeInput"
-                          v-bind:disabled="disabled">
-                    <template slot="prepend">对象代码</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入对象名称" v-model="nameInput" ref="nameInput">
-                    <template slot="prepend">对象名称</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请选择关联表" v-model="tableInput" ref="tableInput" disabled data-id="">
-                    <el-button slot="append" icon="search" @click="searchConnectTable"
-                               v-bind:disabled="firstIconEvent"></el-button>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="版本号" disabled v-model="versionInput">
-                    <template slot="prepend">版&nbsp;本&nbsp;号&nbsp;</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row>
-        <el-col :span="11" style="text-align:right">
-            <el-button type="primary" size="small" @click.native="conformEvent">确定</el-button>
-        </el-col>
-        <el-col :span="11" style="text-align: left" :offset="2">
-            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
-        </el-col>
-    </el-row>
+        <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="addForm" ref='addForm'
+                 style="padding:0 20px" class="demo-ruleForm">
+            <el-form-item label="对象代码:" prop="codeInput">
+                <el-input placeholder="请输入对象代码" v-model="addForm.codeInput" ref="codeInput" v-bind:disabled="addForm.disabled"></el-input>
+            </el-form-item>
+            <el-form-item label="对象名称:" prop="nameInput">
+                <el-input placeholder="请输入对象名称" v-model="addForm.nameInput" ref="nameInput"></el-input>
+            </el-form-item>
+            <el-form-item label="关联表" prop="tableInput">
+                <el-select v-model="addForm.tableInput" placeholder="请选择关联表" v-bind:disabled="addForm.tabDisabled" @change="changeTable">
+                    <el-option v-for="item in reaOptTable"
+                               :key="item.tableSchema"
+                               :label="item.tableSchema"
+                               :value="item.rowId">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="版本:">
+                <el-input placeholder="版本" v-model="addForm.versionInput" ref="versionInput" disabled></el-input>
+            </el-form-item>
+        </el-form>
+        <el-row>
+            <el-col :span="11" style="text-align:right">
+                <el-button type="primary" size="small" @click.native="conformEvent('addForm')">确定</el-button>
+            </el-col>
+            <el-col :span="11" style="text-align: left" :offset="2">
+                <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+            </el-col>
+        </el-row>
 </div>
 <script>
     var em = new Vue({
         el: '#addEvent',
         data: function () {
             return {
-                codeInput: '',
-                nameInput: '',
-                tableInput: '',
-                dataId: '',
-                versionInput: '',
-                disabled: false,
-                firstIconEvent: false,
+                labelPosition: 'right',
+                addForm:{
+                    codeInput: '',
+                    nameInput: '',
+                    tableInput: '',
+                    versionInput: '',
+                    disabled: false,
+                    tabDisabled:false,
+                    dataId:''
+                },
+                reaOptTable:[],
+                rules: {
+                    codeInput: [
+                        {required: true, message: '请输入对象代码', trigger: 'blur'},
+                        //{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    ],
+                    nameInput: [
+                        {required: true, message: '请输入对象名称', trigger: 'change'}
+                    ],
+                    tableInput: [
+                        {required: true, message: '请选择关联', trigger: 'blur'}
+                    ]
+                }
             }
         },
         methods: {
-            searchConnectTable() {
-                var htmlUrl = 'connect-table.html';
-                littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表数据', '600px', '560px', false)
+            changeTable(e){
+              em.dataId=e;
+              console.log(em.dataId)
             },
-            conformEvent() {
-                var datas = [this.$refs.codeInput, this.$refs.nameInput, this.$refs.tableInput];
-                for (var i = 0; i < datas.length; i++) {
-                    if (datas[i].value == '') {
-                        ibcpLayer.ShowMsg(datas[i].placeholder);
-                        return;
+            conformEvent(addForm) {
+                em.$refs[addForm].validate(function (valid) {
+                    if (valid) {
+                        if (operate == 1) {
+                            console.log(em.reaOptTable);
+                            em.$http.jsonp(addUrl, {
+                                objectName: em.addForm.nameInput,
+                                relateTableRowId: em.dataId
+                            }, {
+                                jsonp: 'callback'
+                            }).then(function (res) {
+                                ibcpLayer.ShowOK(res.data.message);
+                                basLeft.searchLeftTable();
+                                ibcpLayer.Close(divIndex);
+                            });
+                        }
+                        if (operate == 2) {
+                            em.$http.jsonp(editUrl, {
+                                //拿到这条数据的ID
+                                rowId: basLeft.currentVal.rowId,
+                                objectName: em.addForm.nameInput
+                            }, {
+                                jsonp: 'callback'
+                            }).then(function () {
+                                ibcpLayer.ShowOK('编辑成功');
+                                basLeft.searchLeftTable();
+                                ibcpLayer.Close(divIndex);
+                            });
+                        }
+                    }else {
+                        return false;
                     }
-                }
-                if (operate == 1) {
-                    this.$http.jsonp(addUrl, {
-                        objectCode: em.codeInput,
-                        objectName: em.nameInput,
-                        relateTableRowId: em.dataId
-                    }, {
-                        jsonp: 'callback'
-                    }).then(function (res) {
-                        ibcpLayer.ShowOK(res.data.message);
-                        basLeft.searchLeftTable();
-                        ibcpLayer.Close(divIndex);
-                    });
-                }
-                if (operate == 2) {
-                    this.$http.jsonp(editUrl, {
-                        //拿到这条数据的ID
-                        rowId: basLeft.currentVal.rowId,
-                        objectName: em.nameInput
-                    }, {
-                        jsonp: 'callback'
-                    }).then(function () {
-                        ibcpLayer.ShowOK('编辑成功');
-                        basLeft.searchLeftTable();
-                        ibcpLayer.Close(divIndex);
-                    });
-                }
+                })
             },
             cancel() {
                 ibcpLayer.Close(divIndex);

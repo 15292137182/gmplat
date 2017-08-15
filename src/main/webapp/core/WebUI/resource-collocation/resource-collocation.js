@@ -17,7 +17,7 @@ var resTop=new Vue({
         addResEvent() {
             operate = 1;
             var htmlUrl = 'resource-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增系统资源配置', '400px', '300px');
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增系统资源配置', '400px', '340px');
         },
     }
 });
@@ -26,7 +26,6 @@ var resCol=new Vue({
     "el":"#resCol",
     data:{
         resInput: '',
-        Height: '',
         tableData: [],
         loading:true,
         currentPage:1,//当前为第一页
@@ -43,10 +42,10 @@ var resCol=new Vue({
             var htmlUrl = 'resource-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑系统资源配置', '400px', '300px', function () {
                 //code值
-                resAdd.codeInput = resCol.currentValue.confKey;  //编辑时候的键
-                resAdd.nameInput = resCol.currentValue.confValue;//编辑时候的值
-                resAdd.tableInput = resCol.currentValue.desp;//编辑时候的名称
-                resAdd.disabled = true  //键的值不可以改变
+                resAdd.colForm.codeInput = resCol.currentValue.confKey;  //编辑时候的键
+                resAdd.colForm.nameInput = resCol.currentValue.confValue;//编辑时候的值
+                resAdd.colForm.tableInput = resCol.currentValue.desp;//编辑时候的名称
+                resAdd.colForm.disabled = true  //键的值不可以改变
             });
         },
         deleteResEvent() {
@@ -73,23 +72,21 @@ var resCol=new Vue({
         },
         handleSizeChange(val) {   //每页多少条数变化时
             this.pageSize=val;
-            //console.log(`每页 ${val} 条`);
             this.searchResTable();
         },
         handleCurrentChange(val) {  //当前页是第几页
             this.currentPage=val;
-            //console.log(`当前页: ${val}`);
             this.searchResTable();
         }
     },
     created() {
         this.searchResTable(); //页面一进入调查询
-        $(document).ready(function () {
-            resCol.Height = $(window).height() - 195;
-        });
-        $(window).resize(function () {
-            resCol.Height = $(window).height() - 195;
-        })
+    //    $(document).ready(function () {
+    //        resCol.Height = $(window).height() - 195;
+    //    });
+    //    $(window).resize(function () {
+    //        resCol.Height = $(window).height() - 195;
+    //    })
     },
     updated() {
         this.FindFirstDate(this.tableData[0]);

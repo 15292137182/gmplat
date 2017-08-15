@@ -30,7 +30,17 @@ var basTop = new Vue({
         addEvent() {
             operate = 1;
             var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px');
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px',function(){
+                //关联表字段
+                basTop.$http.jsonp(conTable, {
+                    str:''
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    em.reaOptTable = res.data.data;
+                    console.log(em.reaOptTable)
+                });
+            });
         },
         addProp(){
             operateOPr=1;
@@ -43,6 +53,7 @@ var basTop = new Vue({
                     jsonp: 'callback'
                 }).then(function (ref) {
                     proEm.optionLeft = ref.data.data;
+                    console.log(proEm.optionLeft)
                 });
                 //值来源类型(键值集合)
                 proEm.$http.jsonp(serverPath + '/keySet/query', {
@@ -97,13 +108,13 @@ var basLeft = new Vue({
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
                 console.log(basLeft.currentVal)
-                em.codeInput = basLeft.currentVal.objectCode;  //对象代码
-                em.disabled = true;//对象代码不可点击
-                em.firstIconEvent = true;//选择关联表的按钮不可用
-                em.nameInput = basLeft.currentVal.objectName;//对象名称
-                em.tableInput = basLeft.currentVal.associatTable;//关联表
-                em.versionInput = basLeft.currentVal.version;//版本
-                em.dataId = basLeft.currentVal.relateTableRowId;//关联表的ID
+                em.addForm.codeInput = basLeft.currentVal.objectCode;  //对象代码
+                em.addForm.disabled = true;//对象代码不可点击
+                em.addForm.tabDisabled = true;//选择关联表的按钮不可用
+                em.addForm.nameInput = basLeft.currentVal.objectName;//对象名称
+                em.addForm.tableInput = basLeft.currentVal.associatTable;//关联表
+                em.addForm.versionInput = basLeft.currentVal.version;//版本
+                //em.addForm.dataId = basLeft.currentVal.relateTableRowId;//关联表的ID
             });
         },
         deleteEvent() {
