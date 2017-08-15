@@ -1,5 +1,6 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
+import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
@@ -33,7 +34,8 @@ public class FieldInTable implements TableSource,Column {
 
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
-    return column.getColumnSqlFragment(translator);
+//    return column.getColumnSqlFragment(translator);
+    return getFieldSource();
   }
 
   @Override
@@ -43,7 +45,7 @@ public class FieldInTable implements TableSource,Column {
 
   @Override
   public String getFieldSource() {
-    return column.getFieldSource();
+    return ((TableInfo)tableSource).table.getTableName()+"."+column.getFieldSource();
   }
 
   @Override

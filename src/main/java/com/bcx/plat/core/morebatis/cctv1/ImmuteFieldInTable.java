@@ -26,7 +26,7 @@ public class ImmuteFieldInTable implements FieldInTable {
 
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
-    return tableSource.table.getTableName() +"."+ column.getFieldSource();
+    return getFieldSource();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class ImmuteFieldInTable implements FieldInTable {
 
   @Override
   public String getFieldSource() {
-    return column.getFieldSource();
+    return tableSource.table.getTableName() +"."+ column.getFieldSource();
   }
 
   @Override

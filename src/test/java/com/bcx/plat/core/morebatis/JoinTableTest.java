@@ -61,6 +61,7 @@ public class JoinTableTest extends BaseTest {
             .on(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
                 T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
         .where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId))
+//        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID,Fields.T_BUSINESS_OBJECT.ROW_ID)
         .orderBy(new Order(T_BUSINESS_OBJECT_PRO.CREATE_TIME,Order.DESC));
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());

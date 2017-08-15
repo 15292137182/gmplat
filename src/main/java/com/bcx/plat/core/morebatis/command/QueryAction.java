@@ -5,6 +5,7 @@ import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.github.pagehelper.Page;
@@ -36,6 +37,7 @@ public class QueryAction {
   private TableSource tableSource;
   private Condition where;
   private List<Order> order;
+  private List<FieldSource> group;
   private SqlComponentTranslator translator;
   private MoreBatis app;
 
@@ -68,6 +70,14 @@ public class QueryAction {
     this.columns = columns;
   }
 
+  public List<FieldSource> getGroup() {
+    return group;
+  }
+
+  public void setGroup(List<FieldSource> group) {
+    this.group = group;
+  }
+
   public QueryAction select(Column... column) {
     return select(Arrays.asList(column));
   }
@@ -98,6 +108,16 @@ public class QueryAction {
 
   public QueryAction orderBy(List<Order> orders) {
     setOrder(orders);
+    return this;
+  }
+
+  public QueryAction groupBy(FieldSource ... fieldSources) {
+    setGroup(Arrays.asList(fieldSources));
+    return this;
+  }
+
+  public QueryAction groupBy(List<FieldSource> fieldSources) {
+    setGroup(fieldSources);
     return this;
   }
 

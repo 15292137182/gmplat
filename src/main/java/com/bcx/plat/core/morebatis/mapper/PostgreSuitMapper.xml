@@ -54,9 +54,14 @@
     FROM <include refid="solveTableSource"/>
     <include refid="solveWhereCondition"/>
     <!--目前tableJoin不支持嵌套 以后要改进这个地方-->
-    <if test="order!=null and order.size>0">
-      order by
-      <foreach collection="order" item="o">
+
+    <if test="group!=null">
+      <foreach open="group by" collection="group" item="g" separator=",">
+        ${g.fieldSource}
+      </foreach>
+    </if>
+    <if test="order!=null">
+      <foreach open="order by" collection="order" item="o" separator=",">
         <choose>
           <when test="o.column instanceof com.bcx.plat.core.morebatis.phantom.FieldInTable">
             ${o.getColumnSqlFragment(translator)}
@@ -68,7 +73,7 @@
         ${o.order==0?"DESC":"ASC"}
       </foreach>
     </if>
-    
+
     <!--order by <if test="tableSource instanceof com.bcx.plat.core.morebatis.component.JoinTable">-->
       <!--${tableSource.tableFirst.getTableSource(translator)[0].segment}.</if>create_time desc-->
   </select>
