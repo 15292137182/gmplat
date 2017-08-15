@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
-;
-
 /**
  * Created by WJF on 2017/8/8.
  */
@@ -35,11 +33,11 @@ public class BusinessObjectController extends
         BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
     @Autowired
-    BusinessObjectProService businessObjectProService;
+    private BusinessObjectProService businessObjectProService;
     @Autowired
-    MaintDBTablesService maintDBTablesService;
+    private MaintDBTablesService maintDBTablesService;
     @Autowired
-    FrontFuncService frontFuncService;
+    private FrontFuncService frontFuncService;
 
     public void setFrontFuncService(FrontFuncService frontFuncService) {
         this.frontFuncService = frontFuncService;
@@ -56,6 +54,31 @@ public class BusinessObjectController extends
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
+
+
+
+    /**
+     * 根据业务对象rowId查找当前对象下的所有属性并分页显示
+     *
+     * @param args     按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @param request  request请求
+     * @param locale   国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryProPage")
+    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
+                                    HttpServletRequest request, Locale locale) {
+        PageResult<Map<String, Object>> result =
+                businessObjectProService.select(
+                        new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
+                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode","propertyName"),UtilsTool.collectToSet(args)))
+                        ,pageNum,pageSize);
+        return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+    }
+
+
 
     /**
      * 执行变更操作
@@ -106,34 +129,11 @@ public class BusinessObjectController extends
     }
 
 
-
-    /**
-     * 根据业务对象rowId查找当前对象下的所有属性并分页显示
-     *
-     * @param args     按照空格查询
-     * @param pageNum  当前第几页
-     * @param pageSize 一页显示多少条
-     * @param request  request请求
-     * @param locale   国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
-                                    HttpServletRequest request, Locale locale) {
-        PageResult<Map<String, Object>> result =
-                businessObjectProService.select(
-                        new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode","propertyName"),UtilsTool.collectToSet(args)))
-                        ,pageNum,pageSize);
-        return super.result(request, new ServiceResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
-    }
-
-
     /**
      * 暂时先放这里 以后再重构
      *
-     * @param result
-     * @return
+     * @param result 返回值
+     * @return 返回值
      */
     @Override
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
