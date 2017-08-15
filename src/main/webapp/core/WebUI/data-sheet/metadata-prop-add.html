@@ -127,22 +127,42 @@
                         return;
                     }
                 }
-                this.$http.jsonp(serverPath + "/businObjPro/add", {
-                    objRowId: basLeft.currentId,//左边表的ID
-                    propertyName: proEm.nameProInput,//业务对象属性名称
-                    wetherExpandPro: proEm.checked,//是否为扩展属性
-                    relateTableColumn: proEm.tableReaInput,//关联表字段
-                    valueType: proEm.typeInput,//值类型
-                    valueResourceType: proEm.typeComValue,//值来源类型
-                    valueResourceContent: proEm.comContent,//值来源内容
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    console.log(res);
-                    ibcpLayer.ShowOK(res.data.message);
-                    basRight.searchRightTable();
-                    ibcpLayer.Close(divIndex);
-                });
+                if(operateOPr==1){
+                    this.$http.jsonp(serverPath + "/businObjPro/add", {
+                        objRowId: basLeft.currentId,//左边表的ID
+                        propertyName: proEm.nameProInput,//业务对象属性名称
+                        wetherExpandPro: proEm.checked,//是否为扩展属性
+                        relateTableColumn: proEm.tableReaInput,//关联表字段
+                        valueType: proEm.typeInput,//值类型
+                        valueResourceType: proEm.typeComValue,//值来源类型
+                        valueResourceContent: proEm.comContent,//值来源内容
+                    }, {
+                        jsonp: 'callback'
+                    }).then(function (res) {
+                        console.log(res);
+                        ibcpLayer.ShowOK(res.data.message);
+                        basRight.searchRightTable();
+                        ibcpLayer.Close(divIndex);
+                    });
+                }else if(operateOPr==2){
+                    this.$http.jsonp(serverPath + "/businObjPro/modify", {
+                        rowId: basLeft.currentId,//左边表的ID
+                        propertyCode: proEm.codeProInput,//业务对象代码
+                        propertyName: proEm.nameProInput,//业务对象属性名称
+                        wetherExpandPro: proEm.checked,//是否为扩展属性
+                        relateTableColumn: proEm.tableReaInput,//关联表字段
+                        valueType: proEm.typeInput,//值类型
+                        valueResourceType: proEm.typeComValue,//值来源类型
+                        valueResourceContent: proEm.comContent,//值来源内容
+                    }, {
+                        jsonp: 'callback'
+                    }).then(function (res) {
+                        console.log(res);
+                        ibcpLayer.ShowOK(res.data.message);
+                        basRight.searchRightTable();
+                        ibcpLayer.Close(divIndex);
+                    });
+                }
 
             },
             cancel() {

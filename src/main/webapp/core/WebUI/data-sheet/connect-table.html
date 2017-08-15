@@ -81,6 +81,7 @@
             },
             handleCurrentChange(val) {
                 //选中行的数据
+                console.log(val)
                 this.currentRow = val.tableSchema + "(" + val.tableCname + ")";
                 //选中行的ID
                 this.currentId = val.rowId;

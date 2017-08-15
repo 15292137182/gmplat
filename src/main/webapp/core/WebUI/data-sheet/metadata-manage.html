@@ -105,6 +105,7 @@
                         <el-table-column prop="valueResourceContent" label="值来源内容" width="110" show-overflow-tooltip></el-table-column>
                         <el-table-column  prop="" label="操作" width="100" fixed="right">
                             <template scope="scope">
+                                <el-button @click.native="editProp" type="text" size="small" icon="edit"></el-button>
                                 <el-button @click.native="deleteProp" type="text" size="small" icon="delete"></el-button>
                             </template>
                         </el-table-column>
