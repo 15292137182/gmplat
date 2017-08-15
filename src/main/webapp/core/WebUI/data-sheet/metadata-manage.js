@@ -33,6 +33,7 @@ var basTop = new Vue({
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px');
         },
         addProp(){
+            operateOPr=1;
             var htmlUrl = 'metadata-prop-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '440px', function () {
                 //键值类型(键值集合)
@@ -212,6 +213,20 @@ var basRight = new Vue({
             });
 
         },
+        editProp(){
+            operateOPr = 2;
+            var htmlUrl = 'metadata-prop-add.html';
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '440px', function () {
+                console.log(basRight.currentVal);
+                proEm.codeProInput=basRight.currentVal.propertyCode   //代码
+                proEm.nameProInput=basRight.currentVal.propertyName   //名称
+                proEm.checked=basRight.currentVal.wetherExpandPro   //是否选中
+                proEm.tableReaInput=basRight.currentVal.relateTableColumn   //关联表
+                proEm.typeInput=basRight.currentVal.valueResourceType   //值类型
+                proEm.typeComValue=basRight.currentVal.valueResourceContent   //值类型来源
+                proEm.comContent=basRight.currentVal.valueType   //值来源内容
+            });
+        },
         deleteProp(){
             deleteObj.del(function(){
                 //拿到ID
@@ -230,7 +245,7 @@ var basRight = new Vue({
             //console.log(row)
             //点击拿到这条数据的值
             if (row != undefined) {
-                //console.log(row)
+                this.currentVal = row;
                 this.rightVal = row.rowId;
                 // console.log(this.rightVal)
             }
