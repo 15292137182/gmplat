@@ -63,6 +63,16 @@ var add=new Vue({
         },
         menuClick(){
             content.dialogFormVisible=true;
+        },
+        show(){
+            this.$http.jsonp(mock,{
+                content:add.seqContentInput,
+                args:{'YM':''},
+            },{
+                jsonp:'callback'
+            }).then(function (res) {
+                alert(res.data.data);
+            })
         }
     }
 })

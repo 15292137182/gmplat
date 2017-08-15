@@ -12,7 +12,7 @@ var keyValueSetAdd = new Vue({
             confValueInput: '',
             despInput: '',
             versionInput: '',
-            disabled:''
+            disabled:false
         }
     },
     methods: {
@@ -21,7 +21,6 @@ var keyValueSetAdd = new Vue({
                 this.$refs.keysetNameInput,
                 this.$refs.confKeyInput,
                 this.$refs.confValueInput,
-                this.$refs.despInput
             ];
             for (var i = 0; i < datas.length; i++) {
                 if (datas[i].value == '') {
