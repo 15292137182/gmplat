@@ -10,6 +10,8 @@ import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import com.bcx.plat.core.morebatis.annotations.TablePK;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.Serializable;
 
 /**
@@ -24,6 +26,8 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String relateTableRowId;//关联表
   private String changeOperat;//执行变更操作
 
+  @Value("${conf.BusinessObjectPro}")
+  private String BusinessObjectPro;
 
   /**
    * 构建 - 创建信息

@@ -13,7 +13,7 @@ public class SequenceManagerTest extends BaseTest {
 
   @Test
   public void test() {
-    String code = "BusinObjectPro";
+    String code = "BusinObjPro";
     Map<String, Object> a = new HashMap<>();
     a.put("a", "测试");
       String s = SequenceManager.getInstance().buildSequenceNo(code, null);

@@ -245,6 +245,7 @@ public class Fields {
 
   public enum T_KEYSET implements FieldInTable {
     ROW_ID(TableInfo.T_KEYSET, "row_id", "rowId"),
+    NUMBER(TableInfo.T_KEYSET, "number" ,"number"),
     KEYSET_CODE(TableInfo.T_KEYSET, "keyset_code", "keysetCode"),
     KEYSET_NAME(TableInfo.T_KEYSET, "keyset_name", "keysetName"),
     CONF_KEY(TableInfo.T_KEYSET, "conf_key", "confKey"),

@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS t_keyset;
 
 CREATE TABLE t_keyset (
   row_id varchar(70) NOT NULL,
+  number VARCHAR(32) NULL,
   keyset_cod varchar(64) NULL,
   keyset_name varchar(64) NULL,
   conf_key varchar(64) NULL,
