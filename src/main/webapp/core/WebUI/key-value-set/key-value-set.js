@@ -29,21 +29,22 @@ var keyValueSet=new Vue({
         addEvent(){
             operate = 1;
             var htmlUrl = 'key-value-set-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增键值集合', '400px', '450px');
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增键值集合', '400px', '500px');
         },
         editEvent(){
             operate = 2;
             var htmlUrl = 'key-value-set-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '450px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '500px', function () {
                 //code值
                 keyValueSetAdd.keysetCodeInput = keyValueSet.currentVal.keysetCode;
+                keyValueSetAdd.numberInput=keyValueSet.currentVal.number;
                 keyValueSetAdd.keysetNameInput = keyValueSet.currentVal.keysetName;
                 keyValueSetAdd.confKeyInput = keyValueSet.currentVal.confKey;
                 keyValueSetAdd.confValueInput = keyValueSet.currentVal.confValue;
                 keyValueSetAdd.despInput = keyValueSet.currentVal.desp;
                 keyValueSetAdd.versionInput = keyValueSet.currentVal.version;
 
-                //不可点击
+                //不可编辑
                 keyValueSetAdd.disabled = true;
             });
         },
