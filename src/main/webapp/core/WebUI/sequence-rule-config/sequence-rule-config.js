@@ -7,6 +7,7 @@ const insert=str+"/add";
 const modify=str+"/modify";
 const del=str+"/delete";
 const queryPage=str+"/queryPage";
+const mock=str+"/mock";
 
 var config=new Vue({
     el:'#srconfig',
@@ -48,11 +49,9 @@ var config=new Vue({
             });
         },
         deleteEvent(){
-            var list=[];
-            list.push(config.currentVal.rowId);
             deleteObj.del(function(){
                 config.$http.jsonp(del,{
-                    rowIds:list.join(" ")
+                    rowId:config.currentVal.rowId
                 }, {
                     jsonp: 'callback'
                 }).then(function (res) {

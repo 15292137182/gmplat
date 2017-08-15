@@ -14,7 +14,7 @@
   <el-row justify="center" type="flex">
     <el-col :span="22">
       <div>
-        <el-input placeholder="请输入代码" v-model="keysetCodeInput" disabled ref="keysetCodeInput">
+        <el-input placeholder="请输入代码" v-model="keysetCodeInput" :disabled="disabled" ref="keysetCodeInput">
           <template slot="prepend">代码</template>
         </el-input>
       </div>
