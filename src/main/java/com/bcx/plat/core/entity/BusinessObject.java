@@ -26,8 +26,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String relateTableRowId;//关联表
   private String changeOperat;//执行变更操作
 
-  @Value("${conf.BusinessObjectPro}")
-  private String BusinessObjectPro;
 
   /**
    * 构建 - 创建信息
@@ -36,6 +34,7 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
    */
   @Override
   public BusinessObject buildCreateInfo() {
+
     this.objectCode = SequenceManager.getInstance().buildSequenceNo("BusinObject",null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
