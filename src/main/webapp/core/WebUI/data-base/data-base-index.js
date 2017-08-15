@@ -72,12 +72,12 @@ var dataBase = new Vue({
     },
     created(){
         this.get();
-        $(document).ready(function(){
-            dataBase.leftHeight=$(window).height()-190;
-        });
-        $(window).resize(function(){
-            dataBase.leftHeight=$(window).height()-190;
-        })
+        // $(document).ready(function(){
+        //     dataBase.leftHeight=$(window).height()-190;
+        // });
+        // $(window).resize(function(){
+        //     dataBase.leftHeight=$(window).height()-190;
+        // })
     },
     updated(){
         this.FindOk(this.tableData[0]);

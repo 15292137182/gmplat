@@ -4,53 +4,79 @@
 var addDataSet = new Vue({
     el:'#addDataSet',
     data:{
-        datasetCode:'',//代码
-        nameInput:'',//名称
-        typeInput:'',//类型
-        content:'',//内容
-        desp:'',//说明
-        version:'',//版本
+        labelPosition:"right",
+        formTable:{
+            datasetCode:'',
+            nameInput:'',
+            typeInput:'',
+            content:'',
+            desp:'',
+            version:''
+        },
         isEdit:'',//是否编辑
         addUrl:serverPath+'/dataSetConfig/add',//新增
         editUrl:serverPath+'/dataSetConfig/modify',//编辑
     },
     methods:{
+        checkIsNull(){//非空验证
+            var data = [
+                this.$refs.nameInput,
+                this.$refs.typeInput
+            ];
+            for(var i=0;i<data.length;i++){
+                if(data[i].value==''){
+                    ibcpLayer.ShowMsg(data[i].placeholder);
+                    return false;
+                }
+            }
+            return true;
+        },
+        addSet(){//新增
+            this.$http.jsonp(this.addUrl,{
+                datasetName:this.formTable.nameInput,
+                datasetType:this.formTable.typeInput,
+                datasetContent:this.formTable.content,
+                desp:this.formTable.desp
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                ibcpLayer.ShowOK(res.data.message);
+                if(res.data.state==1){
+                    ibcpLayer.Close(dataSetConfigButton.divIndex);
+                    dataSetConfig.searchResTable();
+                }
+            },function(){
+                alert("新增失败")
+            })
+        },
+        editSet(){//编辑
+            this.$http.jsonp(this.editUrl,{
+                rowId:dataSetConfig.rowObjId,
+                datasetName:this.nameInput,
+                datasetType:this.typeInput,
+                datasetContent:this.content,
+                desp:this.desp
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                ibcpLayer.ShowOK(res.data.message);
+                if(res.data.state==1){
+                    ibcpLayer.Close(dataSetConfigButton.divIndex);
+                    dataSetConfig.searchResTable();
+                }
+            },function(){
+                alert("新增失败")
+            })
+        },
         conformEvent(){//确定
             if(!this.isEdit){//新增
-                this.$http.jsonp(this.addUrl,{
-                    datasetName:this.nameInput,
-                    datasetType:this.typeInput,
-                    datasetContent:this.content,
-                    desp:this.desp
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
-                    ibcpLayer.ShowOK(res.data.message);
-                    if(res.data.state==1){
-                        ibcpLayer.Close(dataSetConfigButton.divIndex);
-                        dataSetConfig.searchResTable();
-                    }
-                },function(){
-                    alert("新增失败")
-                })
+                if(this.checkIsNull()){
+                    this.addSet();
+                }
             }else{//编辑
-                this.$http.jsonp(this.editUrl,{
-                    rowId:dataSetConfig.rowObjId,
-                    datasetName:this.nameInput,
-                    datasetType:this.typeInput,
-                    datasetContent:this.content,
-                    desp:this.desp
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
-                    ibcpLayer.ShowOK(res.data.message);
-                    if(res.data.state==1){
-                        ibcpLayer.Close(dataSetConfigButton.divIndex);
-                        dataSetConfig.searchResTable();
-                    }
-                },function(){
-                    alert("新增失败")
-                })
+                if(this.checkIsNull()){
+                    this.editSet();
+                }
             }
         },
         cancel(){//取消
