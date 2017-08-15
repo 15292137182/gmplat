@@ -7,11 +7,11 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.TableAnnoUtil;
 import java.io.Serializable;
@@ -125,7 +125,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
           try {
             method.invoke(this, temp);
           } catch (IllegalAccessException | InvocationTargetException e) {
-            // 我拒绝抛出异常 e.printStackTrace();
+            e.printStackTrace();
           }
         }
       }
