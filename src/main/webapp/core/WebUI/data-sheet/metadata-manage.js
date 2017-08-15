@@ -53,7 +53,6 @@ var basTop = new Vue({
                     proEm.optionRight = ref.data.data;
                 });
             });
-
         },
         affectProp(){
             this.$http.jsonp(affectPropUrl, {
@@ -146,7 +145,7 @@ var basLeft = new Vue({
         },
         currentChange(row, event, column) {
           basRight.rightInput='';
-          console.log(row)
+         // console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -217,14 +216,36 @@ var basRight = new Vue({
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '440px', function () {
-                console.log(basRight.currentVal);
-                proEm.codeProInput=basRight.currentVal.propertyCode   //代码
-                proEm.nameProInput=basRight.currentVal.propertyName   //名称
-                proEm.checked=basRight.currentVal.wetherExpandPro   //是否选中
-                proEm.tableReaInput=basRight.currentVal.relateTableColumn   //关联表
-                proEm.typeInput=basRight.currentVal.valueResourceType   //值类型
-                proEm.typeComValue=basRight.currentVal.valueResourceContent   //值类型来源
-                proEm.comContent=basRight.currentVal.valueType   //值来源内容
+                //键值类型(键值集合)
+                proEm.$http.jsonp(serverPath + '/keySet/query', {
+                    str: ''
+                }, {
+                    jsonp: 'callback'
+                }).then(function (ref) {
+                    proEm.optionLeft = ref.data.data;
+                });
+                //值来源类型(键值集合)
+                proEm.$http.jsonp(serverPath + '/keySet/query', {
+                    str: ''
+                }, {
+                    jsonp: 'callback'
+                }).then(function (ref) {
+                    proEm.optionRight = ref.data.data;
+                });
+               console.log(basRight.currentVal);
+                console.log(proEm.checked)
+                proEm.codeProInput=basRight.currentVal.propertyCode;   //代码
+                proEm.nameProInput=basRight.currentVal.propertyName;   //名称
+                if(basRight.currentVal.wetherExpandPro=='true'){
+                    proEm.checked=true;
+                }else{
+                    proEm.checked=false;
+                }
+                proEm.tableReaInput=basRight.currentVal.relateTableColumn ;  //关联表
+                proEm.typeInput=basRight.currentVal.valueType   //值类型
+                proEm.typeComValue=basRight.currentVal.valueResourceType;   //值类型来源
+                proEm.comContent=basRight.currentVal.valueResourceContent;     //值来源内容
+                console.log(proEm.checked)
             });
         },
         deleteProp(){

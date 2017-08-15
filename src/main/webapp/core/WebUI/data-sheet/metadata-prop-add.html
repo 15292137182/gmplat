@@ -88,35 +88,34 @@
     var proEm = new Vue({
         el: '#addProEvent',
         data: function () {
-            return {
-                codeProInput: '',
-                nameProInput: '',
-                checked: false,
-                tableReaInput: '',
-                typeComValue: '',
-                comContent: '',
-                typeInput: '',
-                disabled: true,
-                iconEvent: false,
-                optionLeft: [],
-                optionRight: [],
-                checkEvent: false
-            }
+                return {
+                    codeProInput: '',
+                    nameProInput: '',
+                    checked:false,
+                    tableReaInput: '',
+                    typeComValue: '',
+                    comContent: '',
+                    typeInput: '',
+                    disabled: true,
+                    iconEvent: false,
+                    optionLeft: [],
+                    optionRight: [],
+                    checkEvent: false
+                }
         },
         methods: {
             searchProTable(){
+                this.checked = false  //点击选择表 按钮不选中
                 var htmlUrl = 'connect-child.html';
                 littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表字段', '600px', '560px', false)
             },
             changEvent(){
-                if (this.checked == false) {
-                    this.iconEvent = false
-                } else {
-                    this.iconEvent = true;
+                if (this.checked == true) {
+                    this.tableReaInput=''
                 }
             },
             conformEvent() {
-                if (this.iconEvent == true) {
+                if (this.checked == true) {
                     var datas = [this.$refs.nameProInput, this.$refs.typeInput, this.$refs.typeComValue, this.$refs.comContent];
                 } else {
                     var datas = [this.$refs.nameProInput, this.$refs.tableReaInput, this.$refs.typeInput, this.$refs.typeComValue, this.$refs.comContent];
@@ -145,8 +144,10 @@
                         ibcpLayer.Close(divIndex);
                     });
                 }else if(operateOPr==2){
+                    //console.log(basRight.currentVal.rowId)
                     this.$http.jsonp(serverPath + "/businObjPro/modify", {
-                        rowId: basLeft.currentId,//左边表的ID
+                        rowId: basRight.currentVal.rowId,//本生的ID
+                        objRowId: basLeft.currentId,//左边表的ID
                         propertyCode: proEm.codeProInput,//业务对象代码
                         propertyName: proEm.nameProInput,//业务对象属性名称
                         wetherExpandPro: proEm.checked,//是否为扩展属性
@@ -168,13 +169,7 @@
             cancel() {
                 ibcpLayer.Close(divIndex);
             }
-        },
-        updated() {
-            if (this.tableReaInput != '') {
-                this.checkEvent = true;
-            }
         }
-
     })
 </script>
 </body>
