@@ -30,14 +30,14 @@ var functionBlock = new Vue({
         },
         //编辑
         editBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '420px',function(){
                 em.isEdit = true;
-                em.codeInput=functionBlock.editObj.funcCode;
-                em.nameInput=functionBlock.editObj.funcName;
-                em.typeInput=functionBlock.editObj.funcType;
+                em.formTable.codeInput=functionBlock.editObj.funcCode;
+                em.formTable.nameInput=functionBlock.editObj.funcName;
+                em.formTable.typeInput=functionBlock.editObj.funcType;
                 em.dataId=functionBlock.editObj.relateBusiObj;
-                em.tableInput=functionBlock.editObj.objectName;
-                em.desp=functionBlock.editObj.desp;
+                em.formTable.tableInput=functionBlock.editObj.objectName;
+                em.formTable.desp=functionBlock.editObj.desp;
                 em.rowId=functionBlock.editObj.rowId;
             });
 
@@ -204,19 +204,19 @@ var topButtonObj = new Vue({
     methods: {
         //功能块
         addBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('add-block.html','新增功能块','400px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','新增功能块','400px', '420px',function(){
                 em.isEdit = false;
             });
         },
         editBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('demo.html','编辑功能块','400px', '400px',function(){
                 em.isEdit = true;
-                em.codeInput=functionBlock.editObj.funcCode;
-                em.nameInput=functionBlock.editObj.funcName;
-                em.typeInput=functionBlock.editObj.funcType;
+                em.formTable.codeInput=functionBlock.editObj.funcCode;
+                em.formTable.nameInput=functionBlock.editObj.funcName;
+                em.formTable.typeInput=functionBlock.editObj.funcType;
                 em.dataId=functionBlock.editObj.relateBusiObj;
-                em.tableInput=functionBlock.editObj.objectName;
-                em.desp=functionBlock.editObj.desp;
+                em.formTable.tableInput=functionBlock.editObj.objectName;
+                em.formTable.desp=functionBlock.editObj.desp;
                 em.rowId=functionBlock.editObj.rowId;
             });
 

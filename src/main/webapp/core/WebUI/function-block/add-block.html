@@ -4,58 +4,52 @@
     <meta charset="UTF-8">
     <title>Event_Add</title>
     <style>
-        #addBlock .el-row {
-            margin-top: 20px;
-        }
+        /*#addBlock .el-row {*/
+        /*margin-top: 20px;*/
+        /*}*/
     </style>
 </head>
 <body>
 <div id="addBlock" style="margin-top:20px">
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入代码" v-model="codeInput" :disabled="isEdit" ref="codeInput">
-                    <template slot="prepend">代码</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入名称" v-model="nameInput" ref="nameInput">
-                    <template slot="prepend">名称</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入类型" :disabled="isEdit" v-model="typeInput" ref="typeInput">
-                    <template slot="prepend">类型</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请选择关联对象" v-model="tableInput" ref="tableInput" disabled="" data-id="">
-                    <el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请输入说明" :disabled="isEdit" v-model="desp">
-                    <template slot="prepend">说明</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
+    <el-form :label-position="labelPosition" label-width="70px" :model="formTable">
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="代码">
+                    <el-input placeholder="系统自动生成代码" v-model="formTable.codeInput" disabled="" ref="codeInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="名称">
+                    <el-input placeholder="请输入名称" v-model="formTable.nameInput" ref="nameInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="类型">
+                    <el-input placeholder="请输入类型" :disabled="isEdit" v-model="formTable.typeInput" ref="typeInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="关联对象">
+                    <el-input placeholder="请选择关联对象" disabled="" v-model="formTable.tableInput" ref="tableInput">
+                        <el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>
+                    </el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="说明">
+                    <el-input type="textarea" placeholder="请输入说明" :disabled="isEdit" v-model="formTable.desp"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
     <el-row >
         <el-col :span="11" style="text-align:right">
             <el-button type="primary" @click.native="conformEvent">确定</el-button>
