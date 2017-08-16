@@ -75,7 +75,7 @@ public class BusinessObjectProController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryPro")
-    public Object singleInputSelect(String businProrowId, HttpServletRequest request, Locale locale) {
+    public Object queryPro(String businProrowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> mapList =
                 businessObjectProService.select(
                         new And(

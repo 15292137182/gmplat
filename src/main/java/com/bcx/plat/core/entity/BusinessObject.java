@@ -1,18 +1,16 @@
 package com.bcx.plat.core.entity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
-
-import com.bcx.plat.core.morebatis.annotations.TablePK;
-import org.springframework.beans.factory.annotation.Value;
+import com.bcx.plat.core.utils.UtilsTool;
 
 import java.io.Serializable;
+
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 业务对象实体类 Created by Went on 2017/8/1.
@@ -35,7 +33,7 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   @Override
   public BusinessObject buildCreateInfo() {
 
-    this.objectCode = SequenceManager.getInstance().buildSequenceNo("BusinObject",null);
+    this.objectCode = SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadPproperties("BusinessObject"),null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
     setVersion("1.0");

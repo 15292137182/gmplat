@@ -13,19 +13,12 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +31,7 @@ public class UtilsTool {
   /**
    * 禁止使用 new 的方法构造该类
    */
-  private UtilsTool() {
+  public UtilsTool() {
   }
 
   /**
@@ -288,5 +281,21 @@ public class UtilsTool {
     return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
             new FieldCondition("delete_flag",Operator.IS_NULL,null)),condition);
   }
+
+
+  final static public String loadPproperties(String key){
+    Properties properties = new Properties();
+    InputStream resourceAsStream = UtilsTool.class.getClassLoader()
+            .getResourceAsStream("properties/sequence.properties");
+    try {
+      properties.load(resourceAsStream);
+        String property = properties.getProperty(key);
+        return property;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
 
 }

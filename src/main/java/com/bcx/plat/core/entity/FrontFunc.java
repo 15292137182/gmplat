@@ -7,6 +7,7 @@ import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * 前端功能块实体类 Created by Went on 2017/8/2.
@@ -32,7 +33,7 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
    */
   @Override
   public FrontFunc buildCreateInfo() {
-    this.funcCode = SequenceManager.getInstance().buildSequenceNo("fronc",null);
+    this.funcCode = SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadPproperties("fronc"),null);
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

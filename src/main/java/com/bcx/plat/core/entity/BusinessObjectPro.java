@@ -35,7 +35,7 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
    */
   @Override
   public BusinessObjectPro buildCreateInfo() {
-    setPropertyCode(SequenceManager.getInstance().buildSequenceNo("BusinObjPro",null));
+    setPropertyCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadPproperties("BusinObjPro"),null));
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

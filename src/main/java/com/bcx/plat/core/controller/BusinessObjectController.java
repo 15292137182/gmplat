@@ -61,7 +61,7 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
+    public Object queryProPage(String rowId, String args, int pageNum, int pageSize,
                                     HttpServletRequest request, Locale locale) {
         PageResult<Map<String, Object>> result =
                 businessObjectProService.select(
@@ -82,11 +82,33 @@ public class BusinessObjectController extends
      */
     @RequestMapping("/changeOperat")
     public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
-        Map<String, Object> map = new HashMap<>();
-        if (UtilsTool.isValid(rowId)) {
-            map.put("rowId", rowId);
-            map.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
-            getEntityService().update(map);
+        Map<String, Object> oldRowId = new HashMap<>();
+        Map<String, Object> newRowId = new HashMap<>();
+        List<Map<String, Object>> list = getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        List<String> row = list.stream().map((rowIds) -> {
+            return (String) rowIds.get("changeOperat");
+        }).collect(Collectors.toList());
+        if (UtilsTool.isValid(rowId)&&row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
+            List<Map<String, Object>> mapList =
+                    getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+            Map<String, Object> objectMap = mapList.get(0);
+            //将Map数据转换为json结构的数据
+            String toJson = UtilsTool.objToJson(objectMap);
+            //将json数据转换为实体类
+            BusinessObject businessObject = UtilsTool.jsonToObj(toJson, BusinessObject.class);
+            //复制一份数据出来
+            businessObject.setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
+            businessObject.buildCreateInfo();
+            businessObject.setVersion("2.0");
+            String objectCode = (String)mapList.get(0).get("objectCode");
+            businessObject.setObjectCode(objectCode);
+            getEntityService().insert(businessObject.toMap());
+            logger.info("复制业务对象数据成功");
+            oldRowId.put("rowId", rowId);
+            oldRowId.put("status",BaseConstants.INVALID);
+            oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
+            logger.info("修改变更状态成功");
+            getEntityService().update(oldRowId);
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS), locale);
         }
         return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL), locale);
