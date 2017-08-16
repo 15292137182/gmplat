@@ -5,9 +5,9 @@
     <title>Event_Add</title>
     <script src="../Public/publicjs.js"></script>
     <style>
-        #addData .el-row {
-            margin-top: 20px;
-        }
+        /*#addData .el-row {*/
+        /*margin-top: 20px;*/
+        /*}*/
         .el-input-group__append, .el-input-group__prepend{
             color:black;
         }
@@ -17,96 +17,92 @@
     </style>
 </head>
 <body>
-<div id="addData" style="margin-top:20px">
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input placeholder="请选择关联对象属性" v-model="tableInput" ref="tableInput" disabled="">
-                    <el-button slot="append" type="primary" @click="searchConnectObj">查询</el-button>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input :disabled="isDisabled" placeholder="请输入名称" v-model="nameTitle" ref="nameTitle">
-                    <template slot="prepend">显示标题</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="8" >
-            <template >
-                <el-checkbox :disabled="isDisabled"  v-model="checked" @change="isChecked" style="margin-top: 5px;">是否显示</el-checkbox>
-            </template>
-        </el-col>
-        <el-col :span="14" >
-                <div>
-                    <el-input :disabled="checkType" placeholder="请输入显示控件名称" v-model="nameInput" ref="nameInput">
-                        <template slot="prepend">显示控件</template>
+<div id="addData" style="margin-top:10px">
+    <el-form :label-position="labelPosition" label-width="100px" :model="formTable">
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="关联对象属性">
+                    <el-input placeholder="请选择关联对象属性" v-model="formTable.tableInput" disabled="" ref="tableInput">
+                        <el-button slot="append" type="primary" @click="searchConnectObj" icon="search"></el-button>
                     </el-input>
-                </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="11">
-            <template>
-                <el-checkbox :disabled="isDisabled" v-model="checkedNull">允许为空</el-checkbox>
-            </template>
-        </el-col>
-        <el-col :span="11">
-            <template>
-                <el-checkbox :disabled="isDisabled" v-model="checkedReady">只读</el-checkbox>
-            </template>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input :disabled="isDisabled" placeholder="请输入长度5-12" v-model="lengthSection" ref="lengthSection">
-                    <template slot="prepend">长度区间</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input :disabled="isDisabled" placeholder="请输入验证函数" v-model="testFunction" ref="testFunction">
-                    <template slot="prepend">验证函数</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input :disabled="isDisabled" placeholder="请输入显示函数" v-model="displayFunction" ref="displayFunction">
-                    <template slot="prepend">显示函数</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row justify="center" type="flex">
-        <el-col :span="22">
-            <div>
-                <el-input :disabled="isDisabled" placeholder="请输入排序顺序" v-model="sortNumber" ref="sortNumber">
-                    <template slot="prepend">排序序号</template>
-                </el-input>
-            </div>
-        </el-col>
-    </el-row>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="名称">
+                    <el-input :disabled="isDisabled" placeholder="请输入名称" v-model="formTable.nameTitle" ref="nameTitle"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-20px; text-align: right">
+            <el-col :span="7">
+                <el-form-item label="">
+                    <template>
+                        <el-checkbox :disabled="isDisabled"  v-model="checked" @change="isChecked">是否显示</el-checkbox>
+                    </template>
+                </el-form-item>
+            </el-col>
+            <el-col :span="7">
+                <el-form-item label="">
+                    <template>
+                        <el-checkbox :disabled="isDisabled" v-model="checkedNull">是否为空</el-checkbox>
+                    </template>
+                </el-form-item>
+            </el-col>
+            <el-col :span="7">
+                <el-form-item label="">
+                    <template>
+                        <el-checkbox :disabled="isDisabled" v-model="checkedReady">是否只读</el-checkbox>
+                    </template>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-20px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="显示控件">
+                    <el-input :disabled="checkType" placeholder="请输入显示控件名称" v-model="formTable.nameInput" ref="nameInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="长度区间">
+                    <el-input :disabled="isDisabled" placeholder="请输入长度5-12" v-model="formTable.lengthSection" ref="lengthSection"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="验证函数">
+                    <el-input type="textarea" :disabled="isDisabled" placeholder="请输入验证函数" v-model="formTable.testFunction" ref="testFunction"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="显示函数">
+                    <el-input type="textarea" :disabled="isDisabled" placeholder="请输入显示函数" v-model="formTable.displayFunction" ref="displayFunction"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="排序序号">
+                    <el-input :disabled="isDisabled" placeholder="请输入排序顺序" v-model="formTable.sortNumber" ref="sortNumber"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
     <el-row >
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" @click.native="conformEvent">确定</el-button>
+            <el-button type="primary" @click.native="conformEvent">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" @click.native="cancel">取消</el-button>
         </el-col>
     </el-row>
 </div>
-<script src="add-data.js"></script>
+<script src="demo.js"></script>
 </body>
 </html>

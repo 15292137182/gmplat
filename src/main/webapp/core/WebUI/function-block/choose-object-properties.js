@@ -26,7 +26,7 @@ var em = new Vue({
         },
         conformEvent() {
             //将数据渲染到外面的input里面
-            window.parent.em.tableInput = this.currentRow;
+            window.parent.em.formTable.tableInput = this.currentRow;
             window.parent.em.dataId = this.currentId;
             //执行关闭
             parent.layer.close(window.parent.littledivIndex);

@@ -158,7 +158,7 @@ var properties = new Vue({
             topButtonObj.rowObjId = functionBlock.editObj.rowId;
             topButtonObj.objId = functionBlock.editObj.relateBusiObj;
             topButtonObj.isEdit = true;
-            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
+            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','500px', '550px')
         },
         //删除属性
         delData(){
@@ -235,7 +235,7 @@ var topButtonObj = new Vue({
             topButtonObj.rowObjId = functionBlock.editObj.rowId;
             topButtonObj.objId = functionBlock.editObj.relateBusiObj;
             this.isEdit = true;
-            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','600px', '550px')
+            topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','500px', '550px')
         },
         delData(){
             this.$http.jsonp(this.delUrl,{

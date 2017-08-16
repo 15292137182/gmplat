@@ -35,21 +35,26 @@
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg" style="margin-top:-20px;">
-            <el-col :span="10" :offset="1">
-                <el-form-item label="是否显示">
-                    <el-radio-group v-model="formTable.checked" :disabled="isDisabled">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
-                    </el-radio-group>
+        <el-row type="flex" class="row-bg" style="margin-top:-20px; text-align: right">
+            <el-col :span="7">
+                <el-form-item label="">
+                <template>
+                    <el-checkbox :disabled="isDisabled"  v-model="checked" @change="isChecked">是否显示</el-checkbox>
+                </template>
                 </el-form-item>
             </el-col>
-            <el-col :span="10">
-                <el-form-item label="是否为空">
-                    <el-radio-group v-model="formTable.checkedNull" :disabled="isDisabled">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
-                    </el-radio-group>
+            <el-col :span="7">
+                <el-form-item label="">
+                <template>
+                    <el-checkbox :disabled="isDisabled" v-model="checkedNull">是否为空</el-checkbox>
+                </template>
+                </el-form-item>
+            </el-col>
+            <el-col :span="7">
+                <el-form-item label="">
+                    <template>
+                        <el-checkbox :disabled="isDisabled" v-model="checkedReady">是否只读</el-checkbox>
+                    </template>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -60,17 +65,7 @@
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg" style="margin-top:-20px;">
-            <el-col :span="10" :offset="1">
-                <el-form-item label="是否只读">
-                    <el-radio-group v-model="formTable.checkedReady" :disabled="isDisabled">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
-                    </el-radio-group>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row type="flex" class="row-bg" style="margin-top:-20px;">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="长度区间">
                     <el-input :disabled="isDisabled" placeholder="请输入长度5-12" v-model="formTable.lengthSection" ref="lengthSection"></el-input>

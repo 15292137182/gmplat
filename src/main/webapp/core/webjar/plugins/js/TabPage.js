@@ -77,3 +77,27 @@ var deleteObj = (function(){
         del:del
     }
 })()
+
+var selectObj = (function(){
+    var sel = function(selUrl,str,callback){
+        //selUrl 接口地址，str 参数 callback响应成功后的回调函数
+        $.ajax({
+            url:selUrl,
+            type:get,
+            data:{str:str},
+            dataType:"jsonp",
+            success:function(res){
+                console.log("in");
+                if(typeof callback == "function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                alert("error");
+            }
+        })
+    }
+    return {
+        sel:sel
+    }
+})()
