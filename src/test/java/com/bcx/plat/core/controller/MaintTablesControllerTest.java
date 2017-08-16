@@ -3,39 +3,38 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- *  业务对象属性Controller层测试
+ * 表信息Controller层测试
  * Created by Wen Tiehu on 2017/8/16.
  */
 
-public class BusinessObjectProControllerTest extends BaseControllerTest<BusinessObjectProController> {
+public class MaintTablesControllerTest extends BaseControllerTest<MaintDBTablesController> {
     @Override
     protected String query() {
-        return "/core/businObjPro/query";
+        return "/core/maintTable/query";
     }
 
     @Override
     protected String insert() {
-        return "/core/businObjPro/add";
+        return "/core/maintTable/add";
     }
 
     @Override
     protected String update() {
-        return "/core/businObjPro/modify";
+        return "/core/maintTable/modify";
     }
 
     @Override
     protected String delete() {
-        return "/core/businObjPro/delete";
+        return "/core/maintTable/delete";
     }
-
     @Override
     protected String key1() {
-        return "propertyCode";
+        return "tableCname";
     }
 
     @Override
     protected String key2() {
-        return "propertyName";
+        return "tableEname";
     }
 
     @Override

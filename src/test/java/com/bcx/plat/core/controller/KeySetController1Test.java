@@ -3,39 +3,39 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- *  业务对象属性Controller层测试
+ *  键值集合Controller层测试
  * Created by Wen Tiehu on 2017/8/16.
  */
 
-public class BusinessObjectProControllerTest extends BaseControllerTest<BusinessObjectProController> {
+public class KeySetController1Test extends BaseControllerTest<KeySetController> {
     @Override
     protected String query() {
-        return "/core/businObjPro/query";
+        return "/core/keySet/query";
     }
 
     @Override
     protected String insert() {
-        return "/core/businObjPro/add";
+        return "/core/keySet/add";
     }
 
     @Override
     protected String update() {
-        return "/core/businObjPro/modify";
+        return "/core/keySet/modify";
     }
 
     @Override
     protected String delete() {
-        return "/core/businObjPro/delete";
+        return "/core/keySet/delete";
     }
 
     @Override
     protected String key1() {
-        return "propertyCode";
+        return "confKey";
     }
 
     @Override
     protected String key2() {
-        return "propertyName";
+        return "confValue";
     }
 
     @Override

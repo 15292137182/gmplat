@@ -3,41 +3,40 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- *  业务对象属性Controller层测试
+ * 序列规则Controller层测试
  * Created by Wen Tiehu on 2017/8/16.
  */
 
-public class BusinessObjectProControllerTest extends BaseControllerTest<BusinessObjectProController> {
+public class SequenceRuleConfigControllerTest extends BaseControllerTest<SequenceRuleConfigController> {
     @Override
     protected String query() {
-        return "/core/businObjPro/query";
+        return "/core/sequenceRule/query";
     }
 
     @Override
     protected String insert() {
-        return "/core/businObjPro/add";
+        return "/core/sequenceRule/add";
     }
 
     @Override
     protected String update() {
-        return "/core/businObjPro/modify";
+        return "/core/sequenceRule/modify";
     }
 
     @Override
     protected String delete() {
-        return "/core/businObjPro/delete";
+        return "/core/sequenceRule/delete";
     }
 
     @Override
     protected String key1() {
-        return "propertyCode";
+        return "seqCode";
     }
 
     @Override
     protected String key2() {
-        return "propertyName";
+        return "seqName";
     }
-
     @Override
     protected String rowId() {
         return "rowId";

@@ -1,52 +1,91 @@
 package com.bcx.plat.core.controller;
 
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.bcx.BaseTest;
-import com.bcx.plat.core.utils.ServiceResult;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- * Create By HCL at 2017/8/1
+ * 表字段信息Controller层测试
+ * Created by Wen Tiehu on 2017/8/16.
  */
-public class DBTableColumnControllerTest extends BaseTest {
 
-  private MockMvc mockMvc;
+public class DBTableColumnControllerTest extends BaseControllerTest<DBTableColumnController> {
+    @Override
+    protected String query() {
+        return "/core/dbTableColumn/query";
+    }
 
-  @Autowired
-  private DBTableColumnController dbTableColumnController;
+    @Override
+    protected String insert() {
+        return "/core/dbTableColumn/add";
+    }
 
-  @Before
-  public void before() {
-    MockitoAnnotations.initMocks(this);
-    mockMvc = MockMvcBuilders.standaloneSetup(dbTableColumnController).build();
-  }
+    @Override
+    protected String update() {
+        return "/core/dbTableColumn/modify";
+    }
 
-  /**
-   * 对controller进行单元测试
-   */
-  @Test
-  public void test() throws Exception {
-    // 使用方法： 发起请求 plat/dbTableColumn/singleInputSelect 查询数据
-    MvcResult mvcResult = mockMvc.perform(get("/core/dbTableColumn/query"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andReturn();
+    @Override
+    protected String delete() {
+        return "/core/dbTableColumn/delete";
+    }
 
-    StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
-    sb.delete(0, sb.indexOf("{"))
-        .delete(sb.lastIndexOf("}") + 1, sb.length());
-    // 客户端获得 serviceResult
-    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
-    assert (null != serviceResult && serviceResult.getState() == 1);
-  }
+    @Override
+    protected String key1() {
+        return "columnEname";
+    }
+
+    @Override
+    protected String key2() {
+        return "columnCname";
+    }
+
+    @Override
+    protected String rowId() {
+        return "rowId";
+    }
+
+    @Override
+    public void before() {
+        super.before();
+    }
+
+    /**
+     * 业务对象查询
+     *
+     * @throws Exception
+     */
+    @Override
+    public void testquery() throws Exception {
+        super.testquery();
+    }
+
+    /**
+     * 业务对象新增
+     *
+     * @throws Exception
+     */
+    @Override
+    public void testAInsert() throws Exception {
+        super.testAInsert();
+    }
+
+    /**
+     * 业务对象修改
+     *
+     * @throws Exception
+     */
+    @Override
+    public void testBUpdate() throws Exception {
+        super.testBUpdate();
+    }
+
+    /**
+     * 业务对象删除
+     *
+     * @throws Exception
+     */
+    @Override
+    public void testCDelete() throws Exception {
+        super.testCDelete();
+    }
+
 }

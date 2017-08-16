@@ -3,49 +3,44 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- *  业务对象属性Controller层测试
+ *  序列规则Controller层测试
  * Created by Wen Tiehu on 2017/8/16.
  */
 
-public class BusinessObjectProControllerTest extends BaseControllerTest<BusinessObjectProController> {
+public class SysConfigControllerTest extends BaseControllerTest<SysConfigController> {
     @Override
     protected String query() {
-        return "/core/businObjPro/query";
+        return "/core/sysConfig/query";
     }
 
     @Override
     protected String insert() {
-        return "/core/businObjPro/add";
+        return "/core/sysConfig/add";
     }
 
     @Override
     protected String update() {
-        return "/core/businObjPro/modify";
+        return "/core/sysConfig/modify";
     }
 
     @Override
     protected String delete() {
-        return "/core/businObjPro/delete";
+        return "/core/sysConfig/delete";
     }
 
     @Override
     protected String key1() {
-        return "propertyCode";
+        return "confKey";
     }
 
     @Override
     protected String key2() {
-        return "propertyName";
+        return "confValue";
     }
 
     @Override
     protected String rowId() {
         return "rowId";
-    }
-
-    @Override
-    public void before() {
-        super.before();
     }
 
     /**
@@ -59,7 +54,7 @@ public class BusinessObjectProControllerTest extends BaseControllerTest<Business
     }
 
     /**
-     * 业务对象新增
+     * 新增
      *
      * @throws Exception
      */

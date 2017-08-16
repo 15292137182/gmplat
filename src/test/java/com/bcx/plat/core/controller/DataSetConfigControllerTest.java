@@ -3,39 +3,39 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- *  业务对象属性Controller层测试
+ *  数据集Controller层测试
  * Created by Wen Tiehu on 2017/8/16.
  */
 
-public class BusinessObjectProControllerTest extends BaseControllerTest<BusinessObjectProController> {
+public class DataSetConfigControllerTest extends BaseControllerTest<DataSetConfigController> {
     @Override
     protected String query() {
-        return "/core/businObjPro/query";
+        return "/core/dataSetConfig/query";
     }
 
     @Override
     protected String insert() {
-        return "/core/businObjPro/add";
+        return "/core/dataSetConfig/add";
     }
 
     @Override
     protected String update() {
-        return "/core/businObjPro/modify";
+        return "/core/dataSetConfig/modify";
     }
 
     @Override
     protected String delete() {
-        return "/core/businObjPro/delete";
+        return "/core/dataSetConfig/delete";
     }
 
     @Override
     protected String key1() {
-        return "propertyCode";
+        return "datasetCode";
     }
 
     @Override
     protected String key2() {
-        return "propertyName";
+        return "datasetName";
     }
 
     @Override
@@ -67,7 +67,6 @@ public class BusinessObjectProControllerTest extends BaseControllerTest<Business
     public void testAInsert() throws Exception {
         super.testAInsert();
     }
-
     /**
      * 业务对象修改
      *

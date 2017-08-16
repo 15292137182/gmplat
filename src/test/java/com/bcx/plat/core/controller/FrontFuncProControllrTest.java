@@ -3,39 +3,39 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseControllerTest;
 
 /**
- *  业务对象属性Controller层测试
+ *  前端功能块属性Controller层测试
  * Created by Wen Tiehu on 2017/8/16.
  */
 
-public class BusinessObjectProControllerTest extends BaseControllerTest<BusinessObjectProController> {
+public class FrontFuncProControllrTest extends BaseControllerTest<FrontFuncProController> {
     @Override
     protected String query() {
-        return "/core/businObjPro/query";
+        return "/core/fronFuncPro/query";
     }
 
     @Override
     protected String insert() {
-        return "/core/businObjPro/add";
+        return "/core/fronFuncPro/add";
     }
 
     @Override
     protected String update() {
-        return "/core/businObjPro/modify";
+        return "/core/fronFuncPro/modify";
     }
 
     @Override
     protected String delete() {
-        return "/core/businObjPro/delete";
+        return "/core/fronFuncPro/delete";
     }
 
     @Override
     protected String key1() {
-        return "propertyCode";
+        return "displayWidget";
     }
 
     @Override
     protected String key2() {
-        return "propertyName";
+        return "lengthInterval";
     }
 
     @Override
@@ -47,7 +47,6 @@ public class BusinessObjectProControllerTest extends BaseControllerTest<Business
     public void before() {
         super.before();
     }
-
     /**
      * 业务对象查询
      *
