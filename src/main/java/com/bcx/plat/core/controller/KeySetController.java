@@ -19,7 +19,7 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
 
     @Override
     protected List<String> blankSelectFields() {
-        return Arrays.asList("keysetCode", "keysetName");
+        return Arrays.asList("number","keysetCode", "keysetName");
     }
 
 }
