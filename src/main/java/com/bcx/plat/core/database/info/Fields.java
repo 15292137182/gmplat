@@ -18,7 +18,23 @@ public class Fields {
 
   private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();
   private static final HashMap<Class<? extends BaseEntity>, Map<String, Column>> entityFieldMap = new HashMap<>();
-
+  
+  static {
+    for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
+      for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
+        final int modifiers = field.getModifiers();
+        if (Modifier.isStatic(modifiers)&&Modifier.isPublic(modifiers)) {
+          Object value = null;
+          try {
+            value = field.get(aClass);
+          } catch (IllegalAccessException e) {
+            e.printStackTrace();
+          }
+          value.hashCode();
+        }
+      }
+    }
+  }
 
   private static void putField(TableSource tableSource, Column column, String alies) {
     Map<String, Column> map = tableFieldMap.get(tableSource);
@@ -40,7 +56,7 @@ public class Fields {
   public static Map<String, Column> getFieldMap(Class<? extends BaseEntity> entityClass) {
     Map<String, Column> columnMap = entityFieldMap.get(entityClass);
     if (columnMap == null) {
-//      initRegister();
+
       final TableSource tableSource = TableAnnoUtil.getTableSource(entityClass);
       columnMap = tableFieldMap.get(tableSource);
       entityFieldMap.put(entityClass, columnMap);

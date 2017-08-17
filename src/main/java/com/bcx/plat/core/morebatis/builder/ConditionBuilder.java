@@ -17,18 +17,6 @@ public class ConditionBuilder implements ConditionContainer {
   }
 
   public static void main(String[] args) throws IllegalAccessException {
-//    new ConditionBuilder(BusinessObject.class).buildByAnd().equal("it works", "what").endAnd()
-//        .buildDone();
-    for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
-      for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
-        final int modifiers = field.getModifiers();
-        if (Modifier.isStatic(modifiers)&&Modifier.isPublic(modifiers)) {
-          Object value = field.get(aClass);
-          value.hashCode();
-        }
-      }
-    }
-
     Condition testCondition = new ConditionBuilder(BusinessObject.class).buildByAnd()
         .equal("changeOperat", 10).notNull("changeOperat")
         .or().isNull("deleteFlag").equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()
