@@ -114,8 +114,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectService
                 .select(new FieldCondition("rowId", Operator.IN, rowIds)
-                        , new Field("row_id", "rowId")
-                        , new Field("object_name", "objectName"));
+                        ,Arrays.asList( new Field("row_id", "rowId")
+                        , new Field("object_name", "objectName")),null);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("objectName"));

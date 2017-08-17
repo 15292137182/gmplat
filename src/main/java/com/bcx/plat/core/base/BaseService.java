@@ -2,6 +2,8 @@ package com.bcx.plat.core.base;
 
 
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +22,7 @@ public interface BaseService<T extends BaseEntity> {
       Collection<String> value);
 
   PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
-      Collection<String> value, int pageNum, int pageSize);
+                                                    Collection<String> value, int pageNum, int pageSize, List<Column> columns, List<Order> orders);
 
   int update(Map value);
 

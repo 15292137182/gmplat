@@ -119,8 +119,8 @@ public class FrontFuncProController extends
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectProService
                 .select(new FieldCondition("rowId", Operator.IN, rowIds)
-                        , new Field("row_id", "rowId")
-                        , new Field("property_name", "propertyName"));
+                        , Arrays.asList(new Field("row_id", "rowId")
+                        , new Field("property_name", "propertyName")),null);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("propertyName"));

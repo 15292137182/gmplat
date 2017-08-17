@@ -5,13 +5,12 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +73,10 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return ServiceResult
      */
     @RequestMapping("/queryPage")
-    public Object singleInputSelect(String args, int pageNum, int pageSize, HttpServletRequest request, Locale locale) {
+    public Object singleInputSelect(String args, int pageNum, int pageSize,String order, HttpServletRequest request, Locale locale) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result = entityService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize);
+                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD),orders);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 

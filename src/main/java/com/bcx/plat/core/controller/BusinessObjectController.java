@@ -159,9 +159,9 @@ public class BusinessObjectController extends
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = maintDBTablesService
                 .select(new FieldCondition("rowId", Operator.IN, rowIds)
-                        , new Field("row_id", "rowId")
+                        , Arrays.asList(new Field("row_id", "rowId")
                         , new Field("table_cname", "tableCname")
-                        , new Field("table_schema", "tableSchema"));
+                        , new Field("table_schema", "tableSchema")),null);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("tableSchema") + "(" + row.get("tableCname") + ")");

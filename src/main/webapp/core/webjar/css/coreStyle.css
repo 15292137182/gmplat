@@ -1,7 +1,7 @@
 /*去除滚动条*/
-html {
-    overflow: hidden;
-}
+/*html {*/
+    /*overflow: hidden;*/
+/*}*/
 body{
     margin:2px 8px
 }
