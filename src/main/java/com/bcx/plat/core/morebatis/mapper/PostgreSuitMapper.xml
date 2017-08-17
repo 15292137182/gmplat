@@ -83,7 +83,7 @@
     insert into
     <include refid="solveTableSource"/>
     <foreach close=")" collection="columns" item="column" open="(" separator=",">
-      ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(column)}
+      "${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(column)}"
     </foreach>
     VALUES
     <foreach collection="values" item="row" separator=",">
@@ -96,7 +96,7 @@
   <update id="update" parameterType="com.bcx.plat.core.morebatis.command.UpdateAction">
     UPDATE <include refid="solveTableSource"/> SET
     <foreach collection="values" index="field" item="value" separator=",">
-      ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(field)} = #{value}
+      "${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(field)}" = #{value}
     </foreach>
     <include refid="solveWhereCondition"/>
   </update>

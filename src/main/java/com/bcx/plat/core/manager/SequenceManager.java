@@ -1,5 +1,8 @@
 package com.bcx.plat.core.manager;
 
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
@@ -11,16 +14,12 @@ import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
 import com.bcx.plat.core.utils.extra.lang.Lang;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 序列号生成类
@@ -29,7 +28,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * BCX-TEST-SN BCX-20170810-000002
  *
- * @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6} - @{c} 常量，不具有任何属性
+ * 、  @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6} - @{c} 常量，不具有任何属性
  *
  * #{b;defaultValue;true}变量，从参数中取出;可设置为null时的默认值;是否显示
  *
@@ -43,16 +42,16 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 public class SequenceManager {
 
-    private static SequenceGenerateService sequenceGenerateService;
-    private static SequenceRuleConfigService sequenceRuleConfigService;
+  private static SequenceGenerateService sequenceGenerateService;
+  private static SequenceRuleConfigService sequenceRuleConfigService;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
-    // 变量的参数值取不到的时候默认值
+  // 变量的参数值取不到的时候默认值
   private static final String DEFAULT_ARG_VALUE = "";
-    // 未设定流水号长度时的默认长度
+  // 未设定流水号长度时的默认长度
   private static final int DEFAULT_SERIAL_LENGTH = 6;
-    // 内容内部分隔符
+  // 内容内部分隔符
   private static final String CONTENT_SEPARATOR_ = ";";
 
   private static boolean isMock = false;
@@ -97,7 +96,7 @@ public class SequenceManager {
       if (!mapper.isEmpty()) {
         SequenceGenerate generate = new SequenceGenerate().fromMap(mapper.get(0));
         generate.buildDeleteInfo();
-          return sequenceGenerateService.update(generate.toMap());
+        return sequenceGenerateService.update(generate.toMap());
       }
     }
     return -1;
@@ -253,21 +252,19 @@ public class SequenceManager {
     if (keys.containsKey(variableKey)) {
       return keys.get(variableKey);
     } else {
-      Map<String, Object> cond = new HashMap<>();
-      cond.put("seqRowId", seqRowId);
-      cond.put("variableKey", variableKey);
-      cond.put("branchSign", branchSign);
-//      List<SequenceGenerate> li = sequenceGenerateMapper.select(cond);
-        List<Map<String, Object>> list = sequenceGenerateService.select(
-                new And(new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
-                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY,Operator.EQUAL, variableKey)
-                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN,Operator.EQUAL, branchSign)));
-        if (list.size() == 1) {
-            String json = UtilsTool.objToJson(list.get(0));
-            SequenceGenerate generate = UtilsTool.jsonToObj(json, SequenceGenerate.class);
-            SequenceGenerate sequenceGenerate = generate;
-        if (sequenceGenerate.getCurrentValue().matches("^\\d+$")) {
-          return Integer.valueOf(sequenceGenerate.getCurrentValue());
+      List<Map<String, Object>> list = sequenceGenerateService.select(new And(
+          new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
+          , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY, Operator.EQUAL, variableKey)
+          , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN, Operator.EQUAL, branchSign))
+      );
+      if (list.size() == 1) {
+        String json = UtilsTool.objToJson(list.get(0));
+        SequenceGenerate generate = UtilsTool.jsonToObj(json, SequenceGenerate.class);
+        if (null == generate) {
+          throw Lang.makeThrow("获取当前变量值时出现错误！");
+        }
+        if (generate.getCurrentValue().matches("^\\d+$")) {
+          return Integer.valueOf(generate.getCurrentValue());
         }
       }
     }
@@ -288,12 +285,11 @@ public class SequenceManager {
     if (isValid(sequenceCode)) {
       List<Map<String, Object>> code =
           sequenceRuleConfigService
-              .select((new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)));
+              .select(new FieldCondition("seqCode", Operator.EQUAL, sequenceCode));
       if (code.size() == 1) {
         String toJson = UtilsTool.objToJson(code.get(0));
-        SequenceRuleConfig sequenceRuleConfig = UtilsTool
+        return UtilsTool
             .jsonToObj(toJson, SequenceRuleConfig.class);
-        return sequenceRuleConfig;
       }
     }
     return null;
@@ -303,12 +299,12 @@ public class SequenceManager {
    * 检查序列号生成是否可用
    */
   private boolean init() {
-      if (null == sequenceGenerateService) {
-          sequenceGenerateService = SpringContextHolder.getBean(SequenceGenerateService.class);
-      }
-      if (null == sequenceRuleConfigService) {
-          sequenceRuleConfigService = SpringContextHolder.getBean(SequenceRuleConfigService.class);
-      }
+    if (null == sequenceGenerateService) {
+      sequenceGenerateService = SpringContextHolder.getBean(SequenceGenerateService.class);
+    }
+    if (null == sequenceRuleConfigService) {
+      sequenceRuleConfigService = SpringContextHolder.getBean(SequenceRuleConfigService.class);
+    }
     variable = new HashMap<>();
     keys = new HashMap<>();
     branchValues = new HashMap<>();
@@ -325,10 +321,13 @@ public class SequenceManager {
     // 如果不是测试，存入数据库
     if (!test && !isMock) {
       for (String variableKey : keys.keySet()) {
-          List<Map<String, Object>> list = sequenceGenerateService.select(
-                  new And(new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
-                  , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY,Operator.EQUAL, variableKey)
-                  , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN,Operator.EQUAL, branchValues.get(variableKey).toString())));
+        List<Map<String, Object>> list = sequenceGenerateService.select(
+            new And(
+                new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
+                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY, Operator.EQUAL,
+                variableKey)
+                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN, Operator.EQUAL,
+                branchValues.get(variableKey).toString())));
 
         SequenceGenerate sg = new SequenceGenerate();
         sg.setSeqRowId(seqRowId);
@@ -337,11 +336,11 @@ public class SequenceManager {
         sg.setBranchSign(branchValues.get(variableKey).toString());
         if (list.isEmpty()) {
           sg.buildCreateInfo();
-            sequenceGenerateService.insert(sg.toMap());
+          sequenceGenerateService.insert(sg.toMap());
         } else {
 
           sg.buildModifyInfo();
-            sequenceGenerateService.update(sg.toMap());
+          sequenceGenerateService.update(sg.toMap());
         }
 
       }

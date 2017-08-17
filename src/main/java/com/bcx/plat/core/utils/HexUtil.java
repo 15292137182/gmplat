@@ -71,17 +71,22 @@ public class HexUtil {
    * @param pwd 用户输入密码
    * @param dbPWD 数据库保存的密码
    */
-  public static boolean validPasswd(String pwd, String dbPWD)
-      throws NoSuchAlgorithmException, UnsupportedEncodingException {
+  public static boolean validPasswd(String pwd, String dbPWD) {
     byte[] pwIndb = hexStringToByte(dbPWD);
     // 定义salt
     byte[] salt = new byte[SALT_LENGTH];
     System.arraycopy(pwIndb, 0, salt, 0, SALT_LENGTH);
     // 创建消息摘要对象
-    MessageDigest md = MessageDigest.getInstance("MD5");
-    // 将盐数据传入消息摘要对象
-    md.update(salt);
-    md.update(pwd.getBytes("UTF-8"));
+    MessageDigest md = null;
+    try {
+      md = MessageDigest.getInstance("MD5");
+      // 将盐数据传入消息摘要对象
+      md.update(salt);
+      md.update(pwd.getBytes("UTF-8"));
+    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+      e.printStackTrace();
+      return false;
+    }
     byte[] digest = md.digest();
     // 声明一个对象接收数据库中的口令消息摘要
     byte[] digestIndb = new byte[pwIndb.length - SALT_LENGTH];

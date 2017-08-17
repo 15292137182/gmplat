@@ -1,10 +1,21 @@
 package com.bcx.plat.shiro.relam;
 
+import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
+import static com.bcx.plat.core.utils.HexUtil.validPasswd;
+import static com.bcx.plat.core.utils.UtilsTool.excludeDeleted;
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
+import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.service.UserService;
+import java.util.List;
+import java.util.Map;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -12,6 +23,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 负责登陆和授权的 class
@@ -19,6 +31,9 @@ import org.apache.shiro.subject.PrincipalCollection;
  * Create By HCL at 2017/8/14
  */
 public class DefaultRelam extends AuthorizingRealm {
+
+  @Autowired
+  UserService userService;
 
   /**
    * 默认的授权方法
@@ -45,12 +60,32 @@ public class DefaultRelam extends AuthorizingRealm {
     String userId = (String) upToken.getPrincipal();
     String password = String.valueOf(upToken.getPassword());
     if (isValid(userId) && isValid(password)) {
-      if (!"admin".equals(userId)) {
-        throw new UnknownAccountException();
-      } else if (!"admin".equals(password)) {
-        throw new IncorrectCredentialsException();
+      List<Map<String, Object>> userMaps = userService
+          .select(new FieldCondition("id", Operator.EQUAL, userId));
+      if (userMaps.size() == 1) {
+        User user = new User().fromMap(userMaps.get(0));
+        if (null != user) {
+          String dbPassword = user.getPassword();
+          if (validPasswd(password, dbPassword)) {
+            if (TRUE_FLAG.equals(user.getDisabled())) {
+              // 账号被禁用
+              throw new DisabledAccountException();
+            } else {
+              user.setLastLoginDate(getDateTimeNow());
+              // 更新时间日期
+              userService.update(user.toMap(),
+                  excludeDeleted(new FieldCondition("rowId", Operator.EQUAL, user.getRowId())));
+              return new SimpleAuthenticationInfo(userId, password, getName());
+            }
+          } else {
+            // 账号密码错误
+            throw new IncorrectCredentialsException();
+          }
+        } else {
+          throw new UnknownAccountException();
+        }
       } else {
-        return new SimpleAuthenticationInfo(userId, password, getName());
+        throw new UnknownAccountException();
       }
     }
     return null;
