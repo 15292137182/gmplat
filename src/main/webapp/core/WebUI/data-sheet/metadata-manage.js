@@ -112,7 +112,9 @@ var basLeft = new Vue({
         currentPage:1,//当前为第一页
         pageSize:10,//每页显示条数
         //开始不能为空 否则会报错
-        allDate:0  //总共有多少条
+        allDate:0,//总共有多少条
+        //edit:false,
+        //del:false
     },
     methods: {
         editEvent() {
@@ -149,6 +151,7 @@ var basLeft = new Vue({
                    // console.log(basLeft.tableData);
                     basLeft.currentChange(basLeft.tableData[0]);
                 }else{
+                    //basRight.tableData=[];//没找到右边表的数据为空
                     basTop.addAttr = true,
                     basTop.takeEffect = true,
                     basTop.change = true
@@ -183,7 +186,7 @@ var basLeft = new Vue({
                     //变更
                     if(row.changeOperat=='50'){
                         basTop.change = false;
-                    }else if(row.changeOperat=='20'){
+                    }else if(row.changeOperat=='20'){  //变更了
                         basTop.change = true;
                     }
                 } else if(row.status == '40'){
@@ -199,10 +202,23 @@ var basLeft = new Vue({
                 //查找右侧表的数据
                 basRight.searchRightTable();
             }
+            //if(row.status == '20'){
+            //    console.log(111)
+            //    console.log($('.current-row>.el-table_1_column_5>.cell>button').attr('disabled'))
+            //    $('.el-table__row.current-row>.el-table_1_column_5>.cell button').prop("disabled",false)
+            //     console.log($('.current-row>.el-table_1_column_5>.cell>button').attr('disabled'))
+            //   // $('input').attr("readonly",false)//去除input元素的readonly属性
+            //    //this.row.edit=true;
+            //    //this.del=true;
+            //
+            //}
         },
         FindLFirstDate(row){
             this.$refs.tableData.setCurrentRow(row);
         },
+        headSort(column){//列头排序
+            pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.currentPage,column,this);
+        }
     },
     created() {
         this.searchLeftTable();
@@ -283,6 +299,13 @@ var basRight = new Vue({
                 // console.log(this.rightVal)
             }
         },
+        extendOnly(row){
+            if(row.wetherExpandPro =="true"){
+                return "是"
+            }else{
+                return "否"
+            }
+        },
         FindRFirstDate(row){
             this.$refs.tableData.setCurrentRow(row);
         },
@@ -296,6 +319,9 @@ var basRight = new Vue({
             this.currentPage=val;
             //console.log(`当前页: ${val}`);
             this.searchRightTable();
+        },
+        headSort(column){//列头排序
+            pagingObj.headSorts(qurProUrl,basLeft.currentId,this.resInput,column,this);
         }
     },
     created() {

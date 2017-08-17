@@ -63,7 +63,7 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" size="small" @click.native="conformEvent('addProForm')">确定</el-button>
+            <el-button type="primary" size="small" @click.native="conformEvent('addProForm')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
@@ -128,8 +128,14 @@
             },
             changeReaTable(e){
                 proEm.dataId=e;
+                console.log( proEm.dataId)
                 if(operateOPr==1){  //新增的时候
                     if(proEm.dataId!=''){
+                        proEm.addProForm.checked = false;   //关联表与是否属性只能选其一
+                    }
+                }
+                if(operateOPr==2){  //编辑的时候
+                    if(proEm.dataId!=undefined){
                         proEm.addProForm.checked = false;   //关联表与是否属性只能选其一
                     }
                 }

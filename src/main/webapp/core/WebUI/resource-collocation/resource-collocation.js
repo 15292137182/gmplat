@@ -77,6 +77,9 @@ var resCol=new Vue({
         handleCurrentChange(val) {  //当前页是第几页
             this.currentPage=val;
             this.searchResTable();
+        },
+        headSort(column){//列头排序
+            pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.currentPage,column,this);
         }
     },
     created() {

@@ -42,15 +42,16 @@
                     <el-table :data="tableData" ref="tableData" highlight-current-row
                               @row-click="currentChange" :height="leftHeight" border  v-loading="loading"
                               element-loading-text="加载中"
+                              @sort-change="headSort"
                               class="tableStyle">
-                        <el-table-column prop="objectName" label="名称" show-overflow-tooltip width="110"></el-table-column>
-                        <el-table-column prop="relateTableRowId" label="关联表" show-overflow-tooltip width="110" ></el-table-column>
-                        <el-table-column prop="objectCode" label="代码" show-overflow-tooltip ></el-table-column>
-                        <el-table-column prop="version" label="版本" show-overflow-tooltip ></el-table-column>
+                        <el-table-column prop="objectName" sortable="custom" label="名称" show-overflow-tooltip width="110"></el-table-column>
+                        <el-table-column prop="relateTableRowId" sortable="custom" label="关联表" show-overflow-tooltip width="110" ></el-table-column>
+                        <el-table-column prop="objectCode" label="代码" sortable="custom" show-overflow-tooltip width="100"></el-table-column>
+                        <el-table-column prop="version" label="版本" sortable="custom" show-overflow-tooltip width="100"></el-table-column>
                         <el-table-column  prop="" label="操作" width="" fixed="right" >
                             <template scope="scope">
-                                <el-button @click.native="editEvent" type="text" size="small" icon="edit"></el-button>
-                                <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"></el-button>
+                                <el-button @click.native="editEvent" type="text" size="small" icon="edit"  disabled ></el-button>
+                                <el-button @click.native="deleteEvent" type="text" size="small" icon="delete" disabled></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -94,15 +95,15 @@
                 <template>
                     <!--show-overflow-tooltip-->
                     <el-table :data="tableData" :height="rightHeight" border   ref="tableData" highlight-current-row v-loading="loading"
-                              element-loading-text="加载中"
+                              element-loading-text="加载中"  @sort-change="headSort"
                               @row-click="currentRChange" class="tableStyle">
-                        <el-table-column prop="propertyName" label="名称" width="120" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="wetherExpandPro" label="扩展属性" width="100" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="propertyCode" label="代码" show-overflow-tooltip width="120"></el-table-column>
-                        <el-table-column prop="relateTableColumn" label="关联字段" width="100" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="propertyName" label="名称" sortable="custom" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="wetherExpandPro" label="扩展属性" :formatter="extendOnly" width="100" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="propertyCode" label="代码" sortable="custom" show-overflow-tooltip width="120"></el-table-column>
+                        <el-table-column prop="relateTableColumn"  label="关联字段" width="100" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="valueResourceType" label="值来源类型" width="110" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="valueResourceContent" label="值来源内容" width="110" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="valueResourceType" label="值来源类型"  width="110" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="valueResourceContent" label="值来源内容"  width="110" show-overflow-tooltip></el-table-column>
                         <el-table-column  prop="" label="操作" width="100" fixed="right">
                             <template scope="scope">
                                 <el-button @click.native="editProp" type="text" size="small" icon="edit"></el-button>
