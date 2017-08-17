@@ -291,23 +291,29 @@ public class UtilsTool {
    * @param key 接受properties可以对应的key
    * @return 返回properies中value值
    */
-  final static public String loadPproperties(String key){
+  final static public String loadPproperties(String key) {
     Properties properties = new Properties();
     InputStream resourceAsStream = UtilsTool.class.getClassLoader()
             .getResourceAsStream("properties/sequence.properties");
     try {
       properties.load(resourceAsStream);
-        String propertys = properties.getProperty(key);
-        return propertys;
+      String propertys = properties.getProperty(key);
+      return propertys;
     } catch (IOException e) {
-      e.printStackTrace();
+    } finally {
+      if (resourceAsStream != null) {
+        try {
+          resourceAsStream.close();
+        } catch (IOException e) {
+        }
+      }
     }
     return null;
   }
 
   /**
    * 数据排序
-   * "[{\"str\":\"23\", \"num\":1},{\"str\":\"12\", \"num\":0},{\"str\":\"as\", \"num\":1}]"
+   * "[{\"str\":\"rowId\", \"num\":1},{\"str\":\"code\", \"num\":0}]"
    *
    * @param orde 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__为倒序
    * @return linkedList参数

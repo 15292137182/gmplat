@@ -19,6 +19,7 @@ import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +40,6 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         this.frontFuncProService = frontFuncProService;
         this.businessObjectService = businessObjectService;
     }
-    @Autowired
-    private MoreBatis moreBatis;
 
     /**
      * 需要模糊的搜索字段
@@ -88,7 +87,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      */
     //"[{\"str\":\"23\", \"num\":1},{\"str\":\"12\", \"num\":0},{\"str\":\"as\", \"num\":1}]"
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId, String args, int pageNum, int pageSize,String orde,
+    public Object queryProPage(String rowId, String args,@RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,String orde,
                                     HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(orde);
         PageResult<Map<String, Object>> result =

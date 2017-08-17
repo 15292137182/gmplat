@@ -5,8 +5,10 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -93,13 +96,15 @@ public class FrontFuncProController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
-                                    HttpServletRequest request, Locale locale) {
+    public Object singleInputSelect(String rowId, String args, @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                    HttpServletRequest request, Locale locale,String order) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result =
                 getEntityService().select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(args)))
-                        , pageNum, pageSize);
+                        ,Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         result = queryResultProcess(result);
         return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }

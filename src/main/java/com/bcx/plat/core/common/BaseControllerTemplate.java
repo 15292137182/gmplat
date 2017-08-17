@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y extends BaseEntity<Y>> extends BaseController {
     @Autowired
@@ -72,7 +73,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return ServiceResult
      */
     @RequestMapping("/queryPage")
-    public Object singleInputSelect(String args, int pageNum, int pageSize,String order, HttpServletRequest request, Locale locale) {
+    public Object singleInputSelect(String args, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result = entityService
                 .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)), Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
@@ -107,7 +109,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return ServiceResult
      */
     @RequestMapping("/selectPage")
-    public Object select(Map<String, Object> args, int pageNum, int pageSize, HttpServletRequest request, Locale locale) {
+    public Object select(Map<String, Object> args,@RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                         @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize, HttpServletRequest request, Locale locale) {
         PageResult<Map<String, Object>> result = entityService.select(args, pageNum, pageSize);
 
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);

@@ -21,6 +21,7 @@ import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +65,8 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId, String args, int pageNum, int pageSize,String order,
+    public Object queryProPage(String rowId, String args,@RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,String order,
                                     HttpServletRequest request, Locale locale) {
         LinkedList<Order> str = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result =
@@ -107,6 +109,7 @@ public class BusinessObjectController extends
             businessObject.setObjectCode(objectCode);
             getEntityService().insert(businessObject.toMap());
             logger.info("复制业务对象数据成功");
+
             oldRowId.put("rowId", rowId);
             oldRowId.put("status",BaseConstants.INVALID);
             oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
