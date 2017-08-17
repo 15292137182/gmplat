@@ -78,11 +78,11 @@
                             });
                         }
                         if (operate == 2) {
-                            this.$http.jsonp(editUrl, {
+                            resAdd.$http.jsonp(editUrl, {
                                 //拿到这条数据的ID
                                 rowId: resCol.currentValue.rowId,
-                                confValue: resAdd.nameInput,
-                                desp: resAdd.tableInput
+                                confValue: resAdd.colForm.nameInput,
+                                desp: resAdd.colForm.tableInput
                             }, {
                                 jsonp: 'callback'
                             }).then(function () {

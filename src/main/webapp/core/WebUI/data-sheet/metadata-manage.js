@@ -10,12 +10,8 @@ var deleteProUrl=serverPath + "/businObjPro/delete";
 var qurProUrl=serverPath + "/businObj/queryProPage";
 var affectPropUrl=serverPath + "/businObj/takeEffect";//生效
 var changeUrl=serverPath + "/businObj/changeOperat";//变更
-
 var conTable=serverPath + "/maintTable/query";
-//var conChildTable=serverPath + "/dbTableColumn/query";//字表左侧查右侧
 var conChildTable=serverPath + "/dbTableColumn/queryTabById";//字表左侧查右侧
-
-
 
 
 var basTop = new Vue({
@@ -45,24 +41,39 @@ var basTop = new Vue({
         addProp(){
             operateOPr=1;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '440px', function () {
-                //键值类型(键值集合)
-                proEm.$http.jsonp(serverPath + '/keySet/query', {
-                    str: ''
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    proEm.optionLeft = ref.data.data;
-                    console.log(proEm.optionLeft)
-                });
-                //值来源类型(键值集合)
-                proEm.$http.jsonp(serverPath + '/keySet/query', {
-                    str: ''
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    proEm.optionRight = ref.data.data;
-                });
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '540px', function () {
+                basTop.getSelectValue();
+
+            });
+        },
+        getSelectValue(){
+            //关联表字段
+            proEm.$http.jsonp(conChildTable, {
+                args:'',
+                rowId: basLeft.relateTableRowId
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                console.log(ref);
+                proEm.optionValue = ref.data.data;
+            });
+            //键值类型(键值集合)
+            proEm.$http.jsonp(serverPath + '/keySet/query', {
+                str: ''
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                // console.log(ref);
+                proEm.optionLeft = ref.data.data;
+                console.log(proEm.optionLeft)
+            });
+            //值来源类型(键值集合)
+            proEm.$http.jsonp(serverPath + '/keySet/query', {
+                str: ''
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                proEm.optionRight = ref.data.data;
             });
         },
         affectProp(){
@@ -72,8 +83,9 @@ var basTop = new Vue({
                 jsonp: 'callback'
             }).then(function (ref) {
                 ibcpLayer.ShowOK(ref.data.message);
-                //刷新 不然状态不变化
-                basLeft.searchLeftTable();
+                //选中这一行
+               basLeft.searchLeftTable();
+
             });
         },
         changeProp(){
@@ -84,7 +96,7 @@ var basTop = new Vue({
             }).then(function (ref) {
                 console.log(ref);
                 ibcpLayer.ShowOK(ref.data.message);
-                //刷新 不然状态不变化
+                //选中这一行
                 basLeft.searchLeftTable();
             });
         }
@@ -107,7 +119,7 @@ var basLeft = new Vue({
             operate = 2;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
-                console.log(basLeft.currentVal)
+                console.log(basLeft.currentVal);
                 em.addForm.codeInput = basLeft.currentVal.objectCode;  //对象代码
                 em.addForm.disabled = true;//对象代码不可点击
                 em.addForm.tabDisabled = true;//选择关联表的按钮不可用
@@ -155,23 +167,28 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-          basRight.rightInput='';
-         // console.log(row)
+         // basRight.rightInput='';
+          console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 //生效
-                if (row.status == 40) {
+                if (row.status == '0') {  //没啥变化
+                    basTop.addAttr = false;
                     basTop.takeEffect = false;
                     basTop.change = true;
-                } else if (row.status == 20) {
+                } else if (row.status == '20') {  //生效了
+                    basTop.addAttr = true;
                     basTop.takeEffect = true;
                     basTop.change = false;
-                }
-                //变更
-                if(row.changeOperat==50){
+                    //变更
+                    if(row.changeOperat=='50'){
+                        basTop.change = false;
+                    }else if(row.changeOperat=='20'){
+                        basTop.change = true;
+                    }
+                } else if(row.status == '40'){
                     basTop.addAttr = true;
-                }else if(row.changeOperat==20){
-                    basTop.addAttr = false;
+                    basTop.takeEffect = true;
                     basTop.change = true;
                 }
                 this.currentVal = row;
@@ -226,37 +243,21 @@ var basRight = new Vue({
         editProp(){
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '440px', function () {
-                //键值类型(键值集合)
-                proEm.$http.jsonp(serverPath + '/keySet/query', {
-                    str: ''
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    proEm.optionLeft = ref.data.data;
-                });
-                //值来源类型(键值集合)
-                proEm.$http.jsonp(serverPath + '/keySet/query', {
-                    str: ''
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    proEm.optionRight = ref.data.data;
-                });
-               console.log(basRight.currentVal);
-                console.log(proEm.checked)
-                proEm.codeProInput=basRight.currentVal.propertyCode;   //代码
-                proEm.nameProInput=basRight.currentVal.propertyName;   //名称
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '540px', function () {
+                basTop.getSelectValue();
+                console.log(basRight.currentVal);
+                proEm.addProForm.codeProInput=basRight.currentVal.propertyCode;   //代码
+                proEm.addProForm.nameProInput=basRight.currentVal.propertyName;   //名称
                 if(basRight.currentVal.wetherExpandPro=='true'){
-                    proEm.checked=true;
+                    proEm.addProForm.checked=true;
+                    console.log(proEm.addProForm.checked)
                 }else{
-                    proEm.checked=false;
+                    proEm.addProForm.checked=false;
                 }
-                proEm.tableReaInput=basRight.currentVal.relateTableColumn ;  //关联表
-                proEm.typeInput=basRight.currentVal.valueType   //值类型
-                proEm.typeComValue=basRight.currentVal.valueResourceType;   //值类型来源
-                proEm.comContent=basRight.currentVal.valueResourceContent;     //值来源内容
-                console.log(proEm.checked)
+                proEm.addProForm.tableReaInput=basRight.currentVal.relateTableColumn ;  //关联表
+                proEm.addProForm.typeInput=basRight.currentVal.valueType   //值类型
+                proEm.addProForm.typeComValue=basRight.currentVal.valueResourceType;   //值类型来源
+                proEm.addProForm.comContent=basRight.currentVal.valueResourceContent;     //值来源内容
             });
         },
         deleteProp(){
@@ -274,7 +275,7 @@ var basRight = new Vue({
             })
         },
         currentRChange(row, event, column) {
-            //console.log(row)
+           // console.log(row)
             //点击拿到这条数据的值
             if (row != undefined) {
                 this.currentVal = row;
@@ -288,12 +289,12 @@ var basRight = new Vue({
         handleSizeChange(val) {
             //每页多少条数变化时
             this.pageSize=val;
-            console.log(`每页 ${val} 条`);
+            //console.log(`每页 ${val} 条`);
             this.searchRightTable()
         },
         handleCurrentChange(val) {
             this.currentPage=val;
-            console.log(`当前页: ${val}`);
+            //console.log(`当前页: ${val}`);
             this.searchRightTable();
         }
     },
