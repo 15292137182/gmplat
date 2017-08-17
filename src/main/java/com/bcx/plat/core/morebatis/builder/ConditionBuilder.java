@@ -1,5 +1,6 @@
 package com.bcx.plat.core.morebatis.builder;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -16,8 +17,11 @@ public class ConditionBuilder implements ConditionContainer {
   public static void main(String[] args) {
     new ConditionBuilder(BusinessObject.class).buildByAnd().equal("it works", "what").endAnd()
         .buildDone();
-    new ConditionBuilder(BusinessObject.class).buildByAnd().and().or().and().or()
-                                              .endOr().endAnd().endOr().endAnd().endAnd().buildDone();
+    Condition testCondition = new ConditionBuilder(BusinessObject.class).buildByAnd()
+        .equal("changeOperat", 10).notNull("changeOperat")
+        .or().isNull("deleteFlag").equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()
+        .endAnd().buildDone();
+    testCondition.hashCode();
   }
 
   @Override

@@ -1,70 +1,52 @@
 package com.bcx.plat.core.database.info;
 
+import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteFieldInTable;
 import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.utils.TableAnnoUtil;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Fields {
 
-  /**
-   * 平台用户表
-   */
-  public enum T_USER implements FieldInTable {
+  private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();
+  private static final HashMap<Class<? extends BaseEntity>, Map<String, Column>> entityFieldMap = new HashMap<>();
 
-    ROW_ID(TableInfo.T_SYS_USER, "row_id", "rowId"),
-
-    NAME(TableInfo.T_SYS_USER, "name", "name"),
-    PORTRAIT_PATH(TableInfo.T_SYS_USER, "portrait_path", "portraitPath"),
-    PASSWORD(TableInfo.T_SYS_USER, "password", "password"),
-    SEX(TableInfo.T_SYS_USER, "sex", "sex"),
-    DEPTNO(TableInfo.T_SYS_USER, "deptno", "deptno"),
-    PHONE(TableInfo.T_SYS_USER, "phone", "phone"),
-    TYPE(TableInfo.T_SYS_USER, "type", "type"),
-    LIMIT(TableInfo.T_SYS_USER, "limit", "limit"),
-    LAST_LOGIN_DATE(TableInfo.T_SYS_USER, "last_login_date", "lostLoginDate"),
-    LAST_MODIFY_PASSWORD(TableInfo.T_SYS_USER, "last_modify_password", "lastModifyPassword"),
-    DISABLED(TableInfo.T_SYS_USER, "disabled", "disabled"),
-
-    STATUS(TableInfo.T_SYS_USER, "status", "status"),
-    VERSION(TableInfo.T_SYS_USER, "version", "version"),
-    CREATE_TIME(TableInfo.T_SYS_USER, "create_time", "createTime"),
-    CREATE_USER(TableInfo.T_SYS_USER, "create_user", "createUser"),
-    CREATE_USER_NAME(TableInfo.T_SYS_USER, "create_user_name", "createUserName"),
-    MODIFY_TIME(TableInfo.T_SYS_USER, "modify_time", "modifyTime"),
-    MODIFY_USER(TableInfo.T_SYS_USER, "modify_user", "modifyUser"),
-    MODIFY_USER_NAME(TableInfo.T_SYS_USER, "modify_user_name", "modifyUserName"),
-    DELETE_TIME(TableInfo.T_SYS_USER, "delete_time", "deleteTime"),
-    DELETE_USER(TableInfo.T_SYS_USER, "delete_user", "deleteUser"),
-    DELETE_USER_NAME(TableInfo.T_SYS_USER, "delete_user_name", "deleteUserName"),
-    DELETE_FLAG(TableInfo.T_SYS_USER, "delete_flag", "deleteFlag");
-
-    public final ImmuteFieldInTable field;
-
-    T_USER(TableInfo tableSource, String fieldName, String aliases) {
-      this.field = new ImmuteFieldInTable(new Field(fieldName, aliases), tableSource);
+  private static void putField(TableSource tableSource, Column column, String alies) {
+    Map<String, Column> map = tableFieldMap.get(tableSource);
+    if (map == null) {
+      map = new HashMap<>();
+      tableFieldMap.put(tableSource, map);
     }
+    map.put(alies, column);
+  }
 
-    @Override
-    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-      return null;
-    }
+  public static Column getField(TableSource tableSource, String alies) {
+    return tableFieldMap.get(tableSource).get(alies);
+  }
 
-    @Override
-    public String getColumnSqlFragment(SqlComponentTranslator translator) {
-      return field.getColumnSqlFragment(translator);
-    }
+  public static Column getField(Class<? extends BaseEntity> entityClass, String alies) {
+    return getFieldMap(entityClass).get(alies);
+  }
 
-    @Override
-    public String getAlies() {
-      return field.getAlies();
+  public static Map<String, Column> getFieldMap(Class<? extends BaseEntity> entityClass) {
+    Map<String, Column> columnMap = entityFieldMap.get(entityClass);
+    if (columnMap == null) {
+      final TableSource tableSource = TableAnnoUtil.getTableSource(entityClass);
+      columnMap = tableFieldMap.get(tableSource);
+      entityFieldMap.put(entityClass, columnMap);
     }
+    return columnMap;
+  }
 
-    @Override
-    public String getFieldSource() {
-      return field.getFieldSource();
-    }
+  public static Collection<Column> getFields(Class<? extends BaseEntity> entityClass) {
+    return getFieldMap(entityClass).values();
   }
 
   public enum T_BUSINESS_OBJECT implements FieldInTable {
@@ -89,8 +71,8 @@ public class Fields {
     public final ImmuteFieldInTable field;
 
     T_BUSINESS_OBJECT(TableInfo tableSource, String fieldName, String alies) {
-
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -135,6 +117,7 @@ public class Fields {
 
     T_SYS_CONFIG(TableInfo tableSource, String fieldName, String alies) {
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
 
@@ -183,6 +166,7 @@ public class Fields {
     T_SEQUENCE_RULE_CONFIG(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -231,6 +215,7 @@ public class Fields {
     T_SEQUENCE_GENERATE(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -278,6 +263,7 @@ public class Fields {
     T_SEQ_BUSI_GENERATE(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -328,6 +314,7 @@ public class Fields {
     T_KEYSET(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -383,6 +370,7 @@ public class Fields {
     T_FRONT_FUNC_PRO(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -433,6 +421,7 @@ public class Fields {
     T_FRONT_FUNC(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -481,6 +470,7 @@ public class Fields {
     T_DB_TABLES(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -529,6 +519,7 @@ public class Fields {
     T_DB_TABLE_COLUMN(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -578,6 +569,7 @@ public class Fields {
     T_DATASET_CONFIG(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
@@ -633,6 +625,7 @@ public class Fields {
     T_BUSINESS_OBJECT_PRO(TableInfo tableSource, String fieldName, String alies) {
 
       this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+      putField(tableSource, this.field, alies);
     }
 
     @Override
