@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
@@ -67,13 +68,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
   final public PageResult<Map<String, Object>> select(Condition condition, int pageNum,int pageSize) {
     //同上
-    return select(condition,pageNum,pageSize,QueryAction.ALL_FIELD);
+    return select(condition,pageNum,pageSize,Arrays.asList(QueryAction.ALL_FIELD),null);
   }
 
-  final public PageResult<Map<String, Object>> select(Condition condition, int pageNum,int pageSize,Column ...columns) {
+  final public PageResult<Map<String, Object>> select(Condition condition, int pageNum, int pageSize, List<Column> columns, List<Order> orders) {
     final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
         .from(TableAnnoUtil.getTableSource(entityClass))
-        .where(UtilsTool.excludeDeleted(condition)).selectPage(pageNum, pageSize);
+        .where(UtilsTool.excludeDeleted(condition)).orderBy(orders).selectPage(pageNum, pageSize);
     final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
     return camelizedResult;
   }

@@ -4,10 +4,13 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
@@ -61,13 +64,14 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId, String args, int pageNum, int pageSize,
+    public Object queryProPage(String rowId, String args, int pageNum, int pageSize,String order,
                                     HttpServletRequest request, Locale locale) {
+        LinkedList<Order> str = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result =
                 businessObjectProService.select(
-                        new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
+                        new And(new FieldCondition(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID, Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args)))
-                        , pageNum, pageSize);
+                        , pageNum, pageSize,Arrays.asList(QueryAction.ALL_FIELD),str);
         return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }
 
@@ -83,7 +87,6 @@ public class BusinessObjectController extends
     @RequestMapping("/changeOperat")
     public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
         Map<String, Object> oldRowId = new HashMap<>();
-        Map<String, Object> newRowId = new HashMap<>();
         List<Map<String, Object>> list = getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         List<String> row = list.stream().map((rowIds) -> {
             return (String) rowIds.get("changeOperat");

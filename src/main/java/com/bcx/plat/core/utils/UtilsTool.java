@@ -6,12 +6,16 @@ import static java.time.LocalDateTime.now;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -282,19 +286,48 @@ public class UtilsTool {
             new FieldCondition("delete_flag",Operator.IS_NULL,null)),condition);
   }
 
-
+  /**
+   * 获取属性代码字段信息
+   * @param key 接受properties可以对应的key
+   * @return 返回properies中value值
+   */
   final static public String loadPproperties(String key){
     Properties properties = new Properties();
     InputStream resourceAsStream = UtilsTool.class.getClassLoader()
             .getResourceAsStream("properties/sequence.properties");
     try {
       properties.load(resourceAsStream);
-        String property = properties.getProperty(key);
-        return property;
+        String propertys = properties.getProperty(key);
+        return propertys;
     } catch (IOException e) {
       e.printStackTrace();
     }
     return null;
+  }
+
+  /**
+   * 数据排序
+   * "[{\"str\":\"23\", \"num\":1},{\"str\":\"12\", \"num\":0},{\"str\":\"as\", \"num\":1}]"
+   *
+   * @param orde 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__为倒序
+   * @return linkedList参数
+   */
+  static public LinkedList<Order> dataSort(String orde) {
+    LinkedList<Order> orders = new LinkedList<>();
+    if (orde == null) {
+      return orders;
+    }
+    JSONArray myJsonArray = new JSONArray(orde);
+    for (int i = 0; i < myJsonArray.length(); i++) {
+      //获取每一个JsonObject对象
+      JSONObject myjObject = myJsonArray.getJSONObject(i);
+      //获取每一个对象中的值
+      String str = myjObject.getString("str");
+      int num = myjObject.getInt("num");
+      String string = UtilsTool.camelToUnderline(str);
+      orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(string), num));
+    }
+    return orders;
   }
 
 

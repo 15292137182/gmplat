@@ -4,25 +4,28 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFunc;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 前端功能模块 Created by Went on 2017/8/2.
@@ -38,6 +41,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         this.frontFuncProService = frontFuncProService;
         this.businessObjectService = businessObjectService;
     }
+    @Autowired
+    private MoreBatis moreBatis;
 
     /**
      * 需要模糊的搜索字段
@@ -71,6 +76,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
     }
 
 
+
+
     /**
      * 根据功能块rowId查找当前对象下的所有属性并分页显示
      *
@@ -81,14 +88,16 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      * @param locale   国际化参数
      * @return ServiceResult
      */
+    //"[{\"str\":\"23\", \"num\":1},{\"str\":\"12\", \"num\":0},{\"str\":\"as\", \"num\":1}]"
     @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args, int pageNum, int pageSize,
+    public Object queryProPage(String rowId, String args, int pageNum, int pageSize,String orde,
                                     HttpServletRequest request, Locale locale) {
+        LinkedList<Order> orders = UtilsTool.dataSort(orde);
         PageResult<Map<String, Object>> result =
                 frontFuncProService.select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)))
-                        , pageNum, pageSize);
+                        , pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD), orders);
         result = queryResultProcess(result);
         return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
     }

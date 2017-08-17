@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Transactional
-public abstract class BaseControllerTest<T extends BaseControllerTemplate> extends BaseTest {
+public abstract class BaseControllerTest<T> extends BaseTest {
 
   static String newRowId = null;
 
