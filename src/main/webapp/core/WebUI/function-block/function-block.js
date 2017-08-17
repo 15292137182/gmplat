@@ -79,6 +79,10 @@ var functionBlock = new Vue({
         handleCurrentChange(val){
             this.pageNum=val;
             this.get();
+        },
+        headSort(column){//列头排序
+            console.log(column.prop);
+            pagingObj.headSort(this.Selurl,this.input,this.pageSize,this.pageNum,column,this);
         }
     },
     created(){
@@ -152,6 +156,9 @@ var properties = new Vue({
         handleCurrentChange(val){
             this.pageNum=val;
             this.getRightData();
+        },
+        headSort(column){//列头排序
+            pagingObj.headSorts(this.findRightDataUrl,functionBlock.rowId,this.input,column,this);
         },
         //编辑属性
         editData(){

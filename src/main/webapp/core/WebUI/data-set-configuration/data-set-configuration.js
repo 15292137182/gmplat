@@ -41,6 +41,9 @@ var dataSetConfig = new Vue({
         handleCurrentChange(val){
             this.pageNum=val;
             this.searchResTable();
+        },
+        headSort(column){
+            pagingObj.headSort(this.selUrl,this.input,this.pageSize,this.pageNum,column,this);
         }
     },
     created(){

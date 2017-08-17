@@ -52,18 +52,19 @@
                        highlight-current-row
                        @row-click="clickTable"
                        :height="Height" border
-                       class="tableStyle">
-                        <el-table-column prop="datasetName" label="名称" width="250">
+                       class="tableStyle"
+                       @sort-change="headSort">
+                        <el-table-column sortable="custom" prop="datasetName" label="名称" width="250">
                         </el-table-column>
                         <el-table-column prop="datasetType" label="类型" width="100">
                         </el-table-column>
-                        <el-table-column prop="datasetCode" label="代码" width="250">
+                        <el-table-column sortable="custom" prop="datasetCode" label="代码" width="250">
                         </el-table-column>
                         <el-table-column prop="datasetContent" label="内容" width="">
                         </el-table-column>
                         <el-table-column prop="desp" label="说明" width="">
                         </el-table-column>
-                        <el-table-column prop="version" label="版本" width="">
+                        <el-table-column sortable="custom" prop="version" label="版本" width="">
                         </el-table-column>
                         <el-table-column  prop="" fixed="right" label="操作" width="100">
                             <template scope="scope">

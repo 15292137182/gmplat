@@ -89,14 +89,15 @@
                             @row-click="click"
                             border style="width: 100%"
                             :highlight-current-row="true"
-                            :height="leftHeight">
-                            <el-table-column  prop="funcName" label="名称" width="120">
+                            :height="leftHeight"
+                            @sort-change="headSort">
+                            <el-table-column sortable="custom" prop="funcName" label="名称" width="120">
                             </el-table-column>
                             <el-table-column  prop="funcType" label="类型" width="">
                             </el-table-column>
-                            <el-table-column show-overflow-tooltip prop="funcCode" label="代码" width="">
+                            <el-table-column sortable="custom" show-overflow-tooltip prop="funcCode" label="代码" width="">
                             </el-table-column>
-                            <el-table-column  prop="objectName" label="业务对象" width="">
+                            <el-table-column prop="objectName" label="业务对象" width="">
                             </el-table-column>
                             <!--<el-table-column  prop="wetherAvailable" label="是否可用" width="95">-->
                             <!--</el-table-column>-->
@@ -155,18 +156,19 @@
                             @row-click="clickRightTable"
                             :highlight-current-row="true"
                             border style="width: 100%;"
-                            :height="rightHeight">
+                            :height="rightHeight"
+                            @sort-change="headSort">
                             <el-table-column  prop="propertyName" label="业务对象属性" width="">
                             </el-table-column>
-                            <el-table-column  prop="displayTitle" label="标题" width="">
+                            <el-table-column sortable="custom" prop="displayTitle" label="标题" width="">
                             </el-table-column>
-                            <el-table-column :formatter="wetherDisplay" prop="wetherDisplay" label="是否显示" width="">
+                            <el-table-column sortable="custom" :formatter="wetherDisplay" prop="wetherDisplay" label="是否显示" width="">
                             </el-table-column>
                             <el-table-column  prop="displayWidget" label="控件" width="">
                             </el-table-column>
-                            <el-table-column :formatter="wetherReadonly" prop="wetherReadonly" label="是否只读" width="">
+                            <el-table-column sortable="custom" :formatter="wetherReadonly" prop="wetherReadonly" label="是否只读" width="">
                             </el-table-column>
-                            <el-table-column :formatter="allowEmpty" prop="allowEmpty" label="是否为空" width="">
+                            <el-table-column sortable="custom" :formatter="allowEmpty" prop="allowEmpty" label="是否为空" width="">
                             </el-table-column>
                             <el-table-column  prop="sort" label="排序" width="">
                             </el-table-column>
