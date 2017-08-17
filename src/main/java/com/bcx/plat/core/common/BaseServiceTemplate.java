@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -32,6 +33,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
     private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
+    private static final List<Order> defaultOrders=new LinkedList<>();
+    {
+        defaultOrders.add(new Order(new Field("create_time"),Order.DESC));
+    }
     /**
      * logger 日志操作
      */
@@ -49,6 +54,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
          * 等扩展字段完善以后再来完善
          */
         return select(condition, Arrays.asList(QueryAction.ALL_FIELD), null);
+    }
+
+    private List<Order> emptyDefaultCreateTime(List<Order> orders){
+        return orders==null||orders.isEmpty()?defaultOrders:orders;
     }
 
     final public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {

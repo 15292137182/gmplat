@@ -1,5 +1,7 @@
 package com.bcx.plat.core.morebatis.app;
 
+import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
@@ -19,7 +21,9 @@ public class MoreBatis {
     this.suitMapper = suitMapper;
     this.translator = translator;
   }
-
+  public QueryAction select(Class<? extends BaseEntity> entity){
+    return new QueryAction(this,translator).select(Fields.getFields(entity));
+  }
   public QueryAction select(){
     return new QueryAction(this,translator);
   }
@@ -33,8 +37,7 @@ public class MoreBatis {
     return new DeleteAction(this,translator);
   }
 
-  public List<Map<String, Object>>
-  execute(QueryAction queryAction){return suitMapper.select(queryAction);}
+  public List<Map<String, Object>> execute(QueryAction queryAction){return suitMapper.select(queryAction);}
   public int execute(InsertAction insertAction){
     return suitMapper.insert(insertAction);
   }

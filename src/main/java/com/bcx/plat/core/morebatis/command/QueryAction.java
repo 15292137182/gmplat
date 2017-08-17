@@ -12,6 +12,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class QueryAction {
       return "*";
     }
   };
-  private List<Column> columns;
+  private Collection<Column> columns;
   private TableSource tableSource;
   private Condition where;
   private List<Order> order;
@@ -62,11 +63,11 @@ public class QueryAction {
     return translator;
   }
 
-  public List<Column> getColumns() {
+  public Collection<Column> getColumns() {
     return columns;
   }
 
-  public void setColumns(List<Column> columns) {
+  public void setColumns(Collection<Column> columns) {
     this.columns = columns;
   }
 
@@ -82,7 +83,7 @@ public class QueryAction {
     return select(Arrays.asList(column));
   }
 
-  public QueryAction select(List<Column> column) {
+  public QueryAction select(Collection<Column> column) {
     setColumns(column);
     return this;
   }
