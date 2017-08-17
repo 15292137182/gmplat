@@ -5,6 +5,7 @@ import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.service.TestTableService;
 import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -121,13 +122,12 @@ public class CommonServiceTest extends BaseTest{
     businessObject.setObjectName("aaax2aaa");
     businessObject.buildCreateInfo().insert();
     List<Map<String,Object>> result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2"));
+        .select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2")));
     Assert.assertEquals(4,result.size());
     result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1"));
+        .select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1")));
     Assert.assertEquals(3,result.size());
-    result = testTableService
-        .singleInputSelect(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2"));
+    result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2")));
     Assert.assertEquals(3,result.size());
   }
 

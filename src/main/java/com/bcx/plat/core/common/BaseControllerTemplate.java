@@ -53,8 +53,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/query")
     public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = entityService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(str));
+        List<Map<String, Object>> result = entityService.select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str)));
         if (result.size()==0) {
             return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
         }
@@ -76,7 +75,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object singleInputSelect(String args, int pageNum, int pageSize,String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result = entityService
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD),orders);
+                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)), Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 

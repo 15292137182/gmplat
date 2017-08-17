@@ -2,6 +2,7 @@ package com.bcx.plat.core.common;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.base.BaseService;
+import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
@@ -33,9 +34,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
     private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
+    private final Map<String,Column> fieldMap= Fields.getFieldMap(entityClass);
     private static final List<Order> defaultOrders=new LinkedList<>();
     {
-        defaultOrders.add(new Order(new Field("create_time"),Order.DESC));
+        defaultOrders.add(new Order(fieldMap.get("createTime"),Order.DESC));
     }
     /**
      * logger 日志操作
@@ -60,7 +62,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return orders==null||orders.isEmpty()?defaultOrders:orders;
     }
 
-    final public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
+    public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
         final List<Map<String, Object>> queryResult = moreBatis.select().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(orders).execute();
@@ -68,7 +70,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return camelizedResult;
     }
 
-    final public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
+    public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
         final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(orders).selectPage(pageNum, pageSize);
@@ -92,18 +94,6 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     public List<Map<String, Object>> select(Map args) {
         args = mapFilter(args);
         return select(UtilsTool.convertMapToFieldConditions(args));
-    }
-
-    @Deprecated
-    public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
-                                                             Collection<String> value, int pageNum, int pageSize, List<Column> columns, List<Order> orders) {
-        return select(UtilsTool.createBlankQuery(column, value),columns,orders, pageNum, pageSize);
-    }
-
-    @Deprecated
-    public List<Map<String, Object>> singleInputSelect(Collection<String> column,
-                                                       Collection<String> value) {
-        return select(UtilsTool.createBlankQuery(column, value));
     }
 
     public int insert(Map args) {

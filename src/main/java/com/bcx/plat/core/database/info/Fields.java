@@ -18,7 +18,7 @@ public class Fields {
 
   private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();
   private static final HashMap<Class<? extends BaseEntity>, Map<String, Column>> entityFieldMap = new HashMap<>();
-  
+
   static {
     for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
       for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
