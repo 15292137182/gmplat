@@ -174,7 +174,28 @@ var properties = new Vue({
                     alert("删除失败")
                 })
             })
-        }
+        },
+        wetherDisplay(row){//是否显示
+            if(row.wetherDisplay =="true"){
+                return "是"
+            }else{
+                return "否"
+            }
+        },
+        wetherReadonly(row){//是否只读
+            if(row.wetherReadonly =="true"){
+                return "是"
+            }else{
+                return "否"
+            }
+        },
+        allowEmpty(row){//是否为空
+            if(row.allowEmpty =="true"){
+                return "是"
+            }else{
+                return "否"
+            }
+        },
     },
     created(){
         $(document).ready(function(){

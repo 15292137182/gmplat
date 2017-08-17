@@ -160,13 +160,13 @@
                             </el-table-column>
                             <el-table-column  prop="displayTitle" label="标题" width="">
                             </el-table-column>
-                            <el-table-column  prop="wetherDisplay" label="是否显示" width="">
+                            <el-table-column :formatter="wetherDisplay" prop="wetherDisplay" label="是否显示" width="">
                             </el-table-column>
                             <el-table-column  prop="displayWidget" label="控件" width="">
                             </el-table-column>
-                            <el-table-column  prop="wetherReadonly" label="是否只读" width="">
+                            <el-table-column :formatter="wetherReadonly" prop="wetherReadonly" label="是否只读" width="">
                             </el-table-column>
-                            <el-table-column  prop="allowEmpty" label="是否为空" width="">
+                            <el-table-column :formatter="allowEmpty" prop="allowEmpty" label="是否为空" width="">
                             </el-table-column>
                             <el-table-column  prop="sort" label="排序" width="">
                             </el-table-column>

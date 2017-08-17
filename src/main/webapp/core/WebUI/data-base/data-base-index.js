@@ -68,6 +68,9 @@ var dataBase = new Vue({
         handleCurrentChange(val){//点击第几页
             this.pageNum=val;
             this.get();
+        },
+        hearSort(column){//列头排序
+            pagingObj.headSort(this.url,this.input,this.pageSize,this.pageNum,column,this);
         }
     },
     created(){

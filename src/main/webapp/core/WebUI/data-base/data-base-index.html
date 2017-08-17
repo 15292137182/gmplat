@@ -78,12 +78,13 @@
                                 :highlight-current-row="true"
                                 :height="leftHeight"
                                 v-loading="loading"
-                                element-loading-text="加载中">
-                                <el-table-column  prop="tableSchema" label="表Schema" width="250">
+                                element-loading-text="加载中"
+                                @sort-change="hearSort">
+                                <el-table-column sortable="custom" prop="tableSchema" label="表Schema" width="250">
                                 </el-table-column>
-                                <el-table-column  prop="tableCname" label="表中文名称" width="250">
+                                <el-table-column sortable="custom" prop="tableCname" label="表中文名称" width="250">
                                 </el-table-column>
-                                <el-table-column  prop="tableEname" label="表英文名称" width="300">
+                                <el-table-column sortable="custom" prop="tableEname" label="表英文名称" width="300">
                                 </el-table-column>
                                 <el-table-column  prop="desp" label="说明" width="">
                                 </el-table-column>
