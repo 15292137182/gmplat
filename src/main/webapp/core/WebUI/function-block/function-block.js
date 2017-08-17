@@ -82,7 +82,9 @@ var functionBlock = new Vue({
         },
         headSort(column){//列头排序
             console.log(column.prop);
-            pagingObj.headSort(this.Selurl,this.input,this.pageSize,this.pageNum,column,this);
+            pagingObj.headSort(this.Selurl,this.input,this.pageSize,this.pageNum,column,this,function(res){
+                properties.getRight(functionBlock.tableData[0].rowId);
+            });
         }
     },
     created(){
