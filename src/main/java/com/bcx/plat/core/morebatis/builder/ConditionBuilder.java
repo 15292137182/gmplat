@@ -2,8 +2,10 @@ package com.bcx.plat.core.morebatis.builder;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import java.lang.reflect.Modifier;
 
 public class ConditionBuilder implements ConditionContainer {
 
@@ -14,9 +16,19 @@ public class ConditionBuilder implements ConditionContainer {
     conditionBuilderContext = new ConditionBuilderContext(entityClass);
   }
 
-  public static void main(String[] args) {
-    new ConditionBuilder(BusinessObject.class).buildByAnd().equal("it works", "what").endAnd()
-        .buildDone();
+  public static void main(String[] args) throws IllegalAccessException {
+//    new ConditionBuilder(BusinessObject.class).buildByAnd().equal("it works", "what").endAnd()
+//        .buildDone();
+    for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
+      for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
+        final int modifiers = field.getModifiers();
+        if (Modifier.isStatic(modifiers)&&Modifier.isPublic(modifiers)) {
+          Object value = field.get(aClass);
+          value.hashCode();
+        }
+      }
+    }
+
     Condition testCondition = new ConditionBuilder(BusinessObject.class).buildByAnd()
         .equal("changeOperat", 10).notNull("changeOperat")
         .or().isNull("deleteFlag").equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()

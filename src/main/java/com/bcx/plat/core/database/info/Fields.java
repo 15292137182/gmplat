@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.TableAnnoUtil;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,6 +18,7 @@ public class Fields {
 
   private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();
   private static final HashMap<Class<? extends BaseEntity>, Map<String, Column>> entityFieldMap = new HashMap<>();
+
 
   private static void putField(TableSource tableSource, Column column, String alies) {
     Map<String, Column> map = tableFieldMap.get(tableSource);
@@ -38,11 +40,25 @@ public class Fields {
   public static Map<String, Column> getFieldMap(Class<? extends BaseEntity> entityClass) {
     Map<String, Column> columnMap = entityFieldMap.get(entityClass);
     if (columnMap == null) {
+//      initRegister();
       final TableSource tableSource = TableAnnoUtil.getTableSource(entityClass);
       columnMap = tableFieldMap.get(tableSource);
       entityFieldMap.put(entityClass, columnMap);
     }
     return columnMap;
+  }
+
+  public static void initRegister() throws IllegalAccessException {
+    for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
+      for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
+        final int modifiers = field.getModifiers();
+        if (Modifier.isStatic(modifiers)&&Modifier.isPublic(modifiers)) {
+          FieldInTable value = (FieldInTable)field.get(aClass);
+//          value.
+        }
+      }
+    }
+
   }
 
   public static Collection<Column> getFields(Class<? extends BaseEntity> entityClass) {

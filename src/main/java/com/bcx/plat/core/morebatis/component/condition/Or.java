@@ -3,6 +3,7 @@ package com.bcx.plat.core.morebatis.component.condition;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Or implements ChainCondition<Or> {
@@ -28,7 +29,9 @@ public class Or implements ChainCondition<Or> {
   }
 
   public Or(Condition ... conditions) {
-    this.conditions = Arrays.asList(conditions);
+    LinkedList<Condition> list=new LinkedList<>();
+    list.addAll(Arrays.asList(conditions));
+    this.conditions = list;
   }
 
   public Or(List<Condition> conditions) {
