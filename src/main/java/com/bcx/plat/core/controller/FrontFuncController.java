@@ -17,8 +17,6 @@ import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,7 +70,7 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 
@@ -97,9 +95,9 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
                 frontFuncProService.select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)))
-                        , pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD), orders);
+                        , Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
         result = queryResultProcess(result);
-        return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
     /**

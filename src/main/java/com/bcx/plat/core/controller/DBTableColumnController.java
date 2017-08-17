@@ -55,7 +55,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
         if (result.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 }

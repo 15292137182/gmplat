@@ -62,7 +62,7 @@ public class BusinessObjectProController extends
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 
@@ -83,7 +83,7 @@ public class BusinessObjectProController extends
         if (mapList.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList), locale);
+        return super.result(request, new ServiceResult<>(mapList, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 

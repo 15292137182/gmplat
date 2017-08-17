@@ -30,11 +30,11 @@ public class ServiceResult<T> implements Serializable {
   /**
    * 全参数构造方法
    *
+   * @param data 数据信息
    * @param state 状态
    * @param message 消息
-   * @param data 数据信息
    */
-  public ServiceResult(int state, String message, T data) {
+  public ServiceResult(T data, int state, String message) {
     this.state = state;
     this.message = message;
     this.data = data;
@@ -73,6 +73,6 @@ public class ServiceResult<T> implements Serializable {
   }
 
   public static ServiceResult Msg(int state,String message){
-    return new ServiceResult(state,message,null);
+    return new ServiceResult(null, state,message);
   }
 }

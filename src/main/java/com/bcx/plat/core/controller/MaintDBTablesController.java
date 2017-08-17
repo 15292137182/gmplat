@@ -41,7 +41,7 @@ public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTable
         if (result.size()==0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,result), locale);
+        return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS), locale);
     }
 
     @Override

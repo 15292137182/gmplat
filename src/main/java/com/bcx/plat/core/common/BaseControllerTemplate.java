@@ -189,6 +189,6 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return
      */
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
-        return new ServiceResult<>(BaseConstants.STATUS_SUCCESS, msg, content);
+        return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
     }
 }

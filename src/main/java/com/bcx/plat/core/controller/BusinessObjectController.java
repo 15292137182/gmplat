@@ -71,8 +71,8 @@ public class BusinessObjectController extends
                 businessObjectProService.select(
                         new And(new FieldCondition(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID, Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args)))
-                        , pageNum, pageSize,Arrays.asList(QueryAction.ALL_FIELD),str);
-        return super.result(request, new ServiceResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result), locale);
+                        , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+        return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 
