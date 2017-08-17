@@ -1,8 +1,8 @@
 package com.bcx.plat.core.database.info;
 
+import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.morebatis.component.Table;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -20,7 +20,8 @@ public enum TableInfo implements TableSource {
   T_BUSINESS_OBJECT_PRO("t_business_object_pro"),
   T_BUSINESS_OBJECT("t_business_object"),
   TEST("test_only.test_table1"),
-  T_SEQUENCE_RULE_CONFIG("t_sequence_rule_config");
+  T_SEQUENCE_RULE_CONFIG("t_sequence_rule_config"),
+  T_SYS_USER("t_user");
   public final Table table;
   private final HashMap<String, TableSource> register = new HashMap<>();
 

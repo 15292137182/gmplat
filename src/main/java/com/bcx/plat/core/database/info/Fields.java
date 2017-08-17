@@ -8,6 +8,65 @@ import java.util.LinkedList;
 
 public class Fields {
 
+  /**
+   * 平台用户表
+   */
+  public enum T_USER implements FieldInTable {
+
+    ROW_ID(TableInfo.T_SYS_USER, "row_id", "rowId"),
+
+    NAME(TableInfo.T_SYS_USER, "name", "name"),
+    PORTRAIT_PATH(TableInfo.T_SYS_USER, "portrait_path", "portraitPath"),
+    PASSWORD(TableInfo.T_SYS_USER, "password", "password"),
+    SEX(TableInfo.T_SYS_USER, "sex", "sex"),
+    DEPTNO(TableInfo.T_SYS_USER, "deptno", "deptno"),
+    PHONE(TableInfo.T_SYS_USER, "phone", "phone"),
+    TYPE(TableInfo.T_SYS_USER, "type", "type"),
+    LIMIT(TableInfo.T_SYS_USER, "limit", "limit"),
+    LAST_LOGIN_DATE(TableInfo.T_SYS_USER, "last_login_date", "lostLoginDate"),
+    LAST_MODIFY_PASSWORD(TableInfo.T_SYS_USER, "last_modify_password", "lastModifyPassword"),
+    DISABLED(TableInfo.T_SYS_USER, "disabled", "disabled"),
+
+    STATUS(TableInfo.T_SYS_USER, "status", "status"),
+    VERSION(TableInfo.T_SYS_USER, "version", "version"),
+    CREATE_TIME(TableInfo.T_SYS_USER, "create_time", "createTime"),
+    CREATE_USER(TableInfo.T_SYS_USER, "create_user", "createUser"),
+    CREATE_USER_NAME(TableInfo.T_SYS_USER, "create_user_name", "createUserName"),
+    MODIFY_TIME(TableInfo.T_SYS_USER, "modify_time", "modifyTime"),
+    MODIFY_USER(TableInfo.T_SYS_USER, "modify_user", "modifyUser"),
+    MODIFY_USER_NAME(TableInfo.T_SYS_USER, "modify_user_name", "modifyUserName"),
+    DELETE_TIME(TableInfo.T_SYS_USER, "delete_time", "deleteTime"),
+    DELETE_USER(TableInfo.T_SYS_USER, "delete_user", "deleteUser"),
+    DELETE_USER_NAME(TableInfo.T_SYS_USER, "delete_user_name", "deleteUserName"),
+    DELETE_FLAG(TableInfo.T_SYS_USER, "delete_flag", "deleteFlag");
+
+    public final ImmuteFieldInTable field;
+
+    T_USER(TableInfo tableSource, String fieldName, String aliases) {
+      this.field = new ImmuteFieldInTable(new Field(fieldName, aliases), tableSource);
+    }
+
+    @Override
+    public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
+      return null;
+    }
+
+    @Override
+    public String getColumnSqlFragment(SqlComponentTranslator translator) {
+      return field.getColumnSqlFragment(translator);
+    }
+
+    @Override
+    public String getAlies() {
+      return field.getAlies();
+    }
+
+    @Override
+    public String getFieldSource() {
+      return field.getFieldSource();
+    }
+  }
+
   public enum T_BUSINESS_OBJECT implements FieldInTable {
     ROW_ID(TableInfo.T_BUSINESS_OBJECT, "row_id", "rowId"),
     OBJECT_CODE(TableInfo.T_BUSINESS_OBJECT, "object_code", "objectCode"),
@@ -245,7 +304,7 @@ public class Fields {
 
   public enum T_KEYSET implements FieldInTable {
     ROW_ID(TableInfo.T_KEYSET, "row_id", "rowId"),
-    NUMBER(TableInfo.T_KEYSET, "number" ,"number"),
+    NUMBER(TableInfo.T_KEYSET, "number", "number"),
     KEYSET_CODE(TableInfo.T_KEYSET, "keyset_code", "keysetCode"),
     KEYSET_NAME(TableInfo.T_KEYSET, "keyset_name", "keysetName"),
     CONF_KEY(TableInfo.T_KEYSET, "conf_key", "confKey"),
