@@ -14,6 +14,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
+                    obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
                 }
@@ -43,6 +44,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
+                    obj.pageNum = 1;//定位到第一页
                     if(typeof callback =="function"){
                             callback(res);
                         }
@@ -90,7 +92,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
-                    obj.pageNum =1;
+                    obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
                 }
@@ -134,6 +136,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
+                    obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
                 }
@@ -179,6 +182,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
+                    obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
                 }
