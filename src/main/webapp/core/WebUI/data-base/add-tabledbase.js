@@ -44,11 +44,11 @@ var tableBase = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(dataBase,res);
                 dataBase.get();
                 ibcpLayer.Close(dataBase.editdivIndex);
             },function(){
-                alert("编辑失败");
+                showMsg.MsgError(dataBase);
             })
         },
         isNull(){

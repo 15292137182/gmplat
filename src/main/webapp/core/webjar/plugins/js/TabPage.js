@@ -242,3 +242,27 @@ var editObj = (function(){
     }
 })()
 
+var showMsg = (function(){
+    var MsgOk = function(obj,msg){
+        var type = '';
+        //obj：需要弹出消息页面的Vue实例对象
+        //msg：ajax成功后返回的res
+        if(msg.data.state==1){//操作成功
+            obj.$message({
+                message: msg.data.message,
+                type: 'success'
+            })
+        }else{
+            obj.$message.error(msg.data.message);
+        }
+    }
+    var MsgError = function(obj){
+        //ajax相应失败
+        obj.$message.error("请求失败！");
+    }
+    return {
+        MsgOk:MsgOk,
+        MsgError:MsgError
+    }
+})()
+
