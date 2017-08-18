@@ -202,16 +202,16 @@ var basLeft = new Vue({
                 //查找右侧表的数据
                 basRight.searchRightTable();
             }
-            //if(row.status == '20'){
-            //    console.log(111)
-            //    console.log($('.current-row>.el-table_1_column_5>.cell>button').attr('disabled'))
-            //    $('.el-table__row.current-row>.el-table_1_column_5>.cell button').prop("disabled",false)
-            //     console.log($('.current-row>.el-table_1_column_5>.cell>button').attr('disabled'))
+            if(row.status == '20'){
+                console.log(111)
+                //console.log($('.current-row>.is-hidden>.el-table_1_column_5>.el-button').attr('disabled'))
+                //$('.current-row>.is-hidden>.el-table_1_column_5>.el-button').prop("disabled",false)
+                // console.log($('.current-row>.el-table_1_column_5>.cell>.el-button').attr('disabled'))
             //   // $('input').attr("readonly",false)//去除input元素的readonly属性
             //    //this.row.edit=true;
             //    //this.del=true;
             //
-            //}
+            }
         },
         FindLFirstDate(row){
             this.$refs.tableData.setCurrentRow(row);

@@ -48,7 +48,7 @@
                         <el-table-column prop="relateTableRowId" sortable="custom" label="关联表" show-overflow-tooltip width="110" ></el-table-column>
                         <el-table-column prop="objectCode" label="代码" sortable="custom" show-overflow-tooltip width="100"></el-table-column>
                         <el-table-column prop="version" label="版本" sortable="custom" show-overflow-tooltip width="100"></el-table-column>
-                        <el-table-column  prop="" label="操作" width="" fixed="right" >
+                        <el-table-column  prop="" label="操作" width="" >
                             <template scope="scope">
                                 <el-button @click.native="editEvent" type="text" size="small" icon="edit"></el-button>
                                 <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"></el-button>
@@ -104,7 +104,7 @@
                         <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueResourceType" label="值来源类型"  width="110" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueResourceContent" label="值来源内容"  width="110" show-overflow-tooltip></el-table-column>
-                        <el-table-column  prop="" label="操作" width="100" fixed="right">
+                        <el-table-column  prop="" label="操作" width="100">
                             <template scope="scope">
                                 <el-button @click.native="editProp" type="text" size="small" icon="edit"></el-button>
                                 <el-button @click.native="deleteProp" type="text" size="small" icon="delete"></el-button>

@@ -70,7 +70,7 @@ var dataBase = new Vue({
             this.get();
         },
         headSort(column){//列头排序
-            pagingObj.headSort(this.url,this.input,this.pageSize,this.pageNum,column,this);
+            pagingObj.headSorts1(this.url,this.input,column,this);
         }
     },
     created(){
