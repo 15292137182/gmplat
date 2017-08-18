@@ -57,7 +57,9 @@ var resCol=new Vue({
                     jsonp: 'callback'
                 }).then(function (ref) {
                     resCol.searchResTable();
-                    ibcpLayer.ShowOK(ref.data.message);
+                    showMsg.MsgOk(resTop,ref)
+                },function(){
+                    showMsg.MsgError(resTop)
                 });
             })
         },

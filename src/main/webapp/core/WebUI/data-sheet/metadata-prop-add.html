@@ -172,9 +172,11 @@
                             }).then(function (res) {
                                // console.log(res);
                                 addObj.addOk(function(){
-                                    ibcpLayer.ShowOK(res.data.message);
+                                    showMsg.MsgOk(basTop,res)
                                     basRight.searchRightTable();
                                     ibcpLayer.Close(divIndex);
+                                },function(){
+                                    showMsg.MsgError(basTop)
                                 })
                             });
                         }
@@ -195,9 +197,11 @@
                             }).then(function (res) {
                                // console.log(res);
                                 editObj.editOk(function(){
-                                    ibcpLayer.ShowOK(res.data.message);
+                                    showMsg.MsgOk(basTop,res)
                                     basRight.searchRightTable();
                                     ibcpLayer.Close(divIndex);
+                                },function(){
+                                    showMsg.MsgError(basTop)
                                 })
                             });
                         }

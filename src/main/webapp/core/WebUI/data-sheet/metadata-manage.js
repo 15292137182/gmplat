@@ -138,9 +138,11 @@ var basLeft = new Vue({
                 }, {
                     jsonp: 'callback'
                 }).then(function (ref) {
-                    ibcpLayer.ShowOK(ref.data.message);
+                    showMsg.MsgOk(basTop,ref)
                     basLeft.searchLeftTable();
                     basRight.searchRightTable();
+                },function(){
+                    showMsg.MsgError(basTop)
                 });
             })
         },
@@ -289,8 +291,10 @@ var basRight = new Vue({
                 }, {
                     jsonp: 'callback'
                 }).then(function (ref) {
-                    ibcpLayer.ShowOK(ref.data.message);
+                    showMsg.MsgOk(basTop,ref)
                     basLeft.searchLeftTable();
+                },function(){
+                    showMsg.MsgError(basTop)
                 });
             })
         },

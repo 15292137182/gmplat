@@ -55,8 +55,10 @@ var keyValueSet=new Vue({
                 }, {
                     jsonp: 'callback'
                 }).then(function (res) {
-                    ibcpLayer.ShowOK(res.data.message);
+                    showMsg.MsgOk(keyValueSet,res)
                     keyValueSet.searchPage();
+                },function(){
+                    showMsg.MsgError(keyValueSet)
                 });
             })
 

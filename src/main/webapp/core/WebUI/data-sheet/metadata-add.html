@@ -93,9 +93,11 @@
                                 jsonp: 'callback'
                             }).then(function (res) {
                                 addObj.addOk(function(){
-                                    ibcpLayer.ShowOK(res.data.message);
+                                    showMsg.MsgOk(basTop,res)
                                     basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
+                                },function(){
+                                    showMsg.MsgError(basTop)
                                 })
                             });
                         }
@@ -106,11 +108,13 @@
                                 objectName: em.addForm.nameInput
                             }, {
                                 jsonp: 'callback'
-                            }).then(function () {
+                            }).then(function (res) {
                                 editObj.editOk(function(){
-                                    ibcpLayer.ShowOK('编辑成功');
+                                    showMsg.MsgOk(basTop,res)
                                     basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
+                                },function(){
+                                    showMsg.MsgError(basTop)
                                 })
                             });
                         }
