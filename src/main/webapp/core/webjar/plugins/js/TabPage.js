@@ -11,7 +11,7 @@ var pagingObj = (function(){
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                if(res.data.result.length!=0){
+                if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                 }else{
@@ -40,7 +40,7 @@ var pagingObj = (function(){
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                if(res.data.result.length!=0){
+                if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     if(typeof callback =="function"){
@@ -87,7 +87,7 @@ var pagingObj = (function(){
             success:function(res){
                 console.log(res.data.result);
                 obj.loading=false;
-                if(res.data.result.length!=0){
+                if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                 }else{
@@ -130,7 +130,7 @@ var pagingObj = (function(){
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                if(res.data.result.length!=0){
+                if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                 }else{
@@ -175,7 +175,7 @@ var pagingObj = (function(){
             success:function(res){
                 console.log(res.data.result);
                 obj.loading=false;
-                if(res.data.result.length!=0){
+                if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                 }else{

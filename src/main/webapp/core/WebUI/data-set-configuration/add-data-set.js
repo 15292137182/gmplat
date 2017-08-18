@@ -71,11 +71,15 @@ var addDataSet = new Vue({
         conformEvent(){//确定
             if(!this.isEdit){//新增
                 if(this.checkIsNull()){
-                    this.addSet();
+                    addObj.addOk(function(){
+                        addDataSet.addSet();
+                    })
                 }
             }else{//编辑
                 if(this.checkIsNull()){
-                    this.editSet();
+                    editObj.editOk(function(){
+                        addDataSet.editSet();
+                    })
                 }
             }
         },
