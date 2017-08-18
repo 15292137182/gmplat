@@ -14,12 +14,12 @@
 </head>
 <body>
 <div id="addProEvent" style="margin-top:20px">
-    <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="addProForm" ref='addProForm'
+    <el-form :label-position="labelPosition" label-width="120px" :rules="rules" :model="addProForm" ref='addProForm'
              style="padding:0 20px" class="demo-ruleForm">
-        <el-form-item label="属性代码:" prop="codeProInput">
+        <el-form-item label="属性代码" prop="codeProInput">
             <el-input placeholder="请输入属性代码" v-model="addProForm.codeProInput" ref="addProForm.codeProInput" v-bind:disabled="addProForm.disabled"></el-input>
         </el-form-item>
-        <el-form-item label="属性名称:" prop="nameProInput">
+        <el-form-item label="属性名称" prop="nameProInput">
             <el-input placeholder="请输入属性名称" v-model="addProForm.nameProInput" ref="addProForm.nameProInput"></el-input>
         </el-form-item>
 
@@ -27,8 +27,8 @@
             <!--<el-checkbox :disabled="isDisabled"  v-model="checked" @change="isChecked">是否显示</el-checkbox>-->
         <!--</template>-->
 
-        <el-form-item label="扩展属性:" prop="checked">
-                <el-checkbox label="是否为扩展属性" v-model="addProForm.checked"  @change.native="changEvent" v-bind:disabled="addProForm.checkEvent" name="type"></el-checkbox>
+        <el-form-item label="是否为扩展属性" prop="checked">
+                <el-checkbox label="" v-model="addProForm.checked"  @change.native="changEvent" v-bind:disabled="addProForm.checkEvent" name="type"></el-checkbox>
         </el-form-item>
         <el-form-item label="关联表字段" prop="tableReaInput">
             <el-select v-model="addProForm.tableReaInput" placeholder="请选择关联表字段" ref="addProForm.tableReaInput" @change="changeReaTable" v-bind:disabled="addProForm.reaTabEvent">
@@ -57,7 +57,7 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="值来源内容:" prop="comContent">
+        <el-form-item label="值来源内容" prop="comContent">
             <el-input type="textarea" placeholder="请输入值来源内容" v-model="addProForm.comContent" ref="addProForm.comContent"></el-input>
         </el-form-item>
     </el-form>

@@ -29,20 +29,20 @@ var keyValueSet=new Vue({
         addEvent(){
             operate = 1;
             var htmlUrl = 'key-value-set-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增键值集合', '400px', '500px');
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增键值集合', '400px', '520px');
         },
         editEvent(){
             operate = 2;
             var htmlUrl = 'key-value-set-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '500px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '520px', function () {
                 //code值
-                keyValueSetAdd.keysetCodeInput = keyValueSet.currentVal.keysetCode;
-                keyValueSetAdd.numberInput=keyValueSet.currentVal.number;
-                keyValueSetAdd.keysetNameInput = keyValueSet.currentVal.keysetName;
-                keyValueSetAdd.confKeyInput = keyValueSet.currentVal.confKey;
-                keyValueSetAdd.confValueInput = keyValueSet.currentVal.confValue;
-                keyValueSetAdd.despInput = keyValueSet.currentVal.desp;
-                keyValueSetAdd.versionInput = keyValueSet.currentVal.version;
+                keyValueSetAdd.keyForm.keysetCodeInput = keyValueSet.currentVal.keysetCode;
+                keyValueSetAdd.keyForm.numberInput=keyValueSet.currentVal.number;
+                keyValueSetAdd.keyForm.keysetNameInput = keyValueSet.currentVal.keysetName;
+                keyValueSetAdd.keyForm.confKeyInput = keyValueSet.currentVal.confKey;
+                keyValueSetAdd.keyForm.confValueInput = keyValueSet.currentVal.confValue;
+                keyValueSetAdd.keyForm.despInput = keyValueSet.currentVal.desp;
+                keyValueSetAdd.keyForm.versionInput = keyValueSet.currentVal.version;
 
                 //不可编辑
                 keyValueSetAdd.disabled = true;

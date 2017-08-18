@@ -113,8 +113,7 @@ var basLeft = new Vue({
         pageSize:10,//每页显示条数
         //开始不能为空 否则会报错
         allDate:0,//总共有多少条
-        //edit:false,
-        //del:false
+
     },
     methods: {
         editEvent() {
@@ -148,10 +147,15 @@ var basLeft = new Vue({
         searchLeftTable() {
             pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.currentPage,this,function(res){
                 if(res.data.result.length!=0){
-                   // console.log(basLeft.tableData);
+                    console.log(res.data.result);
+                    $.each(res.data.result, function(index, item) {
+                        if(item.status != "0") {
+                            item.testDemo = true;
+                        }
+                    });
                     basLeft.currentChange(basLeft.tableData[0]);
                 }else{
-                    //basRight.tableData=[];//没找到右边表的数据为空
+                    basRight.tableData=[];//没找到右边表的数据为空
                     basTop.addAttr = true,
                     basTop.takeEffect = true,
                     basTop.change = true
@@ -171,7 +175,9 @@ var basLeft = new Vue({
         },
         currentChange(row, event, column) {
          // basRight.rightInput='';
-          console.log(row)
+          //console.log(row)
+          //console.log(column);
+         // console.log(scope);
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -203,14 +209,27 @@ var basLeft = new Vue({
                 basRight.searchRightTable();
             }
             if(row.status == '20'){
-                console.log(111)
-                //console.log($('.current-row>.is-hidden>.el-table_1_column_5>.el-button').attr('disabled'))
-                //$('.current-row>.is-hidden>.el-table_1_column_5>.el-button').prop("disabled",false)
-                // console.log($('.current-row>.el-table_1_column_5>.cell>.el-button').attr('disabled'))
-            //   // $('input').attr("readonly",false)//去除input元素的readonly属性
-            //    //this.row.edit=true;
-            //    //this.del=true;
-            //
+                //var a=$('.current-row>.el-table_1_column_5>.cell');
+                //$.each(a, function(index, item) {
+                //    console.log(item);
+                //    console.log(typeof item);
+                //    item.find("button").attr("disabled", true);
+                //});
+               //for(var i=0;i<a.length;i++){
+               //    console.log(a[0]);
+               //    a[0].attr('disabled')==false
+               //    //a[i].disabled=false;
+               //    console.log(a[i].attr('disabled'))
+               //}
+               // $('.current-row>.el-table_1_column_5>.cell>button').forEach(function(item){
+               //     console.log(item)
+               // });
+               //
+               // $('.current-row>.el-table_1_column_5>.cell>button>').
+               //  console.log($('.current-row>.el-table_1_column_5>.cell>button>').attr('disabled'))
+               // this.row.edit=true;
+               // this.del=true;
+
             }
         },
         FindLFirstDate(row){
