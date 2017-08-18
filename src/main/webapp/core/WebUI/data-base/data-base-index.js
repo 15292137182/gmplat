@@ -54,10 +54,10 @@ var dataBase = new Vue({
                 },{
                     jsonp:'callback'
                 }).then(function(res){
-                    ibcpLayer.ShowOK(res.data.message);
+                    showMsg.MsgOk(dataBase,res);
                     this.get();
                 },function(){
-                    alert("删除失败")
+                    showMsg.MsgError(dataBase);
                 })
             })
         },

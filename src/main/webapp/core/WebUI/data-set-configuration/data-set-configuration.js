@@ -94,12 +94,12 @@ var dataSetConfigButton = new Vue({
                 },{
                     jsonp:'callback'
                 }).then(function(res){
-                    ibcpLayer.ShowOK(res.data.message);
+                    showMsg.MsgOk(dataSetConfig,res);
                     if(res.data.state==1){
                         dataSetConfig.searchResTable();
                     }
                 },function(){
-                    alert("删除失败")
+                    showMsg.MsgError(dataSetConfig);
                 })
             })
         }

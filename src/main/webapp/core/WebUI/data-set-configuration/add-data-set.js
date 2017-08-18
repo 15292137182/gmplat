@@ -40,13 +40,13 @@ var addDataSet = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(dataSetConfig,res);
                 if(res.data.state==1){
                     ibcpLayer.Close(dataSetConfigButton.divIndex);
                     dataSetConfig.searchResTable();
                 }
             },function(){
-                alert("新增失败")
+                showMsg.MsgError(dataSetConfig);
             })
         },
         editSet(){//编辑
@@ -59,13 +59,13 @@ var addDataSet = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(dataSetConfig,res);
                 if(res.data.state==1){
                     ibcpLayer.Close(dataSetConfigButton.divIndex);
                     dataSetConfig.searchResTable();
                 }
             },function(){
-                alert("新增失败")
+                showMsg.MsgError(dataSetConfig);
             })
         },
         conformEvent(){//确定

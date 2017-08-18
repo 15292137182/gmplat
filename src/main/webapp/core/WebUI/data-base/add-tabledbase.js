@@ -26,11 +26,11 @@ var tableBase = new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(dataBase,res);
                 dataBase.get();
                 ibcpLayer.Close(topButtonObj.divIndex);
             },function(){
-                alert("新增失败");
+                showMsg.MsgError(dataBase);
             })
         },
         //编辑
