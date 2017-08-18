@@ -90,6 +90,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
+                    obj.pageNum =1;
                 }else{
                     obj.tableData = [];
                 }
