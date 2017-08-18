@@ -52,10 +52,10 @@ var addDataSet = new Vue({
         editSet(){//编辑
             this.$http.jsonp(this.editUrl,{
                 rowId:dataSetConfig.rowObjId,
-                datasetName:this.nameInput,
-                datasetType:this.typeInput,
-                datasetContent:this.content,
-                desp:this.desp
+                datasetName:this.formTable.nameInput,
+                datasetType:this.formTable.typeInput,
+                datasetContent:this.formTable.content,
+                desp:this.formTable.desp
             },{
                 jsonp:'callback'
             }).then(function(res){

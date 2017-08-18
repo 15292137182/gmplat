@@ -67,6 +67,8 @@ var em=new Vue({
             }
             //this.sortArrFun(this.sortNumber);//排序
             this.funcRowId = window.parent.topButtonObj.rowObjId;
+            console.log(this.checkedReady);
+            console.log(this.checkedNull);
             this.addObjectProperties();//新增
         },
         newAttribute(){//新增属性
@@ -144,14 +146,16 @@ var em=new Vue({
                 this.funcRowId=res.data.data[0].funcRowId;//功能块ID
                 this.dataId=res.data.data[0].relateBusiPro;//业务对象属性ID
                 this.formTable.nameTitle=res.data.data[0].displayTitle;//显示标题
-                if(res.data.data[0].wetherDisplay){
+                if(res.data.data[0].wetherDisplay =="true"){
                     this.checked=true;//是否显示
                 }
-                if(res.data.data[0].wetherReadonly){
+                if(res.data.data[0].wetherReadonly =="true"){
                     this.checkedReady=true;//只读
+                    alert("只读")
                 }
-                if(res.data.data[0].allowEmpty){
+                if(res.data.data[0].allowEmpty =="true"){
                     this.checkedNull=true;//允许为空
+                    alert("为空")
                 }
                 this.formTable.nameInput=res.data.data[0].displayWidget;//显示控件
                 this.formTable.lengthSection=res.data.data[0].lengthInterval;//长度区间

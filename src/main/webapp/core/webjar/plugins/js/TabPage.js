@@ -64,6 +64,10 @@ var pagingObj = (function(){
         //url:接口地址，args：table输入框，pageSize：每页多少条记录，pageNum：当前第几页
         //column：el函数当前列信息，obj:当前vue实例对象（this）,callback:成功后的回调函数
         var data = {};
+        if(column.prop == null){
+            //是否需要提示？？
+            return;
+        }
         if(column.order=="ascending"){
             data = {str:column.prop,num:1}
         }else{
@@ -104,6 +108,10 @@ var pagingObj = (function(){
         //url:接口地址，rowId:有依赖表的id，args：table输入框，column：el函数当前列信息，
         // obj:当前vue实例对象（this）,callback:成功后的回调函数
         var data = {};
+        if(column.prop == null){
+           //是否需要提示？？
+            return;
+        }
         if(column.order=="ascending"){
             data = {str:column.prop,num:1}
         }else{
@@ -121,7 +129,6 @@ var pagingObj = (function(){
             },
             dataType:"jsonp",
             success:function(res){
-                console.log(res.data.result);
                 obj.loading=false;
                 if(res.data.result.length!=0){
                     obj.tableData = res.data.result;//数据源
@@ -144,6 +151,10 @@ var pagingObj = (function(){
         //url:接口地址，rowId:有依赖表的id，args：table输入框，column：el函数当前列信息，
         // obj:当前vue实例对象（this）,callback:成功后的回调函数
         var data = {};
+        if(column.prop == null){
+            //是否需要提示？？
+            return;
+        }
         if(column.order=="ascending"){
             data = {str:column.prop,num:1}
         }else{

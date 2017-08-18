@@ -15,28 +15,28 @@
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="表schema">
-                    <el-input v-model="formTable.name"></el-input>
+                    <el-input placeholder="请输入表schema" v-model="formTable.name" ref="name"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="表英文名">
-                    <el-input v-model="formTable.Ename"></el-input>
+                    <el-input placeholder="请输入表英文名" v-model="formTable.Ename" ref="Ename"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="表中文名">
-                    <el-input v-model="formTable.Cname"></el-input>
+                    <el-input placeholder="请输入表中文名" v-model="formTable.Cname" ref="Came"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="说明">
-                    <el-input type="textarea" v-model="formTable.desp"></el-input>
+                    <el-input placeholder="请输入说明" type="textarea" v-model="formTable.desp"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

@@ -51,11 +51,29 @@ var tableBase = new Vue({
                 alert("编辑失败");
             })
         },
+        isNull(){
+            var data = [
+                this.$refs.name,
+                this.$refs.Ename,
+                this.$refs.Came
+                ]
+            for(var i=0;i<data.length;i++){
+                if(data[i].value==''){
+                    ibcpLayer.ShowMsg(data[i].placeholder);
+                    return false
+                }
+            }
+            return true;
+        },
         conformEvent(){//确定按钮
             if(topButtonObj.isEdit){//编辑
-                this.editTbleBase(this.rowObj.rowId);
+                if(this.isNull()){
+                    this.editTbleBase(this.rowObj.rowId);
+                }
             }else{//新增
-                this.addTableBase();
+                if(this.isNull()){
+                    this.addTableBase();
+                }
             }
         },
         cancel(){//取消按钮
