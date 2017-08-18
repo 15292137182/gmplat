@@ -27,7 +27,7 @@ Or
 ##  Import your need
 ```javascript
 import 'element-theme-default/lib/input.css';
-import 'element-theme-default/lib/select.css';
+import selectStatement;
 
 // ...
 ```

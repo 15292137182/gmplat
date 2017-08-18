@@ -1,6 +1,5 @@
 package com.bcx.plat.core.morebatis.translator.postgre;
 
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -121,8 +120,8 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
 
   /*Table系列*/
 
-  public LinkedList<Object> translate(Or andCondition, LinkedList<Object> list) {
-    return translateChainCondition(andCondition, list, "or");
+  public LinkedList<Object> translate(Or orCondition, LinkedList<Object> list) {
+    return translateChainCondition(orCondition, list, "or");
   }
 
   /**

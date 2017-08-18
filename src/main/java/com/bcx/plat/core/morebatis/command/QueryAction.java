@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryAction {
-  //TODO 添加Context数据类型 并作为各command父类
   public static final Column ALL_FIELD = new Column() {
     @Override
     public String getColumnSqlFragment(SqlComponentTranslator translator) {
@@ -86,10 +85,6 @@ public class QueryAction {
   public QueryAction select(Collection<Column> column) {
     setColumns(column);
     return this;
-  }
-
-  public QueryAction selectAll() {
-    return select(ALL_FIELD);
   }
 
   public QueryAction where(Condition condition) {

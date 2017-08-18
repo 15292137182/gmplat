@@ -55,7 +55,7 @@ public class JoinTableTest extends BaseTest {
 
   @Test
   public void test() {
-    QueryAction joinTableTest = moreBatis.select().select(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
+    QueryAction joinTableTest = moreBatis.selectStatement().select(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
         .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
             TableInfo.T_BUSINESS_OBJECT_PRO)
             .on(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,

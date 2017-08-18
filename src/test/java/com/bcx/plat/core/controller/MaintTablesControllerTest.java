@@ -25,7 +25,7 @@ public class MaintTablesControllerTest extends BaseControllerTest<MaintDBTablesC
 
     @Override
     protected String delete() {
-        return "/core/maintTable/delete";
+        return "/core/maintTable/deleteEntity";
     }
     @Override
     protected String key1() {

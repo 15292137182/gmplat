@@ -25,7 +25,7 @@ public class SysConfigControllerTest extends BaseControllerTest<SysConfigControl
 
     @Override
     protected String delete() {
-        return "/core/sysConfig/delete";
+        return "/core/sysConfig/deleteEntity";
     }
 
     @Override

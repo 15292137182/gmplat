@@ -25,7 +25,7 @@ public class KeySetController1Test extends BaseControllerTest<KeySetController> 
 
     @Override
     protected String delete() {
-        return "/core/keySet/delete";
+        return "/core/keySet/deleteEntity";
     }
 
     @Override

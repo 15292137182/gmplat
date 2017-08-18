@@ -40,7 +40,7 @@ public class FrontFuncControllerTest extends BaseControllerTest<FrontFuncControl
 
     @Override
     protected String delete() {
-        return "/core/fronc/delete";
+        return "/core/fronc/deleteEntity";
     }
 
     @Override
@@ -114,7 +114,7 @@ public class FrontFuncControllerTest extends BaseControllerTest<FrontFuncControl
 //                .andExpect(status().isOk())
 //                .andReturn();
 //        StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
-//        sb.delete(0, sb.indexOf("{")).delete(sb.lastIndexOf("}") + 1, sb.length());
+//        sb.deleteEntity(0, sb.indexOf("{")).deleteEntity(sb.lastIndexOf("}") + 1, sb.length());
 //        // 客户端获得 serviceResult
 //        ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
 //        List<Map<String,Object>> data = (List<Map<String,Object>> )serviceResult.getData();

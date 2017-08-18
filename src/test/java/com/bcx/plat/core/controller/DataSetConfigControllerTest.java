@@ -25,7 +25,7 @@ public class DataSetConfigControllerTest extends BaseControllerTest<DataSetConfi
 
     @Override
     protected String delete() {
-        return "/core/dataSetConfig/delete";
+        return "/core/dataSetConfig/deleteEntity";
     }
 
     @Override

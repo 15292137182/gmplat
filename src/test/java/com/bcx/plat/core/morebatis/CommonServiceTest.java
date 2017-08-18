@@ -108,6 +108,12 @@ public class CommonServiceTest extends BaseTest{
   @Transactional
   @Rollback
   public void testBlankSelect(){
+    List<Map<String,Object>> result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2")));
+    int result1Before = result.size();
+    result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1")));
+    int result2Before = result.size();
+    result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2")));
+    int result3Before = result.size();
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectCode("aaax1aaa");
     businessObject.setObjectName("aaax1aaa");
@@ -121,14 +127,15 @@ public class CommonServiceTest extends BaseTest{
     businessObject.setObjectCode("aaax2aaa");
     businessObject.setObjectName("aaax2aaa");
     businessObject.buildCreateInfo().insert();
-    List<Map<String,Object>> result = testTableService
-        .select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2")));
-    Assert.assertEquals(4,result.size());
-    result = testTableService
-        .select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1")));
-    Assert.assertEquals(3,result.size());
+    result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2")));
+    int result1After = result.size();
+    result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1")));
+    int result2After = result.size();
     result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2")));
-    Assert.assertEquals(3,result.size());
+    int result3After = result.size();
+    Assert.assertEquals(4,result1After-result1Before);
+    Assert.assertEquals(2,result2After-result2Before);
+    Assert.assertEquals(2,result3After-result3Before);
   }
 
   @Before

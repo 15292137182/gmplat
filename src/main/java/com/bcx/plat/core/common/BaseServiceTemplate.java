@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
-import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -63,7 +62,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
-        final List<Map<String, Object>> queryResult = moreBatis.select().select(columns)
+        final List<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(orders).execute();
         final List<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
@@ -71,7 +70,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
-        final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
+        final PageResult<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(orders).selectPage(pageNum, pageSize);
         final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
@@ -99,7 +98,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     public int insert(Map args) {
         args = mapFilter(args);
         args.remove("etc");
-        InsertAction insertAction = moreBatis.insert().into(table).cols(fieldNames).values(args);
+        InsertAction insertAction = moreBatis.insertStatement().into(table).cols(fieldNames).values(args);
         return insertAction.execute();
     }
 
@@ -113,7 +112,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int update(Map args, Condition condition) {
-        UpdateAction updateAction = moreBatis.update()
+        UpdateAction updateAction = moreBatis.updateStatement()
                 .from(table)
                 .set(args)
                 .where(condition);
@@ -127,7 +126,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int delete(Condition condition) {
-        DeleteAction deleteAction = moreBatis.delete()
+        DeleteAction deleteAction = moreBatis.deleteStatement()
                 .from(table)
                 .where(condition);
         return deleteAction.execute();
@@ -141,7 +140,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private Map<String, Object> mapFilter(Map<String, Object> map, boolean removeNull, boolean removeBlank) {
         Map<String, Object> outputMap = new HashMap<>();
         if (removeBlank == false && removeNull == false) {
-            return outputMap;
+            return map;
         }
         for (Entry<String, Object> entry : map.entrySet()) {
             Object value = entry.getValue();
@@ -168,10 +167,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public boolean isRemoveBlank() {
-        return true;
+        return false;
     }
 
     private boolean isRemoveNull() {
-        return true;
+        return false;
     }
 }

@@ -7,21 +7,12 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.condition.And;
-import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.SpringContextHolder;
-import com.bcx.plat.core.utils.TableAnnoUtil;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 基础 entity 类，建议所有实体类均继承此类
@@ -256,65 +247,23 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   }
 
   public T insert() {
-    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
-    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
-    Map<String, Object> values = toMap();
-    Map etc = (Map) values.remove("etc");
-    getMoreBatis().insert().into(table).cols(values.keySet()).values(Arrays.asList(values))
-        .execute();
+    getMoreBatis().insertEntity((T)this);
     return (T) this;
   }
 
   public T delete() {
-    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
-    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
-    Map<String, Object> values = toMap();
-    Map etc = (Map) values.remove("etc");
-    List<Condition> pkConditions = pks.stream()
-        .map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
-        })
-        .collect(Collectors.toList());
-    getMoreBatis().delete().from(table).where(new And(pkConditions)).execute();
+    getMoreBatis().deleteEntity((T)this);
     return (T) this;
   }
 
   public T update() {
-    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
-    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
-    Map<String, Object> values = toMap();
-    Map etc = (Map) values.remove("etc");
-    List<Condition> pkConditions = pks.stream()
-        .map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
-        })
-        .collect(Collectors.toList());
-    getMoreBatis().update().from(table).set(values).where(new And(pkConditions)).execute();
+    getMoreBatis().updateEntity((T)this);
     return (T) this;
   }
 
 
   public T selectByPks() {
-    List<String> pks = TableAnnoUtil.getPkAnnoField(this.getClass());
-    TableSource table = TableAnnoUtil.getTableSource(this.getClass());
-    Map<String, Object> values = toMap();
-    Map etc = (Map) values.remove("etc");
-    List<Condition> pkConditions = pks.stream()
-        .map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
-        })
-        .collect(Collectors.toList());
-    List<Map<String, Object>> result = getMoreBatis().select().selectAll().from(table)
-        .where(new And(pkConditions)).execute();
-    if (result.size() == 1) {
-      HashMap<String, Object> _obj = new HashMap<>();
-      result.get(0).entrySet().stream().forEach((entry) -> {
-        _obj.put(underlineToCamel(entry.getKey(), false), entry.getValue());
-      });
-      return fromMap(_obj);
-    } else {
-      return null;
-    }
+    return (T) getMoreBatis().selectEntityByPks((T) this);
   }
 
 

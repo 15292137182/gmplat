@@ -23,6 +23,7 @@ public class Table implements TableSource {
 
   public void setTableName(String tableName) {
     this.tableName = tableName;
+    sqlSegment=new SqlSegment(tableName);
   }
 
   public SqlSegment getSqlSegment() {

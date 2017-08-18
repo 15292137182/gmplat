@@ -25,7 +25,7 @@ public class SequenceRuleConfigControllerTest extends BaseControllerTest<Sequenc
 
     @Override
     protected String delete() {
-        return "/core/sequenceRule/delete";
+        return "/core/sequenceRule/deleteEntity";
     }
 
     @Override

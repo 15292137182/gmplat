@@ -12,7 +12,7 @@ public class ImmuteField implements Column {
 
   Column field;
 
-  public ImmuteField(Field field) {
+  public ImmuteField(Column field) {
     this.field = field;
   }
 

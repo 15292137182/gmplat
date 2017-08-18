@@ -25,7 +25,7 @@ public class DBTableColumnControllerTest extends BaseControllerTest<DBTableColum
 
     @Override
     protected String delete() {
-        return "/core/dbTableColumn/delete";
+        return "/core/dbTableColumn/deleteEntity";
     }
 
     @Override

@@ -25,7 +25,7 @@ public class FrontFuncProControllrTest extends BaseControllerTest<FrontFuncProCo
 
     @Override
     protected String delete() {
-        return "/core/fronFuncPro/delete";
+        return "/core/fronFuncPro/deleteEntity";
     }
 
     @Override

@@ -4,7 +4,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 
 /**
- * Dao 操作，该操作方式将在不久的将来被废弃 <p> dao.getMapper(EntityMapper.class).insert(Entity entity)
+ * Dao 操作，该操作方式将在不久的将来被废弃 <p> dao.getMapper(EntityMapper.class).insertEntity(Entity entity)
  */
 @Deprecated
 public class Dao extends SqlSessionTemplate {
