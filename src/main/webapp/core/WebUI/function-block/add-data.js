@@ -85,11 +85,11 @@ var em=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                window.parent.ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(window.parent.functionBlock,res);
                 window.parent.properties.getRight(this.funcRowId);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
-                alert("新增属性失败！")
+                showMsg.MsgError(window.parent.functionBlock);
             });
         },
         editAttribute(){//编辑属性
@@ -109,9 +109,11 @@ var em=new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (res) {
-                window.parent.ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(window.parent.functionBlock,res);
                 window.parent.properties.getRight(this.funcRowId);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
+            },function(){
+                showMsg.MsgError(window.parent.functionBlock);
             });
         },
         cancel(){
@@ -153,11 +155,9 @@ var em=new Vue({
                 }
                 if(res.data.data[0].wetherReadonly =="true"){
                     this.checkedReady=true;//只读
-                    alert("只读")
                 }
                 if(res.data.data[0].allowEmpty =="true"){
                     this.checkedNull=true;//允许为空
-                    alert("为空")
                 }
                 this.formTable.nameInput=res.data.data[0].displayWidget;//显示控件
                 this.formTable.lengthSection=res.data.data[0].lengthInterval;//长度区间

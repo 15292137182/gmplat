@@ -24,8 +24,12 @@ var functionBlock = new Vue({
         get(){
             pagingObj.Example(this.Selurl,this.input,this.pageSize,this.pageNum,this,function(){
                 functionBlock.click(functionBlock.tableData[0]);
-                functionBlock.deleteId = functionBlock.tableData[0].rowId;
-                properties.getRight(functionBlock.tableData[0].rowId);
+                if(functionBlock.tableData.length>0){
+                    functionBlock.deleteId = functionBlock.tableData[0].rowId;
+                    properties.getRight(functionBlock.tableData[0].rowId);
+                }else{
+                    properties.loading = false;
+                }
             });
         },
         //编辑
@@ -50,8 +54,10 @@ var functionBlock = new Vue({
                 },{
                     jsonp:'callback'
                 }).then(function(res){
-                    ibcpLayer.ShowOK(res.data.message);
+                    showMsg.MsgOk(functionBlock,res);
                     functionBlock.get();
+                },function(){
+                    showMsg.MsgError(functionBlock);
                 })
             })
         },
@@ -176,9 +182,9 @@ var properties = new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     properties.getRight(properties.funcId);
-                    ibcpLayer.ShowOK(res.data.message);
+                    showMsg.MsgOk(properties,res);
                 },function(){
-                    alert("删除失败")
+                    showMsg.MsgError(properties);
                 })
             })
         },
@@ -272,9 +278,9 @@ var topButtonObj = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 properties.getRight(properties.funcId);
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(functionBlock,res);
             },function(){
-                alert("删除失败")
+                showMsg.MsgError(functionBlock);
             })
         }
     }

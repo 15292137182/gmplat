@@ -31,11 +31,11 @@ var em=new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(topButtonObj.divIndex);
                 functionBlock.get();
             },function(){
-                alert("error")
+                showMsg.MsgError(functionBlock);
             });
         },
         editBlock(){//编辑
@@ -49,11 +49,11 @@ var em=new Vue({
             },{
                 jsonp:'callback'
             }).then(function(res){
-                ibcpLayer.ShowOK(res.data.message);
+                showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(functionBlock.divIndex);
                 functionBlock.get();
             },function(){
-                alert("error")
+                showMsg(functionBlock);
             });
         },
         conformEvent(){
