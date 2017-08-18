@@ -65,9 +65,13 @@ var em=new Vue({
                 }
             }
             if(em.isEdit){//编辑
-                this.editBlock();
+                editObj.editOk(function(){
+                    em.editBlock();
+                })
             }else{//新增
-                this.addBlock();
+                addObj.addOk(function(){
+                    em.addBlock();
+                })
             }
         },
         cancel(){

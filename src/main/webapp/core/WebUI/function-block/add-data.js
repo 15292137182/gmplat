@@ -67,8 +67,6 @@ var em=new Vue({
             }
             //this.sortArrFun(this.sortNumber);//排序
             this.funcRowId = window.parent.topButtonObj.rowObjId;
-            console.log(this.checkedReady);
-            console.log(this.checkedNull);
             this.addObjectProperties();//新增
         },
         newAttribute(){//新增属性
@@ -127,9 +125,13 @@ var em=new Vue({
         },
         addObjectProperties(){
             if(!window.parent.topButtonObj.isEdit){//新增
-                this.newAttribute();
+                addObj.addOk(function(){
+                    em.newAttribute();
+                })
             }else{//编辑
-                this.editAttribute();
+                editObj.editOk(function(){
+                    em.editAttribute();
+                })
             }
         },
         loadComplete(){

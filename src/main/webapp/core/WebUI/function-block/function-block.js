@@ -57,7 +57,6 @@ var functionBlock = new Vue({
         },
         //点击
         click(row, event, column){
-            console.log(row);
             if(row){
                 properties.rightInput = '';
                 this.rowId = row.rowId;
@@ -127,7 +126,6 @@ var properties = new Vue({
         },
         //点击右边table
         clickRightTable(row, event, column){
-             console.log(row);
             if(row){
                 this.rowId = row.rowId;
                 this.funcId = row.funcRowId;
