@@ -2,12 +2,14 @@ package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.database.info.Fields;
+import com.bcx.plat.core.database.info.Fields.T_BUSINESS_OBJECT;
 import com.bcx.plat.core.database.info.Fields.T_BUSINESS_OBJECT_PRO;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -54,16 +56,30 @@ public class JoinTableTest extends BaseTest {
   }
 
   @Test
-  public void test() {
-    QueryAction joinTableTest = moreBatis.selectStatement().select(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
+  public void innerJoinTest() {
+    QueryAction joinTableTest = moreBatis.selectStatement().select(T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
         .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
             TableInfo.T_BUSINESS_OBJECT_PRO)
             .on(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
                 T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
-        .where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId))
-        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
-        .orderBy(new Order(T_BUSINESS_OBJECT_PRO.CREATE_TIME,Order.DESC));
+        .where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId));
+//        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.ROW_ID);
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());
+  }
+
+  @Test
+  public void groupByTest() {
+    QueryAction joinTableTest;
+    List<Map<String, Object>> result;
+    joinTableTest = moreBatis.selectStatement().select(T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
+        .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
+            TableInfo.T_BUSINESS_OBJECT_PRO)
+            .on(new FieldCondition(T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
+                T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
+        .where(new FieldCondition(T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId))
+        .groupBy(T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID);
+    result = joinTableTest.execute();
+    Assert.assertEquals(1, result.size());
   }
 }

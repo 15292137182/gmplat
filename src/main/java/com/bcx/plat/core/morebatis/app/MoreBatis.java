@@ -98,7 +98,7 @@ public class MoreBatis {
     Map etc = (Map) values.remove("etc");
     List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
+          return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
         })
         .collect(Collectors.toList());
     return this.deleteStatement().from(table).where(new And(pkConditions)).execute();
@@ -111,7 +111,7 @@ public class MoreBatis {
     Map etc = (Map) values.remove("etc");
     List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
+          return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
         })
         .collect(Collectors.toList());
     return this.updateStatement().from(table).set(values).where(new And(pkConditions)).execute();
@@ -124,7 +124,7 @@ public class MoreBatis {
     Map etc = (Map) values.remove("etc");
     List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
-          return new FieldCondition(pk, Operator.EQUAL, values.get(pk));
+          return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
         })
         .collect(Collectors.toList());
     List<Map<String, Object>> result = this.select(entity.getClass()).from(table)

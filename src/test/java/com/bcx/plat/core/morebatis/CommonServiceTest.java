@@ -61,8 +61,12 @@ public class CommonServiceTest extends BaseTest{
   @Transactional
   @Rollback
   public void testConditionalPageQuery(){
+    businessObject.buildCreateInfo();
     businessObject.setObjectCode("for test2");
-    for(int i=0;i<10;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
+    for(int i=0;i<10;i++) {
+      businessObject.setRowId(UtilsTool.lengthUUID(32));
+      testTableService.insert(businessObject.toMap());
+    }
     args.put("objectCode","for test2");
     PageResult<Map<String, Object>> result = testTableService.select(args, 1, 20);
     Assert.assertEquals(10,result.getResult().size());
@@ -117,16 +121,20 @@ public class CommonServiceTest extends BaseTest{
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectCode("aaax1aaa");
     businessObject.setObjectName("aaax1aaa");
-    businessObject.buildCreateInfo().insert();
+    businessObject.setRowId(UtilsTool.lengthUUID(32));
+    businessObject.insert();
     businessObject.setObjectCode("aaax1aaa");
     businessObject.setObjectName("aaax2aaa");
-    businessObject.buildCreateInfo().insert();
+    businessObject.setRowId(UtilsTool.lengthUUID(32));
+    businessObject.insert();
     businessObject.setObjectCode("aaax2aaa");
     businessObject.setObjectName("aaax1aaa");
-    businessObject.buildCreateInfo().insert();
+    businessObject.setRowId(UtilsTool.lengthUUID(32));
+    businessObject.insert();
     businessObject.setObjectCode("aaax2aaa");
     businessObject.setObjectName("aaax2aaa");
-    businessObject.buildCreateInfo().insert();
+    businessObject.setRowId(UtilsTool.lengthUUID(32));
+    businessObject.insert();
     result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1", "ax2")));
     int result1After = result.size();
     result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax1")));
@@ -134,8 +142,8 @@ public class CommonServiceTest extends BaseTest{
     result = testTableService.select(UtilsTool.createBlankQuery(Arrays.asList("objectName", "objectCode"), Arrays.asList("ax2")));
     int result3After = result.size();
     Assert.assertEquals(4,result1After-result1Before);
-    Assert.assertEquals(2,result2After-result2Before);
-    Assert.assertEquals(2,result3After-result3Before);
+    Assert.assertEquals(3,result2After-result2Before);
+    Assert.assertEquals(3,result3After-result3Before);
   }
 
   @Before
@@ -143,7 +151,11 @@ public class CommonServiceTest extends BaseTest{
     businessObject = new BusinessObject();
     testName = UUID.randomUUID().toString();
     businessObject.setObjectName(testName);
-    for(int i=0;i<20;i++) testTableService.insert(businessObject.buildCreateInfo().toMap());
+    businessObject.buildCreateInfo();
+    for(int i=0;i<20;i++){
+      businessObject.setRowId(UtilsTool.lengthUUID(32));
+      testTableService.insert(businessObject.toMap());
+    }
     args = new HashMap<>();
     args.put("objectName", testName);
   }

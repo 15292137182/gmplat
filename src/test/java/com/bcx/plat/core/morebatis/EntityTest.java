@@ -6,11 +6,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
+@Transactional
+@Rollback
 public class EntityTest extends BaseTest{
   @Test
-  @Transactional
-  @Rollback
   public void entityTest(){
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectName("testObject");
