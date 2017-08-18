@@ -5,8 +5,15 @@ import com.bcx.plat.core.entity.FrontFunc;
 import org.springframework.stereotype.Service;
 
 /**
+ *
  * Created by Wen Tiehu on 2017/8/9.
  */
 @Service
 public class FrontFuncService extends BaseServiceTemplate<FrontFunc>{
+
+
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

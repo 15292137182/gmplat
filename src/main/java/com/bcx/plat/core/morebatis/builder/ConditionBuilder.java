@@ -18,8 +18,8 @@ public class ConditionBuilder implements ConditionContainer {
 
   public static void main(String[] args) throws IllegalAccessException {
     Condition testCondition = new ConditionBuilder(BusinessObject.class).buildByAnd()
-        .equal("changeOperat", 10).notNull("changeOperat")
-        .or().isNull("deleteFlag").equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()
+        .equal("changeOperat", 10).notNull("changeOperat").or()
+        .or().isNull("deleteFlag").endOr().equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()
         .endAnd().buildDone();
     testCondition.hashCode();
   }

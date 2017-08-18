@@ -43,9 +43,11 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   public T buildCreateInfo() {
-    setCreateTime(getDateTimeNow());
-    setCreateUser("admin");
-    setCreateUserName("系统管理员");
+      String data = getDateTimeNow();
+      setCreateTime(data);
+      setCreateUser("admin");
+      setCreateUserName("系统管理员");
+      setModifyTime(data);
     return (T) this;
   }
 

@@ -24,6 +24,7 @@ public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
 
   @Override
   public SequenceRuleConfig buildCreateInfo() {
+    setVersion("1.0");
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

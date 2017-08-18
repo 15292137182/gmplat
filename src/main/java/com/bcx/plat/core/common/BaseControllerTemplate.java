@@ -76,6 +76,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object singleInputSelect(String args, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
+        if (args !=null && !args.isEmpty()){
+            pageNum = 1;
+        }
         PageResult<Map<String, Object>> result = entityService
                 .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)), Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
@@ -126,7 +129,10 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/add")
     public Object insert(Y entity, HttpServletRequest request, Locale locale) {
-        entityService.insert(entity.buildCreateInfo().toMap());
+        int insert = entityService.insert(entity.buildCreateInfo().toMap());
+        if (insert!=1) {
+            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL),locale);
+        }
         return super.result(request, commonServiceResult(entity, Message.NEW_ADD_SUCCESS), locale);
     }
 
@@ -141,7 +147,10 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/modify")
     public Object update(Y entity, HttpServletRequest request, Locale locale) {
-        entityService.update(entity.buildModifyInfo().toMap());
+        int update = entityService.update(entity.buildModifyInfo().toMap());
+        if (update!=1) {
+            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL),locale);
+        }
         return super.result(request, commonServiceResult(entity, Message.UPDATE_SUCCESS), locale);
     }
 
@@ -178,6 +187,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
         HashMap<String, Object> map = new HashMap<>();
         map.put("rowId", rowId);
         map.put("status", BaseConstants.TAKE_EFFECT);
+        map.put("modifyTime",UtilsTool.getDateTimeNow());
         entityService.update(map);
         return super.result(request, commonServiceResult(rowId, Message.UPDATE_SUCCESS), locale);
     }
@@ -193,4 +203,6 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
         return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
     }
+
+
 }

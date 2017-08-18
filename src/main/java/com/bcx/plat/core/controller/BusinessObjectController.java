@@ -55,6 +55,47 @@ public class BusinessObjectController extends
 
 
     /**
+     * 通用查询方法
+     *
+     * @param args     按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @param request  request请求
+     * @param locale   国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryPage")
+    public Object singleInputSelect(String args, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
+        if (args !=null && !args.isEmpty()){
+            pageNum = 1;
+        }
+        PageResult<Map<String, Object>> result = getEntityService()
+                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD),orders);
+        if (result.getResult().size()==0) {
+            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
+        }
+        for (Map<String,Object> rest : result.getResult()){
+            rest.put("testDemo",false);
+        }
+        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+    }
+
+    /**
+     * 接受参数和消息进行封装
+     *
+     * @param content 接受的参数
+     * @param msg     消息
+     * @param <T>
+     * @return
+     */
+    private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
+        return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
+    }
+
+
+    /**
      * 根据业务对象rowId查找当前对象下的所有属性并分页显示
      *
      * @param args     按照空格查询
@@ -74,6 +115,12 @@ public class BusinessObjectController extends
                         new And(new FieldCondition(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID, Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args)))
                         , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+        if (result.getResult().size()==0) {
+            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
+        }
+        for (Map<String,Object> rest : result.getResult()){
+            rest.put("testDemo",false);
+        }
         return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
@@ -104,7 +151,14 @@ public class BusinessObjectController extends
             //复制一份数据出来
             businessObject.setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
             businessObject.buildCreateInfo();
-            businessObject.setVersion("2.0");
+            //获取当前版本号
+            String version = (String)mapList.get(0).get("version");
+            //转换为double类型
+            double dou = new Double(version).doubleValue();
+            //++当前版本号
+            String  str = ++dou+"";
+            // TODO 设置版本号 先++
+            businessObject.setVersion(str);
             String objectCode = (String)mapList.get(0).get("objectCode");
             businessObject.setObjectCode(objectCode);
             getEntityService().insert(businessObject.toMap());

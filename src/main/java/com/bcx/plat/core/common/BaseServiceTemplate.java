@@ -2,13 +2,13 @@ package com.bcx.plat.core.common;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.base.BaseService;
-import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -33,11 +33,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
     private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
-    private final Map<String,Column> fieldMap= Fields.getFieldMap(entityClass);
     private static final List<Order> defaultOrders=new LinkedList<>();
-//    {
-//        defaultOrders.add(new Order(fieldMap.get("createTime"),Order.DESC));
-//    }
+    static {
+        defaultOrders.add(new Order(new Field("modify_time"),Order.DESC));
+    }
     /**
      * logger 日志操作
      */
@@ -57,22 +56,22 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return select(condition, Arrays.asList(QueryAction.ALL_FIELD), null);
     }
 
-    private List<Order> emptyDefaultCreateTime(List<Order> orders){
+    private List<Order> emptyDefaultModifyTime(List<Order> orders){
         return orders==null||orders.isEmpty()?defaultOrders:orders;
     }
 
-    public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
-        final List<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
+    final public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
+        final List<Map<String, Object>> queryResult = moreBatis.select().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
-                .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultCreateTime(orders)).execute();
+                .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).execute();
         final List<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
         return camelizedResult;
     }
 
-    public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
-        final PageResult<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
+    final public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
+        final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
-                .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultCreateTime(orders)).selectPage(pageNum, pageSize);
+                .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
         final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
         return camelizedResult;
     }
@@ -95,10 +94,22 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return select(UtilsTool.convertMapToFieldConditions(args));
     }
 
+    @Deprecated
+    public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
+                                                             Collection<String> value, int pageNum, int pageSize, List<Column> columns, List<Order> orders) {
+        return select(UtilsTool.createBlankQuery(column, value),columns,orders, pageNum, pageSize);
+    }
+
+    @Deprecated
+    public List<Map<String, Object>> singleInputSelect(Collection<String> column,
+                                                       Collection<String> value) {
+        return select(UtilsTool.createBlankQuery(column, value));
+    }
+
     public int insert(Map args) {
         args = mapFilter(args);
         args.remove("etc");
-        InsertAction insertAction = moreBatis.insertStatement().into(table).cols(fieldNames).values(args);
+        InsertAction insertAction = moreBatis.insert().into(table).cols(fieldNames).values(args);
         return insertAction.execute();
     }
 
@@ -112,7 +123,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int update(Map args, Condition condition) {
-        UpdateAction updateAction = moreBatis.updateStatement()
+        UpdateAction updateAction = moreBatis.update()
                 .from(table)
                 .set(args)
                 .where(condition);
@@ -126,7 +137,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int delete(Condition condition) {
-        DeleteAction deleteAction = moreBatis.deleteStatement()
+        DeleteAction deleteAction = moreBatis.delete()
                 .from(table)
                 .where(condition);
         return deleteAction.execute();
@@ -140,7 +151,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private Map<String, Object> mapFilter(Map<String, Object> map, boolean removeNull, boolean removeBlank) {
         Map<String, Object> outputMap = new HashMap<>();
         if (removeBlank == false && removeNull == false) {
-            return map;
+            return outputMap;
         }
         for (Entry<String, Object> entry : map.entrySet()) {
             Object value = entry.getValue();
@@ -167,10 +178,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public boolean isRemoveBlank() {
-        return false;
+        return true;
     }
 
     private boolean isRemoveNull() {
-        return false;
+        return true;
     }
 }

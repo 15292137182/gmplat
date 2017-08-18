@@ -291,7 +291,7 @@ public class UtilsTool {
    * @param key 接受properties可以对应的key
    * @return 返回properies中value值
    */
-  final static public String loadPproperties(String key) {
+  final static public String loadProperties(String key) {
     Properties properties = new Properties();
     InputStream resourceAsStream = UtilsTool.class.getClassLoader()
             .getResourceAsStream("properties/sequence.properties");
@@ -336,5 +336,37 @@ public class UtilsTool {
     return orders;
   }
 
-
+  /**
+   *  版本号叠加升级
+   * @param version 接受版本号
+   * @return
+   */
+  public static String upgradeVersion(String version) {
+    StringBuffer sb = new StringBuffer();
+    boolean findUnm = false;
+    String s = version + "_0.1d";
+    double sum = 0D;
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (c == '.' || (c >= '0' && c <= '9')) {
+        sb.append(c);
+        findUnm = true;
+      } else if (findUnm) {
+        try {
+          sum += Double.parseDouble(sb.toString());
+        } catch (Exception e) {
+        }
+        sb = new StringBuffer();
+        findUnm = false;
+      }
+    }
+    StringBuffer sf = new StringBuffer();
+    String str = sum + "";
+    String substring = str.substring(str.indexOf(".") + 1);
+    if (substring.equals("0")) {
+      sf.append(str).append(".0").toString();
+      return sf+"";
+    }
+    return str + "";
+  }
 }
