@@ -21,6 +21,8 @@ public class Field implements Column {
    */
   private String alies;
 
+  public Field(){}
+
   public Field(String fieldName) {
     this.fieldName = UtilsTool.camelToUnderline(fieldName);
     this.alies= fieldName;

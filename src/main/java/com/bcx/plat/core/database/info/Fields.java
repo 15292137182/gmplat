@@ -19,23 +19,6 @@ public class Fields {
   private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();
   private static final HashMap<Class<? extends BaseEntity>, Map<String, Column>> entityFieldMap = new HashMap<>();
 
-  static {
-    for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
-      for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
-        final int modifiers = field.getModifiers();
-        if (Modifier.isStatic(modifiers)&&Modifier.isPublic(modifiers)) {
-          Object value = null;
-          try {
-            value = field.get(aClass);
-          } catch (IllegalAccessException e) {
-            e.printStackTrace();
-          }
-          value.hashCode();
-        }
-      }
-    }
-  }
-
   private static void putField(TableSource tableSource, Column column, String alies) {
     Map<String, Column> map = tableFieldMap.get(tableSource);
     if (map == null) {
@@ -54,14 +37,34 @@ public class Fields {
   }
 
   public static Map<String, Column> getFieldMap(Class<? extends BaseEntity> entityClass) {
-    Map<String, Column> columnMap = entityFieldMap.get(entityClass);
+    final HashMap<Class<? extends BaseEntity>, Map<String, Column>> fieldMap = getFieldMap();
+    Map<String, Column> columnMap = fieldMap.get(entityClass);
     if (columnMap == null) {
-
       final TableSource tableSource = TableAnnoUtil.getTableSource(entityClass);
-      columnMap = tableFieldMap.get(tableSource);
-      entityFieldMap.put(entityClass, columnMap);
+      columnMap = fieldMap.get(tableSource);
+      fieldMap.put(entityClass, columnMap);
     }
     return columnMap;
+  }
+
+  private static HashMap<Class<? extends BaseEntity>, Map<String, Column>> getFieldMap(){
+    if (entityFieldMap.size()==0) {
+      for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
+        for (java.lang.reflect.Field field : aClass.getDeclaredFields()) {
+          final int modifiers = field.getModifiers();
+          if (Modifier.isStatic(modifiers)&&Modifier.isPublic(modifiers)) {
+            Object value = null;
+            try {
+              value = field.get(aClass);
+            } catch (IllegalAccessException e) {
+              e.printStackTrace();
+            }
+            value.hashCode();
+          }
+        }
+      }
+    }
+    return entityFieldMap;
   }
 
   public static void initRegister() throws IllegalAccessException {
@@ -271,7 +274,7 @@ public class Fields {
     }
   }
 
-
+//没有使用
   public enum T_SEQ_BUSI_GENERATE implements FieldInTable {
     ROW_ID(TableInfo.T_SEQ_BUSI_GENERATE, "row_id", "rowId"),
     SEQ_ROW_ID(TableInfo.T_SEQ_BUSI_GENERATE, "seq_row_id", "seqRowId"),
@@ -630,13 +633,10 @@ public class Fields {
     ROW_ID(TableInfo.T_BUSINESS_OBJECT_PRO, "row_id", "rowId"),
     PROPERTY_CODE(TableInfo.T_BUSINESS_OBJECT_PRO, "property_code", "propertyCode"),
     PROPERTY_NAME(TableInfo.T_BUSINESS_OBJECT_PRO, "property_name", "propertyName"),
-    RELATE_TABLE_COLUMN(TableInfo.T_BUSINESS_OBJECT_PRO, "relate_table_column",
-        "relateTableColumn"),
+    RELATE_TABLE_COLUMN(TableInfo.T_BUSINESS_OBJECT_PRO, "relate_table_column","relateTableColumn"),
     VALUE_TYPE(TableInfo.T_BUSINESS_OBJECT_PRO, "value_type", "valueType"),
-    VALUE_RESOURCE_TYPE(TableInfo.T_BUSINESS_OBJECT_PRO, "value_resource_type",
-        "valueResourceType"),
-    VALUE_RESOURCE_CONTENT(TableInfo.T_BUSINESS_OBJECT_PRO, "value_resource_content",
-        "valueResourceContent"),
+    VALUE_RESOURCE_TYPE(TableInfo.T_BUSINESS_OBJECT_PRO, "value_resource_type","valueResourceType"),
+    VALUE_RESOURCE_CONTENT(TableInfo.T_BUSINESS_OBJECT_PRO, "value_resource_content","valueResourceContent"),
     WETHER_EXPAND_PRO(TableInfo.T_BUSINESS_OBJECT_PRO, "wether_expand_pro", "wetherExpandPro"),
     STATUS(TableInfo.T_BUSINESS_OBJECT_PRO, "status", "status"),
     VERSION(TableInfo.T_BUSINESS_OBJECT_PRO, "version", "version"),

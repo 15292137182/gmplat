@@ -36,9 +36,9 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
     private final Map<String,Column> fieldMap= Fields.getFieldMap(entityClass);
     private static final List<Order> defaultOrders=new LinkedList<>();
-    {
-        defaultOrders.add(new Order(fieldMap.get("createTime"),Order.DESC));
-    }
+//    {
+//        defaultOrders.add(new Order(fieldMap.get("createTime"),Order.DESC));
+//    }
     /**
      * logger 日志操作
      */

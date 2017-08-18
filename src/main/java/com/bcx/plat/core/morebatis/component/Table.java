@@ -9,6 +9,9 @@ public class Table implements TableSource {
 
   private String tableName;
   private SqlSegment sqlSegment;
+
+  public Table(){}
+
   public Table(String tableName) {
     this.tableName = tableName;
     sqlSegment=new SqlSegment(getTableName());

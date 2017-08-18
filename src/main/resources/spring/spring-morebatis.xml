@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
+
+  <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatis">
+    <constructor-arg ref="postgreSuitMapper"/>
+    <constructor-arg ref="conditionTranslator"/>
+    <constructor-arg>
+      <list>
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.BusinessObjectPro"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_business_object_pro"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="property_code" p:alies="propertyCode"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="property_name" p:alies="propertyName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_table_column" p:alies="relateTableColumn"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="value_type" p:alies="valueType"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="value_resource_type" p:alies="valueResourceType"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="value_resource_content" p:alies="valueResourceContent"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="wether_expand_pro" p:alies="wetherExpandPro"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="obj_row_id" p:alies="objRowId"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.DataSetConfig"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_dataset_config"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_code" p:alies="datasetCode"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_name" p:alies="datasetName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_type" p:alies="datasetType"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_content" p:alies="datasetContent"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.DBTableColumn"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_db_table_column"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_table_row_id" p:alies="relateTableRowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="column_ename" p:alies="columnEname"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="column_cname" p:alies="columnCname"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.FrontFunc"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_front_func"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_code" p:alies="funcCode"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_name" p:alies="funcName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_type" p:alies="funcType"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_busi_obj" p:alies="relateBusiObj"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="wether_available" p:alies="wetherAvailable"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.FrontFuncPro"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_front_func_pro"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_row_id" p:alies="funcRowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_busi_pro" p:alies="relateBusiPro"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="display_title" p:alies="displayTitle"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="wether_display" p:alies="wetherDisplay"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="display_widget" p:alies="displayWidget"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="wether_readonly" p:alies="wetherReadonly"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="allow_empty" p:alies="allowEmpty"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="length_interval" p:alies="lengthInterval"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="validate_func" p:alies="validateFunc"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="display_func" p:alies="displayFunc"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="sort" p:alies="sort"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.KeySet"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_keyset"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="number" p:alies="number"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_code" p:alies="keysetCode"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_name" p:alies="keysetName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_key" p:alies="confKey"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_value" p:alies="confValue"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.MaintDBTables"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_db_tables"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="table_schema" p:alies="tableSchema"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="table_cname" p:alies="tableCname"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="table_ename" p:alies="tableEname"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.SequenceGenerate"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_sequence_generate"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="seq_row_id" p:alies="seqRowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="variable_key" p:alies="variableKey"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="current_value" p:alies="currentValue"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="branch_sign" p:alies="branchSign"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.SequenceRuleConfig"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_sequence_rule_config"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="seq_code" p:alies="seqCode"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="seq_name" p:alies="seqName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="seq_content" p:alies="seqContent"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.SysConfig"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_sys_config"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_key" p:alies="confKey"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_value" p:alies="confValue"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.BusinessObject"/>
+          <constructor-arg name="table">
+            <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_business_object"/>
+          </constructor-arg>
+          <constructor-arg name="fields">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="object_code" p:alies="objectCode"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="object_name" p:alies="objectName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_table_row_id" p:alies="relateTableRowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="change_operat" p:alies="changeOperat"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user" p:alies="createUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_user_name" p:alies="createUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_time" p:alies="modifyTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user" p:alies="modifyUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="modify_user_name" p:alies="modifyUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_time" p:alies="deleteTime"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+            </list>
+          </constructor-arg>
+          <constructor-arg name="pks">
+            <list>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+            </list>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+
+</beans>
