@@ -61,7 +61,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     final public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
-        final List<Map<String, Object>> queryResult = moreBatis.select().select(columns)
+        final List<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).execute();
         final List<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
@@ -69,7 +69,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     final public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
-        final PageResult<Map<String, Object>> queryResult = moreBatis.select().select(columns)
+        final PageResult<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
         final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
@@ -109,7 +109,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     public int insert(Map args) {
         args = mapFilter(args);
         args.remove("etc");
-        InsertAction insertAction = moreBatis.insert().into(table).cols(fieldNames).values(args);
+        InsertAction insertAction = moreBatis.insertStatement().into(table).cols(fieldNames).values(args);
         return insertAction.execute();
     }
 
@@ -123,7 +123,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int update(Map args, Condition condition) {
-        UpdateAction updateAction = moreBatis.update()
+        UpdateAction updateAction = moreBatis.updateStatement()
                 .from(table)
                 .set(args)
                 .where(condition);
@@ -137,7 +137,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int delete(Condition condition) {
-        DeleteAction deleteAction = moreBatis.delete()
+        DeleteAction deleteAction = moreBatis.deleteStatement()
                 .from(table)
                 .where(condition);
         return deleteAction.execute();
