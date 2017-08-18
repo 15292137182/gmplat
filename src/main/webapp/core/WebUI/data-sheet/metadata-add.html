@@ -92,9 +92,11 @@
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {
-                                ibcpLayer.ShowOK(res.data.message);
-                                basLeft.searchLeftTable();
-                                ibcpLayer.Close(divIndex);
+                                addObj.addOk(function(){
+                                    ibcpLayer.ShowOK(res.data.message);
+                                    basLeft.searchLeftTable();
+                                    ibcpLayer.Close(divIndex);
+                                })
                             });
                         }
                         if (operate == 2) {
@@ -105,9 +107,11 @@
                             }, {
                                 jsonp: 'callback'
                             }).then(function () {
-                                ibcpLayer.ShowOK('编辑成功');
-                                basLeft.searchLeftTable();
-                                ibcpLayer.Close(divIndex);
+                                editObj.editOk(function(){
+                                    ibcpLayer.ShowOK('编辑成功');
+                                    basLeft.searchLeftTable();
+                                    ibcpLayer.Close(divIndex);
+                                })
                             });
                         }
                     }else {

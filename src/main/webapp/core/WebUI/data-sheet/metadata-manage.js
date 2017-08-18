@@ -175,7 +175,7 @@ var basLeft = new Vue({
         },
         currentChange(row, event, column) {
          // basRight.rightInput='';
-          //console.log(row)
+          console.log(row)
           //console.log(column);
          // console.log(scope);
             //判断是否生效
@@ -206,30 +206,7 @@ var basLeft = new Vue({
                 //左边这一行的数据
                 this.currentId = row.rowId;
                 //查找右侧表的数据
-                basRight.searchRightTable();
-            }
-            if(row.status == '20'){
-                //var a=$('.current-row>.el-table_1_column_5>.cell');
-                //$.each(a, function(index, item) {
-                //    console.log(item);
-                //    console.log(typeof item);
-                //    item.find("button").attr("disabled", true);
-                //});
-               //for(var i=0;i<a.length;i++){
-               //    console.log(a[0]);
-               //    a[0].attr('disabled')==false
-               //    //a[i].disabled=false;
-               //    console.log(a[i].attr('disabled'))
-               //}
-               // $('.current-row>.el-table_1_column_5>.cell>button').forEach(function(item){
-               //     console.log(item)
-               // });
-               //
-               // $('.current-row>.el-table_1_column_5>.cell>button>').
-               //  console.log($('.current-row>.el-table_1_column_5>.cell>button>').attr('disabled'))
-               // this.row.edit=true;
-               // this.del=true;
-
+                basRight.searchRightTable(this.currentVal);
             }
         },
         FindLFirstDate(row){
@@ -268,8 +245,16 @@ var basRight = new Vue({
     },
     methods: {
         searchRightTable() {
+            console.log(basLeft.currentVal);
             pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.currentPage,this,function(res){
                 if(res.data.result.length!=0){
+                    //按钮禁掉
+                    $.each(res.data.result, function(index, item) {
+                        if(basLeft.currentVal.testDemo==true) {
+                            item.testDemo = true;
+                        }
+                    });
+                    //默认选中
                     basRight.currentRChange(basRight.tableData[0])
                 }
             });

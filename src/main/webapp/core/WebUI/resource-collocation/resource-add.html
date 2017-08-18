@@ -72,9 +72,11 @@
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {
-                                ibcpLayer.ShowOK(res.data.message);
-                                resCol.searchResTable();
-                                ibcpLayer.Close(divIndex);
+                                addObj.addOk(function(){
+                                    ibcpLayer.ShowOK(res.data.message);
+                                    resCol.searchResTable();
+                                    ibcpLayer.Close(divIndex);
+                                })
                             });
                         }
                         if (operate == 2) {
@@ -85,10 +87,12 @@
                                 desp: resAdd.colForm.tableInput
                             }, {
                                 jsonp: 'callback'
-                            }).then(function () {
-                                ibcpLayer.ShowOK('编辑成功');
-                                resCol.searchResTable();
-                                ibcpLayer.Close(divIndex);
+                            }).then(function (res) {
+                                editObj.editOk(function(){
+                                    ibcpLayer.ShowOK(res.data.message);
+                                    resCol.searchResTable();
+                                    ibcpLayer.Close(divIndex);
+                                })
                             });
                         }
                     } else {

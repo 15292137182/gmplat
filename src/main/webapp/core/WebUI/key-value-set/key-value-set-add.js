@@ -64,9 +64,11 @@ var keyValueSetAdd = new Vue({
                         }, {
                             jsonp: 'callback'
                         }).then(function (res) {
-                            ibcpLayer.ShowOK(res.data.message);
-                            keyValueSet.search();
-                            ibcpLayer.Close(divIndex);
+                            addObj.addOk(function(){
+                                ibcpLayer.ShowOK(res.data.message);
+                                keyValueSet.search();
+                                ibcpLayer.Close(divIndex);
+                            })
                         });
                     }
                     if (operate == 2) {
@@ -83,9 +85,11 @@ var keyValueSetAdd = new Vue({
                         }, {
                             jsonp: 'callback'
                         }).then(function (res) {
-                            ibcpLayer.ShowOK(res.data.message);
-                            keyValueSet.search();
-                            ibcpLayer.Close(divIndex);
+                            editObj.editOk(function(){
+                                ibcpLayer.ShowOK(res.data.message);
+                                keyValueSet.search();
+                                ibcpLayer.Close(divIndex);
+                            })
                         });
                     }
                 }

@@ -61,6 +61,9 @@ var keyValueSet=new Vue({
             })
 
         },
+        FindFirstDate(row){
+            this.$refs.tableData.setCurrentRow(row); //将选中的行变颜色
+        },
         handleSizeChange(val){//每页显示多少条
             this.pageSize=val;
             this.searchPage();
@@ -70,7 +73,8 @@ var keyValueSet=new Vue({
             this.searchPage();
         },
         //点击
-        onClick(row, event, column){
+        currentChange(row, event, column){
+            console.log(row)
             if(row){
                 this.currentVal=row;
             }
@@ -78,12 +82,15 @@ var keyValueSet=new Vue({
     },
     created(){
         this.searchPage();
-        $(document).ready(function(){
-            keyValueSet.height=$(window).height()-200;
-        });
-        $(window).resize(function(){
-            keyValueSet.height=$(window).height()-200;
-        })
+        //$(document).ready(function(){
+        //    keyValueSet.height=$(window).height()-200;
+        //});
+        //$(window).resize(function(){
+        //    keyValueSet.height=$(window).height()-200;
+        //})
+    },
+    updated() {
+        this.FindFirstDate(this.tableData[0]);
     }
 })
 

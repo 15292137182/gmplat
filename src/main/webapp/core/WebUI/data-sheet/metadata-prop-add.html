@@ -170,10 +170,12 @@
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {
-                                console.log(res);
-                                ibcpLayer.ShowOK(res.data.message);
-                                basRight.searchRightTable();
-                                ibcpLayer.Close(divIndex);
+                               // console.log(res);
+                                addObj.addOk(function(){
+                                    ibcpLayer.ShowOK(res.data.message);
+                                    basRight.searchRightTable();
+                                    ibcpLayer.Close(divIndex);
+                                })
                             });
                         }
                         else if(operateOPr==2){
@@ -191,10 +193,12 @@
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {
-                                console.log(res);
-                                ibcpLayer.ShowOK(res.data.message);
-                                basRight.searchRightTable();
-                                ibcpLayer.Close(divIndex);
+                               // console.log(res);
+                                editObj.editOk(function(){
+                                    ibcpLayer.ShowOK(res.data.message);
+                                    basRight.searchRightTable();
+                                    ibcpLayer.Close(divIndex);
+                                })
                             });
                         }
                     }else {
