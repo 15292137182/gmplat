@@ -2,7 +2,6 @@ package com.bcx.plat.shiro.relam;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.utils.HexUtil.validPasswd;
-import static com.bcx.plat.core.utils.UtilsTool.excludeDeleted;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -74,7 +73,7 @@ public class DefaultRelam extends AuthorizingRealm {
               user.setLastLoginDate(getDateTimeNow());
               // 更新时间日期
               userService.update(user.toMap(),
-                  excludeDeleted(new FieldCondition("rowId", Operator.EQUAL, user.getRowId())));
+                  new FieldCondition("rowId", Operator.EQUAL, user.getRowId()));
               return new SimpleAuthenticationInfo(userId, password, getName());
             }
           } else {
