@@ -71,11 +71,12 @@
                                       highlight-current-row
                                       v-loading="loading"
                                       element-loading-text="加载中"
+                                      @sort-change="headSort"
                                       @row-click="currentChange"
                                       style="width: 100%;border-radius: 5px">
-                                <el-table-column prop="keysetCode" label="代码" width="">
+                                <el-table-column prop="keysetCode" sortable="custom" label="代码" width="">
                                 </el-table-column>
-                                <el-table-column prop="number" label="编号" width="">
+                                <el-table-column prop="number" label="编号"sortable="custom"  width="">
                                 </el-table-column>
                                 <el-table-column prop="keysetName" label="名称" width="">
                                 </el-table-column>

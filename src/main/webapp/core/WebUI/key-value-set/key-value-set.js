@@ -79,6 +79,9 @@ var keyValueSet=new Vue({
                 this.currentVal=row;
             }
         },
+        headSort(column){//列头排序
+            pagingObj.headSort(queryPage,this.input,this.pageSize,this.pageNum,column,this);
+        }
     },
     created(){
         this.searchPage();
