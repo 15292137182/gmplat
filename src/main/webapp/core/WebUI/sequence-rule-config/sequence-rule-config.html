@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <script src="../Public/publicjs.js"></script>
-    <title>Title</title>
+    <title>序列规则配置</title>
+    <style>
+        html{
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,7 +16,7 @@
     <!--搜索框 搜索按钮 所有事件按钮-->
     <el-row type="flex" justify="end" style="padding:5px 0 10px 0">
         <el-col :span="24">
-            <el-button type="success" icon="plus" size="small" @click.native="addEvent">新增</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent">新增</el-button>
              <el-button type="warning" icon="setting" size="small" @click.native="reset" :disabled="true">重置</el-button>
         </el-col>
     </el-row>
@@ -36,18 +41,21 @@
                     <el-col :span="24">
                         <template>
                             <el-table :data="tableData" border :height="Height"
+                                      v-loading="loading"
                                       element-loading-text="加载中"
-                                      highlight-current-row @row-click="onClick"
-                                      style="width: 100%;border-radius: 5px">
-                                <el-table-column prop="seqCode" label="代码" width="150">
+                                      highlight-current-row
+                                      @row-click="onClick"
+                                      style="width: 100%;border-radius: 5px"
+                                      @sort-change="headSort">
+                                <el-table-column sortable="custom" prop="seqCode" label="代码" width="150">
                                 </el-table-column>
-                                <el-table-column prop="seqName" label="名称" width="200">
+                                <el-table-column sortable="custom" prop="seqName" label="名称" width="200">
                                 </el-table-column>
                                 <el-table-column prop="seqContent" label="内容" width="450">
                                 </el-table-column>
-                                <el-table-column prop="desp" label="说明" width="125">
+                                <el-table-column prop="desp" label="说明" width="">
                                 </el-table-column>
-                                <el-table-column prop="version" label="版本" width="100">
+                                <el-table-column sortable="custom" prop="version" label="版本" width="">
                                 </el-table-column>
                                 <el-table-column  prop="" fixed="right"
                                                   label="操作" width="100">

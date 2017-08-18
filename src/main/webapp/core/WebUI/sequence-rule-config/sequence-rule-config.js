@@ -33,18 +33,18 @@ var config=new Vue({
         addEvent(){
             operate = 1;
             var htmlUrl="sequence-rule-config-add.html";
-            divIndex=ibcpLayer.ShowDiv(htmlUrl, '新增序列号规则配置', '400px', '450px');
+            divIndex=ibcpLayer.ShowDiv(htmlUrl, '新增序列号规则配置', '400px', '420px');
         },
         editEvent(){
             operate=2;
             var htmlUrl = 'sequence-rule-config-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '450px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑键值集合', '400px', '420px', function () {
                 //code值
-                add.seqCodeInput = config.currentVal.seqCode;
-                add.seqNameInput = config.currentVal.seqName;
-                add.seqContentInput = config.currentVal.seqContent;
-                add.despInput = config.currentVal.desp;
-                add.versionInput = config.currentVal.version;
+                add.formTable.seqCodeInput = config.currentVal.seqCode;
+                add.formTable.seqNameInput = config.currentVal.seqName;
+                add.formTable.seqContentInput = config.currentVal.seqContent;
+                add.formTable.despInput = config.currentVal.desp;
+                add.formTable.versionInput = config.currentVal.version;
                 add.disabled=true;
             });
         },
@@ -69,14 +69,17 @@ var config=new Vue({
             this.pageNum=val;
             this.searchPage();
         },
+        headSort(column){//列头排序
+            pagingObj.headSorts1(queryPage,this.input,column,this);
+        }
     },
     created(){
         this.searchPage();
-        $(document).ready(function(){
-            config.Height=$(window).height()-190;
-        });
-        $(window).resize(function(){
-            config.Height=$(window).height()-190;
-        })
+        // $(document).ready(function(){
+        //     config.Height=$(window).height()-190;
+        // });
+        // $(window).resize(function(){
+        //     config.Height=$(window).height()-190;
+        // })
     }
 })

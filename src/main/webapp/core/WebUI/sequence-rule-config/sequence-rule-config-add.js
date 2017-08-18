@@ -3,21 +3,22 @@
  */
 var add=new Vue({
     el:"#SequenceRuleConfigAdd",
-    data:function(){
-        return{
+    data:{
+        labelPosition:'right',
+        formTable:{
             seqCodeInput:'',
             seqNameInput:'',
             seqContentInput:'',
             despInput:'',
             versionInput:'',
-            disabled:false
-        }
+        },
+        disabled:false
     },
     methods:{
         confirm(){
             var datas = [
+                this.$refs.seqCodeInput,
                 this.$refs.seqNameInput,
-                this.$refs.seqContentInput,
                 this.$refs.seqContentInput,
             ];
             for (var i = 0; i < datas.length; i++) {
@@ -27,34 +28,38 @@ var add=new Vue({
                 }
             }
             if (operate == 1) {
-                this.$http.jsonp(insert, {
-                    seqCode: add.seqCodeInput,
-                    seqName: add.seqNameInput,
-                    seqContent: add.seqContentInput,
-                    desp: add.despInput,
-                    version: add.versionInput
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    ibcpLayer.ShowOK(res.data.message);
-                    config.search();
-                    ibcpLayer.Close(divIndex);
-                });
+                addObj.addOk(function(){
+                    add.$http.jsonp(insert,{
+                        seqCode: add.formTable.seqCodeInput,
+                        seqName: add.formTable.seqNameInput,
+                        seqContent: add.formTable.seqContentInput,
+                        desp: add.formTable.despInput,
+                        version: add.formTable.versionInput
+                    }, {
+                        jsonp: 'callback'
+                    }).then(function (res) {
+                        ibcpLayer.ShowOK(res.data.message);
+                        config.search();
+                        ibcpLayer.Close(divIndex);
+                    });
+                })
             }
             if(operate==2){
-                this.$http.jsonp(modify,{
-                    rowId:config.currentVal.rowId,
-                    seqCode: add.seqCodeInput,
-                    seqName: add.seqNameInput,
-                    seqContent: add.seqContentInput,
-                    desp: add.despInput,
-                    version: add.versionInput
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
-                    ibcpLayer.ShowOK(res.data.message);
-                    config.search();
-                    ibcpLayer.Close(divIndex);
+                editObj.editOk(function(){
+                    add.$http.jsonp(modify,{
+                        rowId:config.currentVal.rowId,
+                        seqCode: add.formTable.seqCodeInput,
+                        seqName: add.formTable.seqNameInput,
+                        seqContent: add.formTable.seqContentInput,
+                        desp: add.formTable.despInput,
+                        version: add.formTable.versionInput
+                    },{
+                        jsonp:'callback'
+                    }).then(function(res){
+                        ibcpLayer.ShowOK(res.data.message);
+                        config.search();
+                        ibcpLayer.Close(divIndex);
+                    })
                 })
             }
         },
@@ -153,7 +158,7 @@ var content=new Vue({
                 str=str.substr(0,str.length-2);
             }
             this.dialogFormVisible=false;
-            add.seqContentInput=str;
+            add.formTable.seqContentInput=str;
         }
     }
 })

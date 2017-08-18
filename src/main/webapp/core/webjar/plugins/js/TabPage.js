@@ -200,6 +200,7 @@ var pagingObj = (function(){
     }
 })()
 
+//删除确认框
 var deleteObj = (function(){
     var del = function(callback){
         ibcpLayer.ShowConfirm("您确定删除吗?",function(){
@@ -210,6 +211,34 @@ var deleteObj = (function(){
     }
     return {
         del:del
+    }
+})()
+
+//新增确认框
+var addObj = (function(){
+    var addOk = function(callback){
+        ibcpLayer.ShowConfirm("您确定新增吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        addOk:addOk
+    }
+})()
+
+//编辑确认框
+var editObj = (function(){
+    var editOk = function(callback){
+        ibcpLayer.ShowConfirm("您确定修改吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        editOk:editOk
     }
 })()
 
