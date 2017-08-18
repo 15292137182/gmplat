@@ -148,7 +148,8 @@ var basLeft = new Vue({
         },
         searchLeftTable() {
             pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.currentPage,this,function(res){
-                if(res.data.result.length!=0){
+                console.log(res)
+                if(res.data!=null){
                     console.log(res.data.result);
                     $.each(res.data.result, function(index, item) {
                         if(item.status != "0") {
@@ -249,7 +250,7 @@ var basRight = new Vue({
         searchRightTable() {
             console.log(basLeft.currentVal);
             pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.currentPage,this,function(res){
-                if(res.data.result.length!=0){
+                if(res.data!=null){
                     //按钮禁掉
                     $.each(res.data.result, function(index, item) {
                         if(basLeft.currentVal.testDemo==true) {
