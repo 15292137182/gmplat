@@ -14,11 +14,9 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
    *
    * @param request 请求
    * @param response 返回
-   * @throws Exception 可能抛出的异常
    */
   @Override
-  protected void doDispatch(HttpServletRequest request, HttpServletResponse response)
-      throws Exception {
+  protected void doDispatch(HttpServletRequest request, HttpServletResponse response) {
     TXManager.doInNewTX(((manager, status) -> {
       try {
         super.doDispatch(request, response);
