@@ -3,13 +3,16 @@ package com.bcx.plat.core.morebatis.app;
 import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.morebatis.cctv1.FieldInTable;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteField;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteTable;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
@@ -46,16 +49,17 @@ public class MoreBatis {
     aliesMaps = new HashMap<>();
     for (EntityEntry entityEntry : entityEntries) {
       final Class<? extends BaseEntity> entryClass = entityEntry.getEntityClass();
+      final TableSource entityEntryTable = entityEntry.getTable();
       Map<String, Column> aliesMap = aliesMaps.get(entryClass);
       if (aliesMap == null) {
         aliesMap = new HashMap<>();
         aliesMaps.put(entryClass, aliesMap);
       }
       for (Column column : entityEntry.getFields()) {
-        aliesMap.put(column.getAlies(), new ImmuteField(column));
+        aliesMap.put(column.getAlies(), new FieldInTable((Field) column,(Table) entityEntryTable));
       }
       entityColumns.put(entryClass, immute(entityEntry.getFields()));
-      entityTables.put(entryClass, new ImmuteTable(entityEntry.getTable()));
+      entityTables.put(entryClass, new ImmuteTable(entityEntryTable));
       entityPks.put(entryClass,immute(entityEntry.getPks()));
     }
   }

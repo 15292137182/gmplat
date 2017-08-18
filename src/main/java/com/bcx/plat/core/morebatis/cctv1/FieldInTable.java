@@ -1,6 +1,8 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.database.info.TableInfo;
+import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
@@ -8,28 +10,20 @@ import java.util.LinkedList;
 
 public class FieldInTable implements TableSource,Column {
 
-  private Column column;
-  private TableSource tableSource;
+  private Field field;
+  private Table table;
 
-  public FieldInTable(Column column, TableSource tableSource) {
-    this.column = column;
-    this.tableSource = tableSource;
+  public FieldInTable(Field field, Table table) {
+    this.field = field;
+    this.table = table;
   }
 
-  public Column getColumn() {
-    return column;
+  public Field getField() {
+    return field;
   }
 
-  public void setColumn(Column column) {
-    this.column = column;
-  }
-
-  public TableSource getTableSource() {
-    return tableSource;
-  }
-
-  public void setTableSource(TableSource tableSource) {
-    this.tableSource = tableSource;
+  public Table getTable() {
+    return table;
   }
 
   @Override
@@ -40,16 +34,16 @@ public class FieldInTable implements TableSource,Column {
 
   @Override
   public String getAlies() {
-    return column.getAlies();
+    return field.getAlies();
   }
 
   @Override
   public String getFieldSource() {
-    return ((TableInfo)tableSource).table.getTableName()+"."+column.getFieldSource();
+    return table.getTableName()+"."+field.getFieldSource();
   }
 
   @Override
   public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-    return tableSource.getTableSource(translator);
+    return table.getTableSource(translator);
   }
 }

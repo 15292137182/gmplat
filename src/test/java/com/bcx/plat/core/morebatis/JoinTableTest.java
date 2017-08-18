@@ -1,9 +1,6 @@
 package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
-import com.bcx.plat.core.database.info.Fields;
-import com.bcx.plat.core.database.info.Fields.T_BUSINESS_OBJECT;
-import com.bcx.plat.core.database.info.Fields.T_BUSINESS_OBJECT_PRO;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
@@ -57,12 +54,15 @@ public class JoinTableTest extends BaseTest {
 
   @Test
   public void innerJoinTest() {
-    QueryAction joinTableTest = moreBatis.selectStatement().select(T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
-        .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
-            TableInfo.T_BUSINESS_OBJECT_PRO)
-            .on(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
-                T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
-        .where(new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId));
+    QueryAction joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))
+        .from(new JoinTable(moreBatis.getTable(BusinessObject.class), JoinType.INNER_JOIN,
+            moreBatis.getTable(BusinessObjectPro.class))
+//    new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID
+            .on(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL,
+                moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))))
+                //T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID
+
+        .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId));
 //        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.ROW_ID);
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());
@@ -72,13 +72,13 @@ public class JoinTableTest extends BaseTest {
   public void groupByTest() {
     QueryAction joinTableTest;
     List<Map<String, Object>> result;
-    joinTableTest = moreBatis.selectStatement().select(T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)
+    joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))
         .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
             TableInfo.T_BUSINESS_OBJECT_PRO)
-            .on(new FieldCondition(T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL,
-                T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID)))
-        .where(new FieldCondition(T_BUSINESS_OBJECT.ROW_ID, Operator.EQUAL, primaryRowId))
-        .groupBy(T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID);
+            .on(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL,
+                moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))))
+        .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId))
+        .groupBy(moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"));
     result = joinTableTest.execute();
     Assert.assertEquals(1, result.size());
   }

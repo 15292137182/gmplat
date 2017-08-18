@@ -6,6 +6,8 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
@@ -112,8 +114,11 @@ public class BusinessObjectController extends
         LinkedList<Order> str = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result =
                 businessObjectProService.select(
-                        new And(new FieldCondition(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID, Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args)))
+                    new ConditionBuilder(BusinessObjectPro.class).buildByAnd().equal("objRowId",rowId).or().addCondition(UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args))).endOr().endAnd().buildDone()
+//                        new And(
+//                            new FieldCondition(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID, Operator.EQUAL, rowId),
+//                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args))
+//                        )
                         , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
         if (result.getResult().size()==0) {
             return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);

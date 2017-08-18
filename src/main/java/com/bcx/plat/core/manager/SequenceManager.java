@@ -6,6 +6,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -44,6 +46,7 @@ public class SequenceManager {
 
   private static SequenceGenerateService sequenceGenerateService;
   private static SequenceRuleConfigService sequenceRuleConfigService;
+  private static MoreBatis moreBatis=SpringContextHolder.getBean("moreBatis");
 
   private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -252,10 +255,12 @@ public class SequenceManager {
     if (keys.containsKey(variableKey)) {
       return keys.get(variableKey);
     } else {
-      List<Map<String, Object>> list = sequenceGenerateService.select(new And(
-          new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
-          , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY, Operator.EQUAL, variableKey)
-          , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN, Operator.EQUAL, branchSign))
+      List<Map<String, Object>> list = sequenceGenerateService.select(
+          new ConditionBuilder(SequenceGenerate.class).buildByAnd().equal("rowId",seqRowId).equal("variableKey",variableKey).equal("branchSign",branchSign).endAnd().buildDone()
+//          new And(
+//          new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
+//          , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY, Operator.EQUAL, variableKey)
+//          , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN, Operator.EQUAL, branchSign))
       );
       if (list.size() == 1) {
         String json = UtilsTool.objToJson(list.get(0));
@@ -321,13 +326,18 @@ public class SequenceManager {
     // 如果不是测试，存入数据库
     if (!test && !isMock) {
       for (String variableKey : keys.keySet()) {
-        List<Map<String, Object>> list = sequenceGenerateService.select(
-            new And(
-                new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
-                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY, Operator.EQUAL,
-                variableKey)
-                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN, Operator.EQUAL,
-                branchValues.get(variableKey).toString())));
+        List<Map<String, Object>> list = sequenceGenerateService.select(new ConditionBuilder(SequenceGenerate.class).buildByAnd()
+            .equal("seqRowId",seqRowId)
+            .equal("variableKey",variableKey)
+            .equal("branchSign",branchValues.get(variableKey).toString())
+            .endAnd()
+            .buildDone()
+//            new And(
+//                new FieldCondition(Fields.T_SEQUENCE_GENERATE.SEQ_ROW_ID, Operator.EQUAL, seqRowId)
+//                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.VARIABLE_KEY, Operator.EQUAL,variableKey)
+//                , new FieldCondition(Fields.T_SEQUENCE_GENERATE.BRANCH_SIGN, Operator.EQUAL,branchValues.get(variableKey).toString())
+//            )
+        );
 
         SequenceGenerate sg = new SequenceGenerate();
         sg.setSeqRowId(seqRowId);
