@@ -337,10 +337,10 @@ var basRight = new Vue({
     },
     created() {
         $(document).ready(function () {
-            basRight.rightHeight = $(window).height() - 200;
+            basRight.rightHeight = $(window).height() - 194;
         });
         $(window).resize(function () {
-            basRight.rightHeight = $(window).height() - 200;
+            basRight.rightHeight = $(window).height() - 194;
         })
     },
     updated() {

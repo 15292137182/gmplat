@@ -66,6 +66,7 @@ var keyValueSetAdd = new Vue({
                         }).then(function (res) {
                             addObj.addOk(function(){
                                 showMsg.MsgOk(keyValueSet,res)
+                                keyValueSet.input='';
                                 keyValueSet.search();
                                 ibcpLayer.Close(divIndex);
                             },function(){
@@ -89,6 +90,7 @@ var keyValueSetAdd = new Vue({
                         }).then(function (res) {
                             editObj.editOk(function(){
                                 showMsg.MsgOk(keyValueSet,res)
+                                keyValueSet.input='';
                                 keyValueSet.search();
                                 ibcpLayer.Close(divIndex);
                             },function(){
