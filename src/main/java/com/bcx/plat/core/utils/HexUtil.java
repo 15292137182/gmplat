@@ -71,11 +71,11 @@ public class HexUtil {
    * @param pwd 用户输入密码
    * @param dbPWD 数据库保存的密码
    */
-  public static boolean validPasswd(String pwd, String dbPWD) {
-    byte[] pwIndb = hexStringToByte(dbPWD);
+  public static boolean validPassword(String pwd, String dbPWD) {
+    byte[] dbPwd = hexStringToByte(dbPWD);
     // 定义salt
     byte[] salt = new byte[SALT_LENGTH];
-    System.arraycopy(pwIndb, 0, salt, 0, SALT_LENGTH);
+    System.arraycopy(dbPwd, 0, salt, 0, SALT_LENGTH);
     // 创建消息摘要对象
     MessageDigest md = null;
     try {
@@ -89,12 +89,12 @@ public class HexUtil {
     }
     byte[] digest = md.digest();
     // 声明一个对象接收数据库中的口令消息摘要
-    byte[] digestIndb = new byte[pwIndb.length - SALT_LENGTH];
+    byte[] digestInDB = new byte[dbPwd.length - SALT_LENGTH];
     // 获得数据库中口令的摘要
-    System.arraycopy(pwIndb, SALT_LENGTH, digestIndb, 0, digestIndb.length);
+    System.arraycopy(dbPwd, SALT_LENGTH, digestInDB, 0, digestInDB.length);
     // 比较根据输入口令生成的消息摘要和数据库中的口令摘要是否相同
     // 口令匹配相同
-    return Arrays.equals(digest, digestIndb);
+    return Arrays.equals(digest, digestInDB);
   }
 
   /**

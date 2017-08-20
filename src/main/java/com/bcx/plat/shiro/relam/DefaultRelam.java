@@ -1,7 +1,7 @@
 package com.bcx.plat.shiro.relam;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
-import static com.bcx.plat.core.utils.HexUtil.validPasswd;
+import static com.bcx.plat.core.utils.HexUtil.validPassword;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -65,7 +65,7 @@ public class DefaultRelam extends AuthorizingRealm {
         User user = new User().fromMap(userMaps.get(0));
         if (null != user) {
           String dbPassword = user.getPassword();
-          if (validPasswd(password, dbPassword)) {
+          if (validPassword(password, dbPassword)) {
             if (TRUE_FLAG.equals(user.getDisabled())) {
               // 账号被禁用
               throw new DisabledAccountException();
