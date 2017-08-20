@@ -89,6 +89,7 @@
                         checkEvent: false,
                         reaTabEvent:false,
                         dataId:'',
+                        flag:true
                     },
                     optionValue:[],
                     optionLeft: [],
@@ -141,6 +142,10 @@
                 }
             },
             conformEvent(addProForm) {
+                if(proEm.flag==false){
+                    return
+                }
+                proEm.flag=false;
 //                if (this.checked == true) {
 //                    var datas = [this.$refs.nameProInput, this.$refs.typeInput, this.$refs.typeComValue, this.$refs.comContent];
 //                } else {

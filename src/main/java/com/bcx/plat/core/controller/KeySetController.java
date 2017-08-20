@@ -4,6 +4,8 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -46,7 +48,6 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
             List<Map<String, Object>> result = getEntityService().singleInputSelect(Arrays.asList("number"), lists);
             map.put("{" + li, result + "}");
         }
-
         if (map.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
@@ -54,33 +55,20 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     }
 
 
-
     /**
-     * 通用查询方法
+     * 根据编号查询数据
      *
-     * @param args     按照空格查询
+     * @param args    按照空格查询
      * @param request request请求
      * @param locale  国际化参数
      * @return ServiceResult
      */
-    @RequestMapping("/queryTest")
-    public Object query(String args, HttpServletRequest request, Locale locale) {
-//        List list = UtilsTool.jsonToObj(args, List.class);
-//        for (Object l: list){
-//            System.out.println(l);
-//        }
-
-        HashMap hashMap = UtilsTool.jsonToObj(args, HashMap.class);
-        for (Object ha : hashMap.keySet()){
-            Object o = hashMap.get(ha);
-            System.out.println(o);
+    @RequestMapping("/queryNumber")
+    public Object queryNumber(String args, HttpServletRequest request, Locale locale) {
+        List<Map<String, Object>> result = getEntityService().select(new FieldCondition("number", Operator.EQUAL, args));
+        if (result.size() == 0) {
+            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-//        List<Map<String, Object>> result = getEntityService()
-//                .singleInputSelect(Arrays.asList("number"), list);
-//        if (result.size() == 0) {
-//            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
-//        }
-        return null;
+        return super.result(request, new ServiceResult(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
-
 }
