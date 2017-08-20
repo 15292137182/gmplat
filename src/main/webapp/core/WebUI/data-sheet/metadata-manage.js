@@ -140,6 +140,7 @@ var basLeft = new Vue({
                 }).then(function (ref) {
                     showMsg.MsgOk(basTop,ref)
                     basLeft.searchLeftTable();
+                    basRight.rightInput='';
                     basRight.searchRightTable();
                 },function(){
                     showMsg.MsgError(basTop)
@@ -209,6 +210,7 @@ var basLeft = new Vue({
                 //左边这一行的数据
                 this.currentId = row.rowId;
                 //查找右侧表的数据
+                basRight.rightInput='';
                 basRight.searchRightTable(this.currentVal);
             }
         },
