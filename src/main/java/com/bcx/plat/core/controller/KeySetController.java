@@ -4,16 +4,10 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
-import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,25 +36,21 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
      * @return ServiceResult
      * ["demo","test"]
      */
-    @RequestMapping("/queryKeySey")
+    @RequestMapping("/queryKeySet")
     public Object queryKeySet(String args, HttpServletRequest request, Locale locale) {
         List list = UtilsTool.jsonToObj(args, List.class);
+        Map<Object, Object> map = new HashMap<>();
         List lists = new ArrayList();
-        for (Object l : list) {
-            lists.add(l);
+        for (Object li : list) {
+            lists.add(li);
+            List<Map<String, Object>> result = getEntityService().singleInputSelect(Arrays.asList("number"), lists);
+            map.put("{" + li, result + "}");
         }
-        List<Map<String, Object>> result = getEntityService()
-                .singleInputSelect(Arrays.asList("number"), lists);
-        for (Map<String,Object> results : result){
-            Object number = results.get("number");
-//            if (number==A){
-//
-//            }
-        }
-        if (result.size() == 0) {
+
+        if (map.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return super.result(request, new ServiceResult(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return super.result(request, new ServiceResult(map, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 
