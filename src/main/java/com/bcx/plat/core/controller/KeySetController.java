@@ -40,8 +40,8 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     public Object queryKeySet(String args, HttpServletRequest request, Locale locale) {
         List list = UtilsTool.jsonToObj(args, List.class);
         Map<Object, Object> map = new HashMap<>();
-        List lists = new ArrayList();
         for (Object li : list) {
+            List lists = new ArrayList();
             lists.add(li);
             List<Map<String, Object>> result = getEntityService().singleInputSelect(Arrays.asList("number"), lists);
             map.put("{" + li, result + "}");
@@ -52,6 +52,7 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
         }
         return super.result(request, new ServiceResult(map, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
+
 
 
     /**

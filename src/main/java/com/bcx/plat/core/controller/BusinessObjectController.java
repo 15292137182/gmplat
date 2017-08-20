@@ -67,8 +67,12 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryPage")
-    public Object singleInputSelect(String args, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
-                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
+    public Object singleInputSelect(String args,
+                                    @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                    String order,
+                                    HttpServletRequest request,
+                                    Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (args !=null && !args.isEmpty()){
             pageNum = 1;
@@ -108,23 +112,42 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId, String args,@RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,String order,
-                                    HttpServletRequest request, Locale locale) {
+    public Object queryProPage(String rowId,
+                               String args,
+                               @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                               @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                               String order,
+                               HttpServletRequest request,
+                               Locale locale) {
         LinkedList<Order> str = UtilsTool.dataSort(order);
-        PageResult<Map<String, Object>> result =
-                businessObjectProService.select(
-                    new ConditionBuilder(BusinessObjectPro.class).buildByAnd().equal("objRowId",rowId).or().addCondition(UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args))).endOr().endAnd().buildDone()
-//                        new And(
-//                            new FieldCondition(Fields.T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID, Operator.EQUAL, rowId),
-//                                UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"), UtilsTool.collectToSet(args))
-//                        )
-                        , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
-        if (result.getResult().size()==0) {
-            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
+        PageResult<Map<String, Object>> result = null;
+
+        if (UtilsTool.isValid(args)) {
+            result = businessObjectProService.select(
+                    new ConditionBuilder(BusinessObjectPro.class).buildByAnd()
+                            .equal("objRowId", rowId).or()
+                            .addCondition(UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"),
+                                    UtilsTool.collectToSet(args))).endOr().endAnd().buildDone()
+                    , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+            if (result.getResult().size() == 0) {
+                return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+            }
+            for (Map<String, Object> rest : result.getResult()) {
+                rest.put("testDemo", false);
+            }
+            return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
         }
-        for (Map<String,Object> rest : result.getResult()){
-            rest.put("testDemo",false);
+        result =
+                businessObjectProService.select(
+                        new ConditionBuilder(BusinessObjectPro.class).buildByAnd()
+                                .equal("objRowId", rowId).or().endOr().endAnd().buildDone()
+                        , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+
+        if (result.getResult().size() == 0) {
+            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+        }
+        for (Map<String, Object> rest : result.getResult()) {
+            rest.put("testDemo", false);
         }
         return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
@@ -226,7 +249,8 @@ public class BusinessObjectController extends
                         , new Field("table_schema", "tableSchema")),null);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
-            map.put((String) row.get("rowId"), row.get("tableSchema") + "(" + row.get("tableCname") + ")");
+//            map.put((String) row.get("rowId"), row.get("tableSchema") + "(" + row.get("tableCname") + ")");
+            map.put((String) row.get("rowId"), row.get("tableCname"));
         }
         for (Map<String, Object> row : result) {
             row.put("associatTable", map.get(row.get("relateTableRowId")));

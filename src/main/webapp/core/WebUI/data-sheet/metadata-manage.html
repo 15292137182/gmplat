@@ -44,9 +44,9 @@
                               @sort-change="headSort"
                               class="tableStyle">
                         <el-table-column prop="objectName" sortable="custom" label="名称" show-overflow-tooltip width="110"></el-table-column>
-                        <el-table-column prop="relateTableRowId" sortable="custom" label="关联表" show-overflow-tooltip width="110" ></el-table-column>
+                        <el-table-column prop="associatTable" label="关联表" show-overflow-tooltip width="110" ></el-table-column>
                         <el-table-column prop="objectCode" label="代码" sortable="custom" show-overflow-tooltip width="100"></el-table-column>
-                        <el-table-column prop="version" label="版本" sortable="custom" show-overflow-tooltip width="100"></el-table-column>
+                        <el-table-column prop="version" label="版本"  show-overflow-tooltip width="100"></el-table-column>
                         <el-table-column  prop="" label="操作" width="" class-name="aaa">
                             <template scope="scope">
                                 <el-button @click.native="editEvent" type="text" size="small" icon="edit" :disabled=scope.row.testDemo></el-button>

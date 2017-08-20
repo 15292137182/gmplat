@@ -102,7 +102,7 @@ var pagingObj = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误")
+                alert("错误111")
             }
         })
     }
