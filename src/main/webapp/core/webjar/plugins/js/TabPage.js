@@ -271,3 +271,86 @@ var showMsg = (function(){
     }
 })()
 
+/**
+ * 下拉框选择组件
+ * @type {{setOpt}}
+ */
+var SelectOptions = (function(){
+    var setOpt = function(templateId,modelName,keysetCode,path){
+        var _data={};
+        _data[modelName]='';
+        _data["options"]=[];
+        _data["list"]=[];
+        var _templateId='tid';
+        if(undefined !=templateId && null !=templateId && "" !=templateId){
+            _templateId=templateId;
+        }
+        var selectComponet = {
+            template: '#'+_templateId,
+            data : function(){
+                return _data;
+            },
+            methods: {
+                flush() {
+                    var _path = serverPath+"/keySet/query";
+                    var param = {"str":keysetCode};
+                    if(undefined != path && null != path && "" != path){
+                        _path = path;
+                        param = {};
+                    }
+                    this.$http.jsonp(_path, param, {
+                        jsonp: 'callback'
+                    }).then(function (res) {
+                        this.list=res.data.data;
+                        this.options=this.list;
+                    });
+                }
+                /*,
+                 queryMethod(query){
+                 if(query !=''){
+                 this.options = this.list.filter(function(item) {
+                 return item.confValue.indexOf(query) > -1 || item.confKey.indexOf(query)>-1;
+                 });
+                 }else{
+                 this.options=this.list;
+                 }
+                 }*/
+            },
+            created(){
+                this.flush();
+            }
+        }
+        return selectComponet;
+    }
+
+    var tableSetOpt=function(serUrl,args){
+        var arr=new Array();
+        for(var p in args){
+            var str=args[p];
+            arr.push(str);
+        }
+
+        $.ajax({
+            url:serUrl,
+            type:"get",
+            data:{args:arr},
+            dataType:"jsonp",
+            success:function(res){
+                console.log(res.data);
+                if(typeof callback == "function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                alert("error");
+            }
+        })
+    }
+    return {
+        setOpt:setOpt,
+        tableSetOpt:tableSetOpt
+    }
+})()
+
+
+

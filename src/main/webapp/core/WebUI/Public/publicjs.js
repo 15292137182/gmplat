@@ -47,6 +47,17 @@ document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ib
 
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpKeyboard.js"></script>');
 
+var _selectHtml = [];
+_selectHtml.push('<template id="tid">');
+_selectHtml.push('  <el-select v-model="value" placeholder="请选择" clearable filterable>');
+_selectHtml.push('      <el-option v-for="item in options"');
+_selectHtml.push('          :key="item.confKey"');
+_selectHtml.push('          :label="item.confValue"');
+_selectHtml.push('          :value="item.confKey"></el-option>');
+_selectHtml.push('  </el-select>');
+_selectHtml.push('</template>');
+document.write(_selectHtml.join(''));
+
 function getRootPath() {
     //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
     var curWwwPath = window.document.location.href;
