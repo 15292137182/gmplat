@@ -172,7 +172,8 @@
                             }).then(function (res) {
                                // console.log(res);
                                 addObj.addOk(function(){
-                                    showMsg.MsgOk(basTop,res)
+                                    showMsg.MsgOk(basTop,res);
+                                    basRight.rightInput='';
                                     basRight.searchRightTable();
                                     ibcpLayer.Close(divIndex);
                                 },function(){
@@ -197,7 +198,8 @@
                             }).then(function (res) {
                                // console.log(res);
                                 editObj.editOk(function(){
-                                    showMsg.MsgOk(basTop,res)
+                                    showMsg.MsgOk(basTop,res);
+                                     basRight.rightInput='';
                                     basRight.searchRightTable();
                                     ibcpLayer.Close(divIndex);
                                 },function(){

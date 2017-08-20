@@ -93,7 +93,8 @@
                                 jsonp: 'callback'
                             }).then(function (res) {
                                 addObj.addOk(function(){
-                                    showMsg.MsgOk(basTop,res)
+                                    showMsg.MsgOk(basTop,res);
+                                    basLeft.leftInput='';
                                     basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
                                 },function(){
@@ -110,7 +111,8 @@
                                 jsonp: 'callback'
                             }).then(function (res) {
                                 editObj.editOk(function(){
-                                    showMsg.MsgOk(basTop,res)
+                                    showMsg.MsgOk(basTop,res);
+                                    basLeft.leftInput='';
                                     basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
                                 },function(){

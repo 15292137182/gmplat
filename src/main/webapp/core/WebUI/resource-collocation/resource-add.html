@@ -73,7 +73,9 @@
                                 jsonp: 'callback'
                             }).then(function (res) {
                                 addObj.addOk(function(){
-                                    showMsg.MsgOk(resTop,res)
+                                    showMsg.MsgOk(resTop,res);
+                                    //新增的时候将搜索框清空
+                                    resCol.resInput='';
                                     resCol.searchResTable();
                                     ibcpLayer.Close(divIndex);
                                 },function(){
@@ -91,7 +93,9 @@
                                 jsonp: 'callback'
                             }).then(function (res) {
                                 editObj.editOk(function(){
-                                    showMsg.MsgOk(resTop,res)
+                                    showMsg.MsgOk(resTop,res);
+                                    //编辑的时候将搜索框清空
+                                    resCol.resInput='';
                                     resCol.searchResTable();
                                     ibcpLayer.Close(divIndex);
                                 },function(){
