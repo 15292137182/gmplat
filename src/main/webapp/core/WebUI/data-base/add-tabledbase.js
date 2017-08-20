@@ -66,7 +66,7 @@ var tableBase = new Vue({
             return true;
         },
         conformEvent(){//确定按钮
-            if(topButtonObj.isEdit){//编辑
+            if(topButtonObj.isEdit == true){//编辑
                 if(this.isNull()){
                     editObj.editOk(function(){
                         tableBase.editTbleBase(tableBase.rowObj.rowId);

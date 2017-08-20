@@ -40,6 +40,7 @@ var dataBase = new Vue({
         editTableBase(){//编辑
             this.editdivIndex = ibcpLayer.ShowDiv('add-tablebase.html','编辑数据库信息','400px', '440px',function(){
                 topButtonObj.isEdit=true;
+                dataBase.input = '';
                 tableBase.rowObj = dataBase.rowObj;
                 tableBase.formTable.name = dataBase.rowObj.tableSchema;
                 tableBase.formTable.Ename = dataBase.rowObj.tableEname;
@@ -95,7 +96,8 @@ var topButtonObj = new Vue({
     methods:{
         addTableBase(){
             this.divIndex = ibcpLayer.ShowDiv('add-tablebase.html','新增数据库信息','400px', '440px',function(){
-
+                topButtonObj.isEdit=false;
+                dataBase.input = '';
             })
         }
     }
