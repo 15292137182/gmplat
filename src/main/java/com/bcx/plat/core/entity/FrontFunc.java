@@ -33,7 +33,11 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
    */
   @Override
   public FrontFunc buildCreateInfo() {
-    this.funcCode = SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("fronc"),null);
+    try {
+      this.funcCode = SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("fronc"),null);
+    } catch (Exception e) {
+      this.funcCode ="DS"+UtilsTool.getDateTimeNow("yyyyMMdd")+UtilsTool.lengthUUID(5).toUpperCase();
+    }
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

@@ -7,6 +7,8 @@ import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
 
+import java.util.Random;
+
 /**
  * 数据集配置实体类
  * Created by Wen Tiehu on 2017/8/8.
@@ -28,7 +30,11 @@ public class DataSetConfig extends BaseEntity<DataSetConfig> {
      */
     @Override
     public DataSetConfig buildCreateInfo() {
-        this.setDatasetCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("dataSet"),null));
+        try {
+            this.setDatasetCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("dataSet"), null));
+        } catch (Exception e) {
+            this.setDatasetCode("DATAS" +UtilsTool.getDateTimeNow("yyyyMMdd")+ UtilsTool.lengthUUID(5).toUpperCase());
+        }
         this.setVersion("1.0");
         this.rowId = UtilsTool.lengthUUID(32);
         return super.buildCreateInfo();

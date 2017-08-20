@@ -33,7 +33,12 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   @Override
   public BusinessObject buildCreateInfo() {
 
-    this.objectCode = SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("BusinessObject"),null);
+    String prop =UtilsTool.loadProperties("BusinessObject");
+    try {
+      this.objectCode = SequenceManager.getInstance().buildSequenceNo(prop,null);
+    } catch (Exception e) {
+      this.objectCode="BUS"+UtilsTool.getDateTimeNow("yyyyMMdd")+UtilsTool.lengthUUID(5).toUpperCase();
+    }
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
     setVersion(BaseConstants.VERSION);

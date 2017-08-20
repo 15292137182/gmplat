@@ -8,6 +8,8 @@ import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
 
+import java.util.Random;
+
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
@@ -31,7 +33,11 @@ public class KeySet extends BaseEntity<KeySet>{
      */
     @Override
     public KeySet buildCreateInfo() {
-        setKeysetCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("keySet"),null));
+        try {
+            setKeysetCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("keySet"), null));
+        } catch (Exception e) {
+            this.keysetCode = "KS" + UtilsTool.getDateTimeNow("yyyyMMdd").toUpperCase();
+        }
         setVersion(BaseConstants.VERSION);
         setRowId(lengthUUID(32));
         return super.buildCreateInfo();
