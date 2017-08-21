@@ -140,6 +140,7 @@ var em=new Vue({
             }
         },
         loadComplete(){
+
             this.funcRowId = window.parent.topButtonObj.rowObjId;
             this.QueryProperties();
         },
@@ -162,6 +163,7 @@ var em=new Vue({
                 if(res.data.data[0].allowEmpty =="true"){
                     this.checkedNull=true;//允许为空
                 }
+                this.$refs.show.value=res.data.data[0].displayWidget;
                 this.formTable.nameInput=res.data.data[0].displayWidget;//显示控件
                 this.formTable.lengthSection=res.data.data[0].lengthInterval;//长度区间
                 this.formTable.testFunction=res.data.data[0].validateFunc;//验证函数
@@ -186,6 +188,7 @@ var em=new Vue({
     created(){
         this.relateBusiObjId = window.parent.topButtonObj.objId;//业务对象Id
         this.rightRowId = window.parent.properties.rowId;
+
         if(window.parent.topButtonObj.isEdit){//编辑
             this.loadComplete();
         }
