@@ -2,6 +2,7 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
@@ -31,14 +32,8 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
    * @return 返回自身
    */
   @Override
-  public BusinessObject buildCreateInfo() {
-
-    String prop =UtilsTool.loadProperties("BusinessObject");
-    try {
-      this.objectCode = SequenceManager.getInstance().buildSequenceNo(prop,null);
-    } catch (Exception e) {
-      this.objectCode="BUS"+UtilsTool.getDateTimeNow("yyyyMMdd")+UtilsTool.lengthUUID(5).toUpperCase();
-    }
+  public BusinessObject buildCreateInfo(){
+    this.objectCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT, null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
     setVersion(BaseConstants.VERSION);

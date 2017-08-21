@@ -2,6 +2,7 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
@@ -33,11 +34,7 @@ public class KeySet extends BaseEntity<KeySet>{
      */
     @Override
     public KeySet buildCreateInfo() {
-        try {
-            setKeysetCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("keySet"), null));
-        } catch (Exception e) {
-            this.keysetCode = "KS" + UtilsTool.getDateTimeNow("yyyyMMdd").toUpperCase();
-        }
+        setKeysetCode(SequenceManager.getInstance().buildSequenceNo(CodeMessage.KEY_SET, null));
         setVersion(BaseConstants.VERSION);
         setRowId(lengthUUID(32));
         return super.buildCreateInfo();

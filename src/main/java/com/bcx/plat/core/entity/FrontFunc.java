@@ -1,13 +1,13 @@
 package com.bcx.plat.core.entity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.CodeMessage;
+import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.utils.UtilsTool;
+
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 前端功能块实体类 Created by Went on 2017/8/2.
@@ -33,11 +33,7 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
    */
   @Override
   public FrontFunc buildCreateInfo() {
-    try {
-      this.funcCode = SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("fronc"),null);
-    } catch (Exception e) {
-      this.funcCode ="DS"+UtilsTool.getDateTimeNow("yyyyMMdd")+UtilsTool.lengthUUID(5).toUpperCase();
-    }
+    this.funcCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.FUNC_FRONC, null);
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

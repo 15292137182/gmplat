@@ -1,6 +1,7 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
@@ -30,11 +31,7 @@ public class DataSetConfig extends BaseEntity<DataSetConfig> {
      */
     @Override
     public DataSetConfig buildCreateInfo() {
-        try {
-            this.setDatasetCode(SequenceManager.getInstance().buildSequenceNo(UtilsTool.loadProperties("dataSet"), null));
-        } catch (Exception e) {
-            this.setDatasetCode("DATAS" +UtilsTool.getDateTimeNow("yyyyMMdd")+ UtilsTool.lengthUUID(5).toUpperCase());
-        }
+        this.setDatasetCode(SequenceManager.getInstance().buildSequenceNo(CodeMessage.DATA_SET, null));
         this.setVersion("1.0");
         this.rowId = UtilsTool.lengthUUID(32);
         return super.buildCreateInfo();
