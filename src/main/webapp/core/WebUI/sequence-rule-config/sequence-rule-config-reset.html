@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>序列规则重置</title>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+<div id="main">
+    <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="代码">
+            <el-input v-model="form.seqCode"></el-input>
+        </el-form-item>
+        <el-form-item label="名称">
+            <el-input v-model="form.seqName"></el-input>
+        </el-form-item>
+        <el-form-item label="规则内容">
+            <el-input v-model="form.seqContent"></el-input>
+        </el-form-item>
+        <!--<el-form-item label="变量Key">-->
+            <!--<el-input v-model="form.name"></el-input>-->
+        <!--</el-form-item>-->
+        <el-form-item label="当前序列值">
+            <el-input v-model="form.value"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" size="small" @click.native="conform()">保存</el-button>
+            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+</body>
+
+<script>
+    var seqReset=new Vue({
+        el:"#main",
+        data:function(){
+            return{
+                form:{
+                    seqCode:'',
+                    seqName:'',
+                    seqContent:'',
+                    value:'',
+                }
+            }
+        },
+        methods:{
+            //保存
+            conform(){
+
+            }
+        }
+    })
+</script>
+</html>

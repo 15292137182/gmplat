@@ -71,6 +71,12 @@ var config=new Vue({
         },
         headSort(column){//列头排序
             pagingObj.headSorts1(queryPage,this.input,column,this);
+        },
+        //重置
+        reset(){
+            var htmlUrl='sequence-rule-config-reset.html';
+            rowId = config.currentVal.rowId;
+            resetIndex = ibcpLayer.ShowIframe(htmlUrl, '序列重置', '400px', '420px',false);
         }
     },
     created(){

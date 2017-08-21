@@ -71,8 +71,8 @@ var add=new Vue({
         },
         show(){
             this.$http.jsonp(mock,{
-                content:add.seqContentInput,
-                args:{'YM':''},
+                content:add.formTable.seqContentInput,
+                args:{'a':''},
             },{
                 jsonp:'callback'
             }).then(function (res) {

@@ -68,9 +68,9 @@
 <template id="ObjSelect">
     <el-select v-model="connectObj" clearable filterable placeholder="请选择关联对象">
         <el-option v-for="item in options"
-                   :key="item.objectCode"
+                   :key="item.rowId"
                    :label="item.objectName"
-                   :value="item.objectCode">
+                   :value="item.rowId">
         </el-option>
     </el-select>
 </template>
