@@ -245,7 +245,7 @@ public class SequenceManager {
           branchValue = new StringBuilder(branchValues.get(a[0]).toString());
         }
         int nextValue =
-            getCurrentVariableValue(ruleConfig.getRowId(), a[0], branchValue.toString()) + 1;
+            getCurrentVariableValue(ruleConfig.getRowId(), a[0]) + 1;
         keys.put(a[0], nextValue);
         branchValues.put(a[0], branchValue);
         StringBuilder nv = new StringBuilder(String.valueOf(nextValue));
@@ -268,7 +268,7 @@ public class SequenceManager {
    *
    * @return 返回值
    */
-  private int getCurrentVariableValue(String seqRowId, String variableKey, String branchSign) {
+  private int getCurrentVariableValue(String seqRowId, String variableKey) {
     if (keys.containsKey(variableKey)) {
       return keys.get(variableKey);
     } else {
