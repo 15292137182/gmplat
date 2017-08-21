@@ -13,7 +13,6 @@ var changeUrl=serverPath + "/businObj/changeOperat";//变更
 var conTable=serverPath + "/maintTable/query";
 var conChildTable=serverPath + "/dbTableColumn/queryTabById";//字表左侧查右侧
 
-
 var basTop = new Vue({
     el: '#basTop',
     data: {
@@ -281,7 +280,7 @@ var basRight = new Vue({
                 }else{
                     proEm.addProForm.checked=false;
                 }
-                proEm.addProForm.tableReaInput=basRight.currentVal.relateTableColumn ;  //关联表
+                proEm.$refs.contablefield.conTableFieldInput=basRight.currentVal.relateTableColumn ;  //关联表
 
                 //修改值类型和值类型来源下拉框  jms 2017/8/21
                 proEm.$refs.vtype.value=basRight.currentVal.valueType   //值类型

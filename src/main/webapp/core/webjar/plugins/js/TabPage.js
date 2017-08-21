@@ -394,6 +394,38 @@ var SelectOptions = (function(){
         }
         return selectComponet;
     };
+
+    //关联下拉框查询
+    var ConSetOpt = function(templateId,modelName,keysetCode,path){
+        var _data={};
+        _data[modelName]='';
+        _data["options"]=[];
+        _data["list"]=[];
+
+        var selectComponet = {
+            template: '#'+templateId,
+            data : function(){
+                return _data;
+            },
+            methods: {
+                flush() {
+                    var param = {"rowId":keysetCode};
+                    this.$http.jsonp(path, param, {
+                        jsonp: 'callback'
+                    }).then(function (res) {
+                        this.list=res.data.data;
+                        this.options=this.list;
+                    });
+                }
+            },
+            created(){
+                this.flush();
+            }
+        }
+        return selectComponet;
+    };
+
+
     // var tableSetOpt=function(args){
     //     var serUrl=serverPath+'/keySet/query';
     //     var arr=new Array();
@@ -417,9 +449,10 @@ var SelectOptions = (function(){
     //             alert("error");
     //         }
     //     })
-    //}
+    // }
     return {
-        setOpt:setOpt
+        setOpt:setOpt,
+        ConSetOpt:ConSetOpt
         // tableSetOpt:tableSetOpt
     }
 })()

@@ -31,13 +31,7 @@
                 <el-checkbox label="" v-model="addProForm.checked"  @change.native="changEvent" v-bind:disabled="addProForm.checkEvent" name="type"></el-checkbox>
         </el-form-item>
         <el-form-item label="关联表字段" prop="tableReaInput">
-            <el-select v-model="addProForm.tableReaInput" placeholder="请选择关联表字段" ref="addProForm.tableReaInput" @change="changeReaTable" v-bind:disabled="addProForm.reaTabEvent">
-                <el-option v-for="item in optionValue"
-                           :key="item.columnCname"
-                           :label="item.columnCname"
-                           :value="item.rowId">
-                </el-option>
-            </el-select>
+            <select-contablefield ref="contablefield"></select-contablefield>
         </el-form-item>
         <el-form-item label="值类型" prop="typeInput">
             <select-vtype ref="vtype"></select-vtype>
@@ -58,8 +52,18 @@
         </el-col>
     </el-row>
 </div>
-<script>
 
+<template id="conTableField">
+    <el-select v-model="conTableFieldInput" clearable filterable placeholder="请选择关联表字段">
+        <el-option v-for="item in options"
+                   :key="item.rowId"
+                   :label="item.columnCname"
+                   :value="item.rowId">
+        </el-option>
+    </el-select>
+</template>
+<script>
+    Vue.component('select-contablefield', SelectOptions.ConSetOpt('conTableField','conTableFieldInput',basLeft.relateTableRowId,conChildTable));
     Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
     Vue.component('select-vorigin', SelectOptions.setOpt('','value','valueTypeOrigin',''));
 
@@ -161,7 +165,7 @@
                                     objRowId: basLeft.currentId,//左边表的ID
                                     propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
                                     wetherExpandPro: proEm.addProForm.checked,//是否为扩展属性
-                                    relateTableColumn: proEm.addProForm.tableReaInput,//关联表字段
+                                    relateTableColumn: proEm.$refs.contablefield.conTableFieldInput,//关联表字段
                                     valueType: proEm.$refs.vtype.value,//值类型
                                     valueResourceType: proEm.$refs.vorigin.value,//值来源类型
                                     valueResourceContent: proEm.addProForm.comContent,//值来源内容
@@ -186,7 +190,7 @@
                                     propertyCode: proEm.addProForm.codeProInput,//业务对象代码
                                     propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
                                     wetherExpandPro: proEm.addProForm.checked,//是否为扩展属性
-                                    relateTableColumn: proEm.addProForm.tableReaInput,//关联表字段
+                                    relateTableColumn:  proEm.$refs.contablefield.conTableFieldInput,//关联表字段
                                     valueType: proEm.$refs.vtype.value,//值类型
                                     valueResourceType: proEm.$refs.vorigin.value,//值来源类型
                                     valueResourceContent: proEm.addProForm.comContent,//值来源内容

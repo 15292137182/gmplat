@@ -18,7 +18,8 @@ var config=new Vue({
         loading:true,
         pageSize:10,//每页显示多少条
         pageNum:1,//第几页
-        allDate:0//共多少条
+        allDate:0,//共多少条
+        rowId:'',//重置选中的rowId
     },
     methods:{
         search(){
@@ -75,7 +76,7 @@ var config=new Vue({
         //重置
         reset(){
             var htmlUrl='sequence-rule-config-reset.html';
-            rowId = config.currentVal.rowId;
+            config.rowId = config.currentVal.rowId;
             resetIndex = ibcpLayer.ShowIframe(htmlUrl, '序列重置', '400px', '420px',false);
         }
     },
