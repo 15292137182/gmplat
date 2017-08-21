@@ -81,7 +81,9 @@ var dataSetConfigButton = new Vue({
                 addDataSet.isEdit = true;
                 addDataSet.formTable.datasetCode = dataSetConfig.rowObj.datasetCode;
                 addDataSet.formTable.nameInput = dataSetConfig.rowObj.datasetName;
-                addDataSet.formTable.typeInput = dataSetConfig.rowObj.datasetType;
+                //类型下拉框赋值修改  jms  2017/8/21
+                addDataSet.$refs.dsctype.value = dataSetConfig.rowObj.datasetType;
+
                 addDataSet.formTable.content = dataSetConfig.rowObj.datasetContent;
                 addDataSet.formTable.desp = dataSetConfig.rowObj.desp;
                 addDataSet.formTable.version = dataSetConfig.rowObj.version;

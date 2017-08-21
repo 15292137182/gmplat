@@ -23,13 +23,7 @@
                 <el-input placeholder="请输入对象名称" v-model="addForm.nameInput" ref="nameInput"></el-input>
             </el-form-item>
             <el-form-item label="关联表" prop="tableInput">
-                <el-select v-model="addForm.tableInput" placeholder="请选择关联表" v-bind:disabled="addForm.tabDisabled" @change="changeTable">
-                    <el-option v-for="item in reaOptTable"
-                               :key="item.tableSchema"
-                               :label="item.tableSchema"
-                               :value="item.rowId">
-                    </el-option>
-                </el-select>
+                <select-tab ref="selectTab"></select-tab>
             </el-form-item>
             <el-form-item label="版本">
                 <el-input placeholder="版本" v-model="addForm.versionInput" ref="versionInput" disabled></el-input>
@@ -44,7 +38,21 @@
             </el-col>
         </el-row>
 </div>
+
+<template id="tableSelect">
+    <el-select v-model="tableInput" clearable filterable placeholder="请选择关联表">
+        <el-option v-for="item in options"
+                   :key="item.rowId"
+                   :label="item.tableCname"
+                   :value="item.rowId">
+        </el-option>
+    </el-select>
+</template>
+
 <script>
+    //下拉框修改 jms
+    Vue.component('select-tab', SelectOptions.setOpt('tableSelect','tableInput','',conTable));
+
     var em = new Vue({
         el: '#addEvent',
         data: function () {
@@ -53,7 +61,7 @@
                 addForm:{
                     codeInput: '',
                     nameInput: '',
-                    tableInput: '',
+//                    tableInput: '',
                     versionInput: '',
                     disabled: true,
                     tabDisabled:false,
@@ -69,9 +77,9 @@
                     nameInput: [
                         {required: true, message: '请输入对象名称', trigger: 'change'}
                     ],
-                    tableInput: [
-                        {required: true, message: '请选择关联', trigger: 'blur'}
-                    ]
+//                    tableInput: [
+//                        {required: true, message: '请选择关联', trigger: 'blur'}
+//                    ]
                 }
             }
         },
@@ -93,7 +101,7 @@
                             console.log(em.reaOptTable);
                             em.$http.jsonp(addUrl, {
                                 objectName: em.addForm.nameInput,
-                                relateTableRowId: em.dataId
+                                relateTableRowId: em.$refs.selectTab.tableInput,
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {
@@ -111,7 +119,8 @@
                             em.$http.jsonp(editUrl, {
                                 //拿到这条数据的ID
                                 rowId: basLeft.currentVal.rowId,
-                                objectName: em.addForm.nameInput
+                                objectName: em.addForm.nameInput,
+                                relateTableRowId: em.$refs.selectTab.tableInput,
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {

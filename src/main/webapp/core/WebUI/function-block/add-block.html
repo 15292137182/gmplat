@@ -7,6 +7,9 @@
         /*#addBlock .el-row {*/
         /*margin-top: 20px;*/
         /*}*/
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
     </style>
 </head>
 <body>
@@ -29,16 +32,18 @@
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="类型">
-                    <el-input placeholder="请输入类型" :disabled="isEdit" v-model="formTable.typeInput" ref="typeInput"></el-input>
+                    <!--<el-input placeholder="请输入类型" :disabled="isEdit" v-model="formTable.typeInput" ref="typeInput"></el-input>-->
+                    <select-fbtype ref="fbtype"></select-fbtype>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="关联对象">
-                    <el-input placeholder="请选择关联对象" disabled="" v-model="formTable.tableInput" ref="tableInput">
-                        <el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>
-                    </el-input>
+                    <!--<el-input placeholder="请选择关联对象" disabled="" v-model="formTable.tableInput" ref="tableInput">-->
+                        <!--<el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>-->
+                    <!--</el-input>-->
+                    <select-conobj ref="conObj"></select-conobj>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -59,6 +64,17 @@
         </el-col>
     </el-row>
 </div>
+
+<template id="ObjSelect">
+    <el-select v-model="connectObj" clearable filterable placeholder="请选择关联对象">
+        <el-option v-for="item in options"
+                   :key="item.objectCode"
+                   :label="item.objectName"
+                   :value="item.objectCode">
+        </el-option>
+    </el-select>
+</template>
+
 </body>
 <script src="add-block.js"></script>
 </html>

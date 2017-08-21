@@ -278,7 +278,11 @@ var showMsg = (function(){
 var SelectOptions = (function(){
     var setOpt = function(templateId,modelName,keysetCode,path){
         var _data={};
-        _data[modelName]='';
+        var _modelName='value';
+        if(undefined !=modelName && null !=modelName && "" !=modelName){
+            _modelName=modelName;
+        }
+        _data[_modelName]='';
         _data["options"]=[];
         _data["list"]=[];
         var _templateId='tid';
@@ -292,8 +296,8 @@ var SelectOptions = (function(){
             },
             methods: {
                 flush() {
-                    var _path = serverPath+"/keySet/query";
-                    var param = {"str":keysetCode};
+                    var _path = serverPath+"/keySet/queryNumber";
+                    var param = {"args":keysetCode};
                     if(undefined != path && null != path && "" != path){
                         _path = path;
                         param = {};
@@ -321,34 +325,34 @@ var SelectOptions = (function(){
             }
         }
         return selectComponet;
-    }
-
-    var tableSetOpt=function(serUrl,args){
-        var arr=new Array();
-        for(var p in args){
-            var str=args[p];
-            arr.push(str);
-        }
-
-        $.ajax({
-            url:serUrl,
-            type:"get",
-            data:{args:arr},
-            dataType:"jsonp",
-            success:function(res){
-                console.log(res.data);
-                if(typeof callback == "function"){
-                    callback(res);
-                }
-            },
-            error:function(){
-                alert("error");
-            }
-        })
-    }
+    };
+    // var tableSetOpt=function(args){
+    //     var serUrl=serverPath+'/keySet/query';
+    //     var arr=new Array();
+    //     for(var p in args){
+    //         var str=args[p];
+    //         arr.push(str);
+    //     }
+    //
+    //     $.ajax({
+    //         url:serUrl,
+    //         type:"get",
+    //         data:{args:arr},
+    //         dataType:"jsonp",
+    //         success:function(res){
+    //             console.log(res.data);
+    //             if(typeof callback == "function"){
+    //                 callback(res);
+    //             }
+    //         },
+    //         error:function(){
+    //             alert("error");
+    //         }
+    //     })
+    //}
     return {
-        setOpt:setOpt,
-        tableSetOpt:tableSetOpt
+        setOpt:setOpt
+        // tableSetOpt:tableSetOpt
     }
 })()
 

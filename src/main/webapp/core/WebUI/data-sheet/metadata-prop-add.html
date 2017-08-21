@@ -40,22 +40,10 @@
             </el-select>
         </el-form-item>
         <el-form-item label="值类型" prop="typeInput">
-            <el-select v-model="addProForm.typeInput" placeholder="请选择值类型" ref="addProForm.typeInput">
-                <el-option v-for="item in optionLeft"
-                           :key="item.confKey"
-                           :label="item.confValue"
-                           :value="item.confValue">
-                </el-option>
-            </el-select>
+            <select-vtype ref="vtype"></select-vtype>
         </el-form-item>
         <el-form-item label="值类型来源" prop="typeComValue">
-            <el-select v-model="addProForm.typeComValue" placeholder="请选择值类型来源" ref="addProForm.typeComValue">
-                <el-option v-for="item in optionRight"
-                           :key="item.confKey"
-                           :label="item.confValue"
-                           :value="item.confValue">
-                </el-option>
-            </el-select>
+            <select-vorigin ref="vorigin"></select-vorigin>
         </el-form-item>
         <el-form-item label="值来源内容" prop="comContent">
             <el-input type="textarea" placeholder="请输入值来源内容" v-model="addProForm.comContent" ref="addProForm.comContent"></el-input>
@@ -71,6 +59,10 @@
     </el-row>
 </div>
 <script>
+
+    Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
+    Vue.component('select-vorigin', SelectOptions.setOpt('','value','valueTypeOrigin',''));
+
     var proEm = new Vue({
         el: '#addProEvent',
         data: function () {
@@ -80,10 +72,10 @@
                         codeProInput: '',
                         nameProInput: '',
                         checked: false,
-                        tableReaInput: '',
-                        typeComValue: '',
+//                        tableReaInput: '',
+//                        typeComValue: '',
                         comContent: '',
-                        typeInput: '',
+//                        typeInput: '',
                         disabled: true,
                         iconEvent: false,
                         checkEvent: false,
@@ -104,12 +96,12 @@
 //                        tableReaInput: [
 //                            { required: true, message: '请选择关联表字段', trigger: 'blur'}
 //                        ],
-                        typeInput: [
-                            {required: true, message: '请选择值类型', trigger: 'change'}
-                        ],
-                        typeComValue: [
-                            {required: true, message: '请选择值类型来源', trigger: 'change'}
-                        ],
+//                        typeInput: [
+//                            {required: true, message: '请选择值类型', trigger: 'change'}
+//                        ],
+//                        typeComValue: [
+//                            {required: true, message: '请选择值类型来源', trigger: 'change'}
+//                        ],
                         comContent: [
                             {required: true, message: '请输入值来源内容', trigger: 'blur'}
                         ]
@@ -169,8 +161,8 @@
                                 propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
                                 wetherExpandPro: proEm.addProForm.checked,//是否为扩展属性
                                 relateTableColumn: proEm.addProForm.tableReaInput,//关联表字段
-                                valueType: proEm.addProForm.typeInput,//值类型
-                                valueResourceType: proEm.addProForm.typeComValue,//值来源类型
+                                valueType: proEm.$refs.vtype.value,//值类型
+                                valueResourceType: proEm.$refs.vorigin.value,//值来源类型
                                 valueResourceContent: proEm.addProForm.comContent,//值来源内容
                             }, {
                                 jsonp: 'callback'
@@ -195,8 +187,8 @@
                                 propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
                                 wetherExpandPro: proEm.addProForm.checked,//是否为扩展属性
                                 relateTableColumn: proEm.addProForm.tableReaInput,//关联表字段
-                                valueType: proEm.addProForm.typeInput,//值类型
-                                valueResourceType: proEm.addProForm.typeComValue,//值来源类型
+                                valueType: proEm.$refs.vtype.value,//值类型
+                                valueResourceType: proEm.$refs.vorigin.value,//值来源类型
                                 valueResourceContent: proEm.addProForm.comContent,//值来源内容
                             }, {
                                 jsonp: 'callback'

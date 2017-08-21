@@ -4,6 +4,9 @@
 /**
  * Created by andim on 2017/8/11.
  */
+
+Vue.component('select-show', SelectOptions.setOpt('','','showControl',''));
+
 var em=new Vue({
     el:'#addData',
     data: {
@@ -11,7 +14,7 @@ var em=new Vue({
         formTable:{
             tableInput:'',//关联对象属性
             nameTitle:'',//显示标题
-            nameInput:'',//显示控件
+            // nameInput:'',//显示控件
             lengthSection:'',//长度区间
             testFunction:'',//验证函数
             displayFunction:'',//显示函数
@@ -75,7 +78,7 @@ var em=new Vue({
                 relateBusiPro:this.dataId,//业务对象属性ID
                 displayTitle:this.formTable.nameTitle,//显示标题
                 wetherDisplay:this.checked,//是否显示
-                displayWidget:this.formTable.nameInput,//显示控件
+                displayWidget:this.$refs.show.value,//显示控件
                 wetherReadonly:this.checkedReady,//只读
                 allowEmpty:this.checkedNull,//允许为空
                 lengthInterval:this.formTable.lengthSection,//长度区间
@@ -99,7 +102,7 @@ var em=new Vue({
                 relateBusiPro:this.dataId,//业务对象属性ID
                 displayTitle:this.nameTitle,//显示标题
                 wetherDisplay:this.checked,//是否显示
-                displayWidget:this.nameInput,//显示控件
+                displayWidget:this.$refs.show.value,//显示控件
                 wetherReadonly:this.checkedReady,//只读
                 allowEmpty:this.checkedNull,//允许为空
                 lengthInterval:this.lengthSection,//长度区间

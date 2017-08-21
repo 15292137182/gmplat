@@ -61,7 +61,8 @@
         <el-row type="flex" class="row-bg" style="margin-top:-20px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="显示控件">
-                    <el-input :disabled="checkType" placeholder="请输入显示控件名称" v-model="formTable.nameInput" ref="nameInput"></el-input>
+                    <!--<el-input :disabled="checkType" placeholder="请输入显示控件名称" v-model="formTable.nameInput" ref="nameInput"></el-input>-->
+                    <select-show ref="show"></select-show>
                 </el-form-item>
             </el-col>
         </el-row>

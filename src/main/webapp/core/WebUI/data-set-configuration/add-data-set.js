@@ -1,6 +1,13 @@
 /**
  * Created by andim on 2017/8/9.
  */
+
+/**
+ * 修改下拉框 jms
+ * @type {Vue}
+ */
+Vue.component('select-dsctype', SelectOptions.setOpt('','','dataSetConfigType',''));
+
 var addDataSet = new Vue({
     el:'#addDataSet',
     data:{
@@ -8,7 +15,7 @@ var addDataSet = new Vue({
         formTable:{
             datasetCode:'',
             nameInput:'',
-            typeInput:'',
+          //  typeInput:'',    修改下拉框 jms 2017/8/21
             content:'',
             desp:'',
             version:''
@@ -21,7 +28,7 @@ var addDataSet = new Vue({
         checkIsNull(){//非空验证
             var data = [
                 this.$refs.nameInput,
-                this.$refs.typeInput
+                // this.$refs.typeInput
             ];
             for(var i=0;i<data.length;i++){
                 if(data[i].value==''){
@@ -34,7 +41,7 @@ var addDataSet = new Vue({
         addSet(){//新增
             this.$http.jsonp(this.addUrl,{
                 datasetName:this.formTable.nameInput,
-                datasetType:this.formTable.typeInput,
+                datasetType:this.$refs.dsctype.value,
                 datasetContent:this.formTable.content,
                 desp:this.formTable.desp
             },{
@@ -53,7 +60,7 @@ var addDataSet = new Vue({
             this.$http.jsonp(this.editUrl,{
                 rowId:dataSetConfig.rowObjId,
                 datasetName:this.formTable.nameInput,
-                datasetType:this.formTable.typeInput,
+                datasetType:this.$refs.dsctype.value,
                 datasetContent:this.formTable.content,
                 desp:this.formTable.desp
             },{

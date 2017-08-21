@@ -7,6 +7,9 @@
         /*#addDataSet .el-row {*/
         /*margin-top: 20px;*/
         /*}*/
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
     </style>
 </head>
 <body>
@@ -29,7 +32,8 @@
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="类型">
-                    <el-input placeholder="请输入类型" v-model="formTable.typeInput" ref="typeInput"></el-input>
+                    <!--<el-input placeholder="请输入类型" v-model="formTable.typeInput" ref="typeInput"></el-input>-->
+                    <select-dsctype ref="dsctype"></select-dsctype>
                 </el-form-item>
             </el-col>
         </el-row>

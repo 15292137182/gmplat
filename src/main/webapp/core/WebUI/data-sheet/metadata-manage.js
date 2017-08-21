@@ -123,9 +123,11 @@ var basLeft = new Vue({
                 console.log(basLeft.currentVal);
                 em.addForm.codeInput = basLeft.currentVal.objectCode;  //对象代码
                 em.addForm.disabled = true;//对象代码不可点击
-                em.addForm.tabDisabled = true;//选择关联表的按钮不可用
+               // em.$refs.selectTab.disabled.tabDisable= true;//选择关联表的按钮不可用
                 em.addForm.nameInput = basLeft.currentVal.objectName;//对象名称
-                em.addForm.tableInput = basLeft.currentVal.associatTable;//关联表
+
+                //修改关联表下拉框   jms  2017/8/21
+                em.$refs.selectTab.tableInput = basLeft.currentVal.associatTable;//关联表
                 em.addForm.versionInput = basLeft.currentVal.version;//版本
                 //em.addForm.dataId = basLeft.currentVal.relateTableRowId;//关联表的ID
             });
@@ -280,8 +282,10 @@ var basRight = new Vue({
                     proEm.addProForm.checked=false;
                 }
                 proEm.addProForm.tableReaInput=basRight.currentVal.relateTableColumn ;  //关联表
-                proEm.addProForm.typeInput=basRight.currentVal.valueType   //值类型
-                proEm.addProForm.typeComValue=basRight.currentVal.valueResourceType;   //值类型来源
+
+                //修改值类型和值类型来源下拉框  jms 2017/8/21
+                proEm.$refs.vtype.value=basRight.currentVal.valueType   //值类型
+                proEm.$refs.vorigin.value=basRight.currentVal.valueResourceType;   //值类型来源
                 proEm.addProForm.comContent=basRight.currentVal.valueResourceContent;     //值来源内容
             });
         },

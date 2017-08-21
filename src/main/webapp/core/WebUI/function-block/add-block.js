@@ -1,6 +1,10 @@
 /**
  * Created by andim on 2017/8/7.
  */
+var objPath=serverPath + "/businObj/query"
+Vue.component('select-conobj', SelectOptions.setOpt('ObjSelect','connectObj','',objPath));
+Vue.component('select-fbtype', SelectOptions.setOpt('','','functionBlockType',''));
+
 var em=new Vue({
     el:'#addBlock',
     data: {
@@ -8,8 +12,8 @@ var em=new Vue({
         formTable:{
             codeInput:'',//funcCode功能代码
             nameInput:'',//funcName功能名称
-            typeInput:'',//funcType功能类型
-            tableInput:'',//relateBusiObj关联对象val
+            // typeInput:'',//funcType功能类型
+            // tableInput:'',//relateBusiObj关联对象val
             desp:'',
         },
         dataId:'',//relateBusiObj关联对象ID
@@ -25,8 +29,8 @@ var em=new Vue({
             this.$http.jsonp(serverPath+"/fronc/add",{
                 "funcCode":this.formTable.codeInput,
                 "funcName":this.formTable.nameInput,
-                "funcType":this.formTable.typeInput,
-                "relateBusiObj":this.dataId,
+                "funcType":this.$refs.fbtype.value,
+                "relateBusiObj":this.$refs.conObj.connectObj,
                 "desp":this.formTable.desp
             },{
                 jsonp:'callback'
@@ -43,8 +47,8 @@ var em=new Vue({
                 "rowId":this.rowId,
                 "funcCode":this.formTable.codeInput,
                 "funcName":this.formTable.nameInput,
-                "funcType":this.formTable.typeInput,
-                "relateBusiObj":this.dataId,
+                "funcType":this.$refs.fbtype.value,
+                "relateBusiObj":this.$refs.conObj.connectObj,
                 "desp":this.formTable.desp
             },{
                 jsonp:'callback'
@@ -57,7 +61,7 @@ var em=new Vue({
             });
         },
         conformEvent(){
-            var datas=[this.$refs.nameInput,this.$refs.typeInput,this.$refs.tableInput];
+            var datas=[this.$refs.nameInput];
             for(var i=0;i<datas.length;i++){
                 if(datas[i].value==''){
                     ibcpLayer.ShowMsg(datas[i].placeholder);
