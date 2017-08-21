@@ -106,13 +106,14 @@ public class SequenceManager {
    * @return 返回
    */
   public int resetSequenceNo(String sequenceCode) {
-    if (isValid(sequenceCode)) {
-      List<Map<String, Object>> mapper = sequenceRuleConfigService
-          .select(new FieldCondition("seq_code", Operator.EQUAL, sequenceCode));
-      if (!mapper.isEmpty()) {
-        SequenceGenerate generate = new SequenceGenerate().fromMap(mapper.get(0));
+    if (isValid(sequenceCode) && init()) {
+      List<Map<String, Object>> codes = moreBatis.select(SequenceRuleConfig.class)
+          .where(new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)).execute();
+      if (!codes.isEmpty()) {
+        SequenceGenerate generate = new SequenceGenerate().fromMap(codes.get(0));
         generate.buildDeleteInfo();
-        return sequenceGenerateService.update(generate.toMap());
+        return sequenceGenerateService
+            .update(generate.toMap(), new FieldCondition("seqRowId", Operator.EQUAL, sequenceCode));
       }
     }
     return -1;
