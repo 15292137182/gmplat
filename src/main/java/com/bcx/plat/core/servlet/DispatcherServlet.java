@@ -17,7 +17,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
    */
   @Override
   protected void doDispatch(HttpServletRequest request, HttpServletResponse response) {
-    TXManager.doInNewTX(((manager, status) -> {
+    TXManager.doInRequiredTX(((manager, status) -> {
       try {
         super.doDispatch(request, response);
       } catch (Exception e) {

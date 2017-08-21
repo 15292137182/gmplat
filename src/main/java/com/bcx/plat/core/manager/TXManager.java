@@ -70,14 +70,27 @@ public class TXManager {
   }
 
   /**
-   * 在新的事务中执行代码
+   * 需要事务，有则加入，没有则创建
+   *
+   * @param operate 操作
+   */
+  public static void doInRequiredTX(QNNOperate operate) {
+    doInTx(operate, TransactionDefinition.PROPAGATION_REQUIRED);
+  }
+
+  /**
+   * 在新的事务中执行代码，无论是否有都加入
    *
    * @param operate 操作
    */
   public static void doInNewTX(QNNOperate operate) {
+    doInTx(operate, TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+  }
+
+  private static void doInTx(QNNOperate operate, int PROPAGATION) {
     if (null != operate && init()) {
       DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-      def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW); //要求开启新的事务
+      def.setPropagationBehavior(PROPAGATION); //要求开启新的事务
       def.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);// 提交后对其他事务可读
       TransactionStatus status = transactionManager.getTransaction(def);
       lt.add(status);
