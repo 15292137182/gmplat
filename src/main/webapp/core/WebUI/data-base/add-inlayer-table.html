@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增数据库表字段</title>
+    <style>
+        #addDataSet .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="addInlayerData" style="margin-top:20px">
+    <el-form :label-position="labelPosition" label-width="100px" :model="Inlayer">
+        <el-row type="flex" class="row-bg">
+            <el-col :span="21" :offset="1">
+                <el-form-item label="字段中文名">
+                    <el-input placeholder="请输入字段中文名" v-model="Inlayer.Cname" ref="inlayerCname"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" >
+            <el-col :span="21" :offset="1">
+                <el-form-item label="字段英文名">
+                    <el-input placeholder="请输入字段英文名" v-model="Inlayer.Ename" ref="inlayerEname"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="21" :offset="1">
+                <el-form-item label="说明">
+                    <el-input placeholder="请输入说明" type="textarea" v-model="Inlayer.desp"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click="conformEvent">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script src="add-inlayer-table.js"></script>
+</html>

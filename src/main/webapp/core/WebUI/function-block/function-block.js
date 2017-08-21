@@ -23,6 +23,7 @@ var functionBlock = new Vue({
         //查询
         get(){
             pagingObj.Example(this.Selurl,this.input,this.pageSize,this.pageNum,this,function(){
+                //functionBlock.pageNum = 1;
                 functionBlock.click(functionBlock.tableData[0]);
                 if(functionBlock.tableData.length>0){
                     functionBlock.deleteId = functionBlock.tableData[0].rowId;
@@ -125,7 +126,7 @@ var properties = new Vue({
     },
     methods:{
         handleClick(){//查看按钮
-            this.divIndex = ibcpLayer.ShowDiv('attribute-details.html','属性明细','400px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('attribute-details.html','属性明细','400px', '460px',function(){
 
             });
         },

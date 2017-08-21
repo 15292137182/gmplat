@@ -1,0 +1,83 @@
+/**
+ * Created by andim on 2017/8/21.
+ */
+var addInlayerData = new Vue({
+    el:"#addInlayerData",
+    data:{
+        labelPosition:'right',
+        Inlayer:{
+            Cname:'',
+            Ename:'',
+            desp:''
+        },
+        addUrl:serverPath+'/dbTableColumn/add',//新增表字段
+        editUrl:serverPath+'/dbTableColumn/modify'//编辑表字段
+    },
+    methods:{
+        addTable(){//新增
+            this.$http.jsonp(this.addUrl,{
+                relateTableRowId:DatabaseDetails.Robj.rowId,
+                columnCname:this.Inlayer.Cname,
+                columnEname:this.Inlayer.Ename,
+                desp:this.Inlayer.desp,
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                showMsg.MsgOk(DatabaseDetails,res);
+                DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                this.cancel();
+            },function(){
+                alert("错误")
+            })
+        },
+        editTble(){//编辑
+            this.$http.jsonp(this.editUrl,{
+                relateTableRowId:DatabaseDetails.Robj.rowId,
+                rowId:DatabaseDetails.rowObj.rowId,
+                columnCname:this.Inlayer.Cname,
+                columnEname:this.Inlayer.Ename,
+                desp:this.Inlayer.desp,
+            },{
+                jsonp:'callback'
+            }).then(function(res){
+                showMsg.MsgOk(DatabaseDetails,res);
+                DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                this.cancel();
+            },function(){
+                alert("错误")
+            })
+        },
+        isNull(){//非空验证
+            var data = [
+                this.$refs.inlayerCname,
+                this.$refs.inlayerEname
+            ]
+            console.log(data);
+            for(var i=0;i<data.length;i++){
+                if(data[i].value==''){
+                    ibcpLayer.ShowMsg(data[i].placeholder);
+                    return false
+                }
+            }
+            return true;
+        },
+        conformEvent(){//确定按钮
+            if(myInlayerButton.isEdit == true){//编辑
+                if(this.isNull()){
+                    editObj.editOk(function(){
+                        addInlayerData.editTble(tableBase.rowObj.rowId);
+                    })
+                }
+            }else{//新增
+                if(this.isNull()){
+                    addObj.addOk(function(){
+                        addInlayerData.addTable();
+                    })
+                }
+            }
+        },
+        cancel(){//取消按钮
+            ibcpLayer.Close(myInlayerButton.divIndex);
+        }
+    }
+})
