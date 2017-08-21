@@ -82,6 +82,10 @@ tr [class^=el-icon-]{
 td  .el-form-item {
     margin-bottom: 0;
 }
+td.el-table__expanded-cell{
+    text-align: left;
+    /*margin-left:20%;*/
+}
 /*扩展表label颜色*/
 .demo-table-expand label {
     color: #99a9bf;

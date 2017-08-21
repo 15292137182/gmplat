@@ -30,9 +30,9 @@ var keyValueSetAdd = new Vue({
                 confValueInput: [
                      {required: true, message: '请输入值', trigger: 'blur'}
                 ],
-                despInput: [
-                     {required: true, message: '请输入说明', trigger: 'blur'}
-                 ]
+                //despInput: [
+                //     {required: true, message: '请输入说明', trigger: 'blur'}
+                // ]
             }
         }
     },
