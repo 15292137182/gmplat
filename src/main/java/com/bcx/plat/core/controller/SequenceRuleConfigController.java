@@ -63,4 +63,25 @@ public class SequenceRuleConfigController extends
     }
     return super.result(request, _sr, locale);
   }
+
+  /**
+   * 重置序列号，接受的参数名称为:seqCode,值为序列号的代码值
+   *
+   * @param request 请求
+   * @param locale 国际化信息
+   * @return 返回
+   */
+  @RequestMapping("/reset")
+  public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
+    String seqCode = request.getParameter("seqCode");
+    ServiceResult<List<String>> _sr = new ServiceResult<>();
+    if (isValid(seqCode)) {
+      SequenceManager.getInstance().resetSequenceNo(seqCode);
+      _sr.setMessage("OPERATOR_SUCCESS");
+    } else {
+      _sr.setState(STATUS_FAIL);
+      _sr.setMessage("INVALID_REQUEST");
+    }
+    return super.result(request, _sr, locale);
+  }
 }
