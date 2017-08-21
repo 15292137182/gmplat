@@ -55,7 +55,8 @@ var functionBlock = new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     showMsg.MsgOk(functionBlock,res);
-                    functionBlock.get();
+                    //functionBlock.get();
+                    queryData.getData(this.Selurl,this.input,this)
                 },function(){
                     showMsg.MsgError(functionBlock);
                 })
@@ -181,7 +182,8 @@ var properties = new Vue({
                 },{
                     jsonp:'callback'
                 }).then(function(res){
-                    properties.getRight(properties.funcId);
+                    //properties.getRight(properties.funcId);
+                    queryData.getDatas(properties.findRightDataUrl,properties.rightInput,properties.funcId,properties);
                     showMsg.MsgOk(properties,res);
                 },function(){
                     showMsg.MsgError(properties);

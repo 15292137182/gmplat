@@ -204,13 +204,45 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
 })()
 
 var queryData = (function(){//刷新table跳转到第一页调改方法
-    var getData = function(url,obj,callback){
+    var getData = function(url,args,obj,callback){
         //url：分页查询接口，obj：当前vue实例对象（this），callback：成功后的回调函数
+            $.ajax({
+                url:url,
+                type:"get",
+                data:{
+                    args:args,
+                    pageSize:obj.pageSize,
+                    pageNum:1
+                },
+                dataType:"jsonp",
+                success:function(res){
+                    obj.loading=false;
+                    console.log(res);
+                    if(res.data!=null){
+                        obj.tableData = res.data.result;//数据源
+                        obj.allDate = Number(res.data.total);//总共多少条数据
+                        obj.pageNum = res.data.pageNum;//当前页
+                    }else{
+                        obj.tableData = [];
+                    }
+                    if(typeof callback =="function"){
+                        callback(res);
+                    }
+                },
+                error:function(){
+                    obj.loading=false;
+                    alert("错误")
+                }
+            })
+    }
+    var getDatas = function(url,args,rowId,obj,callback){
+        //url：分页查询接口，args：输入框，obj：当前vue实例对象（this），rowId：有依赖的ID，callback：成功后的回调函数
         $.ajax({
             url:url,
             type:"get",
             data:{
-                args:obj.input,
+                rowId:rowId,
+                args:args,
                 pageSize:obj.pageSize,
                 pageNum:1
             },
@@ -236,7 +268,8 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
         })
     }
     return {
-        getData:getData
+        getData:getData,
+        getDatas:getDatas
     }
 })()
 

@@ -98,7 +98,7 @@ var dataSetConfigButton = new Vue({
                 }).then(function(res){
                     showMsg.MsgOk(dataSetConfig,res);
                     if(res.data.state==1){
-                        queryData.getData(dataSetConfig.selUrl,dataSetConfig);
+                        queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
                     }
                 },function(){
                     showMsg.MsgError(dataSetConfig);

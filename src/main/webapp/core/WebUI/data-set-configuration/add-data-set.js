@@ -50,7 +50,7 @@ var addDataSet = new Vue({
                 showMsg.MsgOk(dataSetConfig,res);
                 if(res.data.state==1){
                     ibcpLayer.Close(dataSetConfigButton.divIndex);
-                    queryData.getData(dataSetConfig.selUrl,dataSetConfig);
+                    queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
                 }
             },function(){
                 showMsg.MsgError(dataSetConfig);
@@ -69,7 +69,7 @@ var addDataSet = new Vue({
                 showMsg.MsgOk(dataSetConfig,res);
                 if(res.data.state==1){
                     ibcpLayer.Close(dataSetConfigButton.divIndex);
-                    queryData.getData(dataSetConfig.selUrl,dataSetConfig);
+                    queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
                 }
             },function(){
                 showMsg.MsgError(dataSetConfig);

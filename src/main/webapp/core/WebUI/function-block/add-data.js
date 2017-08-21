@@ -89,7 +89,8 @@ var em=new Vue({
                 jsonp: 'callback'
             }).then(function (res) {
                 showMsg.MsgOk(window.parent.functionBlock,res);
-                window.parent.properties.getRight(this.funcRowId);
+                //window.parent.properties.getRight(this.funcRowId);
+                queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
                 showMsg.MsgError(window.parent.functionBlock);
@@ -113,7 +114,8 @@ var em=new Vue({
                 jsonp: 'callback'
             }).then(function (res) {
                 showMsg.MsgOk(window.parent.functionBlock,res);
-                window.parent.properties.getRight(this.funcRowId);
+                //window.parent.properties.getRight(this.funcRowId);
+                queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
                 showMsg.MsgError(window.parent.functionBlock);

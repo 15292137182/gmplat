@@ -37,7 +37,7 @@ var em=new Vue({
             }).then(function(res){
                 showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(topButtonObj.divIndex);
-                functionBlock.get();
+                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock)
             },function(){
                 showMsg.MsgError(functionBlock);
             });
@@ -55,7 +55,7 @@ var em=new Vue({
             }).then(function(res){
                 showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(functionBlock.divIndex);
-                functionBlock.get();
+                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock)
             },function(){
                 showMsg(functionBlock);
             });

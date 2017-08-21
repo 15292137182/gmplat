@@ -58,7 +58,7 @@ var dataBase = new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     showMsg.MsgOk(dataBase,res);
-                    queryData.getData(dataBase.url,this)
+                    queryData.getData(dataBase.url,this.input,this)
                 },function(){
                     showMsg.MsgError(dataBase);
                 })
