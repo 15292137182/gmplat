@@ -109,7 +109,7 @@ var basLeft = new Vue({
         loading:true,
         leftHeight: '',
         tableData: [],
-        currentPage:1,//当前为第一页
+        pageNum:1,//当前为第一页
         pageSize:10,//每页显示条数
         //开始不能为空 否则会报错
         allDate:0,//总共有多少条
@@ -150,7 +150,7 @@ var basLeft = new Vue({
             })
         },
         searchLeftTable() {
-            pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.currentPage,this,function(res){
+            pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.pageNum,this,function(res){
                 console.log(res)
                 if(res.data!=null){
                     console.log(res.data.result);
@@ -171,12 +171,12 @@ var basLeft = new Vue({
         handleSizeChange(val) {
             //每页多少条数变化时
             this.pageSize=val;
-            console.log(`每页 ${val} 条`);
+            //console.log(`每页 ${val} 条`);
             this.searchLeftTable();
         },
         handleCurrentChange(val) {
-            this.currentPage=val;
-            console.log(`当前页: ${val}`);
+            this.pageNum=val;
+           // console.log(`当前页: ${val}`);
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
@@ -220,7 +220,7 @@ var basLeft = new Vue({
             this.$refs.tableData.setCurrentRow(row);
         },
         headSort(column){//列头排序
-            pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.currentPage,column,this);
+            pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.pageNum,column,this);
         }
     },
     created() {
@@ -245,7 +245,7 @@ var basRight = new Vue({
         loading:false,
         rightHeight: '',
         tableData: [],
-        currentPage:1,//当前为第一页
+        pageNum:1,//当前为第一页
         pageSize:10,//每页显示条数
         //开始不能为空 否则会报错
         allDate:0  //总共有多少条
@@ -253,7 +253,7 @@ var basRight = new Vue({
     methods: {
         searchRightTable() {
             console.log(basLeft.currentVal);
-            pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.currentPage,this,function(res){
+            pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.pageNum,this,function(res){
                 if(res.data!=null){
                     //按钮禁掉
                     $.each(res.data.result, function(index, item) {
@@ -331,7 +331,7 @@ var basRight = new Vue({
             this.searchRightTable()
         },
         handleCurrentChange(val) {
-            this.currentPage=val;
+            this.pageNum=val;
             //console.log(`当前页: ${val}`);
             this.searchRightTable();
         },

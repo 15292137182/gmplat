@@ -28,14 +28,14 @@ var resCol=new Vue({
         resInput: '',
         tableData: [],
         loading:true,
-        currentPage:1,//当前为第一页
+        pageNum:1,//当前为第一页
         pageSize:10,//每页显示条数
         //开始不能为空 否则会报错
         allDate:0  //总共有多少条
     },
     methods:{
         searchResTable() {
-            pagingObj.Example(qurUrl,this.resInput,this.pageSize,this.currentPage,this);
+            pagingObj.Example(qurUrl,this.resInput,this.pageSize,this.pageNum,this);
         },
         editResEvent() {
             operate = 2;
@@ -77,11 +77,11 @@ var resCol=new Vue({
             this.searchResTable();
         },
         handleCurrentChange(val) {  //当前页是第几页
-            this.currentPage=val;
+            this.pageNum=val;
             this.searchResTable();
         },
         headSort(column){//列头排序
-            pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.currentPage,column,this);
+            pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.pageNum,column,this);
         }
     },
     created() {

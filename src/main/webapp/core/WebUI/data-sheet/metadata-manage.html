@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../Public/publicjs.js"></script>
+    <style>
+        html {
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 <body>
 <!--搜索框 搜索按钮 所有事件按钮-->
@@ -73,7 +78,7 @@
                     <el-pagination
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
-                            :current-page.sync="currentPage"
+                            :current-page.sync="pageNum"
                             :page-sizes="[5,10,20]"
                             :page-size="pageSize"
                             layout="total, sizes, prev, pager, next, jumper"
@@ -147,7 +152,7 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page.sync="currentPage"
+                                :current-page.sync="pageNum"
                                 :page-sizes="[5,10,20]"
                                 :page-size="pageSize"
                                 layout="total, sizes, prev, pager, next, jumper"

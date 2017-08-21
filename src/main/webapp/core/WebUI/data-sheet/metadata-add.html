@@ -31,7 +31,7 @@
         </el-form>
         <el-row>
             <el-col :span="11" style="text-align:right">
-                <el-button type="primary" size="small" @click.native="conformEvent('addForm')">保存</el-button>
+                <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
             </el-col>
             <el-col :span="11" style="text-align: left" :offset="2">
                 <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
@@ -61,7 +61,6 @@
                 addForm:{
                     codeInput: '',
                     nameInput: '',
-//                    tableInput: '',
                     versionInput: '',
                     disabled: true,
                     tabDisabled:false,
@@ -74,9 +73,9 @@
 //                        {required: true, message: '请输入对象代码', trigger: 'blur'},
 //                        //{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 //                    ],
-                    nameInput: [
-                        {required: true, message: '请输入对象名称', trigger: 'change'}
-                    ],
+//                    nameInput: [
+//                        {required: true, message: '请输入对象名称', trigger: 'change'}
+//                    ],
 //                    tableInput: [
 //                        {required: true, message: '请选择关联', trigger: 'blur'}
 //                    ]
@@ -84,60 +83,77 @@
             }
         },
         methods: {
-            changeTable(e){
-                if (operate == 1) {
-                    em.dataId=e;
-                    console.log(em.dataId)
+//            changeTable(e){
+//                if (operate == 1) {
+//                    em.dataId=e;
+//                    console.log(em.dataId)
+//                }
+//            },
+            conformEvent() {
+                var nameInput= this.$refs.nameInput.value;
+                var tableInput= em.$refs.selectTab.tableInput;
+                if(nameInput==''){
+                    ibcpLayer.ShowMsg(this.$refs.nameInput.placeholder);
+                        return;
                 }
-            },
-            conformEvent(addForm) {
-                if(em.flag==false){
-                    return
+                if(tableInput==''){
+                    ibcpLayer.ShowMsg('请选择关联表');
+                    return;
                 }
-                em.flag=false;
-                em.$refs[addForm].validate(function (valid) {
-                    if (valid) {
+//                var datas = [
+//                    this.$refs.nameInput,
+//                    em.$refs.selectTab
+//                ];
+//                console.log(datas)
+//                console.log(em.$refs.selectTab.value)
+//                for (var i = 0; i < datas.length; i++) {
+//                    if (datas[i].value == '') {
+//                        ibcpLayer.ShowMsg(datas[i].placeholder);
+//                        return;
+//                    }
+//                }
+//                em.$refs[addForm].validate(function (valid) {
+//                    if (valid) {
                         if (operate == 1) {
-                            console.log(em.reaOptTable);
-                            em.$http.jsonp(addUrl, {
+                            addObj.addOk(function(){
+                                em.$http.jsonp(addUrl, {
                                 objectName: em.addForm.nameInput,
                                 relateTableRowId: em.$refs.selectTab.tableInput,
                             }, {
                                 jsonp: 'callback'
                             }).then(function (res) {
-                                addObj.addOk(function(){
                                     showMsg.MsgOk(basTop,res);
                                     basLeft.leftInput='';
                                     basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
-                                },function(){
-                                    showMsg.MsgError(basTop)
                                 })
-                            });
+                            },function(){
+                                showMsg.MsgError(basTop)
+                            })
                         }
                         if (operate == 2) {
-                            em.$http.jsonp(editUrl, {
-                                //拿到这条数据的ID
-                                rowId: basLeft.currentVal.rowId,
-                                objectName: em.addForm.nameInput,
-                                relateTableRowId: em.$refs.selectTab.tableInput,
-                            }, {
-                                jsonp: 'callback'
-                            }).then(function (res) {
-                                editObj.editOk(function(){
+                            editObj.editOk(function(){
+                                em.$http.jsonp(editUrl, {
+                                    //拿到这条数据的ID
+                                    rowId: basLeft.currentVal.rowId,
+                                    objectName: em.addForm.nameInput,
+                                    relateTableRowId: em.$refs.selectTab.tableInput,
+                                }, {
+                                    jsonp: 'callback'
+                                }).then(function (res) {
                                     showMsg.MsgOk(basTop,res);
                                     basLeft.leftInput='';
                                     basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
-                                },function(){
-                                    showMsg.MsgError(basTop)
-                                })
-                            });
+                                });
+                            },function(){
+                                showMsg.MsgError(basTop)
+                            })
                         }
-                    }else {
-                        return false;
-                    }
-                })
+//                    }else {
+//                        return false;
+//                    }
+                //})
             },
             cancel() {
                 ibcpLayer.Close(divIndex);
