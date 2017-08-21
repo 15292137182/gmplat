@@ -70,6 +70,15 @@ public class TXManager {
   }
 
   /**
+   * 不参与事务
+   *
+   * @param operate 操作
+   */
+  public static void doInNoTX(QNNOperate operate) {
+    doInTx(operate, TransactionDefinition.PROPAGATION_NEVER);
+  }
+
+  /**
    * 需要事务，有则加入，没有则创建
    *
    * @param operate 操作
