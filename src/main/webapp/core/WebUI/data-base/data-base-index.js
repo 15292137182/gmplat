@@ -34,9 +34,10 @@ var dataBase = new Vue({
             this.$refs.myData.setCurrentRow(row);
         },
         handleClick(){//查看明细
-            this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','600px', '400px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','700px', '500px',function(){
                 DatabaseDetails.Robj = dataBase.rowObj;
-                DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                // DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                DatabaseDetails.selDatas();
             })
         },
         editTableBase(){//编辑

@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
+    </style>
 </head>
 <body>
     <div id="myInlayerButton">
         <el-col :span="24" style="padding:5px 11px 0 11px">
             <!--所有事件按钮-->
             <el-row type="flex" class="row-bg" justify="end">
-                <el-col :span="24" style="text-align: right">
+                <el-col :span="12" style="text-align: right">
                     <el-button @click="addInlayerTableBase" size="small" type="info" icon="plus">表字段</el-button>
                 </el-col>
             </el-row>
@@ -17,11 +22,22 @@
     </div>
     <div id="right">
         <el-col :span="24">
-            <el-row type="flex" class="row-bg" justify="center">
+            <div class="allBorder" style="margin:0 10px 10px 10px">
+                <el-row>
+                    <el-col :span="12">
+                        <div class="inputStyle">
+                            <el-input size="small" placeholder="请输入内容" v-model="input">
+                                <el-button slot="append" icon="search"  @click.native="selDatas"></el-button>
+                            </el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" class="row-bg" justify="center">
                     <el-col :span="23">
                         <template>
                             <el-table
-                                    :data="rightData"
+                                    :data="tableData"
+                                    :height="300"
                                     border style="width: 100%;
                                     "@row-click="clickTable">
                                 <el-table-column show-overflow-tooltip prop="columnCname" label="字段中文名称" width="">
@@ -38,13 +54,25 @@
                                 </el-table-column>
                             </el-table>
                         </template>
+                        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="pageNum"
+                                    :page-sizes="[2,10, 20]"
+                                    :page-size="pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="allDate">
+                            </el-pagination>
+                        </el-row>
                     </el-col>
-            </el-row>
-            <el-row style="margin-bottom: 10px;margin-top:40px;">
-                <el-col :span="24" style="text-align:center">
-                    <el-button type="primary" @click="conformEvent">确定</el-button>
-                </el-col>
-            </el-row>
+                </el-row>
+                <!--<el-row style="margin-bottom: 10px;margin-top:20px;">-->
+                <!--<el-col :span="24" style="text-align:center">-->
+                <!--<el-button type="primary" @click="conformEvent">确定</el-button>-->
+                <!--</el-col>-->
+                <!--</el-row>-->
+            </div>
         </el-col>
     </div>
 </body>

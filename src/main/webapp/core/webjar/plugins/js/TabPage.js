@@ -73,7 +73,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
         }else{
             data = {str:column.prop,num:0}
         }
-        var datas = "["+JSON.stringify(data)+"]";
+        var datas = JSON.stringify(data);
         $.ajax({
             url:url,
             type:"get",
@@ -118,7 +118,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
         }else{
             data = {str:column.prop,num:0}
         }
-        var datas = "["+JSON.stringify(data)+"]";
+        var datas = JSON.stringify(data);
         $.ajax({
             url:url,
             type:"get",
@@ -162,7 +162,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
         }else{
             data = {str:column.prop,num:0}
         }
-        var datas = "["+JSON.stringify(data)+"]";
+        var datas = JSON.stringify(data);
         $.ajax({
             url:url,
             type:"get",
