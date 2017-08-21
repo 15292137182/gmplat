@@ -53,50 +53,50 @@ var keyValueSetAdd = new Vue({
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
                     if (operate == 1) {
-                        keyValueSetAdd.$http.jsonp(insert, {
-                            //keysetCode: keyValueSetAdd.keyForm.keysetCodeInput,
-                            number:keyValueSetAdd.keyForm.numberInput,
-                            keysetName: keyValueSetAdd.keyForm.keysetNameInput,
-                            confKey: keyValueSetAdd.keyForm.confKeyInput,
-                            confValue: keyValueSetAdd.keyForm.confValueInput,
-                            desp: keyValueSetAdd.keyForm.despInput,
-                            //version: keyValueSetAdd.version
-                        }, {
-                            jsonp: 'callback'
-                        }).then(function (res) {
-                            addObj.addOk(function(){
+                        addObj.addOk(function(){
+                            keyValueSetAdd.$http.jsonp(insert, {
+                                //keysetCode: keyValueSetAdd.keyForm.keysetCodeInput,
+                                number:keyValueSetAdd.keyForm.numberInput,
+                                keysetName: keyValueSetAdd.keyForm.keysetNameInput,
+                                confKey: keyValueSetAdd.keyForm.confKeyInput,
+                                confValue: keyValueSetAdd.keyForm.confValueInput,
+                                desp: keyValueSetAdd.keyForm.despInput,
+                                //version: keyValueSetAdd.version
+                            }, {
+                                jsonp: 'callback'
+                            }).then(function (res) {
                                 showMsg.MsgOk(keyValueSet,res)
                                 keyValueSet.input='';
                                 keyValueSet.search();
                                 ibcpLayer.Close(divIndex);
-                            },function(){
-                                showMsg.MsgError(keyValueSet)
-                            })
-                        });
+                            });
+                        },function(){
+                            showMsg.MsgError(keyValueSet)
+                        })
                     }
                     if (operate == 2) {
-                        keyValueSetAdd.$http.jsonp(modify, {
-                            //拿到这条数据的ID
-                            rowId: keyValueSet.currentVal.rowId,
-                            //keysetCode: keyValueSetAdd.keysetCodeInput,
-                            number:keyValueSetAdd.keyForm.numberInput,
-                            keysetName: keyValueSetAdd.keyForm.keysetNameInput,
-                            confKey: keyValueSetAdd.keyForm.confKeyInput,
-                            confValue: keyValueSetAdd.keyForm.confValueInput,
-                            desp: keyValueSetAdd.keyForm.despInput,
-                            // version: keyValueSetAdd.version
-                        }, {
-                            jsonp: 'callback'
-                        }).then(function (res) {
-                            editObj.editOk(function(){
+                        editObj.editOk(function(){
+                            keyValueSetAdd.$http.jsonp(modify, {
+                                //拿到这条数据的ID
+                                rowId: keyValueSet.currentVal.rowId,
+                                //keysetCode: keyValueSetAdd.keysetCodeInput,
+                                number:keyValueSetAdd.keyForm.numberInput,
+                                keysetName: keyValueSetAdd.keyForm.keysetNameInput,
+                                confKey: keyValueSetAdd.keyForm.confKeyInput,
+                                confValue: keyValueSetAdd.keyForm.confValueInput,
+                                desp: keyValueSetAdd.keyForm.despInput,
+                                // version: keyValueSetAdd.version
+                            }, {
+                                jsonp: 'callback'
+                            }).then(function (res) {
                                 showMsg.MsgOk(keyValueSet,res)
                                 keyValueSet.input='';
                                 keyValueSet.search();
                                 ibcpLayer.Close(divIndex);
-                            },function(){
-                                showMsg.MsgError(keyValueSet)
-                            })
-                        });
+                            });
+                        },function(){
+                            showMsg.MsgError(keyValueSet)
+                        })
                     }
                 }
             })

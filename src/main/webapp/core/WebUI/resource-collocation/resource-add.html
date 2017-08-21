@@ -65,43 +65,44 @@
                 this.$refs[formName].validate(function (valid) {
                     if (valid) {
                         if (operate == 1) { //新增的时候
-                            resAdd.$http.jsonp(addUrl, {
-                                confKey: resAdd.colForm.codeInput,
-                                confValue: resAdd.colForm.nameInput,
-                                desp: resAdd.colForm.tableInput
-                            }, {
-                                jsonp: 'callback'
-                            }).then(function (res) {
-                                addObj.addOk(function(){
+                            addObj.addOk(function(){
+                                resAdd.$http.jsonp(addUrl, {
+                                    confKey: resAdd.colForm.codeInput,
+                                    confValue: resAdd.colForm.nameInput,
+                                    desp: resAdd.colForm.tableInput
+                                }, {
+                                    jsonp: 'callback'
+                                }).then(function (res) {
                                     showMsg.MsgOk(resTop,res);
                                     //新增的时候将搜索框清空
                                     resCol.resInput='';
                                     resCol.searchResTable();
                                     ibcpLayer.Close(divIndex);
-                                },function(){
-                                    showMsg.MsgError(resTop)
-                                })
-                            });
+                                });
+                            },function(){
+                                showMsg.MsgError(resTop)
+                            })
                         }
                         if (operate == 2) {
-                            resAdd.$http.jsonp(editUrl, {
-                                //拿到这条数据的ID
-                                rowId: resCol.currentValue.rowId,
-                                confValue: resAdd.colForm.nameInput,
-                                desp: resAdd.colForm.tableInput
-                            }, {
-                                jsonp: 'callback'
-                            }).then(function (res) {
-                                editObj.editOk(function(){
+                            editObj.editOk(function(){
+                                resAdd.$http.jsonp(editUrl, {
+                                    //拿到这条数据的ID
+                                    rowId: resCol.currentValue.rowId,
+                                    confValue: resAdd.colForm.nameInput,
+                                    desp: resAdd.colForm.tableInput
+                                }, {
+                                    jsonp: 'callback'
+                                }).then(function (res) {
+
                                     showMsg.MsgOk(resTop,res);
                                     //编辑的时候将搜索框清空
                                     resCol.resInput='';
                                     resCol.searchResTable();
                                     ibcpLayer.Close(divIndex);
-                                },function(){
-                                    showMsg.MsgError(resTop)
-                                })
-                            });
+                                });
+                            },function(){
+                                showMsg.MsgError(resTop)
+                            })
                         }
                     } else {
                         return false;
