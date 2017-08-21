@@ -1,5 +1,5 @@
 var pagingObj = (function(){
-    var Example = function(url,args,pageSize,pageNum,obj,callback){
+    var Example = function(url,args,pageSize,pageNum,obj,type,callback){
         $.ajax({
             url:url,
             type:"get",
@@ -11,10 +11,15 @@ var pagingObj = (function(){
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
+                console.log(res);
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
-                    obj.pageNum = 1;//定位到第一页
+                    if(type==1){//新增编辑删除
+                        obj.pageNum = 1;//定位到第一页
+                    }else{
+                        obj.pageNum = res.data.pageNum;//定位到当前页
+                    }
                 }else{
                     obj.tableData = [];
                 }
@@ -28,7 +33,7 @@ var pagingObj = (function(){
             }
         })
     }
-    var Examples = function(url,rowId,args,pageSize,pageNum,obj,callback){//有依赖的分页查询
+    var Examples = function(url,rowId,args,pageSize,pageNum,obj,type,callback){//有依赖的分页查询
         $.ajax({
             url:url,
             type:"get",
@@ -44,16 +49,17 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
-                    obj.pageNum = 1;//定位到第一页
-                    if(typeof callback =="function"){
-                            callback(res);
-                        }
+                    if(type==1){//新增编辑删除
+                        obj.pageNum = 1;//定位到第一页
+                    }else{
+                        obj.pageNum = res.data.pageNum;//定位到当前页
+                    }
                 }else{
                     obj.tableData = [];
                 }
-                // if(typeof callback =="function"){
-                //     callback(res);
-                // }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
             },
             error:function(){
                 obj.loading=false;
