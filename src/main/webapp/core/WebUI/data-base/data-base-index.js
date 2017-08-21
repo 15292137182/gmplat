@@ -21,8 +21,10 @@ var dataBase = new Vue({
         allDate:0//共多少条
     },
     methods:{
-        get(type){//分页查询
-            pagingObj.Example(this.url,this.input, this.pageSize,this.pageNum,this,type);
+        get(){//分页查询
+            pagingObj.Example(this.url,this.input,this.pageSize,this.pageNum,this,function(){
+
+            });
         },
         click(row, event, column){//点击table
             this.rowObj = row;
@@ -56,7 +58,7 @@ var dataBase = new Vue({
                     jsonp:'callback'
                 }).then(function(res){
                     showMsg.MsgOk(dataBase,res);
-                    this.get(1);
+                    queryData.getData(dataBase.url,this)
                 },function(){
                     showMsg.MsgError(dataBase);
                 })

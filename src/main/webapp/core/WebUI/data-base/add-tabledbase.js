@@ -27,7 +27,7 @@ var tableBase = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 showMsg.MsgOk(dataBase,res);
-                dataBase.get(1);
+                queryData.getData(dataBase.url,dataBase)
                 ibcpLayer.Close(topButtonObj.divIndex);
             },function(){
                 showMsg.MsgError(dataBase);
@@ -45,7 +45,7 @@ var tableBase = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 showMsg.MsgOk(dataBase,res);
-                dataBase.get(1);
+                queryData.getData(dataBase.url,dataBase)
                 ibcpLayer.Close(dataBase.editdivIndex);
             },function(){
                 showMsg.MsgError(dataBase);

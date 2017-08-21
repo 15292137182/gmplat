@@ -1,5 +1,5 @@
-var pagingObj = (function(){
-    var Example = function(url,args,pageSize,pageNum,obj,type,callback){
+var pagingObj = (function(){//分页不跳转回第一页调该方法
+    var Example = function(url,args,pageSize,pageNum,obj,callback){
         $.ajax({
             url:url,
             type:"get",
@@ -15,11 +15,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
-                    if(type==1){//新增编辑删除
-                        obj.pageNum = 1;//定位到第一页
-                    }else{
-                        obj.pageNum = res.data.pageNum;//定位到当前页
-                    }
+                    obj.pageNum = res.data.pageNum;//当前页
                 }else{
                     obj.tableData = [];
                 }
@@ -33,7 +29,7 @@ var pagingObj = (function(){
             }
         })
     }
-    var Examples = function(url,rowId,args,pageSize,pageNum,obj,type,callback){//有依赖的分页查询
+    var Examples = function(url,rowId,args,pageSize,pageNum,obj,callback){//有依赖的分页查询
         $.ajax({
             url:url,
             type:"get",
@@ -49,11 +45,7 @@ var pagingObj = (function(){
                 if(res.data!=null){
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
-                    if(type==1){//新增编辑删除
-                        obj.pageNum = 1;//定位到第一页
-                    }else{
-                        obj.pageNum = res.data.pageNum;//定位到当前页
-                    }
+                    obj.pageNum = res.data.pageNum;//定位到当前页
                 }else{
                     obj.tableData = [];
                 }
@@ -208,6 +200,43 @@ var pagingObj = (function(){
         headSort:headSort,
         headSorts:headSorts,
         headSorts1:headSorts1
+    }
+})()
+
+var queryData = (function(){//刷新table跳转到第一页调改方法
+    var getData = function(url,obj,callback){
+        //url：分页查询接口，obj：当前vue实例对象（this），callback：成功后的回调函数
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{
+                args:obj.input,
+                pageSize:obj.pageSize,
+                pageNum:1
+            },
+            dataType:"jsonp",
+            success:function(res){
+                obj.loading=false;
+                console.log(res);
+                if(res.data!=null){
+                    obj.tableData = res.data.result;//数据源
+                    obj.allDate = Number(res.data.total);//总共多少条数据
+                    obj.pageNum = res.data.pageNum;//当前页
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                alert("错误")
+            }
+        })
+    }
+    return {
+        getData:getData
     }
 })()
 

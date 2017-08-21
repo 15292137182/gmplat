@@ -17,8 +17,8 @@ var dataSetConfig = new Vue({
         pageNum:1//当前第几页
     },
     methods:{
-        searchResTable(type){//分页查询
-            pagingObj.Example(this.selUrl,this.input, this.pageSize,this.pageNum,this,type);
+        searchResTable(){//分页查询
+            pagingObj.Example(this.selUrl,this.input, this.pageSize,this.pageNum,this);
         },
         clickTable(row){//表格点击事件
             this.rowObjId = row.rowId;
@@ -98,7 +98,7 @@ var dataSetConfigButton = new Vue({
                 }).then(function(res){
                     showMsg.MsgOk(dataSetConfig,res);
                     if(res.data.state==1){
-                        dataSetConfig.searchResTable(1);
+                        queryData.getData(dataSetConfig.selUrl,dataSetConfig);
                     }
                 },function(){
                     showMsg.MsgError(dataSetConfig);
