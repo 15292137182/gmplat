@@ -1,9 +1,6 @@
 package com.bcx.plat.core.manager;
 
 import com.bcx.BaseTest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 
 /**
@@ -13,18 +10,9 @@ public class SequenceManagerTest extends BaseTest {
 
   @Test
   public void test() {
-    String code = "BusinObjPro";
-    Map<String, Object> a = new HashMap<>();
-    a.put("a", "测试");
-      String s = SequenceManager.getInstance().buildSequenceNo(code, null);
-      System.out.println(s);
 
+    String s = SequenceManager.getInstance().buildSequenceNo("BusinObjPro", null);
+    System.out.println(s);
 
-    String content = "@{11111}&&${a;yyyy-MM-dd-;true}&&*{b;1}";
-    List<String> list = SequenceManager.getInstance().mockSequenceNo(content, null, 5);
-
-    int businObjectPro = SequenceManager.getInstance().resetSequenceNo("BusinObjectPro");
-
-    SequenceManager.getInstance().produceSequenceNo(code, null, 5, false);
   }
 }

@@ -45,7 +45,7 @@ public class UtilsTool {
    * @return 返回
    */
   public static boolean isValid(Object obj) {
-    return null != obj && !"".equals(obj);
+    return null != obj && !"".equals(obj.toString());
   }
 
   public static boolean isValid(List list) {
