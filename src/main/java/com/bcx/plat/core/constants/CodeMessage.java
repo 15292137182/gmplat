@@ -1,6 +1,7 @@
 package com.bcx.plat.core.constants;
 
 /**
+ *
  * Created by Wen Tiehu on 2017/8/21.
  */
 public class CodeMessage {

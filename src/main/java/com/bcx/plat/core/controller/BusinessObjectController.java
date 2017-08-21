@@ -15,10 +15,7 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.service.BusinessObjectProService;
-import com.bcx.plat.core.service.BusinessObjectService;
-import com.bcx.plat.core.service.FrontFuncService;
-import com.bcx.plat.core.service.MaintDBTablesService;
+import com.bcx.plat.core.service.*;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +39,21 @@ public class BusinessObjectController extends
     private final BusinessObjectProService businessObjectProService;
     private final MaintDBTablesService maintDBTablesService;
     private final FrontFuncService frontFuncService;
+    private final FrontFuncProService frontFuncProService;
 
     @Autowired
-    public BusinessObjectController(BusinessObjectProService businessObjectProService, MaintDBTablesService maintDBTablesService, FrontFuncService frontFuncService) {
+    public BusinessObjectController(BusinessObjectProService businessObjectProService,
+                                    MaintDBTablesService maintDBTablesService,
+                                    FrontFuncService frontFuncService,
+                                    FrontFuncProService frontFuncProService) {
         this.businessObjectProService = businessObjectProService;
         this.maintDBTablesService = maintDBTablesService;
         this.frontFuncService = frontFuncService;
+        this.frontFuncProService = frontFuncProService;
     }
+
+
+
 
     @Override
     protected List<String> blankSelectFields() {
@@ -216,6 +221,13 @@ public class BusinessObjectController extends
         Map<String, Object> map = new HashMap<>();
         map.put("relateBusiObj", rowId);
         List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
+        for (Map<String, Object> busin : businObj) {
+            String rowId1 = (String) busin.get("rowId");
+            List<Map<String, Object>> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
+            if (funcRowId.size() != 0) {
+                return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
+            }
+        }
         if (businObj.size() == 0) {
             List<Map<String, Object>> list = businessObjectProService
                     .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));

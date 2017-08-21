@@ -7,6 +7,7 @@ import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -28,9 +29,12 @@ import java.util.Map;
 public class DBTableColumnController extends BaseControllerTemplate<DBTableColumnService, DBTableColumn> {
 
     private final DBTableColumnService dbTableColumnService;
+    private final BusinessObjectProService businessObjectProService;
+
     @Autowired
-    public DBTableColumnController(DBTableColumnService dbTableColumnService) {
+    public DBTableColumnController(DBTableColumnService dbTableColumnService, BusinessObjectProService businessObjectProService) {
         this.dbTableColumnService = dbTableColumnService;
+        this.businessObjectProService = businessObjectProService;
     }
 
     @Override
@@ -56,6 +60,24 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
         return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+    }
+
+
+    /**
+     * 通用删除方法
+     *
+     * @param rowId   按照rowId查询
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return serviceResult
+     */
+    @Override
+    public Object delete(String rowId, HttpServletRequest request, Locale locale) {
+        List<Map<String, Object>> busiPro = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
+        if (busiPro.size() == 0) {
+            return super.delete(rowId, request, locale);
+        }
+        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
     }
 
 }

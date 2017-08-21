@@ -6,9 +6,13 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.manager.SequenceManager;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Arrays;
@@ -17,6 +21,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,5 +89,23 @@ public class SequenceRuleConfigController extends
       _sr.setMessage("INVALID_REQUEST");
     }
     return super.result(request, _sr, locale);
+  }
+
+
+  /**
+   * 通用查询方法
+   *
+   * @param rowId     按照空格查询
+   * @param request request请求
+   * @param locale  国际化参数
+   * @return ServiceResult
+   */
+  @RequestMapping("/queryById")
+  public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
+    List<Map<String, Object>> mapList = getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+    if (mapList.size()==0) {
+      return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL),locale);
+    }
+    return super.result(request, new ServiceResult(mapList,BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
   }
 }
