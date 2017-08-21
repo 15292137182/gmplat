@@ -1,7 +1,7 @@
-/*去除滚动条*/
-/*html {*/
-    /*overflow: hidden;*/
-/*}*/
+/*去除横向滚动条滚动条*/
+html {
+    overflow-x: hidden;
+}
 body{
     margin:2px 8px
 }
@@ -71,4 +71,18 @@ tr [class^=el-icon-]{
 }
 .el-icon-delete{
     color:#FF4949;
+}
+
+
+/*扩展表的padding*/
+.el-table__expanded-cell {
+    padding: 12px 40px 5px 40px;
+}
+/*扩展表表格的bottom*/
+td  .el-form-item {
+    margin-bottom: 0;
+}
+/*扩展表label颜色*/
+.demo-table-expand label {
+    color: #99a9bf;
 }
