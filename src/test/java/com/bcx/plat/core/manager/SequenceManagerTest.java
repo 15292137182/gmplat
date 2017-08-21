@@ -11,7 +11,7 @@ public class SequenceManagerTest extends BaseTest {
   @Test
   public void test() {
 
-    String s = SequenceManager.getInstance().buildSequenceNo("BusinObjPro", null);
+    String s = SequenceManager.getInstance().buildSequenceNo("sssssss", null);
     System.out.println(s);
 
   }

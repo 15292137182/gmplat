@@ -202,6 +202,10 @@ public class SequenceManager {
         finish(ruleConfig.getRowId(), test);
       }
     }
+    if (result.isEmpty()) {
+      logger.error("未能根据传入的序列号: " + sequenceCode + ", 生成正确的序列号，请检查您的序列号配置信息！");
+      throw Lang.makeThrow("无效的序列号: [%s], 请检查！", sequenceCode);
+    }
     return result;
   }
 
