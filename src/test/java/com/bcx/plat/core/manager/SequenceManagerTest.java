@@ -11,7 +11,7 @@ public class SequenceManagerTest extends BaseTest {
   @Test
   public void test() {
 
-    String s = SequenceManager.getInstance().buildSequenceNo("sssssss", null);
+    String s = SequenceManager.getInstance().buildSequenceNo("keySet");
     System.out.println(s);
 
   }

@@ -75,6 +75,16 @@ public class SequenceManager {
   private Map<String, Object> branchValues;
 
   /**
+   * 生成流水号
+   *
+   * @param sequenceCode 流水号代码
+   * @return 返回流水号
+   */
+  public String buildSequenceNo(String sequenceCode) {
+    return buildSequenceNo(sequenceCode, null);
+  }
+
+  /**
    * 生成序列号
    *
    * @param sequenceCode 序列号编码
@@ -340,7 +350,8 @@ public class SequenceManager {
         fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
         if (isValid(branchValues.get(variableKey))) {
           fieldConditions
-              .add(new FieldCondition("branchSign", Operator.EQUAL, branchValues.get(variableKey)));
+              .add(new FieldCondition("branchSign", Operator.EQUAL,
+                  branchValues.get(variableKey).toString()));
         }
         List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
             .where(new And(fieldConditions)).execute();
