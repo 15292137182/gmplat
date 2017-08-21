@@ -71,4 +71,5 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
         }
         return super.result(request, new ServiceResult(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
+
 }

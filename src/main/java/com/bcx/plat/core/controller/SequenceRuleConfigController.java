@@ -13,6 +13,7 @@ import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.service.SequenceGenerateService;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.ServiceResult;
 import java.util.Arrays;
@@ -20,9 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bcx.plat.core.utils.UtilsTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +36,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/core/sequenceRule")
 public class SequenceRuleConfigController extends
     BaseControllerTemplate<SequenceRuleConfigService, SequenceRuleConfig> {
+
+  private final SequenceGenerateService sequenceGenerateService;
+
+  @Autowired
+  public SequenceRuleConfigController(SequenceGenerateService sequenceGenerateService) {
+    this.sequenceGenerateService = sequenceGenerateService;
+  }
 
   @Override
   protected List<String> blankSelectFields() {
@@ -102,7 +112,16 @@ public class SequenceRuleConfigController extends
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
+    Map<String ,Object > map = new HashMap<>();
     List<Map<String, Object>> mapList = getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+    List<Map<String, Object>> seqRowId = sequenceGenerateService.select(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
+    String currentValue = null;
+    for (Map<String,Object>  seq :seqRowId){
+      currentValue = (String)seq.get("currentValue");
+    }
+    for (Map<String,Object> maplists : mapList){
+      maplists.put("currenValue",currentValue);
+    }
     if (mapList.size()==0) {
       return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL),locale);
     }
