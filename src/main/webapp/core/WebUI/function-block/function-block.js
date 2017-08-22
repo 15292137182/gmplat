@@ -64,6 +64,7 @@ var functionBlock = new Vue({
         },
         //点击
         click(row, event, column){
+            console.log(row);
             if(row){
                 properties.rightInput = '';
                 this.rowId = row.rowId;
