@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="main" style="margin-top:20px">
-    <el-form ref="resetform" :model="resetform" label-width="100px">
+    <el-form ref="resetform" :model="resetform" v-model="labelPosition" label-width="90px" style="padding:0 20px 0 10px">
         <el-form-item label="代码">
             <el-input v-model="resetform.seqCode" :disabled="true"></el-input>
         </el-form-item>
@@ -20,6 +20,13 @@
         <!--<el-form-item label="变量Key">-->
             <!--<el-input v-model="resetform.name"></el-input>-->
         <!--</el-form-item>-->
+
+        <el-form-item
+                v-for="(domain, index) in dynamicValidateForm.domains"
+                :label="'变量' + index"
+                :key="domain.key"
+                :prop="'domains.' + index + '.value'"/>
+
         <el-form-item label="当前序列值">
             <el-input v-model="resetform.value"></el-input>
         </el-form-item>
@@ -42,6 +49,7 @@
                     seqContent:'',
                     value:''
                 },
+                labelPosition: 'right',
                 choseId:'',//选中的rowId
                 queryUrl:serverPath+'/sequenceRule/queryById',
                 resetUrl:serverPath+'/sequenceRule/reset',

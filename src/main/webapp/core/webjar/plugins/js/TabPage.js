@@ -425,37 +425,71 @@ var SelectOptions = (function(){
         return selectComponet;
     };
 
-
-    // var tableSetOpt=function(args){
-    //     var serUrl=serverPath+'/keySet/query';
-    //     var arr=new Array();
-    //     for(var p in args){
-    //         var str=args[p];
-    //         arr.push(str);
-    //     }
-    //
-    //     $.ajax({
-    //         url:serUrl,
-    //         type:"get",
-    //         data:{args:arr},
-    //         dataType:"jsonp",
-    //         success:function(res){
-    //             console.log(res.data);
-    //             if(typeof callback == "function"){
-    //                 callback(res);
-    //             }
-    //         },
-    //         error:function(){
-    //             alert("error");
-    //         }
-    //     })
-    // }
     return {
         setOpt:setOpt,
         ConSetOpt:ConSetOpt
-        // tableSetOpt:tableSetOpt
     }
 })()
+
+
+/**
+ * 表格下拉框 值显示
+ */
+var tableKeyValueSetIn='';
+var tableKeyValueSetOut='';
+//var tabSelectShow={"dataSetConfig":
+//                                  {"datasetType":"dataSetConfigType"}};
+var TableKeyValueSet = (function(){
+
+    var init = function(tableStr){
+        if("" !=tableStr || undefined !=tableStr || null!=tableStr ){
+            tableKeyValueSetIn=tableStr;
+            var arr=new Array();
+            for(var i in tableStr){
+                for (var j in tableStr[i]){
+                    var str='"'+tableStr[i][j]+'"';
+                    arr.push(str);
+                }
+            }
+            arr="["+arr+"]";
+            $.ajax({
+                url:serverPath+"/keySet/queryKeySet",
+                type:"get",
+                data:{
+                    args:arr
+                },
+                dataType:"jsonp",
+                success:function(res){
+                    tableKeyValueSetOut=JSON.parse(res.data);
+
+                },
+                error:function(){
+                    alert("未能获取键值集合")
+                }
+            })
+        }else{
+            alert("未传入参数");
+        }
+        return init;
+    };
+
+    var getOptions=function () {
+        return tableKeyValueSetIn;
+    };
+
+    var getData=function(){
+        return tableKeyValueSetOut;
+    };
+
+    return {
+        init:init,
+        getOptions:getOptions,
+        getData:getData
+    }
+})()
+
+
+
 
 
 
