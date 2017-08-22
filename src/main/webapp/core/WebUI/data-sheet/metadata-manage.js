@@ -53,7 +53,7 @@ var basTop = new Vue({
             }, {
                 jsonp: 'callback'
             }).then(function (ref) {
-                console.log(ref);
+                //console.log(ref);
                 proEm.optionValue = ref.data.data;
             });
             //键值类型(键值集合)
@@ -64,7 +64,7 @@ var basTop = new Vue({
             }).then(function (ref) {
                 // console.log(ref);
                 proEm.optionLeft = ref.data.data;
-                console.log(proEm.optionLeft)
+               // console.log(proEm.optionLeft)
             });
             //值来源类型(键值集合)
             proEm.$http.jsonp(serverPath + '/keySet/query', {
@@ -141,8 +141,8 @@ var basLeft = new Vue({
                     showMsg.MsgOk(basTop,ref)
                     //分页跳回到第一页
                     queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
-                    basRight.rightInput='';
-                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
+                    //basRight.rightInput='';
+                    //queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
                 },function(){
                     showMsg.MsgError(basTop)
                 });
@@ -296,7 +296,7 @@ var basRight = new Vue({
                 }).then(function (ref) {
                     showMsg.MsgOk(basTop,ref);
                     //分页跳回到第一页
-                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
+                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
                 },function(){
                     showMsg.MsgError(basTop)
                 });
@@ -345,8 +345,8 @@ var basRight = new Vue({
         })
     },
     updated() {
-        if (this.tableData != null) {
-            this.FindRFirstDate(this.tableData[0]);
-        }
+        //if (this.tableData != null) {
+        //    this.FindRFirstDate(this.tableData[0]);
+        //}
     }
 })

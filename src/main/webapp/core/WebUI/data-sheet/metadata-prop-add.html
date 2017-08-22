@@ -58,8 +58,8 @@
 </template>
 
 <script>
-    var newVue = Vue.component('select-contablefield', SelectOptions.ConSetOpt('conTableField','conTableFieldInput',basLeft.relateTableRowId,conChildTable));
-    var cc=Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
+    Vue.component('select-contablefield',SelectOptions.ConSetOpt('conTableField','conTableFieldInput',basLeft.relateTableRowId,conChildTable));
+    Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
     Vue.component('select-vorigin', SelectOptions.setOpt('','value','valueTypeOrigin',''));
 
     var proEm = new Vue({
@@ -114,10 +114,10 @@
                 littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表字段', '600px', '560px', false)
             },
             changEvent(){
-                console.log(111)
-                if (proEm.addProForm.checked ==true) {
-                    proEm.$refs.contablefield.conTableFieldInput='';
-                }
+//                console.log(111)
+//                if (proEm.addProForm.checked ==true) {
+//                    proEm.$refs.contablefield.conTableFieldInput='';
+//                }
             },
             changeReaTable(e){
                 console.log(111)
@@ -136,9 +136,11 @@
 //                }
             },
             conformEvent(addProForm) {
-//                if(proEm.flag==false){
-//                    return
-//                }
+                console.log(proEm.$refs.contablefield.conTableFieldInput)
+                if(proEm.addProForm.checked==true&proEm.$refs.contablefield.conTableFieldInput!='') {
+                    ibcpLayer.ShowMsg('扩展属性与关联表字段只能选其一')
+                    return;
+                }
 //                proEm.flag=false;
 //                if (this.checked == true) {
 //                    var datas = [this.$refs.nameProInput, this.$refs.typeInput, this.$refs.typeComValue, this.$refs.comContent];
@@ -153,10 +155,6 @@
 //                }
                 proEm.$refs[addProForm].validate(function (valid) {
                     if (valid) {
-                        if(proEm.addProForm.checked==false&&proEm.addProForm.tableReaInput==''){
-                            ibcpLayer.ShowMsg('扩展属性与关联表字段选其一')
-                            return;
-                        }
                         if(operateOPr==1){
                             addObj.addOk(function(){
                                 proEm.$http.jsonp(serverPath + "/businObjPro/add", {
@@ -216,12 +214,14 @@
             }
         },
         updated() {
-            if(proEm.$refs.contablefield.conTableFieldInput!=''){
-                proEm.addProForm.checked =true
-            }
+//            if(proEm.$refs.contablefield.conTableFieldInput!=''){
+//                proEm.addProForm.checked =true
+//            }
             //console.log(proEm.$refs.contablefield.conTableFieldInput)
         }
     })
+
+
 
 </script>
 </body>
