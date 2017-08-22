@@ -56,7 +56,8 @@ var keyValueSet=new Vue({
                     jsonp: 'callback'
                 }).then(function (res) {
                     showMsg.MsgOk(keyValueSet,res)
-                    keyValueSet.searchPage();
+                    queryData.getData(queryPage,keyValueSet.input,keyValueSet,function(res){});
+                    //keyValueSet.searchPage();
                 },function(){
                     showMsg.MsgError(keyValueSet)
                 });

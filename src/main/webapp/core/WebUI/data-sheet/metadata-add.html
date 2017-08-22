@@ -83,12 +83,12 @@
             }
         },
         methods: {
-//            changeTable(e){
-//                if (operate == 1) {
-//                    em.dataId=e;
-//                    console.log(em.dataId)
-//                }
-//            },
+            changeTable(e){
+                if (operate == 1) {
+                    em.dataId=e;
+                    console.log(em.dataId)
+                }
+            },
             conformEvent() {
                 var nameInput= this.$refs.nameInput.value;
                 var tableInput= em.$refs.selectTab.tableInput;
@@ -115,6 +115,7 @@
 //                em.$refs[addForm].validate(function (valid) {
 //                    if (valid) {
                         if (operate == 1) {
+                            console.log(em.$refs.selectTab.tableInput)
                             addObj.addOk(function(){
                                 em.$http.jsonp(addUrl, {
                                 objectName: em.addForm.nameInput,
@@ -126,7 +127,6 @@
                                     basLeft.leftInput='';
                                     //分页跳回到第一页
                                     queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
-//                                    basLeft.searchLeftTable();
                                     ibcpLayer.Close(divIndex);
                                 })
                             },function(){
@@ -134,6 +134,7 @@
                             })
                         }
                         if (operate == 2) {
+                           // console.log(em.$refs.selectTab)
                             editObj.editOk(function(){
                                 em.$http.jsonp(editUrl, {
                                     //拿到这条数据的ID

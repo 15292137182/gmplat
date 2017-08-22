@@ -67,7 +67,8 @@ var keyValueSetAdd = new Vue({
                             }).then(function (res) {
                                 showMsg.MsgOk(keyValueSet,res)
                                 keyValueSet.input='';
-                                keyValueSet.search();
+                                queryData.getData(queryPage,keyValueSet.input,keyValueSet,function(res){});
+                                //keyValueSet.search();
                                 ibcpLayer.Close(divIndex);
                             });
                         },function(){
@@ -91,7 +92,8 @@ var keyValueSetAdd = new Vue({
                             }).then(function (res) {
                                 showMsg.MsgOk(keyValueSet,res)
                                 keyValueSet.input='';
-                                keyValueSet.search();
+                                //keyValueSet.search();
+                                queryData.getData(queryPage,keyValueSet.input,keyValueSet,function(res){});
                                 ibcpLayer.Close(divIndex);
                             });
                         },function(){

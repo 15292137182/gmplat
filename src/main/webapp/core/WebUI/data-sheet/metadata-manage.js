@@ -122,7 +122,6 @@ var basLeft = new Vue({
                 console.log(basLeft.currentVal);
                 em.addForm.codeInput = basLeft.currentVal.objectCode;  //对象代码
                 em.addForm.disabled = true;//对象代码不可点击
-               // em.$refs.selectTab.disabled.tabDisable= true;//选择关联表的按钮不可用
                 em.addForm.nameInput = basLeft.currentVal.objectName;//对象名称
 
                 //修改关联表下拉框   jms  2017/8/21
@@ -179,7 +178,7 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-          console.log(row)
+          //console.log(row)
           //console.log(column);
             //判断是否生效
             if (row !== undefined) {
@@ -249,7 +248,7 @@ var basRight = new Vue({
     },
     methods: {
         searchRightTable() {
-            console.log(basLeft.currentVal);
+           // console.log(basLeft.currentVal);
             pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.pageNum,this,function(res){
                 if(res.data!=null){
                     //按钮禁掉
