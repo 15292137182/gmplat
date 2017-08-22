@@ -97,7 +97,6 @@ public class SequenceManager {
     return null;
   }
 
-  private static Pattern intPattern = Pattern.compile("^\\d+$");
   private static Pattern serialNumPattern = Pattern.compile("[*][{].+[}]");
   private static Pattern serialNumWithVariablePattern = Pattern.compile("[*][{].+[;][\\d]+-.+[}]");
 
@@ -110,7 +109,7 @@ public class SequenceManager {
    * @param serialId   需要重置的序列号key，若只有一个可以传 null
    * @param startValue 目标值
    */
-  public int resetSequenceNo(String rowId, String serialId, String startValue) {
+  public int resetSequenceNo(String rowId, String serialId, int startValue) {
     if (isValid(rowId)) {
       List<Map<String, Object>> ruleConfigs = moreBatis.select(SequenceRuleConfig.class)
               .where(new FieldCondition("rowId", Operator.EQUAL, rowId))
@@ -118,9 +117,7 @@ public class SequenceManager {
       if (ruleConfigs.size() == 1) {
         String content = (String) ruleConfigs.get(0).get("seqContent");
         // 如果传入的是全是数字
-        if (intPattern.matcher(startValue).matches()) {
-          int _aimValue = Integer.parseInt(startValue);
-          // 检查是否存在有变量，并获得变量个数
+        // 检查是否存在有变量，并获得变量个数
           Matcher matcher = serialNumPattern.matcher(content);
           int groupCount = 0;
           if (matcher.find()) {
@@ -137,7 +134,7 @@ public class SequenceManager {
               throwError("带有变量的的序列号不能被重置！");
             } else {
               // 重置这个流水号
-              return setDBSerialValue(rowId, matcherContent, _aimValue);
+              return setDBSerialValue(rowId, matcherContent, startValue);
             }
           } else if (isValid(serialId)) {
             // 找到带有该键值的模块
@@ -147,14 +144,11 @@ public class SequenceManager {
               throwError("没有在序列号(rowId)：%s 中找到指定的序列号键值：%s！", rowId, serialId);
             } else {
               String module = matcher1.group();
-              return setDBSerialValue(rowId, module, _aimValue);
+              return setDBSerialValue(rowId, module, startValue);
             }
           } else {
             throwError("多序列号重置需要指定序列号的键值！");
           }
-        } else {
-          throwError("流水号重置：%s，想要重置到的值不合法: %d", rowId, startValue);
-        }
       } else {
         throwError("未查询到正确数量的流水号：%s，查询到的数量为: %d", rowId, ruleConfigs.size());
       }

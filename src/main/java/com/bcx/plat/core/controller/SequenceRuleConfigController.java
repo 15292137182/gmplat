@@ -88,7 +88,7 @@ public class SequenceRuleConfigController extends
     String serialId = request.getParameter("serialId");
     ServiceResult<List<String>> _sr = new ServiceResult<>();
     if (isValid(rowId)) {
-      SequenceManager.getInstance().resetSequenceNo(rowId, serialId, aimValue);
+      SequenceManager.getInstance().resetSequenceNo(rowId, serialId, Integer.parseInt(aimValue));
       _sr.setMessage("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);

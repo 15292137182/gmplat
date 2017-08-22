@@ -18,7 +18,7 @@ public class SequenceManagerTest extends BaseTest {
 
     // String s = SequenceManager.getInstance().buildSequenceNo("keySet");
     // String s2 = SequenceManager.getInstance().buildSequenceNo("keySet");
-    // SequenceManager.getInstance().resetSequenceNo("0aecb64f-f323-4150-b69c-56b27b10",null,"5");
+    // SequenceManager.getInstance().resetSequenceNo("0aecb64f-f323-4150-b69c-56b27b10",null,8);
     System.out.println("666");
 
   }
