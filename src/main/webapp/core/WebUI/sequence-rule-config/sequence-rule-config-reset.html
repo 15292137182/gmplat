@@ -9,13 +9,13 @@
 <div id="main" style="margin-top:20px">
     <el-form ref="resetform" :model="resetform" label-width="100px">
         <el-form-item label="代码">
-            <el-input v-model="resetform.seqCode"></el-input>
+            <el-input v-model="resetform.seqCode" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="名称">
-            <el-input v-model="resetform.seqName"></el-input>
+            <el-input v-model="resetform.seqName" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="规则内容">
-            <el-input v-model="resetform.seqContent"></el-input>
+            <el-input v-model="resetform.seqContent" :disabled="true"></el-input>
         </el-form-item>
         <!--<el-form-item label="变量Key">-->
             <!--<el-input v-model="resetform.name"></el-input>-->
@@ -23,7 +23,7 @@
         <el-form-item label="当前序列值">
             <el-input v-model="resetform.value"></el-input>
         </el-form-item>
-        <el-form-item >
+        <el-form-item style="text-align: center">
             <el-button type="primary" size="small" @click.native="conform()">保存</el-button>
             <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
         </el-form-item>
@@ -43,7 +43,8 @@
                     value:''
                 },
                 choseId:'',//选中的rowId
-                queryUrl:serverPath+'/sequenceRule/queryById'
+                queryUrl:serverPath+'/sequenceRule/queryById',
+                resetUrl:serverPath+'/sequenceRule/reset',
             }
         },
         methods:{
@@ -56,11 +57,23 @@
                     this.resetform.seqCode=res.data.data[0].seqCode;
                     this.resetform.seqName=res.data.data[0].seqName;
                     this.resetform.seqContent=res.data.data[0].seqContent;
+                    this.resetform.value=res.data.data[0].currenValue;
                 })
             },
             //保存
             conform(){
-
+                this.$http.jsonp(this.resetUrl, {
+                    rowId:this.choseId,//重置的rowId
+                    seqCode:this.resetform.seqCode,//传code
+                    currentValue:this.resetform.value//传值
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    showMsg.MsgOk(window.parent.config,res);
+                    parent.layer.close(window.parent.resetIndex);
+                },function(){
+                    showMsg.MsgError(window.parent.resetIndex);
+                });
             },
             cancel(){
                 parent.layer.close(window.parent.resetIndex);

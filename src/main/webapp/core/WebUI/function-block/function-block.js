@@ -41,7 +41,7 @@ var functionBlock = new Vue({
                 em.formTable.nameInput=functionBlock.editObj.funcName;
                 em.$refs.fbtype.value=functionBlock.editObj.funcType;
                 em.dataId=functionBlock.editObj.relateBusiObj;
-                em.$refs.conObj.ConnectObj=functionBlock.editObj.objectName;
+                em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
                 em.formTable.desp=functionBlock.editObj.desp;
                 em.rowId=functionBlock.editObj.rowId;
             });
