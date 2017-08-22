@@ -69,19 +69,23 @@
 <!--</script>-->
 <script>
   (function ($) {
-    $('#login').click(function () {
+    $("#login").click(function () {
 
-      if (!$("input[name=username]").val()) {
-        $("input[name=username]").focus();
+      var $userName = $("input[name=username]"),
+          $password = $("input[name=password]"),
+          $loginForm = $("#loginForm");
+
+      if (!$userName.val()) {
+        $userName.focus();
         ibcpLayer.ShowMsg("用户名不能为空");
         return false;
       }
-      if (!$("input[name=password]").val()) {
-        $("input[name=password]").focus();
+      if (!$password.val()) {
+        $password.focus();
         ibcpLayer.ShowMsg("密码不能为空");
         return false;
       }
-      var t = $('#loginForm').serializeArray();
+      var t = $loginForm.serializeArray();
       $.ajax({
         url: getRootPath() + "/system/login",
         data: t,
@@ -105,8 +109,7 @@
         }
       });
     });
-  })($);
-
+  })(jQuery);
 </script>
 </body>
 

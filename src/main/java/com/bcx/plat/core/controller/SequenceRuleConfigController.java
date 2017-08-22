@@ -97,7 +97,6 @@ public class SequenceRuleConfigController extends
     return super.result(request, _sr, locale);
   }
 
-
   /**
    * 通用查询方法
    *
