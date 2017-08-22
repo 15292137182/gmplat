@@ -34,7 +34,7 @@ public class UtilsTool {
   /**
    * 禁止使用 new 的方法构造该类
    */
-  public UtilsTool() {
+  private UtilsTool() {
   }
 
   /**

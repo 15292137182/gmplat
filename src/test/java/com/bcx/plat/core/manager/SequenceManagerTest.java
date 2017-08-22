@@ -16,8 +16,10 @@ public class SequenceManagerTest extends BaseTest {
   @Test
   public void test() {
 
-    String s = SequenceManager.getInstance().buildSequenceNo("keySet");
-    System.out.println(s);
+    // String s = SequenceManager.getInstance().buildSequenceNo("keySet");
+    // String s2 = SequenceManager.getInstance().buildSequenceNo("keySet");
+    // SequenceManager.getInstance().resetSequenceNo("0aecb64f-f323-4150-b69c-56b27b10",null,"5");
+    System.out.println("666");
 
   }
 }

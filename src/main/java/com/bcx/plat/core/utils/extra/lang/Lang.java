@@ -7,6 +7,7 @@ package com.bcx.plat.core.utils.extra.lang;
  */
 public abstract class Lang {
 
+
   /**
    * 抛出运行时异常
    *
@@ -15,6 +16,8 @@ public abstract class Lang {
    * @return 返回运行时异常
    */
   public static RuntimeException makeThrow(String format, Object... args) {
-    return new RuntimeException(String.format(format, args));
+    String message = String.format(format, args);
+    return new RuntimeException(message);
   }
+
 }

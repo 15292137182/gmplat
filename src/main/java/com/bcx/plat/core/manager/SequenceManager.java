@@ -1,8 +1,5 @@
 package com.bcx.plat.core.manager;
 
-import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
@@ -10,43 +7,44 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.service.SequenceGenerateService;
-import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
 import com.bcx.plat.core.utils.extra.lang.Lang;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 序列号生成类
- *
+ * <p>
  * 流水号模块定义：
- *
+ * <p>
  * BCX-TEST-SN BCX-20170810-000002
- *
+ * <p>
  * 、  @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6} - @{c} 常量，不具有任何属性
- *
+ * <p>
  * #{b;defaultValue;true}变量，从参数中取出;可设置为null时的默认值;是否显示
- *
+ * <p>
  * ${d;format;true}日期类型模块 可以指定格式化样式，例如;yyyy-MM-dd 是否显示
- *
+ * <p>
  * *{a;6-b&d} 序列号 位数 影响的变量将会使重置号重置
- *
+ * <p>
  * eg:
- *
+ * <p>
  * Create By HCL at 2017/8/8
  */
 public class SequenceManager {
 
-  private static SequenceGenerateService sequenceGenerateService;
-  private static SequenceRuleConfigService sequenceRuleConfigService;
   private static MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
-
   private Logger logger = LoggerFactory.getLogger(getClass());
 
   // 变量的参数值取不到的时候默认值
@@ -88,7 +86,7 @@ public class SequenceManager {
    * 生成序列号
    *
    * @param sequenceCode 序列号编码
-   * @param args 参数map
+   * @param args         参数map
    * @return 返回信息
    */
   public String buildSequenceNo(String sequenceCode, Map<String, Object> args) {
@@ -99,32 +97,148 @@ public class SequenceManager {
     return null;
   }
 
+  private static Pattern intPattern = Pattern.compile("^\\d+$");
+  private static Pattern serialNumPattern = Pattern.compile("[*][{].+[}]");
+  private static Pattern serialNumWithVariablePattern = Pattern.compile("[*][{].+[;][\\d]+-.+[}]");
+
   /**
-   * 重置序列号
+   * 重置序列号，如果序列号配置中只有一个流水模块，可以不输入，有多个需要指定！
+   * <p>
+   * 如果流水号受变量影响，则该流水号当前值现在是不允许重置的！ -.-
    *
-   * @param sequenceCode 代码
-   * @return 返回
+   * @param rowId      需要重置的序列号的rowId
+   * @param serialId   需要重置的序列号key，若只有一个可以传 null
+   * @param startValue 目标值
    */
-  public int resetSequenceNo(String sequenceCode) {
-    if (isValid(sequenceCode) && init()) {
-      List<Map<String, Object>> codes = moreBatis.select(SequenceRuleConfig.class)
-          .where(new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)).execute();
-      if (!codes.isEmpty()) {
-        SequenceGenerate generate = new SequenceGenerate().fromMap(codes.get(0));
-        generate.buildDeleteInfo();
-        return sequenceGenerateService
-            .update(generate.toMap(), new FieldCondition("seqRowId", Operator.EQUAL, sequenceCode));
+  public int resetSequenceNo(String rowId, String serialId, String startValue) {
+    if (isValid(rowId)) {
+      List<Map<String, Object>> ruleConfigs = moreBatis.select(SequenceRuleConfig.class)
+              .where(new FieldCondition("rowId", Operator.EQUAL, rowId))
+              .execute();
+      if (ruleConfigs.size() == 1) {
+        String content = (String) ruleConfigs.get(0).get("seqContent");
+        // 如果传入的是全是数字
+        if (intPattern.matcher(startValue).matches()) {
+          int _aimValue = Integer.parseInt(startValue);
+          // 检查是否存在有变量，并获得变量个数
+          Matcher matcher = serialNumPattern.matcher(content);
+          int groupCount = 0;
+          if (matcher.find()) {
+            Matcher countM = serialNumPattern.matcher(content);
+            while (countM.find()) {
+              groupCount++;
+            }
+          }
+          if (groupCount == 0) {
+            logger.warn("没有序列号可以重置！");
+          } else if (groupCount == 1) {
+            String matcherContent = matcher.group();
+            if (serialNumWithVariablePattern.matcher(matcherContent).find()) {
+              throwError("带有变量的的序列号不能被重置！");
+            } else {
+              // 重置这个流水号
+              return setDBSerialValue(rowId, matcherContent, _aimValue);
+            }
+          } else if (isValid(serialId)) {
+            // 找到带有该键值的模块
+            Pattern pattern = Pattern.compile("[*][{]" + serialId + "[;][\\d]+-.+[}]");
+            Matcher matcher1 = pattern.matcher(content);
+            if (!matcher1.find()) {
+              throwError("没有在序列号(rowId)：%s 中找到指定的序列号键值：%s！", rowId, serialId);
+            } else {
+              String module = matcher1.group();
+              return setDBSerialValue(rowId, module, _aimValue);
+            }
+          } else {
+            throwError("多序列号重置需要指定序列号的键值！");
+          }
+        } else {
+          throwError("流水号重置：%s，想要重置到的值不合法: %d", rowId, startValue);
+        }
+      } else {
+        throwError("未查询到正确数量的流水号：%s，查询到的数量为: %d", rowId, ruleConfigs.size());
       }
     }
     return -1;
   }
 
   /**
+   * 更新序列号的分支值
+   *
+   * @param seqRowId 序列号主键
+   * @param content  序列号内容
+   * @param aimValue 目标值
+   * @return 返回操作类型状态
+   */
+  private int setDBSerialValue(String seqRowId, String content, int aimValue) {
+    if (String.valueOf(aimValue).length() <= getVariableLength(content)) {
+      List<Condition> conditions = new ArrayList<>();
+      conditions.add(new FieldCondition("seqRowId", Operator.EQUAL, seqRowId));
+      conditions.add(new FieldCondition("variableKey", Operator.EQUAL, getVariableKey(content)));
+      List<Map<String, Object>> result = moreBatis.select(SequenceGenerate.class)
+              .where(new And(conditions)).execute();
+      if (result.size() == 1) {
+        SequenceGenerate generate = new SequenceGenerate().fromMap(result.get(0));
+        String _aimV = String.valueOf(aimValue - 1);
+        generate.setCurrentValue(_aimV);
+        return moreBatis.updateEntity(generate);
+      }
+    } else {
+      throwError("需要重置的序列：%s 长度溢出 ！", seqRowId);
+    }
+    return -1;
+  }
+
+  /**
+   * 获取序列号模块中的 Key
+   *
+   * @param module 模块
+   * @return 返回key
+   */
+  private String getVariableKey(String module) {
+    if (isValid(module) && serialNumPattern.matcher(module).find()) {
+      int splitEnd = module.contains(";") ? module.indexOf(";") : module.indexOf("}");
+      return module.substring(module.indexOf("{") + 1, splitEnd);
+    }
+    return null;
+  }
+
+  /**
+   * 获取序列号定义的长度
+   *
+   * @param module 模块
+   * @return 返回长度
+   */
+  private Integer getVariableLength(String module) {
+    if (isValid(module) && serialNumPattern.matcher(module).find()) {
+      StringBuilder sb = new StringBuilder(module);
+      String[] ss = sb.substring(1, sb.length() - 1).split(";");
+      int length = DEFAULT_SERIAL_LENGTH;
+      if (ss.length >= 2) {
+        length = Integer.parseInt(ss[1].split("-")[0]);
+      }
+      return length;
+    }
+    return 0;
+  }
+
+  /**
+   * 扔出并记录错误
+   *
+   * @param message 错误内容信息
+   * @param objects 需要进行格式化对象
+   */
+  private void throwError(String message, Object... objects) {
+    logger.error(message, objects);
+    throw Lang.makeThrow(message, objects);
+  }
+
+  /**
    * 直接生成流水号内容进行生成模拟
    *
    * @param content 内容
-   * @param args 参数
-   * @param num 数量
+   * @param args    参数
+   * @param num     数量
    * @return 返回流水号列表
    */
   public List<String> mockSequenceNo(String content, Map<String, Object> args, int num) {
@@ -141,13 +255,13 @@ public class SequenceManager {
    * 创建流水号方法
    *
    * @param sequenceCode 流水号规则内容
-   * @param args 参数，将参数放入 map 中
-   * @param num 连续生成几个流水号
-   * @param test 是否为测试？测试生成的流水号不会走动，不会对流水号本身造成影响
+   * @param args         参数，将参数放入 map 中
+   * @param num          连续生成几个流水号
+   * @param test         是否为测试？测试生成的流水号不会走动，不会对流水号本身造成影响
    * @return 返回生成的序列号模块
    */
   public List<String> produceSequenceNo(String sequenceCode, Map<String, Object> args, int num,
-      boolean test) {
+                                        boolean test) {
     List<String> result = new ArrayList<>();
     if (init()) {
       SequenceRuleConfig ruleConfig = getRuleConfig(sequenceCode);
@@ -168,13 +282,13 @@ public class SequenceManager {
             String defaultValue = a.length >= 2 ? a[1] : DEFAULT_ARG_VALUE;
             if (isValid(key)) {
               value = null == args || args.isEmpty() ? defaultValue :
-                  isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
+                      isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
             } else {
               value = DEFAULT_ARG_VALUE;
             }
             String visible = a.length >= 3 ? a[2] : "";
             if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible
-                .equalsIgnoreCase("true")) {
+                    .equalsIgnoreCase("true")) {
               rm.put(modular, value);
             }
             // ${d:format}日期类型模块 可以指定格式化样式，例如:yyyy-MM-dd，直接解析
@@ -188,7 +302,7 @@ public class SequenceManager {
             }
             String visible = a.length >= 3 ? a[2] : "";
             if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible
-                .equalsIgnoreCase("true")) {
+                    .equalsIgnoreCase("true")) {
               rm.put(modular, value);
             }
             if (isValid(key)) {
@@ -224,7 +338,7 @@ public class SequenceManager {
    * 解析变量模块
    */
   private void analysisSerialNo(SequenceRuleConfig ruleConfig, Map<String, Object> serialMap,
-      Map<String, Object> rm) {
+                                Map<String, Object> rm) {
     if (!serialMap.isEmpty()) {
       for (String modular : serialMap.keySet()) {
         String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
@@ -239,14 +353,14 @@ public class SequenceManager {
           if (isValid(variables)) {
             for (String v : variables) {
               branchValue.append("[").append(v).append(":").append(variable.getOrDefault(v, ""))
-                  .append("]");
+                      .append("]");
             }
           }
         } else {
           branchValue = new StringBuilder(branchValues.get(a[0]).toString());
         }
         int nextValue =
-            getCurrentVariableValue(ruleConfig.getRowId(), a[0]) + 1;
+                getCurrentVariableValue(ruleConfig.getRowId(), a[0]) + 1;
         keys.put(a[0], nextValue);
         branchValues.put(a[0], branchValue);
         StringBuilder nv = new StringBuilder(String.valueOf(nextValue));
@@ -257,7 +371,7 @@ public class SequenceManager {
           // 若数据溢出时有异常，在此处追加 异常
         } else {
           throw Lang.makeThrow("Class [%s]: [%s] 该流水号已经用尽！请修改流水号规则或联系管理员！", getClass(),
-              ruleConfig.getSeqCode());
+                  ruleConfig.getSeqCode());
         }
         rm.put(modular, nv);
       }
@@ -276,12 +390,11 @@ public class SequenceManager {
       List<Condition> fieldConditions = new ArrayList<>();
       fieldConditions.add(new FieldCondition("seqRowId", Operator.EQUAL, seqRowId));
       fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
-      if (isValid(branchValues.get(variableKey))) {
-        fieldConditions
-            .add(new FieldCondition("branchSign", Operator.EQUAL, branchValues.get(variableKey)));
-      }
+      fieldConditions
+              .add(new FieldCondition("branchSign", Operator.EQUAL,
+                      isValid(branchValues.get(variableKey)) ? branchValues.get(variableKey) : ""));
       List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
-          .where(new And(fieldConditions)).execute();
+              .where(new And(fieldConditions)).execute();
       if (list.size() == 1) {
         String json = UtilsTool.objToJson(list.get(0));
         SequenceGenerate generate = UtilsTool.jsonToObj(json, SequenceGenerate.class);
@@ -308,13 +421,11 @@ public class SequenceManager {
       return ruleConfig;
     }
     if (isValid(sequenceCode)) {
-      List<Map<String, Object>> code =
-          sequenceRuleConfigService
-              .select(new FieldCondition("seqCode", Operator.EQUAL, sequenceCode));
+      List<Map<String, Object>> code = moreBatis.select(SequenceRuleConfig.class)
+              .where(new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)).execute();
       if (code.size() == 1) {
         String toJson = UtilsTool.objToJson(code.get(0));
-        return UtilsTool
-            .jsonToObj(toJson, SequenceRuleConfig.class);
+        return UtilsTool.jsonToObj(toJson, SequenceRuleConfig.class);
       }
     }
     return null;
@@ -324,12 +435,6 @@ public class SequenceManager {
    * 检查序列号生成是否可用
    */
   private boolean init() {
-    if (null == sequenceGenerateService) {
-      sequenceGenerateService = SpringContextHolder.getBean(SequenceGenerateService.class);
-    }
-    if (null == sequenceRuleConfigService) {
-      sequenceRuleConfigService = SpringContextHolder.getBean(SequenceRuleConfigService.class);
-    }
     variable = new HashMap<>();
     keys = new HashMap<>();
     branchValues = new HashMap<>();
@@ -340,7 +445,7 @@ public class SequenceManager {
    * 完成流水号
    *
    * @param seqRowId 流水号编号
-   * @param test 是否测试
+   * @param test     是否测试
    */
   private void finish(String seqRowId, boolean test) {
     // 如果不是测试，存入数据库
@@ -349,26 +454,26 @@ public class SequenceManager {
         List<Condition> fieldConditions = new ArrayList<>();
         fieldConditions.add(new FieldCondition("seqRowId", Operator.EQUAL, seqRowId));
         fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
-        if (isValid(branchValues.get(variableKey))) {
-          fieldConditions
-              .add(new FieldCondition("branchSign", Operator.EQUAL,
-                  branchValues.get(variableKey).toString()));
-        }
+
+        fieldConditions.add(new FieldCondition("branchSign", Operator.EQUAL,
+                branchValues.get(variableKey) == null ? "" : branchValues.get(variableKey).toString()));
+
         List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
-            .where(new And(fieldConditions)).execute();
+                .where(new And(fieldConditions)).execute();
         SequenceGenerate sg = new SequenceGenerate();
         if (list.isEmpty()) {
           sg.setSeqRowId(seqRowId);
           sg.setVariableKey(variableKey);
           sg.setCurrentValue(keys.get(variableKey).toString());
           sg.setBranchSign(branchValues.get(variableKey).toString());
+          sg.setBranchSign("");
           sg.buildCreateInfo();
-          sequenceGenerateService.insert(sg.toMap());
+          moreBatis.insertEntity(sg);
         } else {
           sg.fromMap(list.get(0));
           sg.setCurrentValue(keys.get(variableKey).toString());
           sg.buildModifyInfo();
-          sequenceGenerateService.update(sg.toMap());
+          moreBatis.updateEntity(sg);
         }
       }
     }
