@@ -435,12 +435,12 @@ var SelectOptions = (function(){
 /**
  * 表格下拉框 值显示
  */
-var tableKeyValueSetIn='';
-var tableKeyValueSetOut='';
+
 //var tabSelectShow={"dataSetConfig":
 //                                  {"datasetType":"dataSetConfigType"}};
 var TableKeyValueSet = (function(){
-
+    var tableKeyValueSetIn='';
+    var tableKeyValueSetOut='';
     var init = function(tableStr){
         if("" !=tableStr || undefined !=tableStr || null!=tableStr ){
             tableKeyValueSetIn=tableStr;
