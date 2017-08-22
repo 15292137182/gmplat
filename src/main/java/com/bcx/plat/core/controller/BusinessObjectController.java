@@ -7,6 +7,7 @@ import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
@@ -40,16 +41,19 @@ public class BusinessObjectController extends
     private final MaintDBTablesService maintDBTablesService;
     private final FrontFuncService frontFuncService;
     private final FrontFuncProService frontFuncProService;
+    private final DBTableColumnService dbTableColumnService;
 
     @Autowired
     public BusinessObjectController(BusinessObjectProService businessObjectProService,
                                     MaintDBTablesService maintDBTablesService,
                                     FrontFuncService frontFuncService,
-                                    FrontFuncProService frontFuncProService) {
+                                    FrontFuncProService frontFuncProService,
+                                    DBTableColumnService dbTableColumnService) {
         this.businessObjectProService = businessObjectProService;
         this.maintDBTablesService = maintDBTablesService;
         this.frontFuncService = frontFuncService;
         this.frontFuncProService = frontFuncProService;
+        this.dbTableColumnService = dbTableColumnService;
     }
 
 
@@ -137,26 +141,43 @@ public class BusinessObjectController extends
             if (result.getResult().size() == 0) {
                 return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
             }
-            for (Map<String, Object> rest : result.getResult()) {
-                rest.put("testDemo", false);
-            }
-            return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+            PageResult<Map<String, Object>> result1 = queryProPage(result);
+            return super.result(request, new ServiceResult<>(result1, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
         }
         result =
                 businessObjectProService.select(
                         new ConditionBuilder(BusinessObjectPro.class).buildByAnd()
-                                .equal("objRowId", rowId).or().endOr().endAnd().buildDone()
+                                .equal("objRowId", rowId).endAnd().buildDone()
                         , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
-
         if (result.getResult().size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        for (Map<String, Object> rest : result.getResult()) {
-            rest.put("testDemo", false);
-        }
-        return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        PageResult<Map<String, Object>> result1 = queryProPage(result);
+        return super.result(request, new ServiceResult<>(result1, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
+    /**
+     * 根据业务对象rowId查找当前对象下的所有属性
+     * @param result result
+     * @return
+     */
+    private PageResult<Map<String, Object>> queryProPage(PageResult<Map<String, Object>> result){
+        Map<String, Object> map= new HashMap<>();
+        for (Map<String, Object> rest : result.getResult()) {
+            String relateTableColumn = (String) rest.get("relateTableColumn");
+            List<Map<String, Object>> mapList = dbTableColumnService.select(new ConditionBuilder(DBTableColumn.class)
+                    .buildByAnd()
+                    .equal("rowId", relateTableColumn).endAnd().buildDone());
+            for (int i = 0; i < mapList.size(); i++) {
+                map.put((String) mapList.get(i).get("rowId"), mapList.get(i).get("columnCname"));
+            }
+        }
+        for (Map<String, Object> rest : result.getResult()) {
+            rest.put("testDemo", false);
+            rest.put("columnCname",map.get(rest.get("relateTableColumn")));
+        }
+        return result;
+    }
 
     /**
      * 执行变更操作

@@ -46,12 +46,13 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
             List lists = new ArrayList();
             lists.add(li);
             List<Map<String, Object>> result = getEntityService().singleInputSelect(Arrays.asList("number"), lists);
-            map.put("{" + li, result + "}");
+            map.put(li, result);
         }
+        String toJson = UtilsTool.objToJson(map);
         if (map.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }
-        return super.result(request, new ServiceResult(map, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return super.result(request, new ServiceResult(toJson, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
 
 

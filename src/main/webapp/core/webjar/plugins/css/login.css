@@ -1,6 +1,9 @@
 .beg-login-bg {
 	background: url(../../../../core/images/login.png) no-repeat center center fixed;
 	background-color: #393D49;
+	filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+	-moz-background-size:100% 100%;
+	background-size:100% 100%;
 }
 
 .beg-login-box {
