@@ -460,8 +460,17 @@ var TableKeyValueSet = (function(){
                 },
                 dataType:"jsonp",
                 success:function(res){
-                    tableKeyValueSetOut=JSON.parse(res.data);
-
+                    var param={};
+                    var jsonStr=JSON.parse(res.data);
+                    for(k in jsonStr){
+                        var _param={};
+                        for(m in jsonStr[k]){
+                            var aa=jsonStr[k][m];
+                            _param[aa.confKey]=aa.confValue;
+                        }
+                        param[k]=_param;
+                    }
+                    tableKeyValueSetOut=param;
                 },
                 error:function(){
                     alert("未能获取键值集合")
