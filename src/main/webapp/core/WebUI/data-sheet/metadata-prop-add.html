@@ -22,11 +22,6 @@
         <el-form-item label="属性名称" prop="nameProInput">
             <el-input placeholder="请输入属性名称" v-model="addProForm.nameProInput" ref="addProForm.nameProInput"></el-input>
         </el-form-item>
-
-        <!--<template>-->
-            <!--<el-checkbox :disabled="isDisabled"  v-model="checked" @change="isChecked">是否显示</el-checkbox>-->
-        <!--</template>-->
-
         <el-form-item label="是否为扩展属性" prop="checked">
                 <el-checkbox label="" v-model="addProForm.checked"  @change.native="changEvent" v-bind:disabled="addProForm.checkEvent" name="type"></el-checkbox>
         </el-form-item>
@@ -36,7 +31,7 @@
         <el-form-item label="值类型" prop="typeInput">
             <select-vtype ref="vtype"></select-vtype>
         </el-form-item>
-        <el-form-item label="值类型来源" prop="typeComValue">
+        <el-form-item label="值来源类型" prop="typeComValue">
             <select-vorigin ref="vorigin"></select-vorigin>
         </el-form-item>
         <el-form-item label="值来源内容" prop="comContent">
@@ -52,9 +47,8 @@
         </el-col>
     </el-row>
 </div>
-
 <template id="conTableField">
-    <el-select v-model="conTableFieldInput" clearable filterable placeholder="请选择关联表字段">
+    <el-select v-model="conTableFieldInput"  clearable filterable placeholder="请选择关联表字段">
         <el-option v-for="item in options"
                    :key="item.rowId"
                    :label="item.columnCname"
@@ -119,11 +113,13 @@
                 littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表字段', '600px', '560px', false)
             },
             changEvent(){
-//                if (proEm.addProForm.checked ==true) {
-//                    proEm.addProForm.tableReaInput=''
-//                }
+                console.log(111)
+                if (proEm.addProForm.checked ==true) {
+                    proEm.$refs.contablefield.conTableFieldInput='';
+                }
             },
             changeReaTable(e){
+                //console.log(e)
 //                proEm.dataId=e;
 //                console.log( proEm.dataId)
 //                if(operateOPr==1){  //新增的时候
@@ -174,7 +170,8 @@
                                 }).then(function (res) {
                                     showMsg.MsgOk(basTop,res);
                                     basRight.rightInput='';
-                                    basRight.searchRightTable();
+                                    //分页跳回到第一页
+                                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){
@@ -199,7 +196,7 @@
                                 }).then(function (res) {
                                     showMsg.MsgOk(basTop,res);
                                     basRight.rightInput='';
-                                    basRight.searchRightTable();
+                                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){

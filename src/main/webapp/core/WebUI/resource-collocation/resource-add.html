@@ -76,7 +76,8 @@
                                     showMsg.MsgOk(resTop,res);
                                     //新增的时候将搜索框清空
                                     resCol.resInput='';
-                                    resCol.searchResTable();
+                                    queryData.getData(qurUrl,resCol.resInput,resCol,function(res){});
+                                   // resCol.searchResTable();
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){
@@ -97,7 +98,8 @@
                                     showMsg.MsgOk(resTop,res);
                                     //编辑的时候将搜索框清空
                                     resCol.resInput='';
-                                    resCol.searchResTable();
+                                    queryData.getData(qurUrl,resCol.resInput,resCol,function(res){});
+                                   // resCol.searchResTable();
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){

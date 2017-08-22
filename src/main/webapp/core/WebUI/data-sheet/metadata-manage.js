@@ -82,8 +82,8 @@ var basTop = new Vue({
                 jsonp: 'callback'
             }).then(function (ref) {
                 ibcpLayer.ShowOK(ref.data.message);
-                //选中这一行
-               basLeft.searchLeftTable();
+                //分页跳回到第一页
+                queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
 
             });
         },
@@ -95,8 +95,8 @@ var basTop = new Vue({
             }).then(function (ref) {
                 console.log(ref);
                 ibcpLayer.ShowOK(ref.data.message);
-                //选中这一行
-                basLeft.searchLeftTable();
+                //分页跳回到第一页
+                queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
             });
         }
     }
@@ -140,9 +140,10 @@ var basLeft = new Vue({
                     jsonp: 'callback'
                 }).then(function (ref) {
                     showMsg.MsgOk(basTop,ref)
-                    basLeft.searchLeftTable();
+                    //分页跳回到第一页
+                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
                     basRight.rightInput='';
-                    basRight.searchRightTable();
+                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
                 },function(){
                     showMsg.MsgError(basTop)
                 });
@@ -168,21 +169,18 @@ var basLeft = new Vue({
             });
         },
         handleSizeChange(val) {
-            //每页多少条数变化时
+            //每页 ${val} 条
             this.pageSize=val;
-            //console.log(`每页 ${val} 条`);
             this.searchLeftTable();
         },
         handleCurrentChange(val) {
+            //当前页: ${val}
             this.pageNum=val;
-           // console.log(`当前页: ${val}`);
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-         // basRight.rightInput='';
           console.log(row)
           //console.log(column);
-         // console.log(scope);
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -215,7 +213,7 @@ var basLeft = new Vue({
                 basRight.searchRightTable(this.currentVal);
             }
         },
-        FindLFirstDate(row){
+        FindLFirstDate(row){  //将选中行变颜色
             this.$refs.tableData.setCurrentRow(row);
         },
         headSort(column){//列头排序
@@ -297,20 +295,21 @@ var basRight = new Vue({
                 }, {
                     jsonp: 'callback'
                 }).then(function (ref) {
-                    showMsg.MsgOk(basTop,ref)
-                    basLeft.searchLeftTable();
+                    showMsg.MsgOk(basTop,ref);
+                    //分页跳回到第一页
+                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
                 },function(){
                     showMsg.MsgError(basTop)
                 });
             })
         },
         currentRChange(row, event, column) {
-           // console.log(row)
+            console.log(row)
             //点击拿到这条数据的值
             if (row != undefined) {
                 this.currentVal = row;
                 this.rightVal = row.rowId;
-                // console.log(this.rightVal)
+                 console.log(this.rightVal)
             }
         },
         extendOnly(row){
@@ -321,22 +320,22 @@ var basRight = new Vue({
             }
         },
         FindRFirstDate(row){
+           // console.log(row)
             this.$refs.tableData.setCurrentRow(row);
         },
         handleSizeChange(val) {
-            //每页多少条数变化时
+            //每页每页 ${val} 条
             this.pageSize=val;
-            //console.log(`每页 ${val} 条`);
             this.searchRightTable()
         },
         handleCurrentChange(val) {
+            //当前页: ${val}
             this.pageNum=val;
-            //console.log(`当前页: ${val}`);
             this.searchRightTable();
         },
         headSort(column){//列头排序
             pagingObj.headSorts(qurProUrl,basLeft.currentId,this.resInput,column,this);
-        }
+        },
     },
     created() {
         $(document).ready(function () {

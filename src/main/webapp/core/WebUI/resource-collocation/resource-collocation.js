@@ -56,7 +56,8 @@ var resCol=new Vue({
                 }, {
                     jsonp: 'callback'
                 }).then(function (ref) {
-                    resCol.searchResTable();
+                    queryData.getData(qurUrl,resCol.resInput,resCol,function(res){});
+                    //resCol.searchResTable();
                     showMsg.MsgOk(resTop,ref)
                 },function(){
                     showMsg.MsgError(resTop)

@@ -28,6 +28,10 @@ body{
     background-color: #ffbf27;
     border-color: #ffbf27;
 }
+
+
+
+
 /*标题头部*/
 .bg-color {
     background: #f5f5f5;
@@ -69,10 +73,14 @@ body{
 tr [class^=el-icon-]{
     margin:3px;
 }
+/*删除按钮*/
 .el-icon-delete{
     color:#FF4949;
 }
-
+/*被禁用的删除按钮*/
+.el-button.is-disabled.el-button--text .el-icon-delete {
+    color:#f59797;
+}
 
 /*扩展表的padding*/
 .el-table__expanded-cell {

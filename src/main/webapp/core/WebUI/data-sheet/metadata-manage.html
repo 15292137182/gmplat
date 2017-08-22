@@ -53,13 +53,18 @@
                         <el-table-column type="expand">
                             <template scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
-                                    <el-form-item label="代码">
-                                        <span>{{ props.row.objectCode }}</span>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item label="版本">
-                                        <span>{{ props.row.version }}</span>
-                                    </el-form-item>
+                                    <el-row>
+                                        <el-col :span="16">
+                                            <el-form-item label="代码">
+                                                <span>{{ props.row.objectCode }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="8">
+                                            <el-form-item label="版本">
+                                                <span>{{ props.row.version }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
                                 </el-form>
                             </template>
                         </el-table-column>
@@ -125,17 +130,26 @@
                         <el-table-column type="expand">
                             <template scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
-                                    <el-form-item label="代码">
-                                        <span>{{ props.row.propertyCode }}</span>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item label="值来源类型">
-                                        <span>{{ props.row.valueResourceType }}</span>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item label="值来源内容">
-                                        <span>{{ props.row.valueResourceContent }}</span>
-                                    </el-form-item>
+
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="代码">
+                                                <span>{{ props.row.propertyCode }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="值来源类型">
+                                                <span>{{ props.row.valueResourceType }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="值来源内容">
+                                                <span>{{ props.row.valueResourceContent }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
                                 </el-form>
                             </template>
                         </el-table-column>
