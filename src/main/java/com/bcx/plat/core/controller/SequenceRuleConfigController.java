@@ -1,11 +1,6 @@
 package com.bcx.plat.core.controller;
 
 
-import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
-import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
@@ -16,18 +11,17 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.SequenceGenerateService;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.ServiceResult;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
+import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 
 /**
  * Create By HCL at 2017/8/8
@@ -35,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/core/sequenceRule")
 public class SequenceRuleConfigController extends
-    BaseControllerTemplate<SequenceRuleConfigService, SequenceRuleConfig> {
+        BaseControllerTemplate<SequenceRuleConfigService, SequenceRuleConfig> {
 
   private final SequenceGenerateService sequenceGenerateService;
 
@@ -84,15 +78,17 @@ public class SequenceRuleConfigController extends
    * 重置序列号，接受的参数名称为:seqCode,值为序列号的代码值
    *
    * @param request 请求
-   * @param locale 国际化信息
+   * @param locale  国际化信息
    * @return 返回
    */
   @RequestMapping("/reset")
   public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
-    String seqCode = request.getParameter("seqCode");
+    String rowId = request.getParameter("rowId");
+    String aimValue = request.getParameter("currentValue");
+    String serialId = request.getParameter("serialId");
     ServiceResult<List<String>> _sr = new ServiceResult<>();
-    if (isValid(seqCode)) {
-      SequenceManager.getInstance().resetSequenceNo(seqCode);
+    if (isValid(rowId)) {
+      SequenceManager.getInstance().resetSequenceNo(rowId, serialId, aimValue);
       _sr.setMessage("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);
@@ -105,26 +101,26 @@ public class SequenceRuleConfigController extends
   /**
    * 通用查询方法
    *
-   * @param rowId     按照空格查询
+   * @param rowId   按照空格查询
    * @param request request请求
    * @param locale  国际化参数
    * @return ServiceResult
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
-    Map<String ,Object > map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     List<Map<String, Object>> mapList = getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
     List<Map<String, Object>> seqRowId = sequenceGenerateService.select(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
     String currentValue = null;
-    for (Map<String,Object>  seq :seqRowId){
-      currentValue = (String)seq.get("currentValue");
+    for (Map<String, Object> seq : seqRowId) {
+      currentValue = (String) seq.get("currentValue");
     }
-    for (Map<String,Object> maplists : mapList){
-      maplists.put("currenValue",currentValue);
+    for (Map<String, Object> maplists : mapList) {
+      maplists.put("currenValue", currentValue);
     }
-    if (mapList.size()==0) {
-      return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL),locale);
+    if (mapList.size() == 0) {
+      return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
     }
-    return super.result(request, new ServiceResult(mapList,BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+    return super.result(request, new ServiceResult(mapList, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
   }
 }
