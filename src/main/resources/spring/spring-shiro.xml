@@ -55,6 +55,7 @@
         /**/*.js=anon
         /**/*.css=anon
         /**/*.jpg=anon
+        /**/*.png=anon
         /**/*.ico=anon
         /**/*.woff=anon
         /**=authc

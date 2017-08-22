@@ -112,14 +112,17 @@ public class SequenceRuleConfigController extends
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
-    Map<String ,Object > map = new HashMap<>();
     List<Map<String, Object>> mapList = getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
     List<Map<String, Object>> seqRowId = sequenceGenerateService.select(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
     String currentValue = null;
+    String variableKey = null;
     for (Map<String,Object>  seq :seqRowId){
       currentValue = (String)seq.get("currentValue");
+      variableKey = (String)seq.get("variableKey");
     }
+    String[] split = variableKey.split(":");
     for (Map<String,Object> maplists : mapList){
+      maplists.put("variableKey",split[0]);
       maplists.put("currenValue",currentValue);
     }
     if (mapList.size()==0) {

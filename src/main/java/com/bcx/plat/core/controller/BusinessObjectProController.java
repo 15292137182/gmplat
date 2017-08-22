@@ -55,8 +55,7 @@ public class BusinessObjectProController extends
      */
     @RequestMapping("/querySlave")
     public Object querySlave(String str, String objRowId, HttpServletRequest request, Locale locale) {
-        final BusinessObjectProService entityService = getEntityService();
-        List<Map<String, Object>> result = entityService
+        List<Map<String, Object>> result = getEntityService()
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
                         UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
         if (result.size() == 0) {

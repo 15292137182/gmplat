@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
@@ -83,8 +84,9 @@ public class UtilsTool {
    * @return 返回时间日期
    */
   public static String getDateTimeNow() {
-    return getDateTimeNow("yyyy-MM-dd hh:mm:ss");
+    return getDateTimeNow("yyyy-MM-dd HH:mm:ss");
   }
+
 
   /**
    * 根据指定时间格式来格式化日期
