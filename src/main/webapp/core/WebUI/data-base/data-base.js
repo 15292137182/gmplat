@@ -16,7 +16,7 @@ var myInlayerButton = new Vue({
     methods:{
         addInlayerTableBase(){
             this.divIndex =  ibcpLayer.ShowDiv('add-inlayer-table.html','表字段','400px', '320px',function(){
-
+                myInlayerButton.isEdit = false;
             })
         },
     }
@@ -73,7 +73,7 @@ var DatabaseDetails = new Vue({
                 }).then(function(res){
                     showMsg.MsgOk(dataBase,res);
                     //DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
-                    queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.Robj.rowId,DatabaseDetails)
+                    queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails)
                 },function(){
                     showMsg.MsgError(dataBase);
                 })

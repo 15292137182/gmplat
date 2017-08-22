@@ -24,13 +24,14 @@ var addInlayerData = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 showMsg.MsgOk(DatabaseDetails,res);
-                DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                //DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
                 this.cancel();
             },function(){
                 alert("错误")
             })
         },
-        editTble(){//编辑
+        editTable(){//编辑
             this.$http.jsonp(this.editUrl,{
                 relateTableRowId:DatabaseDetails.Robj.rowId,
                 rowId:DatabaseDetails.rowObj.rowId,
@@ -41,7 +42,8 @@ var addInlayerData = new Vue({
                 jsonp:'callback'
             }).then(function(res){
                 showMsg.MsgOk(DatabaseDetails,res);
-                DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                //DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
+                queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
                 this.cancel();
             },function(){
                 alert("错误")
@@ -65,7 +67,7 @@ var addInlayerData = new Vue({
             if(myInlayerButton.isEdit == true){//编辑
                 if(this.isNull()){
                     editObj.editOk(function(){
-                        addInlayerData.editTble(tableBase.rowObj.rowId);
+                        addInlayerData.editTable();
                     })
                 }
             }else{//新增
