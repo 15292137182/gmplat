@@ -24,7 +24,7 @@ var em=new Vue({
         dataId:'',//关联对象属性ID
         isEdit:'',//是否编辑
         rowId:'',//行ID
-        checked:'',//是否显示
+        checked:true,//是否显示
         checkedNull:'',//允许为空
         checkedReady:'',//只读
         checkType:true,//判断显示控件禁用或者启用
@@ -53,10 +53,10 @@ var em=new Vue({
             var data = [
                 this.$refs.tableInput,
                 this.$refs.nameTitle,
-                this.$refs.lengthSection,
-                this.$refs.testFunction,
-                this.$refs.displayFunction,
-                this.$refs.sortNumber
+                // this.$refs.lengthSection,
+                // this.$refs.testFunction,
+                // this.$refs.displayFunction,
+                // this.$refs.sortNumber
             ];
             for(var i=0;i<data.length;i++){
                 if(data[i].value==''){
@@ -158,6 +158,8 @@ var em=new Vue({
                 this.formTable.nameTitle=res.data.data[0].displayTitle;//显示标题
                 if(res.data.data[0].wetherDisplay =="true"){
                     this.checked=true;//是否显示
+                }else{
+                    this.checked=false;//是否显示
                 }
                 if(res.data.data[0].wetherReadonly =="true"){
                     this.checkedReady=true;//只读

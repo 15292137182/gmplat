@@ -115,13 +115,13 @@
                                         </el-form>
                                     </template>
                                 </el-table-column>
-                                <el-table-column sortable="custom" prop="funcName" label="名称" width="120">
+                                <el-table-column show-overflow-tooltip sortable="custom" prop="funcName" label="名称" width="">
                                 </el-table-column>
-                                <el-table-column prop="objectName" label="业务对象" width="">
+                                <el-table-column show-overflow-tooltip prop="objectName" label="业务对象" width="120">
                                 </el-table-column>
                                 <!--<el-table-column  prop="wetherAvailable" label="是否可用" width="95">-->
                                 <!--</el-table-column>-->
-                                <el-table-column  label="操作" width="">
+                                <el-table-column  label="操作" width="80">
                                     <template scope="scope">
                                         <el-button @click="editBlock" type="text" size="small" icon="edit"></el-button>
                                         <el-button @click="del" type="text" size="small" icon="delete"></el-button>
@@ -211,21 +211,21 @@
                                         <!--</el-form>-->
                                     <!--</template>-->
                                 <!--</el-table-column>-->
-                                <el-table-column  prop="propertyName" label="业务对象属性" width="">
+                                <el-table-column show-overflow-tooltip prop="propertyName" label="业务对象属性" width="200">
                                 </el-table-column>
-                                <el-table-column sortable="custom" prop="displayTitle" label="标题" width="">
+                                <el-table-column show-overflow-tooltip sortable="custom" prop="displayTitle" label="标题" width="200">
                                 </el-table-column>
                                 <!--<el-table-column sortable="custom" :formatter="wetherDisplay" prop="wetherDisplay" label="是否显示" width="">-->
                                 <!--</el-table-column>-->
-                                <el-table-column  prop="displayWidget" label="控件" width="">
+                                <el-table-column show-overflow-tooltip prop="displayWidget" label="控件" width="100">
                                 </el-table-column>
                                 <!--<el-table-column sortable="custom" :formatter="wetherReadonly" prop="wetherReadonly" label="是否只读" width="">-->
                                 <!--</el-table-column>-->
                                 <!--<el-table-column sortable="custom" :formatter="allowEmpty" prop="allowEmpty" label="是否为空" width="">-->
                                 <!--</el-table-column>-->
-                                <el-table-column  prop="sort" label="排序" width="">
+                                <el-table-column show-overflow-tooltip prop="sort" label="排序" width="200">
                                 </el-table-column>
-                                <el-table-column  label="操作" width="">
+                                <el-table-column  label="操作" width="100">
                                     <template scope="scope">
                                         <el-button @click="handleClick" type="text" icon="search" size="small"></el-button>
                                         <el-button @click="editData" type="text" icon="edit" size="small"></el-button>
