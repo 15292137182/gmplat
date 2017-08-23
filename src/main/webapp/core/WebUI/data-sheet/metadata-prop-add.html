@@ -171,9 +171,7 @@
                                     showMsg.MsgOk(basTop,res);
                                     basRight.rightInput='';
                                     //分页跳回到第一页
-                                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){
-
-                                    });
+                                    basRight.searchRight();
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){
@@ -198,7 +196,7 @@
                                 }).then(function (res) {
                                     showMsg.MsgOk(basTop,res);
                                     basRight.rightInput='';
-                                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
+                                    basRight.searchRight();
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){

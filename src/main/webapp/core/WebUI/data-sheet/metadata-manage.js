@@ -82,8 +82,7 @@ var basTop = new Vue({
                 jsonp: 'callback'
             }).then(function (ref) {
                 ibcpLayer.ShowOK(ref.data.message);
-                //分页跳回到第一页
-                queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
+                basLeft.searchLeft();
 
             });
         },
@@ -96,7 +95,7 @@ var basTop = new Vue({
                 console.log(ref);
                 ibcpLayer.ShowOK(ref.data.message);
                 //分页跳回到第一页
-                queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
+                basLeft.searchLeft();
             });
         }
     }
@@ -145,22 +144,35 @@ var basLeft = new Vue({
                 }).then(function (ref) {
                     showMsg.MsgOk(basTop,ref)
                     //分页跳回到第一页
-                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){
-                        //选中第一行
-                        basLeft.currentChange(basLeft.tableData[0]);
-                        //默认点击右边第一列
-                        basRight.searchRightTable();
-                    });
+                    basLeft.searchLeft();
                 },function(){
                     showMsg.MsgError(basTop)
                 });
             })
         },
+        searchLeft(){
+            queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){
+                if(res.data!=null){
+                    //console.log(res.data.result);
+                    $.each(res.data.result, function(index, item) {
+                        if(item.status != "0") {
+                            item.testDemo = true;
+                        }
+                    });
+                    basLeft.currentChange(basLeft.tableData[0]);
+                }else{
+                    basRight.tableData=[];//没找到右边表的数据为空
+                    basTop.addAttr = true,
+                    basTop.takeEffect = true,
+                    basTop.change = true
+                }
+            });
+        },
         searchLeftTable() {
             pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.pageNum,this,function(res){
-                console.log(res)
+                //console.log(res)
                 if(res.data!=null){
-                    console.log(res.data.result);
+                    //console.log(res.data.result);
                     $.each(res.data.result, function(index, item) {
                         if(item.status != "0") {
                             item.testDemo = true;
@@ -269,7 +281,9 @@ var basRight = new Vue({
                     basRight.currentRChange(basRight.tableData[0])
                 }
             });
-
+        },
+        searchRight(){
+            queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
         },
         editProp(){
             operateOPr = 2;
@@ -312,7 +326,7 @@ var basRight = new Vue({
                 }).then(function (ref) {
                     showMsg.MsgOk(basTop,ref);
                     //分页跳回到第一页
-                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
+                    basRight.searchRight();
                 },function(){
                     showMsg.MsgError(basTop)
                 });

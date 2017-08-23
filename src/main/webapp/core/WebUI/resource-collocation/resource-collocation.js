@@ -37,6 +37,9 @@ var resCol=new Vue({
         searchResTable() {
             pagingObj.Example(qurUrl,this.resInput,this.pageSize,this.pageNum,this);
         },
+        searchTable(){
+            queryData.getData(qurUrl,resCol.resInput,resCol,function(res){});
+        },
         editResEvent() {
             operate = 2;
             var htmlUrl = 'resource-add.html';
@@ -56,8 +59,7 @@ var resCol=new Vue({
                 }, {
                     jsonp: 'callback'
                 }).then(function (ref) {
-                    queryData.getData(qurUrl,resCol.resInput,resCol,function(res){});
-                    //resCol.searchResTable();
+                    resCol. searchTable();
                     showMsg.MsgOk(resTop,ref)
                 },function(){
                     showMsg.MsgError(resTop)
@@ -79,6 +81,7 @@ var resCol=new Vue({
         },
         handleCurrentChange(val) {  //当前页是第几页
             this.pageNum=val;
+            console.log(this.pageNum)
             this.searchResTable();
         },
         headSort(column){//列头排序
