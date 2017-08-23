@@ -31,13 +31,11 @@ import java.util.Map;
 public class BusinessObjectProController extends
         BaseControllerTemplate<BusinessObjectProService, BusinessObjectPro> {
 
-    final private BusinessObjectProService businessObjectProService;
     final private FrontFuncProService frontFuncProService;
     final private DBTableColumnService dbTableColumnService;
 
     @Autowired
-    public BusinessObjectProController(BusinessObjectProService businessObjectProService, FrontFuncProService frontFuncProService,DBTableColumnService dbTableColumnService) {
-        this.businessObjectProService = businessObjectProService;
+    public BusinessObjectProController( FrontFuncProService frontFuncProService,DBTableColumnService dbTableColumnService) {
         this.frontFuncProService = frontFuncProService;
         this.dbTableColumnService = dbTableColumnService;
     }
@@ -77,6 +75,9 @@ public class BusinessObjectProController extends
 
         List<Map<String, Object>> rowId1 =
                 dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
+        if (rowId1.size()==0) {
+            return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+        }
         for (Map<String ,Object> row :result){
             row.put("columnCname",rowId1.get(0).get("columnCname"));
         }
@@ -117,7 +118,7 @@ public class BusinessObjectProController extends
     @RequestMapping("/queryPro")
     public Object queryPro(String businProrowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> mapList =
-                businessObjectProService.select(
+                getEntityService().select(
                         new And(
                                 new FieldCondition("rowId", Operator.EQUAL, businProrowId)));
         if (mapList.size() == 0) {
@@ -135,6 +136,7 @@ public class BusinessObjectProController extends
      * @param locale  国际化参数
      * @return serviceResult
      */
+    @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> busiPro = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));

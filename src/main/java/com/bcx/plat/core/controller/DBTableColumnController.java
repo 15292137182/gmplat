@@ -29,12 +29,10 @@ import java.util.*;
 @RequestMapping("/core/dbTableColumn")
 public class DBTableColumnController extends BaseControllerTemplate<DBTableColumnService, DBTableColumn> {
 
-    private final DBTableColumnService dbTableColumnService;
     private final BusinessObjectProService businessObjectProService;
 
     @Autowired
-    public DBTableColumnController(DBTableColumnService dbTableColumnService, BusinessObjectProService businessObjectProService) {
-        this.dbTableColumnService = dbTableColumnService;
+    public DBTableColumnController(BusinessObjectProService businessObjectProService) {
         this.businessObjectProService = businessObjectProService;
     }
 
@@ -79,8 +77,8 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      */
     @RequestMapping("/queryTabById")
     public Object singleInputSelect(String args, String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = dbTableColumnService.select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
-                UtilsTool.createBlankQuery(Arrays.asList("columnEname", "columnCname"), UtilsTool.collectToSet(args))));
+        List<Map<String, Object>> result = getEntityService().select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
+                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args))));
         if (result.size() == 0) {
             return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
         }

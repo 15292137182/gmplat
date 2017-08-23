@@ -57,8 +57,7 @@ public class FrontFuncProController extends
      */
     @RequestMapping("/queryProRowId")
     public Object singleQuery(String queryProRowId, HttpServletRequest request, Locale locale) {
-        final FrontFuncProService entityService = getEntityService();
-        List<Map<String, Object>> result = entityService
+        List<Map<String, Object>> result = getEntityService()
                 .select(new And(new FieldCondition("rowId", Operator.EQUAL, queryProRowId)));
         result = queryResultProcess(result);
         if (result.size() == 0) {
