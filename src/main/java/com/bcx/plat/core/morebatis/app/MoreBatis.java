@@ -12,8 +12,10 @@ import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
@@ -24,6 +26,8 @@ import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,51 +55,58 @@ public class MoreBatis {
       final Class<? extends BaseEntity> entryClass = entityEntry.getEntityClass();
       final TableSource entityEntryTable = entityEntry.getTable();
       Map<String, Column> aliesMap = aliesMaps.get(entryClass);
+      LinkedList<Column> fieldInTables=new LinkedList<>();
       if (aliesMap == null) {
         aliesMap = new HashMap<>();
         aliesMaps.put(entryClass, aliesMap);
       }
       for (Column column : entityEntry.getFields()) {
-        aliesMap.put(column.getAlies(), new FieldInTable((Field) column,(Table) entityEntryTable));
+        aliesMap.put(column.getAlies(), new FieldInTable((Field) column, (Table) entityEntryTable));
       }
-      entityColumns.put(entryClass, immute(entityEntry.getFields()));
+      entityColumns.put(entryClass, immute(bindWithTable((Table) entityEntryTable,entityEntry.getFields())));
       entityTables.put(entryClass, new ImmuteTable(entityEntryTable));
-      entityPks.put(entryClass,immute(entityEntry.getPks()));
+      entityPks.put(entryClass, immute(bindWithTable((Table) entityEntryTable,entityEntry.getPks())));
     }
   }
 
-  public <T extends BaseEntity<T>> Collection<Column> getPks(Class<T> entityClass){
+  public <T extends BaseEntity<T>> Collection<Column> getPks(Class<T> entityClass) {
     return entityPks.get(entityClass);
   }
 
-  public <T extends BaseEntity<T>> Collection<Column> getColumns(Class<T> entityClass){
+  public <T extends BaseEntity<T>> Collection<Column> getColumns(Class<T> entityClass) {
     return entityColumns.get(entityClass);
   }
 
-  public <T extends BaseEntity<T>> TableSource getTable(Class<T> entityClass){
+  public <T extends BaseEntity<T>> TableSource getTable(Class<T> entityClass) {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BaseEntity<T>> Column getColumnByAlies(Class<T> entityClass,String alies){
+  public <T extends BaseEntity<T>> Column getColumnByAlies(Class<T> entityClass, String alies) {
     final Map<String, Column> entityColumn = aliesMaps.get(entityClass);
     try {
       return entityColumn.get(alies);
     } catch (NullPointerException e) {
-      if (entityColumn==null) {
-        throw new NullPointerException("实体类没有注册:"+entityClass.getName());
-      }else{
-        throw new NullPointerException("无效的字段别名:"+alies);
+      if (entityColumn == null) {
+        throw new NullPointerException("实体类没有注册:" + entityClass.getName());
+      } else {
+        throw new NullPointerException("无效的字段别名:" + alies);
       }
     }
   }
 
-  private List<Column> immute(Collection<Column> columns){
-    return columns.stream().map((column)->{
+  private List<Column> immute(Collection<Column> columns) {
+    return columns.stream().map((column) -> {
       return new ImmuteField(column);
     }).collect(Collectors.toList());
   }
 
-  public <T extends BaseEntity<T>> int insertEntity(T entity){
+  private List<Column> bindWithTable(Table table,Collection<Column> columns) {
+    return columns.stream().map((column) -> {
+      return new FieldInTable((Field) column,table);
+    }).collect(Collectors.toList());
+  }
+
+  public <T extends BaseEntity<T>> int insertEntity(T entity) {
     final Class<? extends BaseEntity> entityClass = entity.getClass();
     TableSource table = entityTables.get(entityClass);
     Map<String, Object> values = entity.toMap();
@@ -154,15 +165,26 @@ public class MoreBatis {
   }
 
 
-
   public QueryAction select(Class<? extends BaseEntity> entity) {
-    return new QueryAction(this, translator).select(entityColumns.get(entity))
+    return selectStatement().select(entityColumns.get(entity))
         .from(entityTables.get(entity));
+  }
+
+  public QueryAction select(Class<? extends BaseEntity> primary,
+      Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary) {
+    HashSet<Column> columns = new HashSet<>();
+    columns.addAll(entityColumns.get(primary));
+    columns.addAll(entityColumns.get(secondary));
+    Column primaryField = getColumnByAlies(primary, relationPrimary);
+    Column secondaryField = getColumnByAlies(secondary, relationSecondary);
+    return selectStatement().select(columns).from(
+        new JoinTable(entityTables.get(primary), JoinType.INNER_JOIN, entityTables.get(primary))
+            .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 
   public QueryAction select(Class<? extends BaseEntity> entity, List<String> columns) {
     Map<String, Column> columnMap = aliesMaps.get(entity);
-    return new QueryAction(this, translator).select(columns.stream().map((columnAlies) -> {
+    return selectStatement().select(columns.stream().map((columnAlies) -> {
       return columnMap.get(columnAlies);
     }).collect(Collectors.toList())).from(entityTables.get(entity));
   }
