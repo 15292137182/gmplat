@@ -4,7 +4,6 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
@@ -14,7 +13,6 @@ import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.*;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -133,7 +131,7 @@ public class BusinessObjectController extends
 
         if (UtilsTool.isValid(args)) {
             result = businessObjectProService.select(
-                    new ConditionBuilder(BusinessObjectPro.class).buildByAnd()
+                    new ConditionBuilder(BusinessObjectPro.class).and()
                             .equal("objRowId", rowId).or()
                             .addCondition(UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"),
                                     UtilsTool.collectToSet(args))).endOr().endAnd().buildDone()
@@ -146,7 +144,7 @@ public class BusinessObjectController extends
         }
         result =
                 businessObjectProService.select(
-                        new ConditionBuilder(BusinessObjectPro.class).buildByAnd()
+                        new ConditionBuilder(BusinessObjectPro.class).and()
                                 .equal("objRowId", rowId).endAnd().buildDone()
                         , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
         if (result.getResult().size() == 0) {
@@ -166,7 +164,7 @@ public class BusinessObjectController extends
         for (Map<String, Object> rest : result.getResult()) {
             String relateTableColumn = (String) rest.get("relateTableColumn");
             List<Map<String, Object>> mapList = dbTableColumnService.select(new ConditionBuilder(DBTableColumn.class)
-                    .buildByAnd()
+                    .and()
                     .equal("rowId", relateTableColumn).endAnd().buildDone());
             for (int i = 0; i < mapList.size(); i++) {
                 map.put((String) mapList.get(i).get("rowId"), mapList.get(i).get("columnCname"));

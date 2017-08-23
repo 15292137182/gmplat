@@ -2,10 +2,8 @@ package com.bcx.plat.core.morebatis.builder;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.Fields;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import java.lang.reflect.Modifier;
 
 public class ConditionBuilder implements ConditionContainer {
 
@@ -17,7 +15,7 @@ public class ConditionBuilder implements ConditionContainer {
   }
 
   public static void main(String[] args) throws IllegalAccessException {
-    Condition testCondition = new ConditionBuilder(BusinessObject.class).buildByAnd()
+    Condition testCondition = new ConditionBuilder(BusinessObject.class).and()
         .equal("changeOperat", 10).notNull("changeOperat").or()
         .or().isNull("deleteFlag").endOr().equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()
         .endAnd().buildDone();
@@ -29,19 +27,19 @@ public class ConditionBuilder implements ConditionContainer {
     this.condition = condition;
   }
 
-  public AndConditionBuilder<ConditionBuilder> buildByAnd() {
+  public AndConditionBuilder<ConditionBuilder> and() {
     return new AndConditionBuilder<>(false, this, conditionBuilderContext);
   }
 
-  public AndConditionBuilder<ConditionBuilder> buildByAndNot() {
+  public AndConditionBuilder<ConditionBuilder> andNot() {
     return new AndConditionBuilder<>(true, this, conditionBuilderContext);
   }
 
-  public OrConditionBuilder<ConditionBuilder> buildByOr() {
+  public OrConditionBuilder<ConditionBuilder> or() {
     return new OrConditionBuilder<>(false, this, conditionBuilderContext);
   }
 
-  public OrConditionBuilder<ConditionBuilder> buildByOrNot() {
+  public OrConditionBuilder<ConditionBuilder> orNot() {
     return new OrConditionBuilder<>(true, this, conditionBuilderContext);
   }
 
