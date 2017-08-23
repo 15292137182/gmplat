@@ -37,12 +37,14 @@ var functionBlock = new Vue({
         //编辑
         editBlock(){
             this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '420px',function(){
+                console.log(functionBlock.editObj);
                 em.isEdit = true;
                 em.formTable.codeInput=functionBlock.editObj.funcCode;
                 em.formTable.nameInput=functionBlock.editObj.funcName;
                 em.$refs.fbtype.value=functionBlock.editObj.funcType;
                 em.dataId=functionBlock.editObj.relateBusiObj;
-                em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
+                //em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
+                em.$refs.conObj.connectObj=functionBlock.editObj.relateBusiObj;
                 em.formTable.desp=functionBlock.editObj.desp;
                 em.rowId=functionBlock.editObj.rowId;
             });

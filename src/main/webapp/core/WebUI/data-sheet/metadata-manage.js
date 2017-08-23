@@ -119,15 +119,20 @@ var basLeft = new Vue({
             operate = 2;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
-                console.log(basLeft.currentVal);
-                em.addForm.codeInput = basLeft.currentVal.objectCode;  //对象代码
-                em.addForm.disabled = true;//对象代码不可点击
-                em.addForm.nameInput = basLeft.currentVal.objectName;//对象名称
+                console.log(basLeft.currentVal.rowId);
 
-                //修改关联表下拉框   jms  2017/8/21
-                em.$refs.selectTab.tableInput = basLeft.currentVal.associatTable;//关联表
-                em.addForm.versionInput = basLeft.currentVal.version;//版本
-                //em.addForm.dataId = basLeft.currentVal.relateTableRowId;//关联表的ID
+                //关联表字段
+                basLeft.$http.jsonp(serverPath+'/businObj/queryById', {
+                    rowId:basLeft.currentVal.rowId
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    em.addForm.codeInput = res.data.data[0].objectCode;  //对象代码
+                    em.addForm.nameInput = res.data.data[0].objectName;//对象名称
+                    em.$refs.selectTab.tableInput = res.data.data[0].relateTableRowId;//关联表
+                    em.addForm.versionInput = res.data.data[0].version;//版本
+
+                });
             });
         },
         deleteEvent() {
@@ -178,8 +183,7 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-          //console.log(row)
-          //console.log(column);
+          console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -308,7 +312,7 @@ var basRight = new Vue({
             if (row != undefined) {
                 this.currentVal = row;
                 this.rightVal = row.rowId;
-                 console.log(this.rightVal)
+                // console.log(this.rightVal)
             }
         },
         extendOnly(row){
