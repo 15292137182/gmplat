@@ -17,13 +17,13 @@ var attributeDetails = new Vue({
             displayFunc:'',//显示函数
         },
         input:'',
-        url:serverPath+'/fronFuncPro/queryProRowId',//查询功能块属性接口
+        url:serverPath+'/fronFuncPro/queryById',//查询功能块属性接口
         attributeData:[],//属性数组
     },
     methods:{
         getAttribute(){
             this.$http.jsonp(this.url, {
-                "queryProRowId":properties.rowId,
+                "rowId":properties.rowId,
             }, {
                 jsonp: 'callback'
             }).then(function (res) {

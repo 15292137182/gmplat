@@ -31,7 +31,7 @@ var em=new Vue({
         relateBusiObjId:'',//业务对象ID
         sortArr:[],//排序数组
         url:serverPath+'/fronFuncPro/add',//新增接口
-        queryUrl:serverPath+'/fronFuncPro/queryProRowId',//查询指定ID功能块属性接口
+        queryUrl:serverPath+'/fronFuncPro/queryById',//查询指定ID功能块属性接口
         queryDataUrl:serverPath+'/businObjPro/queryById',//查询指定ID业务对象属性接口
         editUrl:serverPath+'/fronFuncPro/modify',//编辑功能块属性
         isDisabled:false,//是否禁用
@@ -91,6 +91,7 @@ var em=new Vue({
                 showMsg.MsgOk(window.parent.functionBlock,res);
                 //window.parent.properties.getRight(this.funcRowId);
                 queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
+                window.parent.functionBlock.get();
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
                 showMsg.MsgError(window.parent.functionBlock);
@@ -149,7 +150,7 @@ var em=new Vue({
         },
         QueryProperties(){
             this.$http.jsonp(this.queryUrl,{
-                "queryProRowId":this.rightRowId,
+                "rowId":this.rightRowId,
             },{
                 jsonp:'callback'
             }).then(function (res) {
