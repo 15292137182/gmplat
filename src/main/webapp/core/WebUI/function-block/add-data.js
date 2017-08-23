@@ -116,6 +116,7 @@ var em=new Vue({
                 showMsg.MsgOk(window.parent.functionBlock,res);
                 //window.parent.properties.getRight(this.funcRowId);
                 queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
+                window.parent.functionBlock.get();
                 parent.layer.close(window.parent.topButtonObj.divIndex);
             },function(){
                 showMsg.MsgError(window.parent.functionBlock);

@@ -11,7 +11,6 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                console.log(res);
                 if(res.data!=null){
                     dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
@@ -218,7 +217,6 @@ var dataConversion = (function(){
         //var data = {"Tid":{"Fun":"code","Fun1":"code1"}};
         //   data.tableId = {"Key":"Value","key":"value"}
         var datas = data[oId];   //通过表格ID获取数据
-        console.log(datas);
         return datas;
     }
     //获取相同key
@@ -233,7 +231,6 @@ var dataConversion = (function(){
                 }
             }
         }
-        console.log("keyArr:"+keyArr);
         return keyArr;
     }
     //循环赋值
@@ -253,7 +250,6 @@ var dataConversion = (function(){
                 //重新赋值
                 //console.log(dataObj[arr[i][keyArr[i]]]);
                 row[setColumn] = _newValue;
-                console.log(row[setColumn]);
             }
         }
     }
@@ -261,7 +257,6 @@ var dataConversion = (function(){
         var datas = getData(obj);
         var keyArr = getKey(datas,arr)
         assignment(keyArr,arr,datas);
-        console.log(arr);
     }
     return {
         conversion:conversion

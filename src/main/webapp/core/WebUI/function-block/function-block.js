@@ -12,6 +12,7 @@ var functionBlock = new Vue({
         leftHeight:'',
         //url:serverPath+'/fronc/query',//查询所有功能块信息
         Selurl:serverPath+'/fronc/queryPage',//查询所有功能块信息
+        selUrlId:serverPath+'/fronc/queryById',//根据rowId查所有信息
         deleteId:'',
         rowId:'',
         editObj:'',
@@ -37,16 +38,34 @@ var functionBlock = new Vue({
         //编辑
         editBlock(){
             this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '420px',function(){
-                console.log(functionBlock.editObj);
-                em.isEdit = true;
-                em.formTable.codeInput=functionBlock.editObj.funcCode;
-                em.formTable.nameInput=functionBlock.editObj.funcName;
-                em.$refs.fbtype.value=functionBlock.editObj.funcType;
-                em.dataId=functionBlock.editObj.relateBusiObj;
-                //em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
-                em.$refs.conObj.connectObj=functionBlock.editObj.relateBusiObj;
-                em.formTable.desp=functionBlock.editObj.desp;
-                em.rowId=functionBlock.editObj.rowId;
+                functionBlock.$http.jsonp(functionBlock.selUrlId,{
+                    rowId:functionBlock.rowId
+                },{
+                    jsonp:'callback'
+                }).then(function(res){
+                    var data = res.data.data;
+                    em.isEdit = true;
+                    em.formTable.codeInput=data[0].funcCode;
+                    em.formTable.nameInput=data[0].funcName;
+                    em.$refs.fbtype.value=data[0].funcType;
+                    console.log(data[0].funcType);
+                    em.dataId=data[0].relateBusiObj;
+                    //em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
+                    em.$refs.conObj.connectObj=data[0].relateBusiObj;
+                    em.formTable.desp=data[0].desp;
+                    em.rowId=data[0].rowId;
+                })
+                // console.log(functionBlock.editObj);
+                // em.isEdit = true;
+                // em.formTable.codeInput=functionBlock.editObj.funcCode;
+                // em.formTable.nameInput=functionBlock.editObj.funcName;
+                // em.$refs.fbtype.value=functionBlock.editObj.funcType;
+                // console.log(functionBlock.editObj.funcType);
+                // em.dataId=functionBlock.editObj.relateBusiObj;
+                // //em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
+                // em.$refs.conObj.connectObj=functionBlock.editObj.relateBusiObj;
+                // em.formTable.desp=functionBlock.editObj.desp;
+                // em.rowId=functionBlock.editObj.rowId;
             });
         },
         //删除
@@ -97,7 +116,7 @@ var functionBlock = new Vue({
         }
     },
     created(){
-        var args={"Block":{funcType:"functionBlockType"}};
+        var args={"Block":{funcType:"functionBlockType"},"blockAttribute":{displayWidget:"showControl"}};
         TableKeyValueSet.init(args);
         this.get();
         $(document).ready(function(){
@@ -219,8 +238,8 @@ var properties = new Vue({
         },
     },
     created(){
-        var args={"blockAttribute":{displayWidget:"showControl"}};
-        TableKeyValueSet.init(args);
+        //var args={"blockAttribute":{displayWidget:"showControl"}};
+        //TableKeyValueSet.init(args);
         $(document).ready(function(){
             properties.rightHeight=$(window).height()-190;
         });
