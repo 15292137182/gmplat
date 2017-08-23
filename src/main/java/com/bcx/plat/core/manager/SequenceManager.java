@@ -470,6 +470,7 @@ public class SequenceManager {
     variable = null;
     keys = null;
     branchValues = null;
+    content = null;
     System.gc();
   }
 
