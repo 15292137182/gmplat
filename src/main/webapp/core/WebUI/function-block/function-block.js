@@ -118,6 +118,7 @@ var functionBlock = new Vue({
 var properties = new Vue({
     el:'#right',
     data:{
+        tableId:'blockAttribute',
         loading:true,
         tableData:[],
         findRightDataUrl:serverPath+'/fronFuncPro/queryProPage',//查询指定ID功能块的属性信息
@@ -218,6 +219,8 @@ var properties = new Vue({
         },
     },
     created(){
+        var args={"blockAttribute":{displayWidget:"showControl"}};
+        TableKeyValueSet.init(args);
         $(document).ready(function(){
             properties.rightHeight=$(window).height()-190;
         });

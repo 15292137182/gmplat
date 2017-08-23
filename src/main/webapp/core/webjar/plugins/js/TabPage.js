@@ -44,6 +44,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             success:function(res){
                 obj.loading=false;
                 if(res.data!=null){
+                    dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     obj.pageNum = res.data.pageNum;//定位到当前页
@@ -89,6 +90,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
                 console.log(res.data.result);
                 obj.loading=false;
                 if(res.data!=null){
+                    dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
@@ -133,6 +135,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             success:function(res){
                 obj.loading=false;
                 if(res.data!=null){
+                    dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
@@ -179,6 +182,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
                 console.log(res.data.result);
                 obj.loading=false;
                 if(res.data!=null){
+                    dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
