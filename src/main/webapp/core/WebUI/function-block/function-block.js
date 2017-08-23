@@ -78,7 +78,9 @@ var functionBlock = new Vue({
                 }).then(function(res){
                     showMsg.MsgOk(functionBlock,res);
                     //functionBlock.get();
-                    queryData.getData(this.Selurl,this.input,this)
+                    queryData.getData(this.Selurl,this.input,this,function(res){
+                        properties.getRight(functionBlock.tableData[0].rowId);
+                    })
                 },function(){
                     showMsg.MsgError(functionBlock);
                 })

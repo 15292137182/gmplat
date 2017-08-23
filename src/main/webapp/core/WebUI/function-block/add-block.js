@@ -37,7 +37,9 @@ var em=new Vue({
             }).then(function(res){
                 showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(topButtonObj.divIndex);
-                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock)
+                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
+                    properties.getRight(functionBlock.tableData[0].rowId);
+                })
             },function(){
                 showMsg.MsgError(functionBlock);
             });
