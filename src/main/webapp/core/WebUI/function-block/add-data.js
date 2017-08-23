@@ -32,7 +32,7 @@ var em=new Vue({
         sortArr:[],//排序数组
         url:serverPath+'/fronFuncPro/add',//新增接口
         queryUrl:serverPath+'/fronFuncPro/queryProRowId',//查询指定ID功能块属性接口
-        queryDataUrl:serverPath+'/businObjPro/queryPro',//查询指定ID业务对象属性接口
+        queryDataUrl:serverPath+'/businObjPro/queryById',//查询指定ID业务对象属性接口
         editUrl:serverPath+'/fronFuncPro/modify',//编辑功能块属性
         isDisabled:false,//是否禁用
         rightRowId:'',//右边表行ID
@@ -180,7 +180,7 @@ var em=new Vue({
         },
         queryObjectProperties(){
             this.$http.jsonp(this.queryDataUrl,{
-                "businProrowId":this.dataId
+                "rowId":this.dataId
             },{
                 jsonp:'callback'
             }).then(function(res){

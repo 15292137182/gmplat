@@ -53,6 +53,9 @@ var DatabaseDetails = new Vue({
         selDatas(){
             pagingObj.Examples(DatabaseDetails.selUrl,DatabaseDetails.Robj.rowId,DatabaseDetails.input,DatabaseDetails.pageSize,DatabaseDetails.pageNum,DatabaseDetails)
         },
+        selDataOne(){
+            queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails)
+        },
         clickTable(row){
             this.rowObj = row;
         },
