@@ -49,7 +49,7 @@ public class SequenceRuleConfigController extends
    * @param request 请求
    * @return 返回流水号的生成列表
    */
-  @RequestMapping("/mock")
+    @RequestMapping("/mock")
   public Object mockSequenceNo(HttpServletRequest request, Locale locale) {
     String _content = request.getParameter("content");
     ServiceResult<List<String>> _sr = new ServiceResult<>();

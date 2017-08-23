@@ -52,30 +52,21 @@ public class FrontFuncProController extends
         return Collections.singletonList("rowId");
     }
 
-    /**
-     * 查询
-     */
-    @RequestMapping("/queryProRowId")
-    public Object singleQuery(String queryProRowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = getEntityService()
-                .select(new And(new FieldCondition("rowId", Operator.EQUAL, queryProRowId)));
-        result = queryResultProcess(result);
-        if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
-        }
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
-    }
-
 
     /**
-     * 查询
+     * 通过功能块rowId查询功能块属性下对应的数据
+     *
+     * @param str            空格查询
+     * @param rowId 功能块rowId
+     * @param request        请求
+     * @param locale         国际化参数
+     * @return 返回serviceResult
      */
     @RequestMapping("/queryPro")
-    public Object singleQuery(String str, String fronByProRowId, HttpServletRequest request, Locale locale) {
-        final FrontFuncProService entityService = getEntityService();
-        List<Map<String, Object>> result = entityService
-                .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, fronByProRowId),
-                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+    public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
+        List<Map<String, Object>> result = getEntityService()
+                .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                        UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
         result = queryResultProcess(result);
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
@@ -95,7 +86,8 @@ public class FrontFuncProController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args, @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+    public Object singleInputSelect(String rowId, String args,
+                                    @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                     HttpServletRequest request, Locale locale,String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);

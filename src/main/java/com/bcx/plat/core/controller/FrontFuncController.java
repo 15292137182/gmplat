@@ -50,27 +50,6 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         return Arrays.asList("funcCode", "funcName");
     }
 
-    /**
-     * 根据功能块rowId查询功能块属性
-     *
-     * @param str     空格查询
-     * @param rowId   功能块rowId
-     * @param request request请求
-     * @param locale  国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/queryPro")
-    public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = frontFuncProService
-                .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
-        result = queryResultProcess(result);
-        if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
-        }
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
-    }
-
 
     /**
      * 根据功能块rowId查找当前对象下的所有属性并分页显示
@@ -84,9 +63,11 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      */
     //"[{\"str\":\"23\", \"num\":1},{\"str\":\"12\", \"num\":0},{\"str\":\"as\", \"num\":1}]"
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId, String args,@RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,String orde,
-                                    HttpServletRequest request, Locale locale) {
+    public Object queryProPage(String rowId, String args,
+                               @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                               String orde,
+                               HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(orde);
         PageResult<Map<String, Object>> result =
                 frontFuncProService.select(

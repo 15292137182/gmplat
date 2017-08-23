@@ -108,27 +108,6 @@ public class BusinessObjectProController extends
 
 
     /**
-     * 根据业务对象属性的rowId查找当前记录
-     *
-     * @param businProrowId 业务对象属性rowId
-     * @param request       request请求
-     * @param locale        国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/queryPro")
-    public Object queryPro(String businProrowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> mapList =
-                getEntityService().select(
-                        new And(
-                                new FieldCondition("rowId", Operator.EQUAL, businProrowId)));
-        if (mapList.size() == 0) {
-            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
-        }
-        return super.result(request, new ServiceResult<>(mapList, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
-    }
-
-
-    /**
      * 通用删除方法
      *
      * @param rowId   按照rowId查询

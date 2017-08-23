@@ -29,7 +29,7 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     }
 
     /**
-     * 通用查询方法
+     * 根据编号number查询，以数组的形式传入数据进来["demo","test"]
      *
      * @param args     按照空格查询
      * @param request request请求
