@@ -284,6 +284,7 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
                     obj.loading=false;
                     console.log(res);
                     if(res.data!=null){
+                        dataConversion.conversion(obj,res.data.result);
                         obj.tableData = res.data.result;//数据源
                         obj.allDate = Number(res.data.total);//总共多少条数据
                         obj.pageNum = res.data.pageNum;//当前页
@@ -316,6 +317,7 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
                 obj.loading=false;
                 console.log(res);
                 if(res.data!=null){
+                    dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     obj.pageNum = res.data.pageNum;//当前页

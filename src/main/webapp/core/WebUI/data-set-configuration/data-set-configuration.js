@@ -5,6 +5,7 @@
 var dataSetConfig = new Vue({
     el:'#dataSetConfig',
     data:{
+        tableId:'dataSetConfig',
         loading:true,
         tableData:[],//table数据
         input:'',//搜索框输入
@@ -21,6 +22,7 @@ var dataSetConfig = new Vue({
             pagingObj.Example(this.selUrl,this.input, this.pageSize,this.pageNum,this);
         },
         clickTable(row){//表格点击事件
+            console.log(row)
             this.rowObjId = row.rowId;
             this.rowObj = row;
             dataSetConfigButton.dis = false;
@@ -47,6 +49,8 @@ var dataSetConfig = new Vue({
         }
     },
     created(){
+        var args={"dataSetConfig":{datasetType:"dataSetConfigType"}};
+        TableKeyValueSet.init(args);
         this.searchResTable();
         // $(document).ready(function(){
         //     dataSetConfig.Height=$(window).height()-190;
