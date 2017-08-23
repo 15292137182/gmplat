@@ -44,7 +44,7 @@ function optimizationPath(path) {
 }
 
 //服務地址--头部--调试
-var serverHead = 'http://192.168.100.46';
+var serverHead = 'http://192.168.100.47';
 
 // 服務地址--头部--部署
 //var serverHead = getBPBasePath();
