@@ -64,6 +64,29 @@ public class BusinessObjectController extends
 
 
     /**
+     * 根据业务对象rowId查询当前数据
+     *
+     * @param rowId     唯一标识
+     * @param request  request请求
+     * @param locale   国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryById")
+    public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
+
+        List<Map<String, Object>> result = getEntityService()
+                .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        String relateTableRowId = (String)result.get(0).get("relateTableRowId");
+
+        List<Map<String, Object>> rowId1 =
+                maintDBTablesService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+        for (Map<String ,Object> row :result){
+           row.put("tableCname",rowId1.get(0).get("tableCname"));
+        }
+        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+    }
+
+    /**
      * 通用查询方法
      *
      * @param args     按照空格查询

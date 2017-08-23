@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
+import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -32,17 +33,56 @@ public class BusinessObjectProController extends
 
     final private BusinessObjectProService businessObjectProService;
     final private FrontFuncProService frontFuncProService;
+    final private DBTableColumnService dbTableColumnService;
 
     @Autowired
-    public BusinessObjectProController(BusinessObjectProService businessObjectProService, FrontFuncProService frontFuncProService) {
+    public BusinessObjectProController(BusinessObjectProService businessObjectProService, FrontFuncProService frontFuncProService,DBTableColumnService dbTableColumnService) {
         this.businessObjectProService = businessObjectProService;
         this.frontFuncProService = frontFuncProService;
+        this.dbTableColumnService = dbTableColumnService;
     }
 
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("propertyCode", "propertyName");
     }
+
+    /**
+     * 接受参数和消息进行封装
+     *
+     * @param content 接受的参数
+     * @param msg     消息
+     * @param <T>
+     * @return
+     */
+    private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
+        return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
+    }
+
+    /**
+     * 根据业务对象属性rowId查询当前数据
+     *
+     * @param rowId     唯一标识
+     * @param request  request请求
+     * @param locale   国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryById")
+    public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
+
+        List<Map<String, Object>> result = getEntityService()
+                .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        String relateTableColumn = (String)result.get(0).get("relateTableColumn");
+
+        List<Map<String, Object>> rowId1 =
+                dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
+        for (Map<String ,Object> row :result){
+            row.put("columnCname",rowId1.get(0).get("columnCname"));
+        }
+        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+    }
+
+
 
     /**
      * 根据业务对象rowId查询当前业务对象下的所有属性
