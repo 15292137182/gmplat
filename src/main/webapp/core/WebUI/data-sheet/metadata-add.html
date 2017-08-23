@@ -126,7 +126,12 @@
                                     showMsg.MsgOk(basTop,res);
                                     basLeft.leftInput='';
                                     //分页跳回到第一页
-                                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
+                                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){
+                                        //选中第一行
+                                        basLeft.currentChange(basLeft.tableData[0]);
+                                        //默认点击右边第一列
+                                        basRight.searchRightTable();
+                                    });
                                     ibcpLayer.Close(divIndex);
                                 })
                             },function(){

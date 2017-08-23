@@ -171,7 +171,9 @@
                                     showMsg.MsgOk(basTop,res);
                                     basRight.rightInput='';
                                     //分页跳回到第一页
-                                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
+                                    queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){
+
+                                    });
                                     ibcpLayer.Close(divIndex);
                                 });
                             },function(){
@@ -179,7 +181,7 @@
                             })
                         }
                         else if(operateOPr==2){
-                            //console.log(basRight.currentVal.rowId)
+                            console.log(basRight.currentVal.rowId)
                             editObj.editOk(function(){
                                 proEm.$http.jsonp(serverPath + "/businObjPro/modify", {
                                     rowId: basRight.currentVal.rowId,//本生的ID

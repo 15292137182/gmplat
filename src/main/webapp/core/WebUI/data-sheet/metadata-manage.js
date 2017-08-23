@@ -145,9 +145,12 @@ var basLeft = new Vue({
                 }).then(function (ref) {
                     showMsg.MsgOk(basTop,ref)
                     //分页跳回到第一页
-                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){});
-                    //basRight.rightInput='';
-                    //queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
+                    queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){
+                        //选中第一行
+                        basLeft.currentChange(basLeft.tableData[0]);
+                        //默认点击右边第一列
+                        basRight.searchRightTable();
+                    });
                 },function(){
                     showMsg.MsgError(basTop)
                 });
