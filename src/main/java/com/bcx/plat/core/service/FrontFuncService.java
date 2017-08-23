@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class FrontFuncService extends BaseServiceTemplate<FrontFunc>{
 
-
     @Override
     public boolean isRemoveBlank() {
         return false;

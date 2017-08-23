@@ -28,7 +28,6 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
         return Arrays.asList("number","keysetCode", "keysetName");
     }
 
-
     /**
      * 通用查询方法
      *

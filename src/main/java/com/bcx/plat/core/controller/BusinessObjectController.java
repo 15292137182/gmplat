@@ -53,10 +53,6 @@ public class BusinessObjectController extends
         this.frontFuncProService = frontFuncProService;
         this.dbTableColumnService = dbTableColumnService;
     }
-
-
-
-
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
@@ -72,6 +68,7 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryById")
+    @Override
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
 
         List<Map<String, Object>> result = getEntityService()
@@ -87,7 +84,7 @@ public class BusinessObjectController extends
     }
 
     /**
-     * 通用查询方法
+     * 查询业务对象全部数据并分页显示
      *
      * @param args     按照空格查询
      * @param pageNum  当前第几页
@@ -97,6 +94,7 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryPage")
+    @Override
     public Object singleInputSelect(String args,
                                     @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,

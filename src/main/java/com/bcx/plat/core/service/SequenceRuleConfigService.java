@@ -10,4 +10,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SequenceRuleConfigService extends BaseServiceTemplate<SequenceRuleConfig>{
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

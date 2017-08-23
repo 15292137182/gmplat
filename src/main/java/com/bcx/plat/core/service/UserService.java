@@ -11,5 +11,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService extends BaseServiceTemplate<User> {
-
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

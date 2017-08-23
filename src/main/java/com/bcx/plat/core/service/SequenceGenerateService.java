@@ -10,4 +10,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SequenceGenerateService extends BaseServiceTemplate<SequenceGenerate>{
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

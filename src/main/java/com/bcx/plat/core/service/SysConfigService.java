@@ -13,5 +13,9 @@ import java.util.Map;
  */
 @Service
 public class SysConfigService extends BaseServiceTemplate<SysConfig> {
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 
 }

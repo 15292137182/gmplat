@@ -9,4 +9,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MaintDBTablesService extends BaseServiceTemplate<MaintDBTables> {
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

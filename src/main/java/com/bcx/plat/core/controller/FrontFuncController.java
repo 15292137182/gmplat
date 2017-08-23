@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFunc;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
@@ -71,8 +70,6 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         }
         return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
     }
-
-
 
 
     /**

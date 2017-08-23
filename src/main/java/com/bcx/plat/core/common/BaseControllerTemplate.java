@@ -6,7 +6,9 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 
@@ -61,6 +63,24 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 
+    /**
+     * 根据功能块rowId查询当前数据
+     *
+     * @param rowId   功能块rowId
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryById")
+    public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
+        List<Map<String, Object>> result = entityService
+                .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        result = queryResultProcess(result);
+        if (result.size() == 0) {
+            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+        }
+        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+    }
 
     /**
      * 通用查询方法

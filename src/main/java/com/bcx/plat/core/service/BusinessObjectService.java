@@ -9,4 +9,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
+
+
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

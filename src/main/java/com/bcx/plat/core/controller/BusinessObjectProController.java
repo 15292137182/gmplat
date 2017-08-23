@@ -68,6 +68,7 @@ public class BusinessObjectProController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryById")
+    @Override
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
 
         List<Map<String, Object>> result = getEntityService()

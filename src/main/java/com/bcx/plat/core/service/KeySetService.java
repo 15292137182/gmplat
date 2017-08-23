@@ -13,4 +13,8 @@ import java.util.Map;
  */
 @Service
 public class KeySetService extends BaseServiceTemplate<KeySet>{
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }

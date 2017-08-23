@@ -45,7 +45,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
 
 
     /**
-     * 通用查询方法
+     * 通过表信息字段rowId查询表信息并分页显示
      *
      * @param args     按照空格查询
      * @param rowId    接受rowId

@@ -10,4 +10,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DataSetConfigService extends BaseServiceTemplate<DataSetConfig> {
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }
+

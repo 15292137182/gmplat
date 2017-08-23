@@ -36,23 +36,6 @@ public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTable
         this.businessObjectService = businessObjectService;
         this.dbTableColumnService = dbTableColumnService;
     }
-    /**
-     *根据数据库表信息rowId查询出当前对应的一条记录
-     *
-     * @param rowId     rowId查找当前记录
-     * @param request request请求
-     * @param locale  国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/queryById")
-    public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = getEntityService()
-                .select(new And(new FieldCondition("rowId", Operator.EQUAL, rowId)));
-        if (result.size()==0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
-        }
-        return super.result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS), locale);
-    }
 
     @Override
     protected List<String> blankSelectFields() {
