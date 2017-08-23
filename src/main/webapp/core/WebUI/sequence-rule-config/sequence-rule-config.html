@@ -6,7 +6,7 @@
     <title>序列规则配置</title>
     <style>
         html{
-            overflow: hidden;
+            overflow-x: hidden;
         }
     </style>
 </head>
@@ -40,7 +40,7 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <el-col :span="24">
                         <template>
-                            <el-table :data="tableData" border :height="Height"
+                            <el-table :data="tableData" border :height="Height" highlight-current-row
                                       v-loading="loading"
                                       element-loading-text="加载中"
                                       highlight-current-row

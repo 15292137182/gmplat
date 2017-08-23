@@ -38,9 +38,12 @@ var add=new Vue({
                     }, {
                         jsonp: 'callback'
                     }).then(function (res) {
-                        ibcpLayer.ShowOK(res.data.message);
-                        config.search();
+                        showMsg.MsgOk(config,res);
                         ibcpLayer.Close(divIndex);
+                        queryData.getData(queryPage,config.input,config)
+                    },
+                    function(){
+                        showMsg.MsgError(config);
                     });
                 })
             }
@@ -56,10 +59,13 @@ var add=new Vue({
                     },{
                         jsonp:'callback'
                     }).then(function(res){
-                        ibcpLayer.ShowOK(res.data.message);
-                        config.search();
+                        showMsg.MsgOk(config,res);
                         ibcpLayer.Close(divIndex);
-                    })
+                        queryData.getData(queryPage,config.input,config)
+                    },
+                    function(){
+                        showMsg.MsgError(config);
+                    });
                 })
             }
         },
