@@ -13,6 +13,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
                 obj.loading=false;
                 console.log(res);
                 if(res.data!=null){
+                    dataConversion.conversion(obj,res.data.result);
                     obj.tableData = res.data.result;//数据源
                     obj.allDate = Number(res.data.total);//总共多少条数据
                     obj.pageNum = res.data.pageNum;//当前页
@@ -200,6 +201,66 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
         headSort:headSort,
         headSorts:headSorts,
         headSorts1:headSorts1
+    }
+})()
+
+//表字段值替换
+var dataConversion = (function(){
+    //获取数据
+    var getData = function(obj){//obj当前Vue实例对象
+        var oId = obj.tableId;//表格ID
+        //调用XX方法获取所有数据{'表格ID':{"Key":"Value"}};
+        var data = TableKeyValueSet.getOptions();
+        //var data = {"Tid":{"Fun":"code","Fun1":"code1"}};
+        //   data.tableId = {"Key":"Value","key":"value"}
+        var datas = data[oId];   //通过表格ID获取数据
+        console.log(datas);
+        return datas;
+    }
+    //获取相同key
+    var getKey = function(datas,arr){
+        var keyArr = [];//保存datas与tableData中相同的key
+        for(var i=0;i<1;i++){//获取tableData中的key
+            for (var Key in arr[i]){//找出与datas相同的key
+                for(var key in datas){
+                    if(Key==key){
+                        keyArr.push(key);
+                    }
+                }
+            }
+        }
+        console.log("keyArr:"+keyArr);
+        return keyArr;
+    }
+    //循环赋值
+    var assignment = function(keyArr,arr,datas){
+        for(var i=0;i<arr.length;i++){//遍历tableData（arr=Obj）
+            var row = arr[i];
+            for(var j=0;j<keyArr.length;j++){
+                var setColumn = keyArr[j];
+                //字段下面的具体代码（value）
+                var val = datas[setColumn];
+                //调用XXX方法获取所有代码对应的值{"val":{1:"文本",2:"日期"}}
+                var data = TableKeyValueSet.getData()
+                //var data = {"code":{1:"文本",2:"日期"}};
+                //获取data下val的值
+                var dataObj = data[val];
+                var _newValue = dataObj[row[setColumn]];
+                //重新赋值
+                //console.log(dataObj[arr[i][keyArr[i]]]);
+                row[setColumn] = _newValue;
+                console.log(row[setColumn]);
+            }
+        }
+    }
+    var conversion = function(obj,arr){
+        var datas = getData(obj);
+        var keyArr = getKey(datas,arr)
+        assignment(keyArr,arr,datas);
+        console.log(arr);
+    }
+    return {
+        conversion:conversion
     }
 })()
 
