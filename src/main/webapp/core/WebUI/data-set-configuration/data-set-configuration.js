@@ -82,15 +82,33 @@ var dataSetConfigButton = new Vue({
         },
         editDataSetConfig(){//编辑
             this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '500px',function(){
-                addDataSet.isEdit = true;
-                addDataSet.formTable.datasetCode = dataSetConfig.rowObj.datasetCode;
-                addDataSet.formTable.nameInput = dataSetConfig.rowObj.datasetName;
-                //类型下拉框赋值修改  jms  2017/8/21
-                addDataSet.$refs.dsctype.value = dataSetConfig.rowObj.datasetType;
+                console.log(dataSetConfig.rowObjId);
+                dataSetConfigButton.$http.jsonp(serverPath+'/dataSetConfig/queryById',{
+                        rowId: dataSetConfig.rowObjId
+                    },{
+                        jsonp:'callback'
+                    }).then(function(res){
+                        console.log(res.data.data[0])
+                    addDataSet.isEdit = true;
+                    addDataSet.formTable.datasetCode = res.data.data[0].datasetCode;
+                    addDataSet.formTable.nameInput =res.data.data[0].datasetName;
+                    //类型下拉框赋值修改  jms  2017/8/21
+                    addDataSet.$refs.dsctype.value = res.data.data[0].datasetType;
 
-                addDataSet.formTable.content = dataSetConfig.rowObj.datasetContent;
-                addDataSet.formTable.desp = dataSetConfig.rowObj.desp;
-                addDataSet.formTable.version = dataSetConfig.rowObj.version;
+                    addDataSet.formTable.content = res.data.data[0].datasetContent;
+                    addDataSet.formTable.desp = res.data.data[0].desp;
+                    addDataSet.formTable.version =res.data.data[0].version;
+                    })
+
+                //addDataSet.isEdit = true;
+                //addDataSet.formTable.datasetCode = dataSetConfig.rowObj.datasetCode;
+                //addDataSet.formTable.nameInput = dataSetConfig.rowObj.datasetName;
+                ////类型下拉框赋值修改  jms  2017/8/21
+                //addDataSet.$refs.dsctype.value = dataSetConfig.rowObj.datasetType;
+                //
+                //addDataSet.formTable.content = dataSetConfig.rowObj.datasetContent;
+                //addDataSet.formTable.desp = dataSetConfig.rowObj.desp;
+                //addDataSet.formTable.version = dataSetConfig.rowObj.version;
             });
         },
         deleteDataSetConfig(){//删除
