@@ -5,6 +5,7 @@
 var functionBlock = new Vue({
     el:"#app",
     data:{
+        tableId:'Block',
         loading:true,
         input:'',
         tableData:[],
@@ -64,7 +65,6 @@ var functionBlock = new Vue({
         },
         //点击
         click(row, event, column){
-            console.log(row);
             if(row){
                 properties.rightInput = '';
                 this.rowId = row.rowId;
@@ -95,6 +95,8 @@ var functionBlock = new Vue({
         }
     },
     created(){
+        var args={"Block":{funcType:"functionBlockType"}};
+        TableKeyValueSet.init(args);
         this.get();
         $(document).ready(function(){
             functionBlock.leftHeight=$(window).height()-190;
