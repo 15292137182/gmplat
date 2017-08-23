@@ -44,10 +44,10 @@ function optimizationPath(path) {
 }
 
 //服務地址--头部--调试
-var serverHead = 'http://192.168.100.47';
+// var serverHead = 'http://192.168.100.193';
 
 // 服務地址--头部--部署
-//var serverHead = getBPBasePath();
+var serverHead = getBPBasePath();
 
 //完整路径
 var serverPath = serverHead + "/gmplat/core";

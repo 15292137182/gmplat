@@ -102,7 +102,7 @@ public class BusinessObjectController extends
                                     HttpServletRequest request,
                                     Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (args !=null && !args.isEmpty()){
+        if (args ==null && args.isEmpty()){
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = getEntityService()

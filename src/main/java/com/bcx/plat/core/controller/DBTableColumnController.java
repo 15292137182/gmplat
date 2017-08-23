@@ -57,7 +57,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
     public Object queryPageById(String args,String rowId,@RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (args !=null && !args.isEmpty()){
+        if (args ==null && args.isEmpty()){
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = getEntityService()
