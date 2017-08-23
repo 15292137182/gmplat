@@ -55,7 +55,9 @@ public class SequenceManager {
   private static final String CONTENT_SEPARATOR_ = ";";
 
   private static boolean isMock = false;
-
+  private Map<String, Object> variable;
+  private Map<String, Integer> keys;
+  private Map<String, Object> branchValues;
   private String content;
 
 
@@ -67,10 +69,6 @@ public class SequenceManager {
   public static SequenceManager getInstance() {
     return SequenceManagerHolder.instance;
   }
-
-  private Map<String, Object> variable;
-  private Map<String, Integer> keys;
-  private Map<String, Object> branchValues;
 
   /**
    * 生成流水号
@@ -118,37 +116,37 @@ public class SequenceManager {
         String content = (String) ruleConfigs.get(0).get("seqContent");
         // 如果传入的是全是数字
         // 检查是否存在有变量，并获得变量个数
-          Matcher matcher = serialNumPattern.matcher(content);
-          int groupCount = 0;
-          if (matcher.find()) {
-            Matcher countM = serialNumPattern.matcher(content);
-            while (countM.find()) {
-              groupCount++;
-            }
+        Matcher matcher = serialNumPattern.matcher(content);
+        int groupCount = 0;
+        if (matcher.find()) {
+          Matcher countM = serialNumPattern.matcher(content);
+          while (countM.find()) {
+            groupCount++;
           }
-          if (groupCount == 0) {
-            logger.warn("没有序列号可以重置！");
-          } else if (groupCount == 1) {
-            String matcherContent = matcher.group();
-            if (serialNumWithVariablePattern.matcher(matcherContent).find()) {
-              throwError("带有变量的的序列号不能被重置！");
-            } else {
-              // 重置这个流水号
-              return setDBSerialValue(rowId, matcherContent, startValue);
-            }
-          } else if (isValid(serialId)) {
-            // 找到带有该键值的模块
-            Pattern pattern = Pattern.compile("[*][{]" + serialId + "[;][\\d]+-.+[}]");
-            Matcher matcher1 = pattern.matcher(content);
-            if (!matcher1.find()) {
-              throwError("没有在序列号(rowId)：%s 中找到指定的序列号键值：%s！", rowId, serialId);
-            } else {
-              String module = matcher1.group();
-              return setDBSerialValue(rowId, module, startValue);
-            }
+        }
+        if (groupCount == 0) {
+          logger.warn("没有序列号可以重置！");
+        } else if (groupCount == 1) {
+          String matcherContent = matcher.group();
+          if (serialNumWithVariablePattern.matcher(matcherContent).find()) {
+            throwError("带有变量的的序列号不能被重置！");
           } else {
-            throwError("多序列号重置需要指定序列号的键值！");
+            // 重置这个流水号
+            return setDBSerialValue(rowId, matcherContent, startValue);
           }
+        } else if (isValid(serialId)) {
+          // 找到带有该键值的模块
+          Pattern pattern = Pattern.compile("[*][{]" + serialId + "[;][\\d]+-.+[}]");
+          Matcher matcher1 = pattern.matcher(content);
+          if (!matcher1.find()) {
+            throwError("没有在序列号(rowId)：%s 中找到指定的序列号键值：%s！", rowId, serialId);
+          } else {
+            String module = matcher1.group();
+            return setDBSerialValue(rowId, module, startValue);
+          }
+        } else {
+          throwError("多序列号重置需要指定序列号的键值！");
+        }
       } else {
         throwError("未查询到正确数量的流水号：%s，查询到的数量为: %d", rowId, ruleConfigs.size());
       }
@@ -353,10 +351,10 @@ public class SequenceManager {
         } else {
           branchValue = new StringBuilder(branchValues.get(a[0]).toString());
         }
+        branchValues.put(a[0], branchValue);
         int nextValue =
                 getCurrentVariableValue(ruleConfig.getRowId(), a[0]) + 1;
         keys.put(a[0], nextValue);
-        branchValues.put(a[0], branchValue);
         StringBuilder nv = new StringBuilder(String.valueOf(nextValue));
         if (nv.length() <= length) {
           while (nv.length() < length) {
@@ -386,7 +384,7 @@ public class SequenceManager {
       fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
       fieldConditions
               .add(new FieldCondition("branchSign", Operator.EQUAL,
-                      isValid(branchValues.get(variableKey)) ? branchValues.get(variableKey) : ""));
+                      isValid(branchValues.get(variableKey)) ? branchValues.get(variableKey).toString() : ""));
       List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
               .where(new And(fieldConditions)).execute();
       if (list.size() == 1) {
@@ -448,10 +446,8 @@ public class SequenceManager {
         List<Condition> fieldConditions = new ArrayList<>();
         fieldConditions.add(new FieldCondition("seqRowId", Operator.EQUAL, seqRowId));
         fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
-
-        fieldConditions.add(new FieldCondition("branchSign", Operator.EQUAL,
-                branchValues.get(variableKey) == null ? "" : branchValues.get(variableKey).toString()));
-
+        String branchSign = branchValues.get(variableKey) == null ? "" : branchValues.get(variableKey).toString();
+        fieldConditions.add(new FieldCondition("branchSign", Operator.EQUAL, branchSign));
         List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
                 .where(new And(fieldConditions)).execute();
         SequenceGenerate sg = new SequenceGenerate();
@@ -459,8 +455,7 @@ public class SequenceManager {
           sg.setSeqRowId(seqRowId);
           sg.setVariableKey(variableKey);
           sg.setCurrentValue(keys.get(variableKey).toString());
-          sg.setBranchSign(branchValues.get(variableKey).toString());
-          sg.setBranchSign("");
+          sg.setBranchSign(branchSign);
           sg.buildCreateInfo();
           moreBatis.insertEntity(sg);
         } else {
@@ -471,6 +466,7 @@ public class SequenceManager {
         }
       }
     }
+    isMock = false;
     variable = null;
     keys = null;
     branchValues = null;
