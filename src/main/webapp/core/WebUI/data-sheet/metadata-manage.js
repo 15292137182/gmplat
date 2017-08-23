@@ -241,6 +241,7 @@ var basLeft = new Vue({
 var basRight = new Vue({
     "el": "#basRight",
     data: {
+        tableId:'objProp',
         rightInput: '',
         loading:false,
         rightHeight: '',
@@ -272,21 +273,29 @@ var basRight = new Vue({
             var htmlUrl = 'metadata-prop-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '540px', function () {
                 basTop.getSelectValue();
-                console.log(basRight.currentVal);
-                proEm.addProForm.codeProInput=basRight.currentVal.propertyCode;   //代码
-                proEm.addProForm.nameProInput=basRight.currentVal.propertyName;   //名称
-                if(basRight.currentVal.wetherExpandPro=='true'){
-                    proEm.addProForm.checked=true;
-                    console.log(proEm.addProForm.checked)
-                }else{
-                    proEm.addProForm.checked=false;
-                }
-                proEm.$refs.contablefield.conTableFieldInput=basRight.currentVal.relateTableColumn ;  //关联表
+                //console.log(basRight.currentVal);
+                ////关联表字段
+                basRight.$http.jsonp(serverPath+'/businObjPro/queryById', {
+                    rowId:basRight.currentVal.rowId
+                }, {
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    console.log(res.data.data[0])
+                    proEm.addProForm.codeProInput=res.data.data[0].propertyCode;   //代码
+                    proEm.addProForm.nameProInput=res.data.data[0].propertyName;   //名称
+                    if(res.data.data[0].wetherExpandPro=='true'){
+                        proEm.addProForm.checked=true;
+                        console.log(proEm.addProForm.checked)
+                    }else{
+                        proEm.addProForm.checked=false;
+                    }
+                    proEm.$refs.contablefield.conTableFieldInput=res.data.data[0].relateTableColumn ;  //关联表
 
-                //修改值类型和值类型来源下拉框  jms 2017/8/21
-                proEm.$refs.vtype.value=basRight.currentVal.valueType   //值类型
-                proEm.$refs.vorigin.value=basRight.currentVal.valueResourceType;   //值类型来源
-                proEm.addProForm.comContent=basRight.currentVal.valueResourceContent;     //值来源内容
+                    //修改值类型和值类型来源下拉框  jms 2017/8/21
+                    proEm.$refs.vtype.value=res.data.data[0].valueType   //值类型
+                    proEm.$refs.vorigin.value=res.data.data[0].valueResourceType;   //值类型来源
+                    proEm.addProForm.comContent=res.data.data[0].valueResourceContent;     //值来源内容
+                });
             });
         },
         deleteProp(){
@@ -346,7 +355,10 @@ var basRight = new Vue({
         });
         $(window).resize(function () {
             basRight.rightHeight = $(window).height() - 194;
-        })
+        });
+        var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
+        TableKeyValueSet.init(args);
+
     },
     updated() {
         //if (this.tableData != null) {
