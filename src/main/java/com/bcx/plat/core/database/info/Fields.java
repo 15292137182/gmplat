@@ -1,19 +1,5 @@
 package com.bcx.plat.core.database.info;
 
-import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.morebatis.cctv1.ImmuteFieldInTable;
-import com.bcx.plat.core.morebatis.component.Field;
-import com.bcx.plat.core.morebatis.phantom.Column;
-import com.bcx.plat.core.morebatis.phantom.FieldInTable;
-import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.utils.TableAnnoUtil;
-import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-
 public class Fields {
 
 //  private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();

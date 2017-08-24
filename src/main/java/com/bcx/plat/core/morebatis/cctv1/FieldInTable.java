@@ -8,7 +8,7 @@ import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.LinkedList;
 
-public class FieldInTable implements TableSource,Column {
+public class FieldInTable implements com.bcx.plat.core.morebatis.phantom.FieldInTable{
 
   private Field field;
   private Table table;
@@ -29,7 +29,7 @@ public class FieldInTable implements TableSource,Column {
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
 //    return column.getColumnSqlFragment(translator);
-    return "\""+table.getTableName()+"\".\""+field.getFieldSource()+"\""+(field.getAlies()==null||field.getAlies().isEmpty()?"":" as \""+field.getAlies()+"\"");
+    return getFieldSource()+(field.getAlies()==null||field.getAlies().isEmpty()?"":" as \""+field.getAlies()+"\"");
 //    return getFieldSource();
   }
 
@@ -40,7 +40,7 @@ public class FieldInTable implements TableSource,Column {
 
   @Override
   public String getFieldSource() {
-    return field.getFieldSource();
+    return "\""+table.getTableName()+"\".\""+field.getFieldSource()+"\"";
   }
 
   @Override

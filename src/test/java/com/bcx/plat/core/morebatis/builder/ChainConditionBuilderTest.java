@@ -60,7 +60,7 @@ public class ChainConditionBuilderTest extends BaseTest {
   @Test
   public void conditionBuilder() {
     ConditionBuilder conditionBuilder = new ConditionBuilder(BusinessObjectPro.class).and()
-        .equal(BusinessObject.class, "rowId", objRowId).leftLike("propertyName", "1").endAnd();
+        .equal(BusinessObject.class, "rowId", objRowId).rightLike("propertyName", "1").endAnd();
     List<Map<String, Object>> result = moreBatis
         .select(BusinessObject.class, BusinessObjectPro.class, "rowId", "objRowId")
         .where(conditionBuilder.buildDone()).execute();

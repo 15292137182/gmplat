@@ -172,13 +172,17 @@ public class MoreBatis {
 
   public QueryAction select(Class<? extends BaseEntity> primary,
       Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary) {
-    HashSet<Column> columns = new HashSet<>();
-    columns.addAll(entityColumns.get(primary));
-    columns.addAll(entityColumns.get(secondary));
+    HashMap<String,Column> columns = new HashMap<>();
+    for (Column column : entityColumns.get(primary)) {
+      columns.put(column.getAlies(),column);
+    }
+    for (Column column : entityColumns.get(secondary)) {
+      columns.put(column.getAlies(),column);
+    }
     Column primaryField = getColumnByAlies(primary, relationPrimary);
     Column secondaryField = getColumnByAlies(secondary, relationSecondary);
-    return selectStatement().select(columns).from(
-        new JoinTable(entityTables.get(primary), JoinType.INNER_JOIN, entityTables.get(primary))
+    return selectStatement().select(columns.values()).from(
+        new JoinTable(entityTables.get(primary), JoinType.INNER_JOIN, entityTables.get(secondary))
             .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 

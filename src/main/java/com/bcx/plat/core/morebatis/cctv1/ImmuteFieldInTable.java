@@ -36,7 +36,7 @@ public class ImmuteFieldInTable implements FieldInTable {
 
   @Override
   public String getFieldSource() {
-    return tableSource.table.getTableName() +"."+ column.getFieldSource();
+    return column.getFieldSource();
   }
 
   @Override
