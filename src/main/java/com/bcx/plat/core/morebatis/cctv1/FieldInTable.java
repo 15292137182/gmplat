@@ -29,7 +29,8 @@ public class FieldInTable implements TableSource,Column {
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
 //    return column.getColumnSqlFragment(translator);
-    return getFieldSource();
+    return "\""+table.getTableName()+"\".\""+field.getFieldSource()+"\""+(field.getAlies()==null||field.getAlies().isEmpty()?"":" as \""+field.getAlies()+"\"");
+//    return getFieldSource();
   }
 
   @Override
@@ -39,7 +40,7 @@ public class FieldInTable implements TableSource,Column {
 
   @Override
   public String getFieldSource() {
-    return table.getTableName()+"."+field.getFieldSource();
+    return field.getFieldSource();
   }
 
   @Override
