@@ -50,33 +50,33 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         return Arrays.asList("funcCode", "funcName");
     }
 
-
-    /**
-     * 根据功能块rowId查找当前对象下的所有属性并分页显示
-     *
-     * @param args     按照空格查询
-     * @param pageNum  当前第几页
-     * @param pageSize 一页显示多少条
-     * @param request  request请求
-     * @param locale   国际化参数
-     * @return ServiceResult
-     */
-    //"[{\"str\":\"23\", \"num\":1},{\"str\":\"12\", \"num\":0},{\"str\":\"as\", \"num\":1}]"
-    @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId, String args,
-                               @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                               String orde,
-                               HttpServletRequest request, Locale locale) {
-        LinkedList<Order> orders = UtilsTool.dataSort(orde);
-        PageResult<Map<String, Object>> result =
-                frontFuncProService.select(
-                        new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)))
-                        , Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
-        result = queryResultProcess(result);
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
-    }
+//
+//    /**
+//     * 根据功能块rowId查找当前对象下的所有属性并分页显示
+//     *
+//     * @param args     按照空格查询
+//     * @param pageNum  当前第几页
+//     * @param pageSize 一页显示多少条
+//     * @param request  request请求
+//     * @param locale   国际化参数
+//     * @return ServiceResult
+//     */
+//    //"{\"str\":\"23\", \"num\":1}"
+//    @RequestMapping("/queryProPage")
+//    public Object queryProPage(String rowId, String args,
+//                               @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+//                               @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+//                               String orde,
+//                               HttpServletRequest request, Locale locale) {
+//        LinkedList<Order> orders = UtilsTool.dataSort(orde);
+//        PageResult<Map<String, Object>> result =
+//                frontFuncProService.select(
+//                        new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+//                                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)))
+//                        , Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
+//        result = queryResultProcess(result);
+//        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+//    }
 
     /**
      * TODO 这个方法后面会有用处

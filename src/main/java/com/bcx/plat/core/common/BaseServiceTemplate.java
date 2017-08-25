@@ -57,7 +57,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     private List<Order> emptyDefaultModifyTime(List<Order> orders){
-        return orders==null||orders.isEmpty()?defaultOrders:orders;
+        return orders;
     }
 
     final public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {

@@ -54,8 +54,10 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      * @return ServiceResult
      */
     @RequestMapping("/queryPageById")
-    public Object queryPageById(String args,String rowId,@RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
-                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
+    public Object queryPageById(String args,String rowId,
+                                @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
+                                @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (args ==null && args.isEmpty()){
             pageNum = 1;
