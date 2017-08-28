@@ -50,7 +50,7 @@ public class SequenceRuleConfigController extends
    * @param request 请求
    * @return 返回流水号的生成列表
    */
-    @RequestMapping("/mock")
+  @RequestMapping("/mock")
   public Object mockSequenceNo(HttpServletRequest request, Locale locale) {
     String _content = request.getParameter("content");
     PlatResult<List<String>> _sr = new PlatResult<>();
@@ -87,15 +87,17 @@ public class SequenceRuleConfigController extends
     String rowId = request.getParameter("rowId");
     String aimValue = request.getParameter("currentValue");
     String serialId = request.getParameter("serialId");
+    // 序列号的分支，你不传也没什么问题
+    String[] objectSigns = request.getParameterValues("objectSigns");
     PlatResult<List<String>> _sr = new PlatResult<>();
     if (isValid(rowId)) {
-      SequenceManager.getInstance().resetSequenceNo(rowId, serialId, Integer.parseInt(aimValue));
+      SequenceManager.getInstance().resetSequenceNo(rowId, serialId, Integer.parseInt(aimValue), objectSigns);
       _sr.setMsg("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);
       _sr.setMsg("INVALID_REQUEST");
     }
-    return super.result(request,ServiceResult.Msg(_sr), locale);
+    return super.result(request, ServiceResult.Msg(_sr), locale);
   }
 
   /**
@@ -121,6 +123,6 @@ public class SequenceRuleConfigController extends
     if (mapList.size() == 0) {
       return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
-    return super.result(request,ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,mapList)), locale);
+    return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList)), locale);
   }
 }

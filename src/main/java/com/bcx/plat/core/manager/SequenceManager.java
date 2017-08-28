@@ -171,8 +171,8 @@ public class SequenceManager {
       conditions.add(new FieldCondition("variableKey", Operator.EQUAL, getVariableKey(content)));
 
       StringBuilder os = new StringBuilder("");
-      if (null != objectSigns) {
-        for (String s : objectSigns) {
+      if (null != objSigns && objSigns.length != 0) {
+        for (String s : objSigns) {
           os.append("[").append(s).append("]");
         }
       }
