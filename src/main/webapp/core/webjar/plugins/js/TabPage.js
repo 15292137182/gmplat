@@ -1,4 +1,5 @@
 var pagingObj = (function(){//分页不跳转回第一页调该方法
+    /*tsj 17/08/28 修改后端返回结构*/
     var Example = function(url,args,pageSize,pageNum,obj,callback){
         $.ajax({
             url:url,
@@ -11,8 +12,8 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                console.log(res);
                 if(res.resp.respCode=="000"){
+                    console.log(res.resp.content.data.result);
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -582,7 +583,9 @@ var TableKeyValueSet = (function(){
                 dataType:"jsonp",
                 success:function(res){
                     var param={};
-                    var jsonStr=JSON.parse(res.data);
+                    // var jsonStr=JSON.parse(res.data);res.resp.content.data.result
+                    /*tsj 17/08/28 修改后端返回结构*/
+                    var jsonStr=JSON.parse(res.resp.content.data);
                     for(k in jsonStr){
                         var _param={};
                         for(m in jsonStr[k]){
