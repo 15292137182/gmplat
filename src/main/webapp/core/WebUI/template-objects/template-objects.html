@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        .el-select .el-input{
+            width:240px;
+        }
+        form  .el-input input{
+            width:240px;
+        }
+    </style>
+
+</head>
+<body>
+<!--搜索框 搜索按钮 所有事件按钮-->
+<div id="basTop">
+    <el-row type="flex" justify="end">
+        <el-col :span="24">
+            <el-button type="info" icon="plus" size="small" @click.native="addTemp">模板对象</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addTempProp" v-bind:disabled="addTempAttr">模板对象属性</el-button>
+        </el-col>
+    </el-row>
+</div>
+
+
+<!--左边的数据-->
+<el-col :span="8" id="basLeft" style="margin-left:15px">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color"><span>模板对象信息</span></div>
+            </el-col>
+        </el-row>
+        <el-row class="inputStyle">
+            <el-col :xs="18" :sm="18" :md="18">
+                <div>
+                    <el-input placeholder="请输入内容" v-model="leftInput" size="small">
+                        <el-button slot="append" icon="search" @click.native="searchLeftTable"></el-button>
+                    </el-input>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row style="padding:0 10px 10px 10px">
+            <el-col :span="24">
+                <template>
+                    <el-table :data="tableData" ref="tableData" highlight-current-row
+                              @row-click="currentChange" :height="leftHeight" border v-loading="loading"
+                              element-loading-text="加载中"
+                              @sort-change="headSort"
+                              class="tableStyle"
+                              style="width: 100%">
+                        <el-table-column type="expand">
+                            <template scope="props">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-row>
+                                        <el-col :span="16">
+                                            <el-form-item label="说明">
+                                                <span>{{ props.row.objectCode }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="8">
+                                            <el-form-item label="创建时间">
+                                                <span>{{ props.row.version }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="objectName" sortable="custom" label="名称" show-overflow-tooltip width="120"></el-table-column>
+                        <el-table-column prop="associatTable" label="代码" show-overflow-tooltip width=""></el-table-column>
+                        <el-table-column prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button @click.native="editEvent" type="text" size="small" icon="edit"
+                                           :disabled=scope.row.testDemo></el-button>
+                                <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"
+                                           :disabled=scope.row.testDemo></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                </template>
+                <el-row type="flex" justify="end" style="padding-top: 10px">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page.sync="pageNum"
+                            :page-sizes="[5,10,20]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next"
+                            :total="allDate">
+                    </el-pagination>
+                </el-row>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+
+
+<!--右边的数据-->
+<el-col :span="15" id="basRight" style="margin-left: 25px">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color"><span>模板对象属性</span></div>
+            </el-col>
+        </el-row>
+        <el-row class="inputStyle">
+            <el-col :xs="14" :sm="14" :md="14">
+                <div>
+                    <el-input placeholder="请输入内容" v-model="rightInput" size="small">
+                        <el-button slot="append" icon="search" @click.native="searchRightTable"></el-button>
+                    </el-input>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row style="padding:0px 10px 10px 10px">
+            <el-col :span="24">
+                <template>
+                    <el-table :data="tableData" :height="rightHeight" border ref="tableData" highlight-current-row
+                              v-loading="loading"
+                              element-loading-text="加载中" @sort-change="headSort"
+                              @row-click="currentRChange" class="tableStyle">
+
+                        <el-table-column type="expand">
+                            <template scope="props">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="代码">
+                                                <span>{{ props.row.propertyCode }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="属性英文名称">
+                                                <span>{{ props.row.valueResourceType }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column prop="propertyName" label="属性中文名称" sortable="custom" width="160"
+                                         show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="wetherExpandPro" label="值类型"  width="100"
+                                         show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="columnCname" label="默认值" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="" label="操作" width="100">
+                            <template scope="scope">
+                                <el-button @click.native="editProp" type="text" size="small" icon="edit"
+                                           :disabled=scope.row.testDemo></el-button>
+                                <el-button @click.native="deleteProp" type="text" size="small" icon="delete"
+                                           :disabled=scope.row.testDemo></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                <el-row type="flex" justify="end" style="padding-top: 10px">
+                    <div class="block">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page.sync="pageNum"
+                                :page-sizes="[5,10,20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="allDate">
+                        </el-pagination>
+                    </div>
+                </el-row>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+
+
+<script src="template-objects.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #addEvent .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="addEvent" style="margin-top:20px">
+    <el-form :label-position="labelPosition" label-width="100px"  :model="addTemp" ref='addTemp'
+             style="padding:0 20px" class="demo-ruleForm">
+        <el-form-item label="模板代码" prop="codeInput">
+            <el-input placeholder="模板代码" v-model="addTemp.codeInput" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="模板名称" prop="nameInput">
+            <el-input placeholder="请输入模板名称" v-model="addTemp.nameInput"></el-input>
+        </el-form-item>
+        <el-form-item label="说明" prop="comContent">
+            <el-input type="textarea" placeholder="请输入说明" v-model="addTemp.comContent"></el-input>
+        </el-form-item>
+
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="saveTemp">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancelTemp">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script src="template-add.html"></script>
+</body>
+</html>

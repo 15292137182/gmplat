@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #addEvent .el-row {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="addEventProp" style="margin-top:20px">
+    <el-form :label-position="labelPosition" label-width="100px"  :model="addTempProp" ref='addTempProp'
+             style="padding:0 20px" class="demo-ruleForm">
+        <el-form-item label="代码" prop="codeInput">
+            <el-input placeholder="代码" v-model="addTempProp.codeInput" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="英文名称" prop="engNameInput">
+            <el-input placeholder="请输入英文名称" v-model="addTempProp.engNameInput"></el-input>
+        </el-form-item>
+        <el-form-item label="中文名称" prop="chnNameInput">
+            <el-input placeholder="请输入中文名称" v-model="addTempProp.chnNameInput"></el-input>
+        </el-form-item>
+        <el-form-item label="值类型" prop="valueType">
+            <select-value ref="valueType"></select-value>
+        </el-form-item>
+        <el-form-item label="默认值" prop="default">
+            <el-input placeholder="请输入默认值" v-model="addTempProp.default"></el-input>
+        </el-form-item>
+        <el-form-item label="说明" prop="comContent">
+            <el-input type="textarea" placeholder="请输入说明" v-model="addTempProp.comContent"></el-input>
+        </el-form-item>
+
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="saveTempProp">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancelTempProp">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+
+<script src="template-add-prop.html"></script>
+</body>
+</html>
