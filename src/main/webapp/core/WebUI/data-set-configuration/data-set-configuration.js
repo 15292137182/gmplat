@@ -4,19 +4,15 @@
 //表格
 var dataSetConfig = new Vue({
     el:'#dataSetConfig',
-    data:{
+    data:getData.dataObj({
+        /**
+         * tsj 07/8/28 替换vue data
+         **/
         tableId:'dataSetConfig',
-        loading:true,
-        tableData:[],//table数据
-        input:'',//搜索框输入
-        Height:'',//表格高度
         rowObjId:'',//行内容ID
         rowObj:'',//行内容
         selUrl:serverPath+'/dataSetConfig/queryPage',//分页查询接口
-        allDate:0,//共多少条数据
-        pageSize:10,//每页显示多少条数据
-        pageNum:1//当前第几页
-    },
+    }),
     methods:{
         searchResTable(){//分页查询
             pagingObj.Example(this.selUrl,this.input, this.pageSize,this.pageNum,this);
@@ -81,49 +77,36 @@ var dataSetConfigButton = new Vue({
             });
         },
         editDataSetConfig(){//编辑
+            /**
+             * tsj 07/8/28 替换ajax方法，修改赋值
+             **/
             this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '500px',function(){
-                console.log(dataSetConfig.rowObjId);
-                dataSetConfigButton.$http.jsonp(serverPath+'/dataSetConfig/queryById',{
-                        rowId: dataSetConfig.rowObjId
-                    },{
-                        jsonp:'callback'
-                    }).then(function(res){
-                        console.log(res.data.data[0])
+                gmpAjax.showAjax(serverPath+'/dataSetConfig/queryById',{
+                    rowId: dataSetConfig.rowObjId
+                },function(res){
+                    var data =res.resp.content.data[0];
                     addDataSet.isEdit = true;
-                    addDataSet.formTable.datasetCode = res.data.data[0].datasetCode;
-                    addDataSet.formTable.nameInput =res.data.data[0].datasetName;
-                    //类型下拉框赋值修改  jms  2017/8/21
-                    addDataSet.$refs.dsctype.value = res.data.data[0].datasetType;
+                    addDataSet.formTable.datasetCode = data.datasetCode;
+                    addDataSet.formTable.nameInput =data.datasetName;
+                        //类型下拉框赋值修改  jms  2017/8/21
+                    addDataSet.$refs.dsctype.value = data.datasetType;
 
-                    addDataSet.formTable.content = res.data.data[0].datasetContent;
-                    addDataSet.formTable.desp = res.data.data[0].desp;
-                    addDataSet.formTable.version =res.data.data[0].version;
-                    })
-
-                //addDataSet.isEdit = true;
-                //addDataSet.formTable.datasetCode = dataSetConfig.rowObj.datasetCode;
-                //addDataSet.formTable.nameInput = dataSetConfig.rowObj.datasetName;
-                ////类型下拉框赋值修改  jms  2017/8/21
-                //addDataSet.$refs.dsctype.value = dataSetConfig.rowObj.datasetType;
-                //
-                //addDataSet.formTable.content = dataSetConfig.rowObj.datasetContent;
-                //addDataSet.formTable.desp = dataSetConfig.rowObj.desp;
-                //addDataSet.formTable.version = dataSetConfig.rowObj.version;
+                    addDataSet.formTable.content = data.datasetContent;
+                    addDataSet.formTable.desp = data.desp;
+                    addDataSet.formTable.version =data.version;
+                })
             });
         },
         deleteDataSetConfig(){//删除
             deleteObj.del(function(){
-                dataSetConfigButton.$http.jsonp(dataSetConfigButton.delUrl,{
+                /**
+                 * tsj 07/8/28 替换ajax方法
+                * */
+                gmpAjax.showAjax(dataSetConfigButton.delUrl,{
                     rowId:dataSetConfig.rowObjId
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
+                },function(res){
                     showMsg.MsgOk(dataSetConfig,res);
-                    if(res.data.state==1){
-                        queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
-                    }
-                },function(){
-                    showMsg.MsgError(dataSetConfig);
+                    queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
                 })
             })
         }

@@ -39,40 +39,34 @@ var addDataSet = new Vue({
             return true;
         },
         addSet(){//新增
-            this.$http.jsonp(this.addUrl,{
+            /**
+             * tsj 07/8/28 替换ajax方法，修改赋值
+             **/
+            gmpAjax.showAjax(addDataSet.addUrl,{
                 datasetName:this.formTable.nameInput,
                 datasetType:this.$refs.dsctype.value,
                 datasetContent:this.formTable.content,
                 desp:this.formTable.desp
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            },function(res){
                 showMsg.MsgOk(dataSetConfig,res);
-                if(res.data.state==1){
-                    ibcpLayer.Close(dataSetConfigButton.divIndex);
-                    queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
-                }
-            },function(){
-                showMsg.MsgError(dataSetConfig);
+                ibcpLayer.Close(dataSetConfigButton.divIndex);
+                queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig)
             })
         },
         editSet(){//编辑
-            this.$http.jsonp(this.editUrl,{
+            /**
+             * tsj 07/8/28 替换ajax方法，修改赋值
+             **/
+            gmpAjax.showAjax(addDataSet.editUrl,{
                 rowId:dataSetConfig.rowObjId,
                 datasetName:this.formTable.nameInput,
                 datasetType:this.$refs.dsctype.value,
                 datasetContent:this.formTable.content,
                 desp:this.formTable.desp
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            },function(res){
                 showMsg.MsgOk(dataSetConfig,res);
-                if(res.data.state==1){
-                    ibcpLayer.Close(dataSetConfigButton.divIndex);
-                    queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
-                }
-            },function(){
-                showMsg.MsgError(dataSetConfig);
+                ibcpLayer.Close(dataSetConfigButton.divIndex);
+                queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
             })
         },
         conformEvent(){//确定
