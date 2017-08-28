@@ -18,7 +18,6 @@ import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
@@ -48,7 +47,7 @@ public class UtilsTool {
   }
 
   public static boolean isValid(List list) {
-    return null != list && list.size()>0;
+    return null != list && list.size() > 0;
   }
 
 
@@ -118,7 +117,7 @@ public class UtilsTool {
    * json 转换为 Object
    *
    * @param json json
-   * @param <T> 类型
+   * @param <T>  类型
    * @return 返回类型
    */
   @SuppressWarnings("unchecked")
@@ -145,7 +144,7 @@ public class UtilsTool {
 
   /**
    * 将字符串从 指定字符 分割，返回为 Set 自带去重功能
-   *
+   * <p>
    * 自指定字符包括： 空白，（圆角和半角）逗号，句号
    *
    * @param str 字符串
@@ -164,7 +163,7 @@ public class UtilsTool {
    * 获取 class 内带有某注解的字段名称
    *
    * @param clazz class
-   * @param anno 注解 class
+   * @param anno  注解 class
    * @return 返回list
    */
   public static List<String> getAnnoFieldName(Class<?> clazz, Class<? extends Annotation> anno) {
@@ -187,14 +186,14 @@ public class UtilsTool {
    * 下划线转驼峰
    *
    * @param underline 下划线字符串
-   * @param bigCamel 是否大驼峰
+   * @param bigCamel  是否大驼峰
    * @return 返回字符串
    */
   public static String underlineToCamel(String underline, boolean bigCamel) {
     StringBuilder sb = new StringBuilder(underline);
     while (sb.indexOf("_") != -1) {
       sb.replace(sb.indexOf("_"), sb.indexOf("_") + 2,
-          (sb.charAt(sb.indexOf("_") + 1) + "").toUpperCase());
+              (sb.charAt(sb.indexOf("_") + 1) + "").toUpperCase());
     }
     if (bigCamel) {
       sb.replace(0, 1, (sb.charAt(0) + "").toUpperCase());
@@ -226,6 +225,7 @@ public class UtilsTool {
 
   /**
    * 将map中的键值对转换为一组and条件
+   *
    * @param args
    * @return
    */
@@ -242,8 +242,9 @@ public class UtilsTool {
 
   /**
    * 创建空格查询的查询条件
+   *
    * @param columns 列
-   * @param values 关键字
+   * @param values  关键字
    * @return
    */
   public static Or createBlankQuery(Collection<String> columns, Collection<String> values) {
@@ -258,6 +259,7 @@ public class UtilsTool {
 
   /**
    * 将下划线风格key的map转换为驼峰法则key的map
+   *
    * @param origin 输入的PageResult
    * @return
    */
@@ -268,10 +270,11 @@ public class UtilsTool {
 
   /**
    * 将下划线风格key的map转换为驼峰法则key的map
+   *
    * @param origin 输入MapList
    * @return
    */
-  final static public List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
+  static public List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
       HashMap<String, Object> out = new HashMap<>();
       for (Entry<String, Object> entry : row.entrySet()) {
@@ -281,30 +284,32 @@ public class UtilsTool {
     }).collect(Collectors.toList());
   }
 
-  final static public And excludeDeleted(Condition condition){
-    return new And(new Or(new FieldCondition("delete_flag",Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
-            new FieldCondition("delete_flag",Operator.IS_NULL,null)),condition);
+  static public And excludeDeleted(Condition condition) {
+    return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
+            new FieldCondition("delete_flag", Operator.IS_NULL, null)), condition);
   }
 
   /**
    * 获取属性代码字段信息
+   *
    * @param key 接受properties可以对应的key
    * @return 返回properies中value值
    */
-  final static public String loadProperties(String key) {
+  static public String loadProperties(String key) {
     Properties properties = new Properties();
     InputStream resourceAsStream = UtilsTool.class.getClassLoader()
             .getResourceAsStream("properties/sequence.properties");
     try {
       properties.load(resourceAsStream);
-      String propertys = properties.getProperty(key);
-      return propertys;
+      return properties.getProperty(key);
     } catch (IOException e) {
+      e.printStackTrace();
     } finally {
       if (resourceAsStream != null) {
         try {
           resourceAsStream.close();
         } catch (IOException e) {
+          e.printStackTrace();
         }
       }
     }
@@ -332,9 +337,9 @@ public class UtilsTool {
   }
 
 
-
   /**
-   *  版本号叠加升级
+   * 版本号叠加升级
+   *
    * @param version 接受版本号
    * @return
    */
@@ -352,17 +357,18 @@ public class UtilsTool {
         try {
           sum += Double.parseDouble(sb.toString());
         } catch (Exception e) {
+          e.printStackTrace();
         }
         sb = new StringBuffer();
         findUnm = false;
       }
     }
-    StringBuffer sf = new StringBuffer();
+    StringBuilder sf = new StringBuilder();
     String str = sum + "";
     String substring = str.substring(str.indexOf(".") + 1);
     if (substring.equals("0")) {
-      sf.append(str).append(".0").toString();
-      return sf+"";
+      sf.append(str).append(".0");
+      return sf + "";
     }
     return str + "";
   }
