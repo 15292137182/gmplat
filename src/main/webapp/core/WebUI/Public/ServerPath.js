@@ -49,5 +49,14 @@ function optimizationPath(path) {
 // 服務地址--头部--部署
 var serverHead = getBPBasePath();
 
+function getRootPath() {
+  var curWwwPath = window.document.location.href;
+  var pathName = window.document.location.pathname;
+  var pos = curWwwPath.indexOf(pathName);
+  var localhostPath = curWwwPath.substring(0, pos);
+  var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+  return (localhostPath + projectName);
+}
+
 //完整路径
-var serverPath = serverHead + "/gmplat/core";
+var serverPath = getRootPath() + "/core";
