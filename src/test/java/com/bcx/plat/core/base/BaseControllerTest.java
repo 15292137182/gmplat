@@ -3,6 +3,7 @@ package com.bcx.plat.core.base;
 import com.bcx.BaseTest;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.controller.BusinessObjectController;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.junit.Before;
@@ -70,11 +71,13 @@ public abstract class BaseControllerTest<T> extends BaseTest {
     StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
     sb.delete(0, sb.indexOf("{")).delete(sb.lastIndexOf("}") + 1, sb.length());
     // 客户端获得 serviceResult
-    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
-    List<Map<String,Object>> data = (List<Map<String,Object>> )serviceResult.getData();
+//    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+    PlatResult platResult = jsonToObj(sb.toString(), PlatResult.class);
+
+    List<Map<String,Object>> data = (List<Map<String,Object>> ) platResult.getData();
 
     logger.info("查询数据共"+data.size()+"条"+data);
-    assert (null != serviceResult && serviceResult.getState() == 1);
+    assert (null != platResult && platResult.getState() == 1);
   }
 
   /**
@@ -94,11 +97,11 @@ public abstract class BaseControllerTest<T> extends BaseTest {
     sb.delete(0, sb.indexOf("{"))
         .delete(sb.lastIndexOf("}") + 1, sb.length());
     // 客户端获得 serviceResult
-    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
-    Map data = (Map) serviceResult.getData();
+    PlatResult platResult = jsonToObj(sb.toString(), PlatResult.class);
+    Map data = (Map) platResult.getData();
     logger.info("新增数据"+data);
     newRowId = (String) data.get(rowId());
-    assert (null != serviceResult && serviceResult.getState() == 1);
+    assert (null != platResult && platResult.getState() == 1);
   }
 
   /**
@@ -118,9 +121,9 @@ public abstract class BaseControllerTest<T> extends BaseTest {
     sb.delete(0, sb.indexOf("{"))
         .delete(sb.lastIndexOf("}") + 1, sb.length());
     // 客户端获得 serviceResult
-    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
-    logger.info("修改数据"+serviceResult.getData());
-    assert (null != serviceResult && serviceResult.getState() == 1);
+    PlatResult platResult = jsonToObj(sb.toString(), PlatResult.class);
+    logger.info("修改数据"+platResult.getData());
+    assert (null != platResult && platResult.getState() == 1);
   }
 
 
@@ -139,9 +142,9 @@ public abstract class BaseControllerTest<T> extends BaseTest {
     sb.delete(0, sb.indexOf("{"))
         .delete(sb.lastIndexOf("}") + 1, sb.length());
     // 客户端获得 serviceResult
-    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
-    logger.info("删除数据"+serviceResult.getData());
-    assert (null != serviceResult && serviceResult.getState() == 1);
+    PlatResult platResult = jsonToObj(sb.toString(), PlatResult.class);
+    logger.info("删除数据"+platResult.getData());
+    assert (null != platResult && platResult.getState() == 1);
   }
 
 

@@ -10,6 +10,7 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class BusinessObjectProController extends
      * @return
      */
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
-        return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
+        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, msg,content));
     }
 
     /**
@@ -101,9 +102,9 @@ public class BusinessObjectProController extends
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
                         UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
         if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
 
@@ -122,6 +123,6 @@ public class BusinessObjectProController extends
         if (busiPro.size() == 0) {
             return super.delete(rowId, request, locale);
         }
-        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
     }
 }

@@ -4,6 +4,7 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.constants.SysMessage;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
@@ -15,6 +16,7 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.*;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,34 +55,50 @@ public class BusinessObjectController extends
         this.frontFuncProService = frontFuncProService;
         this.dbTableColumnService = dbTableColumnService;
     }
+
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
 
 
+//    /**
+//     * 根据业务对象rowId查询当前数据
+//     *
+//     * @param rowId     唯一标识
+//     * @param request  request请求
+//     * @param locale   国际化参数
+//     * @return ServiceResult
+//     */
+//    @RequestMapping("/queryById")
+//    @Override
+//    public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
+//
+//        List<Map<String, Object>> result = getEntityService()
+//                .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+//        String relateTableRowId = (String)result.get(0).get("relateTableRowId");
+//
+//        List<Map<String, Object>> rowId1 =
+//                maintDBTablesService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+//        for (Map<String ,Object> row :result){
+//           row.put("tableCname",rowId1.get(0).get("tableCname"));
+//        }
+//        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+//    }
+
     /**
      * 根据业务对象rowId查询当前数据
      *
-     * @param rowId     唯一标识
-     * @param request  request请求
-     * @param locale   国际化参数
+     * @param rowId   唯一标识
+     * @param request request请求
+     * @param locale  国际化参数
      * @return ServiceResult
      */
     @RequestMapping("/queryById")
     @Override
-    public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
-
-        List<Map<String, Object>> result = getEntityService()
-                .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        String relateTableRowId = (String)result.get(0).get("relateTableRowId");
-
-        List<Map<String, Object>> rowId1 =
-                maintDBTablesService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-        for (Map<String ,Object> row :result){
-           row.put("tableCname",rowId1.get(0).get("tableCname"));
-        }
-        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+    public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
+        ServiceResult result = getEntityService().queryById(rowId);
+        return super.result(request, result, locale);
     }
 
     /**
@@ -96,22 +114,22 @@ public class BusinessObjectController extends
     @RequestMapping("/queryPage")
     @Override
     public Object singleInputSelect(String args,
-                                    @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
-                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                    @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                     String order,
                                     HttpServletRequest request,
                                     Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (args ==null && args.isEmpty()){
+        if (args == null && args.isEmpty()) {
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = getEntityService()
-                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD),orders);
-        if (result.getResult().size()==0) {
-            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
+                .singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(args), pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD), orders);
+        if (result.getResult().size() == 0) {
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        for (Map<String,Object> rest : result.getResult()){
-            rest.put("testDemo",false);
+        for (Map<String, Object> rest : result.getResult()) {
+            rest.put("testDemo", false);
         }
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
@@ -125,7 +143,7 @@ public class BusinessObjectController extends
      * @return
      */
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
-        return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
+        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, msg, content));
     }
 
 
@@ -158,10 +176,10 @@ public class BusinessObjectController extends
                                     UtilsTool.collectToSet(args))).endOr().endAnd().buildDone()
                     , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
             if (result.getResult().size() == 0) {
-                return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
             }
             PageResult<Map<String, Object>> result1 = queryProPage(result);
-            return super.result(request, new ServiceResult<>(result1, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+            return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1)), locale);
         }
         result =
                 businessObjectProService.select(
@@ -169,19 +187,20 @@ public class BusinessObjectController extends
                                 .equal("objRowId", rowId).endAnd().buildDone()
                         , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
         if (result.getResult().size() == 0) {
-            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
         }
         PageResult<Map<String, Object>> result1 = queryProPage(result);
-        return super.result(request, new ServiceResult<>(result1, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1)), locale);
     }
 
     /**
      * 根据业务对象rowId查找当前对象下的所有属性
+     *
      * @param result result
      * @return
      */
-    private PageResult<Map<String, Object>> queryProPage(PageResult<Map<String, Object>> result){
-        Map<String, Object> map= new HashMap<>();
+    private PageResult<Map<String, Object>> queryProPage(PageResult<Map<String, Object>> result) {
+        Map<String, Object> map = new HashMap<>();
         for (Map<String, Object> rest : result.getResult()) {
             String relateTableColumn = (String) rest.get("relateTableColumn");
             List<Map<String, Object>> mapList = dbTableColumnService.select(new ConditionBuilder(DBTableColumn.class)
@@ -193,7 +212,7 @@ public class BusinessObjectController extends
         }
         for (Map<String, Object> rest : result.getResult()) {
             rest.put("testDemo", false);
-            rest.put("columnCname",map.get(rest.get("relateTableColumn")));
+            rest.put("columnCname", map.get(rest.get("relateTableColumn")));
         }
         return result;
     }
@@ -213,7 +232,7 @@ public class BusinessObjectController extends
         List<String> row = list.stream().map((rowIds) -> {
             return (String) rowIds.get("changeOperat");
         }).collect(Collectors.toList());
-        if (UtilsTool.isValid(rowId)&&row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
+        if (UtilsTool.isValid(rowId) && row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
             List<Map<String, Object>> mapList =
                     getEntityService().select(new FieldCondition("rowId", Operator.EQUAL, rowId));
             Map<String, Object> objectMap = mapList.get(0);
@@ -225,26 +244,26 @@ public class BusinessObjectController extends
             businessObject.setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
             businessObject.buildCreateInfo();
             //获取当前版本号
-            String version = (String)mapList.get(0).get("version");
+            String version = (String) mapList.get(0).get("version");
             //转换为double类型
             double dou = new Double(version).doubleValue();
             //++当前版本号
-            String  str = ++dou+"";
+            String str = ++dou + "";
             // TODO 设置版本号 先++
             businessObject.setVersion(str);
-            String objectCode = (String)mapList.get(0).get("objectCode");
+            String objectCode = (String) mapList.get(0).get("objectCode");
             businessObject.setObjectCode(objectCode);
             getEntityService().insert(businessObject.toMap());
             logger.info("复制业务对象数据成功");
 
             oldRowId.put("rowId", rowId);
-            oldRowId.put("status",BaseConstants.INVALID);
+            oldRowId.put("status", BaseConstants.INVALID);
             oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
             logger.info("修改变更状态成功");
             getEntityService().update(oldRowId);
-            return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS), locale);
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS)), locale);
         }
-        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL), locale);
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL)), locale);
     }
 
     /**
@@ -265,7 +284,7 @@ public class BusinessObjectController extends
             String rowId1 = (String) busin.get("rowId");
             List<Map<String, Object>> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
             if (funcRowId.size() != 0) {
-                return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
+                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
             }
         }
         if (businObj.size() == 0) {
@@ -279,7 +298,7 @@ public class BusinessObjectController extends
             }
             return super.delete(rowId, request, locale);
         }
-        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
     }
 
 
@@ -297,8 +316,8 @@ public class BusinessObjectController extends
         List<Map<String, Object>> results = maintDBTablesService
                 .select(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
-                        , new Field("table_cname", "tableCname")
-                        , new Field("table_schema", "tableSchema")),null);
+                                , new Field("table_cname", "tableCname")
+                                , new Field("table_schema", "tableSchema")), null);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
 //            map.put((String) row.get("rowId"), row.get("tableSchema") + "(" + row.get("tableCname") + ")");

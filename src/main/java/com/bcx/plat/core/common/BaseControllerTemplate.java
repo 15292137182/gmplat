@@ -9,6 +9,7 @@ import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 
@@ -58,7 +59,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = entityService.select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str)));
         if (result.size()==0) {
-            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL),locale);
+            return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)),locale);
         }
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
@@ -77,9 +78,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
                 .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         result = queryResultProcess(result);
         if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
     /**
@@ -116,7 +117,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object select(Map<String, Object> args, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = entityService.select(args);
         if (result.size()==0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
@@ -151,7 +152,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object insert(Y entity, HttpServletRequest request, Locale locale) {
         int insert = entityService.insert(entity.buildCreateInfo().toMap());
         if (insert!=1) {
-            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL),locale);
+            return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL)),locale);
         }
         return super.result(request, commonServiceResult(entity, Message.NEW_ADD_SUCCESS), locale);
     }
@@ -169,7 +170,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object update(Y entity, HttpServletRequest request, Locale locale) {
         int update = entityService.update(entity.buildModifyInfo().toMap());
         if (update!=1) {
-            return super.result(request,ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL),locale);
+            return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL)),locale);
         }
         return super.result(request, commonServiceResult(entity, Message.UPDATE_SUCCESS), locale);
     }
@@ -190,7 +191,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
             entityService.delete(args);
             return super.result(request, commonServiceResult(rowId, Message.DELETE_SUCCESS), locale);
         }
-        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL,Message.DELETE_FAIL), locale);
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.DELETE_FAIL)), locale);
 
     }
 
@@ -221,7 +222,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return
      */
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
-        return new ServiceResult<>(content, BaseConstants.STATUS_SUCCESS, msg);
+        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, msg,content));
     }
 
 

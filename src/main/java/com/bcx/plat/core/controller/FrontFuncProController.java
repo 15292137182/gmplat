@@ -13,6 +13,7 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 
@@ -69,9 +70,9 @@ public class FrontFuncProController extends
                         UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
         result = queryResultProcess(result);
         if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
 
@@ -97,7 +98,7 @@ public class FrontFuncProController extends
                                 UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(args)))
                         ,Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         result = queryResultProcess(result);
-        return result(request, new ServiceResult<>(result, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
 

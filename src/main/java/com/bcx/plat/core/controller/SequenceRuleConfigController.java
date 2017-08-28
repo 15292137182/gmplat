@@ -10,6 +10,7 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.SequenceGenerateService;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +53,7 @@ public class SequenceRuleConfigController extends
     @RequestMapping("/mock")
   public Object mockSequenceNo(HttpServletRequest request, Locale locale) {
     String _content = request.getParameter("content");
-    ServiceResult<List<String>> _sr = new ServiceResult<>();
+    PlatResult<List<String>> _sr = new PlatResult<>();
     if (isValid(_content)) {
       _sr.setState(STATUS_SUCCESS);
       String _args = request.getParameter("args");
@@ -66,12 +67,12 @@ public class SequenceRuleConfigController extends
       int num = _num.matches("^\\d+$") ? Integer.parseInt(_num) : 5;
       List<String> strings = SequenceManager.getInstance().mockSequenceNo(_content, map, num);
       _sr.setData(strings);
-      _sr.setMessage("OPERATOR_SUCCESS");
+      _sr.setMsg("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);
-      _sr.setMessage("INVALID_REQUEST");
+      _sr.setMsg("INVALID_REQUEST");
     }
-    return super.result(request, _sr, locale);
+    return super.result(request, ServiceResult.Msg(_sr), locale);
   }
 
   /**
@@ -86,15 +87,15 @@ public class SequenceRuleConfigController extends
     String rowId = request.getParameter("rowId");
     String aimValue = request.getParameter("currentValue");
     String serialId = request.getParameter("serialId");
-    ServiceResult<List<String>> _sr = new ServiceResult<>();
+    PlatResult<List<String>> _sr = new PlatResult<>();
     if (isValid(rowId)) {
       SequenceManager.getInstance().resetSequenceNo(rowId, serialId, Integer.parseInt(aimValue));
-      _sr.setMessage("OPERATOR_SUCCESS");
+      _sr.setMsg("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);
-      _sr.setMessage("INVALID_REQUEST");
+      _sr.setMsg("INVALID_REQUEST");
     }
-    return super.result(request, _sr, locale);
+    return super.result(request,ServiceResult.Msg(_sr), locale);
   }
 
   /**
@@ -118,8 +119,8 @@ public class SequenceRuleConfigController extends
       maplists.put("currenValue", currentValue);
     }
     if (mapList.size() == 0) {
-      return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL), locale);
+      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
-    return super.result(request, new ServiceResult(mapList, BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS), locale);
+    return super.result(request,ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,mapList)), locale);
   }
 }

@@ -3,10 +3,13 @@ package com.bcx.plat.core.base;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,17 +42,22 @@ public class BaseController {
    * @return 返回
    */
   protected Object result(HttpServletRequest request, ServiceResult serviceResult, Locale locale) {
+    Map map = new HashMap();
+    String msg = serviceResult.getContent().getMsg();
+
     if (null != serviceResult) {
-      String message = messageSource.getMessage(serviceResult.getMessage(), null, locale);
+      String message = messageSource.getMessage(msg, null, locale);
       if (isValid(message)) {
-        serviceResult.setMessage(message);
+        serviceResult.getContent().setMsg(message);
+        map.put("resp",serviceResult);
       }
       if (isValid(request.getParameter("callback"))) {
-        MappingJacksonValue value = new MappingJacksonValue(serviceResult);
+        map.put("resp",serviceResult);
+        MappingJacksonValue value = new MappingJacksonValue(map);
         value.setJsonpFunction(request.getParameter("callback"));
         return value;
       }
     }
-    return serviceResult;
+    return map;
   }
 }

@@ -4,6 +4,7 @@ import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 
 import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
@@ -30,31 +31,32 @@ public class SystemController extends BaseController {
    */
   @RequestMapping("/login")
   public ServiceResult login(HttpServletRequest request) {
-    ServiceResult sr = new ServiceResult();
+    PlatResult platResult = new PlatResult();
     String userId = request.getParameter("username");
     String password = request.getParameter("password");
     UsernamePasswordToken token = new UsernamePasswordToken(userId, password);
     Subject subject = SecurityUtils.getSubject();
-    sr.setState(STATUS_FAIL);
+    platResult.setState(STATUS_FAIL);
     // 开始登陆认证
     try {
       subject.login(token);
-      sr.setState(STATUS_SUCCESS);
-      sr.setMessage("登陆成功！");
+      platResult.setState(STATUS_SUCCESS);
+      platResult.setMsg("登陆成功！");
     } catch (IncorrectCredentialsException e) {
-      sr.setMessage("帐号密码不匹配 ~");
-      logger.warn(sr.getMessage() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      platResult.setMsg("帐号密码不匹配 ~");
+      logger.warn(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     } catch (DisabledAccountException e) {
-      sr.setMessage("帐号已被禁用 ~ ");
-      logger.warn(sr.getMessage() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      platResult.setMsg("帐号已被禁用 ~ ");
+      logger.warn(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     } catch (UnknownAccountException e) {
-      sr.setMessage("账号不存在 ~ ");
-      logger.warn(sr.getMessage() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      platResult.setMsg("账号不存在 ~ ");
+      logger.warn(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     } catch (Exception e) {
-      sr.setMessage("系统内部响应异常，请稍后重试 ~ ");
-      logger.error(sr.getMessage() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      platResult.setMsg("系统内部响应异常，请稍后重试 ~ ");
+      logger.error(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     }
-    return sr;
+
+    return ServiceResult.Msg(platResult);
   }
 
 }
