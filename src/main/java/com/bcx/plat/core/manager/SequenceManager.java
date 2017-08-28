@@ -59,6 +59,8 @@ public class SequenceManager {
   private Map<String, Integer> keys;
   private Map<String, Object> branchValues;
   private String content;
+  // 对象集合标记
+  private String[] objectSigns;
 
 
   private static class SequenceManagerHolder {
@@ -87,8 +89,8 @@ public class SequenceManager {
    * @param args         参数map
    * @return 返回信息
    */
-  public String buildSequenceNo(String sequenceCode, Map<String, Object> args) {
-    List<String> strings = produceSequenceNo(sequenceCode, args, 1, false);
+  public String buildSequenceNo(String sequenceCode, Map<String, Object> args, String... objSigns) {
+    List<String> strings = produceSequenceNo(sequenceCode, args, 1, false, objSigns);
     if (strings.size() == 1) {
       return strings.get(0);
     }
@@ -107,7 +109,7 @@ public class SequenceManager {
    * @param serialId   需要重置的序列号key，若只有一个可以传 null
    * @param startValue 目标值
    */
-  public int resetSequenceNo(String rowId, String serialId, int startValue) {
+  public int resetSequenceNo(String rowId, String serialId, int startValue, String... objSigns) {
     if (isValid(rowId)) {
       List<Map<String, Object>> ruleConfigs = moreBatis.select(SequenceRuleConfig.class)
               .where(new FieldCondition("rowId", Operator.EQUAL, rowId))
@@ -132,7 +134,7 @@ public class SequenceManager {
             throwError("带有变量的的序列号不能被重置！");
           } else {
             // 重置这个流水号
-            return setDBSerialValue(rowId, matcherContent, startValue);
+            return setDBSerialValue(rowId, matcherContent, startValue, objSigns);
           }
         } else if (isValid(serialId)) {
           // 找到带有该键值的模块
@@ -142,7 +144,7 @@ public class SequenceManager {
             throwError("没有在序列号(rowId)：%s 中找到指定的序列号键值：%s！", rowId, serialId);
           } else {
             String module = matcher1.group();
-            return setDBSerialValue(rowId, module, startValue);
+            return setDBSerialValue(rowId, module, startValue, objSigns);
           }
         } else {
           throwError("多序列号重置需要指定序列号的键值！");
@@ -162,11 +164,20 @@ public class SequenceManager {
    * @param aimValue 目标值
    * @return 返回操作类型状态
    */
-  private int setDBSerialValue(String seqRowId, String content, int aimValue) {
+  private int setDBSerialValue(String seqRowId, String content, int aimValue, String... objSigns) {
     if (String.valueOf(aimValue).length() <= getVariableLength(content)) {
       List<Condition> conditions = new ArrayList<>();
       conditions.add(new FieldCondition("seqRowId", Operator.EQUAL, seqRowId));
       conditions.add(new FieldCondition("variableKey", Operator.EQUAL, getVariableKey(content)));
+
+      StringBuilder os = new StringBuilder("");
+      if (null != objectSigns) {
+        for (String s : objectSigns) {
+          os.append("[").append(s).append("]");
+        }
+      }
+      conditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os));
+
       List<Map<String, Object>> result = moreBatis.select(SequenceGenerate.class)
               .where(new And(conditions)).execute();
       if (result.size() == 1) {
@@ -253,11 +264,16 @@ public class SequenceManager {
    * @return 返回生成的序列号模块
    */
   public List<String> produceSequenceNo(String sequenceCode, Map<String, Object> args, int num,
-                                        boolean test, String... strings) {
+                                        boolean test, String... objSigns) {
     List<String> result = new ArrayList<>();
     if (init()) {
       SequenceRuleConfig ruleConfig = getRuleConfig(sequenceCode);
       if (null != ruleConfig) {
+        // 存储对象标记
+        if (null != objSigns && objSigns.length != 0) {
+          this.objectSigns = objSigns;
+        }
+
         String[] modules = ruleConfig.getSeqContent().split("&&");
         // 解析之后存储数据
         Map<String, Object> rm = new HashMap<>();
@@ -306,6 +322,8 @@ public class SequenceManager {
           }
         }
         while (num-- != 0) {
+          // 解析流水号
+          // 增加对象序列支持
           analysisSerialNo(ruleConfig, serialMap, rm);
           StringBuilder sb = new StringBuilder();
           for (String modular : modules) {
@@ -385,6 +403,15 @@ public class SequenceManager {
       fieldConditions
               .add(new FieldCondition("branchSign", Operator.EQUAL,
                       isValid(branchValues.get(variableKey)) ? branchValues.get(variableKey).toString() : ""));
+      // 检查对象标记是否存在
+      StringBuilder os = new StringBuilder("");
+      if (null != objectSigns) {
+        for (String s : objectSigns) {
+          os.append("[").append(s).append("]");
+        }
+      }
+      fieldConditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os.toString()));
+
       List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
               .where(new And(fieldConditions)).execute();
       if (list.size() == 1) {
@@ -448,6 +475,15 @@ public class SequenceManager {
         fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
         String branchSign = branchValues.get(variableKey) == null ? "" : branchValues.get(variableKey).toString();
         fieldConditions.add(new FieldCondition("branchSign", Operator.EQUAL, branchSign));
+
+        StringBuilder os = new StringBuilder("");
+        if (null != objectSigns) {
+          for (String s : objectSigns) {
+            os.append("[").append(s).append("]");
+          }
+        }
+        fieldConditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os));
+
         List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
                 .where(new And(fieldConditions)).execute();
         SequenceGenerate sg = new SequenceGenerate();
@@ -456,6 +492,7 @@ public class SequenceManager {
           sg.setVariableKey(variableKey);
           sg.setCurrentValue(keys.get(variableKey).toString());
           sg.setBranchSign(branchSign);
+          sg.setObjectSigns(os.toString());
           sg.buildCreateInfo();
           moreBatis.insertEntity(sg);
         } else {
@@ -471,6 +508,7 @@ public class SequenceManager {
     keys = null;
     branchValues = null;
     content = null;
+    objectSigns = null;
     System.gc();
   }
 
