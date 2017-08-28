@@ -495,7 +495,7 @@ var SelectOptions = (function(){
                     this.$http.jsonp(_path, param, {
                         jsonp: 'callback'
                     }).then(function (res) {
-                        this.list=res.data.data;
+                        this.list=res.data.resp.content.data;
                         this.options=this.list;
                     });
                 }
@@ -535,7 +535,7 @@ var SelectOptions = (function(){
                     this.$http.jsonp(path, param, {
                         jsonp: 'callback'
                     }).then(function (res) {
-                        this.list=res.data.data;
+                        this.list=res.data.resp.content.data;
                         this.options=this.list;
                     });
                 }
