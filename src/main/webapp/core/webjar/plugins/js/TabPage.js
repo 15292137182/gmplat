@@ -11,11 +11,12 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                if(res.data!=null){
-                    dataConversion.conversion(obj,res.data.result);
-                    obj.tableData = res.data.result;//数据源
-                    obj.allDate = Number(res.data.total);//总共多少条数据
-                    obj.pageNum = res.data.pageNum;//当前页
+                console.log(res);
+                if(res.resp.respCode=="000"){
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                    obj.pageNum = res.resp.content.data.pageNum;//当前页
                 }else{
                     obj.tableData = [];
                 }
@@ -42,11 +43,11 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                if(res.data!=null){
-                    dataConversion.conversion(obj,res.data.result);
-                    obj.tableData = res.data.result;//数据源
-                    obj.allDate = Number(res.data.total);//总共多少条数据
-                    obj.pageNum = res.data.pageNum;//定位到当前页
+                if(res.resp.respCode=="000"){
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                    obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
                 }else{
                     obj.tableData = [];
                 }
@@ -88,10 +89,10 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             success:function(res){
                 console.log(res.data.result);
                 obj.loading=false;
-                if(res.data!=null){
-                    dataConversion.conversion(obj,res.data.result);
-                    obj.tableData = res.data.result;//数据源
-                    obj.allDate = Number(res.data.total);//总共多少条数据
+                if(res.resp.respCode=="000"){
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
@@ -133,10 +134,10 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                if(res.data!=null){
-                    dataConversion.conversion(obj,res.data.result);
-                    obj.tableData = res.data.result;//数据源
-                    obj.allDate = Number(res.data.total);//总共多少条数据
+                if(res.resp.respCode=="000"){
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
@@ -180,10 +181,10 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             success:function(res){
                 console.log(res.data.result);
                 obj.loading=false;
-                if(res.data!=null){
-                    dataConversion.conversion(obj,res.data.result);
-                    obj.tableData = res.data.result;//数据源
-                    obj.allDate = Number(res.data.total);//总共多少条数据
+                if(res.resp.respCode=="000"){
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
                 }else{
                     obj.tableData = [];
@@ -278,11 +279,11 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
                 success:function(res){
                     obj.loading=false;
                     console.log(res);
-                    if(res.data!=null){
-                        dataConversion.conversion(obj,res.data.result);
-                        obj.tableData = res.data.result;//数据源
-                        obj.allDate = Number(res.data.total);//总共多少条数据
-                        obj.pageNum = res.data.pageNum;//当前页
+                    if(res.resp.respCode=="000"){
+                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        obj.tableData = res.resp.content.data.result;//数据源
+                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                        obj.pageNum = res.resp.content.data.pageNum;//当前页
                     }else{
                         obj.tableData = [];
                     }
@@ -311,11 +312,11 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
             success:function(res){
                 obj.loading=false;
                 console.log(res);
-                if(res.data!=null){
-                    dataConversion.conversion(obj,res.data.result);
-                    obj.tableData = res.data.result;//数据源
-                    obj.allDate = Number(res.data.total);//总共多少条数据
-                    obj.pageNum = res.data.pageNum;//当前页
+                if(res.resp.respCode=="000"){
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                    obj.pageNum = res.resp.content.data.pageNum;//当前页
                 }else{
                     obj.tableData = [];
                 }
@@ -378,16 +379,18 @@ var editObj = (function(){
 })()
 
 var showMsg = (function(){
-    var MsgOk = function(obj,msg){
+    var MsgOk = function(obj,data){
+        console.log(data.resp.respCode);
+        //console.log(data.resp.content.msg);
         //obj：需要弹出消息页面的Vue实例对象
         //msg：ajax成功后返回的res
-        if(msg.data.state==1){//操作成功
+        if(data.resp.respCode=="000"){//操作成功
             obj.$message({
-                message: msg.message,
+                message: data.resp.content.msg,
                 type: 'success'
             })
         }else{
-            obj.$message.error(msg.message);
+            obj.$message.error(data.resp.content.msg);
         }
     }
     var MsgError = function(obj){

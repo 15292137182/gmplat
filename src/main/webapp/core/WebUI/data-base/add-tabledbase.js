@@ -18,37 +18,29 @@ var tableBase = new Vue({
     methods:{
         //新增
         addTableBase(){
-            this.$http.jsonp(this.url,{
-                tableSchema:this.formTable.name,
-                tableEname:this.formTable.Ename,
-                tableCname:this.formTable.Cname,
-                desp:this.formTable.desp
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            gmpAjax.showAjax(tableBase.url,{
+                    tableSchema:this.formTable.name,
+                    tableEname:this.formTable.Ename,
+                    tableCname:this.formTable.Cname,
+                    desp:this.formTable.desp
+                },function(res){
                 showMsg.MsgOk(dataBase,res);
-                queryData.getData(dataBase.url,dataBase.input,dataBase)
+                queryData.getData(dataBase.url,dataBase.input,dataBase);
                 ibcpLayer.Close(topButtonObj.divIndex);
-            },function(){
-                showMsg.MsgError(dataBase);
             })
         },
         //编辑
         editTbleBase(rowId){
-            this.$http.jsonp(this.editUrl,{
+            gmpAjax.showAjax(tableBase.editUrl,{
                 rowId:rowId,
                 tableSchema:this.formTable.name,
                 tableEname:this.formTable.Ename,
                 tableCname:this.formTable.Cname,
                 desp:this.formTable.desp
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            },function(res){
                 showMsg.MsgOk(dataBase,res);
-                queryData.getData(dataBase.url,dataBase.input,dataBase)
+                queryData.getData(dataBase.url,dataBase.input,dataBase);
                 ibcpLayer.Close(dataBase.editdivIndex);
-            },function(){
-                showMsg.MsgError(dataBase);
             })
         },
         isNull(){

@@ -15,38 +15,28 @@ var addInlayerData = new Vue({
     },
     methods:{
         addTable(){//新增
-            this.$http.jsonp(this.addUrl,{
+            gmpAjax.showAjax(addInlayerData.addUrl,{
                 relateTableRowId:DatabaseDetails.Robj.rowId,
-                columnCname:this.Inlayer.Cname,
-                columnEname:this.Inlayer.Ename,
-                desp:this.Inlayer.desp,
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+                    columnCname:addInlayerData.Inlayer.Cname,
+                    columnEname:addInlayerData.Inlayer.Ename,
+                    desp:addInlayerData.Inlayer.desp,
+            },function(res){
                 showMsg.MsgOk(DatabaseDetails,res);
-                //DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
                 queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
-                this.cancel();
-            },function(){
-                alert("错误")
+                addInlayerData.cancel();
             })
         },
         editTable(){//编辑
-            this.$http.jsonp(this.editUrl,{
+            gmpAjax.showAjax(addInlayerData.editUrl,{
                 relateTableRowId:DatabaseDetails.Robj.rowId,
                 rowId:DatabaseDetails.rowObj.rowId,
                 columnCname:this.Inlayer.Cname,
                 columnEname:this.Inlayer.Ename,
                 desp:this.Inlayer.desp,
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            },function(res){
                 showMsg.MsgOk(DatabaseDetails,res);
-                //DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
                 queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
-                this.cancel();
-            },function(){
-                alert("错误")
+                addInlayerData.cancel();
             })
         },
         isNull(){//非空验证

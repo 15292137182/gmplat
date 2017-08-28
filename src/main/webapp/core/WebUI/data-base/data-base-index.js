@@ -6,20 +6,6 @@
  */
 var dataBase = new Vue({
     el:"#app",
-    // data:{
-    //     loading:true,
-    //     input:'',
-    //     tableData:[],
-    //     leftHeight:'',
-    //     rowObj:'',
-    //     divIndex:'',
-    //     editdivIndex:'',
-    //     url:serverPath+'/maintTable/queryPage',
-    //     delUrl:serverPath+'/maintTable/delete',
-    //     pageSize:10,//每页显示多少条
-    //     pageNum:1,//第几页
-    //     allDate:0//共多少条
-    // },
     data:getData.dataObj({
                     "rowObj":'',
                     "divIndex":'',
@@ -43,7 +29,6 @@ var dataBase = new Vue({
         handleClick(){//查看明细
             this.divIndex = ibcpLayer.ShowDiv('data-base.html','表字段信息','700px', '500px',function(){
                 DatabaseDetails.Robj = dataBase.rowObj;
-                // DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
                 DatabaseDetails.selDatas();
             })
         },
@@ -64,16 +49,6 @@ var dataBase = new Vue({
                     showMsg.MsgOk(dataBase,res);
                     queryData.getData(dataBase.url,dataBase.input,dataBase)
                 })
-                // dataBase.$http.jsonp(dataBase.delUrl,{
-                //     rowId:dataBase.rowObj.rowId
-                // },{
-                //     jsonp:'callback'
-                // }).then(function(res){
-                //     showMsg.MsgOk(dataBase,res);
-                //     queryData.getData(dataBase.url,this.input,this)
-                // },function(){
-                //     showMsg.MsgError(dataBase);
-                // })
             })
         },
         handleSizeChange(val){//每页显示多少条

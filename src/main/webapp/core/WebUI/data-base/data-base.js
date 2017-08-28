@@ -24,32 +24,14 @@ var myInlayerButton = new Vue({
 
 var DatabaseDetails = new Vue({
     el:'#right',
-    data:{
-        tableData:[],
-        //rightHeight:'',
-        Robj:'',
-        url:serverPath+'/dbTableColumn/queryTabById',
-        selUrl:serverPath+'/dbTableColumn/queryPageById',//分页查询
-        delUrl:serverPath+'/dbTableColumn/delete',//删除
-        rowObj:'',
-        input:'',
-        pageSize:10,//每页显示多少条
-        pageNum:1,//第几页
-        allDate:0//共多少条
-    },
+    data:getData.dataObj({
+            Robj:'',
+            rowObj:'',
+            url:serverPath+'/dbTableColumn/queryTabById',
+            selUrl:serverPath+'/dbTableColumn/queryPageById',//分页查询
+            delUrl:serverPath+'/dbTableColumn/delete',//删除
+             }),
     methods:{
-        FindData(id){
-            this.$http.jsonp(DatabaseDetails.url,{
-                "args":'',
-                "rowId":id
-            },{
-                jsonp:'callback'
-            }).then(function (res) {
-                if(res.data.data!=null){
-                    this.tableData=res.data.data;
-                }
-            })
-        },
         selDatas(){
             pagingObj.Examples(DatabaseDetails.selUrl,DatabaseDetails.Robj.rowId,DatabaseDetails.input,DatabaseDetails.pageSize,DatabaseDetails.pageNum,DatabaseDetails)
         },
@@ -69,16 +51,9 @@ var DatabaseDetails = new Vue({
         },
         delInlayerTableBase(){
             deleteObj.del(function(){
-                DatabaseDetails.$http.jsonp(DatabaseDetails.delUrl,{
-                    rowId:DatabaseDetails.rowObj.rowId
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
+                gmpAjax.showAjax(DatabaseDetails.delUrl,{rowId:DatabaseDetails.rowObj.rowId},function(res){
                     showMsg.MsgOk(dataBase,res);
-                    //DatabaseDetails.FindData(DatabaseDetails.Robj.rowId);
-                    queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails)
-                },function(){
-                    showMsg.MsgError(dataBase);
+                    queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
                 })
             })
         },
