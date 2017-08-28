@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/core/maintTable")
 public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTablesService,MaintDBTables>{
 
-    private final BusinessObjectService businessObjectService;
-    private final DBTableColumnService dbTableColumnService;
+    private BusinessObjectService businessObjectService;
+    private DBTableColumnService dbTableColumnService;
 
     @Autowired
     public MaintDBTablesController(BusinessObjectService businessObjectService, DBTableColumnService dbTableColumnService) {
@@ -43,33 +43,6 @@ public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTable
         return Arrays.asList("tableSchema","tableEname","tableCname");
     }
 
-//    /**
-//     * 通用删除方法
-//     *
-//     * @param rowId   按照rowId查询
-//     * @param request request请求
-//     * @param locale  国际化参数
-//     * @return
-//     */
-//    @RequestMapping("/delete")
-//    @Override
-//    public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("relateTableRowId", rowId);
-//        List<Map<String, Object>> tableRowId = businessObjectService.select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
-//        if (tableRowId.size() == 0) {
-//            List<Map<String, Object>> list = dbTableColumnService
-//                    .select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
-//            if (UtilsTool.isValid(list)) {
-//                List<String> rowIds = list.stream().map((row) -> {
-//                    return (String) row.get("rowId");
-//                }).collect(Collectors.toList());
-//                dbTableColumnService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
-//            }
-//            return super.delete(rowId, request, locale);
-//        }
-//        return super.result(request, ServiceResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE), locale);
-//    }
     /**
      * 通用删除方法
      *

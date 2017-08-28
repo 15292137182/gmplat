@@ -1,8 +1,5 @@
 package com.bcx.plat.core.utils;
 
-import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.constants.Message;
-
 /**
  * <p>Title: PlatResult</p>
  * <p>Description: the is PlatResult</p>

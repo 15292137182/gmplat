@@ -30,17 +30,12 @@ import java.util.stream.Collectors;
 public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
     private final Class entityClass = (Class) ((ParameterizedType) this.getClass()
             .getGenericSuperclass()).getActualTypeArguments()[0];
+
     private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
     private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
-    private static final List<Order> defaultOrders=new LinkedList<>();
-    static {
-        defaultOrders.add(new Order(new Field("modify_time"),Order.DESC));
-    }
-    /**
-     * logger 日志操作
-     */
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+
+
     @Autowired
     private MoreBatis moreBatis;
 

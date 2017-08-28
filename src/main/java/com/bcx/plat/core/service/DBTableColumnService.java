@@ -36,14 +36,14 @@ public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
      * @param pageSize 一页显示多少条
      * @return
      */
-    public ServiceResult queryPageById(String search,String rowId,LinkedList<Order> orders,int pageNum,int pageSize){
+    public PlatResult queryPageById(String search,String rowId,LinkedList<Order> orders,int pageNum,int pageSize){
         if (search ==null && search.isEmpty()){
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))),
                         Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
-        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result));
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
     }
 
     /**
@@ -52,14 +52,14 @@ public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
      * @param search    搜索条件
      * @return
      */
-    public ServiceResult  queryTableById(String rowId,String search){
+    public PlatResult  queryTableById(String rowId,String search){
         List<Map<String, Object>> result = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
         if (result.size() == 0) {
-            return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
 
         }
-        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result));
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
     }
 
 

@@ -43,33 +43,6 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
     }
 
 
-//    /**
-//     * 通过表信息字段rowId查询表信息并分页显示
-//     *
-//     * @param args     按照空格查询
-//     * @param rowId    接受rowId
-//     * @param pageNum  当前第几页
-//     * @param pageSize 一页显示多少条
-//     * @param request  request请求
-//     * @param locale   国际化参数
-//     * @return ServiceResult
-//     */
-//    @RequestMapping("/queryPageById")
-//    public Object queryPageById(String args,String rowId,
-//                                @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
-//                                @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-//                                String order, HttpServletRequest request, Locale locale) {
-//        LinkedList<Order> orders = UtilsTool.dataSort(order);
-//        if (args ==null && args.isEmpty()){
-//            pageNum = 1;
-//        }
-//        PageResult<Map<String, Object>> result = getEntityService()
-//                .select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
-//                                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args))),
-//                        Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
-//        return super.result(request, new ServiceResult(result,BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS), locale);
-//    }
-
     /**
      * 通过表信息字段rowId查询表信息并分页显示
      *
@@ -87,8 +60,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
                                 @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                 String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        ServiceResult result = getEntityService().queryPageById(args, rowId, orders, pageNum, pageSize);
-        return super.result(request, result, locale);
+        return super.result(request, ServiceResult.Msg(getEntityService().queryPageById(args, rowId, orders, pageNum, pageSize)), locale);
     }
 
     /**
@@ -101,8 +73,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      */
     @RequestMapping("/queryTabById")
     public Object singleInputSelect(String args, String rowId, HttpServletRequest request, Locale locale) {
-        ServiceResult result = getEntityService().queryTableById(rowId, args);
-        return super.result(request,result,locale);
+        return super.result(request,ServiceResult.Msg(getEntityService().queryTableById(rowId, args)),locale);
     }
 
 

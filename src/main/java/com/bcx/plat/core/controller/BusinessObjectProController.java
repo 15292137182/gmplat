@@ -32,31 +32,16 @@ import java.util.Map;
 public class BusinessObjectProController extends
         BaseControllerTemplate<BusinessObjectProService, BusinessObjectPro> {
 
-    final private FrontFuncProService frontFuncProService;
-    final private DBTableColumnService dbTableColumnService;
-
     @Autowired
-    public BusinessObjectProController( FrontFuncProService frontFuncProService,DBTableColumnService dbTableColumnService) {
-        this.frontFuncProService = frontFuncProService;
-        this.dbTableColumnService = dbTableColumnService;
-    }
+    private FrontFuncProService frontFuncProService;
+
 
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("propertyCode", "propertyName");
     }
 
-    /**
-     * 接受参数和消息进行封装
-     *
-     * @param content 接受的参数
-     * @param msg     消息
-     * @param <T>
-     * @return
-     */
-    private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
-        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, msg,content));
-    }
+
 
     /**
      * 根据业务对象属性rowId查询当前数据
@@ -69,23 +54,11 @@ public class BusinessObjectProController extends
     @RequestMapping("/queryById")
     @Override
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
-
-        List<Map<String, Object>> result = getEntityService()
-                .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        String relateTableColumn = (String)result.get(0).get("relateTableColumn");
-
-        List<Map<String, Object>> rowId1 =
-                dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
-        if (rowId1.size()==0) {
-            return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+        if (rowId==null) {
+            return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
         }
-        for (Map<String ,Object> row :result){
-            row.put("columnCname",rowId1.get(0).get("columnCname"));
-        }
-        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
+        return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS)),locale);
     }
-
-
 
     /**
      * 根据业务对象rowId查询当前业务对象下的所有属性

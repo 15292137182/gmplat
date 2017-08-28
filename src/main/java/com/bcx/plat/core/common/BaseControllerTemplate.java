@@ -105,40 +105,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 
-    /**
-     * 通用查询方法
-     *
-     * @param args    按照空格查询
-     * @param request request请求
-     * @param locale  国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/select")
-    public Object select(Map<String, Object> args, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = entityService.select(args);
-        if (result.size()==0) {
-            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-        }
-        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
-    }
 
-    /**
-     * 通用查询方法
-     *
-     * @param args     按照空格查询
-     * @param pageNum  当前第几页
-     * @param pageSize 一页显示多少条
-     * @param request  request请求
-     * @param locale   国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/selectPage")
-    public Object select(Map<String, Object> args,@RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                         @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize, HttpServletRequest request, Locale locale) {
-        PageResult<Map<String, Object>> result = entityService.select(args, pageNum, pageSize);
-
-        return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
-    }
 
     /**
      * 通用新增方法

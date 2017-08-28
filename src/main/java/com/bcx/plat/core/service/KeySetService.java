@@ -9,9 +9,7 @@ import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.QEncoderStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +20,18 @@ import java.util.*;
  * Created by Went on 2017/8/3.
  */
 @Service
-public class KeySetService extends BaseServiceTemplate<KeySet> {
+public class KeySetService extends BaseServiceTemplate<KeySet>{
 
     @Autowired
     private MoreBatis moreBatis;
 
     /**
-     * 根据编号number查询，以数组的形式传入数据进来["demo","test"]
+     * 根据编号number查询，以数组的形式传入数据进来
      *
-     * @param list  搜索条件
-     * @return  ServiceResult
+     * @param list 搜索条件
+     * @return ServiceResult
      */
-    public ServiceResult queryKeySet(List list){
+    public PlatResult queryKeySet(List list) {
         Map<Object, Object> map = new HashMap<>();
         for (Object li : list) {
             List lists = new ArrayList();
@@ -47,29 +45,26 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
         }
         String toJson = UtilsTool.objToJson(map);
         if (map.size() == 0) {
-            return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,toJson));
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, toJson);
     }
 
     /**
      * 根据键值集合编号查询对应的数据
+     *
      * @param search
      * @return
      */
-    public ServiceResult queryNumber(String search){
+    public PlatResult queryNumber(String search) {
         List<Map<String, Object>> result = moreBatis.selectStatement().select(Arrays.asList(QueryAction.ALL_FIELD))
                 .from(moreBatis.getTable(KeySet.class))
                 .where(new FieldCondition("number", Operator.EQUAL, search))
                 .execute();
         if (result.size() == 0) {
-            return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result));
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }
 
-    @Override
-    public boolean isRemoveBlank() {
-        return false;
-    }
 }
