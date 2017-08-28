@@ -379,16 +379,15 @@ var editObj = (function(){
 
 var showMsg = (function(){
     var MsgOk = function(obj,msg){
-        var type = '';
         //obj：需要弹出消息页面的Vue实例对象
         //msg：ajax成功后返回的res
         if(msg.data.state==1){//操作成功
             obj.$message({
-                message: msg.data.message,
+                message: msg.message,
                 type: 'success'
             })
         }else{
-            obj.$message.error(msg.data.message);
+            obj.$message.error(msg.message);
         }
     }
     var MsgError = function(obj){
@@ -398,6 +397,63 @@ var showMsg = (function(){
     return {
         MsgOk:MsgOk,
         MsgError:MsgError
+    }
+})()
+
+
+/*
+* Vue实例抽出data，ajax
+* */
+
+var getData = (function(){
+    var dataObj = function(json){
+        var data = {};
+        if(json){
+            data = json;
+            data.loading=true;
+            data.input='';
+            data.tableData=[];
+            data.leftHeight='';
+            data.pageSize=10;
+            data.pageNum=1;
+            data.allDate=0;
+        }else{
+             data = {
+                loading:true,//加载提示效果
+                input:'',//输入框
+                tableData:[],//table数据
+                leftHeight:'',//左边表格高度
+                pageSize:10,//每页显示多少条
+                pageNum:1,//第几页
+                allDate:0//共多少条
+            }
+        }
+        return data
+    }
+    return {
+        dataObj:dataObj
+    }
+})()
+
+var gmpAjax = (function(){
+    var showAjax = function(url,jsonData,callback){
+        $.ajax({
+            url:url,
+            type:"get",
+            data:jsonData,
+            dataType:"jsonp",
+            success:function(res){
+                if(typeof callback == "function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                alert("请求失败")
+            }
+        })
+    }
+    return{
+        showAjax:showAjax
     }
 })()
 

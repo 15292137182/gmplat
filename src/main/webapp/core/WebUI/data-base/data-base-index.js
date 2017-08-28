@@ -6,20 +6,27 @@
  */
 var dataBase = new Vue({
     el:"#app",
-    data:{
-        loading:true,
-        input:'',
-        tableData:[],
-        leftHeight:'',
-        rowObj:'',
-        divIndex:'',
-        editdivIndex:'',
-        url:serverPath+'/maintTable/queryPage',
-        delUrl:serverPath+'/maintTable/delete',
-        pageSize:10,//每页显示多少条
-        pageNum:1,//第几页
-        allDate:0//共多少条
-    },
+    // data:{
+    //     loading:true,
+    //     input:'',
+    //     tableData:[],
+    //     leftHeight:'',
+    //     rowObj:'',
+    //     divIndex:'',
+    //     editdivIndex:'',
+    //     url:serverPath+'/maintTable/queryPage',
+    //     delUrl:serverPath+'/maintTable/delete',
+    //     pageSize:10,//每页显示多少条
+    //     pageNum:1,//第几页
+    //     allDate:0//共多少条
+    // },
+    data:getData.dataObj({
+                    "rowObj":'',
+                    "divIndex":'',
+                    "editdivIndex":'',
+                    "url":serverPath+'/maintTable/queryPage',
+                    "delUrl":serverPath+'/maintTable/delete',
+    }),
     methods:{
         get(){//分页查询
             pagingObj.Example(this.url,this.input,this.pageSize,this.pageNum,this,function(){
@@ -53,16 +60,20 @@ var dataBase = new Vue({
         },
         delTableBase(){
             deleteObj.del(function(){
-                dataBase.$http.jsonp(dataBase.delUrl,{
-                    rowId:dataBase.rowObj.rowId
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
+                gmpAjax.showAjax(dataBase.delUrl,{rowId:dataBase.rowObj.rowId},function(res){
                     showMsg.MsgOk(dataBase,res);
-                    queryData.getData(dataBase.url,this.input,this)
-                },function(){
-                    showMsg.MsgError(dataBase);
+                    queryData.getData(dataBase.url,dataBase.input,dataBase)
                 })
+                // dataBase.$http.jsonp(dataBase.delUrl,{
+                //     rowId:dataBase.rowObj.rowId
+                // },{
+                //     jsonp:'callback'
+                // }).then(function(res){
+                //     showMsg.MsgOk(dataBase,res);
+                //     queryData.getData(dataBase.url,this.input,this)
+                // },function(){
+                //     showMsg.MsgError(dataBase);
+                // })
             })
         },
         handleSizeChange(val){//每页显示多少条
