@@ -253,7 +253,7 @@ public class SequenceManager {
    * @return 返回生成的序列号模块
    */
   public List<String> produceSequenceNo(String sequenceCode, Map<String, Object> args, int num,
-                                        boolean test) {
+                                        boolean test, String... strings) {
     List<String> result = new ArrayList<>();
     if (init()) {
       SequenceRuleConfig ruleConfig = getRuleConfig(sequenceCode);

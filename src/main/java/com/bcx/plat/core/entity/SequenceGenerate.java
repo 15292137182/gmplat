@@ -1,11 +1,11 @@
 package com.bcx.plat.core.entity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
+
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 序列号生成 Entity，准确的来说，更像是序列号的历史表
@@ -21,11 +21,20 @@ public class SequenceGenerate extends BaseEntity<SequenceGenerate> {
   private String variableKey;
   private String currentValue;
   private String branchSign;  // 分支标志
+  private String objectSigns;
 
   @Override
   public SequenceGenerate buildCreateInfo() {
     setRowId(lengthUUID(64));
     return super.buildCreateInfo();
+  }
+
+  public String getObjectSigns() {
+    return objectSigns;
+  }
+
+  public void setObjectSigns(String objectSigns) {
+    this.objectSigns = objectSigns;
   }
 
   public String getRowId() {

@@ -6,6 +6,7 @@ CREATE TABLE t_sequence_generate (
   variable_key     VARCHAR(64)  NULL,
   current_value    VARCHAR(64)  NULL,
   branch_sign      VARCHAR(128) NULL,
+  object_signs     VARCHAR(128) NULL,
   status           VARCHAR(8)   NULL,
   "version"        VARCHAR(16)  NULL,
   create_time      VARCHAR(32)  NULL,
