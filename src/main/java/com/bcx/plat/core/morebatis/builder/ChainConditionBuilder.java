@@ -58,22 +58,22 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return like(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE leftLike(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE endWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_LEFT, value));
   }
 
-  public CURRENT_NODE leftLike(String alies, String value) {
-    return leftLike(conditionBuilderContext.getClz(),alies,value);
+  public CURRENT_NODE endWith(String alies, String value) {
+    return endWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE rightLike(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE startWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_RIGHT, value));
   }
 
-  public CURRENT_NODE rightLike(String alies, String value) {
-    return rightLike(conditionBuilderContext.getClz(),alies,value);
+  public CURRENT_NODE startWith(String alies, String value) {
+    return startWith(conditionBuilderContext.getClz(),alies,value);
   }
 
   public CURRENT_NODE isNull(Class<? extends BaseEntity> entityClass,String alies) {
@@ -122,22 +122,22 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notLike(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notLeftLike(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE notEndWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_LEFT, value));
   }
 
-  public CURRENT_NODE notLeftLike(String alies, String value) {
-    return notLeftLike(conditionBuilderContext.getClz(),alies,value);
+  public CURRENT_NODE notEndWith(String alies, String value) {
+    return notEndWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notRightLike(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE notStartWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_RIGHT, value));
   }
 
-  public CURRENT_NODE notRightLike(String alies, String value) {
-    return notRightLike(conditionBuilderContext.getClz(),alies,value);
+  public CURRENT_NODE notStartWith(String alies, String value) {
+    return notStartWith(conditionBuilderContext.getClz(),alies,value);
   }
 
   public CURRENT_NODE notNull(Class<? extends BaseEntity> entityClass,String alies) {
