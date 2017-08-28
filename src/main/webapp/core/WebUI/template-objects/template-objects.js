@@ -3,7 +3,9 @@
  */
 
 //模板对象查询接口
+    var queryTemp=serverPath + "/templateObj/query";  //不分页查询
 //模板对象新增接口
+    var addTemp=serverPath + "/templateObj/add";  //不分页查询
 //模板对象编辑接口
 //模板对象删除接口
 
@@ -20,16 +22,7 @@ var basTop = new Vue({
         addTemp(){
             operate = 1;
             var htmlUrl = 'template-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象', '400px', '340px',function(){
-                //关联表字段
-                this.$http.jsonp(conTable, {
-                    str:''
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    console.log(res)
-                });
-            });
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象', '400px', '340px',function(){});
         },
         //新增模板对象属性
         addTempProp(){
@@ -49,7 +42,7 @@ var basLeft = new Vue({
     "el": "#basLeft",
     data: {
         leftInput:'',//左边搜索框
-        loading:true,
+        loading:false,
         tableData:[],//左边表格
         leftHeight: '',//左边表格高度
         pageNum:1,//当前为第一页
@@ -60,7 +53,14 @@ var basLeft = new Vue({
     methods: {
         //不分页查询
         searchLeft(){
-
+            this.$http.jsonp(queryTemp, {
+                str:'',
+            }, {
+                jsonp: 'callback'
+            }).then(function (ref) {
+                //console.log(ref);
+                this.tableData=ref.data.resp.content.data;
+            });
         },
         //分页查询
         searchLeftTable(){
