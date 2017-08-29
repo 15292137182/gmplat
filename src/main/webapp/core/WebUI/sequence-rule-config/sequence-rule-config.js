@@ -30,6 +30,13 @@ var config=new Vue({
         },
         onClick(row, event, column){
             this.currentVal=row;
+            config.rowId=config.currentVal.rowId;
+            gmpAjax.showAjax(serverPath+'/sequenceRule/queryById',
+                {rowId:config.currentVal.rowId},
+                function(res){
+                    var data=res.resp.content.data;
+                    config.keyValueContent=data;
+                })
         },
         addEvent(){
             operate = 1;
