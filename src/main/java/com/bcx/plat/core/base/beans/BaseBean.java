@@ -1,23 +1,16 @@
-package com.bcx.plat.core.base;
+package com.bcx.plat.core.base.beans;
 
-import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.utils.SpringContextHolder;
-
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import com.bcx.plat.core.base.BaseConstants;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
-import static com.bcx.plat.core.utils.UtilsTool.*;
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 
 /**
- * 基础 entity 类，建议所有实体类均继承此类
+ * 共有字段 Bean
  * <p>
- * Create By HCL at 2017/7/31
+ * Create By HCL at 2017/8/29
  */
-public class BaseEntity<T extends BaseEntity> implements Serializable {
+public class BaseBean<T extends BaseBean> extends SimpleBeanUtils<T> {
 
   private String status;  // 状态
   private String version; // 版本
@@ -32,8 +25,6 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   private String deleteTime;  // 删除时间
   private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
 
-  private Map etc;
-
   /**
    * 构建 - 创建信息
    *
@@ -41,11 +32,9 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   public T buildCreateInfo() {
-    String data = getDateTimeNow();
-    setCreateTime(data);
+    setCreateTime(getDateTimeNow());
     setCreateUser("admin");
     setCreateUserName("系统管理员");
-    setModifyTime(data);
     return (T) this;
   }
 
@@ -74,68 +63,6 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     setDeleteUserName("系统管理员");
     setDeleteFlag(DELETE_FLAG);
     return (T) this;
-  }
-
-  /**
-   * 将 entity 实体类转换为 map
-   *
-   * @return map
-   */
-  @SuppressWarnings("unchecked")
-  public Map<String, Object> toMap() {
-    return jsonToObj(objToJson(this), HashMap.class);
-  }
-
-  /**
-   * 尝试从 map 中读取 entity 类
-   * <p>
-   * 为了满足需求，我决定造一个轮子
-   *
-   * @param map         map数据
-   * @param isUnderline 传入map的key是否为下划线命名
-   * @return 返回实体类
-   */
-  @SuppressWarnings("unchecked")
-  public T fromMap(Map<String, Object> map, boolean isUnderline) {
-    Class current = getClass();
-    do {
-      Method[] methods = current.getDeclaredMethods();
-      Object temp;
-      for (Method method : methods) {
-        if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
-          String fieldName = underlineToCamel(
-                  method.getName().substring(3, method.getName().length()), false);
-          temp = isUnderline ? map.get(underlineToCamel(fieldName, false)) : map.get(fieldName);
-          if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
-            if (temp instanceof String) {
-              temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
-            } else {
-              temp = jsonToObj(objToJson(temp), method.getParameterTypes()[0]);
-            }
-          }
-          try {
-            method.invoke(this, temp);
-          } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-      current = current.getSuperclass();
-    } while (current != Object.class);
-
-    return (T) this;
-  }
-
-  /**
-   * 尝试从 map 中读取 entity 类
-   * <p>
-   * 为了满足需求，我决定造一个轮子
-   *
-   * @param map map数据
-   * @return 返回实体类
-   */
-  public T fromMap(Map<String, Object> map) {
-    return fromMap(map, false);
   }
 
   public String getStatus() {
@@ -233,38 +160,4 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   public void setDeleteFlag(String deleteFlag) {
     this.deleteFlag = deleteFlag;
   }
-
-  public Map getEtc() {
-    return etc;
-  }
-
-  public void setEtc(Map etc) {
-    this.etc = etc;
-  }
-
-  private MoreBatis getMoreBatis() {
-    return (MoreBatis) SpringContextHolder.getBean("moreBatis");
-  }
-
-  public T insert() {
-    getMoreBatis().insertEntity((T) this);
-    return (T) this;
-  }
-
-  public T delete() {
-    getMoreBatis().deleteEntity((T) this);
-    return (T) this;
-  }
-
-  public T update() {
-    getMoreBatis().updateEntity((T) this);
-    return (T) this;
-  }
-
-
-  public T selectByPks() {
-    return (T) getMoreBatis().selectEntityByPks((T) this);
-  }
-
-
 }

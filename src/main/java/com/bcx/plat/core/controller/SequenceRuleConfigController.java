@@ -86,12 +86,13 @@ public class SequenceRuleConfigController extends
   public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
     String rowId = request.getParameter("rowId");
     String aimValue = request.getParameter("currentValue");
-    String serialId = request.getParameter("serialId");
+    // 流水号的键
+    String key = request.getParameter("serialId");
     // 序列号的分支，你不传也没什么问题
     String[] objectSigns = request.getParameterValues("objectSigns");
     PlatResult<List<String>> _sr = new PlatResult<>();
     if (isValid(rowId)) {
-      SequenceManager.getInstance().resetSequenceNo(rowId, serialId, Integer.parseInt(aimValue), objectSigns);
+      SequenceManager.getInstance().resetSequenceNo(rowId, key, Integer.parseInt(aimValue), objectSigns);
       _sr.setMsg("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);

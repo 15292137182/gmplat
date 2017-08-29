@@ -72,7 +72,7 @@ var dataSetConfigButton = new Vue({
     },
     methods:{
         addDataSetConfig(){//新增
-            this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','新增数据集配置','400px', '500px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','新增数据集配置','400px', '530px',function(){
                 addDataSet.isEdit = false;
             });
         },
@@ -80,7 +80,7 @@ var dataSetConfigButton = new Vue({
             /**
              * tsj 07/8/28 替换ajax方法，修改赋值
              **/
-            this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '500px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '530px',function(){
                 gmpAjax.showAjax(serverPath+'/dataSetConfig/queryById',{
                     rowId: dataSetConfig.rowObjId
                 },function(res){
@@ -94,6 +94,9 @@ var dataSetConfigButton = new Vue({
                     addDataSet.formTable.content = data.datasetContent;
                     addDataSet.formTable.desp = data.desp;
                     addDataSet.formTable.version =data.version;
+                    addDataSet.formTable.belongModule =data.belongModule;
+                    addDataSet.formTable.belongSystem =data.belongSystem;
+
                 })
             });
         },

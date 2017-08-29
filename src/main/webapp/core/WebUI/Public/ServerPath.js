@@ -60,3 +60,5 @@ function getRootPath() {
 
 //完整路径
 var serverPath = getRootPath() + "/core";
+//测试路径
+// var serverPath = serverHead + "/gmplat/core";
