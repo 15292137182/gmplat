@@ -41,8 +41,10 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
                     .from(moreBatis.getTable(KeySet.class))
                     .where(UtilsTool.createBlankQuery(Arrays.asList("number"), lists))
                     .execute();
-            map.put(li, result);
+            List<Map<String, Object>> results = UtilsTool.underlineKeyMapListToCamel(result);
+            map.put(li, results);
         }
+
         String toJson = UtilsTool.objToJson(map);
         if (map.size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
