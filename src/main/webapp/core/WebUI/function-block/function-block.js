@@ -71,18 +71,26 @@ var functionBlock = new Vue({
         //删除
         del(){
             deleteObj.del(function(){
-                functionBlock.$http.jsonp(serverPath+"/fronc/delete",{
+                // functionBlock.$http.jsonp(serverPath+"/fronc/delete",{
+                //     rowId:functionBlock.deleteId
+                // },{
+                //     jsonp:'callback'
+                // }).then(function(res){
+                //     showMsg.MsgOk(functionBlock,res);
+                //     //functionBlock.get();
+                //     queryData.getData(this.Selurl,this.input,this,function(res){
+                //         properties.getRight(functionBlock.tableData[0].rowId);
+                //     })
+                // },function(){
+                //     showMsg.MsgError(functionBlock);
+                // })
+                gmpAjax.showAjax(serverPath+"/fronc/delete",{
                     rowId:functionBlock.deleteId
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
+                },function(res){
                     showMsg.MsgOk(functionBlock,res);
-                    //functionBlock.get();
-                    queryData.getData(this.Selurl,this.input,this,function(res){
-                        properties.getRight(functionBlock.tableData[0].rowId);
-                    })
-                },function(){
-                    showMsg.MsgError(functionBlock);
+                    queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
+                                 properties.getRight(functionBlock.tableData[0].rowId);
+                             })
                 })
             })
         },

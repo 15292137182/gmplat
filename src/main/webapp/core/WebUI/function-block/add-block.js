@@ -26,23 +26,36 @@ var em=new Vue({
             littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象数据', '400px', '420px',false);
         },
         addBlock(){//新增
-            this.$http.jsonp(serverPath+"/fronc/add",{
-                "funcCode":this.formTable.codeInput,
-                "funcName":this.formTable.nameInput,
-                "funcType":this.$refs.fbtype.value,
-                "relateBusiObj":this.$refs.conObj.connectObj,
-                "desp":this.formTable.desp
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            // this.$http.jsonp(serverPath+"/fronc/add",{
+            //     "funcCode":this.formTable.codeInput,
+            //     "funcName":this.formTable.nameInput,
+            //     "funcType":this.$refs.fbtype.value,
+            //     "relateBusiObj":this.$refs.conObj.connectObj,
+            //     "desp":this.formTable.desp
+            // },{
+            //     jsonp:'callback'
+            // }).then(function(res){
+            //     showMsg.MsgOk(functionBlock,res);
+            //     ibcpLayer.Close(topButtonObj.divIndex);
+            //     queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
+            //         properties.getRight(functionBlock.tableData[0].rowId);
+            //     })
+            // },function(){
+            //     showMsg.MsgError(functionBlock);
+            // });
+            gmpAjax.showAjax(serverPath+"/fronc/add",{
+                "funcCode":em.formTable.codeInput,
+                "funcName":em.formTable.nameInput,
+                "funcType":em.$refs.fbtype.value,
+                "relateBusiObj":em.$refs.conObj.connectObj,
+                "desp":em.formTable.desp
+            },function(res){
                 showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(topButtonObj.divIndex);
-                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
-                    properties.getRight(functionBlock.tableData[0].rowId);
-                })
-            },function(){
-                showMsg.MsgError(functionBlock);
-            });
+                    queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
+                                 properties.getRight(functionBlock.tableData[0].rowId);
+                             })
+            })
         },
         editBlock(){//编辑
             this.$http.jsonp(serverPath+"/fronc/modify",{
