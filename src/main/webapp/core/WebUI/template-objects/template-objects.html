@@ -37,7 +37,7 @@
         <el-row class="inputStyle">
             <el-col :xs="18" :sm="18" :md="18">
                 <div>
-                    <el-input placeholder="请输入内容" v-model="leftInput" size="small">
+                    <el-input placeholder="请输入内容" v-model="input" size="small">
                         <el-button slot="append" icon="search" @click.native="searchLeftTable"></el-button>
                     </el-input>
                 </div>
@@ -71,7 +71,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="templateName" sortable="custom" label="名称" show-overflow-tooltip width="120"></el-table-column>
-                        <el-table-column prop="templateCode" label="代码" show-overflow-tooltip width=""></el-table-column>
+                        <el-table-column prop="templateCode" label="代码" show-overflow-tooltipsortable="custom"></el-table-column>
                         <el-table-column prop="" label="操作" width="100">
                             <template scope="scope">
                                 <el-button @click.native="editEvent" type="text" size="small" icon="edit"
@@ -111,7 +111,7 @@
         <el-row class="inputStyle">
             <el-col :xs="14" :sm="14" :md="14">
                 <div>
-                    <el-input placeholder="请输入内容" v-model="rightInput" size="small">
+                    <el-input placeholder="请输入内容" v-model="input" size="small">
                         <el-button slot="append" icon="search" @click.native="searchRightTable"></el-button>
                     </el-input>
                 </div>
@@ -120,7 +120,7 @@
         <el-row style="padding:0px 10px 10px 10px">
             <el-col :span="24">
                 <template>
-                    <el-table :data="tableData" :height="rightHeight" border ref="tableData" highlight-current-row
+                    <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
                               v-loading="loading"
                               element-loading-text="加载中" @sort-change="headSort"
                               @row-click="currentRChange" class="tableStyle">
@@ -131,12 +131,12 @@
                                     <el-row>
                                         <el-col :span="12">
                                             <el-form-item label="代码">
-                                                <span>{{ props.row.propertyCode }}</span>
+                                                <span>{{ props.row.code }}</span>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="属性英文名称">
-                                                <span>{{ props.row.valueResourceType }}</span>
+                                                <span>{{ props.row.ename }}</span>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -144,11 +144,11 @@
                             </template>
                         </el-table-column>
 
-                        <el-table-column prop="propertyName" label="属性中文名称" sortable="custom" width="160"
+                        <el-table-column prop="cname" label="属性中文名称" sortable="custom" width="160"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="wetherExpandPro" label="值类型"  width="100"
+                        <el-table-column prop="valueType" label="值类型"  width="100"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="columnCname" label="默认值" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="defaultValue" label="默认值" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="" label="操作" width="100">
                             <template scope="scope">
                                 <el-button @click.native="editProp" type="text" size="small" icon="edit"

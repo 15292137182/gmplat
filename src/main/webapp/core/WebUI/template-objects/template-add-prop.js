@@ -2,13 +2,12 @@
  * Created by admin on 2017/8/27.
  */
 
-Vue.component('select-value', SelectOptions.setOpt('','value','valueType',''));//templateId,modelName,keysetCode,path
+Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
 
 
 var addTempProp = new Vue({
     "el": "#addEventProp",
-    data: {
-        function () {
+    data: function () {
             return {
                 labelPosition: 'right',
                 addTempProp: {
@@ -19,8 +18,7 @@ var addTempProp = new Vue({
                     comContent:''
                 }
             }
-        }
-    },
+        },
     methods: {
         //保存事件
         saveTempProp(){

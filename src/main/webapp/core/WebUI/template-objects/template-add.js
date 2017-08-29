@@ -8,7 +8,7 @@ var addTemp = new Vue({
     data: function () {
             return {
                 labelPosition: 'right',
-                addTemp: {
+                addTempObj: {
                     codeInput: '',
                     nameInput: '',
                     comContent: '',
@@ -21,15 +21,23 @@ var addTemp = new Vue({
             //新增
             if(operate==1){
                 addObj.addOk(function(){
-                    this.$http.jsonp(addTemp, {
-                        templateName:this.nameInput,
-                        templatedesp:this.comContent
-                    }, {
-                        jsonp: 'callback'
-                    }).then(function (ref) {
-                        showMsg.MsgOk(addTemp,ref);
-                        //分页调回第一页
-                    });
+                    gmpAjax.showAjax(addTempObj,{templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent},function(res){
+                        //显示消息
+                        showMsg.MsgOk(basLeft,res);
+                        //关闭弹层
+                        ibcpLayer.Close(divIndex);
+                        //分页查询
+                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                    })
+                })
+            }if(operate==2){
+                editObj.editOk(function(){
+                    gmpAjax.showAjax(editTempObj,{rowId:basLeft.currentId,templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent},function(res){
+                        console.log(res)
+                        showMsg.MsgOk(basLeft,res);
+                        ibcpLayer.Close(divIndex);
+                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                    })
                 })
             }
         },

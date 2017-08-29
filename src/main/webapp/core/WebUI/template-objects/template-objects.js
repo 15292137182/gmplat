@@ -3,12 +3,17 @@
  */
 
 //模板对象查询接口
-    var queryTemp=serverPath + "/templateObj/query";  //不分页查询
+    var queryTemp=serverPath + "/templateObj/queryPage";
 //模板对象新增接口
-    var addTemp=serverPath + "/templateObj/add";  //不分页查询
+    var addTempObj=serverPath + "/templateObj/add";
+//模板编辑查询接口
+    var addTempObjQuery=serverPath + "/templateObj/queryById";
 //模板对象编辑接口
+    var editTempObj=serverPath + "/templateObj/modify";
 //模板对象删除接口
-
+    var deleteTempObj=serverPath + "/templateObj/delete";
+//模板对象属性查询接口
+    var queryObjTemp=serverPath + "/templateObj/queryProPage";
 
 
 
@@ -22,17 +27,18 @@ var basTop = new Vue({
         addTemp(){
             operate = 1;
             var htmlUrl = 'template-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象', '400px', '340px',function(){});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象', '400px', '340px',function(){
+
+            });
         },
         //新增模板对象属性
         addTempProp(){
             operateOPr=1;
-            //var htmlUrl = 'metadata-prop-add.html';
-            //divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象属性', '400px', '540px', function () {
-            //    basTop.getSelectValue();
-            //
-            //});
-        }
+            var htmlUrl = 'template-add-prop.html';
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象属性', '400px', '480px', function () {
+
+            });
+        },
 
     }
 });
@@ -40,62 +46,57 @@ var basTop = new Vue({
 
 var basLeft = new Vue({
     "el": "#basLeft",
-    data: {
-        leftInput:'',//左边搜索框
-        loading:false,
-        tableData:[],//左边表格
-        leftHeight: '',//左边表格高度
-        pageNum:1,//当前为第一页
-        pageSize:10,//每页显示条数
-        allDate:0,//总共有多少条
-
-    },
+    data: getData.dataObj({
+    }),
     methods: {
         //不分页查询
         searchLeft(){
-            this.$http.jsonp(queryTemp, {
-                str:'',
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                //console.log(ref);
-                this.tableData=ref.data.resp.content.data;
-            });
+            pagingObj.Example(queryTemp,this.input,this.pageSize,this.pageNum,this,function(res){
+                //有数据选中第一行
+                basLeft.currentChange(basLeft.tableData[0]);
+            })
         },
         //分页查询
         searchLeftTable(){
-
+            queryData.getData(queryTemp,this.input,this,function(res){
+                basLeft.currentChange(basLeft.tableData[0]);
+            })
         },
         //编辑事件
         editEvent(){
             operate = 2;
             var htmlUrl = 'template-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象', '400px', '340px',function(){
-
+                gmpAjax.showAjax(addTempObjQuery,{rowId:basLeft.currentId},function(res){
+                    //编辑拿到的数据
+                    var data=res.resp.content.data[0];
+                    addTemp.addTempObj.codeInput=data.templateCode;
+                    addTemp.addTempObj.nameInput=data.templateName;
+                    addTemp.addTempObj.comContent=data.desp;
+                })
             });
         },
         //删除事件
         deleteEvent(){
             deleteObj.del(function(){
-                //var deleteId = basLeft.currentVal.rowId;  //左侧表的row的ID
-                //basLeft.$http.jsonp(deleteUrl, {
-                //    rowId: deleteId
-                //}, {
-                //    jsonp: 'callback'
-                //}).then(function (ref) {
-                //    showMsg.MsgOk(basTop,ref)
-                //    //分页跳回到第一页
-                //    basLeft.searchLeft();
-                //},function(){
-                //    showMsg.MsgError(basTop)
-                //});
+                gmpAjax.showAjax(deleteTempObj,{rowId:basLeft.currentId},function(res){
+                    showMsg.MsgOk(basLeft,res);
+                    queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                })
             })
         },
         //表格点击事件
-        currentChange(){
-            //左边这一行的数据
-            //this.currentId = row.rowId;
+        currentChange(row){
+            console.log(row);
+            //左边这一行的数据的ID
+            this.currentId = row.rowId;
             //查找右边表的数据
+            queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
+                console.log(res.resp.content.data.result);
+                //选中右边第一行
+                //basLeft.currentChange(basLeft.tableData[0]);
+            })
+
 
         },
         //将选中行变颜色
@@ -103,8 +104,8 @@ var basLeft = new Vue({
             this.$refs.tableData.setCurrentRow(row);
         },
         //排序事件
-        headSort(){
-
+        headSort(column){
+            pagingObj.headSort(queryTemp,this.input,this.pageSize,this.pageNum,column,this);
         },
         //选择每页多少条数据
         handleSizeChange(val) {
@@ -139,15 +140,8 @@ var basLeft = new Vue({
 
 var basRight = new Vue({
     "el": "#basRight",
-    data: {
-        rightInput:'',//右边输入框
-        loading:true,
-        tableData:[],//右边表格
-        rightHeight: '',//右边表格高度
-        pageNum:1,//当前为第一页
-        pageSize:10,//每页显示条数
-        allDate:0,//总共有多少条
-    },
+    data: getData.dataObj({
+        }),
     methods: {
         //不分页查询
         searchRight(){
@@ -194,10 +188,10 @@ var basRight = new Vue({
     created(){
         this.searchRight();
         $(document).ready(function () {
-            basRight.rightHeight = $(window).height() - 194;
+            basRight.leftHeight = $(window).height() - 194;
         });
         $(window).resize(function () {
-            basRight.rightHeight = $(window).height() - 194;
+            basRight.leftHeight = $(window).height() - 194;
         });
     },
     //页面一进入第一行高亮显示
