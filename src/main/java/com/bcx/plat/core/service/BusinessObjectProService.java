@@ -34,11 +34,9 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
      * 根据业务对象属性rowId查询当前数据
      *
      * @param rowId     唯一标识
-     * @param request  request请求
-     * @param locale   国际化参数
      * @return ServiceResult
      */
-    public PlatResult queryById(String rowId, HttpServletRequest request, Locale locale) {
+    public PlatResult queryById(String rowId) {
 
         List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         String relateTableColumn = (String)result.get(0).get("relateTableColumn");

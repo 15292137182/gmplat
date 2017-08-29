@@ -1,100 +1,106 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 业务对象业务层
  * Created by Wen Tiehu on 2017/8/7.
  */
 @Service
 public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
 
 
+    private MaintDBTablesService maintDBTablesService;
+    private BusinessObjectProService businessObjectProService;
+    private DBTableColumnService dbTableColumnService;
+    private FrontFuncService frontFuncService;
+    private FrontFuncProService frontFuncProService;
 
     @Autowired
-    MoreBatis moreBatis;
-    @Autowired
-    MaintDBTablesService maintDBTablesService;
-    @Autowired
-    BusinessObjectProService businessObjectProService;
-    @Autowired
-    DBTableColumnService dbTableColumnService;
+    public BusinessObjectService(MaintDBTablesService maintDBTablesService, BusinessObjectProService businessObjectProService, DBTableColumnService dbTableColumnService, FrontFuncService frontFuncService, FrontFuncProService frontFuncProService) {
+        this.maintDBTablesService = maintDBTablesService;
+        this.businessObjectProService = businessObjectProService;
+        this.dbTableColumnService = dbTableColumnService;
+        this.frontFuncService = frontFuncService;
+        this.frontFuncProService = frontFuncProService;
+    }
 
     public List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
+
     /**
      * 根据rowId查询数据
-     * @param rowId
-     * @return
+     *
+     * @param rowId 唯一标示
+     * @return  PlatResult
      */
-    public PlatResult queryById(String rowId){
+    public PlatResult queryById(String rowId) {
         List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        String relateTableRowId = (String)result.get(0).get("relateTableRowId");
+        String relateTableRowId = (String) result.get(0).get("relateTableRowId");
 
         List<Map<String, Object>> rowId1 =
                 maintDBTablesService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-        for (Map<String ,Object> row :result){
-            row.put("tableCname",rowId1.get(0).get("tableCname"));
+        for (Map<String, Object> row : result) {
+            row.put("tableCname", rowId1.get(0).get("tableCname"));
         }
-        return PlatResult.Msg(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS);
+        return PlatResult.Msg(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS);
     }
 
     /**
-     *  分页显示查询
-     * @param search
-     * @param pageNum
-     * @param pageSize
-     * @param order
-     * @return
+     * 分页显示查询
+     *
+     * @param search   搜索条件
+     * @param pageNum  页码
+     * @param pageSize 一页显示条数
+     * @param order    排序
+     * @return          PlatResult
      */
     public PlatResult queryPage(String search, int pageNum, int pageSize, List<Order> order) {
-        if (search == null && search.isEmpty()) {
+        if (!UtilsTool.isValid(search)) {
             pageNum = 1;
         }
-        PageResult<Map<String, Object>> result = singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(search),
-                pageNum, pageSize, Arrays.asList(QueryAction.ALL_FIELD), order);
+        PageResult<Map<String, Object>> result;
+        result = singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(search),
+                pageNum, pageSize, Collections.singletonList(QueryAction.ALL_FIELD), order);
         if (result.getResult().size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-            for (Map<String, Object> rest : result.getResult()) {
-                rest.put("testDemo", false);
-            }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        for (Map<String, Object> rest : result.getResult()) {
+            rest.put("testDemo", false);
+        }
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }
 
     /**
      * 根据业务对象rowId查找当前对象下的所有属性并分页显示
-     * @param search
-     * @param rowId
-     * @param pageNum
-     * @param pageSize
-     * @param order
-     * @return
+     *
+     * @param search    搜索条件
+     * @param rowId     唯一标识
+     * @param pageNum   页码
+     * @param pageSize  一页显示条数
+     * @param order     排序
+     * @return      PlatResult
      */
-    public PlatResult queryProPage(String search,String rowId, int pageNum, int pageSize, List<Order> order) {
+    public PlatResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
         PageResult<Map<String, Object>> result;
         if (UtilsTool.isValid(search)) {
             result = businessObjectProService.select(
@@ -147,17 +153,18 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
 
     /**
      * 根据rowId来执行变更操作
-     * @param rowId
-     * @return
+     *
+     * @param rowId     唯一标示
+     * @return          PlatResult
      */
-    public PlatResult changeOperat(String rowId){
+    public PlatResult changeOperat(String rowId) {
         Map<String, Object> oldRowId = new HashMap<>();
-        List<Map<String, Object>> list =select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        List<Map<String, Object>> list = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         List<String> row = list.stream().map((rowIds) -> {
             return (String) rowIds.get("changeOperat");
         }).collect(Collectors.toList());
         if (UtilsTool.isValid(rowId) && row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
-            List<Map<String, Object>> mapList =select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+            List<Map<String, Object>> mapList = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
             Map<String, Object> objectMap = mapList.get(0);
             //将Map数据转换为json结构的数据
             String toJson = UtilsTool.objToJson(objectMap);
@@ -187,7 +194,42 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
         return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
     }
 
+    /**
+     * 根据rowId删除业务对象数据
+     *
+     * @param rowId 唯一标示
+     * @return
+     */
+    public PlatResult delete(String rowId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("relateBusiObj", rowId);
+        List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
+        for (Map<String, Object> busin : businObj) {
+            String rowId1 = (String) busin.get("rowId");
+            List<Map<String, Object>> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
+            if (funcRowId.size() != 0) {
+                return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+            }
+        }
+        if (businObj.size() == 0) {
+            List<Map<String, Object>> list = businessObjectProService
+                    .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
+            if (UtilsTool.isValid(list)) {
+                List<String> rowIds = list.stream().map((row) -> {
+                    return (String) row.get("rowId");
+                }).collect(Collectors.toList());
+                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+            }
+            if (rowId != null && rowId.length() > 0) {
+                Map<String, Object> args = new HashMap<>();
+                args.put("rowId", rowId);
+                delete(args);
+                return PlatResult.Msg(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+            }
+        }
+        return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
 
+    }
 
 
     @Override

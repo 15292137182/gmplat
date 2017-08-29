@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
@@ -28,26 +27,16 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/core/businObj")
-public class BusinessObjectController extends
-        BaseControllerTemplate<BusinessObjectService, BusinessObject> {
+public class BusinessObjectController extends BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
-    private final BusinessObjectProService businessObjectProService;
     private final MaintDBTablesService maintDBTablesService;
-    private final FrontFuncService frontFuncService;
-    private final FrontFuncProService frontFuncProService;
     private final BusinessObjectService businessObjectService;
 
     @Autowired
-    public BusinessObjectController(BusinessObjectProService businessObjectProService,
-                                    MaintDBTablesService maintDBTablesService,
-                                    FrontFuncService frontFuncService,
-                                    FrontFuncProService frontFuncProService,
+    public BusinessObjectController(MaintDBTablesService maintDBTablesService,
                                     BusinessObjectService businessObjectService) {
-        this.businessObjectProService = businessObjectProService;
         this.maintDBTablesService = maintDBTablesService;
-        this.frontFuncService = frontFuncService;
         this.businessObjectService = businessObjectService;
-        this.frontFuncProService = frontFuncProService;
     }
 
     @Override
@@ -87,7 +76,7 @@ public class BusinessObjectController extends
                             @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                             String order,HttpServletRequest request,Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (search == null && search.isEmpty()) {
+        if (!UtilsTool.isValid(search)) {
             pageNum = 1;
         }
         return super.result(request, ServiceResult.Msg(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
@@ -125,15 +114,14 @@ public class BusinessObjectController extends
      */
     @RequestMapping("/changeOperat")
     public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
-        if (rowId==null) {
-            return ServiceResult.ErrorMsg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+        if (!UtilsTool.isValid(rowId)) {
+            return ServiceResult.ErrorMsg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
-        return super.result(
-                request,ServiceResult.Msg(
-                        new PlatResult(
-                                BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS,
-                                businessObjectService.changeOperat(rowId))),locale);
+        PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
+                businessObjectService.changeOperat(rowId));
+        return super.result(request, ServiceResult.Msg(platResult), locale);
     }
+
 
     /**
      * 判断当前业务对象下是否有业务对象属性数据,有就全部删除
@@ -146,28 +134,10 @@ public class BusinessObjectController extends
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("relateBusiObj", rowId);
-        List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
-        for (Map<String, Object> busin : businObj) {
-            String rowId1 = (String) busin.get("rowId");
-            List<Map<String, Object>> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
-            if (funcRowId.size() != 0) {
-                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
-            }
+        if (UtilsTool.isValid(rowId)) {
+            return ServiceResult.Msg(businessObjectService.delete(rowId));
         }
-        if (businObj.size() == 0) {
-            List<Map<String, Object>> list = businessObjectProService
-                    .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
-            if (UtilsTool.isValid(list)) {
-                List<String> rowIds = list.stream().map((row) -> {
-                    return (String) row.get("rowId");
-                }).collect(Collectors.toList());
-                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
-            }
-            return super.delete(rowId, request, locale);
-        }
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+        return ServiceResult.Msg(null);
     }
 
 

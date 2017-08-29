@@ -33,13 +33,14 @@ public class BusinessObjectProController extends
 
     @Autowired
     private FrontFuncProService frontFuncProService;
+    @Autowired
+    private BusinessObjectProService businessObjectProService;
 
 
     @Override
     protected List<String> blankSelectFields() {
         return Arrays.asList("propertyCode", "propertyName");
     }
-
 
 
     /**
@@ -53,10 +54,10 @@ public class BusinessObjectProController extends
     @RequestMapping("/queryById")
     @Override
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
-        if (rowId==null) {
+        if (!UtilsTool.isValid(rowId)) {
             return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
         }
-        return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_SUCCESS,Message.OPERATOR_SUCCESS)),locale);
+        return super.result(request,ServiceResult.Msg(businessObjectProService.queryById(rowId)),locale);
     }
 
     /**
