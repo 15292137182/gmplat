@@ -3,6 +3,8 @@ package com.bcx.plat.core.base.beans;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 
 /**
+ * 工作流 javaBean
+ *
  * Create By HCL at 2017/8/29
  */
 public class WorkFlowBean<T extends WorkFlowBean> extends SimpleBeanUtils<T> {

@@ -12,14 +12,14 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
  * <p>
  * Create By HCL at 2017/8/29
  */
-public class SimpleBeanUtils<T extends SimpleBeanUtils> {
+public abstract class SimpleBeanUtils<T extends SimpleBeanUtils> implements BeanLimit<T> {
 
   /**
    * 将当前对象转换为 Map
    *
    * @return 返回转换后的 map
    */
-  protected Map toMap() {
+  public Map toMap() {
     return jsonToObj(objToJson(this), HashMap.class);
   }
 
@@ -30,13 +30,14 @@ public class SimpleBeanUtils<T extends SimpleBeanUtils> {
    * @return 返回自身
    */
   @SuppressWarnings("unchecked")
-  protected T fromMap(Map map) {
+  public T fromMap(Map map) {
     Class current = getClass();
     while (current != SimpleBeanUtils.class) {
       Method[] methods = current.getDeclaredMethods();
       for (Method method : methods) {
         if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
-          String fieldName = method.getName().substring(3, method.getName().length());
+          String _fieldName = method.getName().substring(3, method.getName().length());
+          String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
           Object value = map.get(fieldName);
           if (value != null) {
             try {

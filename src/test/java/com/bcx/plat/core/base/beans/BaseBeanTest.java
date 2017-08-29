@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Create By HCL at 2017/8/29
  */
-public class PublicBeanTest extends BaseTest {
+public class BaseBeanTest extends BaseTest {
 
   /**
    * 简单测试不
