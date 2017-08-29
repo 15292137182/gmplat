@@ -18,7 +18,9 @@ var addDataSet = new Vue({
           //  typeInput:'',    修改下拉框 jms 2017/8/21
             content:'',
             desp:'',
-            version:''
+            version:'',
+            belongModule:'',//模块
+            belongSystem:'',//系统
         },
         isEdit:'',//是否编辑
         addUrl:serverPath+'/dataSetConfig/add',//新增
@@ -46,7 +48,9 @@ var addDataSet = new Vue({
                 datasetName:this.formTable.nameInput,
                 datasetType:this.$refs.dsctype.value,
                 datasetContent:this.formTable.content,
-                desp:this.formTable.desp
+                desp:this.formTable.desp,
+                belongModule:this.formTable.belongModule,
+                belongSystem:this.formTable.belongSystem
             },function(res){
                 showMsg.MsgOk(dataSetConfig,res);
                 ibcpLayer.Close(dataSetConfigButton.divIndex);
@@ -62,7 +66,9 @@ var addDataSet = new Vue({
                 datasetName:this.formTable.nameInput,
                 datasetType:this.$refs.dsctype.value,
                 datasetContent:this.formTable.content,
-                desp:this.formTable.desp
+                desp:this.formTable.desp,
+                belongModule:this.formTable.belongModule,
+                belongSystem:this.formTable.belongSystem
             },function(res){
                 showMsg.MsgOk(dataSetConfig,res);
                 ibcpLayer.Close(dataSetConfigButton.divIndex);

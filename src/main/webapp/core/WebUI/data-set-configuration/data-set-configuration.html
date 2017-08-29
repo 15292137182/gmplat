@@ -62,9 +62,13 @@
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="datasetContent" label="内容" width="250">
                         </el-table-column>
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="belongModule" label="所属模板" width="120">
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="belongSystem" label="所属系统" width="120">
+                        </el-table-column>
                         <el-table-column show-overflow-tooltip prop="desp" label="说明" width="250">
                         </el-table-column>
-                        <el-table-column sortable="custom" prop="version" label="版本" width="">
+                        <el-table-column sortable="custom" prop="version" label="版本" width="100">
                         </el-table-column>
                         <el-table-column  prop="" fixed="right" label="操作" width="80">
                             <template scope="scope">

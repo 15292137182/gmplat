@@ -14,22 +14,22 @@
 </head>
 <body>
 <div id="addDataSet" style="margin-top:20px">
-    <el-form :label-position="labelPosition" label-width="60px" :model="formTable">
-        <el-row type="flex" class="row-bg">
+    <el-form :label-position="labelPosition" label-width="80px" :model="formTable">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="代码">
                     <el-input placeholder="系统自动生成代码" v-model="formTable.datasetCode" disabled="" ref="codeInput"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="名称">
                     <el-input placeholder="请输入名称" v-model="formTable.nameInput" ref="nameInput"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="类型">
                     <!--<el-input placeholder="请输入类型" v-model="formTable.typeInput" ref="typeInput"></el-input>-->
@@ -37,21 +37,35 @@
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="内容">
                     <el-input type="textarea" placeholder="请输入内容" v-model="formTable.content"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="所属模块">
+                    <el-input placeholder="请输入所属模块" v-model="formTable.belongModule"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="所属系统">
+                    <el-input placeholder="请输入所属系统" v-model="formTable.belongSystem"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="说明">
                     <el-input type="textarea" placeholder="请输入说明" v-model="formTable.desp"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg">
+        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="版本">
                     <el-input placeholder="系统自动生成版本" v-model="formTable.version" disabled=""></el-input>
