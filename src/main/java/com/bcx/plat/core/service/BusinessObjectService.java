@@ -179,7 +179,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             double dou = new Double(version).doubleValue();
             //++当前版本号
             String str = ++dou + "";
-            // TODO 设置版本号 先++
+            // TODO 设置版本号
             businessObject.setVersion(str);
             String objectCode = (String) mapList.get(0).get("objectCode");
             businessObject.setObjectCode(objectCode);

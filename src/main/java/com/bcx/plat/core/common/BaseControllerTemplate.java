@@ -12,15 +12,15 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
 public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y extends BaseEntity<Y>> extends BaseController {
+
     @Autowired
     private T entityService;
 
@@ -50,7 +50,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     /**
      * 通用查询方法
      *
-     * @param search     按照空格查询
+     * @param search  按照空格查询
      * @param request request请求
      * @param locale  国际化参数
      * @return ServiceResult
@@ -58,8 +58,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/query")
     public Object singleInputSelect(String search, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = entityService.select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)));
-        if (result.size()==0) {
-            return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)),locale);
+        if (result.size() == 0) {
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
@@ -74,19 +74,19 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/queryById")
     public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = entityService
+        List result = entityService
                 .select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         result = queryResultProcess(result);
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
+        return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
     }
 
     /**
      * 通用查询方法
      *
-     * @param search     按照空格查询
+     * @param search   按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -94,17 +94,16 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return ServiceResult
      */
     @RequestMapping("/queryPage")
-    public Object singleInputSelect(String search, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
-                                    @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
+    public Object singleInputSelect(String search, @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (search ==null && search.isEmpty()){
+        if (search == null && search.isEmpty()) {
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = entityService
-                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)), Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
+                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)), Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
-
 
 
     /**
@@ -118,8 +117,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/add")
     public Object insert(Y entity, HttpServletRequest request, Locale locale) {
         int insert = entityService.insert(entity.buildCreateInfo().toMap());
-        if (insert!=1) {
-            return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL)),locale);
+        if (insert != 1) {
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
         }
         return super.result(request, commonServiceResult(entity, Message.NEW_ADD_SUCCESS), locale);
     }
@@ -136,8 +135,8 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     @RequestMapping("/modify")
     public Object update(Y entity, HttpServletRequest request, Locale locale) {
         int update = entityService.update(entity.buildModifyInfo().toMap());
-        if (update!=1) {
-            return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.NEW_ADD_FAIL)),locale);
+        if (update != 1) {
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
         }
         return super.result(request, commonServiceResult(entity, Message.UPDATE_SUCCESS), locale);
     }
@@ -152,13 +151,13 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/delete")
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        if (rowId!=null && rowId.length()>0) {
+        if (UtilsTool.isValid(rowId)) {
             Map<String, Object> args = new HashMap<>();
             args.put("rowId", rowId);
             entityService.delete(args);
             return super.result(request, commonServiceResult(rowId, Message.DELETE_SUCCESS), locale);
         }
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.DELETE_FAIL)), locale);
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
 
     }
 
@@ -175,7 +174,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
         HashMap<String, Object> map = new HashMap<>();
         map.put("rowId", rowId);
         map.put("status", BaseConstants.TAKE_EFFECT);
-        map.put("modifyTime",UtilsTool.getDateTimeNow());
+        map.put("modifyTime", UtilsTool.getDateTimeNow());
         entityService.update(map);
         return super.result(request, commonServiceResult(rowId, Message.UPDATE_SUCCESS), locale);
     }
@@ -189,7 +188,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return
      */
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
-        return ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, msg,content));
+        return ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, msg, content));
     }
 
 

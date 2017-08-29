@@ -31,10 +31,14 @@ import java.util.Map;
 public class BusinessObjectProController extends
         BaseControllerTemplate<BusinessObjectProService, BusinessObjectPro> {
 
+    private final FrontFuncProService frontFuncProService;
+    private final BusinessObjectProService businessObjectProService;
+
     @Autowired
-    private FrontFuncProService frontFuncProService;
-    @Autowired
-    private BusinessObjectProService businessObjectProService;
+    public BusinessObjectProController(FrontFuncProService frontFuncProService, BusinessObjectProService businessObjectProService) {
+        this.frontFuncProService = frontFuncProService;
+        this.businessObjectProService = businessObjectProService;
+    }
 
 
     @Override
@@ -77,7 +81,7 @@ public class BusinessObjectProController extends
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
+        return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
 

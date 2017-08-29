@@ -72,7 +72,8 @@ public class FrontFuncProController extends
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
-        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
+        PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        return result(request, ServiceResult.Msg(platResult), locale);
     }
 
 
@@ -96,14 +97,13 @@ public class FrontFuncProController extends
                 getEntityService().select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
-                        ,Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
+                        , Collections.singletonList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         result = queryResultProcess(result);
-        return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
+        return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
 
     /**
-     * TODO 这个方法后面会有大用处
      * 暂时先放这里 以后再重构
      *
      * @param result 接受ServiceResult

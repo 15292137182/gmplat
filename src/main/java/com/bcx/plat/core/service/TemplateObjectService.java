@@ -17,4 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TemplateObjectService extends BaseServiceTemplate<TemplateObject>{
+
+    @Override
+    public boolean isRemoveBlank() {
+        return false;
+    }
 }
