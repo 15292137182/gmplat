@@ -76,17 +76,19 @@ var config=new Vue({
         //重置
         reset(){
             var htmlUrl='sequence-rule-config-reset.html';
-            config.rowId = config.currentVal.rowId;
-            resetIndex = ibcpLayer.ShowIframe(htmlUrl, '序列重置', '400px', '420px',false);
+            resetIndex = ibcpLayer.ShowDiv(htmlUrl, '序列重置', '400px', '420px',
+                gmpAjax.showAjax(serverPath+'/sequenceRule/queryById',
+                    {rowId:config.currentVal.rowId},
+                    function(res){
+                        var data=res.resp.content.data[0];
+                        seqReset.resetform.seqCode=data.seqCode;
+                        seqReset.resetform.seqName=data.seqName;
+                        seqReset.resetform.seqContent=data.seqContent;
+                        seqReset.resetform.value=res.resp.content.data;
+                     }));
         }
     },
     created(){
         this.searchPage();
-        // $(document).ready(function(){
-        //     config.Height=$(window).height()-190;
-        // });
-        // $(window).resize(function(){
-        //     config.Height=$(window).height()-190;
-        // })
     }
 })

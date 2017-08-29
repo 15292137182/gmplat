@@ -27,7 +27,9 @@ var addTemp = new Vue({
                         //关闭弹层
                         ibcpLayer.Close(divIndex);
                         //分页查询
-                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){
+                            basLeft.currentChange(basLeft.tableData[0]);
+                        })
                     })
                 })
             }if(operate==2){
@@ -36,7 +38,9 @@ var addTemp = new Vue({
                         console.log(res)
                         showMsg.MsgOk(basLeft,res);
                         ibcpLayer.Close(divIndex);
-                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){
+                            basLeft.currentChange(basLeft.tableData[0]);
+                        })
                     })
                 })
             }

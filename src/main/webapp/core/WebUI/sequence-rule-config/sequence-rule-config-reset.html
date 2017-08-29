@@ -2,13 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <title>序列规则重置</title>
-    <script src="../Public/publicjs.js"></script>
+
 </head>
 <body>
 <div id="main" style="margin-top:20px">
-    <el-form ref="resetform" :model="resetform" v-model="labelPosition" label-width="90px" style="padding:0 20px 0 10px">
-        <el-form-item label="代码">
+    <!--<form class="el-form" style="padding: 0px 20px 0px 10px;">
+        <div class="el-form-item">
+    <label class="el-form-item__label" style="width: 90px;">代码</label>
+    <div class="el-form-item__content" style="margin-left: 90px;"><div class="el-input is-disabled">
+        <input autocomplete="off" disabled="disabled" type="text" rows="2" validateevent="true" class="el-input__inner">
+    </div>
+    </div>
+</div>
+    <div class="el-form-item">
+        <label class="el-form-item__label" style="width: 90px;">名称</label>
+        <div class="el-form-item__content" style="margin-left: 90px;"><div class="el-input is-disabled">
+            <input autocomplete="off" disabled="disabled" type="text" rows="2" validateevent="true" class="el-input__inner">
+        </div>
+        </div>
+    </div>
+    <div class="el-form-item">
+        <label class="el-form-item__label" style="width: 90px;">规则内容</label>
+        <div class="el-form-item__content" style="margin-left: 90px;"><div class="el-input is-disabled">
+            <input autocomplete="off" disabled="disabled" type="text" rows="2" validateevent="true" class="el-input__inner">
+        </div>
+        </div>
+    </div>
+
+    <div class="el-form-item"><label class="el-form-item__label" style="width: 90px;">b</label>
+        <div class="el-form-item__content" style="margin-left: 90px;"><div class="el-input">
+            <input autocomplete="off" type="text" rows="2" validateevent="true" value="666" class="el-input__inner">
+        </div></div></div>
+    </form>
+-->
+
+
+
+
+
+
+
+
+
+     <el-form ref="resetform" :model="resetform" v-model="labelPosition" label-width="90px" style="padding:0 20px 0 10px">
+         <el-form-item label="代码">
             <el-input v-model="resetform.seqCode" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="名称">
@@ -17,80 +56,22 @@
         <el-form-item label="规则内容">
             <el-input v-model="resetform.seqContent" :disabled="true"></el-input>
         </el-form-item>
-        <!--<el-form-item label="变量Key">-->
-            <!--<el-input v-model="resetform.name"></el-input>-->
+
+        <div class="el-form-item">
+            <label class="el-form-item__label" style="width: 90px;">b</label>
+            <div class="el-form-item__content" style="margin-left: 90px;">
+                <div class="el-input">
+                    <input autocomplete="off" type="text" rows="2" validateevent="true" value="666" class="el-input__inner">
+                </div></div>
+        </div>
+
+        <!--<el-form-item style="text-align: center">-->
+            <!--<el-button type="primary" size="small" @click.native="conform()">保存</el-button>-->
+            <!--<el-button type="primary" size="small" @click.native="cancel">取消</el-button>-->
         <!--</el-form-item>-->
-
-        <el-form-item
-                v-for="(domain, index) in dynamicValidateForm.domains"
-                :label="'变量' + index"
-                :key="domain.key"
-                :prop="'domains.' + index + '.value'"/>
-
-        <el-form-item label="当前序列值">
-            <el-input v-model="resetform.value"></el-input>
-        </el-form-item>
-        <el-form-item style="text-align: center">
-            <el-button type="primary" size="small" @click.native="conform()">保存</el-button>
-            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
-        </el-form-item>
     </el-form>
 </div>
 </body>
 
-<script>
-    var seqReset=new Vue({
-        el:"#main",
-        data:function(){
-            return{
-                resetform:{
-                    seqCode:'',
-                    seqName:'',
-                    seqContent:'',
-                    value:''
-                },
-                labelPosition: 'right',
-                choseId:'',//选中的rowId
-                queryUrl:serverPath+'/sequenceRule/queryById',
-                resetUrl:serverPath+'/sequenceRule/reset',
-            }
-        },
-        methods:{
-            searchByRowId(){
-                this.$http.jsonp(this.queryUrl,{
-                    "rowId":this.choseId,
-                },{
-                    jsonp:'callback'
-                }).then(function (res) {
-                    this.resetform.seqCode=res.data.data[0].seqCode;
-                    this.resetform.seqName=res.data.data[0].seqName;
-                    this.resetform.seqContent=res.data.data[0].seqContent;
-                    this.resetform.value=res.data.data[0].currenValue;
-                })
-            },
-            //保存
-            conform(){
-                this.$http.jsonp(this.resetUrl, {
-                    rowId:this.choseId,//重置的rowId
-                    seqCode:this.resetform.seqCode,//传code
-                    currentValue:this.resetform.value//传值
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    showMsg.MsgOk(window.parent.config,res);
-                    parent.layer.close(window.parent.resetIndex);
-                },function(){
-                    showMsg.MsgError(window.parent.resetIndex);
-                });
-            },
-            cancel(){
-                parent.layer.close(window.parent.resetIndex);
-            }
-        },
-        created(){
-            this.choseId = window.parent.config.rowId;
-            this.searchByRowId();
-        }
-    })
-</script>
+<script src="sequence-rule-config-reset.js"></script>
 </html>

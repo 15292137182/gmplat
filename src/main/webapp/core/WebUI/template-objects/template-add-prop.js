@@ -31,17 +31,33 @@ var addTempProp = new Vue({
                                                    defaultValue:addTempProp.addTempPropObj.default,
                                                    desp:addTempProp.addTempPropObj.comContent
                     },function(res){
-                        console.log(res);
                         //显示消息
-                        showMsg.MsgOk(basLeft,res);
+                        showMsg.MsgOk(basRight,res);
                         //关闭弹层
                         ibcpLayer.Close(divIndex);
                         //分页查询
-                        queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                        queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){})
                     })
                 })
             }else if(operateOPr==2){
-
+                editObj.editOk(function(){
+                    gmpAjax.showAjax(editObjTemp,{templateObjRowId:basLeft.currentId,
+                        rowId:basRight.currentId,
+                        ename:addTempProp.addTempPropObj.engNameInput,
+                        cname:addTempProp.addTempPropObj.chnNameInput,
+                        valueType:addTempProp.$refs.vtype.value,
+                        defaultValue:addTempProp.addTempPropObj.default,
+                        desp:addTempProp.addTempPropObj.comContent
+                    },function(res){
+                        //显示消息
+                        showMsg.MsgOk(basRight,res);
+                        //关闭弹层
+                        ibcpLayer.Close(divIndex);
+                        //分页查询
+                        queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
+                        })
+                    })
+                })
             }
         },
         //取消事件
