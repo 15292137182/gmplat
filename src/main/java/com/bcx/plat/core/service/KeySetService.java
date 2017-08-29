@@ -64,7 +64,8 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
         if (result.size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, list);
     }
 
 }
