@@ -482,7 +482,7 @@ public class SequenceManager {
             os.append("[").append(s).append("]");
           }
         }
-        fieldConditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os));
+        fieldConditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os.toString()));
 
         List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
                 .where(new And(fieldConditions)).execute();
