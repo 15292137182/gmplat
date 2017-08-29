@@ -1,17 +1,30 @@
 /**
  * Created by admin on 2017/8/1.
  */
-var addUrl=serverPath + "/businObj/add";
-var editUrl=serverPath + "/businObj/modify";
-var deleteUrl=serverPath + "/businObj/delete";
-var qurUrl=serverPath + "/businObj/queryPage";
-var addProUrl=serverPath + "/businObj/add";
-var deleteProUrl=serverPath + "/businObjPro/delete";
-var qurProUrl=serverPath + "/businObj/queryProPage";
-var affectPropUrl=serverPath + "/businObj/takeEffect";//生效
-var changeUrl=serverPath + "/businObj/changeOperat";//变更
-var conTable=serverPath + "/maintTable/query";
-var conChildTable=serverPath + "/dbTableColumn/queryTabById";//字表左侧查右侧
+//新增业务对象
+    var addUrl=serverPath + "/businObj/add";
+//编辑业务对象
+    var editUrl=serverPath + "/businObj/modify";
+//编辑业务对象查询
+    var editObjUrl=serverPath + "/businObj/queryById";
+//删除业务对象
+    var deleteUrl=serverPath + "/businObj/delete";
+//业务对象查询
+    var qurUrl=serverPath + "/businObj/queryPage";
+//新增业务对象属性
+    var addProUrl=serverPath + "/businObj/add";
+//删除业务对象属性
+    var deleteProUrl=serverPath + "/businObjPro/delete";
+//查询业务对象属性
+    var qurProUrl=serverPath + "/businObj/queryProPage";
+//生效
+    var affectPropUrl=serverPath + "/businObj/takeEffect";
+//变更
+    var changeUrl=serverPath + "/businObj/changeOperat";
+//关联表
+    var conTable=serverPath + "/maintTable/query";
+//关联表字段
+    var conChildTable=serverPath + "/dbTableColumn/queryTabById";
 
 var basTop = new Vue({
     el: '#basTop',
@@ -22,135 +35,74 @@ var basTop = new Vue({
         change: true,
     },
     methods: {
+        //新增业务对象
         addEvent() {
             operate = 1;
             var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px',function(){
-                //关联表字段
-                basTop.$http.jsonp(conTable, {
-                    str:''
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    em.reaOptTable = res.data.data;
-                    console.log(em.reaOptTable)
-                });
-            });
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px',function(){});
         },
+        //新增业务对象属性
         addProp(){
             operateOPr=1;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '540px', function () {
-                basTop.getSelectValue();
-
-            });
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '540px', function () {});
         },
-        getSelectValue(){
-            //关联表字段
-            proEm.$http.jsonp(conChildTable, {
-                args:'',
-                rowId: basLeft.relateTableRowId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                //console.log(ref);
-                proEm.optionValue = ref.data.data;
-            });
-            //键值类型(键值集合)
-            proEm.$http.jsonp(serverPath + '/keySet/query', {
-                str: ''
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                // console.log(ref);
-                proEm.optionLeft = ref.data.data;
-               // console.log(proEm.optionLeft)
-            });
-            //值来源类型(键值集合)
-            proEm.$http.jsonp(serverPath + '/keySet/query', {
-                str: ''
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                proEm.optionRight = ref.data.data;
-            });
-        },
+        //生效
         affectProp(){
-            this.$http.jsonp(affectPropUrl, {
-                rowId: basLeft.currentId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                ibcpLayer.ShowOK(ref.data.message);
+            gmpAjax.showAjax(affectPropUrl,{rowId:basLeft.currentId},function(res){
+                showMsg.MsgOk(basTop,res);
                 basLeft.searchLeft();
-
-            });
+            })
         },
+        //变更
         changeProp(){
-            this.$http.jsonp(changeUrl, {
-                rowId: basLeft.currentId
-            }, {
-                jsonp: 'callback'
-            }).then(function (ref) {
-                console.log(ref);
-                ibcpLayer.ShowOK(ref.data.message);
-                //分页跳回到第一页
+            gmpAjax.showAjax(changeUrl,{rowId:basLeft.currentId},function(res){
+                showMsg.MsgOk(basTop,res);
                 basLeft.searchLeft();
-            });
+            })
         }
     }
 });
 var basLeft = new Vue({
     "el": "#basLeft",
-    data: {
-        leftInput: '',
-        loading:true,
-        leftHeight: '',
-        tableData: [],
-        pageNum:1,//当前为第一页
-        pageSize:10,//每页显示条数
-        //开始不能为空 否则会报错
-        allDate:0,//总共有多少条
-
-    },
+    data:  getData.dataObj({
+    }),
     methods: {
+        //编辑业务对象
         editEvent() {
             operate = 2;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
                 console.log(basLeft.currentVal.rowId);
-
-                //关联表字段
-                basLeft.$http.jsonp(serverPath+'/businObj/queryById', {
-                    rowId:basLeft.currentVal.rowId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    em.addForm.codeInput = res.data.data[0].objectCode;  //对象代码
-                    em.addForm.nameInput = res.data.data[0].objectName;//对象名称
-                    em.$refs.selectTab.tableInput = res.data.data[0].relateTableRowId;//关联表
-                    em.addForm.versionInput = res.data.data[0].version;//版本
-
-                });
+                gmpAjax.showAjax(editObjUrl,{rowId:basLeft.currentVal.rowId},function(res){
+                    //编辑拿到的数据
+                    var data=res.resp.content.data[0];
+                    em.addForm.codeInput = data.objectCode;  //对象代码
+                    em.addForm.nameInput =data.objectName;//对象名称
+                    em.$refs.selectTab.tableInput =data.relateTableRowId;//关联表
+                    em.addForm.versionInput =data.version;//版本
+                })
             });
         },
+        //删除业务对象
         deleteEvent() {
             deleteObj.del(function(){
-                var deleteId = basLeft.currentVal.rowId;  //左侧表的row的ID
-                basLeft.$http.jsonp(deleteUrl, {
-                    rowId: deleteId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    showMsg.MsgOk(basTop,ref)
+                gmpAjax.showAjax(deleteUrl,{rowId:basLeft.currentVal.rowId},function(res){
+                    showMsg.MsgOk(basLeft,res);
                     //分页跳回到第一页
                     basLeft.searchLeft();
-                },function(){
-                    showMsg.MsgError(basTop)
-                });
+                })
             })
         },
+        //分页查询
         searchLeft(){
+            queryData.getData(queryTemp,this.input,this,function(res){
+                basLeft.currentChange(basLeft.tableData[0]);
+            })
+
+
+
+
             queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){
                 if(res.data!=null){
                     //console.log(res.data.result);
@@ -168,6 +120,7 @@ var basLeft = new Vue({
                 }
             });
         },
+        //不分页查询
         searchLeftTable() {
             pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.pageNum,this,function(res){
                 //console.log(res)

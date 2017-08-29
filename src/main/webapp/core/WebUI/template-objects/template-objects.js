@@ -15,16 +15,14 @@
 //模板对象属性查询接口
     var queryObjTemp=serverPath + "/templateObj/queryProPage";
 
-
 //模板对象属性新增接口
-var addObjTemp=serverPath + "/templateObjPro/add";
+    var addObjTemp=serverPath + "/templateObjPro/add";
 //模板对象属性编辑查询接口
-//var editQueryObjTemp=serverPath + "/templateObj/queryProPage";
+    var editQueryObjTemp=serverPath + "/templateObjPro/queryById";
 //模板对象属性编辑接口
-var editObjTemp=serverPath + "/templateObjPro/modify";
+    var editObjTemp=serverPath + "/templateObjPro/modify";
 //模板对象属性删除接口
-var deleteObjTemp=serverPath + "/templateObjPro/delete";
-
+    var deleteObjTemp=serverPath + "/templateObjPro/delete";
 
 
 var basTop = new Vue({
@@ -87,22 +85,24 @@ var basLeft = new Vue({
             deleteObj.del(function(){
                 gmpAjax.showAjax(deleteTempObj,{rowId:basLeft.currentId},function(res){
                     showMsg.MsgOk(basLeft,res);
-                    queryData.getData(queryTemp,basLeft.input,basLeft,function(res){})
+                    queryData.getData(queryTemp,basLeft.input,basLeft,function(res){
+                        basLeft.currentChange(basLeft.tableData[0]);
+                    })
                 })
             })
         },
         //表格点击事件
         currentChange(row){
-            console.log(row);
-            //左边这一行的数据的ID
-            this.currentId = row.rowId;
-            //查找右边表的数据
-            queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
-                //选中右边第一行
-                basRight.currentRChange(basRight.tableData[0]);
-            })
-
-
+            if(row!=undefined){
+                //左边这一行的数据的ID
+                this.currentId = row.rowId;
+                //查找右边表的数据
+                queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
+                    //console.log(res)
+                    //选中右边第一行
+                    basRight.currentRChange(basRight.tableData[0]);
+                })
+            }
         },
         //将选中行变颜色
         FindLFirstDate(row){
@@ -151,37 +151,57 @@ var basRight = new Vue({
     methods: {
         //不分页查询
         searchRight(){
-            pagingObj.Examples(queryTemp,basLeft.currentId,this.input,this.pageSize,this.pageNum,this,function(res){
+            pagingObj.Examples(queryObjTemp,basLeft.currentId,this.input,this.pageSize,this.pageNum,this,function(res){
                 //有数据选中第一行
                 basRight.currentRChange(basRight.tableData[0]);
             })
         },
         //分页查询
         searchRightTable(){
-            queryData.getDatas(queryTemp,this.input,basLeft.currentId,this,function(res){
-                basRight.currentChange(basRight.tableData[0]);
+            queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
+                basRight.currentRChange(basRight.tableData[0]);
             })
         },
         //右边点击事件
         currentRChange(row){
-            console.log(row);
+            //console.log(row);
+            this.currentId=row.rowId;
         },
         //编辑事件
         editProp(){
             operateOPr=2;
-
+            var htmlUrl = 'template-add-prop.html';
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象属性', '400px', '480px',function() {
+                gmpAjax.showAjax(editQueryObjTemp, {rowId: basRight.currentId}, function (res) {
+                    //编辑拿到的数据
+                    var data = res.resp.content.data[0];
+                    //console.log(data);
+                    addTempProp.addTempPropObj.codeInput=data.code;
+                    addTempProp.addTempPropObj.engNameInput=data.ename;
+                    addTempProp.addTempPropObj.chnNameInput=data.cname;
+                    addTempProp.$refs.vtype.value=data.valueType;
+                    addTempProp.addTempPropObj.default=data.defaultValue;
+                    addTempProp.addTempPropObj.comContent=data.desp;
+                })
+            })
         },
         //删除事件
-        editProp(){
-
+        deleteProp(){
+            deleteObj.del(function(){
+                gmpAjax.showAjax(deleteObjTemp,{rowId: basRight.currentId},function(res){
+                    showMsg.MsgOk(basRight,res);
+                    //分页查询
+                    queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){})
+                })
+            })
         },
         //将选中行变颜色
         FindLFirstDate(row){
             this.$refs.tableData.setCurrentRow(row);
         },
         //排序事件
-        headSort(){
-
+        headSort(column){
+            pagingObj.headSorts(queryObjTemp,basLeft.currentId,this.input,column,this);
         },
         //选择每页多少条数据
         handleSizeChange(val) {
@@ -204,7 +224,7 @@ var basRight = new Vue({
         $(window).resize(function () {
             basRight.leftHeight = $(window).height() - 194;
         });
-        var args={"objTempProp":{defaultValue:"valueType"}};
+        var args={"objTempProp":{valueType:"valueType"}};
         TableKeyValueSet.init(args);
     },
     //页面一进入第一行高亮显示
