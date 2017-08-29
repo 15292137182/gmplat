@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS t_business_object;
 
-
-CREATE TABLE t_business_object (
+CREATE TABLE public.t_business_object (
   row_id              VARCHAR(70) NOT NULL,
   object_code         VARCHAR(64) NULL,
   object_name         VARCHAR(64) NULL,
   relate_table_row_id VARCHAR(70) NULL,
+  change_operat       VARCHAR(8)  NULL,
   status              VARCHAR(8)  NULL,
   "version"           VARCHAR(16) NULL,
   create_time         VARCHAR(32) NULL,
@@ -18,6 +18,8 @@ CREATE TABLE t_business_object (
   delete_user         VARCHAR(16) NULL,
   delete_user_name    VARCHAR(16) NULL,
   delete_flag         VARCHAR(4)  NULL,
+  belong_module       VARCHAR(32) NULL,
+  belong_system       VARCHAR(32) NULL,
   CONSTRAINT t_business_object_pkey PRIMARY KEY (row_id)
 );
 
