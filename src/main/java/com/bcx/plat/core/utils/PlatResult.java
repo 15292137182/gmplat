@@ -1,5 +1,11 @@
 package com.bcx.plat.core.utils;
 
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>Title: PlatResult</p>
  * <p>Description: the is PlatResult</p>
@@ -22,7 +28,16 @@ public class PlatResult<T> {
     public PlatResult(int state, String msg, T data) {
         this.state = state;
         this.msg = msg;
+        try {
+            ((PageResult) data).getResult();
+        } catch (Exception e) {
+            Map<String,Object> map = new HashMap<>();
+            map.put("result",data);
+            this.data = (T)map;
+            return;
+        }
         this.data = data;
+
     }
 
     public static PlatResult Msg(int state, String msg) {
