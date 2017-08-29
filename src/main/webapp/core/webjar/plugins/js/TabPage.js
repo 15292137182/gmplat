@@ -458,6 +458,10 @@ var gmpAjax = (function(){
  * @type {{setOpt}}
  */
 var SelectOptions = (function(){
+    //templateId在public.js中小代码组件的id
+    //modelName下拉框的值
+    //keysetCode指键值集合中的某个编号
+    //path  后端接口
     var setOpt = function(templateId,modelName,keysetCode,path){
         var _data={};
         var _modelName='value';
