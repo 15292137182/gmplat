@@ -1,11 +1,12 @@
-var pagingObj = (function(){//分页不跳转回第一页调该方法
+//分页不跳转回第一页调该方法
+var pagingObj = (function(){
     /*tsj 17/08/28 修改后端返回结构*/
-    var Example = function(url,args,pageSize,pageNum,obj,callback){
+    var Example = function(url,search,pageSize,pageNum,obj,callback){
         $.ajax({
             url:url,
             type:"get",
             data:{
-                args:args,
+                search:search,
                 pageSize:pageSize,
                 pageNum:pageNum
             },
@@ -30,13 +31,13 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             }
         })
     }
-    var Examples = function(url,rowId,args,pageSize,pageNum,obj,callback){//有依赖的分页查询
+    var Examples = function(url,rowId,search,pageSize,pageNum,obj,callback){//有依赖的分页查询
         $.ajax({
             url:url,
             type:"get",
             data:{
                 rowId:rowId,
-                args:args,
+                search:search,
                 pageSize:pageSize,
                 pageNum:pageNum
             },
@@ -61,7 +62,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             }
         })
     }
-    var headSort = function(url,args,pageSize,pageNum,column,obj,callback){
+    var headSort = function(url,search,pageSize,pageNum,column,obj,callback){
         //列头排序
         //url:接口地址，args：table输入框，pageSize：每页多少条记录，pageNum：当前第几页
         //column：el函数当前列信息，obj:当前vue实例对象（this）,callback:成功后的回调函数
@@ -80,7 +81,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             url:url,
             type:"get",
             data:{
-                args:args,
+                search:search,
                 pageSize:pageSize,
                 pageNum:pageNum,
                 order:datas
@@ -106,7 +107,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             }
         })
     }
-    var headSorts1 = function(url,args,column,obj,callback){
+    var headSorts1 = function(url,search,column,obj,callback){
         //有依赖的列头排序
         //url:接口地址，rowId:有依赖表的id，args：table输入框，column：el函数当前列信息，
         // obj:当前vue实例对象（this）,callback:成功后的回调函数
@@ -125,7 +126,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             url:url,
             type:"get",
             data:{
-                args:args,
+                search:search,
                 pageSize:obj.pageSize,
                 pageNum:1,
                 order:datas
@@ -151,7 +152,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             }
         })
     }
-    var headSorts = function(url,rowId,args,column,obj,callback){
+    var headSorts = function(url,rowId,search,column,obj,callback){
         //有依赖的列头排序
         //url:接口地址，rowId:有依赖表的id，args：table输入框，column：el函数当前列信息，
         // obj:当前vue实例对象（this）,callback:成功后的回调函数
@@ -171,7 +172,7 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             type:"get",
             data:{
                 rowId:rowId,
-                args:args,
+                search:search,
                 pageSize:obj.pageSize,
                 pageNum:1,
                 order:datas
@@ -261,14 +262,15 @@ var dataConversion = (function(){
     }
 })()
 
-var queryData = (function(){//刷新table跳转到第一页调改方法
-    var getData = function(url,args,obj,callback){
+//刷新table跳转到第一页调该方法
+var queryData = (function(){
+    var getData = function(url,search,obj,callback){
         //url：分页查询接口，obj：当前vue实例对象（this），callback：成功后的回调函数
             $.ajax({
                 url:url,
                 type:"get",
                 data:{
-                    args:args,
+                    search:search,
                     pageSize:obj.pageSize,
                     pageNum:1
                 },
@@ -293,14 +295,14 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
                 }
             })
     }
-    var getDatas = function(url,args,rowId,obj,callback){
+    var getDatas = function(url,search,rowId,obj,callback){
         //url：分页查询接口，args：输入框，obj：当前vue实例对象（this），rowId：有依赖的ID，callback：成功后的回调函数
         $.ajax({
             url:url,
             type:"get",
             data:{
                 rowId:rowId,
-                args:args,
+                search:search,
                 pageSize:obj.pageSize,
                 pageNum:1
             },
@@ -373,6 +375,7 @@ var editObj = (function(){
     }
 })()
 
+//弹出消息
 var showMsg = (function(){
     var MsgOk = function(obj,data){
         //obj：需要弹出消息页面的Vue实例对象
@@ -403,6 +406,8 @@ var showMsg = (function(){
 
 var getData = (function(){
     var dataObj = function(json){
+        //需要自定义的data数据，格式json（"key":"value"） data:getData.dataObj(json)
+        //不需要自定义不用传参数！！！data:getData.dataObj()
         var data = {};
         if(json){
             data = json;
@@ -433,6 +438,7 @@ var getData = (function(){
 
 var gmpAjax = (function(){
     var showAjax = function(url,jsonData,callback){
+        //url：接口地址，jsonData：json格式的数据（"key":"value"），callback：成功后的回调函数
         $.ajax({
             url:url,
             type:"get",
@@ -483,7 +489,7 @@ var SelectOptions = (function(){
             methods: {
                 flush() {
                     var _path = serverPath+"/keySet/queryNumber";
-                    var param = {"args":keysetCode};
+                    var param = {"search":keysetCode};
                     if(undefined != path && null != path && "" != path){
                         _path = path;
                         param = {};
@@ -574,7 +580,7 @@ var TableKeyValueSet = (function(){
                 url:serverPath+"/keySet/queryKeySet",
                 type:"get",
                 data:{
-                    args:arr
+                    search:arr
                 },
                 dataType:"jsonp",
                 success:function(res){

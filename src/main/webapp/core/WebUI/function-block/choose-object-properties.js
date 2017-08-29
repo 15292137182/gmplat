@@ -7,7 +7,7 @@ var em = new Vue({
         objectPropertiesData: []
     },
     created() {
-        this.$http.jsonp(serverPath + "/businObjPro/querySlave", {//查询指定业务对象ID下的所有属性
+        this.$http.jsonp(serverPath + "/businObjPro/queryBusinPro", {//查询指定业务对象ID下的所有属性
             objRowId:window.parent.em.relateBusiObjId,
         }, {
             jsonp: 'callback'
