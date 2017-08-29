@@ -12,8 +12,8 @@ var em=new Vue({
         formTable:{
             codeInput:'',//funcCode功能代码
             nameInput:'',//funcName功能名称
-            // typeInput:'',//funcType功能类型
-            // tableInput:'',//relateBusiObj关联对象val
+            Module:'',//所属模块
+            System:'',//所属系统
             desp:'',
         },
         dataId:'',//relateBusiObj关联对象ID
@@ -26,28 +26,16 @@ var em=new Vue({
             littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象数据', '400px', '420px',false);
         },
         addBlock(){//新增
-            // this.$http.jsonp(serverPath+"/fronc/add",{
-            //     "funcCode":this.formTable.codeInput,
-            //     "funcName":this.formTable.nameInput,
-            //     "funcType":this.$refs.fbtype.value,
-            //     "relateBusiObj":this.$refs.conObj.connectObj,
-            //     "desp":this.formTable.desp
-            // },{
-            //     jsonp:'callback'
-            // }).then(function(res){
-            //     showMsg.MsgOk(functionBlock,res);
-            //     ibcpLayer.Close(topButtonObj.divIndex);
-            //     queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
-            //         properties.getRight(functionBlock.tableData[0].rowId);
-            //     })
-            // },function(){
-            //     showMsg.MsgError(functionBlock);
-            // });
+            /**
+             * tsj 07/8/29 新增功能块ajax代码重构,新增所属模块，系统字段
+             **/
             gmpAjax.showAjax(serverPath+"/fronc/add",{
                 "funcCode":em.formTable.codeInput,
                 "funcName":em.formTable.nameInput,
                 "funcType":em.$refs.fbtype.value,
                 "relateBusiObj":em.$refs.conObj.connectObj,
+                "belongModule":em.formTable.Module,
+                "belongSystem":em.formTable.System,
                 "desp":em.formTable.desp
             },function(res){
                 showMsg.MsgOk(functionBlock,res);
@@ -58,22 +46,23 @@ var em=new Vue({
             })
         },
         editBlock(){//编辑
-            this.$http.jsonp(serverPath+"/fronc/modify",{
+            /**
+             * tsj 07/8/29 编辑功能块ajax代码重构,增加所属模块，系统字段
+             **/
+            gmpAjax.showAjax(serverPath+"/fronc/modify",{
                 "rowId":this.rowId,
                 "funcCode":this.formTable.codeInput,
                 "funcName":this.formTable.nameInput,
                 "funcType":this.$refs.fbtype.value,
                 "relateBusiObj":this.$refs.conObj.connectObj,
+                "belongModule":this.formTable.Module,
+                "belongSystem":this.formTable.System,
                 "desp":this.formTable.desp
-            },{
-                jsonp:'callback'
-            }).then(function(res){
+            },function(res){
                 showMsg.MsgOk(functionBlock,res);
                 ibcpLayer.Close(functionBlock.divIndex);
-                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock)
-            },function(){
-                showMsg(functionBlock);
-            });
+                queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock);
+            })
         },
         conformEvent(){
             var datas=[this.$refs.nameInput];

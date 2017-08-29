@@ -49,6 +49,20 @@
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
+                <el-form-item label="所属模块">
+                    <el-input placeholder="请输入所属模块" v-model="formTable.Module" ref="Module"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="所属系统">
+                    <el-input placeholder="请输入所属系统" v-model="formTable.System" ref="System"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
                 <el-form-item label="说明">
                     <el-input type="textarea" placeholder="请输入说明" v-model="formTable.desp"></el-input>
                 </el-form-item>

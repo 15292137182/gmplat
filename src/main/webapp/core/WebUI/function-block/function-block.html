@@ -113,6 +113,18 @@
                                                 </el-col>
                                             </el-row>
                                             <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="所属模块">
+                                                        <span>{{props.row.belongModule}}</span>
+                                                    </el-form-item>
+                                                </el-col>
+                                                <el-col :span="12">
+                                                    <el-form-item label="所属系统">
+                                                        <span>{{props.row.belongSystem}}</span>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
                                                 <el-col :span="24">
                                                     <el-form-item label="说明">
                                                         <span>{{ props.row.desp }}</span>

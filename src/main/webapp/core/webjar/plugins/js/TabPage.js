@@ -13,7 +13,6 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
-                    console.log(res.resp.content.data.result);
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -88,7 +87,6 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             },
             dataType:"jsonp",
             success:function(res){
-                console.log(res.data.result);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     dataConversion.conversion(obj,res.resp.content.data.result);
@@ -180,7 +178,6 @@ var pagingObj = (function(){//分页不跳转回第一页调该方法
             },
             dataType:"jsonp",
             success:function(res){
-                console.log(res.data.result);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     dataConversion.conversion(obj,res.resp.content.data.result);
@@ -250,7 +247,6 @@ var dataConversion = (function(){
                 var dataObj = data[val];
                 var _newValue = dataObj[row[setColumn]];
                 //重新赋值
-                //console.log(dataObj[arr[i][keyArr[i]]]);
                 row[setColumn] = _newValue;
             }
         }
@@ -279,7 +275,6 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
                 dataType:"jsonp",
                 success:function(res){
                     obj.loading=false;
-                    console.log(res);
                     if(res.resp.respCode=="000"){
                         dataConversion.conversion(obj,res.resp.content.data.result);
                         obj.tableData = res.resp.content.data.result;//数据源
@@ -312,7 +307,6 @@ var queryData = (function(){//刷新table跳转到第一页调改方法
             dataType:"jsonp",
             success:function(res){
                 obj.loading=false;
-                console.log(res);
                 if(res.resp.respCode=="000"){
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
@@ -381,8 +375,6 @@ var editObj = (function(){
 
 var showMsg = (function(){
     var MsgOk = function(obj,data){
-        console.log(data.resp.respCode);
-        //console.log(data.resp.content.msg);
         //obj：需要弹出消息页面的Vue实例对象
         //msg：ajax成功后返回的res
         if(data.resp.respCode=="000"){//操作成功

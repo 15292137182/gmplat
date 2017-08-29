@@ -4,28 +4,22 @@
 //左边table
 var functionBlock = new Vue({
     el:"#app",
-    data:{
+    /**
+     * tsj 07/8/29 data代码重构
+     **/
+    data:getData.dataObj({
         tableId:'Block',
-        loading:true,
-        input:'',
-        tableData:[],
-        leftHeight:'',
-        //url:serverPath+'/fronc/query',//查询所有功能块信息
         Selurl:serverPath+'/fronc/queryPage',//查询所有功能块信息
         selUrlId:serverPath+'/fronc/queryById',//根据rowId查所有信息
         deleteId:'',
         rowId:'',
         editObj:'',
         divIndex:'',
-        pageNum:1,//当前页号
-        pageSize:10,//每页显示数据条数
-        allDate:0//共多少条数据
-    },
+    }),
     methods:{
         //查询
         get(){
             pagingObj.Example(this.Selurl,this.input,this.pageSize,this.pageNum,this,function(){
-                //functionBlock.pageNum = 1;
                 functionBlock.click(functionBlock.tableData[0]);
                 if(functionBlock.tableData.length>0){
                     functionBlock.deleteId = functionBlock.tableData[0].rowId;
@@ -37,53 +31,33 @@ var functionBlock = new Vue({
         },
         //编辑
         editBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '420px',function(){
-                functionBlock.$http.jsonp(functionBlock.selUrlId,{
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','编辑功能块','400px', '540px',function(){
+                /**
+                 * tsj 07/8/29 编辑功能块ajax代码重构，增加所属模块，系统字段
+                 **/
+                gmpAjax.showAjax(functionBlock.selUrlId,{
                     rowId:functionBlock.rowId
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
-                    var data = res.data.data;
-                    em.isEdit = true;
-                    em.formTable.codeInput=data[0].funcCode;
-                    em.formTable.nameInput=data[0].funcName;
-                    em.$refs.fbtype.value=data[0].funcType;
-                    console.log(data[0].funcType);
-                    em.dataId=data[0].relateBusiObj;
-                    //em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
-                    em.$refs.conObj.connectObj=data[0].relateBusiObj;
-                    em.formTable.desp=data[0].desp;
-                    em.rowId=data[0].rowId;
+                },function(res){
+                    var data = res.resp.content.data;
+                        em.isEdit = true;
+                        em.formTable.codeInput=data[0].funcCode;
+                        em.formTable.nameInput=data[0].funcName;
+                        em.$refs.fbtype.value=data[0].funcType;
+                        em.dataId=data[0].relateBusiObj;
+                        em.$refs.conObj.connectObj=data[0].relateBusiObj;
+                        em.formTable.Module=data[0].belongModule;
+                        em.formTable.System=data[0].belongSystem;
+                        em.formTable.desp=data[0].desp;
+                        em.rowId=data[0].rowId;
                 })
-                // console.log(functionBlock.editObj);
-                // em.isEdit = true;
-                // em.formTable.codeInput=functionBlock.editObj.funcCode;
-                // em.formTable.nameInput=functionBlock.editObj.funcName;
-                // em.$refs.fbtype.value=functionBlock.editObj.funcType;
-                // console.log(functionBlock.editObj.funcType);
-                // em.dataId=functionBlock.editObj.relateBusiObj;
-                // //em.$refs.conObj.connectObj=functionBlock.editObj.objectName;
-                // em.$refs.conObj.connectObj=functionBlock.editObj.relateBusiObj;
-                // em.formTable.desp=functionBlock.editObj.desp;
-                // em.rowId=functionBlock.editObj.rowId;
             });
         },
         //删除
         del(){
+            /**
+             * tsj 07/8/29 删除功能块ajax代码重构
+             **/
             deleteObj.del(function(){
-                // functionBlock.$http.jsonp(serverPath+"/fronc/delete",{
-                //     rowId:functionBlock.deleteId
-                // },{
-                //     jsonp:'callback'
-                // }).then(function(res){
-                //     showMsg.MsgOk(functionBlock,res);
-                //     //functionBlock.get();
-                //     queryData.getData(this.Selurl,this.input,this,function(res){
-                //         properties.getRight(functionBlock.tableData[0].rowId);
-                //     })
-                // },function(){
-                //     showMsg.MsgError(functionBlock);
-                // })
                 gmpAjax.showAjax(serverPath+"/fronc/delete",{
                     rowId:functionBlock.deleteId
                 },function(res){
@@ -248,8 +222,6 @@ var properties = new Vue({
         },
     },
     created(){
-        //var args={"blockAttribute":{displayWidget:"showControl"}};
-        //TableKeyValueSet.init(args);
         $(document).ready(function(){
             properties.rightHeight=$(window).height()-190;
         });
@@ -277,25 +249,9 @@ var topButtonObj = new Vue({
     methods: {
         //功能块
         addBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('add-block.html','新增功能块','400px', '420px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('add-block.html','新增功能块','400px', '540px',function(){
                 em.isEdit = false;
             });
-        },
-        editBlock(){
-            this.divIndex = ibcpLayer.ShowDiv('demo.html','编辑功能块','400px', '400px',function(){
-                em.isEdit = true;
-                em.formTable.codeInput=functionBlock.editObj.funcCode;
-                em.formTable.nameInput=functionBlock.editObj.funcName;
-                em.formTable.typeInput=functionBlock.editObj.funcType;
-                em.dataId=functionBlock.editObj.relateBusiObj;
-                em.formTable.tableInput=functionBlock.editObj.objectName;
-                em.formTable.desp=functionBlock.editObj.desp;
-                em.rowId=functionBlock.editObj.rowId;
-            });
-
-        },
-        del(){
-            functionBlock.del();
         },
         //功能块属性
         addData(){
