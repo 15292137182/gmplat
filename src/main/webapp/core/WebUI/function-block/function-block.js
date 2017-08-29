@@ -120,23 +120,21 @@ var functionBlock = new Vue({
 //右边table
 var properties = new Vue({
     el:'#right',
-    data:{
+    /**
+     * tsj 07/8/29 data代码重构
+     **/
+    data:getData.dataObj({
         tableId:'blockAttribute',
-        loading:true,
-        tableData:[],
         findRightDataUrl:serverPath+'/fronFuncPro/queryProPage',//查询指定ID功能块的属性信息
         rightHeight:'',
         rightInput:'',//右边表输入框
         rowId:'',//选中属性行ID
         funcId:'',//功能块ID
         divIndex:'',
-        pageNum:1,//当前页号
-        pageSize:10,//每页显示数据条数
-        allDate:0//共多少条数据
-    },
+    }),
     methods:{
         handleClick(){//查看按钮
-            this.divIndex = ibcpLayer.ShowDiv('attribute-details.html','属性明细','400px', '460px',function(){
+            this.divIndex = ibcpLayer.ShowDiv('attribute-details.html','属性明细','645px', '600px',function(){
 
             });
         },
@@ -186,16 +184,14 @@ var properties = new Vue({
         //删除属性
         delData(){
             deleteObj.del(function(){
-                properties.$http.jsonp(topButtonObj.delUrl,{
+                /**
+                 * tsj 07/8/29 ajax代码重构
+                 **/
+                gmpAjax.showAjax(topButtonObj.delUrl,{
                     rowId:properties.rowId
-                },{
-                    jsonp:'callback'
-                }).then(function(res){
-                    //properties.getRight(properties.funcId);
+                },function(res){
                     queryData.getDatas(properties.findRightDataUrl,properties.rightInput,properties.funcId,properties);
                     showMsg.MsgOk(properties,res);
-                },function(){
-                    showMsg.MsgError(properties);
                 })
             })
         },

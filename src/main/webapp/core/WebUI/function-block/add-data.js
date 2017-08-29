@@ -6,6 +6,7 @@
  */
 
 Vue.component('select-show', SelectOptions.setOpt('','','showControl',''));
+Vue.component('select-align', SelectOptions.setOpt('','','functionBlockAlign',''));
 
 var em=new Vue({
     el:'#addData',
@@ -19,6 +20,10 @@ var em=new Vue({
             testFunction:'',//验证函数
             displayFunction:'',//显示函数
             sortNumber:'',//排序
+            Twidth:'',//宽度
+            Keyword1:'',//关键字1
+            Keyword2:'',//关键字2
+            Keyword3:'',//关键字3
         },
         funcRowId:'',//功能块ID
         dataId:'',//关联对象属性ID
@@ -36,6 +41,8 @@ var em=new Vue({
         editUrl:serverPath+'/fronFuncPro/modify',//编辑功能块属性
         isDisabled:false,//是否禁用
         rightRowId:'',//右边表行ID
+        SupportSorting:'',//支持排序
+        ExactSearch:'',//是否精确查询
     },
     methods:{
         searchConnectObj(){//查询所有对象属性，弹出对象属性表
@@ -73,55 +80,69 @@ var em=new Vue({
             this.addObjectProperties();//新增
         },
         newAttribute(){//新增属性
-            this.$http.jsonp(this.url, {
-                funcRowId:this.funcRowId,//功能块ID
-                relateBusiPro:this.dataId,//业务对象属性ID
-                displayTitle:this.formTable.nameTitle,//显示标题
-                wetherDisplay:this.checked,//是否显示
-                displayWidget:this.$refs.show.value,//显示控件
-                wetherReadonly:this.checkedReady,//只读
-                allowEmpty:this.checkedNull,//允许为空
-                lengthInterval:this.formTable.lengthSection,//长度区间
-                validateFunc:this.formTable.testFunction,//验证函数
-                displayFunc:this.formTable.displayFunction,//显示函数
-                sort:this.formTable.sortNumber,//排序
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                showMsg.MsgOk(window.parent.functionBlock,res);
-                //window.parent.properties.getRight(this.funcRowId);
-                queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
-                window.parent.functionBlock.get();
-                parent.layer.close(window.parent.topButtonObj.divIndex);
-            },function(){
-                showMsg.MsgError(window.parent.functionBlock);
-            });
+            /**
+             * tsj 07/8/29 新增数据ajax代码重构，增加字段
+             **/
+            gmpAjax.showAjax(em.url,
+                {
+                funcRowId:em.funcRowId,//功能块ID
+                relateBusiPro:em.dataId,//业务对象属性ID
+                displayTitle:em.formTable.nameTitle,//显示标题
+                wetherDisplay:em.checked,//是否显示
+                displayWidget:em.$refs.show.value,//显示控件
+                wetherReadonly:em.checkedReady,//只读
+                allowEmpty:em.checkedNull,//允许为空
+                lengthInterval:em.formTable.lengthSection,//长度区间
+                validateFunc:em.formTable.testFunction,//验证函数
+                displayFunc:em.formTable.displayFunction,//显示函数
+                sort:em.formTable.sortNumber,//排序
+                widthSetting:em.formTable.Twidth,//宽度
+                align:em.$refs.align.value,//对齐方式
+                exactQuery:em.ExactSearch,//是否精确查询
+                supportSort:em.SupportSorting,//支持排序
+                keywordOne:em.formTable.Keyword1,//关键字1
+                keywordTwo:em.formTable.Keyword2,//关键字2
+                keywordThree:em.formTable.Keyword3,//关键字3
+            },
+                function(res){
+                    showMsg.MsgOk(window.parent.functionBlock,res);
+                    queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
+                    window.parent.functionBlock.get();
+                    parent.layer.close(window.parent.topButtonObj.divIndex);
+            })
         },
         editAttribute(){//编辑属性
-            this.$http.jsonp(this.editUrl, {
-                rowId:this.rowId,//新增属性的ID
-                funcRowId:this.funcRowId,//功能块ID
-                relateBusiPro:this.dataId,//业务对象属性ID
-                displayTitle:this.nameTitle,//显示标题
-                wetherDisplay:this.checked,//是否显示
-                displayWidget:this.$refs.show.value,//显示控件
-                wetherReadonly:this.checkedReady,//只读
-                allowEmpty:this.checkedNull,//允许为空
-                lengthInterval:this.lengthSection,//长度区间
-                validateFunc:this.testFunction,//验证函数
-                displayFunc:this.displayFunction,//显示函数
-                sort:this.sortNumber,//排序
-            }, {
-                jsonp: 'callback'
-            }).then(function (res) {
-                showMsg.MsgOk(window.parent.functionBlock,res);
-                //window.parent.properties.getRight(this.funcRowId);
-                queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
-                window.parent.functionBlock.get();
-                parent.layer.close(window.parent.topButtonObj.divIndex);
-            },function(){
-                showMsg.MsgError(window.parent.functionBlock);
-            });
+            /**
+             * tsj 07/8/29 编辑数据ajax代码重构，增加字段
+             **/
+            gmpAjax.showAjax(this.editUrl,
+                {
+                    rowId:em.rowId,//新增属性的ID
+                    funcRowId:em.funcRowId,//功能块ID
+                    relateBusiPro:em.dataId,//业务对象属性ID
+                    displayTitle:em.nameTitle,//显示标题
+                    wetherDisplay:em.checked,//是否显示
+                    displayWidget:em.$refs.show.value,//显示控件
+                    wetherReadonly:em.checkedReady,//只读
+                    allowEmpty:em.checkedNull,//允许为空
+                    lengthInterval:em.lengthSection,//长度区间
+                    validateFunc:em.testFunction,//验证函数
+                    displayFunc:em.displayFunction,//显示函数
+                    sort:em.sortNumber,//排序
+                    widthSetting:em.formTable.Twidth,//宽度
+                    align:em.$refs.align.value,//对齐方式
+                    exactQuery:em.ExactSearch,//是否精确查询
+                    supportSort:em.SupportSorting,//支持排序
+                    keywordOne:em.formTable.Keyword1,//关键字1
+                    keywordTwo:em.formTable.Keyword2,//关键字2
+                    keywordThree:em.formTable.Keyword3,//关键字3
+
+            },function(res){
+                    showMsg.MsgOk(window.parent.functionBlock,res);
+                    queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
+                    window.parent.functionBlock.get();
+                    parent.layer.close(window.parent.topButtonObj.divIndex);
+                })
         },
         cancel(){
             parent.layer.close(window.parent.topButtonObj.divIndex);
@@ -144,50 +165,59 @@ var em=new Vue({
             }
         },
         loadComplete(){
-
             this.funcRowId = window.parent.topButtonObj.rowObjId;
             this.QueryProperties();
         },
         QueryProperties(){
-            this.$http.jsonp(this.queryUrl,{
-                "rowId":this.rightRowId,
-            },{
-                jsonp:'callback'
-            }).then(function (res) {
-                this.rowId=res.data.data[0].rowId;//新增成功后返回的ID
-                this.funcRowId=res.data.data[0].funcRowId;//功能块ID
-                this.dataId=res.data.data[0].relateBusiPro;//业务对象属性ID
-                this.formTable.nameTitle=res.data.data[0].displayTitle;//显示标题
-                if(res.data.data[0].wetherDisplay =="true"){
-                    this.checked=true;//是否显示
+            /**
+             * tsj 07/8/29 编辑数据ajax代码重构，增加字段
+             **/
+            gmpAjax.showAjax(this.queryUrl,{
+                "rowId":this.rightRowId
+            },function(res){
+                var data = res.resp.content.data;
+                em.rowId=data[0].rowId;//新增成功后返回的ID
+                em.funcRowId=data[0].funcRowId;//功能块ID
+                em.dataId=data[0].relateBusiPro;//业务对象属性ID
+                em.formTable.nameTitle=data[0].displayTitle;//显示标题
+                if(data[0].wetherDisplay =="true"){
+                    em.checked=true;//是否显示
                 }else{
-                    this.checked=false;//是否显示
+                    em.checked=false;//是否显示
                 }
-                if(res.data.data[0].wetherReadonly =="true"){
-                    this.checkedReady=true;//只读
+                if(data[0].wetherReadonly =="true"){
+                    em.checkedReady=true;//只读
                 }
-                if(res.data.data[0].allowEmpty =="true"){
-                    this.checkedNull=true;//允许为空
+                if(data[0].allowEmpty =="true"){
+                    em.checkedNull=true;//允许为空
                 }
-                this.$refs.show.value=res.data.data[0].displayWidget;
-                this.formTable.nameInput=res.data.data[0].displayWidget;//显示控件
-                this.formTable.lengthSection=res.data.data[0].lengthInterval;//长度区间
-                this.formTable.testFunction=res.data.data[0].validateFunc;//验证函数
-                this.formTable.displayFunction=res.data.data[0].displayFunc;//显示函数
-                this.formTable.sortNumber=res.data.data[0].sort;//排序
-                this.isDisabled=true;
-                this.queryObjectProperties();
+                if(data[0].exactQuery =="true"){
+                    em.ExactSearch=true;//精确查询
+                }
+                if(data[0].supportSort =="true"){
+                    em.SupportSorting=true;//支持排序
+                }
+                em.$refs.show.value=data[0].displayWidget;
+                em.formTable.nameInput=data[0].displayWidget;//显示控件
+                em.formTable.lengthSection=data[0].lengthInterval;//长度区间
+                em.formTable.testFunction=data[0].validateFunc;//验证函数
+                em.formTable.displayFunction=data[0].displayFunc;//显示函数
+                em.formTable.sortNumber=data[0].sort;//排序
+                em.$refs.align.value=data[0].align//下拉框
+                em.formTable.Twidth=data[0].widthSetting//宽度
+                em.formTable.Keyword1=data[0].keywordOne//关键字1
+                em.formTable.Keyword2=data[0].keywordTwo//关键字2
+                em.formTable.Keyword3=data[0].keywordThree//关键字3
+                em.isDisabled=true;
+                em.queryObjectProperties();
             })
         },
         queryObjectProperties(){
-            this.$http.jsonp(this.queryDataUrl,{
-                "rowId":this.dataId
-            },{
-                jsonp:'callback'
-            }).then(function(res){
-                this.formTable.tableInput = res.data.data[0].propertyName//业务对象属性中文名
-            },function(){
-                alert("1111111错误!")
+            gmpAjax.showAjax(this.queryDataUrl,{
+                "rowId":em.dataId
+            },function(res){
+                var data = res.resp.content.data;
+                em.formTable.tableInput = data[0].propertyCode+"("+data[0].propertyName+")"//业务对象属性中文名
             })
         }
     },

@@ -7,15 +7,16 @@ var em = new Vue({
         objectPropertiesData: []
     },
     created() {
-        this.$http.jsonp(serverPath + "/businObjPro/queryBusinPro", {//查询指定业务对象ID下的所有属性
-            objRowId:window.parent.em.relateBusiObjId,
-        }, {
-            jsonp: 'callback'
-        }).then(function (res) {
-            if(res.data.data!=null){
-                this.objectPropertiesData = res.data.data;
+        /**
+         * tsj 07/8/29 ajax代码重构
+         **/
+        gmpAjax.showAjax(serverPath + "/businObjPro/queryBusinPro",{
+            objRowId:window.parent.em.relateBusiObjId
+        },function(res){
+            if(res.resp.content.data!=null){
+                em.objectPropertiesData = res.resp.content.data;
             }
-        });
+        })
     },
     methods: {
         handleCurrentChange(val) {

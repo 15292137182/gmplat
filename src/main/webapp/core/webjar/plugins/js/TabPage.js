@@ -14,6 +14,12 @@ var pagingObj = (function(){
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -45,6 +51,12 @@ var pagingObj = (function(){
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -90,6 +102,12 @@ var pagingObj = (function(){
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -135,6 +153,12 @@ var pagingObj = (function(){
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -181,6 +205,12 @@ var pagingObj = (function(){
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
                     dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
