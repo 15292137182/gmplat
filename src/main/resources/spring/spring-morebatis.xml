@@ -61,6 +61,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_name" p:alies="datasetName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_type" p:alies="datasetType"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="dataset_content" p:alies="datasetContent"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_system" p:alies="belongSystem"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
@@ -130,6 +132,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_busi_obj" p:alies="relateBusiObj"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="wether_available" p:alies="wetherAvailable"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_system" p:alies="belongSystem"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
@@ -170,6 +174,13 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="validate_func" p:alies="validateFunc"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="display_func" p:alies="displayFunc"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="sort" p:alies="sort"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="width_setting" p:alies="widthSetting"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="align" p:alies="align"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="exact_query" p:alies="exactQuery"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="support_sort" p:alies="supportSort"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyword_one" p:alies="keywordOne"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyword_two" p:alies="keywordTwo"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyword_three" p:alies="keywordThree"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
@@ -305,6 +316,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="seq_name" p:alies="seqName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="seq_content" p:alies="seqContent"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_system" p:alies="belongSystem"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
@@ -370,6 +383,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="object_name" p:alies="objectName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_table_row_id" p:alies="relateTableRowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="change_operat" p:alies="changeOperat"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_system" p:alies="belongSystem"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>
@@ -402,6 +417,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="template_code" p:alies="templateCode"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="template_name" p:alies="templateName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_system" p:alies="belongSystem"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="create_time" p:alies="createTime"/>

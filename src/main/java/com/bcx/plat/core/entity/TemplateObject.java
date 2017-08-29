@@ -25,6 +25,8 @@ public class TemplateObject extends BaseEntity<TemplateObject>{
     private String templateCode;//模板代码
     private String templateName;//模板名称
     private String desp;//说明
+    private String belongModule;//所属模块
+    private String belongSystem;//所属系统
 
     /**
      * 构建 - 创建信息
@@ -36,6 +38,22 @@ public class TemplateObject extends BaseEntity<TemplateObject>{
         this.rowId = UtilsTool.lengthUUID(32);
         this.templateCode = UtilsTool.lengthUUID(5).toUpperCase();
         return super.buildCreateInfo();
+    }
+
+    public String getBelongModule() {
+        return belongModule;
+    }
+
+    public void setBelongModule(String belongModule) {
+        this.belongModule = belongModule;
+    }
+
+    public String getBelongSystem() {
+        return belongSystem;
+    }
+
+    public void setBelongSystem(String belongSystem) {
+        this.belongSystem = belongSystem;
     }
 
     public String getRowId() {

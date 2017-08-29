@@ -23,6 +23,8 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
   private String relateBusiObj;//关联业务对象
   private String wetherAvailable;//是否可用
   private String desp;//说明
+  private String belongModule;//所属模块
+  private String belongSystem;//所属系统
 
 
 
@@ -38,7 +40,21 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
     return super.buildCreateInfo();
   }
 
+  public String getBelongModule() {
+    return belongModule;
+  }
 
+  public void setBelongModule(String belongModule) {
+    this.belongModule = belongModule;
+  }
+
+  public String getBelongSystem() {
+    return belongSystem;
+  }
+
+  public void setBelongSystem(String belongSystem) {
+    this.belongSystem = belongSystem;
+  }
 
   public String getRowId() {
     return rowId;

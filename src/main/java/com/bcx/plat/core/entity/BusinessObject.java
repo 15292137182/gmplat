@@ -24,6 +24,8 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String objectName;//对象名称
   private String relateTableRowId;//关联表
   private String changeOperat;//执行变更操作
+  private String belongModule;//所属模块
+  private String belongSystem;//所属系统
 
 
   /**
@@ -39,6 +41,22 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
     setVersion(BaseConstants.VERSION);
     setStatus(BaseConstants.UNUSED);
     return super.buildCreateInfo();
+  }
+
+  public String getBelongModule() {
+    return belongModule;
+  }
+
+  public void setBelongModule(String belongModule) {
+    this.belongModule = belongModule;
+  }
+
+  public String getBelongSystem() {
+    return belongSystem;
+  }
+
+  public void setBelongSystem(String belongSystem) {
+    this.belongSystem = belongSystem;
   }
 
   public String getChangeOperat() {

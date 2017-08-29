@@ -23,6 +23,8 @@ public class DataSetConfig extends BaseEntity<DataSetConfig> {
     private String datasetType;//数据集类型
     private String datasetContent;//数据集内容
     private String desp;//说明
+    private String belongModule;//所属模块
+    private String belongSystem;//所属系统
 
     /**
      * 构建 - 创建信息
@@ -35,6 +37,22 @@ public class DataSetConfig extends BaseEntity<DataSetConfig> {
         this.setVersion("1.0");
         this.rowId = UtilsTool.lengthUUID(32);
         return super.buildCreateInfo();
+    }
+
+    public String getBelongModule() {
+        return belongModule;
+    }
+
+    public void setBelongModule(String belongModule) {
+        this.belongModule = belongModule;
+    }
+
+    public String getBelongSystem() {
+        return belongSystem;
+    }
+
+    public void setBelongSystem(String belongSystem) {
+        this.belongSystem = belongSystem;
     }
 
     public String getRowId() {

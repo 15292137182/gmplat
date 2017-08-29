@@ -21,6 +21,8 @@ public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
   private String seqName;
   private String seqContent;
   private String desp;
+  private String belongModule;//所属模块
+  private String belongSystem;//所属系统
 
   @Override
   public SequenceRuleConfig buildCreateInfo() {
@@ -31,6 +33,22 @@ public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
 
   public String getRowId() {
     return rowId;
+  }
+
+  public String getBelongModule() {
+    return belongModule;
+  }
+
+  public void setBelongModule(String belongModule) {
+    this.belongModule = belongModule;
+  }
+
+  public String getBelongSystem() {
+    return belongSystem;
+  }
+
+  public void setBelongSystem(String belongSystem) {
+    this.belongSystem = belongSystem;
   }
 
   public void setRowId(String rowId) {

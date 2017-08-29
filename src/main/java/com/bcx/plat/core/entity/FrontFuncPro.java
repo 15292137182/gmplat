@@ -25,6 +25,13 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
     private String validateFunc;//验证函数
     private String displayFunc;//显示函数
     private String sort;//排序
+    private String widthSetting;//宽度设置
+    private String align;//对齐方式
+    private String exactQuery;//是否精确查询
+    private String supportSort;//支持排序
+    private String keywordOne;//关键字一
+    private String keywordTwo;//关键字二
+    private String keywordThree;//关键字三
 
     /**
      * 构建 - 创建信息
@@ -132,5 +139,61 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
 
     public void setSort(String sort) {
         this.sort = sort;
+    }
+
+    public String getWidthSetting() {
+        return widthSetting;
+    }
+
+    public void setWidthSetting(String widthSetting) {
+        this.widthSetting = widthSetting;
+    }
+
+    public String getAlign() {
+        return align;
+    }
+
+    public void setAlign(String align) {
+        this.align = align;
+    }
+
+    public String getExactQuery() {
+        return exactQuery;
+    }
+
+    public void setExactQuery(String exactQuery) {
+        this.exactQuery = exactQuery;
+    }
+
+    public String getSupportSort() {
+        return supportSort;
+    }
+
+    public void setSupportSort(String supportSort) {
+        this.supportSort = supportSort;
+    }
+
+    public String getKeywordOne() {
+        return keywordOne;
+    }
+
+    public void setKeywordOne(String keywordOne) {
+        this.keywordOne = keywordOne;
+    }
+
+    public String getKeywordTwo() {
+        return keywordTwo;
+    }
+
+    public void setKeywordTwo(String keywordTwo) {
+        this.keywordTwo = keywordTwo;
+    }
+
+    public String getKeywordThree() {
+        return keywordThree;
+    }
+
+    public void setKeywordThree(String keywordThree) {
+        this.keywordThree = keywordThree;
     }
 }
