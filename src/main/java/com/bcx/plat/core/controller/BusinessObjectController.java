@@ -4,13 +4,7 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.constants.SysMessage;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -79,7 +73,7 @@ public class BusinessObjectController extends
     /**
      * 查询业务对象全部数据并分页显示
      *
-     * @param args     按照空格查询
+     * @param search     按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -88,22 +82,22 @@ public class BusinessObjectController extends
      */
     @RequestMapping("/queryPage")
     @Override
-    public Object singleInputSelect(String args,
+    public Object singleInputSelect(String search,
                             @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                             @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                             String order,HttpServletRequest request,Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (args == null && args.isEmpty()) {
+        if (search == null && search.isEmpty()) {
             pageNum = 1;
         }
-        return super.result(request, ServiceResult.Msg(businessObjectService.queryPage(args, pageNum, pageSize, orders)), locale);
+        return super.result(request, ServiceResult.Msg(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
     }
 
 
     /**
      * 根据业务对象rowId查找当前对象下的所有属性并分页显示
      *
-     * @param args     按照空格查询
+     * @param search     按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -111,12 +105,12 @@ public class BusinessObjectController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId,  String args,
+    public Object queryProPage(String rowId,  String search,
                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                String order, HttpServletRequest request,  Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        return super.result(request,ServiceResult.Msg(businessObjectService.queryProPage(args,rowId,pageNum,pageSize,orders)),locale);
+        return super.result(request,ServiceResult.Msg(businessObjectService.queryProPage(search,rowId,pageNum,pageSize,orders)),locale);
     }
 
 

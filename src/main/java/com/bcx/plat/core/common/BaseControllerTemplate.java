@@ -50,14 +50,14 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     /**
      * 通用查询方法
      *
-     * @param str     按照空格查询
+     * @param search     按照空格查询
      * @param request request请求
      * @param locale  国际化参数
      * @return ServiceResult
      */
     @RequestMapping("/query")
-    public Object singleInputSelect(String str, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = entityService.select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str)));
+    public Object singleInputSelect(String search, HttpServletRequest request, Locale locale) {
+        List<Map<String, Object>> result = entityService.select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)));
         if (result.size()==0) {
             return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)),locale);
         }
@@ -86,7 +86,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     /**
      * 通用查询方法
      *
-     * @param args     按照空格查询
+     * @param search     按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -94,14 +94,14 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      * @return ServiceResult
      */
     @RequestMapping("/queryPage")
-    public Object singleInputSelect(String args, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
+    public Object singleInputSelect(String search, @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (args ==null && args.isEmpty()){
+        if (search ==null && search.isEmpty()){
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = entityService
-                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(args)), Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
+                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)), Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 

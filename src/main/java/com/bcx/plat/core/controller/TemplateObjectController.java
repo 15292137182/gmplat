@@ -3,7 +3,6 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -49,7 +48,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
     /**
      * 根据业务对象rowId查找当前对象下的所有属性并分页显示
      *
-     * @param args     按照空格查询
+     * @param search     按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -58,7 +57,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
      */
     @RequestMapping("/queryProPage")
     public Object queryProPage(String rowId,
-                               String args,
+                               String search,
                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                String order,
@@ -67,12 +66,12 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
         LinkedList<Order> str = UtilsTool.dataSort(order);
         PageResult<Map<String, Object>> result = null;
 
-        if (UtilsTool.isValid(args)) {
+        if (UtilsTool.isValid(search)) {
             result = templateObjectProService.select(
                     new ConditionBuilder(TemplateObjectPro.class).and()
                             .equal("templateObjRowId", rowId).or()
                             .addCondition(UtilsTool.createBlankQuery(Arrays.asList("code", "cname","ename"),
-                                    UtilsTool.collectToSet(args))).endOr().endAnd().buildDone()
+                                    UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
                     , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
             if (result.getResult().size() == 0) {
                 return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);

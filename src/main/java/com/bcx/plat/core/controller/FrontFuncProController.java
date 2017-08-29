@@ -79,7 +79,7 @@ public class FrontFuncProController extends
     /**
      * 根据功能块rowId查找当前对象下的所有属性并分页显示
      *
-     * @param args     按照空格查询
+     * @param search     按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -87,7 +87,7 @@ public class FrontFuncProController extends
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String args,
+    public Object singleInputSelect(String rowId, String search,
                                     @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                     HttpServletRequest request, Locale locale,String order) {
@@ -95,7 +95,7 @@ public class FrontFuncProController extends
         PageResult<Map<String, Object>> result =
                 getEntityService().select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(args)))
+                                UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
                         ,Arrays.asList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
         result = queryResultProcess(result);
         return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);

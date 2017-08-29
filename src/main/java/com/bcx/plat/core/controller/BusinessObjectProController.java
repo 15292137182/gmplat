@@ -8,7 +8,6 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
-import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
@@ -63,17 +62,17 @@ public class BusinessObjectProController extends
     /**
      * 根据业务对象rowId查询当前业务对象下的所有属性
      *
-     * @param str      按照条件搜索
+     * @param search      按照条件搜索
      * @param objRowId 根据业务对象rowId查找业务对象下所有属性
      * @param request  request请求
      * @param locale   国际化参数
      * @return ServiceResult
      */
-    @RequestMapping("/querySlave")
-    public Object querySlave(String str, String objRowId, HttpServletRequest request, Locale locale) {
+    @RequestMapping("/queryBusinPro")
+    public Object querySlave(String search, String objRowId, HttpServletRequest request, Locale locale) {
         List<Map<String, Object>> result = getEntityService()
                 .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
-                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(str))));
+                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
         if (result.size() == 0) {
             return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }

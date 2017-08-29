@@ -4,11 +4,8 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
@@ -46,7 +43,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
     /**
      * 通过表信息字段rowId查询表信息并分页显示
      *
-     * @param args     按照空格查询
+     * @param search     按照空格查询
      * @param rowId    接受rowId
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
@@ -55,25 +52,25 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      * @return ServiceResult
      */
     @RequestMapping("/queryPageById")
-    public Object queryPageById(String args,String rowId,
+    public Object queryPageById(String search, String rowId,
                                 @RequestParam(value = "pageNum", defaultValue=BaseConstants.PAGE_NUM) int pageNum,
                                 @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                 String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        return super.result(request, ServiceResult.Msg(getEntityService().queryPageById(args, rowId, orders, pageNum, pageSize)), locale);
+        return super.result(request, ServiceResult.Msg(getEntityService().queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
     }
 
     /**
      * 根据表信息的rowId来查询表字段中的信息
      *
-     * @param args    按照空格查询
+     * @param search    按照空格查询
      * @param request request请求
      * @param locale  国际化参数
      * @return ServiceResult
      */
     @RequestMapping("/queryTabById")
-    public Object singleInputSelect(String args, String rowId, HttpServletRequest request, Locale locale) {
-        return super.result(request,ServiceResult.Msg(getEntityService().queryTableById(rowId, args)),locale);
+    public Object singleInputSelect(String search, String rowId, HttpServletRequest request, Locale locale) {
+        return super.result(request,ServiceResult.Msg(getEntityService().queryTableById(rowId, search)),locale);
     }
 
 
