@@ -467,7 +467,8 @@ var gmpAjax = (function(){
      * tsj 07/8030 ajax公共方法重构
      **/
     var showAjax = function(dataJson,callback){
-        //dataJson:json格式的数据(url：接口地址,json：请求数组,obj：需要弹出消息层的vue实例),
+        //dataJson:json格式的数据
+        // (url：接口地址,jsonData:后端请求数据，obj：需要弹出消息层的vue实例),
         // callbakc:成功后的回调函数
         var data = dataJson;
         $.ajax({
@@ -479,7 +480,7 @@ var gmpAjax = (function(){
                 if(res.resp.content.state==1){
                     if (typeof callback == "function") {
                         callback(res.resp.content.data.result);
-                        showMsg.MsgOk(dataBase,res.resp.content.msg);
+                        showMsg.MsgOk(data.obj,res.resp.content.msg);
                     }
                 }
             },

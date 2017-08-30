@@ -81,9 +81,15 @@ var dataSetConfigButton = new Vue({
              * tsj 07/8/28 替换ajax方法，修改赋值
              **/
             this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '530px',function(){
-                gmpAjax.showAjax(serverPath+'/dataSetConfig/queryById',{
-                    rowId: dataSetConfig.rowObjId
-                },function(res){
+                var data = {
+                    "url":serverPath+'/dataSetConfig/queryById',
+                    "jsonData":{
+                        rowId: dataSetConfig.rowObjId
+                    },
+                    "obj":dataSetConfigButton
+                }
+                gmpAjax.showAjax(data,function(res){
+                    console.log(res);
                     var data =res.resp.content.data[0];
                     addDataSet.isEdit = true;
                     addDataSet.formTable.datasetCode = data.datasetCode;
