@@ -135,6 +135,7 @@ save=function(){
     }
     //保存
     gmpAjax.showAjax(serverPath+'/sequenceRule/reset',data,function(res){
+        alert(res.resp.content.msg);
         ibcpLayer.Close(resetIndex);
     })
 }
