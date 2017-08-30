@@ -15,26 +15,34 @@ var addInlayerData = new Vue({
     },
     methods:{
         addTable(){//新增
-            gmpAjax.showAjax(addInlayerData.addUrl,{
-                relateTableRowId:DatabaseDetails.Robj.rowId,
+            var data = {
+                "url":addInlayerData.addUrl,
+                "jsonData":{
+                    relateTableRowId:DatabaseDetails.Robj.rowId,
                     columnCname:addInlayerData.Inlayer.Cname,
                     columnEname:addInlayerData.Inlayer.Ename,
                     desp:addInlayerData.Inlayer.desp,
-            },function(res){
-                showMsg.MsgOk(DatabaseDetails,res);
+                },
+                "obj":addInlayerData
+            }
+            gmpAjax.showAjax(data,function(res){
                 queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
                 addInlayerData.cancel();
             })
         },
         editTable(){//编辑
-            gmpAjax.showAjax(addInlayerData.editUrl,{
-                relateTableRowId:DatabaseDetails.Robj.rowId,
-                rowId:DatabaseDetails.rowObj.rowId,
-                columnCname:this.Inlayer.Cname,
-                columnEname:this.Inlayer.Ename,
-                desp:this.Inlayer.desp,
-            },function(res){
-                showMsg.MsgOk(DatabaseDetails,res);
+            var data = {
+                "url":addInlayerData.editUrl,
+                "jsonData":{
+                    relateTableRowId:DatabaseDetails.Robj.rowId,
+                    rowId:DatabaseDetails.rowObj.rowId,
+                    columnCname:this.Inlayer.Cname,
+                    columnEname:this.Inlayer.Ename,
+                    desp:this.Inlayer.desp,
+                },
+                "obj":addInlayerData
+            }
+            gmpAjax.showAjax(data,function(res){
                 queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
                 addInlayerData.cancel();
             })

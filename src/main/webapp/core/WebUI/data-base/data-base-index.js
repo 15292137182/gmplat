@@ -45,8 +45,12 @@ var dataBase = new Vue({
         },
         delTableBase(){
             deleteObj.del(function(){
-                gmpAjax.showAjax(dataBase.delUrl,{rowId:dataBase.rowObj.rowId},function(res){
-                    showMsg.MsgOk(dataBase,res);
+                var data = {
+                    "url":dataBase.delUrl,
+                    "jsonData":{rowId:dataBase.rowObj.rowId},
+                    "obj":dataBase
+                }
+                gmpAjax.showAjax(data,function(res){
                     queryData.getData(dataBase.url,dataBase.input,dataBase)
                 })
             })

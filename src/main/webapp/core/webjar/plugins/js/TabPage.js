@@ -407,17 +407,13 @@ var editObj = (function(){
 
 //弹出消息
 var showMsg = (function(){
-    var MsgOk = function(obj,data){
+    var MsgOk = function(obj,msg){
         //obj：需要弹出消息页面的Vue实例对象
         //msg：ajax成功后返回的res
-        if(data.resp.respCode=="000"){//操作成功
             obj.$message({
-                message: data.resp.content.msg,
+                message: msg,
                 type: 'success'
             })
-        }else{
-            obj.$message.error(data.resp.content.msg);
-        }
     }
     var MsgError = function(obj){
         //ajax相应失败
@@ -467,20 +463,29 @@ var getData = (function(){
 })()
 
 var gmpAjax = (function(){
-    var showAjax = function(url,jsonData,callback){
-        //url：接口地址，jsonData：json格式的数据（"key":"value"），callback：成功后的回调函数
+    /**
+     * tsj 07/8030 ajax公共方法重构
+     **/
+    var showAjax = function(dataJson,callback){
+        //dataJson:json格式的数据(url：接口地址,json：请求数组,obj：需要弹出消息层的vue实例),
+        // callbakc:成功后的回调函数
+        var data = dataJson;
         $.ajax({
-            url:url,
+            url:data.url,
             type:"get",
-            data:jsonData,
+            data:data.jsonData,
             dataType:"jsonp",
             success:function(res){
-                if(typeof callback == "function"){
-                    callback(res);
+                if(res.resp.content.state==1){
+                    if (typeof callback == "function") {
+                        callback(res.resp.content.data.result);
+                        showMsg.MsgOk(dataBase,res.resp.content.msg);
+                    }
                 }
             },
-            error:function(){
-                alert("请求失败")
+            error:function(res){
+                console.log(res);
+                    data.obj.$message.error("操作失败");
             }
         })
     }
