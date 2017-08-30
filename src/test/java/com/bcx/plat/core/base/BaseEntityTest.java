@@ -25,7 +25,7 @@ public class BaseEntityTest extends BaseTest {
     @SuppressWarnings("unchecked")
     Map<String, Object> map = entity.toMap();
     DBTableColumn entity1 = new DBTableColumn().fromMap(map, false);
-    assert (entity1.getTemplateBean().getCreateTime().equals(entity.getTemplateBean().getCreateTime()));
+    assert (entity1.getBaseTemplateBean().getCreateTime().equals(entity.getBaseTemplateBean().getCreateTime()));
 
 
     Map<String, Object> map2 = new HashMap<>();

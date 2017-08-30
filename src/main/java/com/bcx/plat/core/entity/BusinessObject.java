@@ -33,12 +33,12 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
    * @return 返回自身
    */
   @Override
-  public BusinessObject buildCreateInfo(){
+  public BusinessObject buildCreateInfo() {
     this.objectCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT, null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
-    setVersion(BaseConstants.VERSION);
-    setStatus(BaseConstants.UNUSED);
+    getBaseTemplateBean().setVersion(BaseConstants.VERSION);
+    getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
     return super.buildCreateInfo();
   }
 

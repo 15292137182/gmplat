@@ -31,12 +31,6 @@ public class BaseEntity<T extends BaseEntity> implements BeanInterface<T> {
     return (T) this;
   }
 
-  public void setVersion(String s) {
-  }
-
-  public void setStatus(String s) {
-  }
-
   public T buildModifyInfo() {
     templateBean.buildModifyInfo(this.rowId);
     return (T) this;
@@ -56,7 +50,7 @@ public class BaseEntity<T extends BaseEntity> implements BeanInterface<T> {
     this.templateBean.setRowId(rowId);
   }
 
-  public BaseTemplateBean getTemplateBean() {
+  public BaseTemplateBean getBaseTemplateBean() {
     return templateBean;
   }
 
