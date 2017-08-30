@@ -10,11 +10,16 @@ var em = new Vue({
         /**
          * tsj 07/8/29 ajax代码重构
          **/
-        gmpAjax.showAjax(serverPath + "/businObjPro/queryBusinPro",{
-            objRowId:window.parent.em.relateBusiObjId
-        },function(res){
-            if(res.resp.content.data!=null){
-                em.objectPropertiesData = res.resp.content.data;
+        var data = {
+            "url":serverPath + "/businObjPro/queryBusinPro",
+            "jsonData":{
+                objRowId:window.parent.em.relateBusiObjId
+            },
+            "obj":em
+        }
+        gmpAjax.showAjax(data,function(res){
+            if(res!=null){
+                em.objectPropertiesData = res;
             }
         })
     },

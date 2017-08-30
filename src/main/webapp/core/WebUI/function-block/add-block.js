@@ -29,16 +29,20 @@ var em=new Vue({
             /**
              * tsj 07/8/29 新增功能块ajax代码重构,新增所属模块，系统字段
              **/
-            gmpAjax.showAjax(serverPath+"/fronc/add",{
-                "funcCode":em.formTable.codeInput,
-                "funcName":em.formTable.nameInput,
-                "funcType":em.$refs.fbtype.value,
-                "relateBusiObj":em.$refs.conObj.connectObj,
-                "belongModule":em.formTable.Module,
-                "belongSystem":em.formTable.System,
-                "desp":em.formTable.desp
-            },function(res){
-                showMsg.MsgOk(functionBlock,res);
+            var data = {
+                "url":serverPath+"/fronc/add",
+                "jsonData":{
+                    "funcCode":em.formTable.codeInput,
+                    "funcName":em.formTable.nameInput,
+                    "funcType":em.$refs.fbtype.value,
+                    "relateBusiObj":em.$refs.conObj.connectObj,
+                    "belongModule":em.formTable.Module,
+                    "belongSystem":em.formTable.System,
+                    "desp":em.formTable.desp
+                },
+                "obj":em
+            }
+            gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(topButtonObj.divIndex);
                     queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
                                  properties.getRight(functionBlock.tableData[0].rowId);
@@ -49,17 +53,21 @@ var em=new Vue({
             /**
              * tsj 07/8/29 编辑功能块ajax代码重构,增加所属模块，系统字段
              **/
-            gmpAjax.showAjax(serverPath+"/fronc/modify",{
-                "rowId":this.rowId,
-                "funcCode":this.formTable.codeInput,
-                "funcName":this.formTable.nameInput,
-                "funcType":this.$refs.fbtype.value,
-                "relateBusiObj":this.$refs.conObj.connectObj,
-                "belongModule":this.formTable.Module,
-                "belongSystem":this.formTable.System,
-                "desp":this.formTable.desp
-            },function(res){
-                showMsg.MsgOk(functionBlock,res);
+            var data = {
+                "url":serverPath+"/fronc/modify",
+                "jsonData":{
+                    "rowId":this.rowId,
+                    "funcCode":this.formTable.codeInput,
+                    "funcName":this.formTable.nameInput,
+                    "funcType":this.$refs.fbtype.value,
+                    "relateBusiObj":this.$refs.conObj.connectObj,
+                    "belongModule":this.formTable.Module,
+                    "belongSystem":this.formTable.System,
+                    "desp":this.formTable.desp
+                },
+                "obj":em
+            }
+            gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(functionBlock.divIndex);
                 queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock);
             })

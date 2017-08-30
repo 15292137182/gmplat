@@ -83,29 +83,32 @@ var em=new Vue({
             /**
              * tsj 07/8/29 新增数据ajax代码重构，增加字段
              **/
-            gmpAjax.showAjax(em.url,
-                {
-                funcRowId:em.funcRowId,//功能块ID
-                relateBusiPro:em.dataId,//业务对象属性ID
-                displayTitle:em.formTable.nameTitle,//显示标题
-                wetherDisplay:em.checked,//是否显示
-                displayWidget:em.$refs.show.value,//显示控件
-                wetherReadonly:em.checkedReady,//只读
-                allowEmpty:em.checkedNull,//允许为空
-                lengthInterval:em.formTable.lengthSection,//长度区间
-                validateFunc:em.formTable.testFunction,//验证函数
-                displayFunc:em.formTable.displayFunction,//显示函数
-                sort:em.formTable.sortNumber,//排序
-                widthSetting:em.formTable.Twidth,//宽度
-                align:em.$refs.align.value,//对齐方式
-                exactQuery:em.ExactSearch,//是否精确查询
-                supportSort:em.SupportSorting,//支持排序
-                keywordOne:em.formTable.Keyword1,//关键字1
-                keywordTwo:em.formTable.Keyword2,//关键字2
-                keywordThree:em.formTable.Keyword3,//关键字3
-            },
-                function(res){
-                    showMsg.MsgOk(window.parent.functionBlock,res);
+            var data = {
+                "url":em.url,
+                "jsonData":{
+                    funcRowId:em.funcRowId,//功能块ID
+                    relateBusiPro:em.dataId,//业务对象属性ID
+                    displayTitle:em.formTable.nameTitle,//显示标题
+                    wetherDisplay:em.checked,//是否显示
+                    displayWidget:em.$refs.show.value,//显示控件
+                    wetherReadonly:em.checkedReady,//只读
+                    allowEmpty:em.checkedNull,//允许为空
+                    lengthInterval:em.formTable.lengthSection,//长度区间
+                    validateFunc:em.formTable.testFunction,//验证函数
+                    displayFunc:em.formTable.displayFunction,//显示函数
+                    sort:em.formTable.sortNumber,//排序
+                    widthSetting:em.formTable.Twidth,//宽度
+                    align:em.$refs.align.value,//对齐方式
+                    exactQuery:em.ExactSearch,//是否精确查询
+                    supportSort:em.SupportSorting,//支持排序
+                    keywordOne:em.formTable.Keyword1,//关键字1
+                    keywordTwo:em.formTable.Keyword2,//关键字2
+                    keywordThree:em.formTable.Keyword3,//关键字3
+                },
+                "obj":window.parent.functionBlock
+            }
+            gmpAjax.showAjax(data,function(res){
+                    //showMsg.MsgOk(window.parent.functionBlock,res);
                     queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
                     window.parent.functionBlock.get();
                     parent.layer.close(window.parent.topButtonObj.divIndex);
@@ -115,8 +118,9 @@ var em=new Vue({
             /**
              * tsj 07/8/29 编辑数据ajax代码重构，增加字段
              **/
-            gmpAjax.showAjax(this.editUrl,
-                {
+            var data = {
+                "url":em.editUrl,
+                "jsonData":{
                     rowId:em.rowId,//新增属性的ID
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.dataId,//业务对象属性ID
@@ -136,9 +140,11 @@ var em=new Vue({
                     keywordOne:em.formTable.Keyword1,//关键字1
                     keywordTwo:em.formTable.Keyword2,//关键字2
                     keywordThree:em.formTable.Keyword3,//关键字3
-
-            },function(res){
-                    showMsg.MsgOk(window.parent.functionBlock,res);
+                },
+                "obj":window.parent.functionBlock
+            }
+            gmpAjax.showAjax(data,function(res){
+                    //showMsg.MsgOk(window.parent.functionBlock,res);
                     queryData.getDatas(window.parent.properties.findRightDataUrl,window.parent.properties.rightInput,this.funcRowId,window.parent.properties);
                     window.parent.functionBlock.get();
                     parent.layer.close(window.parent.topButtonObj.divIndex);
@@ -172,10 +178,15 @@ var em=new Vue({
             /**
              * tsj 07/8/29 编辑数据ajax代码重构，增加字段
              **/
-            gmpAjax.showAjax(this.queryUrl,{
-                "rowId":this.rightRowId
-            },function(res){
-                var data = res.resp.content.data;
+            var data = {
+                "url":this.queryUrl,
+                "jsonData":{
+                    "rowId":this.rightRowId
+                },
+                "obj":this
+            }
+            gmpAjax.showAjax(data,function(res){
+                var data = res;
                 em.rowId=data[0].rowId;//新增成功后返回的ID
                 em.funcRowId=data[0].funcRowId;//功能块ID
                 em.dataId=data[0].relateBusiPro;//业务对象属性ID
@@ -213,10 +224,15 @@ var em=new Vue({
             })
         },
         queryObjectProperties(){
-            gmpAjax.showAjax(this.queryDataUrl,{
-                "rowId":em.dataId
-            },function(res){
-                var data = res.resp.content.data;
+            var data = {
+                "url":em.queryDataUrl,
+                "jsonData":{
+                    "rowId":em.dataId
+                },
+                "obj":em
+            }
+            gmpAjax.showAjax(data,function(res){
+                var data = res;
                 em.formTable.tableInput = data[0].propertyCode+"("+data[0].propertyName+")"//业务对象属性中文名
             })
         }
