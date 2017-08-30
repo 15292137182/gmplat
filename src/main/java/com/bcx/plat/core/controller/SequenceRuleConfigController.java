@@ -22,7 +22,6 @@ import java.util.*;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.*;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Create By HCL at 2017/8/8
@@ -82,7 +81,7 @@ public class SequenceRuleConfigController extends
    * @param locale  国际化信息
    * @return 返回
    */
-  @RequestMapping(value = "/reset", method = POST)
+  @RequestMapping(value = "/reset")
   public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
     String rowId = request.getParameter("rowId");
     PlatResult<List<String>> _sr = new PlatResult<>();
