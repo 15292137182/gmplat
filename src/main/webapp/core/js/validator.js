@@ -94,7 +94,7 @@ layui.define(function (exports) {
     },
     //验证字符串包含内容  
     IsStringInclude: function (input, withEnglishCharacter, withNumber,
-        withChineseCharacter) {
+                               withChineseCharacter) {
       if (!Boolean(withEnglishCharacter) && !Boolean(withNumber) && !Boolean(
               withChineseCharacter)) {
         return false; //如果英文字母、数字和汉字都没有，则返回false  
@@ -129,7 +129,7 @@ layui.define(function (exports) {
     },
     //验证字符串长度范围（字符串内只包含数字和/或英文字母）[若要验证固定长度，可传入相同的两个长度数值]  
     IsStringLengthOnlyNumberAndEnglishCharacter: function (input, LengthBegin,
-        LengthEnd) {
+                                                           LengthEnd) {
       var pattern = '^[0-9a-zA-z]{' + lengthBegin + ',' + lengthEnd + '}$';
       var regex = new RegExp(pattern);
       if (input.match(regex)) {
@@ -140,7 +140,7 @@ layui.define(function (exports) {
     },
     //验证字符串长度范围 [若要验证固定长度，可传入相同的两个长度数值]  
     IsStringLengthByInclude: function (input, withEnglishCharacter, withNumber,
-        withChineseCharacter, lengthBegin, lengthEnd) {
+                                       withChineseCharacter, lengthBegin, lengthEnd) {
       if (!withEnglishCharacter && !withNumber && !withChineseCharacter) {
         return false; //如果英文字母、数字和汉字都没有，则返回false  
       }
@@ -384,3 +384,12 @@ layui.define(function (exports) {
 
   exports('validator', validator);
 });
+
+var data = {
+  rowId: ""
+  , content: JSON.stringify([
+    {key: "a", value: "100", objectSigns: []},
+    {key: "b", value: "100", objectSigns: []},
+    {key: "c", value: "100", objectSigns: []},
+  ])
+};
