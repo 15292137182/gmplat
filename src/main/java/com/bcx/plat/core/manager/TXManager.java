@@ -2,16 +2,17 @@ package com.bcx.plat.core.manager;
 
 import com.bcx.plat.core.database.DynamicDataSource;
 import com.bcx.plat.core.utils.SpringContextHolder;
-import java.util.LinkedList;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.util.LinkedList;
+
 /**
  * 事务管理器
- *
+ * <p>
  * Create By HCL at 2017/8/13
  */
 public class TXManager {
@@ -24,7 +25,7 @@ public class TXManager {
   @FunctionalInterface
   public interface DBOperate {
 
-    void operate();
+    void operate() throws Exception;
   }
 
   /**
@@ -33,13 +34,13 @@ public class TXManager {
   @FunctionalInterface
   public interface QNNOperate {
 
-    void operator(PlatformTransactionManager manager, TransactionStatus status);
+    void operator(PlatformTransactionManager manager, TransactionStatus status) throws Exception;
   }
 
   private static DataSourceTransactionManager transactionManager;
   private static DynamicDataSource dataSource;
 
-  public static void doInNewTX(DBOperate operate) {
+  public static void doInNewTX(DBOperate operate) throws Exception {
     doInNewTX((manager, status) -> operate.operate());
   }
 
@@ -74,7 +75,7 @@ public class TXManager {
    *
    * @param operate 操作
    */
-  public static void doInNoTX(QNNOperate operate) {
+  public static void doInNoTX(QNNOperate operate) throws Exception {
     doInTx(operate, TransactionDefinition.PROPAGATION_NEVER);
   }
 
@@ -83,7 +84,7 @@ public class TXManager {
    *
    * @param operate 操作
    */
-  public static void doInRequiredTX(QNNOperate operate) {
+  public static void doInRequiredTX(QNNOperate operate) throws Exception {
     doInTx(operate, TransactionDefinition.PROPAGATION_REQUIRED);
   }
 
@@ -92,11 +93,11 @@ public class TXManager {
    *
    * @param operate 操作
    */
-  public static void doInNewTX(QNNOperate operate) {
+  public static void doInNewTX(QNNOperate operate) throws Exception {
     doInTx(operate, TransactionDefinition.PROPAGATION_REQUIRES_NEW);
   }
 
-  private static void doInTx(QNNOperate operate, int PROPAGATION) {
+  private static void doInTx(QNNOperate operate, int PROPAGATION) throws Exception {
     if (null != operate && init()) {
       DefaultTransactionDefinition def = new DefaultTransactionDefinition();
       def.setPropagationBehavior(PROPAGATION); //要求开启新的事务
@@ -112,7 +113,7 @@ public class TXManager {
         if (!status.isCompleted()) {
           transactionManager.rollback(status);
         }
-        e.printStackTrace();
+        throw e;
       }
       if (status.isCompleted()) {
         lt.remove(status);
