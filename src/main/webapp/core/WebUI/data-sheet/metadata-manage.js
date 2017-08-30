@@ -96,57 +96,26 @@ var basLeft = new Vue({
         },
         //分页查询
         searchLeft(){
-            queryData.getData(queryTemp,this.input,this,function(res){
+            queryData.getData(qurUrl,this.input,this,function(res){
+                console.log(res);
                 basLeft.currentChange(basLeft.tableData[0]);
             })
-
-
-
-
-            queryData.getData(qurUrl,basLeft.leftInput,basLeft,function(res){
-                if(res.data!=null){
-                    //console.log(res.data.result);
-                    $.each(res.data.result, function(index, item) {
-                        if(item.status != "0") {
-                            item.testDemo = true;
-                        }
-                    });
-                    basLeft.currentChange(basLeft.tableData[0]);
-                }else{
-                    basRight.tableData=[];//没找到右边表的数据为空
-                    basTop.addAttr = true,
-                    basTop.takeEffect = true,
-                    basTop.change = true
-                }
-            });
         },
-        //不分页查询
+        //分页不跳回第一页查询
         searchLeftTable() {
-            pagingObj.Example(qurUrl,this.leftInput,this.pageSize,this.pageNum,this,function(res){
-                //console.log(res)
-                if(res.data!=null){
-                    //console.log(res.data.result);
-                    $.each(res.data.result, function(index, item) {
-                        if(item.status != "0") {
-                            item.testDemo = true;
-                        }
-                    });
-                    basLeft.currentChange(basLeft.tableData[0]);
-                }else{
-                    basRight.tableData=[];//没找到右边表的数据为空
-                    basTop.addAttr = true,
-                    basTop.takeEffect = true,
-                    basTop.change = true
-                }
+            pagingObj.Example(qurUrl,this.input,this.pageSize,this.pageNum,this,function(res){
+                //console.log(res);
+                //有数据选中第一行
+                basLeft.currentChange(basLeft.tableData[0]);
             });
         },
+        //每页 ${val} 条
         handleSizeChange(val) {
-            //每页 ${val} 条
             this.pageSize=val;
             this.searchLeftTable();
         },
+        //当前页: ${val}
         handleCurrentChange(val) {
-            //当前页: ${val}
             this.pageNum=val;
             this.searchLeftTable();
         },
@@ -180,8 +149,7 @@ var basLeft = new Vue({
                 //左边这一行的数据
                 this.currentId = row.rowId;
                 //查找右侧表的数据
-                basRight.rightInput='';
-                basRight.searchRightTable(this.currentVal);
+                basRight.searchRight();
             }
         },
         FindLFirstDate(row){  //将选中行变颜色
@@ -208,21 +176,14 @@ var basLeft = new Vue({
 
 var basRight = new Vue({
     "el": "#basRight",
-    data: {
+    data:  getData.dataObj({
         tableId:'objProp',
-        rightInput: '',
-        loading:false,
-        rightHeight: '',
-        tableData: [],
-        pageNum:1,//当前为第一页
-        pageSize:10,//每页显示条数
-        //开始不能为空 否则会报错
-        allDate:0  //总共有多少条
-    },
+    }),
     methods: {
+        //不跳转到第一页查询
         searchRightTable() {
-           // console.log(basLeft.currentVal);
-            pagingObj.Examples(qurProUrl,basLeft.currentId,this.rightInput,this.pageSize,this.pageNum,this,function(res){
+            pagingObj.Examples(qurProUrl,basLeft.currentId,this.input,this.pageSize,this.pageNum,this,function(res){
+                //有数据选中第一行
                 if(res.data!=null){
                     //按钮禁掉
                     $.each(res.data.result, function(index, item) {
@@ -231,59 +192,49 @@ var basRight = new Vue({
                         }
                     });
                     //默认选中
-                    basRight.currentRChange(basRight.tableData[0])
+                    basRight.currentRChange(basRight.tableData[0]);
                 }
-            });
+            })
         },
+        //转到第一页查询
         searchRight(){
-            queryData.getDatas(qurProUrl,basRight.rightInput,basLeft.currentId,basRight,function(res){});
+            queryData.getDatas(qurProUrl,basRight.input,basLeft.currentId,basRight,function(res){
+                console.log(res);
+                basRight.currentRChange(basRight.tableData[0]);
+            })
         },
         editProp(){
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '540px', function () {
-                basTop.getSelectValue();
-                //console.log(basRight.currentVal);
-                ////关联表字段
-                basRight.$http.jsonp(serverPath+'/businObjPro/queryById', {
-                    rowId:basRight.currentVal.rowId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    console.log(res.data.data[0])
-                    proEm.addProForm.codeProInput=res.data.data[0].propertyCode;   //代码
-                    proEm.addProForm.nameProInput=res.data.data[0].propertyName;   //名称
-                    if(res.data.data[0].wetherExpandPro=='true'){
+                gmpAjax.showAjax(editObjUrl, {rowId: basRight.currentVal.rowId}, function (res) {
+                //    //编辑拿到的数据
+                    var data = res.data.data[0];
+                    proEm.addProForm.codeProInput=data.propertyCode;   //代码
+                    proEm.addProForm.nameProInput=data.propertyName;   //名称
+                    if(data.wetherExpandPro=='true'){
                         proEm.addProForm.checked=true;
                         console.log(proEm.addProForm.checked)
                     }else{
                         proEm.addProForm.checked=false;
                     }
-                    proEm.$refs.contablefield.conTableFieldInput=res.data.data[0].relateTableColumn ;  //关联表
-
+                    proEm.$refs.contablefield.conTableFieldInput=data.relateTableColumn ;  //关联表
                     //修改值类型和值类型来源下拉框  jms 2017/8/21
-                    proEm.$refs.vtype.value=res.data.data[0].valueType   //值类型
-                    proEm.$refs.vorigin.value=res.data.data[0].valueResourceType;   //值类型来源
-                    proEm.addProForm.comContent=res.data.data[0].valueResourceContent;     //值来源内容
-                });
+                    proEm.$refs.vtype.value=data.valueType   //值类型
+                    proEm.$refs.vorigin.value=data.valueResourceType;   //值类型来源
+                    proEm.addProForm.comContent=data.valueResourceContent;     //值来源内容
+
+                })
             });
         },
         deleteProp(){
             deleteObj.del(function(){
-                //拿到ID
-                var deleteId = basRight.rightVal
-                basRight.$http.jsonp(deleteProUrl, {
-                    rowId: deleteId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    showMsg.MsgOk(basTop,ref);
-                    //分页跳回到第一页
+                gmpAjax.showAjax(deleteProUrl,{rowId: basRight.rightVal},function(res){
+                    showMsg.MsgOk(basRight,res);
+                    //分页查询
                     basRight.searchRight();
-                },function(){
-                    showMsg.MsgError(basTop)
-                });
-            })
+                })
+            });
         },
         currentRChange(row, event, column) {
             console.log(row)
@@ -321,18 +272,16 @@ var basRight = new Vue({
     },
     created() {
         $(document).ready(function () {
-            basRight.rightHeight = $(window).height() - 194;
+            basRight.leftHeight = $(window).height() - 194;
         });
         $(window).resize(function () {
-            basRight.rightHeight = $(window).height() - 194;
+            basRight.leftHeight = $(window).height() - 194;
         });
         var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
         TableKeyValueSet.init(args);
-
     },
+    //页面一进入第一行高亮显示
     updated() {
-        //if (this.tableData != null) {
-        //    this.FindRFirstDate(this.tableData[0]);
-        //}
+        this.FindRFirstDate(this.tableData[0]);
     }
 })
