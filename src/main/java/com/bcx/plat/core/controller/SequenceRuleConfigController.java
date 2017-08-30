@@ -95,6 +95,7 @@ public class SequenceRuleConfigController extends
         boolean success = true;
         String message = "操作成功！流水号已重设！";
         try {
+          // 开启事务管理要成功全成功，要失败全失败
           TXManager.doInNewTX(((manager, status) -> {
             for (Object obj : list) {
               Map ele = jsonToObj(objToJson(obj), HashMap.class);

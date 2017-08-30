@@ -1,13 +1,15 @@
 package com.bcx.plat.core.base;
 
-import com.bcx.plat.core.base.support.BeanInterface;
-import com.bcx.plat.core.base.template.BaseTemplateBean;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.utils.SpringContextHolder;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
+import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
@@ -15,47 +17,63 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  * <p>
  * Create By HCL at 2017/7/31
  */
-public class BaseEntity<T extends BaseEntity> implements BeanInterface<T> {
+public class BaseEntity<T extends BaseEntity> implements Serializable {
 
-  @JsonIgnore
-  private BaseTemplateBean templateBean = new BaseTemplateBean();
-  @JsonIgnore
+  private String status;  // 状态
+  private String version; // 版本
+  private String createUser;  // 创建人
+  private String createUserName;  // 创建名称
+  private String createTime;  // 创建时间
+  private String modifyUser;  // 修改人
+  private String modifyUserName;  // 修改名称
+  private String modifyTime;  // 修改时间
+  private String deleteUser;  // 删除人
+  private String deleteUserName;  // 删除名称
+  private String deleteTime;  // 删除时间
+  private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
+
   private Map etc;
 
-  private String rowId;
-
-
+  /**
+   * 构建 - 创建信息
+   *
+   * @return 返回自身
+   */
+  @SuppressWarnings("unchecked")
   public T buildCreateInfo() {
-    this.rowId = lengthUUID(64);
-    this.templateBean.buildCreateInfo(this.rowId);
+    String data = getDateTimeNow();
+    setCreateTime(data);
+    setCreateUser("admin");
+    setCreateUserName("系统管理员");
+    setModifyTime(data);
     return (T) this;
   }
 
+  /**
+   * 构建 - 修改信息
+   *
+   * @return 返回自身
+   */
+  @SuppressWarnings("unchecked")
   public T buildModifyInfo() {
-    templateBean.buildModifyInfo(this.rowId);
+    setModifyTime(getDateTimeNow());
+    setModifyUser("admin");
+    setModifyUserName("系统管理员");
     return (T) this;
   }
 
+  /**
+   * 构建 - 删除信息
+   *
+   * @return 自身
+   */
+  @SuppressWarnings("unchecked")
   public T buildDeleteInfo() {
-    templateBean.buildDeleteInfo(this.rowId);
+    setDeleteTime(getDateTimeNow());
+    setDeleteUser("admin");
+    setDeleteUserName("系统管理员");
+    setDeleteFlag(DELETE_FLAG);
     return (T) this;
-  }
-
-  public String getRowId() {
-    return templateBean.getRowId();
-  }
-
-  public void setRowId(String rowId) {
-    this.rowId = rowId;
-    this.templateBean.setRowId(rowId);
-  }
-
-  public BaseTemplateBean getBaseTemplateBean() {
-    return templateBean;
-  }
-
-  public void setTemplateBean(BaseTemplateBean templateBean) {
-    this.templateBean = templateBean;
   }
 
   /**
@@ -64,16 +82,9 @@ public class BaseEntity<T extends BaseEntity> implements BeanInterface<T> {
    * @return map
    */
   @SuppressWarnings("unchecked")
-  @Override
   public Map<String, Object> toMap() {
-    Map<String, Object> map = this.templateBean.toMap();
-    if (null != etc) {
-      map.putAll(etc);
-    }
-    map.putAll(jsonToObj(objToJson(this), Map.class));
-    return map;
+    return jsonToObj(objToJson(this), HashMap.class);
   }
-
 
   /**
    * 尝试从 map 中读取 entity 类
@@ -86,17 +97,137 @@ public class BaseEntity<T extends BaseEntity> implements BeanInterface<T> {
    */
   @SuppressWarnings("unchecked")
   public T fromMap(Map<String, Object> map, boolean isUnderline) {
-    if (isUnderline) {
-      map.forEach((str, obj) -> {
-        String newKey = underlineToCamel(str, false);
-        if (!newKey.equals(str)) {
-          map.putIfAbsent(newKey, obj);
-          map.remove(str);
+    Class current = getClass();
+    do {
+      Method[] methods = current.getDeclaredMethods();
+      Object temp;
+      for (Method method : methods) {
+        if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
+          String fieldName = underlineToCamel(
+                  method.getName().substring(3, method.getName().length()), false);
+          temp = isUnderline ? map.get(underlineToCamel(fieldName, false)) : map.get(fieldName);
+          if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
+            if (temp instanceof String) {
+              temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
+            } else {
+              temp = jsonToObj(objToJson(temp), method.getParameterTypes()[0]);
+            }
+          }
+          try {
+            method.invoke(this, temp);
+          } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+          }
         }
-      });
-    }
-    fromMap(map);
+      }
+      current = current.getSuperclass();
+    } while (current != Object.class);
+
     return (T) this;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getCreateUser() {
+    return createUser;
+  }
+
+  public void setCreateUser(String createUser) {
+    this.createUser = createUser;
+  }
+
+  public String getCreateUserName() {
+    return createUserName;
+  }
+
+  public void setCreateUserName(String createUserName) {
+    this.createUserName = createUserName;
+  }
+
+  public String getCreateTime() {
+    return createTime;
+  }
+
+  public void setCreateTime(String createTime) {
+    this.createTime = createTime;
+  }
+
+  public String getModifyUser() {
+    return modifyUser;
+  }
+
+  public void setModifyUser(String modifyUser) {
+    this.modifyUser = modifyUser;
+  }
+
+  public String getModifyUserName() {
+    return modifyUserName;
+  }
+
+  public void setModifyUserName(String modifyUserName) {
+    this.modifyUserName = modifyUserName;
+  }
+
+  public String getModifyTime() {
+    return modifyTime;
+  }
+
+  public void setModifyTime(String modifyTime) {
+    this.modifyTime = modifyTime;
+  }
+
+  public String getDeleteUser() {
+    return deleteUser;
+  }
+
+  public void setDeleteUser(String deleteUser) {
+    this.deleteUser = deleteUser;
+  }
+
+  public String getDeleteUserName() {
+    return deleteUserName;
+  }
+
+  public void setDeleteUserName(String deleteUserName) {
+    this.deleteUserName = deleteUserName;
+  }
+
+  public String getDeleteTime() {
+    return deleteTime;
+  }
+
+  public void setDeleteTime(String deleteTime) {
+    this.deleteTime = deleteTime;
+  }
+
+  public String getDeleteFlag() {
+    return deleteFlag;
+  }
+
+  public void setDeleteFlag(String deleteFlag) {
+    this.deleteFlag = deleteFlag;
+  }
+
+  public Map getEtc() {
+    return etc;
+  }
+
+  public void setEtc(Map etc) {
+    this.etc = etc;
   }
 
   private MoreBatis getMoreBatis() {
@@ -124,11 +255,4 @@ public class BaseEntity<T extends BaseEntity> implements BeanInterface<T> {
   }
 
 
-  public Map getEtc() {
-    return etc;
-  }
-
-  public void setEtc(Map etc) {
-    this.etc = etc;
-  }
 }
