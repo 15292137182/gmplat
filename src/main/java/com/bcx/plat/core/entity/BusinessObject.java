@@ -37,8 +37,10 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
     this.objectCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT, null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
-    getBaseTemplateBean().setVersion(BaseConstants.VERSION);
-    getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
+    // getBaseTemplateBean().setVersion(BaseConstants.VERSION);
+    setVersion(BaseConstants.VERSION);
+    // getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
+    setStatus(BaseConstants.UNUSED);
     return super.buildCreateInfo();
   }
 
