@@ -22,6 +22,7 @@ var seqReset=new Vue({
 
             var elFormItemLabel=$("<label></label>");
             elFormItemLabel.addClass("el-form-item__label");
+            elFormItemLabel.addClass("serialKey");
             elFormItemLabel.css("width","100px");
             elFormItemLabel.text(key);
             elFormItemLabel.appendTo(elFormItem);
@@ -39,6 +40,7 @@ var seqReset=new Vue({
             var elInputInner=$("<input></input>");
             elInputInner.addClass("el-input__inner");
             elInputInner.attr("autocomplete","off");
+            elInputInner.addClass("serialValue");
             elInputInner.attr("type","text");
             elInputInner.attr("rows","2");
             elInputInner.attr("value",value);
@@ -86,46 +88,58 @@ var seqReset=new Vue({
         },
     },
     created(){
-        //获得此序列号规则的流水号的键值，动态添加键值行
-        var data=config.keyValueContent;
-        var len=data.length;
-        for(var i=0;i<len;i++){
-            var key=data[i].variableKey;
-            var value=data[i].currenValue;
-            this.dynamicRendering(key,value);
+        //获得此序列号规则的流水号的键值
+        var data = config.keyValueContent;
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var key = data[i].variableKey;
+            var value = data[i].currenValue;
+
+            if (key == null || value == null) {
+                ibcpLayer.ShowMsg("该序列规则暂未使用，没有流水号");
+                return false;
+            } else {
+                //动态添加键值行
+                this.dynamicRendering(key, value);
+            }
         }
+        //动态添加确认、取消按钮
         this.dynamicButton();
     }
 })
 
 //保存按钮
 save=function(){
-    // $.ajax({
-    //     url:serverPath+'/sequenceRule/reset',
-    //     type:"get",
-    //     data:
-    //         (rowId:"7a9327b8-c0d1-434d-a053-18e9fc52",
-    //         serialId: "X",
-    //         currentValue: "150"),
-    //
-    //     dataType:"jsonp",
-    //     success:function(res){
-    //         if(typeof callback == "function"){
-    //             callback(res);
-    //         }
-    //     },
-    //     error:function(){
-    //         alert("请求失败")
-    //     }
-    // })
-    gmpAjax.showAjax(serverPath+'/sequenceRule/reset',{
-        rowId:"7a9327b8-c0d1-434d-a053-18e9fc52",
-        serialId: "X",
-        currentValue: "150"
-    },function(res){
+    //获取键值
+    var labelArray=$(".serialKey");
+    var inputArray=$(".serialValue");
+
+    /*
+     * 将键值放入数组中传入后端,格式：
+     *  {rowId:'',content:[{key:'',value:''},{key:'',value:''}]}
+     */
+    var arrserialKeyValue=new Array();
+    for(var i=0;i<labelArray.length;i++){
+        var serialKey=labelArray[i].innerHTML;
+        var serialValue=inputArray[i].value;
+
+        var serialKeyValue=new Object();
+        serialKeyValue.key=serialKey;
+        serialKeyValue.value=serialValue;
+        arrserialKeyValue.push(serialKeyValue);
+    }
+
+    var data={
+        rowId:config.rowId,
+        content:JSON.stringify(arrserialKeyValue)
+    }
+    //保存
+    gmpAjax.showAjax(serverPath+'/sequenceRule/reset',data,function(res){
         ibcpLayer.Close(resetIndex);
     })
-},
+}
+
+//取消按钮
 cancel=function() {
     ibcpLayer.Close(resetIndex);
 }
