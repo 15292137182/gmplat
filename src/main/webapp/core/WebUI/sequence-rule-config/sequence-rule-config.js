@@ -3,11 +3,13 @@
  */
 var str=serverPath+"/sequenceRule";
 const query=str+"/query";
+const queryById=str+"/queryById"
 const insert=str+"/add";
 const modify=str+"/modify";
 const del=str+"/delete";
 const queryPage=str+"/queryPage";
 const mock=str+"/mock";
+const resetUrl=str+"/reset";
 
 var config=new Vue({
     el:'#srconfig',
@@ -31,17 +33,20 @@ var config=new Vue({
         onClick(row, event, column){
             this.currentVal=row;
             config.rowId=config.currentVal.rowId;
-            gmpAjax.showAjax(serverPath+'/sequenceRule/queryById',
-                {rowId:config.currentVal.rowId},
-                function(res){
-                    var data=res.resp.content.data.result;
+            var data={
+                "url":queryById,
+                "jsonData":{rowId:config.currentVal.rowId},
+                "obj":config
+            }
+            gmpAjax.showAjax(data,function(res){
+                    var data=res;
                     config.keyValueContent=data;
                 })
         },
         addEvent(){
             operate = 1;
             var htmlUrl="sequence-rule-config-add.html";
-            divIndex=ibcpLayer.ShowDiv(htmlUrl, '新增序列号规则配置', '400px', '420px');
+            divIndex=ibcpLayer.ShowIframe(htmlUrl, '新增序列号规则配置', '800px', "400px");
         },
         editEvent(){
             operate=2;
@@ -82,15 +87,19 @@ var config=new Vue({
         },
         //重置
         reset(){
+
             var htmlUrl='sequence-rule-config-reset.html';
             resetIndex = ibcpLayer.ShowDiv(htmlUrl, '序列重置', '400px', '420px',function(){
-                gmpAjax.showAjax(serverPath+'/sequenceRule/queryById',
-                    {rowId:config.currentVal.rowId},
-                    function(res){
-                        var data=res.resp.content.data.result[0];
-                        seqReset.resetform.seqCode=data.seqCode;
-                        seqReset.resetform.seqName=data.seqName;
-                        seqReset.resetform.seqContent=data.seqContent;
+                var data={
+                    "url":queryById,
+                    "jsonData":{rowId:config.currentVal.rowId},
+                    "obj":config
+                }
+                gmpAjax.showAjax(data, function(res){
+                        var data=res;
+                        seqReset.resetform.seqCode=data[0].seqCode;
+                        seqReset.resetform.seqName=data[0].seqName;
+                        seqReset.resetform.seqContent=data[0].seqContent;
                      })
             });
 
