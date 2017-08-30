@@ -21,8 +21,7 @@ import java.util.*;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -88,7 +87,24 @@ public class SequenceRuleConfigController extends
     String rowId = request.getParameter("rowId");
     PlatResult<List<String>> _sr = new PlatResult<>();
     if (isValid(rowId)) {
-      // SequenceManager.getInstance().resetSequenceNo(rowId, keys, Integer.parseInt(aimValue), objectSigns);
+      String content = request.getParameter("content");
+      List list = jsonToObj(content, ArrayList.class);
+      for (Object obj : list) {
+        Map ele = jsonToObj(objToJson(obj), HashMap.class);
+        if (ele != null) {
+          String key = ele.get("key").toString();
+          String value = ele.get("value").toString();
+          if (isValid(key) && value.matches("\\d+")) {
+            String[] objectSigns = new String[]{};
+            List os = jsonToObj(objToJson(ele.get("objectSigns")), List.class);
+            for (int i = 0; os != null && i < os.size(); i++) {
+              objectSigns[i] = os.get(i).toString();
+            }
+            SequenceManager.getInstance().resetSequenceNo(rowId, key, Integer.parseInt(value), objectSigns);
+          }
+        }
+
+      }
       _sr.setMsg("OPERATOR_SUCCESS");
     } else {
       _sr.setState(STATUS_FAIL);
