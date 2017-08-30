@@ -42,34 +42,43 @@ var addDataSet = new Vue({
         },
         addSet(){//新增
             /**
-             * tsj 07/8/28 替换ajax方法，修改赋值
+             * tsj 07/8/30 替换ajax方法，修改赋值
              **/
-            gmpAjax.showAjax(addDataSet.addUrl,{
-                datasetName:this.formTable.nameInput,
-                datasetType:this.$refs.dsctype.value,
-                datasetContent:this.formTable.content,
-                desp:this.formTable.desp,
-                belongModule:this.formTable.belongModule,
-                belongSystem:this.formTable.belongSystem
-            },function(res){
-                showMsg.MsgOk(dataSetConfig,res);
+            var data = {
+                "url":addDataSet.addUrl,
+                "jsonData":{
+                    datasetName:this.formTable.nameInput,
+                    datasetType:this.$refs.dsctype.value,
+                    datasetContent:this.formTable.content,
+                    desp:this.formTable.desp,
+                    belongModule:this.formTable.belongModule,
+                    belongSystem:this.formTable.belongSystem
+                },
+                "obj":addDataSet
+            }
+            gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(dataSetConfigButton.divIndex);
                 queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig)
             })
         },
         editSet(){//编辑
             /**
-             * tsj 07/8/28 替换ajax方法，修改赋值
+             * tsj 07/8/30 替换ajax方法，修改赋值
              **/
-            gmpAjax.showAjax(addDataSet.editUrl,{
-                rowId:dataSetConfig.rowObjId,
-                datasetName:this.formTable.nameInput,
-                datasetType:this.$refs.dsctype.value,
-                datasetContent:this.formTable.content,
-                desp:this.formTable.desp,
-                belongModule:this.formTable.belongModule,
-                belongSystem:this.formTable.belongSystem
-            },function(res){
+            var data = {
+                "url":addDataSet.editUrl,
+                "jsonData":{
+                    rowId:dataSetConfig.rowObjId,
+                    datasetName:this.formTable.nameInput,
+                    datasetType:this.$refs.dsctype.value,
+                    datasetContent:this.formTable.content,
+                    desp:this.formTable.desp,
+                    belongModule:this.formTable.belongModule,
+                    belongSystem:this.formTable.belongSystem
+                },
+                "obj":addDataSet
+            }
+            gmpAjax.showAjax(data,function(res){
                 showMsg.MsgOk(dataSetConfig,res);
                 ibcpLayer.Close(dataSetConfigButton.divIndex);
                 queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);

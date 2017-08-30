@@ -51,8 +51,12 @@ var DatabaseDetails = new Vue({
         },
         delInlayerTableBase(){
             deleteObj.del(function(){
-                gmpAjax.showAjax(DatabaseDetails.delUrl,{rowId:DatabaseDetails.rowObj.rowId},function(res){
-                    showMsg.MsgOk(dataBase,res);
+                var data = {
+                    "url":DatabaseDetails.delUrl,
+                    "jsonData":{rowId:DatabaseDetails.rowObj.rowId},
+                    "obj":DatabaseDetails
+                }
+                gmpAjax.showAjax(data,function(res){
                     queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
                 })
             })

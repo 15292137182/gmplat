@@ -35,10 +35,15 @@ var functionBlock = new Vue({
                 /**
                  * tsj 07/8/29 编辑功能块ajax代码重构，增加所属模块，系统字段
                  **/
-                gmpAjax.showAjax(functionBlock.selUrlId,{
-                    rowId:functionBlock.rowId
-                },function(res){
-                    var data = res.resp.content.data;
+                var data = {
+                    "url":functionBlock.selUrlId,
+                    "jsonData":{
+                        rowId:functionBlock.rowId
+                    },
+                    "obj":functionBlock
+                }
+                gmpAjax.showAjax(data,function(res){
+                    var data = res;
                         em.isEdit = true;
                         em.formTable.codeInput=data[0].funcCode;
                         em.formTable.nameInput=data[0].funcName;
@@ -55,13 +60,17 @@ var functionBlock = new Vue({
         //删除
         del(){
             /**
-             * tsj 07/8/29 删除功能块ajax代码重构
+             * tsj 07/8/30删除功能块ajax代码重构
              **/
-            deleteObj.del(function(){
-                gmpAjax.showAjax(serverPath+"/fronc/delete",{
+            var data = {
+                "url":serverPath+"/fronc/delete",
+                "jsonData":{
                     rowId:functionBlock.deleteId
-                },function(res){
-                    showMsg.MsgOk(functionBlock,res);
+                },
+                "obj":functionBlock
+            }
+            deleteObj.del(function(){
+                gmpAjax.showAjax(data,function(res){
                     queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock,function(res){
                                  properties.getRight(functionBlock.tableData[0].rowId);
                              })
@@ -187,11 +196,16 @@ var properties = new Vue({
                 /**
                  * tsj 07/8/29 ajax代码重构
                  **/
-                gmpAjax.showAjax(topButtonObj.delUrl,{
-                    rowId:properties.rowId
-                },function(res){
+                var data = {
+                    "url":topButtonObj.delUrl,
+                    "jsonData":{
+                        rowId:properties.rowId
+                    },
+                    "obj":topButtonObj
+                }
+                gmpAjax.showAjax(data,function(res){
                     queryData.getDatas(properties.findRightDataUrl,properties.rightInput,properties.funcId,properties);
-                    showMsg.MsgOk(properties,res);
+                    //showMsg.MsgOk(properties,res);
                 })
             })
         },

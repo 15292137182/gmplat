@@ -2,30 +2,30 @@
  * Created by admin on 2017/8/1.
  */
 //新增业务对象
-    var addUrl=serverPath + "/businObj/add";
+var addUrl=serverPath + "/businObj/add";
 //编辑业务对象
-    var editUrl=serverPath + "/businObj/modify";
+var editUrl=serverPath + "/businObj/modify";
 //编辑业务对象查询
-    var editObjUrl=serverPath + "/businObj/queryById";
+var editObjUrl=serverPath + "/businObj/queryById";
 //删除业务对象
-    var deleteUrl=serverPath + "/businObj/delete";
+var deleteUrl=serverPath + "/businObj/delete";
 //业务对象查询
-    var qurUrl=serverPath + "/businObj/queryPage";
+var qurUrl=serverPath + "/businObj/queryPage";
 //新增业务对象属性
-    var addProUrl=serverPath + "/businObj/add";
+var addProUrl=serverPath + "/businObj/add";
 //删除业务对象属性
-    var deleteProUrl=serverPath + "/businObjPro/delete";
+var deleteProUrl=serverPath + "/businObjPro/delete";
 //查询业务对象属性
-    var qurProUrl=serverPath + "/businObj/queryProPage";
+var qurProUrl=serverPath + "/businObj/queryProPage";
 //生效
-    var affectPropUrl=serverPath + "/businObj/takeEffect";
+var affectPropUrl=serverPath + "/businObj/takeEffect";
 //变更
-    var changeUrl=serverPath + "/businObj/changeOperat";
+var changeUrl=serverPath + "/businObj/changeOperat";
 //关联表
-    var conTable=serverPath + "/maintTable/query";
+var conTable=serverPath + "/maintTable/query";
 //关联表字段
-    var conChildTable=serverPath + "/dbTableColumn/queryTabById";
-
+var conChildTable=serverPath + "/dbTableColumn/queryTabById";
+//上方按钮事件
 var basTop = new Vue({
     el: '#basTop',
     data: {
@@ -39,13 +39,13 @@ var basTop = new Vue({
         addEvent() {
             operate = 1;
             var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '340px',function(){});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){});
         },
         //新增业务对象属性
         addProp(){
             operateOPr=1;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '540px', function () {});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '580px', function () {});
         },
         //生效
         affectProp(){
@@ -63,16 +63,18 @@ var basTop = new Vue({
         }
     }
 });
+//左侧表格
 var basLeft = new Vue({
     "el": "#basLeft",
     data:  getData.dataObj({
+
     }),
     methods: {
         //编辑业务对象
         editEvent() {
             operate = 2;
             var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '340px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '510px', function () {
                 console.log(basLeft.currentVal.rowId);
                 gmpAjax.showAjax(editObjUrl,{rowId:basLeft.currentVal.rowId},function(res){
                     //编辑拿到的数据
@@ -98,13 +100,19 @@ var basLeft = new Vue({
         searchLeft(){
             queryData.getData(qurUrl,this.input,this,function(res){
                 console.log(res);
-                basLeft.currentChange(basLeft.tableData[0]);
+                var data=res.resp.content.data.result
+                if(data==null){
+                    basRightBottom.tableData=[];
+                }else{
+                    basLeft.currentChange(basLeft.tableData[0]);
+                }
+
             })
         },
         //分页不跳回第一页查询
         searchLeftTable() {
             pagingObj.Example(qurUrl,this.input,this.pageSize,this.pageNum,this,function(res){
-                //console.log(res);
+                console.log(res);
                 //有数据选中第一行
                 basLeft.currentChange(basLeft.tableData[0]);
             });
@@ -120,7 +128,7 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-          console.log(row)
+            console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -149,7 +157,7 @@ var basLeft = new Vue({
                 //左边这一行的数据
                 this.currentId = row.rowId;
                 //查找右侧表的数据
-                basRight.searchRight();
+                basRightBottom.searchRight();
             }
         },
         FindLFirstDate(row){  //将选中行变颜色
@@ -174,8 +182,52 @@ var basLeft = new Vue({
     }
 });
 
+//右侧表格上方
 var basRight = new Vue({
     "el": "#basRight",
+    data:  getData.dataObj({
+    }),
+    methods:{
+        //分页查询跳到第一页
+        searchRightTopEvent(){
+
+        },
+        //分页查询不反回第一页
+        searchRightTop(){
+
+        },
+        handleSizeChange(val) {
+            //每页每页 ${val} 条
+            this.pageSize=val;
+            //this.searchRightTable()
+        },
+        handleCurrentChange(val) {
+            //当前页: ${val}
+            this.pageNum=val;
+            //this.searchRightTable();
+        },
+        headSort(column){//列头排序
+            //pagingObj.headSorts(qurProUrl,basLeft.currentId,this.resInput,column,this);
+        },
+    },
+    created() {
+        //$(document).ready(function () {
+        //    basRightBottom.leftHeight = $(window).height() - 194;
+        //});
+        //$(window).resize(function () {
+        //    basRightBottom.leftHeight = $(window).height() - 194;
+        //});
+        //var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
+        //TableKeyValueSet.init(args);
+    },
+    //页面一进入第一行高亮显示
+    updated() {
+        //this.FindRFirstDate(this.tableData[0]);
+    }
+})
+//右侧表格下方
+var basRightBottom = new Vue({
+    "el": "#basRightBottom",
     data:  getData.dataObj({
         tableId:'objProp',
     }),
@@ -192,23 +244,23 @@ var basRight = new Vue({
                         }
                     });
                     //默认选中
-                    basRight.currentRChange(basRight.tableData[0]);
+                    basRightBottom.currentRChange(basRightBottom.tableData[0]);
                 }
             })
         },
         //转到第一页查询
         searchRight(){
-            queryData.getDatas(qurProUrl,basRight.input,basLeft.currentId,basRight,function(res){
+            queryData.getDatas(qurProUrl,basRightBottom.input,basLeft.currentId,basRightBottom,function(res){
                 console.log(res);
-                basRight.currentRChange(basRight.tableData[0]);
+                basRightBottom.currentRChange(basRightBottom.tableData[0]);
             })
         },
         editProp(){
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '540px', function () {
-                gmpAjax.showAjax(editObjUrl, {rowId: basRight.currentVal.rowId}, function (res) {
-                //    //编辑拿到的数据
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '580px', function () {
+                gmpAjax.showAjax(editObjUrl, {rowId: basRightBottom.currentVal.rowId}, function (res) {
+                    //    //编辑拿到的数据
                     var data = res.data.data[0];
                     proEm.addProForm.codeProInput=data.propertyCode;   //代码
                     proEm.addProForm.nameProInput=data.propertyName;   //名称
@@ -229,10 +281,10 @@ var basRight = new Vue({
         },
         deleteProp(){
             deleteObj.del(function(){
-                gmpAjax.showAjax(deleteProUrl,{rowId: basRight.rightVal},function(res){
-                    showMsg.MsgOk(basRight,res);
+                gmpAjax.showAjax(deleteProUrl,{rowId: basRightBottom.rightVal},function(res){
+                    showMsg.MsgOk(basRightBottom,res);
                     //分页查询
-                    basRight.searchRight();
+                    basRightBottom.searchRight();
                 })
             });
         },
@@ -253,7 +305,7 @@ var basRight = new Vue({
             }
         },
         FindRFirstDate(row){
-           // console.log(row)
+            // console.log(row)
             this.$refs.tableData.setCurrentRow(row);
         },
         handleSizeChange(val) {
@@ -272,10 +324,10 @@ var basRight = new Vue({
     },
     created() {
         $(document).ready(function () {
-            basRight.leftHeight = $(window).height() - 194;
+            basRightBottom.leftHeight = $(window).height() - 468;
         });
         $(window).resize(function () {
-            basRight.leftHeight = $(window).height() - 194;
+            basRightBottom.leftHeight = $(window).height() - 468;
         });
         var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
         TableKeyValueSet.init(args);

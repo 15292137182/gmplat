@@ -32,10 +32,15 @@ var attributeDetails = new Vue({
             /**
              * tsj 07/8/29 ajax代码重构，增加字段
              **/
-            gmpAjax.showAjax(this.url,{
-                "rowId":properties.rowId,
-            },function(res) {
-                var data = res.resp.content.data;
+            var data = {
+                "url":this.url,
+                "jsonData":{
+                    "rowId":properties.rowId,
+                },
+                "obj":this
+            }
+            gmpAjax.showAjax(data,function(res) {
+                var data = res;
                 attributeDetails.formTable.lengthSection = data[0].lengthInterval//长度区间
                 attributeDetails.formTable.validateFunc = data[0].validateFunc//验证函数
                 attributeDetails.formTable.displayFunc = data[0].displayFunc//显示函数

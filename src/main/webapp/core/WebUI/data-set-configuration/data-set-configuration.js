@@ -15,7 +15,7 @@ var dataSetConfig = new Vue({
     }),
     methods:{
         searchResTable(){//分页查询
-            pagingObj.Example(this.selUrl,this.input, this.pageSize,this.pageNum,this);
+            pagingObj.Example(this.selUrl,this.input,this.pageSize,this.pageNum,this);
         },
         clickTable(row){//表格点击事件
             console.log(row)
@@ -81,10 +81,15 @@ var dataSetConfigButton = new Vue({
              * tsj 07/8/28 替换ajax方法，修改赋值
              **/
             this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '530px',function(){
-                gmpAjax.showAjax(serverPath+'/dataSetConfig/queryById',{
-                    rowId: dataSetConfig.rowObjId
-                },function(res){
-                    var data =res.resp.content.data[0];
+                var data = {
+                    "url":serverPath+'/dataSetConfig/queryById',
+                    "jsonData":{
+                        rowId: dataSetConfig.rowObjId
+                    },
+                    "obj":dataSetConfigButton
+                }
+                gmpAjax.showAjax(data,function(res){
+                    var data =res[0];
                     addDataSet.isEdit = true;
                     addDataSet.formTable.datasetCode = data.datasetCode;
                     addDataSet.formTable.nameInput =data.datasetName;
@@ -103,12 +108,16 @@ var dataSetConfigButton = new Vue({
         deleteDataSetConfig(){//删除
             deleteObj.del(function(){
                 /**
-                 * tsj 07/8/28 替换ajax方法
+                 * tsj 07/8/30 ajax方法重构
                 * */
-                gmpAjax.showAjax(dataSetConfigButton.delUrl,{
-                    rowId:dataSetConfig.rowObjId
-                },function(res){
-                    showMsg.MsgOk(dataSetConfig,res);
+                var data = {
+                    "url":dataSetConfigButton.delUrl,
+                    "jsonData":{
+                        rowId:dataSetConfig.rowObjId
+                    },
+                    "obj":dataSetConfigButton
+                }
+                gmpAjax.showAjax(data,function(res){
                     queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
                 })
             })
