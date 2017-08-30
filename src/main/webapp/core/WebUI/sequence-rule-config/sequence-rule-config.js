@@ -30,6 +30,13 @@ var config=new Vue({
         },
         onClick(row, event, column){
             this.currentVal=row;
+            config.rowId=config.currentVal.rowId;
+            gmpAjax.showAjax(serverPath+'/sequenceRule/queryById',
+                {rowId:config.currentVal.rowId},
+                function(res){
+                    var data=res.resp.content.data.result;
+                    config.keyValueContent=data;
+                })
         },
         addEvent(){
             operate = 1;
@@ -76,16 +83,17 @@ var config=new Vue({
         //重置
         reset(){
             var htmlUrl='sequence-rule-config-reset.html';
-            resetIndex = ibcpLayer.ShowDiv(htmlUrl, '序列重置', '400px', '420px',
+            resetIndex = ibcpLayer.ShowDiv(htmlUrl, '序列重置', '400px', '420px',function(){
                 gmpAjax.showAjax(serverPath+'/sequenceRule/queryById',
                     {rowId:config.currentVal.rowId},
                     function(res){
-                        var data=res.resp.content.data[0];
+                        var data=res.resp.content.data.result[0];
                         seqReset.resetform.seqCode=data.seqCode;
                         seqReset.resetform.seqName=data.seqName;
                         seqReset.resetform.seqContent=data.seqContent;
-                        seqReset.resetform.value=res.resp.content.data;
-                     }));
+                     })
+            });
+
         }
     },
     created(){

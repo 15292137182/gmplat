@@ -527,7 +527,10 @@ var SelectOptions = (function(){
                     this.$http.jsonp(_path, param, {
                         jsonp: 'callback'
                     }).then(function (res) {
-                        this.list=res.data.resp.content.data;
+                        /**
+                         * tsj 07/8/30 修改后端返回数据结构
+                         **/
+                        this.list=res.data.resp.content.data.result;
                         this.options=this.list;
                     });
                 }
@@ -567,7 +570,10 @@ var SelectOptions = (function(){
                     this.$http.jsonp(path, param, {
                         jsonp: 'callback'
                     }).then(function (res) {
-                        this.list=res.data.resp.content.data;
+                        /**
+                         * tsj 07/8/30 修改后端返回数据结构
+                         **/
+                        this.list=res.data.resp.content.data.result;
                         this.options=this.list;
                     });
                 }
@@ -617,7 +623,10 @@ var TableKeyValueSet = (function(){
                     var param={};
                     // var jsonStr=JSON.parse(res.data);res.resp.content.data.result
                     /*tsj 17/08/28 修改后端返回结构*/
-                    var jsonStr=JSON.parse(res.resp.content.data);
+                    /**
+                     * tsj 07/8/30 修改后端返回数据结构
+                     **/
+                    var jsonStr=JSON.parse(res.resp.content.data.result);
                     for(k in jsonStr){
                         var _param={};
                         for(m in jsonStr[k]){

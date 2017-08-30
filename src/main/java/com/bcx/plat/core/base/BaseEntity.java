@@ -91,6 +91,20 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    * <p>
    * 为了满足需求，我决定造一个轮子
    *
+   * @param map map数据
+   * @return 返回实体类
+   */
+  @SuppressWarnings("unchecked")
+  public T fromMap(Map<String, Object> map) {
+    return fromMap(map, false);
+  }
+
+
+  /**
+   * 尝试从 map 中读取 entity 类
+   * <p>
+   * 为了满足需求，我决定造一个轮子
+   *
    * @param map         map数据
    * @param isUnderline 传入map的key是否为下划线命名
    * @return 返回实体类
@@ -124,18 +138,6 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     } while (current != Object.class);
 
     return (T) this;
-  }
-
-  /**
-   * 尝试从 map 中读取 entity 类
-   * <p>
-   * 为了满足需求，我决定造一个轮子
-   *
-   * @param map map数据
-   * @return 返回实体类
-   */
-  public T fromMap(Map<String, Object> map) {
-    return fromMap(map, false);
   }
 
   public String getStatus() {

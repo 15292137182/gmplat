@@ -119,7 +119,7 @@
         <el-row class="inputStyle">
             <el-col :xs="14" :sm="14" :md="14">
                 <div>
-                    <el-input placeholder="请输入内容" v-model="rightInput" size="small">
+                    <el-input placeholder="请输入内容" v-model="input" size="small">
                         <el-button slot="append" icon="search" @click.native="searchRight"></el-button>
                     </el-input>
                 </div>
@@ -129,7 +129,7 @@
             <el-col :span="24">
                 <template>
                     <!--show-overflow-tooltip-->
-                    <el-table :data="tableData" :height="rightHeight" border ref="tableData" highlight-current-row
+                    <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
                               v-loading="loading"
                               element-loading-text="加载中" @sort-change="headSort"
                               @row-click="currentRChange" class="tableStyle">

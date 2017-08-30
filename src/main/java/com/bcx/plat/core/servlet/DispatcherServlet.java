@@ -1,6 +1,7 @@
 package com.bcx.plat.core.servlet;
 
 import com.bcx.plat.core.manager.TXManager;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,18 +13,11 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
   /**
    * 执行 doDispatch，开其事务管理
    *
-   * @param request 请求
+   * @param request  请求
    * @param response 返回
    */
   @Override
-  protected void doDispatch(HttpServletRequest request, HttpServletResponse response) {
-    TXManager.doInRequiredTX(((manager, status) -> {
-      try {
-        super.doDispatch(request, response);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }));
-
+  protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    TXManager.doInRequiredTX(((manager, status) -> super.doDispatch(request, response)));
   }
 }

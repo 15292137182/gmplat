@@ -18,9 +18,9 @@ public class SequenceManagerTest extends BaseTest {
 
     // String s = SequenceManager.getInstance().buildSequenceNo("keySet");
     // String s2 = SequenceManager.getInstance().buildSequenceNo("keySet");
-    // SequenceManager.getInstance().resetSequenceNo("0aecb64f-f323-4150-b69c-56b27b10",null,8);
+    // SequenceManager.getInstance().resetSequenceNo("0aecb64f-f323-4150-b69c-56b27b10",null,3);
     // SequenceManager.getInstance().mockSequenceNo("@{BU}&&${S;yyyyMMdd;1}&&*{X;6-S}", null, 5);
-    // List<String> s = SequenceManager.getInstance().produceSequenceNo("BusinObject", null, 5, false);
+    // List<String> s3 = SequenceManager.getInstance().produceSequenceNo("BusinObject", null, 5, false);
     System.out.println("666");
 
   }

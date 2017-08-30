@@ -23,7 +23,7 @@ public class TXManagerTest extends BaseTest {
    * 测试事务
    */
   @Test
-  public void test() {
+  public void test() throws Exception {
     int size1 = mapper.select(new HashMap()).size();
     SequenceGenerate delete = new SequenceGenerate();
 

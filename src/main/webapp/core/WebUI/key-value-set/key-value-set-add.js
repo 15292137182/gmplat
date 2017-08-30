@@ -87,7 +87,8 @@ var keyValueSetAdd = new Vue({
             })
         },
         cancel() {
-            ibcpLayer.Close(divIndex);
+            ibcpLayer.Close(topButtonObj.divIndex);
+            ibcpLayer.Close(keyValueSet.editdivIndex);
         }
     }
 })

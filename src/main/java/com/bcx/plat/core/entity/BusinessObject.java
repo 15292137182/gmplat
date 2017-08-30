@@ -7,7 +7,6 @@ import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.utils.UtilsTool;
 
 import java.io.Serializable;
 
@@ -18,6 +17,7 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  */
 @Table(TableInfo.T_BUSINESS_OBJECT)
 public class BusinessObject extends BaseEntity<BusinessObject> implements Serializable {
+
   @TablePK
   private String rowId;//唯一标识
   private String objectCode;//对象代码
@@ -27,18 +27,19 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String belongModule;//所属模块
   private String belongSystem;//所属系统
 
-
   /**
    * 构建 - 创建信息
    *
    * @return 返回自身
    */
   @Override
-  public BusinessObject buildCreateInfo(){
+  public BusinessObject buildCreateInfo() {
     this.objectCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT, null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
     setRowId(lengthUUID(32));
+    // getBaseTemplateBean().setVersion(BaseConstants.VERSION);
     setVersion(BaseConstants.VERSION);
+    // getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
     setStatus(BaseConstants.UNUSED);
     return super.buildCreateInfo();
   }

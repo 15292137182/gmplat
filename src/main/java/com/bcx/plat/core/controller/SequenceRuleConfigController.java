@@ -6,6 +6,7 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.manager.SequenceManager;
+import com.bcx.plat.core.manager.TXManager;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.SequenceGenerateService;
@@ -21,8 +22,7 @@ import java.util.*;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * Create By HCL at 2017/8/8
@@ -82,21 +82,45 @@ public class SequenceRuleConfigController extends
    * @param locale  国际化信息
    * @return 返回
    */
-  @RequestMapping("/reset")
+  @RequestMapping(value = "/reset")
   public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
     String rowId = request.getParameter("rowId");
-    String aimValue = request.getParameter("currentValue");
-    // 流水号的键
-    String key = request.getParameter("serialId");
-    // 序列号的分支，你不传也没什么问题
-    String[] objectSigns = request.getParameterValues("objectSigns");
     PlatResult<List<String>> _sr = new PlatResult<>();
+    _sr.setState(STATUS_FAIL);
+    _sr.setMsg("INVALID_REQUEST");
     if (isValid(rowId)) {
-      SequenceManager.getInstance().resetSequenceNo(rowId, key, Integer.parseInt(aimValue), objectSigns);
-      _sr.setMsg("OPERATOR_SUCCESS");
-    } else {
-      _sr.setState(STATUS_FAIL);
-      _sr.setMsg("INVALID_REQUEST");
+      String content = request.getParameter("content");
+      List list = jsonToObj(content, ArrayList.class);
+      if (null != list) {
+        boolean success = true;
+        String message = "操作成功！流水号已重设！";
+        try {
+          // 开启事务管理要成功全成功，要失败全失败
+          TXManager.doInNewTX(((manager, status) -> {
+            for (Object obj : list) {
+              Map ele = jsonToObj(objToJson(obj), HashMap.class);
+              if (ele != null) {
+                String key = ele.get("key").toString();
+                String value = ele.get("value").toString();
+                if (isValid(key) && value.matches("\\d+")) {
+                  String[] objectSigns = new String[]{};
+                  List os = jsonToObj(objToJson(ele.get("objectSigns")), List.class);
+                  for (int i = 0; os != null && i < os.size(); i++) {
+                    objectSigns[i] = os.get(i).toString();
+                  }
+                  SequenceManager.getInstance().resetSequenceNo(rowId, key, Integer.parseInt(value), objectSigns);
+                }
+              }
+            }
+          }));
+        } catch (Exception e) {
+          e.printStackTrace();
+          success = false;
+          message = e.getMessage();
+        }
+        _sr.setState(success ? STATUS_SUCCESS : STATUS_FAIL);
+        _sr.setMsg(message);
+      }
     }
     return super.result(request, ServiceResult.Msg(_sr), locale);
   }

@@ -1,21 +1,15 @@
 package com.bcx.plat.core.utils;
 
-import static com.bcx.plat.core.utils.UtilsTool.camelToUnderline;
-import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
-import static com.bcx.plat.core.utils.UtilsTool.getDateBy10;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
-import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
-
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.manager.TXManager;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
+
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 测试工具类中的方法
@@ -26,7 +20,7 @@ public class UtilsToolTest extends BaseTest {
    * 对工具类中的方法进行测试
    */
   @Test
-  public void testMethod() {
+  public void testMethod() throws Exception {
     // 测试 json 的互转功能
     Map<String, Object> map = new HashMap<>();
     map.put("A", "2017-07-28");

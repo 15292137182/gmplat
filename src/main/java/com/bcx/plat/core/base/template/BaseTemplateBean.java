@@ -1,16 +1,18 @@
-package com.bcx.plat.core.base.beans;
+package com.bcx.plat.core.base.template;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.manager.SpApplicationManager;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 
 /**
- * 共有字段 Bean
+ * 基础公共字段，定义了平台一些基础的字段和基本方法
  * <p>
- * Create By HCL at 2017/8/29
+ * Create By HCL at 2017/8/30
  */
-public class BaseBean<T extends BaseBean> extends SimpleBeanUtils<T> {
+public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
 
   private String status;  // 状态
   private String version; // 版本
@@ -25,44 +27,42 @@ public class BaseBean<T extends BaseBean> extends SimpleBeanUtils<T> {
   private String deleteTime;  // 删除时间
   private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
 
+
   /**
-   * 构建 - 创建信息
+   * 创建 - 创建信息
    *
    * @return 返回自身
    */
-  @SuppressWarnings("unchecked")
-  public T buildCreateInfo() {
-    setCreateTime(getDateTimeNow());
-    setCreateUser("admin");
-    setCreateUserName("系统管理员");
-    return (T) this;
+  public BaseTemplateBean buildCreateInfo() {
+    this.createTime = getDateTimeNow();
+    this.createUser = SpApplicationManager.getInstance().getLoginUserId();
+    this.createUserName = SpApplicationManager.getInstance().getLoginUserName();
+    return this;
   }
 
   /**
-   * 构建 - 修改信息
+   * 创建 - 修改信息
    *
    * @return 返回自身
    */
-  @SuppressWarnings("unchecked")
-  public T buildModifyInfo() {
-    setModifyTime(getDateTimeNow());
-    setModifyUser("admin");
-    setModifyUserName("系统管理员");
-    return (T) this;
+  public BaseTemplateBean buildModifyInfo() {
+    this.modifyTime = getDateTimeNow();
+    this.modifyUser = SpApplicationManager.getInstance().getLoginUserId();
+    this.modifyUserName = SpApplicationManager.getInstance().getLoginUserName();
+    return this;
   }
 
   /**
-   * 构建 - 删除信息
+   * 创建 - 修改信息
    *
-   * @return 自身
+   * @return 返回自身
    */
-  @SuppressWarnings("unchecked")
-  public T buildDeleteInfo() {
-    setDeleteTime(getDateTimeNow());
-    setDeleteUser("admin");
-    setDeleteUserName("系统管理员");
-    setDeleteFlag(DELETE_FLAG);
-    return (T) this;
+  public BaseTemplateBean buildDeleteInfo() {
+    this.deleteFlag = DELETE_FLAG;
+    this.deleteTime = getDateTimeNow();
+    this.deleteUser = SpApplicationManager.getInstance().getLoginUserId();
+    this.deleteUserName = SpApplicationManager.getInstance().getLoginUserName();
+    return this;
   }
 
   public String getStatus() {
