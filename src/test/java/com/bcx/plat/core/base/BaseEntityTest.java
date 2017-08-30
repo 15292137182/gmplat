@@ -28,7 +28,6 @@ public class BaseEntityTest extends BaseTest {
     // assert (entity1.getBaseTemplateBean().getCreateTime().equals(entity.getBaseTemplateBean().getCreateTime()));
     assert (entity1.getCreateTime().equals(entity.getCreateTime()));
 
-
     Map<String, Object> map2 = new HashMap<>();
     map2.put("etc", "{\"id\":\"00001\"}");
     entity1 = entity1.fromMap(map2);

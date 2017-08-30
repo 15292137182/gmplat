@@ -21,33 +21,14 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
   private BaseTemplateBean templateBean = new BaseTemplateBean();
   @JsonIgnore
   private Map etc;
-
   private String rowId;
 
-
-  public T buildCreateInfo() {
-    this.rowId = lengthUUID(64);
-    this.templateBean.buildCreateInfo(this.rowId);
-    return (T) this;
-  }
-
-  public T buildModifyInfo() {
-    templateBean.buildModifyInfo(this.rowId);
-    return (T) this;
-  }
-
-  public T buildDeleteInfo() {
-    templateBean.buildDeleteInfo(this.rowId);
-    return (T) this;
-  }
-
   public String getRowId() {
-    return templateBean.getRowId();
+    return this.rowId;
   }
 
   public void setRowId(String rowId) {
     this.rowId = rowId;
-    this.templateBean.setRowId(rowId);
   }
 
   public BaseTemplateBean getBaseTemplateBean() {

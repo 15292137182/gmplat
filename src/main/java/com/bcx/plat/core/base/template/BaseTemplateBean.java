@@ -27,18 +27,16 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
   private String deleteTime;  // 删除时间
   private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
 
-  private String rowId;
 
   /**
    * 创建 - 创建信息
    *
    * @return 返回自身
    */
-  public BaseTemplateBean buildCreateInfo(String rowId) {
+  public BaseTemplateBean buildCreateInfo() {
     this.createTime = getDateTimeNow();
     this.createUser = SpApplicationManager.getInstance().getLoginUserId();
     this.createUserName = SpApplicationManager.getInstance().getLoginUserName();
-    this.rowId = rowId;
     return this;
   }
 
@@ -47,11 +45,10 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
    *
    * @return 返回自身
    */
-  public BaseTemplateBean buildModifyInfo(String rowId) {
+  public BaseTemplateBean buildModifyInfo() {
     this.modifyTime = getDateTimeNow();
     this.modifyUser = SpApplicationManager.getInstance().getLoginUserId();
     this.modifyUserName = SpApplicationManager.getInstance().getLoginUserName();
-    this.rowId = rowId;
     return this;
   }
 
@@ -60,21 +57,12 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
    *
    * @return 返回自身
    */
-  public BaseTemplateBean buildDeleteInfo(String rowId) {
+  public BaseTemplateBean buildDeleteInfo() {
     this.deleteFlag = DELETE_FLAG;
     this.deleteTime = getDateTimeNow();
     this.deleteUser = SpApplicationManager.getInstance().getLoginUserId();
     this.deleteUserName = SpApplicationManager.getInstance().getLoginUserName();
-    this.rowId = rowId;
     return this;
-  }
-
-  public String getRowId() {
-    return rowId;
-  }
-
-  public void setRowId(String rowId) {
-    this.rowId = rowId;
   }
 
   public String getStatus() {
