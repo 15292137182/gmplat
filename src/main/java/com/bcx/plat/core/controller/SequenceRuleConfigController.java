@@ -85,29 +85,29 @@ public class SequenceRuleConfigController extends
   public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
     String rowId = request.getParameter("rowId");
     PlatResult<List<String>> _sr = new PlatResult<>();
+    _sr.setState(STATUS_FAIL);
+    _sr.setMsg("INVALID_REQUEST");
     if (isValid(rowId)) {
       String content = request.getParameter("content");
       List list = jsonToObj(content, ArrayList.class);
-      for (Object obj : list) {
-        Map ele = jsonToObj(objToJson(obj), HashMap.class);
-        if (ele != null) {
-          String key = ele.get("key").toString();
-          String value = ele.get("value").toString();
-          if (isValid(key) && value.matches("\\d+")) {
-            String[] objectSigns = new String[]{};
-            List os = jsonToObj(objToJson(ele.get("objectSigns")), List.class);
-            for (int i = 0; os != null && i < os.size(); i++) {
-              objectSigns[i] = os.get(i).toString();
+      if (null != list) {
+        for (Object obj : list) {
+          Map ele = jsonToObj(objToJson(obj), HashMap.class);
+          if (ele != null) {
+            String key = ele.get("key").toString();
+            String value = ele.get("value").toString();
+            if (isValid(key) && value.matches("\\d+")) {
+              String[] objectSigns = new String[]{};
+              List os = jsonToObj(objToJson(ele.get("objectSigns")), List.class);
+              for (int i = 0; os != null && i < os.size(); i++) {
+                objectSigns[i] = os.get(i).toString();
+              }
+              SequenceManager.getInstance().resetSequenceNo(rowId, key, Integer.parseInt(value), objectSigns);
             }
-            SequenceManager.getInstance().resetSequenceNo(rowId, key, Integer.parseInt(value), objectSigns);
           }
         }
-
+        _sr.setMsg("OPERATOR_SUCCESS");
       }
-      _sr.setMsg("OPERATOR_SUCCESS");
-    } else {
-      _sr.setState(STATUS_FAIL);
-      _sr.setMsg("INVALID_REQUEST");
     }
     return super.result(request, ServiceResult.Msg(_sr), locale);
   }
