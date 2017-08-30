@@ -21,14 +21,14 @@ import java.util.*;
 public class KeySetController extends BaseControllerTemplate<KeySetService, KeySet> {
 
     protected List<String> blankSelectFields() {
-        return Arrays.asList("number", "keysetCode", "keysetName");
+        return Arrays.asList("keysetCode", "keysetName");
     }
 
     @Autowired
     KeySetService keySetService;
 
     /**
-     * 根据编号number查询，以数组的形式传入数据进来["demo","test"]
+     * 根据keysetCode查询，以数组的形式传入数据进来["demo","test"]
      *
      * @param search    按照空格查询
      * @param request request请求

@@ -4,6 +4,8 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -29,13 +31,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/core/businObj")
 public class BusinessObjectController extends BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
-    private final MaintDBTablesService maintDBTablesService;
     private final BusinessObjectService businessObjectService;
 
     @Autowired
-    public BusinessObjectController(MaintDBTablesService maintDBTablesService,
-                                    BusinessObjectService businessObjectService) {
-        this.maintDBTablesService = maintDBTablesService;
+    public BusinessObjectController(BusinessObjectService businessObjectService) {
         this.businessObjectService = businessObjectService;
     }
 
@@ -141,29 +140,29 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     }
 
 
-    /**
-     * 暂时先放这里 以后再重构
-     *
-     * @param result 返回值
-     * @return 返回值
-     */
-    @Override
-    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
-        List<String> rowIds = result.stream().map((row) -> {
-            return (String) row.get("relateTableRowId");
-        }).collect(Collectors.toList());
-        List<Map<String, Object>> results = maintDBTablesService
-                .select(new FieldCondition("rowId", Operator.IN, rowIds)
-                        , Arrays.asList(new Field("row_id", "rowId")
-                                , new Field("table_cname", "tableCname")
-                                , new Field("table_schema", "tableSchema")), null);
-        HashMap<String, Object> map = new HashMap<>();
-        for (Map<String, Object> row : results) {
-            map.put((String) row.get("rowId"), row.get("tableCname"));
-        }
-        for (Map<String, Object> row : result) {
-            row.put("associatTable", map.get(row.get("relateTableRowId")));
-        }
-        return result;
-    }
+//    /**
+//     * 暂时先放这里 以后再重构
+//     *
+//     * @param result 返回值
+//     * @return 返回值
+//     */
+//    @Override
+//    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+//        List<String> rowIds = result.stream().map((row) -> {
+//            return (String) row.get("relateTableRowId");
+//        }).collect(Collectors.toList());
+//        List<Map<String, Object>> results = maintDBTablesService
+//                .select(new FieldCondition("rowId", Operator.IN, rowIds)
+//                        , Arrays.asList(new Field("row_id", "rowId")
+//                                , new Field("table_cname", "tableCname")
+//                                , new Field("table_schema", "tableSchema")), null);
+//        HashMap<String, Object> map = new HashMap<>();
+//        for (Map<String, Object> row : results) {
+//            map.put((String) row.get("rowId"), row.get("tableCname"));
+//        }
+//        for (Map<String, Object> row : result) {
+//            row.put("associatTable", map.get(row.get("relateTableRowId")));
+//        }
+//        return result;
+//    }
 }

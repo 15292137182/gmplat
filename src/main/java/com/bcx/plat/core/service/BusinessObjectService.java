@@ -9,10 +9,12 @@ import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,9 +87,44 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
         for (Map<String, Object> rest : result.getResult()) {
-            rest.put("testDemo", false);
+            rest.put("disableButton", false);//前端页面删除,编辑,禁用按钮
         }
-        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, queryResultProcess(result));
+    }
+
+    /**
+     * 数据封装
+     * @param result
+     * @return
+     */
+    protected PageResult<Map<String, Object>> queryResultProcess(PageResult<Map<String, Object>> result) {
+        result.setResult(queryResultProcessAction(result.getResult()));
+        return result;
+    }
+
+    /**
+     * 暂时先放这里 以后再重构
+     *
+     * @param result 返回值
+     * @return 返回值
+     */
+    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+        List<String> rowIds = result.stream().map((row) -> {
+            return (String) row.get("relateTableRowId");
+        }).collect(Collectors.toList());
+        List<Map<String, Object>> results = maintDBTablesService
+                .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                        , Arrays.asList(new Field("row_id", "rowId")
+                                , new Field("table_cname", "tableCname")
+                                , new Field("table_schema", "tableSchema")), null);
+        HashMap<String, Object> map = new HashMap<>();
+        for (Map<String, Object> row : results) {
+            map.put((String) row.get("rowId"), row.get("tableCname"));
+        }
+        for (Map<String, Object> row : result) {
+            row.put("associatTable", map.get(row.get("relateTableRowId")));
+        }
+        return result;
     }
 
     /**

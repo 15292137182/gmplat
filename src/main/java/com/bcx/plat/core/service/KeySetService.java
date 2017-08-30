@@ -24,6 +24,8 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
 
     @Autowired
     private MoreBatis moreBatis;
+    @Autowired
+    private KeySetProService keySetProService;
 
     /**
      * 根据编号number查询，以数组的形式传入数据进来
@@ -33,16 +35,28 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
      */
     public PlatResult queryKeySet(List list) {
         Map<Object, Object> map = new HashMap<>();
+        Map<Object, Object> maps = new HashMap<>();
+
         for (Object li : list) {
             List lists = new ArrayList();
             lists.add(li);
             List<Map<String, Object>> result = moreBatis.selectStatement()
                     .select(Arrays.asList(QueryAction.ALL_FIELD))
                     .from(moreBatis.getTable(KeySet.class))
-                    .where(UtilsTool.createBlankQuery(Arrays.asList("number"), lists))
+                    .where(UtilsTool.createBlankQuery(Arrays.asList("keysetCode"), lists))
                     .execute();
             List<Map<String, Object>> results = UtilsTool.underlineKeyMapListToCamel(result);
-            map.put(li, results);
+            for (Map<String,Object> res : results){
+                String  rowId = (String) res.get("rowId");
+                List<Map<String, Object>> relateKeysetRowId =
+                        keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+                for (Map<String, Object> relate : relateKeysetRowId){
+
+                    res.put("confKey",relate.get("confKey"));
+                    res.put("confValue",relate.get("confValue"));
+                    map.put(li, results);
+                }
+            }
         }
 
         String toJson = UtilsTool.objToJson(map);
@@ -61,13 +75,20 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
     public PlatResult queryNumber(String search) {
         List<Map<String, Object>> result = moreBatis.selectStatement().select(Arrays.asList(QueryAction.ALL_FIELD))
                 .from(moreBatis.getTable(KeySet.class))
-                .where(new FieldCondition("number", Operator.EQUAL, search))
+                .where(new FieldCondition("keysetCode", Operator.EQUAL, search))
                 .execute();
+        List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
+        List<Map<String, Object>> relateKeysetRowId = null;
+        for (Map<String, Object> results : list) {
+            String rowId = (String) results.get("rowId");
+            relateKeysetRowId =
+                    keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+        }
+        List<Map<String, Object>> relateKeysetRowIds = UtilsTool.underlineKeyMapListToCamel(relateKeysetRowId);
         if (result.size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, list);
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowIds);
     }
 
 }

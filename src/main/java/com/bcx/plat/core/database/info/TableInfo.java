@@ -12,6 +12,7 @@ public enum TableInfo implements TableSource {
   T_SEQUENCE_GENERATE("t_sequence_generate"),
   T_SEQ_BUSI_GENERATE("t_seq_busi_generate"),
   T_KEYSET("t_keyset"),
+  T_KEYSET_PRO("t_keyset_pro"),
   T_FRONT_FUNC_PRO("t_front_func_pro"),
   T_FRONT_FUNC("t_front_func"),
   T_DB_TABLES("t_db_tables"),
