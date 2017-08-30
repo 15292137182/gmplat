@@ -213,8 +213,6 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="number" p:alies="number"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_code" p:alies="keysetCode"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_name" p:alies="keysetName"/>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_key" p:alies="confKey"/>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_value" p:alies="confValue"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>
@@ -238,7 +236,7 @@
         </bean>
 
         <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
-          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.KeySet"/>
+          <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.KeySetPro"/>
           <constructor-arg name="table">
             <bean class="com.bcx.plat.core.morebatis.component.Table" p:tableName="t_keyset_pro"/>
           </constructor-arg>
@@ -246,8 +244,6 @@
             <list>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_keyset_row_id" p:alies="relateKeysetRowId"/>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_code" p:alies="keysetCode"/>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_name" p:alies="keysetName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_key" p:alies="confKey"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="conf_value" p:alies="confValue"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>

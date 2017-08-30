@@ -134,8 +134,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      */
     @RequestMapping("/modify")
     public Object update(Y entity, HttpServletRequest request, Locale locale) {
-        Map map= new HashMap();
-        int update = entityService.update(map);
+        int update = entityService.update(entity.toMap());
         if (update != 1) {
             return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
         }

@@ -6,6 +6,7 @@ import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,6 +54,18 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     @RequestMapping("/queryNumber")
     public Object queryNumber(String search, HttpServletRequest request, Locale locale) {
          return super.result(request,ServiceResult.Msg(keySetService.queryNumber(search)),locale);
+    }
+
+    /**
+     * 根据键值集合主表查询从表详细信息
+     * @param rowId 唯一标识
+     * @param request   请求
+     * @param locale    国际化
+     * @return
+     */
+    @RequestMapping("/queryById")
+    public Object queryById(String rowId, HttpServletRequest request, Locale locale){
+        return super.result(request,ServiceResult.Msg(keySetService.queryById(rowId)),locale);
     }
 
 }

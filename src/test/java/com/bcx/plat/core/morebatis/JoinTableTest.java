@@ -4,6 +4,8 @@ import com.bcx.BaseTest;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.entity.KeySetPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
@@ -33,7 +35,7 @@ public class JoinTableTest extends BaseTest {
     this.moreBatis = moreBatis;
   }
 
-  @Before
+//  @Before
   public void createData() {
     BusinessObject businessObject = new BusinessObject();
     businessObject.setObjectName("join test");
@@ -64,6 +66,17 @@ public class JoinTableTest extends BaseTest {
 
         .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId));
 //        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.ROW_ID);
+    List<Map<String, Object>> result = joinTableTest.execute();
+    Assert.assertEquals(5, result.size());
+  }
+  @Test
+  public void test() {
+    QueryAction joinTableTest = moreBatis.selectStatement().select(QueryAction.ALL_FIELD)
+        .from(new JoinTable(moreBatis.getTable(KeySet.class), JoinType.LEFT_JOIN,
+            moreBatis.getTable(KeySetPro.class))
+            .on(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class,"rowId"), Operator.EQUAL,
+                moreBatis.getColumnByAlies(KeySetPro.class,"relateKeysetRowId"))))
+        .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class,"keysetCode"), Operator.EQUAL, "124"));
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());
   }
