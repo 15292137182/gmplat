@@ -3,11 +3,8 @@ DROP TABLE IF EXISTS t_keyset;
 
 CREATE TABLE t_keyset (
   row_id           VARCHAR(70) NOT NULL,
-  number           VARCHAR(32) NULL,
-  keyset_cod       VARCHAR(64) NULL,
+  keyset_code       VARCHAR(64) NULL,
   keyset_name      VARCHAR(64) NULL,
-  conf_key         VARCHAR(64) NULL,
-  conf_value       VARCHAR(64) NULL,
   desp             TEXT        NULL,
   status           VARCHAR(8)  NULL,
   "version"        VARCHAR(16) NULL,
