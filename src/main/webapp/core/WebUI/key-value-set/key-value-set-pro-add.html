@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>编辑明细信息</title>
+  <style>
+    #keyValueSetAdd .el-row {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="keyValueSetProAdd" style="margin-top:20px">
+  <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="keyForm" ref='keyForm'
+           style="padding:0 20px" class="demo-ruleForm">
+    <el-form-item label="键" prop="confKeyInput">
+      <el-input placeholder="键" v-model="keyForm.confKeyInput" ref="confKeyInput"></el-input>
+    </el-form-item>
+    <el-form-item label="值" prop="confValueInput">
+      <el-input placeholder="值" v-model="keyForm.confValueInput" ref="confValueInput"></el-input>
+    </el-form-item>
+    <el-form-item label="说明" prop="despInput">
+      <el-input type="textarea" placeholder="请输入说明" v-model="keyForm.despInput" ref="despInput"></el-input>
+    </el-form-item>
+  </el-form>
+  <el-row>
+    <el-col :span="11" style="text-align:right">
+      <el-button type="primary" size="small" @click.native="confirm('keyForm')">保存</el-button>
+    </el-col>
+    <el-col :span="11" style="text-align: left" :offset="2">
+      <el-button type="primary" size="small" @click.native="cancel" >取消</el-button>
+    </el-col>
+  </el-row>
+</div>
+<script src="key-value-set-pro-add.js"></script>
+</body>
+</html>
