@@ -20,6 +20,7 @@ public enum TableInfo implements TableSource {
   T_DATASET_CONFIG("t_dataset_config"),
   T_BUSINESS_OBJECT_PRO("t_business_object_pro"),
   T_BUSINESS_OBJECT("t_business_object"),
+  T_BUSINESS_RELATE_TEMPLATE("t_business_relate_template"),
   TEST("test_only.test_table1"),
   T_SEQUENCE_RULE_CONFIG("t_sequence_rule_config"),
   T_TEMPLATE_OBJECT("t_template_object"),

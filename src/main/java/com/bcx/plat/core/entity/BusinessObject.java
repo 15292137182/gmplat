@@ -26,6 +26,7 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
   private String changeOperat;//执行变更操作
   private String belongModule;//所属模块
   private String belongSystem;//所属系统
+  private String relateTemplateObject;//关联模板对象
 
   /**
    * 构建 - 创建信息
@@ -41,7 +42,16 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
     setVersion(BaseConstants.VERSION);
     // getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
     setStatus(BaseConstants.UNUSED);
-    return super.buildCreateInfo();
+    return this;
+  }
+
+
+  public String getRelateTemplateObject() {
+    return relateTemplateObject;
+  }
+
+  public void setRelateTemplateObject(String relateTemplateObject) {
+    this.relateTemplateObject = relateTemplateObject;
   }
 
   public String getBelongModule() {

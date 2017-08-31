@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessRelateTemplate;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
@@ -32,10 +33,12 @@ import java.util.stream.Collectors;
 public class BusinessObjectController extends BaseControllerTemplate<BusinessObjectService, BusinessObject> {
 
     private final BusinessObjectService businessObjectService;
+    private final BusinessRelateTemplateService businessRelateTemplateService;
 
     @Autowired
-    public BusinessObjectController(BusinessObjectService businessObjectService) {
+    public BusinessObjectController(BusinessObjectService businessObjectService,BusinessRelateTemplateService businessRelateTemplateService) {
         this.businessObjectService = businessObjectService;
+        this.businessRelateTemplateService = businessRelateTemplateService;
     }
 
     @Override
@@ -43,6 +46,30 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
         return Arrays.asList("objectCode", "objectName");
     }
 
+
+    /**
+     * 通用新增方法
+     *
+     * @param businessObject  接受一个实体参数
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return
+     */
+    @RequestMapping("/add")
+    @Override
+    public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
+        String rowId = businessObject.getRowId();
+        String relateTemplateObject = businessObject.getRelateTemplateObject();
+        int insert = businessObjectService.insert(businessObject.toMap());
+        BusinessRelateTemplate brt = new BusinessRelateTemplate();
+        brt.setBusinessRowId(rowId);
+        brt.setTemplateRowId(relateTemplateObject);
+        businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
+        if (insert != 1) {
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+        }
+        return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,insert)), locale);
+    }
 
     /**
      * 根据业务对象rowId查询当前数据

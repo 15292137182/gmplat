@@ -1,13 +1,16 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,9 +66,11 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
      * @param locale    国际化
      * @return
      */
-    @RequestMapping("/queryById")
-    public Object queryById(String rowId, HttpServletRequest request, Locale locale){
-        return super.result(request,ServiceResult.Msg(keySetService.queryById(rowId)),locale);
+    @RequestMapping("/queryPro")
+    public Object queryPro(String rowId, HttpServletRequest request, Locale locale){
+        return super.result(request,ServiceResult.Msg(keySetService.queryPro(rowId)),locale);
     }
+
+
 
 }

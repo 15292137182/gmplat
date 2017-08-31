@@ -27,13 +27,17 @@ import java.util.*;
 @Service
 public class KeySetService extends BaseServiceTemplate<KeySet>{
 
+    private final MoreBatis moreBatis;
+    private final KeySetProService keySetProService;
+
     @Autowired
-    private MoreBatis moreBatis;
-    @Autowired
-    private KeySetProService keySetProService;
+    public KeySetService(MoreBatis moreBatis, KeySetProService keySetProService) {
+        this.moreBatis = moreBatis;
+        this.keySetProService = keySetProService;
+    }
 
 
-   /**
+    /**
      * 根据编号number查询，以数组的形式传入数据进来
      *
      * @param list 搜索条件
@@ -91,7 +95,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
      * @param rowId 唯一标示
      * @return  PlatResult
      */
-    public PlatResult queryById(String rowId) {
+    public PlatResult queryPro(String rowId) {
         List<Map<String, Object>> rowId1 =
                 keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
         return new PlatResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,rowId1);
