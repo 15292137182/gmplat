@@ -14,56 +14,63 @@
 </head>
 <body>
 <div id="addEvent" style="margin-top:20px">
-        <el-form :label-position="labelPosition" label-width="100px" :model="addForm" ref='addForm'
-                 style="padding:0 20px" class="demo-ruleForm">
-            <el-form-item label="对象代码" prop="codeInput">
-                <el-input placeholder="对象代码" v-model="addForm.codeInput" ref="codeInput" v-bind:disabled="addForm.disabled"></el-input>
-            </el-form-item>
-            <el-form-item label="对象名称" prop="nameInput">
-                <el-input placeholder="请输入对象名称" v-model="addForm.nameInput" ref="nameInput"></el-input>
-            </el-form-item>
-            <el-form-item label="关联表" prop="tableInput">
-                <select-tab ref="selectTab"></select-tab>
-            </el-form-item>
-            <el-form-item label="关联模板对象">
-                <el-select v-model="value5" multiple placeholder="请选择">
-                    <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="所属模块" prop="tableInput">
-                <el-input placeholder="请输入所属模块" v-model="addForm.modules" ref="modules"></el-input>
-            </el-form-item>
-            <el-form-item label="所属系统" prop="tableInput">
-                <el-input placeholder="请输入所属系统" v-model="addForm.system" ref="system"></el-input>
-            </el-form-item>
-            <el-form-item label="版本">
-                <el-input placeholder="版本" v-model="addForm.versionInput" ref="versionInput" disabled></el-input>
-            </el-form-item>
-        </el-form>
-        <el-row>
-            <el-col :span="11" style="text-align:right">
-                <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
-            </el-col>
-            <el-col :span="11" style="text-align: left" :offset="2">
-                <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
-            </el-col>
-        </el-row>
-</div>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="对象代码" prop="codeInput">
+            <el-input v-model="ruleForm.codeInput" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="对象名称" prop="nameInput">
+            <el-input  v-model="ruleForm.nameInput"></el-input>
+        </el-form-item>
 
-<template id="tableSelect">
-    <el-select v-model="tableInput" clearable filterable placeholder="请选择关联表">
-        <el-option v-for="item in options"
-                   :key="item.rowId"
-                   :label="item.tableCname"
-                   :value="item.rowId">
-        </el-option>
-    </el-select>
-</template>
-<script src="metadata-add.js"></script>
+        <el-form-item label="关联表" prop="reaTable">
+            <ibcp-selection v-dom="selectDatas1" :multiple-data="selectDatas1.values" :multiple-option="options1"
+                            @clear-event="afterClear1" :is-multiple="multipleBool1" :is-disabled="disabledBool1" :is-filterable="filterBool1">
+            </ibcp-selection>
+        </el-form-item>
+
+        <el-form-item label="关联模板对象" prop="reaTableObj">
+            <ibcp-selection v-dom="selectDatas2" :multiple-data="selectDatas2.values" :multiple-option="options2"
+                            @clear-event="afterClear2" :is-multiple="multipleBool2" :is-disabled="disabledBool2" :is-filterable="filterBool2">
+            </ibcp-selection>
+        </el-form-item>
+
+        <el-form-item label="所属模块" prop="tableInput">
+            <ibcp-selection v-dom="selectDatas3" :multiple-data="selectDatas3.values" :multiple-option="options3"
+                            @clear-event="afterClear3" :is-multiple="multipleBool3" :is-disabled="disabledBool3" :is-filterable="filterBool3">
+            </ibcp-selection>
+        </el-form-item>
+
+        <el-form-item label="版本">
+            <el-input  v-model="ruleForm.versionInput" disabled></el-input>
+        </el-form-item>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script type="text/javascript" src="components.js"></script>
+<script>
+    //使用自定义指定
+    Vue.directive("dom", {
+        //el:哪一个框
+        bind: function(el, binding) {
+            var obj = binding.value;
+            console.log(obj)
+            if(obj != null) {
+                var key = Object.keys(binding.modifiers)[0] || "el";
+                Vue.set(obj, key, el);
+            }
+        }
+    });
+</script>
+
+<script src="metadata-add.js.js"></script>
 </body>
+
+
 </html>

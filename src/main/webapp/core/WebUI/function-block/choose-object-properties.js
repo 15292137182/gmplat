@@ -15,7 +15,7 @@ var em = new Vue({
             "jsonData":{
                 objRowId:window.parent.em.relateBusiObjId
             },
-            "obj":em
+            "obj":this
         }
         gmpAjax.showAjax(data,function(res){
             if(res!=null){

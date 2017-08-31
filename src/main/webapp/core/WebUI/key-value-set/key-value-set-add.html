@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>编辑</title>
+  <title>编辑主信息</title>
   <style>
     #keyValueSetAdd .el-row {
       margin-top: 20px;
@@ -12,22 +12,19 @@
 <body>
 <div id="keyValueSetAdd" style="margin-top:20px">
   <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="keyForm" ref='keyForm'
-           style="padding:0 20px" class="demo-ruleForm">
+           style="padding:0 20px 0 5px" class="demo-ruleForm">
     <el-form-item label="代码" prop="keysetCodeInput">
-      <el-input placeholder="请输入代码" v-model="keyForm.keysetCodeInput" :disabled="keyForm.disabled" ref="keysetCodeInput"></el-input>
-    </el-form-item>
-    <el-form-item label="编号" prop="numberInput">
-      <el-input placeholder="请输入编号"  v-model="keyForm.numberInput" ref="numberInput"></el-input>
+      <el-input placeholder="请输入代码" v-model="keyForm.keysetCodeInput" ref="keysetCodeInput"></el-input>
     </el-form-item>
     <el-form-item label="名称" prop="keysetNameInput">
       <el-input placeholder="请输入名称" v-model="keyForm.keysetNameInput" ref="keysetNameInput"></el-input>
     </el-form-item>
-    <el-form-item label="键" prop="confKeyInput">
-      <el-input placeholder="键" v-model="keyForm.confKeyInput" ref="confKeyInput"></el-input>
+    <el-form-item label="所属模块" prop="belongModuleInput">
+      <el-input placeholder="请输入名称" v-model="keyForm.belongModuleInput" ref="belongModuleInput"></el-input>
     </el-form-item>
-    <el-form-item label="值" prop="confValueInput">
-      <el-input placeholder="值" v-model="keyForm.confValueInput" ref="confValueInput"></el-input>
-    </el-form-item>
+    <!--<el-form-item label="所属类型" prop="belongSystemInput">-->
+      <!--<el-input placeholder="请输入名称" v-model="keyForm.belongSystemInput" ref="belongSystemInput"></el-input>-->
+    <!--</el-form-item>-->
     <el-form-item label="说明" prop="despInput">
       <el-input type="textarea" placeholder="请输入说明" v-model="keyForm.despInput" ref="despInput"></el-input>
     </el-form-item>

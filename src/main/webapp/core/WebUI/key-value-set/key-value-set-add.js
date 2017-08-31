@@ -1,23 +1,22 @@
 /**
  * Created by jms on 2017/8/7.
  */
+//定义各方法接口
+var addUrl=serverPath+'/keySet/add';
+var modifyUrl=serverPath+'/keySet/modify';
 
 var keyValueSetAdd = new Vue({
     el: '#keyValueSetAdd',
     data: {
         labelPosition: 'right',
-        addUrl:serverPath+'/keySet/add',
-        modifyUrl:serverPath+'/keySet/modify',
         rowObj:'',
         keyForm:{
             keysetCodeInput: '',
-            numberInput:'',
             keysetNameInput: '',
-            confKeyInput: '',
-            confValueInput: '',
+            belongModuleInput:'',
+         //   belongSystemInput:'',
             despInput: '',
             versionInput: '',
-            disabled:true
         },
         rules: {
             numberInput: [
@@ -26,46 +25,46 @@ var keyValueSetAdd = new Vue({
             keysetNameInput: [
                 {required: true, message: '请输入名称', trigger: 'blur'}
             ],
-            confKeyInput: [
-                {required: true, message: '请输入键', trigger: 'blur'}
-            ],
-            confValueInput: [
-                {required: true, message: '请输入值', trigger: 'blur'}
-            ],
-            //despInput: [
-            //     {required: true, message: '请输入说明', trigger: 'blur'}
-            // ]
         }
     },
     methods: {
         //新增
         addKeySet(){
-            gmpAjax.showAjax(keyValueSetAdd.addUrl,{
-                number:this.keyForm.numberInput,
-                keysetName: this.keyForm.keysetNameInput,
-                confKey: this.keyForm.confKeyInput,
-                confValue: this.keyForm.confValueInput,
-                desp: this.keyForm.despInput,
-            },function(res){
-                showMsg.MsgOk(keyValueSet,res);
-                queryData.getData(keyValueSet.url,keyValueSet.input,keyValueSet);
+            var data={
+                "url":addUrl,
+                "jsonData":{
+                    keysetCode:this.keyForm.keysetCodeInput,
+                    keysetName:this.keyForm.keysetNameInput,
+
+                    belongModule:this.keyForm.belongModuleInput,
+           //         belongSystem:this.keyForm.belongSystemInput,
+                    desp:this.keyForm.despInput
+                },
+                "obj":keyValueSetAdd
+            }
+            gmpAjax.showAjax(data,function(res){
+                queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet);
                 ibcpLayer.Close(topButtonObj.divIndex);
             })
         },
 
         //编辑
         editKeySet(rowId){
-            gmpAjax.showAjax(keyValueSetAdd.modifyUrl,{
-                rowId:rowId,
-                number:this.keyForm.numberInput,
-                keysetName: this.keyForm.keysetNameInput,
-                confKey: this.keyForm.confKeyInput,
-                confValue: this.keyForm.confValueInput,
-                desp: this.keyForm.despInput,
-            },function(res){
-                showMsg.MsgOk(keyValueSet,res);
-                queryData.getData(keyValueSet.url,keyValueSet.input,keyValueSet);
-                ibcpLayer.Close(keyValueSet.editdivIndex);
+            var data={
+                "url":modifyUrl,
+                "jsonData":{
+                    rowId:rowId,
+                    keysetCode:this.keyForm.keysetCodeInput,
+                    keysetName:this.keyForm.keysetNameInput,
+                    belongModule:this.keyForm.belongModuleInput,
+               //     belongSystem:this.keyForm.belongSystemInput,
+                    desp:this.keyForm.despInput
+                },
+                "obj":keyValueSetAdd
+            }
+            gmpAjax.showAjax(data,function(res){
+                queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet);
+                ibcpLayer.Close(leftKeyValueSet.editdivIndex);
             })
         },
 
@@ -74,7 +73,7 @@ var keyValueSetAdd = new Vue({
                 if(topButtonObj.isEdit == true){//编辑
                     if(valid){
                         editObj.editOk(function(){
-                            keyValueSetAdd.editKeySet(keyValueSetAdd.rowObj.rowId);
+                            keyValueSetAdd.editKeySet(leftKeyValueSet.rowId);
                         })
                     }
                 }else{//新增
@@ -88,7 +87,7 @@ var keyValueSetAdd = new Vue({
         },
         cancel() {
             ibcpLayer.Close(topButtonObj.divIndex);
-            ibcpLayer.Close(keyValueSet.editdivIndex);
+            ibcpLayer.Close(leftKeyValueSet.editdivIndex);
         }
     }
 })
