@@ -16,6 +16,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     private final BusinessRelateTemplateService businessRelateTemplateService;
 
     @Autowired
-    public BusinessObjectController(BusinessObjectService businessObjectService,BusinessRelateTemplateService businessRelateTemplateService) {
+    public BusinessObjectController(BusinessObjectService businessObjectService, BusinessRelateTemplateService businessRelateTemplateService) {
         this.businessObjectService = businessObjectService;
         this.businessRelateTemplateService = businessRelateTemplateService;
     }
@@ -50,9 +51,9 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     /**
      * 通用新增方法
      *
-     * @param businessObject  接受一个实体参数
-     * @param request request请求
-     * @param locale  国际化参数
+     * @param businessObject 接受一个实体参数
+     * @param request        request请求
+     * @param locale         国际化参数
      * @return
      */
     @RequestMapping("/add")
@@ -61,14 +62,18 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
         BusinessRelateTemplate brt = new BusinessRelateTemplate();
         int insert = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
         String rowId = businessObject.getRowId();
-        String relateTemplateObject = businessObject.getRelateTemplateObject();
-        brt.setBusinessRowId(rowId);
-        brt.setTemplateRowId(relateTemplateObject);
-        businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
+        String rto = businessObject.getRelateTemplateObject();
+        List list = UtilsTool.jsonToObj(rto, List.class);
+        for (Object li : list) {
+            brt.setBusinessRowId(rowId);
+            brt.setTemplateRowId(li.toString());
+            businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
+        }
         if (insert != 1) {
             return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+        } else {
+            return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, insert)), locale);
         }
-        return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,insert)), locale);
     }
 
     /**
@@ -88,7 +93,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     /**
      * 查询业务对象全部数据并分页显示
      *
-     * @param search     按照空格查询
+     * @param search   按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -98,13 +103,11 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @RequestMapping("/queryPage")
     @Override
     public Object singleInputSelect(String search,
-                            @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                            @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                            String order,HttpServletRequest request,Locale locale) {
+                                    @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                    String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (!UtilsTool.isValid(search)) {
-            pageNum = 1;
-        }
+        pageNum = !UtilsTool.isValid(search) ? pageNum = 1 : pageNum;
         return super.result(request, ServiceResult.Msg(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
     }
 
@@ -112,7 +115,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     /**
      * 根据业务对象rowId查找当前对象下的所有属性并分页显示
      *
-     * @param search     按照空格查询
+     * @param search   按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -120,14 +123,13 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
      * @return ServiceResult
      */
     @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId,  String search,
+    public Object queryProPage(String rowId, String search,
                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                               String order, HttpServletRequest request,  Locale locale) {
+                               String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        return super.result(request,ServiceResult.Msg(businessObjectService.queryProPage(search,rowId,pageNum,pageSize,orders)),locale);
+        return super.result(request, ServiceResult.Msg(businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
     }
-
 
 
     /**
@@ -142,10 +144,11 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
         if (!UtilsTool.isValid(rowId)) {
             return ServiceResult.ErrorMsg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        } else {
+            PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
+                    businessObjectService.changeOperat(rowId));
+            return super.result(request, ServiceResult.Msg(platResult), locale);
         }
-        PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
-                businessObjectService.changeOperat(rowId));
-        return super.result(request, ServiceResult.Msg(platResult), locale);
     }
 
 
@@ -161,9 +164,28 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return ServiceResult.Msg(businessObjectService.delete(rowId));
+            return super.result(request,ServiceResult.Msg(businessObjectService.delete(rowId)),locale);
+        } else {
+            return super.result(request,ServiceResult.Msg(null),locale);
         }
-        return ServiceResult.Msg(null);
+    }
+
+    /**
+     *  根据业务对象唯一标识查询出业务关联模板属性的信息
+     * @param rowId
+     * @param order
+     * @param request
+     * @param locale
+     * @return
+     */
+    @RequestMapping("/queryTemplatePro")
+    public Object queryTemplate(String rowId, String order ,HttpServletRequest request, Locale locale){
+        if (UtilsTool.isValid(rowId)) {
+            LinkedList<Order> orders = UtilsTool.dataSort(order);
+            return super.result(request,ServiceResult.Msg(businessObjectService.queryTemplatePro(rowId,orders)),locale);
+        }else {
+            return super.result(request,ServiceResult.Msg(null),locale);
+        }
     }
 
 

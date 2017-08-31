@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
+import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/core/fronc")
 @RestController
 public class FrontFuncController extends BaseControllerTemplate<FrontFuncService, FrontFunc> {
+    private final FrontFuncService frontFuncService;
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectService businessObjectService;
 
     @Autowired
-    public FrontFuncController(FrontFuncProService frontFuncProService, BusinessObjectService businessObjectService) {
+    public FrontFuncController(FrontFuncService frontFuncService,FrontFuncProService frontFuncProService, BusinessObjectService businessObjectService) {
+        this.frontFuncService = frontFuncService;
         this.frontFuncProService = frontFuncProService;
         this.businessObjectService = businessObjectService;
     }
@@ -86,5 +89,20 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
             frontFuncProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
         }
         return super.delete(rowId, request, locale);
+    }
+
+
+
+    /**
+     * 根据前端功能块的代码查询出对应的数据
+     * @param funcCode
+     * @param request
+     * @param locale
+     * @return
+     */
+    @RequestMapping("/queryFuncCode")
+    public Object queryFuncCode(String funcCode, HttpServletRequest request, Locale locale) {
+        List list = UtilsTool.jsonToObj(funcCode, List.class);
+        return super.result(request, ServiceResult.Msg(frontFuncService.queryFuncCode(list)),locale);
     }
 }

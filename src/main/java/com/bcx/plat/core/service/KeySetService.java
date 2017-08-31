@@ -25,7 +25,7 @@ import java.util.*;
  * Created by Went on 2017/8/3.
  */
 @Service
-public class KeySetService extends BaseServiceTemplate<KeySet>{
+public class KeySetService extends BaseServiceTemplate<KeySet> {
 
     private final MoreBatis moreBatis;
     private final KeySetProService keySetProService;
@@ -43,25 +43,25 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
      * @param list 搜索条件
      * @return ServiceResult
      */
-   public PlatResult queryKeySet(List list) {
-       Map<Object, Object> maps = new HashMap<>();
-       for (Object li : list) {
-           List lists = new ArrayList();
-           lists.add(li);
-           QueryAction joinTableTest = moreBatis.selectStatement().select(QueryAction.ALL_FIELD)
-                   .from(new JoinTable(moreBatis.getTable(KeySet.class), JoinType.LEFT_JOIN,
-                           moreBatis.getTable(KeySetPro.class))
-                           .on(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "rowId"), Operator.EQUAL,
-                                   moreBatis.getColumnByAlies(KeySetPro.class, "relateKeysetRowId"))))
-                   .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
-           List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(joinTableTest.execute());
-           maps.put(li, list1);
-           if (maps.size() == 0) {
-               return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-           }
-       }
-       return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.objToJson(maps));
-   }
+    public PlatResult queryKeySet(List list) {
+        Map<Object, Object> maps = new HashMap<>();
+        for (Object li : list) {
+            List lists = new ArrayList();
+            lists.add(li);
+            QueryAction joinTableTest = moreBatis.selectStatement().select(QueryAction.ALL_FIELD)
+                    .from(new JoinTable(moreBatis.getTable(KeySet.class), JoinType.LEFT_JOIN,
+                            moreBatis.getTable(KeySetPro.class))
+                            .on(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "rowId"), Operator.EQUAL,
+                                    moreBatis.getColumnByAlies(KeySetPro.class, "relateKeysetRowId"))))
+                    .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
+            List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(joinTableTest.execute());
+            maps.put(li, list1);
+            if (maps.size() == 0) {
+                return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            }
+        }
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.objToJson(maps));
+    }
 
     /**
      * 根据键值集合编号查询对应的数据
@@ -93,25 +93,24 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
      * 根据rowId查询数据
      *
      * @param rowId 唯一标示
-     * @return  PlatResult
+     * @return PlatResult
      */
     public PlatResult queryPro(String rowId) {
         List<Map<String, Object>> rowId1 =
                 keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
-        return new PlatResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,rowId1);
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, rowId1);
     }
-
 
 
     /**
      * 根据键值集合rowId查找当前键值集合属性并分页显示
      *
-     * @param search    搜索条件
-     * @param rowId     唯一标识
-     * @param pageNum   页码
-     * @param pageSize  一页显示条数
-     * @param order     排序
-     * @return      PlatResult
+     * @param search   搜索条件
+     * @param rowId    唯一标识
+     * @param pageNum  页码
+     * @param pageSize 一页显示条数
+     * @param order    排序
+     * @return PlatResult
      */
     public PlatResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
         PageResult<Map<String, Object>> result;
@@ -125,8 +124,8 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
             if (result.getResult().size() == 0) {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             }
-            for (Map<String,Object> res :result.getResult()){
-                res.put("disableButton",false);
+            for (Map<String, Object> res : result.getResult()) {
+                res.put("disableButton", false);
             }
             return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
         }
@@ -138,13 +137,10 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
         if (result.getResult().size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        for (Map<String,Object> res :result.getResult()){
-            res.put("disableButton",false);
+        for (Map<String, Object> res : result.getResult()) {
+            res.put("disableButton", false);
         }
         return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }
-
-
-
 
 }
