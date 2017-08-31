@@ -213,6 +213,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="number" p:alies="number"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_code" p:alies="keysetCode"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_name" p:alies="keysetName"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_system" p:alies="belongSystem"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="desp" p:alies="desp"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="status" p:alies="status"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="version" p:alies="version"/>

@@ -17,6 +17,8 @@ public class KeySet extends BaseEntity<KeySet>{
     private String rowId;//唯一标示
     private String keysetCode;//键值代码
     private String keysetName;//键值名称
+    private String belongModule;//所属模块
+    private String belongSystem;//所属系统
     private String desp;//说明
 
     /**
@@ -28,6 +30,22 @@ public class KeySet extends BaseEntity<KeySet>{
     public KeySet buildCreateInfo() {
         setRowId(lengthUUID(32));
         return this;
+    }
+
+    public String getBelongModule() {
+        return belongModule;
+    }
+
+    public void setBelongModule(String belongModule) {
+        this.belongModule = belongModule;
+    }
+
+    public String getBelongSystem() {
+        return belongSystem;
+    }
+
+    public void setBelongSystem(String belongSystem) {
+        this.belongSystem = belongSystem;
     }
 
     public String getRowId() {
