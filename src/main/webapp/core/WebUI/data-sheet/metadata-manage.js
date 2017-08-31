@@ -28,8 +28,11 @@ var conChildTable=serverPath + "/dbTableColumn/queryTabById";
 //查找模板对象属性
 var tempObj=serverPath + "/businObj/queryTemplatePro";
 //关联表
+
 //关联模板对象
+
 //所属模块
+var belongModel=serverPath + "/templateObj/query";
 
 //上方按钮事件
 var basTop = new Vue({
@@ -44,7 +47,7 @@ var basTop = new Vue({
         //新增业务对象
         addEvent() {
             operate = 1;
-            var htmlUrl = 'metadata-manage.html';
+            var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){});
         },
         //新增业务对象属性
@@ -55,15 +58,23 @@ var basTop = new Vue({
         },
         //生效
         affectProp(){
-            gmpAjax.showAjax(affectPropUrl,{rowId:basLeft.currentId},function(res){
-                showMsg.MsgOk(basTop,res);
+            var data={
+                "url":affectPropUrl,
+                "jsonData":{rowId:basLeft.currentId},
+                "obj":basTop
+            };
+            gmpAjax.showAjax(data,function(res){
                 basLeft.searchLeft();
             })
         },
         //变更
         changeProp(){
-            gmpAjax.showAjax(changeUrl,{rowId:basLeft.currentId},function(res){
-                showMsg.MsgOk(basTop,res);
+            var data={
+                "url":changeUrl,
+                "jsonData":{rowId:basLeft.currentId},
+                "obj":basTop
+            };
+            gmpAjax.showAjax(data,function(res){
                 basLeft.searchLeft();
             })
         }
@@ -81,8 +92,13 @@ var basLeft = new Vue({
             operate = 2;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '510px', function () {
-                console.log(basLeft.currentVal.rowId);
-                gmpAjax.showAjax(editObjUrl,{rowId:basLeft.currentVal.rowId},function(res){
+                var data={
+                    "url":editObjUrl,
+                    "jsonData":{rowId:basLeft.currentVal.rowId},
+                    "obj":basLeft
+                };
+                gmpAjax.showAjax(data,function(res){
+                    console.log(res)
                     //编辑拿到的数据
                     var data=res.resp.content.data[0];
                     em.addForm.codeInput = data.objectCode;  //对象代码
@@ -95,8 +111,12 @@ var basLeft = new Vue({
         //删除业务对象
         deleteEvent() {
             deleteObj.del(function(){
-                gmpAjax.showAjax(deleteUrl,{rowId:basLeft.currentVal.rowId},function(res){
-                    showMsg.MsgOk(basLeft,res);
+                var data={
+                    "url":deleteUrl,
+                    "jsonData":{rowId:basLeft.currentVal.rowId},
+                    "obj":basLeft
+                };
+                gmpAjax.showAjax(data,function(res){
                     //分页跳回到第一页
                     basLeft.searchLeft();
                 })
@@ -220,16 +240,25 @@ var basRight=new Vue({
         //转到第一页查询
         searchRight(){
             queryData.getDatas(qurProUrl,basRight.input,basLeft.currentId,basRight,function(res){
-                //console.log(res);
-                basRight.currentRChange(basRight.tableData[0]);
+                console.log(res);
+                var data=res.resp.content.data.result
+                if(data!=null){
+                    basRight.currentRChange(basRight.tableData[0]);
+                }
             })
         },
         editProp(){
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '580px', function () {
-                gmpAjax.showAjax(editObjUrl, {rowId: basRight.currentVal.rowId}, function (res) {
-                    //    //编辑拿到的数据
+
+                var data={
+                    "url":editObjUrl,
+                    "jsonData":{rowId: basRight.currentVal.rowId},
+                    "obj":basRight
+                };
+                gmpAjax.showAjax(data, function (res) {
+                    ///编辑拿到的数据
                     var data = res.data.data[0];
                     proEm.addProForm.codeProInput=data.propertyCode;   //代码
                     proEm.addProForm.nameProInput=data.propertyName;   //名称
@@ -250,8 +279,12 @@ var basRight=new Vue({
         },
         deleteProp(){
             deleteObj.del(function(){
-                gmpAjax.showAjax(deleteProUrl,{rowId: basRight.rightVal},function(res){
-                    showMsg.MsgOk(basRight,res);
+                var data={
+                    "url":deleteProUrl,
+                    "jsonData":{rowId: basRight.rightVal},
+                    "obj":basRight
+                };
+                gmpAjax.showAjax(data,function(res){
                     //分页查询
                     basRight.searchRight();
                 })
@@ -301,10 +334,6 @@ var basRight=new Vue({
         var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
         TableKeyValueSet.init(args);
     },
-    //页面一进入第一行高亮显示
-    updated() {
-        this.FindRFirstDate(this.tableData[0]);
-    }
 })
 //模板的属性
 var basRightTop = new Vue({
@@ -328,6 +357,9 @@ var basRightTop = new Vue({
         },
         headSort(column){//列头排序
             //pagingObj.headSorts(qurProUrl,basLeft.currentId,this.resInput,column,this);
+        },
+        currentChange(row, event, column) {
+            console.log(row)
         },
     },
     created() {

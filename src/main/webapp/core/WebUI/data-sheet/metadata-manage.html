@@ -238,6 +238,7 @@
             <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
                       v-loading="loading"
                       element-loading-text="加载中" @sort-change="headSort"
+                      @row-click="currentChange"
                       class="tableStyle">
                 <el-table-column type="expand">
                     <template scope="props">
@@ -245,12 +246,12 @@
                             <el-row>
                                 <el-col :span="12">
                                     <el-form-item label="默认值">
-                                        <span>{{ props.row.propertyCode }}</span>
+                                        <span>{{ props.row.defaultValue }}</span>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="12">
                                     <el-form-item label="说明">
-                                        <span>{{ props.row.valueResourceType }}</span>
+                                        <span>{{ props.row.desp }}</span>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
@@ -258,16 +259,16 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="propertyName" label="代码" sortable="custom" width="160"
+                <el-table-column prop="code" label="代码" sortable="custom" width="160"
                                  show-overflow-tooltip></el-table-column>
-                <el-table-column prop="wetherExpandPro" label="中文名称" width="100"
+                <el-table-column prop="cname" label="中文名称" width="100"
                                  show-overflow-tooltip></el-table-column>
-                <el-table-column prop="columnCname" label="英文名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="ename" label="英文名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
             </el-table>
         </template>
     </el-col>
 </template>
-<script src="2.js"></script>
+<script src="metadata-manage.js"></script>
 </body>
 </html>

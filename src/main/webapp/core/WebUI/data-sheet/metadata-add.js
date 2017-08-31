@@ -97,7 +97,6 @@ var em = new Vue({
                 return
             }
             if (operate == 1) {
-
                 console.log(em.ruleForm.reaTableObj)
                 console.log(em.ruleForm.tableInput)
                 //addObj.addOk(function(){

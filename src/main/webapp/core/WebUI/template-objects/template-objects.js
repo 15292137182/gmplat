@@ -71,11 +71,15 @@ var basLeft = new Vue({
             operate = 2;
             var htmlUrl = 'template-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象', '400px', '420px',function(){
-                gmpAjax.showAjax(addTempObjQuery,{rowId:basLeft.currentId},function(res){
+                var data={
+                    "url":addTempObjQuery,
+                    "jsonData":{rowId:basLeft.currentId},
+                     "obj":basLeft
+                };
+                gmpAjax.showAjax(data,function(res){
                     //编辑拿到的数据
                     console.log(res);
-                    var data=res.resp.content.data.result[0];
-                    console.log(data);
+                    var data=res[0];
                     addTemp.addTempObj.codeInput=data.templateCode;
                     addTemp.addTempObj.nameInput=data.templateName;
                     addTemp.addTempObj.comContent=data.desp;
@@ -87,8 +91,12 @@ var basLeft = new Vue({
         //删除事件
         deleteEvent(){
             deleteObj.del(function(){
-                gmpAjax.showAjax(deleteTempObj,{rowId:basLeft.currentId},function(res){
-                    showMsg.MsgOk(basLeft,res);
+                var data={
+                    "url":deleteTempObj,
+                    "jsonData":{rowId:basLeft.currentId},
+                    "obj":basLeft
+                };
+                gmpAjax.showAjax(data,function(res){
                     queryData.getData(queryTemp,basLeft.input,basLeft,function(res){
                         basLeft.currentChange(basLeft.tableData[0]);
                     })
@@ -180,9 +188,14 @@ var basRight = new Vue({
             operateOPr=2;
             var htmlUrl = 'template-add-prop.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象属性', '400px', '480px',function() {
-                gmpAjax.showAjax(editQueryObjTemp, {rowId: basRight.currentId}, function (res) {
+                var data={
+                    "url":editQueryObjTemp,
+                    "jsonData":{rowId:basLeft.currentId},
+                    "obj":basRight
+                };
+                gmpAjax.showAjax(data, function (res) {
                     //编辑拿到的数据
-                    var data = res.resp.content.data[0];
+                    var data = res[0];
                     console.log(data);
                     addTempProp.addTempPropObj.codeInput=data.code;
                     addTempProp.addTempPropObj.engNameInput=data.ename;
@@ -196,8 +209,12 @@ var basRight = new Vue({
         //删除事件
         deleteProp(){
             deleteObj.del(function(){
-                gmpAjax.showAjax(deleteObjTemp,{rowId: basRight.currentId},function(res){
-                    showMsg.MsgOk(basRight,res);
+                var data={
+                    "url":deleteObjTemp,
+                    "jsonData":{rowId: basRight.currentId},
+                    "obj":basRight
+                };
+                gmpAjax.showAjax(data,function(res){
                     //分页查询
                     queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){})
                 })
