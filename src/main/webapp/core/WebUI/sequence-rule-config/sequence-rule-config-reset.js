@@ -129,14 +129,29 @@ save=function(){
         arrserialKeyValue.push(serialKeyValue);
     }
 
-    var data={
+    var resultJson={
         rowId:config.rowId,
         content:JSON.stringify(arrserialKeyValue)
     }
-    //保存
-    gmpAjax.showAjax(serverPath+'/sequenceRule/reset',data,function(res){
-        alert(res.resp.content.msg);
-        ibcpLayer.Close(resetIndex);
+
+    // var data={
+    //     "url":resetUrl,
+    //     "jsonData":resultJson,
+    //     "obj":seqReset,
+    // }
+    //特殊情况
+    $.ajax({
+        url:resetUrl,
+        type:"get",
+        data:resultJson,
+        dataType:"jsonp",
+        success:function(res){
+             alert(res.resp.content.msg);
+            ibcpLayer.Close(resetIndex);
+        },
+        error:function(res){
+            console.log(res);
+        }
     })
 }
 
