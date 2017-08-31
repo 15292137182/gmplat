@@ -19,10 +19,15 @@
         <el-form-item label="模板名称" prop="nameInput">
             <el-input placeholder="请输入模板名称" v-model="addTempObj.nameInput"></el-input>
         </el-form-item>
+        <el-form-item label="所属模块" prop="modules">
+            <el-input placeholder="请输入所属模块" v-model="addTempObj.modules"></el-input>
+        </el-form-item>
+        <el-form-item label="所属系统" prop="system">
+            <el-input placeholder="请输入所属系统" v-model="addTempObj.system"></el-input>
+        </el-form-item>
         <el-form-item label="说明" prop="comContent">
             <el-input type="textarea" placeholder="请输入说明" v-model="addTempObj.comContent"></el-input>
         </el-form-item>
-
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">

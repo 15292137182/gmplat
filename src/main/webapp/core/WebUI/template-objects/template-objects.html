@@ -57,13 +57,20 @@
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-row>
                                         <el-col :span="16">
-                                            <el-form-item label="说明">
-                                                <span>{{ props.row.desp }}</span>
+                                            <el-form-item label="所属模块">
+                                                <span>{{ props.row.belongModule}}</span>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="8">
-                                            <el-form-item label="创建时间">
-                                                <span>{{ props.row.modifyTime }}</span>
+                                            <el-form-item label="所属系统">
+                                                <span>{{props.row.belongSystem}}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="说明">
+                                                <span>{{ props.row.desp }}</span>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -129,14 +136,9 @@
                             <template scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-row>
-                                        <el-col :span="12">
+                                        <el-col :span="24">
                                             <el-form-item label="代码">
                                                 <span>{{ props.row.code }}</span>
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <el-form-item label="属性英文名称">
-                                                <span>{{ props.row.ename }}</span>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -145,6 +147,8 @@
                         </el-table-column>
 
                         <el-table-column prop="cname" label="属性中文名称" sortable="custom"
+                                         show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="ename" label="属性英文名称" sortable="custom"
                                          show-overflow-tooltip></el-table-column>
                         <el-table-column prop="valueType" label="值类型"  width="100"
                                          show-overflow-tooltip></el-table-column>

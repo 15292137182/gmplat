@@ -11,6 +11,10 @@
         form  .el-input input{
             width:240px;
         }
+        .el-tabs__item{
+            line-height:24px;
+            height:24px;
+        }
     </style>
 
 </head>
@@ -63,28 +67,33 @@
                             <template scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-row>
-                                        <el-col :span="16">
+                                        <el-col :span="14">
                                             <el-form-item label="代码">
                                                 <span>{{ props.row.objectCode }}</span>
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="8">
+                                        <el-col :span="10">
                                             <el-form-item label="版本">
                                                 <span>{{ props.row.version }}</span>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
-                                        <el-col :span="16">
+                                        <el-col :span="14">
+                                            <el-form-item label="模板对象">
+                                                <span>{{props.row.relateTemplateObject}}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
                                             <el-form-item label="所属模块">
-                                                <span>{{  }}</span>
+                                                <span>{{props.row.belongModule}}</span>
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="8">
-                                            <el-form-item label="所属系统">
-                                                <span>{{ }}</span>
-                                            </el-form-item>
-                                        </el-col>
+                                        <!--<el-col :span="9">-->
+                                        <!--<el-form-item label="所属系统">-->
+                                        <!--<span>{{props.row.belongSystem}}</span>-->
+                                        <!--</el-form-item>-->
+                                        <!--</el-col>-->
                                     </el-row>
                                 </el-form>
                             </template>
@@ -122,169 +131,143 @@
 
 <!--右边的数据-->
 <el-col :span="15" id="basRight" style="margin-left: 25px">
-    <!--表格上方-->
     <div class="allBorder">
         <el-row>
             <el-col>
-                <div class="bg-color"><span>模板对象属性</span></div>
-            </el-col>
-        </el-row>
-        <el-row class="inputStyle">
-            <el-col :xs="14" :sm="14" :md="14">
-                <div>
-                    <el-input placeholder="请输入内容" v-model="input" size="small">
-                        <el-button slot="append" icon="search" @click.native="searchRightTopEvent"></el-button>
-                    </el-input>
+                <div class="bg-color">
+                    <div>
+                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                            <el-tab-pane label="对象的属性" name="first">
+                                <el-row>
+                                    <el-col :span="24">
+                                        <div class="allBorder">
+                                            <el-row class="inputStyle">
+                                                <el-col :xs="14" :sm="14" :md="14">
+                                                    <div>
+                                                        <el-input placeholder="请输入内容" v-model="input" size="small">
+                                                            <el-button slot="append" icon="search" @click.native="searchRight"></el-button>
+                                                        </el-input>
+                                                    </div>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row style="padding:0px 10px 10px 10px">
+                                                <el-col :span="24">
+                                                    <template>
+                                                        <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                                                                  v-loading="loading"
+                                                                  element-loading-text="加载中" @sort-change="headSort"
+                                                                  @row-click="currentRChange" class="tableStyle">
+
+                                                            <el-table-column type="expand">
+                                                                <template scope="props">
+                                                                    <el-form label-position="left" inline class="demo-table-expand">
+
+                                                                        <el-row>
+                                                                            <el-col :span="12">
+                                                                                <el-form-item label="代码">
+                                                                                    <span>{{ props.row.propertyCode }}</span>
+                                                                                </el-form-item>
+                                                                            </el-col>
+                                                                            <el-col :span="12">
+                                                                                <el-form-item label="值来源类型">
+                                                                                    <span>{{ props.row.valueResourceType }}</span>
+                                                                                </el-form-item>
+                                                                            </el-col>
+                                                                        </el-row>
+                                                                        <el-row>
+                                                                            <el-col :span="24">
+                                                                                <el-form-item label="值来源内容">
+                                                                                    <span>{{ props.row.valueResourceContent }}</span>
+                                                                                </el-form-item>
+                                                                            </el-col>
+                                                                        </el-row>
+                                                                    </el-form>
+                                                                </template>
+                                                            </el-table-column>
+
+                                                            <el-table-column prop="propertyName" label="名称" sortable="custom"
+                                                                             show-overflow-tooltip></el-table-column>
+                                                            <el-table-column prop="wetherExpandPro" label="扩展属性" :formatter="extendOnly" width="100"
+                                                                             show-overflow-tooltip></el-table-column>
+                                                            <el-table-column prop="columnCname" label="关联字段" show-overflow-tooltip></el-table-column>
+                                                            <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
+                                                            <el-table-column prop="" label="操作" width="100">
+                                                                <template scope="scope">
+                                                                    <el-button @click.native="editProp" type="text" size="small" icon="edit"
+                                                                               :disabled=scope.row.testDemo></el-button>
+                                                                    <el-button @click.native="deleteProp" type="text" size="small" icon="delete"
+                                                                               :disabled=scope.row.testDemo></el-button>
+                                                                </template>
+                                                            </el-table-column>
+                                                        </el-table>
+                                                    </template>
+                                                    <el-row type="flex" justify="end" style="padding-top: 10px">
+                                                        <div class="block">
+                                                            <el-pagination
+                                                                    @size-change="handleSizeChange"
+                                                                    @current-change="handleCurrentChange"
+                                                                    :current-page.sync="pageNum"
+                                                                    :page-sizes="[5,10,20]"
+                                                                    :page-size="pageSize"
+                                                                    layout="total, sizes, prev, pager, next, jumper"
+                                                                    :total="allDate">
+                                                            </el-pagination>
+                                                        </div>
+                                                    </el-row>
+                                                </el-col>
+                                            </el-row>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                            </el-tab-pane>
+                            <el-tab-pane label="模板对象属性" name="second">
+                                <el-row id="basRightTop"></el-row>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
                 </div>
             </el-col>
         </el-row>
-        <el-row style="padding:0px 10px 10px 10px">
-            <el-col :span="24">
-                <template>
-                    <el-table :data="tableData" :height="100" border ref="tableData" highlight-current-row
-                              v-loading="loading"
-                              element-loading-text="加载中" @sort-change="headSort"
-                              class="tableStyle">
-                        <el-table-column type="expand">
-                            <template scope="props">
-                                <el-form label-position="left" inline class="demo-table-expand">
-                                    <el-row>
-                                        <el-col :span="12">
-                                            <el-form-item label="默认值">
-                                                <span>{{ props.row.propertyCode }}</span>
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <el-form-item label="说明">
-                                                <span>{{ props.row.valueResourceType }}</span>
-                                            </el-form-item>
-                                        </el-col>
-                                    </el-row>
-                                </el-form>
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column prop="propertyName" label="代码" sortable="custom" width="160"
-                                         show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="wetherExpandPro" label="中文名称" width="100"
-                                         show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="columnCname" label="英文名称" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
-                    </el-table>
-                </template>
-                <el-row type="flex" justify="end" style="padding-top: 10px">
-                    <div class="block">
-                        <el-pagination
-                                @size-change="handleSizeChange"
-                                :current-page.sync="pageNum"
-                                :page-sizes="[5,10,20]"
-                                :page-size="pageSize"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="allDate">
-                        </el-pagination>
-                    </div>
-                </el-row>
-            </el-col>
         </el-row>
     </div>
 </el-col>
 
-<!--表格下方-->
-<el-row type="flex" justify="end">
-    <el-col :span="15" id="basRightBottom" style="margin-left: 25px;margin-top: 25px">
-        <el-row>
-            <el-col :span="24" id="basRightBottom">
-                <div class="allBorder">
-                    <el-row>
-                        <el-col>
-                            <div class="bg-color"><span>对象的属性</span></div>
-                        </el-col>
-                    </el-row>
-                    <el-row class="inputStyle">
-                        <el-col :xs="14" :sm="14" :md="14">
-                            <div>
-                                <el-input placeholder="请输入内容" v-model="input" size="small">
-                                    <el-button slot="append" icon="search" @click.native="searchRight"></el-button>
-                                </el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row style="padding:0px 10px 10px 10px">
-                        <el-col :span="24">
-                            <template>
-                                <!--show-overflow-tooltip-->
-                                <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
-                                          v-loading="loading"
-                                          element-loading-text="加载中" @sort-change="headSort"
-                                          @row-click="currentRChange" class="tableStyle">
-
-                                    <el-table-column type="expand">
-                                        <template scope="props">
-                                            <el-form label-position="left" inline class="demo-table-expand">
-
-                                                <el-row>
-                                                    <el-col :span="12">
-                                                        <el-form-item label="代码">
-                                                            <span>{{ props.row.propertyCode }}</span>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                    <el-col :span="12">
-                                                        <el-form-item label="值来源类型">
-                                                            <span>{{ props.row.valueResourceType }}</span>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </el-row>
-                                                <el-row>
-                                                    <el-col :span="24">
-                                                        <el-form-item label="值来源内容">
-                                                            <span>{{ props.row.valueResourceContent }}</span>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </el-row>
-                                            </el-form>
-                                        </template>
-                                    </el-table-column>
-
-                                    <el-table-column prop="propertyName" label="名称" sortable="custom" width="160"
-                                                     show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="wetherExpandPro" label="扩展属性" :formatter="extendOnly" width="100"
-                                                     show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="columnCname" label="关联字段" show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="" label="操作" width="100">
-                                        <template scope="scope">
-                                            <el-button @click.native="editProp" type="text" size="small" icon="edit"
-                                                       :disabled=scope.row.testDemo></el-button>
-                                            <el-button @click.native="deleteProp" type="text" size="small" icon="delete"
-                                                       :disabled=scope.row.testDemo></el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                            </template>
-                            <el-row type="flex" justify="end" style="padding-top: 10px">
-                                <div class="block">
-                                    <el-pagination
-                                            @size-change="handleSizeChange"
-                                            @current-change="handleCurrentChange"
-                                            :current-page.sync="pageNum"
-                                            :page-sizes="[5,10,20]"
-                                            :page-size="pageSize"
-                                            layout="total, sizes, prev, pager, next, jumper"
-                                            :total="allDate">
-                                    </el-pagination>
-                                </div>
+<template id="tempBlock">
+    <el-col :span="24" id="basRightTop">
+        <template>
+            <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                      v-loading="loading"
+                      element-loading-text="加载中" @sort-change="headSort"
+                      class="tableStyle">
+                <el-table-column type="expand">
+                    <template scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="默认值">
+                                        <span>{{ props.row.propertyCode }}</span>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="说明">
+                                        <span>{{ props.row.valueResourceType }}</span>
+                                    </el-form-item>
+                                </el-col>
                             </el-row>
-                        </el-col>
-                    </el-row>
-                </div>
-            </el-col>
-        </el-row>
+                        </el-form>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="propertyName" label="代码" sortable="custom" width="160"
+                                 show-overflow-tooltip></el-table-column>
+                <el-table-column prop="wetherExpandPro" label="中文名称" width="100"
+                                 show-overflow-tooltip></el-table-column>
+                <el-table-column prop="columnCname" label="英文名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
+            </el-table>
+        </template>
     </el-col>
-</el-row>
-
-
-
-
-<script src="metadata-manage.js"></script>
+</template>
+<script src="2.js"></script>
 </body>
 </html>

@@ -14,8 +14,6 @@ var proEm = new Vue({
                 addProForm: {
                     codeProInput: '',
                     nameProInput: '',
-                    checked: '',
-                    checked1: '',
                     comContent: '',
                     disabled: true,
                     iconEvent: false,
@@ -27,6 +25,8 @@ var proEm = new Vue({
                 optionValue:[],
                 optionLeft: [],
                 optionRight: [],
+                checked: '',
+                checked1: '',
             }
         },
         methods: {

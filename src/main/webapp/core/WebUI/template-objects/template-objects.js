@@ -35,7 +35,7 @@ var basTop = new Vue({
         addTemp(){
             operate = 1;
             var htmlUrl = 'template-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象', '400px', '340px',function(){});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增模板对象', '400px', '420px',function(){});
         },
         //新增模板对象属性
         addTempProp(){
@@ -70,13 +70,17 @@ var basLeft = new Vue({
         editEvent(){
             operate = 2;
             var htmlUrl = 'template-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象', '400px', '340px',function(){
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象', '400px', '420px',function(){
                 gmpAjax.showAjax(addTempObjQuery,{rowId:basLeft.currentId},function(res){
                     //编辑拿到的数据
-                    var data=res.resp.content.data[0];
+                    console.log(res);
+                    var data=res.resp.content.data.result[0];
+                    console.log(data);
                     addTemp.addTempObj.codeInput=data.templateCode;
                     addTemp.addTempObj.nameInput=data.templateName;
                     addTemp.addTempObj.comContent=data.desp;
+                    addTemp.addTempObj.modules=data.belongModule;
+                    addTemp.addTempObj.system=data.belongSystem;
                 })
             });
         },
@@ -93,6 +97,7 @@ var basLeft = new Vue({
         },
         //表格点击事件
         currentChange(row){
+            console.log(row);
             if(row!=undefined){
                 //左边这一行的数据的ID
                 this.currentId = row.rowId;
@@ -100,7 +105,10 @@ var basLeft = new Vue({
                 queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
                     //console.log(res)
                     //选中右边第一行
-                    basRight.currentRChange(basRight.tableData[0]);
+                    var data=res.resp.content.data.result;
+                    if(data!=null){
+                        basRight.currentRChange(basRight.tableData[0]);
+                    }
                 })
             }
         },
@@ -164,7 +172,7 @@ var basRight = new Vue({
         },
         //右边点击事件
         currentRChange(row){
-            //console.log(row);
+            console.log(row);
             this.currentId=row.rowId;
         },
         //编辑事件
@@ -175,7 +183,7 @@ var basRight = new Vue({
                 gmpAjax.showAjax(editQueryObjTemp, {rowId: basRight.currentId}, function (res) {
                     //编辑拿到的数据
                     var data = res.resp.content.data[0];
-                    //console.log(data);
+                    console.log(data);
                     addTempProp.addTempPropObj.codeInput=data.code;
                     addTempProp.addTempPropObj.engNameInput=data.ename;
                     addTempProp.addTempPropObj.chnNameInput=data.cname;
@@ -228,7 +236,7 @@ var basRight = new Vue({
         TableKeyValueSet.init(args);
     },
     //页面一进入第一行高亮显示
-    updated() {
-        this.FindLFirstDate(this.tableData[0]);
-    }
+    //updated() {
+    //    this.FindLFirstDate(this.tableData[0]);
+    //}
 });
