@@ -60,28 +60,29 @@ public class BusinessObjectProController extends
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
         if (!UtilsTool.isValid(rowId)) {
             return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+        }else{
+            return super.result(request,ServiceResult.Msg(businessObjectProService.queryById(rowId)),locale);
         }
-        return super.result(request,ServiceResult.Msg(businessObjectProService.queryById(rowId)),locale);
+
     }
 
     /**
+     * 供前端功能块属性使用
      * 根据业务对象rowId查询当前业务对象下的所有属性
      *
-     * @param search      按照条件搜索
      * @param objRowId 根据业务对象rowId查找业务对象下所有属性
      * @param request  request请求
      * @param locale   国际化参数
      * @return ServiceResult
      */
     @RequestMapping("/queryBusinPro")
-    public Object querySlave(String search, String objRowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = getEntityService()
-                .select(new And(new FieldCondition("objRowId", Operator.EQUAL, objRowId),
-                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
-        if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+    public Object queryBusinPro(String objRowId, HttpServletRequest request, Locale locale) {
+        if (UtilsTool.isValid(objRowId)) {
+            PlatResult platResult = businessObjectProService.queryBusinPro(objRowId);
+            return result(request, ServiceResult.Msg(platResult), locale);
+        }else{
+            return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,null)), locale);
         }
-        return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
 
 
