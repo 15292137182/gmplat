@@ -73,4 +73,23 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
 
 
 
+    /**
+     * 根据业务对象rowId查找当前对象下的所有属性并分页显示
+     *
+     * @param search     按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @param request  request请求
+     * @param locale   国际化参数
+     * @return ServiceResult
+     */
+    @RequestMapping("/queryProPage")
+    public Object queryProPage(String rowId,  String search,
+                               @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                               @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                               String order, HttpServletRequest request,  Locale locale) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
+        return super.result(request,ServiceResult.Msg(keySetService.queryProPage(search,rowId,pageNum,pageSize,orders)),locale);
+    }
+
 }

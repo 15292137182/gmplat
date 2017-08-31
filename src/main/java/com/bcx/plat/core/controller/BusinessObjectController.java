@@ -58,10 +58,10 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     @RequestMapping("/add")
     @Override
     public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
+        BusinessRelateTemplate brt = new BusinessRelateTemplate();
+        int insert = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
         String rowId = businessObject.getRowId();
         String relateTemplateObject = businessObject.getRelateTemplateObject();
-        int insert = businessObjectService.insert(businessObject.toMap());
-        BusinessRelateTemplate brt = new BusinessRelateTemplate();
         brt.setBusinessRowId(rowId);
         brt.setTemplateRowId(relateTemplateObject);
         businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());

@@ -3,14 +3,14 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.KeySet;
-import com.bcx.plat.core.entity.KeySetPro;
+import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.PlatResult;
@@ -100,5 +100,51 @@ public class KeySetService extends BaseServiceTemplate<KeySet>{
                 keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
         return new PlatResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,rowId1);
     }
+
+
+
+    /**
+     * 根据键值集合rowId查找当前键值集合属性并分页显示
+     *
+     * @param search    搜索条件
+     * @param rowId     唯一标识
+     * @param pageNum   页码
+     * @param pageSize  一页显示条数
+     * @param order     排序
+     * @return      PlatResult
+     */
+    public PlatResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
+        PageResult<Map<String, Object>> result;
+        if (UtilsTool.isValid(search)) {
+            result = keySetProService.select(
+                    new ConditionBuilder(KeySetPro.class).and()
+                            .equal("relateKeysetRowId", rowId).or()
+                            .addCondition(UtilsTool.createBlankQuery(Arrays.asList("confKey", "confValue"),
+                                    UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
+                    , Arrays.asList(QueryAction.ALL_FIELD), order, pageNum, pageSize);
+            if (result.getResult().size() == 0) {
+                return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            }
+            for (Map<String,Object> res :result.getResult()){
+                res.put("disableButton",false);
+            }
+            return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        }
+        result =
+                keySetProService.select(
+                        new ConditionBuilder(KeySetPro.class).and()
+                                .equal("relateKeysetRowId", rowId).endAnd().buildDone()
+                        , Arrays.asList(QueryAction.ALL_FIELD), order, pageNum, pageSize);
+        if (result.getResult().size() == 0) {
+            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+        }
+        for (Map<String,Object> res :result.getResult()){
+            res.put("disableButton",false);
+        }
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+    }
+
+
+
 
 }

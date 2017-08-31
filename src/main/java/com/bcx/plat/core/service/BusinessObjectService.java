@@ -182,7 +182,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             }
         }
         for (Map<String, Object> rest : result.getResult()) {
-            rest.put("testDemo", false);
+            rest.put("disableButton", false);
             rest.put("columnCname", map.get(rest.get("relateTableColumn")));
         }
         return result;
