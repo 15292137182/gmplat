@@ -8,16 +8,12 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.util.LinkedList;
-
 /**
  * 事务管理器
  * <p>
  * Create By HCL at 2017/8/13
  */
 public class TXManager {
-
-  private static LinkedList<TransactionStatus> lt = new LinkedList<>();
 
   /**
    * 数据库操作接口
@@ -55,22 +51,6 @@ public class TXManager {
   }
 
   /**
-   * 判断当前执行方法处是否处于事务中
-   */
-  public static boolean isInTx() {
-    return getCurrentStatus() != null;
-  }
-
-  /**
-   * 获取当前事务状态
-   *
-   * @return 返回
-   */
-  private static TransactionStatus getCurrentStatus() {
-    return lt.getLast();
-  }
-
-  /**
    * 不参与事务
    *
    * @param operate 操作
@@ -103,7 +83,6 @@ public class TXManager {
       def.setPropagationBehavior(PROPAGATION); //要求开启新的事务
       def.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);// 提交后对其他事务可读
       TransactionStatus status = transactionManager.getTransaction(def);
-      lt.add(status);
       try {
         operate.operator(transactionManager, status);
         if (!status.isCompleted()) {
@@ -116,7 +95,6 @@ public class TXManager {
         throw e;
       }
       if (status.isCompleted()) {
-        lt.remove(status);
       }
     }
   }
@@ -132,9 +110,6 @@ public class TXManager {
     }
     if (null == dataSource) {
       dataSource = SpringContextHolder.getBean(DynamicDataSource.class);
-    }
-    if (null == lt) {
-      lt = new LinkedList<>();
     }
     return true;
   }

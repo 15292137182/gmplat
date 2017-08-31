@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ import static java.time.LocalDateTime.now;
  */
 public class UtilsTool {
 
-  private static ObjectMapper objectMapper;
+  private static JacksonAdapter objectMapper;
 
   /**
    * 禁止使用 new 的方法构造该类
@@ -122,6 +121,9 @@ public class UtilsTool {
    */
   @SuppressWarnings("unchecked")
   public static <T> T jsonToObj(String json, Class<T> clazz) {
+    if (!isValid(json)) {
+      return null;
+    }
     try {
       return initMapper().readValue(json, clazz);
     } catch (IOException e) {
@@ -131,13 +133,30 @@ public class UtilsTool {
   }
 
   /**
+   * 反序列化复杂Collection如List<Bean>
+   * <p>
+   * jsonToObj(json, List.class, Bean.class)
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T jsonToObj(String json, Class<T> clazz, Class<?> elements) {
+    if (!isValid(json)) {
+      return null;
+    }
+    try {
+      return (T) initMapper().readValue(json, initMapper().createType(clazz, elements));
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  /**
    * 获取 ObjectMapper
    *
    * @return 返回 ObjectMapper
    */
-  private static ObjectMapper initMapper() {
+  private static JacksonAdapter initMapper() {
     if (null == objectMapper) {
-      objectMapper = (JacksonAdapter) getBean("jacksonAdapter");
+      objectMapper = getBean("jacksonAdapter");
     }
     return objectMapper;
   }
