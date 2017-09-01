@@ -13,6 +13,8 @@ var deleteUrl=serverPath + "/businObj/delete";
 var qurUrl=serverPath + "/businObj/queryPage";
 //新增业务对象属性
 var addProUrl=serverPath + "/businObj/add";
+//编辑业务对象属性查询
+var editQurProUrl=serverPath+'/businObjPro/queryById';
 //删除业务对象属性
 var deleteProUrl=serverPath + "/businObjPro/delete";
 //查询业务对象属性
@@ -27,11 +29,18 @@ var conTable=serverPath + "/maintTable/query";
 var conChildTable=serverPath + "/dbTableColumn/queryTabById";
 //查找模板对象属性
 var tempObj=serverPath + "/businObj/queryTemplatePro";
+
+
+
 //关联表
+
+//serverPath+"/keySet/queryNumber";
 
 //关联模板对象
 
-//所属模块
+//serverPath+"/keySet/queryKeySet",
+
+//关联模板
 var belongModel=serverPath + "/templateObj/query";
 
 //上方按钮事件
@@ -48,7 +57,26 @@ var basTop = new Vue({
         addEvent() {
             operate = 1;
             var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){
+                //查询关联表
+                basTop.$http.jsonp(conTable,{
+                    search:''
+                },{
+                    jsonp: 'callback'
+                }).then(function (res) {
+                   console.log(res);
+                });
+                //查询关联模板对象
+                this.$http.jsonp(belongModel,{
+                    search:''
+                },{
+                    jsonp: 'callback'
+                }).then(function (res) {
+                    console.log(res);
+                });
+                //查询所属模块
+
+            });
         },
         //新增业务对象属性
         addProp(){
@@ -98,13 +126,13 @@ var basLeft = new Vue({
                     "obj":basLeft
                 };
                 gmpAjax.showAjax(data,function(res){
-                    console.log(res)
                     //编辑拿到的数据
-                    var data=res.resp.content.data[0];
-                    em.addForm.codeInput = data.objectCode;  //对象代码
-                    em.addForm.nameInput =data.objectName;//对象名称
-                    em.$refs.selectTab.tableInput =data.relateTableRowId;//关联表
-                    em.addForm.versionInput =data.version;//版本
+                    var data=res[0];
+                    //console.log(data)
+                    em.ruleForm.codeInput = data.objectCode;  //对象代码
+                    em.ruleForm.nameInput =data.objectName;//对象名称
+                    //em.$refs.selectTab.tableInput =data.relateTableRowId;//关联表
+                    em.ruleForm.versionInput =data.version;//版本
                 })
             });
         },
@@ -154,7 +182,7 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-            console.log(row)
+            //console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -219,7 +247,7 @@ var basRight=new Vue({
     }),
     methods: {
         handleClick(tab, event) {
-            //console.log(tab)
+
         },
         //不跳转到第一页查询
         searchRightTable() {
@@ -240,7 +268,7 @@ var basRight=new Vue({
         //转到第一页查询
         searchRight(){
             queryData.getDatas(qurProUrl,basRight.input,basLeft.currentId,basRight,function(res){
-                console.log(res);
+               // console.log(res);
                 var data=res.resp.content.data.result
                 if(data!=null){
                     basRight.currentRChange(basRight.tableData[0]);
@@ -251,15 +279,15 @@ var basRight=new Vue({
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '580px', function () {
-
                 var data={
-                    "url":editObjUrl,
+                    "url":editQurProUrl,
                     "jsonData":{rowId: basRight.currentVal.rowId},
                     "obj":basRight
                 };
                 gmpAjax.showAjax(data, function (res) {
+                    console.log(res);
                     ///编辑拿到的数据
-                    var data = res.data.data[0];
+                    var data = res[0];
                     proEm.addProForm.codeProInput=data.propertyCode;   //代码
                     proEm.addProForm.nameProInput=data.propertyName;   //名称
                     if(data.wetherExpandPro=='true'){
@@ -346,12 +374,11 @@ var basRightTop = new Vue({
         //不分页查询
         searchRightTopEvent(){
             pagingObj.Examples(tempObj,basLeft.currentId,'','','',this,function(res){
-                console.log(res);
+               // console.log(res);
                 //有数据选中第一行
                 var data=res.resp.content.data.result;
                 if(data.length!=0){
-
-                    //basRight.currentRChange(basRight.tableData[0]);
+                    basRight.currentRChange(basRightTop.tableData[0]);
                 }
             })
         },
