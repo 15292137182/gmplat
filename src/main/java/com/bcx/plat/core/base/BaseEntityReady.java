@@ -54,7 +54,10 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
     if (null != etc) {
       map.putAll(etc);
     }
-    map.putAll(jsonToObj(objToJson(this), Map.class));
+    Map temp = jsonToObj(objToJson(this), Map.class);
+    if (null != temp) {
+      map.putAll(temp);
+    }
     return map;
   }
 
