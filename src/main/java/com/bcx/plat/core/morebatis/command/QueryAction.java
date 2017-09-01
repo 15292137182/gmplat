@@ -17,22 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryAction {
-  public static final Column ALL_FIELD = new Column() {
-    @Override
-    public String getColumnSqlFragment(SqlComponentTranslator translator) {
-      return "*";
-    }
-
-    @Override
-    public String getAlies() {
-      return null;
-    }
-
-    @Override
-    public String getFieldSource() {
-      return "*";
-    }
-  };
   private Collection<Column> columns;
   private TableSource tableSource;
   private Condition where;

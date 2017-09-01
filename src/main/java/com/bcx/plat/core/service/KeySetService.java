@@ -71,8 +71,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
      * @return
      */
     public PlatResult queryKeyCode(String keyCode) {
-        List<Map<String, Object>> result = moreBatis.selectStatement().select(Arrays.asList(QueryAction.ALL_FIELD))
-                .from(moreBatis.getTable(KeySet.class))
+        List<Map<String, Object>> result = moreBatis.select(KeySet.class)
                 .where(new FieldCondition("keysetCode", Operator.EQUAL, keyCode))
                 .execute();
         List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);

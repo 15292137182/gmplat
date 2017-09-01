@@ -84,7 +84,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
         pageNum = !UtilsTool.isValid(search) ? pageNum = 1 : pageNum;
         PageResult<Map<String, Object>> result;
         result = singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(search),
-                pageNum, pageSize, Collections.singletonList(QueryAction.ALL_FIELD), order);
+                pageNum, pageSize, order);
         if (result.getResult().size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         } else {

@@ -99,9 +99,14 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return select(UtilsTool.convertMapToFieldConditions(args));
     }
 
+    public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
+                                                             Collection<String> value, int pageNum, int pageSize, List<Order> orders) {
+        return singleInputSelect(column,value,pageNum,pageSize,moreBatis.getColumns(entityClass),orders);
+    }
+
     @Deprecated
     public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
-                                                             Collection<String> value, int pageNum, int pageSize, List<Column> columns, List<Order> orders) {
+                                                             Collection<String> value, int pageNum, int pageSize, Collection<Column> columns, List<Order> orders) {
         return select(UtilsTool.createBlankQuery(column, value),columns,orders, pageNum, pageSize);
     }
 

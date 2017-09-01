@@ -98,7 +98,7 @@ public class FrontFuncProController extends
                 getEntityService().select(
                         new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
-                        , Collections.singletonList(QueryAction.ALL_FIELD),orders, pageNum, pageSize);
+                        ,orders, pageNum, pageSize);
         result = queryResultProcess(result);
         return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
     }
