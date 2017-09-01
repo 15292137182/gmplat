@@ -19,8 +19,10 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
 
   @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();
+
   @JsonIgnore
   private Map etc;
+
   private String rowId;
 
   public String getRowId() {
@@ -35,7 +37,7 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
     return templateBean;
   }
 
-  public void setTemplateBean(BaseTemplateBean templateBean) {
+  public void setBaseTemplateBean(BaseTemplateBean templateBean) {
     this.templateBean = templateBean;
   }
 
@@ -47,6 +49,7 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
   @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> toMap() {
+    // 压入通用属性
     Map<String, Object> map = this.templateBean.toMap();
     if (null != etc) {
       map.putAll(etc);

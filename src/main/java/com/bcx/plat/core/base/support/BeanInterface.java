@@ -61,6 +61,7 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
               Map etc = new HashMap();
               map.forEach((k, v) -> {
                 if ("etc".equalsIgnoreCase(k.toString())) {
+                  // 处理扩属属性字段
                   Map temp;
                   if (v instanceof String) {
                     temp = jsonToObj((String) v, Map.class);
