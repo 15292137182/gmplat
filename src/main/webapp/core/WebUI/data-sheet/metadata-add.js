@@ -15,11 +15,7 @@ var em = new Vue({
                 versionInput: '',//版本
             },
             options1: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '黄金'
+
             }],
             options2: [{
                 value: '选项1',

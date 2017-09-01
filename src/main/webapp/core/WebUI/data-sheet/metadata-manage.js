@@ -64,16 +64,24 @@ var basTop = new Vue({
                 },{
                     jsonp: 'callback'
                 }).then(function (res) {
-                   console.log(res);
+                   var data=res.data.resp.content.data.result;
+                    console.log(data);
+                    var a='';
+                    for(var i=0;i<data.length;i++){
+                        var s=data[i].tableCname
+                        a+=s;
+                    }
+                    em.options1.label=a;
+                    console.log(em.options1.label)
                 });
                 //查询关联模板对象
-                this.$http.jsonp(belongModel,{
-                    search:''
-                },{
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    console.log(res);
-                });
+                //basTop.$http.jsonp(belongModel,{
+                //    search:''
+                //},{
+                //    jsonp: 'callback'
+                //}).then(function (res) {
+                //    console.log(res);
+                //});
                 //查询所属模块
 
             });
