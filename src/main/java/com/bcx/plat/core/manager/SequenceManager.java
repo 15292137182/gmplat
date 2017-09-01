@@ -13,10 +13,7 @@ import com.bcx.plat.core.utils.extra.lang.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,19 +27,34 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * <p>
  * BCX-TEST-SN BCX-20170810-000002
  * <p>
- * 、  @{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6} - @{c} 常量，不具有任何属性
+ * \@{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6}
+ * <p>
+ * \@{c} 常量，不具有任何属性
  * <p>
  * #{b;defaultValue;true}变量，从参数中取出;可设置为null时的默认值;是否显示
- * <p>
- * ${d;format;true}日期类型模块 可以指定格式化样式，例如;yyyy-MM-dd 是否显示
- * <p>
- * *{a;6-b&d} 序列号 位数 影响的变量将会使重置号重置
- * <p>
+ * -----------------------------------日期类型------------------------------------
+ * 【已废弃】${d;format;true}日期类型模块 可以指定格式化样式，例如;yyyy-MM-dd 是否显示
+ * 2017-09-01：
+ * ${format} 现在日期已不再是变量，日期仅需指定格式
+ * ----------------------------------序列号类型-----------------------------------
+ * 【已废弃】*{a;6-b&d} 序列号 位数 影响的变量将会使重置号重置
+ * 2017-09-01：
+ * *{a;6-none-b&d} : a 变量名； 6 位数 ； none ：循环方式 ; b&d:受变量影响
+ * ------------------------------------------------------------------------------
  * eg:
- * <p>
  * Create By HCL at 2017/8/8
  */
 public class SequenceManager {
+
+  /**
+   * 定义循环类型
+   */
+  private static String LOOP_NONE = "none"; // 不循环
+  private static String LOOP_DAY = "day"; // 按天
+  private static String LOOP_WEEK = "week"; // 按周
+  private static String LOOP_YEAR = "year"; // 按年
+  private static String LOOP_MOUTH = "mouth"; // 按月
+
 
   private static MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
   private Logger logger = LoggerFactory.getLogger(getClass());
@@ -54,9 +66,13 @@ public class SequenceManager {
   // 内容内部分隔符
   private static final String CONTENT_SEPARATOR_ = ";";
 
+  // 是否处于模拟模式
   private static boolean isMock = false;
+  // 变量的值
   private Map<String, Object> variable;
+  // 变量的keys
   private Map<String, Integer> keys;
+  // 分支的值
   private Map<String, Object> branchValues;
   private String content;
   // 对象集合标记
@@ -299,23 +315,24 @@ public class SequenceManager {
                     .equalsIgnoreCase("true")) {
               rm.put(modular, value);
             }
-            // ${d:format}日期类型模块 可以指定格式化样式，例如:yyyy-MM-dd，直接解析
           } else if (modular.matches("^[$][{].*[}]$")) {
-            String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
-            String key = a[0];
-            String format = a.length >= 2 ? a[1] : "yyyy-MM-dd";
+            // ${format}日期类型模块仅指定日期格式 [2017-09-01 modify by hcl]
+            // String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
+            // String key = a[0];
+            // String format = a.length >= 2 ? a[1] : "yyyy-MM-dd";
+            String format = modular.substring(2, modular.length() - 1);
             String value = "";
             if (isValid(format)) {
               value = getDateTimeNow(format);
             }
-            String visible = a.length >= 3 ? a[2] : "";
-            if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible
-                    .equalsIgnoreCase("true")) {
-              rm.put(modular, value);
-            }
-            if (isValid(key)) {
+            // String visible = a.length >= 3 ? a[2] : "";
+            // if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible.equalsIgnoreCase("true")) {
+            rm.put(modular, value);
+            //  }
+            // 日期不再是变量
+            /*if (isValid(key)) {
               variable.put(key, value);
-            }
+            }*/
             // *{a:6-none-b&d} 序列号
           } else if (modular.matches("^[*][{].*[}]$")) {
             serialMap.put(modular, "");
@@ -346,20 +363,34 @@ public class SequenceManager {
 
   /**
    * 解析变量模块
+   *
+   * @param ruleConfig 规则
+   * @param serialMap  序列值的 Map
+   * @param rm         我忘了是啥
    */
   private void analysisSerialNo(SequenceRuleConfig ruleConfig, Map<String, Object> serialMap,
                                 Map<String, Object> rm) {
     if (!serialMap.isEmpty()) {
       for (String modular : serialMap.keySet()) {
         String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
-        String rule = a.length >= 2 ? a[1] : "";
-        String[] r = rule.split("-", 2);
-        int length = r[0].matches("^\\d+$") ? Integer.valueOf(r[0]) : DEFAULT_SERIAL_LENGTH;
+        // 变量key
+        String _key = a[0];
+        // 规则，完整样子: 6-none-b&d
+        String _rule = a.length >= 2 ? a[1] : "";
+
+        String[] r = _rule.split("-");
+        // 长度
+        int length = r.length >= 1 ?
+                (r[0].matches("^\\d+$") ? Integer.valueOf(r[0]) : DEFAULT_SERIAL_LENGTH) : DEFAULT_SERIAL_LENGTH;
         // 获取分支
         StringBuilder branchValue;
-        if (!branchValues.containsKey(a[0])) {
+        if (!branchValues.containsKey(_key)) {
           branchValue = new StringBuilder();
-          String[] variables = r.length >= 2 ? r[1].split("&") : null;
+          // 加入循环影响{}
+          String loopType = r.length >= 2 ? r[1] : null;
+          branchValue.append(getLoopString(loopType));
+          // 加入影响变量
+          String[] variables = r.length >= 3 ? r[2].split("&") : null;
           if (isValid(variables)) {
             for (String v : variables) {
               branchValue.append("[").append(v).append(":").append(variable.getOrDefault(v, ""))
@@ -367,12 +398,12 @@ public class SequenceManager {
             }
           }
         } else {
-          branchValue = new StringBuilder(branchValues.get(a[0]).toString());
+          branchValue = new StringBuilder(branchValues.get(_key).toString());
         }
-        branchValues.put(a[0], branchValue);
+        branchValues.put(_key, branchValue);
         int nextValue =
-                getCurrentVariableValue(ruleConfig.getRowId(), a[0]) + 1;
-        keys.put(a[0], nextValue);
+                getCurrentVariableValue(ruleConfig.getRowId(), _key) + 1;
+        keys.put(_key, nextValue);
         StringBuilder nv = new StringBuilder(String.valueOf(nextValue));
         if (nv.length() <= length) {
           while (nv.length() < length) {
@@ -386,6 +417,29 @@ public class SequenceManager {
         rm.put(modular, nv);
       }
     }
+  }
+
+  /**
+   * 构造循环类型字符串,不区分大小写
+   *
+   * @param loopType 循环指示
+   * @return 返回组装后的字符串
+   */
+  private String getLoopString(String loopType) {
+    if (isValid(loopType)) {
+      if (loopType.equalsIgnoreCase(LOOP_DAY)) {
+        return "{" + getDateTimeNow("yyyyMMdd") + "}";
+      } else if (loopType.equalsIgnoreCase(LOOP_MOUTH)) {
+        return "{" + getDateTimeNow("yyyyMM") + "}";
+      } else if (loopType.equalsIgnoreCase(LOOP_YEAR)) {
+        return "{" + getDateTimeNow("yyyy") + "}";
+      } else if (loopType.equalsIgnoreCase(LOOP_WEEK)) {
+        Calendar calendar = Calendar.getInstance();
+        int mouth = calendar.get(Calendar.DAY_OF_MONTH);
+        return "{" + getDateTimeNow("yyyy") + mouth + "}";
+      }
+    }
+    return "";
   }
 
   /**
