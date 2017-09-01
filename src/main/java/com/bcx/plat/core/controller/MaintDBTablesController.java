@@ -5,7 +5,6 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.MaintDBTables;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.DBTableColumnService;
@@ -21,12 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 /**
  * 数据库表信息Controller层
  * Created by Wen Tiehu on 2017/8/11.
  */
 @RestController
-@RequestMapping("/core/maintTable")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/maintTable")
 public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTablesService,MaintDBTables>{
 
     private BusinessObjectService businessObjectService;

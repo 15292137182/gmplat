@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 /**
  * Create By HCL at 2017/8/1
  */
 @RestController
-@RequestMapping("/core/dbTableColumn")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/dbTableColumn")
 public class DBTableColumnController extends BaseControllerTemplate<DBTableColumnService, DBTableColumn> {
 
     private final BusinessObjectProService businessObjectProService;

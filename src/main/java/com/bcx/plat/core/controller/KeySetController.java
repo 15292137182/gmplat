@@ -5,23 +5,26 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.KeySet;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.KeySetService;
-import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
 /**
  * 键值集合Controller层
  * Created by Went on 2017/8/3.
  */
-@RequestMapping("/core/keySet")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/keySet")
 @RestController
 public class KeySetController extends BaseControllerTemplate<KeySetService, KeySet> {
 

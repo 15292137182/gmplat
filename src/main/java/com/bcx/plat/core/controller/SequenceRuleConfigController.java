@@ -22,13 +22,14 @@ import java.util.*;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * Create By HCL at 2017/8/8
  */
 @RestController
-@RequestMapping("/core/sequenceRule")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/sequenceRule")
 public class SequenceRuleConfigController extends
         BaseControllerTemplate<SequenceRuleConfigService, SequenceRuleConfig> {
 

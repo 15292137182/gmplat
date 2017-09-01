@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 
 /**
  * controller层
  * Created by Wen Tiehu on 2017/8/8.
  */
 @RestController
-@RequestMapping("/core/busiRelate")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/busiRelate")
 public class BusinessRelateTemplateController extends BaseControllerTemplate<DataSetConfigService, DataSetConfig> {
 
     @Override

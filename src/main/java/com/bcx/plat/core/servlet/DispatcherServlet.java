@@ -5,7 +5,7 @@ import com.bcx.plat.core.manager.TXManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.bcx.plat.core.utils.ServletUtils.isStaticFile;
+import static com.bcx.plat.core.utils.ServletUtils.uriNeedHandle;
 
 /**
  * 新增异常通知
@@ -33,11 +33,11 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
    */
   @Override
   protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    if (isStaticFile(request.getRequestURI())) {
-      super.doDispatch(request, response);
-    } else {
-      // 静态文件不在开启事务
+    // 需要平台处理时开启事务
+    if (uriNeedHandle(request.getRequestURI())) {
       TXManager.doInRequiredTX(((manager, status) -> super.doDispatch(request, response)));
+    } else {
+      super.doDispatch(request, response);
     }
   }
 

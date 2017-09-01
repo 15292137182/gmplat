@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 /**
  * <p>Title: TemplateObjectController</p>
  * <p>Description: 模板对象控制层</p>
@@ -29,64 +31,65 @@ import java.util.*;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                2017/8/28  Wen TieHu Create
  *          </pre>
  */
 @RestController
-@RequestMapping("/core/templateObj")
-public class TemplateObjectController extends BaseControllerTemplate<TemplateObjectService,TemplateObject>{
+@RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
+public class TemplateObjectController extends BaseControllerTemplate<TemplateObjectService, TemplateObject> {
 
 
-    @Override
-    protected List<String> blankSelectFields() {
-        return Arrays.asList("templateCode","templateCode","templateName");
+  @Override
+  protected List<String> blankSelectFields() {
+    return Arrays.asList("templateCode", "templateCode", "templateName");
+  }
+
+  @Autowired
+  private TemplateObjectProService templateObjectProService;
+
+  /**
+   * 根据业务对象rowId查找当前对象下的所有属性并分页显示
+   *
+   * @param search   按照空格查询
+   * @param pageNum  当前第几页
+   * @param pageSize 一页显示多少条
+   * @param request  request请求
+   * @param locale   国际化参数
+   * @return ServiceResult
+   */
+  @RequestMapping("/queryProPage")
+  public Object queryProPage(String rowId,
+                             String search,
+                             @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                             @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                             String order,
+                             HttpServletRequest request,
+                             Locale locale) {
+    LinkedList<Order> str = UtilsTool.dataSort(order);
+    PageResult<Map<String, Object>> result = null;
+
+    if (UtilsTool.isValid(search)) {
+      result = templateObjectProService.select(
+              new ConditionBuilder(TemplateObjectPro.class).and()
+                      .equal("templateObjRowId", rowId).or()
+                      .addCondition(UtilsTool.createBlankQuery(Arrays.asList("code", "cname", "ename"),
+                              UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
+              , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+      if (result.getResult().size() == 0) {
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+      }
+      return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
     }
-
-    @Autowired
-    private TemplateObjectProService templateObjectProService;
-    /**
-     * 根据业务对象rowId查找当前对象下的所有属性并分页显示
-     *
-     * @param search     按照空格查询
-     * @param pageNum  当前第几页
-     * @param pageSize 一页显示多少条
-     * @param request  request请求
-     * @param locale   国际化参数
-     * @return ServiceResult
-     */
-    @RequestMapping("/queryProPage")
-    public Object queryProPage(String rowId,
-                               String search,
-                               @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                               @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                               String order,
-                               HttpServletRequest request,
-                               Locale locale) {
-        LinkedList<Order> str = UtilsTool.dataSort(order);
-        PageResult<Map<String, Object>> result = null;
-
-        if (UtilsTool.isValid(search)) {
-            result = templateObjectProService.select(
+    result =
+            templateObjectProService.select(
                     new ConditionBuilder(TemplateObjectPro.class).and()
-                            .equal("templateObjRowId", rowId).or()
-                            .addCondition(UtilsTool.createBlankQuery(Arrays.asList("code", "cname","ename"),
-                                    UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
+                            .equal("templateObjRowId", rowId).endAnd().buildDone()
                     , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
-            if (result.getResult().size() == 0) {
-                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-            }
-            return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
-        }
-        result =
-                templateObjectProService.select(
-                        new ConditionBuilder(TemplateObjectPro.class).and()
-                                .equal("templateObjRowId", rowId).endAnd().buildDone()
-                        , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
-        if (result.getResult().size() == 0) {
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
-        }
-        return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+    if (result.getResult().size() == 0) {
+      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
+    return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+  }
 
 }

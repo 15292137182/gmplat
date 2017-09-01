@@ -18,10 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 /**
  * 前端功能模块 Created by Went on 2017/8/2.
  */
-@RequestMapping("/core/fronc")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/fronc")
 @RestController
 public class FrontFuncController extends BaseControllerTemplate<FrontFuncService, FrontFunc> {
     private final FrontFuncService frontFuncService;
