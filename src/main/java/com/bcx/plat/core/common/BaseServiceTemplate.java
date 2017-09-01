@@ -6,7 +6,6 @@ import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -50,30 +49,27 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
          * 此处先将就
          * 等扩展字段完善以后再来完善
          */
-        return select(condition,  null);
+        return select(condition, null);
     }
 
-    private List<Order> emptyDefaultModifyTime(List<Order> orders){
+    private List<Order> emptyDefaultModifyTime(List<Order> orders) {
         return orders;
     }
 
     final public List<Map<String, Object>> select(Condition condition, List<Order> orders) {
-        return select(condition,moreBatis.getColumns(entityClass),orders);
+        return selectColumns(condition, moreBatis.getColumns(entityClass), orders);
     }
 
-    final public List<Map<String, Object>> select(Condition condition, Collection<Column> columns, List<Order> orders) {
-        final List<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
-                .from(TableAnnoUtil.getTableSource(entityClass))
-                .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).execute();
-        final List<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
-        return camelizedResult;
+    public List<Map<String, Object>> selectColumns(Condition condition, Collection<Column> columns, List<Order> orders) {
+        return moreBatis.selectStatement().select(columns).from(TableAnnoUtil.getTableSource(entityClass))
+                .orderBy(orders).where(condition).execute();
     }
 
-    final public PageResult<Map<String, Object>> select(Condition condition, List<Order> orders, int pageNum, int pageSize) {
-        return select(condition,moreBatis.getColumns(entityClass),orders,pageNum,pageSize);
+    public PageResult<Map<String, Object>> select(Condition condition, List<Order> orders, int pageNum, int pageSize) {
+        return selectColumns(condition, moreBatis.getColumns(entityClass), orders, pageNum, pageSize);
     }
 
-    final public PageResult<Map<String, Object>> select(Condition condition, Collection<Column> columns, List<Order> orders, int pageNum, int pageSize) {
+    private PageResult<Map<String, Object>> selectColumns(Condition condition, Collection<Column> columns, List<Order> orders, int pageNum, int pageSize) {
         final PageResult<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
@@ -81,9 +77,9 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return camelizedResult;
     }
 
-    final public PageResult<Map<String, Object>> select(Condition condition, int pageNum, int pageSize) {
+    public PageResult<Map<String, Object>> select(Condition condition, int pageNum, int pageSize) {
         //同上
-        return select(condition,  null, pageNum, pageSize);
+        return select(condition, null, pageNum, pageSize);
     }
 
 
@@ -99,15 +95,25 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return select(UtilsTool.convertMapToFieldConditions(args));
     }
 
+    @Override
+    public List<Map<String, Object>> select(Condition condition, Collection<String> columns, List<Order> orders) {
+        return selectColumns(condition,moreBatis.getColumnByAlies(entityClass,columns),orders);
+    }
+
+    @Override
+    public PageResult<Map<String, Object>> select(Condition condition, Collection<String> columns, List<Order> orders, int pageNum, int pageSize) {
+        return selectColumns(condition,moreBatis.getColumnByAlies(entityClass,columns),orders,pageNum,pageSize);
+    }
+
     public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
                                                              Collection<String> value, int pageNum, int pageSize, List<Order> orders) {
-        return singleInputSelect(column,value,pageNum,pageSize,moreBatis.getColumns(entityClass),orders);
+        return singleInputSelect(column, value, pageNum, pageSize, moreBatis.getColumns(entityClass), orders);
     }
 
     @Deprecated
-    public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
-                                                             Collection<String> value, int pageNum, int pageSize, Collection<Column> columns, List<Order> orders) {
-        return select(UtilsTool.createBlankQuery(column, value),columns,orders, pageNum, pageSize);
+    private PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
+                                                              Collection<String> value, int pageNum, int pageSize, Collection<Column> columns, List<Order> orders) {
+        return selectColumns(UtilsTool.createBlankQuery(column, value), columns, orders, pageNum, pageSize);
     }
 
     @Deprecated
@@ -176,7 +182,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return outputMap;
     }
 
-    final private Set<String> getFieldNamesFromClass(Class clz) {
+    private Set<String> getFieldNamesFromClass(Class clz) {
         HashSet<String> result = new HashSet<>();
         while (clz != Object.class) {
             result.addAll(Arrays.stream(clz.getDeclaredFields()).map((field -> field.getName())).collect(

@@ -5,21 +5,15 @@ import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**

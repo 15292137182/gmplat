@@ -2,7 +2,6 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.FrontFunc;
-import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
@@ -59,9 +58,7 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
             return (String) row.get("relateBusiObj");
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectService
-                .select(new FieldCondition("rowId", Operator.IN, rowIds)
-                        ,Arrays.asList( new Field("row_id", "rowId")
-                        , new Field("object_name", "objectName")),null);
+                .select(new FieldCondition("rowId", Operator.IN, rowIds));
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("objectName"));

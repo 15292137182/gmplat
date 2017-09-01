@@ -5,7 +5,6 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;

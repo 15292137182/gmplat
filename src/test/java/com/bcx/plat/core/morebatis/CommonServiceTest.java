@@ -4,14 +4,13 @@ import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.service.TestTableService;
-import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

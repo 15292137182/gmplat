@@ -5,7 +5,6 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -116,7 +115,7 @@ public class FrontFuncProController extends
             return (String) row.get("relateBusiPro");
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectProService
-                .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
                         , new Field("property_name", "propertyName")),null);
         HashMap<String, Object> map = new HashMap<>();

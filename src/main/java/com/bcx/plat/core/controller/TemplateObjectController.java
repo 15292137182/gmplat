@@ -7,7 +7,6 @@ import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;

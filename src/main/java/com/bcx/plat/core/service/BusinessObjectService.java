@@ -7,7 +7,6 @@ import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -117,7 +116,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             return (String) row.get("relateTableRowId");
         }).collect(Collectors.toList());
         List<Map<String, Object>> results = maintDBTablesService
-                .select(new FieldCondition("rowId", Operator.IN, rowIds)
+                .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
                                 , new Field("table_cname", "tableCname")
                                 , new Field("table_schema", "tableSchema")), null);

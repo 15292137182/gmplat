@@ -94,6 +94,23 @@ public class MoreBatis {
     }
   }
 
+  public <T extends BaseEntity<T>> List<Column> getColumnByAlies(Class<T> entityClass, Collection<String> alies) {
+    final Map<String, Column> entityColumn = aliesMaps.get(entityClass);
+    final LinkedList<Column> result=new LinkedList<>();
+    try {
+      for (String aly : alies) {
+        result.add(entityColumn.get(aly));
+      }
+    } catch (NullPointerException e) {
+      if (entityColumn == null) {
+        throw new NullPointerException("实体类没有注册:" + entityClass.getName());
+      } else {
+        throw new NullPointerException("无效的字段别名:" + alies);
+      }
+    }
+    return result;
+  }
+
   private List<Column> immute(Collection<Column> columns) {
     return columns.stream().map((column) -> {
       return new ImmuteField(column);
