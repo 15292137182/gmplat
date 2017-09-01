@@ -48,7 +48,7 @@ public class PropertiesLoader {
   }
 
   /**
-   * 取出String类型的Property，但以System的Property优先,如果都为Null则抛出异常.
+   * 取出String类型的Property，但以 System 的Property优先
    *
    * @param key 键
    * @return 返回
