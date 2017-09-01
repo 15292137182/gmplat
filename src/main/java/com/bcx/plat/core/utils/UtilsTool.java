@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import static com.bcx.plat.core.utils.SpringContextHolder.getBean;
 import static java.time.LocalDateTime.now;
 
 /**
@@ -156,7 +155,7 @@ public class UtilsTool {
    */
   private static JacksonAdapter initMapper() {
     if (null == objectMapper) {
-      objectMapper = getBean("jacksonAdapter");
+      objectMapper = new JacksonAdapter();
     }
     return objectMapper;
   }
