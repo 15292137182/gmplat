@@ -67,13 +67,13 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
     /**
      * 根据键值集合编号查询对应的数据
      *
-     * @param search
+     * @param keyCode
      * @return
      */
-    public PlatResult queryNumber(String search) {
+    public PlatResult queryKeyCode(String keyCode) {
         List<Map<String, Object>> result = moreBatis.selectStatement().select(Arrays.asList(QueryAction.ALL_FIELD))
                 .from(moreBatis.getTable(KeySet.class))
-                .where(new FieldCondition("keysetCode", Operator.EQUAL, search))
+                .where(new FieldCondition("keysetCode", Operator.EQUAL, keyCode))
                 .execute();
         List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
         List<Map<String, Object>> relateKeysetRowId = null;

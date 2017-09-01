@@ -51,16 +51,16 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     }
 
     /**
-     * 根据编号查询数据
+     * 根据主表键值集合代码查询数据
      *
-     * @param search  按照空格查询
+     * @param keyCode  按照空格查询
      * @param request request请求
      * @param locale  国际化参数
      * @return ServiceResult
      */
-    @RequestMapping("/queryNumber")
-    public Object queryNumber(String search, HttpServletRequest request, Locale locale) {
-        return super.result(request, ServiceResult.Msg(keySetService.queryNumber(search)), locale);
+    @RequestMapping("/queryKeyCode")
+    public Object queryKeyCode(String keyCode, HttpServletRequest request, Locale locale) {
+        return super.result(request, ServiceResult.Msg(keySetService.queryKeyCode(keyCode)), locale);
     }
 
     /**
