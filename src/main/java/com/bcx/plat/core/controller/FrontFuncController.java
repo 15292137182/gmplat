@@ -102,7 +102,7 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      */
     @RequestMapping("/queryFuncCode")
     public Object queryFuncCode(String funcCode, HttpServletRequest request, Locale locale) {
-        List list = UtilsTool.jsonToObj(funcCode, List.class);
+        List list = UtilsTool.jsonToObj(funcCode.toString(), List.class);
         return super.result(request, ServiceResult.Msg(frontFuncService.queryFuncCode(list)),locale);
     }
 }

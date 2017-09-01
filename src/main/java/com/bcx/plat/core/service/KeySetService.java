@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 键值集合信息
@@ -141,6 +142,31 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
             res.put("disableButton", false);
         }
         return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+    }
+
+
+
+
+    /**
+     * 根据rowId删除业务对象数据
+     *
+     * @param rowId 唯一标示
+     * @return
+     */
+    public PlatResult delete(String rowId) {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> maps = new HashMap<>();
+        List<Map<String, Object>> rkrd = keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+        for (Map<String, Object> rk : rkrd){
+            String rowIds = rk.get("rowId").toString();
+            map.put("rowId",rowIds);
+            keySetProService.delete(map);
+        }
+        maps.put("rowId",rowId);
+        delete(maps);
+
+        return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+
     }
 
 }

@@ -21,7 +21,7 @@ import com.bcx.plat.core.utils.UtilsTool;
 public class TemplateObjectPro extends BaseEntity<TemplateObjectPro>{
 
     @TablePK
-    private String rowId;//唯一标示
+    private String proRowId;//唯一标示
     private String templateObjRowId;//关联模板对象rowId
     private String code;//代码
     private String cname ;//中文名称
@@ -37,17 +37,17 @@ public class TemplateObjectPro extends BaseEntity<TemplateObjectPro>{
      */
     @Override
     public TemplateObjectPro buildCreateInfo() {
-        this.rowId = UtilsTool.lengthUUID(32);
+        this.proRowId = UtilsTool.lengthUUID(32);
         this.code = UtilsTool.lengthUUID(5).toUpperCase();
         return super.buildCreateInfo();
     }
 
-    public String getRowId() {
-        return rowId;
+    public String getProRowId() {
+        return proRowId;
     }
 
-    public void setRowId(String rowId) {
-        this.rowId = rowId;
+    public void setProRowId(String proRowId) {
+        this.proRowId = proRowId;
     }
 
     public String getTemplateObjRowId() {
