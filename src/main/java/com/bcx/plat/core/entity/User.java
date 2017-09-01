@@ -16,6 +16,7 @@ public class User extends BaseEntity<User> {
   @TablePK
   private String rowId;
 
+  private String id;
   private String name;
   private String portraitPath;
   private String password;
@@ -28,6 +29,14 @@ public class User extends BaseEntity<User> {
   private String lastLoginDate;
   private String lastModifyPassword;
   private String disabled;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public String getRowId() {
     return rowId;

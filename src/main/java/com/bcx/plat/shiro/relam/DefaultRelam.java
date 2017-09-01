@@ -1,32 +1,27 @@
 package com.bcx.plat.shiro.relam;
 
-import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
-import static com.bcx.plat.core.utils.HexUtil.validPassword;
-import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
-
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.UserService;
-import java.util.List;
-import java.util.Map;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.Map;
+
+import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
+import static com.bcx.plat.core.utils.HexUtil.validPassword;
+import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 /**
  * 负责登陆和授权的 class
- *
+ * <p>
  * Create By HCL at 2017/8/14
  */
 public class DefaultRelam extends AuthorizingRealm {
@@ -54,13 +49,13 @@ public class DefaultRelam extends AuthorizingRealm {
    */
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
-      throws AuthenticationException {
+          throws AuthenticationException {
     UsernamePasswordToken upToken = (UsernamePasswordToken) token;
     String userId = (String) upToken.getPrincipal();
     String password = String.valueOf(upToken.getPassword());
     if (isValid(userId) && isValid(password)) {
       List<Map<String, Object>> userMaps = userService
-          .select(new FieldCondition("id", Operator.EQUAL, userId));
+              .select(new FieldCondition("id", Operator.EQUAL, userId));
       if (userMaps.size() == 1) {
         User user = new User().fromMap(userMaps.get(0));
         if (null != user) {
@@ -73,7 +68,9 @@ public class DefaultRelam extends AuthorizingRealm {
               user.setLastLoginDate(getDateTimeNow());
               // 更新时间日期
               userService.update(user.toMap(),
-                  new FieldCondition("rowId", Operator.EQUAL, user.getRowId()));
+                      new FieldCondition("rowId", Operator.EQUAL, user.getRowId()));
+              // 将用户信息放入 session
+              SecurityUtils.getSubject().getSession().setAttribute("user", user);
               return new SimpleAuthenticationInfo(userId, password, getName());
             }
           } else {

@@ -20,7 +20,10 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 public interface BeanInterface<T extends BeanInterface> extends Serializable {
 
   /**
+   * 更多序列话配置
+   *
    * @return 将 javaBean 的内容输出到 map
+   * @see com.bcx.plat.core.utils.JacksonAdapter
    */
   default Map toMap() {
     return jsonToObj(objToJson(this), HashMap.class);
@@ -28,9 +31,13 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
 
   /**
    * 将 javaBean 中的内容读取到自身,默认根据 setter 方法进行读取
+   * 处理方式 : 如果一个 Map 中的某字段在所有类型的字段，例如拓展字段、基础字段、公共字段中都能找到，则所有该字段均会被赋值
+   * <p>
+   * 更多反序列化配置：
    *
    * @param map 需要读入的 javaBean
    * @return 返回自身
+   * @see com.bcx.plat.core.utils.JacksonAdapter
    */
   @SuppressWarnings("unchecked")
   default T fromMap(Map map) {
@@ -54,6 +61,7 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
               Map etc = new HashMap();
               map.forEach((k, v) -> {
                 if ("etc".equalsIgnoreCase(k.toString())) {
+                  // 处理扩属属性字段
                   Map temp;
                   if (v instanceof String) {
                     temp = jsonToObj((String) v, Map.class);

@@ -1,12 +1,8 @@
 package com.bcx.plat.core.controller;
 
-import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
-import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -16,11 +12,17 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
+import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 /**
  * Create By HCL at 2017/8/14
  */
 @RestController
-@RequestMapping("/system")
+@RequestMapping(PLAT_SYS_PREFIX + "/system")
 public class SystemController extends BaseController {
 
   /**

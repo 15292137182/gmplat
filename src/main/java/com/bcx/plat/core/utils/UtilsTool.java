@@ -243,6 +243,24 @@ public class UtilsTool {
   }
 
   /**
+   * java 中的 join 函数
+   *
+   * @param strings   对象数组
+   * @param connector 链接符
+   * @return 返回处理后的字符串
+   */
+  public static String join(Object[] strings, Object connector) {
+    StringBuilder sb = new StringBuilder();
+    for (int _i = 0; _i < strings.length; _i++) {
+      sb.append(strings[_i]);
+      if (_i != strings.length - 1) {
+        sb.append(connector);
+      }
+    }
+    return sb.toString();
+  }
+
+  /**
    * 将map中的键值对转换为一组and条件
    *
    * @param args

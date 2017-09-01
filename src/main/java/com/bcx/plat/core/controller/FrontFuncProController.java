@@ -16,15 +16,16 @@ import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
 
 /**
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Wen Tiehu on 2017/8/4.
  */
 @RestController
-@RequestMapping("/core/fronFuncPro")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
 public class FrontFuncProController extends
         BaseControllerTemplate<FrontFuncProService, FrontFuncPro> {
 

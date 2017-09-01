@@ -24,15 +24,18 @@ var addTempProp = new Vue({
         saveTempProp(){
             if(operateOPr==1){
                 addObj.addOk(function(){
-                    gmpAjax.showAjax(addObjTemp,{templateObjRowId:basLeft.currentId,
-                                                   ename:addTempProp.addTempPropObj.engNameInput,
-                                                   cname:addTempProp.addTempPropObj.chnNameInput,
-                                                   valueType:addTempProp.$refs.vtype.value,
-                                                   defaultValue:addTempProp.addTempPropObj.default,
-                                                   desp:addTempProp.addTempPropObj.comContent
-                    },function(res){
-                        //显示消息
-                        showMsg.MsgOk(basRight,res);
+                    var data={
+                        "url":addObjTemp,
+                        "jsonData":{templateObjRowId:basLeft.currentId,
+                            ename:addTempProp.addTempPropObj.engNameInput,
+                            cname:addTempProp.addTempPropObj.chnNameInput,
+                            valueType:addTempProp.$refs.vtype.value,
+                            defaultValue:addTempProp.addTempPropObj.default,
+                            desp:addTempProp.addTempPropObj.comContent
+                        },
+                        "obj":basRight
+                    };
+                    gmpAjax.showAjax(data,function(res){
                         //关闭弹层
                         ibcpLayer.Close(divIndex);
                         //分页查询
@@ -41,16 +44,19 @@ var addTempProp = new Vue({
                 })
             }else if(operateOPr==2){
                 editObj.editOk(function(){
-                    gmpAjax.showAjax(editObjTemp,{templateObjRowId:basLeft.currentId,
-                        rowId:basRight.currentId,
-                        ename:addTempProp.addTempPropObj.engNameInput,
-                        cname:addTempProp.addTempPropObj.chnNameInput,
-                        valueType:addTempProp.$refs.vtype.value,
-                        defaultValue:addTempProp.addTempPropObj.default,
-                        desp:addTempProp.addTempPropObj.comContent
-                    },function(res){
-                        //显示消息
-                        showMsg.MsgOk(basRight,res);
+                    var data={
+                        "url":editObjTemp,
+                        "jsonData":{templateObjRowId:basLeft.currentId,
+                            rowId:basRight.currentId,
+                            ename:addTempProp.addTempPropObj.engNameInput,
+                            cname:addTempProp.addTempPropObj.chnNameInput,
+                            valueType:addTempProp.$refs.vtype.value,
+                            defaultValue:addTempProp.addTempPropObj.default,
+                            desp:addTempProp.addTempPropObj.comContent
+                        },
+                        "obj":basRight
+                    };
+                    gmpAjax.showAjax(data,function(res){
                         //关闭弹层
                         ibcpLayer.Close(divIndex);
                         //分页查询

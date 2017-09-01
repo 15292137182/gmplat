@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 
 /**
  * 数据集controller层
  * Created by Wen Tiehu on 2017/8/8.
  */
 @RestController
-@RequestMapping("/core/dataSetConfig")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/dataSetConfig")
 public class DataSetConfigController extends BaseControllerTemplate<DataSetConfigService, DataSetConfig> {
 
     @Override

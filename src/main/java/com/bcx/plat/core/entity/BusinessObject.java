@@ -19,14 +19,14 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 public class BusinessObject extends BaseEntity<BusinessObject> implements Serializable {
 
   @TablePK
-  private String rowId;//唯一标识
-  private String objectCode;//对象代码
-  private String objectName;//对象名称
-  private String relateTableRowId;//关联表
-  private String changeOperat;//执行变更操作
-  private String belongModule;//所属模块
-  private String belongSystem;//所属系统
-  private String relateTemplateObject;//关联模板对象
+  private String rowId; //唯一标识
+  private String objectCode;  //对象代码
+  private String objectName;  //对象名称
+  private String relateTableRowId;  //关联表
+  private String changeOperat;  //执行变更操作
+  private String belongModule;  //所属模块
+  private String belongSystem;  //所属系统
+  private String relateTemplateObject;  //关联模板对象
 
   /**
    * 构建 - 创建信息

@@ -5,7 +5,6 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -22,11 +21,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
 /**
  * 业务对象属性Controller层
  * Created by Wen Tiehu on 2017/8/8.
  */
-@RequestMapping("/core/businObjPro")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/businObjPro")
 @RestController
 public class BusinessObjectProController extends
         BaseControllerTemplate<BusinessObjectProService, BusinessObjectPro> {
