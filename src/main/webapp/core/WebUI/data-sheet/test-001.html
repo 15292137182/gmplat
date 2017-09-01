@@ -2,9 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>下拉框 多组件之间解耦</title>
 </head>
 <body>
-$END$
+    <div id="app">
+        <el-row>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <single-selection @change-data="getChildData_1" :initial-value="value_1">
+                    <!---->
+                </single-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <single-selection @change-data="getChildData_2" :is-disabled="disabledBool" :initial-value="value_2">
+                    <!---->
+                </single-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <multiple-selection @change-datas="multipleDatas"  :initial-value="value_3">
+                    <!---->
+                </multiple-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <el-button type="success" @click="validate">check</el-button>
+            </el-col>
+        </el-row>
+    </div>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script type="text/javascript" src="../Public/ibcpComponents.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    disabledBool: true,
+                    value_1: "选项1",
+                    value_2: "选项2",
+                    value_3: ["选项2", "选项3"],
+                }
+            },
+            mounted() {
+                //
+            },
+            methods: {
+                validate() {
+//                    console.log(this.value_1);
+//                    console.log(this.value_2);
+                    if(this.value_1 == "" || this.value_2 == "" || this.value_3 == "") {
+                        this.$message({
+                            message: "请选择类型",
+                            customClass: "messageBox",	// 给消息弹出框添加类名
+                            showClose: true,
+                            type: "warning"
+                        });
+                        return
+                    }else {
+                        this.$message({
+                            message: "提交成功",
+                            customClass: "messageBox",
+                            showClose: true,
+                            type: "success"
+                        });
+                    }
+                },
+                getChildData_1(data) {
+                    // 子组件值传递给父组件
+                    this.value_1 = data;
+                },
+                getChildData_2(data) {
+                    // 子组件值传递给父组件
+                    this.value_2 = data;
+                },
+                multipleDatas(datas) {
+                    this.value_3 = datas;
+                }
+            }
+        })
+    </script>
 </body>
 </html>
