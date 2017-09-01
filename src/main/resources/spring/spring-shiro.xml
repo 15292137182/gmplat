@@ -50,7 +50,7 @@
     <constructor-arg>
       <value>
         /login=anon
-        /system/login=anon
+        /gmp/sys/system/login=anon
         /logout=logout
         /**/*.js=anon
         /**/*.css=anon
