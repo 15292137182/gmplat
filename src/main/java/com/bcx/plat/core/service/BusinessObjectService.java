@@ -149,7 +149,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                             .equal("objRowId", rowId).or()
                             .addCondition(UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName"),
                                     UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
-                    , Arrays.asList(QueryAction.ALL_FIELD), order, pageNum, pageSize);
+                    ,  order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
@@ -161,7 +161,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                     businessObjectProService.select(
                             new ConditionBuilder(BusinessObjectPro.class).and()
                                     .equal("objRowId", rowId).endAnd().buildDone()
-                            , Arrays.asList(QueryAction.ALL_FIELD), order, pageNum, pageSize);
+                            ,  order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
@@ -287,7 +287,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
         List<Map<String, Object>> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
         for (Map<String ,Object> bri: businessRowId){
             String  templateRowId = bri.get("templateRowId").toString();
-            List<Map<String, Object>> result = moreBatis.selectStatement().select(QueryAction.ALL_FIELD)
+            List<Map<String, Object>> result = moreBatis.select(entityClass)
                     .from(moreBatis.getTable(TemplateObjectPro.class))
                     .where(new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId))
                     .orderBy(orders).execute();

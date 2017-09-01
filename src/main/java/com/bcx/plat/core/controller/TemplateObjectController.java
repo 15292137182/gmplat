@@ -75,7 +75,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
                       .equal("templateObjRowId", rowId).or()
                       .addCondition(UtilsTool.createBlankQuery(Arrays.asList("code", "cname", "ename"),
                               UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
-              , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+              ,  str, pageNum, pageSize);
       if (result.getResult().size() == 0) {
         return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
       }
@@ -85,7 +85,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
             templateObjectProService.select(
                     new ConditionBuilder(TemplateObjectPro.class).and()
                             .equal("templateObjRowId", rowId).endAnd().buildDone()
-                    , Arrays.asList(QueryAction.ALL_FIELD), str, pageNum, pageSize);
+                    ,  str, pageNum, pageSize);
     if (result.getResult().size() == 0) {
       return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }

@@ -71,11 +71,7 @@ public class JoinTableTest extends BaseTest {
   }
   @Test
   public void test() {
-    QueryAction joinTableTest = moreBatis.selectStatement().select(QueryAction.ALL_FIELD)
-        .from(new JoinTable(moreBatis.getTable(KeySet.class), JoinType.LEFT_JOIN,
-            moreBatis.getTable(KeySetPro.class))
-            .on(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class,"rowId"), Operator.EQUAL,
-                moreBatis.getColumnByAlies(KeySetPro.class,"relateKeysetRowId"))))
+    QueryAction joinTableTest = moreBatis.select(KeySet.class,KeySetPro.class,"rowId","relateKeysetRowId")
         .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class,"keysetCode"), Operator.EQUAL, "124"));
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());

@@ -171,7 +171,12 @@ public class MoreBatis {
   }
 
   public QueryAction select(Class<? extends BaseEntity> primary,
-      Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary) {
+                            Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary){
+    return select(primary,secondary,relationPrimary,relationSecondary,JoinType.INNER_JOIN);
+  }
+
+  public QueryAction select(Class<? extends BaseEntity> primary,
+      Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary,JoinType joinType) {
     HashMap<String,Column> columns = new HashMap<>();
     for (Column column : entityColumns.get(primary)) {
       columns.put(column.getAlies(),column);
@@ -182,7 +187,7 @@ public class MoreBatis {
     Column primaryField = getColumnByAlies(primary, relationPrimary);
     Column secondaryField = getColumnByAlies(secondary, relationSecondary);
     return selectStatement().select(columns.values()).from(
-        new JoinTable(entityTables.get(primary), JoinType.INNER_JOIN, entityTables.get(secondary))
+        new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
             .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 

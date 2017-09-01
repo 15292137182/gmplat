@@ -101,7 +101,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
             pageNum = 1;
         }
         PageResult<Map<String, Object>> result = entityService
-                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)), Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
+                .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)),  orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
     }
 

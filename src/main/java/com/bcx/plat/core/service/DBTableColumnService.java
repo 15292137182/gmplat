@@ -41,7 +41,7 @@ public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
         }
         PageResult<Map<String, Object>> result = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
                                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))),
-                        Arrays.asList(QueryAction.ALL_FIELD), orders, pageNum, pageSize);
+                         orders, pageNum, pageSize);
         return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
     }
 

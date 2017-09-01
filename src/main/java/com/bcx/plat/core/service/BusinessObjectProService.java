@@ -82,8 +82,7 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
             根据业务对象rowId查询出和业务对象属性关联的属性
             这里的业务对象的属性是基本属性
          */
-        List<Map<String, Object>> result = moreBatis.selectStatement()
-                .select(QueryAction.ALL_FIELD)
+        List<Map<String, Object>> result = moreBatis.select(entityClass)
                 .from(new JoinTable(moreBatis.getTable(BusinessObject.class), JoinType.LEFT_JOIN, moreBatis.getTable(BusinessObjectPro.class))
                         .on(new FieldCondition(
                                 moreBatis.getColumnByAlies(BusinessObject.class, "rowId"),
@@ -100,8 +99,7 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
         /*
             根据业务对象rowId来查询关联表数据,获取到关联业务对象的模板对象的rowId
          */
-        List<Map<String, Object>> execute = moreBatis.selectStatement()
-                .select(QueryAction.ALL_FIELD)
+        List<Map<String, Object>> execute = moreBatis.select(entityClass)
                 .from(new JoinTable(moreBatis.getTable(BusinessObject.class), JoinType.LEFT_JOIN, moreBatis.getTable(BusinessRelateTemplate.class))
                         .on(new FieldCondition(
                                 moreBatis.getColumnByAlies(BusinessObject.class, "rowId"),
@@ -121,8 +119,7 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
             /*
             通过获取到的模板对象的rowId来查询出模板对象关联的模板对象属性的数据
              */
-            execu = moreBatis.selectStatement()
-                    .select(QueryAction.ALL_FIELD)
+            execu = moreBatis.select(entityClass)
                     .from(new JoinTable(moreBatis.getTable(TemplateObject.class), JoinType.LEFT_JOIN, moreBatis.getTable(TemplateObjectPro.class))
                             .on(new FieldCondition(
                                     moreBatis.getColumnByAlies(TemplateObject.class, "rowId"),

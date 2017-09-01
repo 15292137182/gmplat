@@ -18,9 +18,9 @@ public interface BaseService<T extends BaseEntity> {
 
   List<Map<String, Object>> select(Map condition);
 
-  List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders);
+  List<Map<String, Object>> select(Condition condition, Collection<Column> columns, List<Order> orders);
 
-  PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize);
+  PageResult<Map<String, Object>> select(Condition condition, Collection<Column> columns, List<Order> orders, int pageNum, int pageSize);
 
   int update(Map value);
 

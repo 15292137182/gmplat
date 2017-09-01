@@ -49,7 +49,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
         for (Object li : list) {
             List lists = new ArrayList();
             lists.add(li);
-            QueryAction joinTableTest = moreBatis.selectStatement().select(QueryAction.ALL_FIELD)
+            QueryAction joinTableTest = moreBatis.select(entityClass)
                     .from(new JoinTable(moreBatis.getTable(KeySet.class), JoinType.LEFT_JOIN,
                             moreBatis.getTable(KeySetPro.class))
                             .on(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "rowId"), Operator.EQUAL,
@@ -121,7 +121,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
                             .equal("relateKeysetRowId", rowId).or()
                             .addCondition(UtilsTool.createBlankQuery(Arrays.asList("confKey", "confValue"),
                                     UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
-                    , Arrays.asList(QueryAction.ALL_FIELD), order, pageNum, pageSize);
+                    ,  order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             }
@@ -134,7 +134,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
                 keySetProService.select(
                         new ConditionBuilder(KeySetPro.class).and()
                                 .equal("relateKeysetRowId", rowId).endAnd().buildDone()
-                        , Arrays.asList(QueryAction.ALL_FIELD), order, pageNum, pageSize);
+                        ,  order, pageNum, pageSize);
         if (result.getResult().size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }

@@ -27,9 +27,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
-    private final Class entityClass = (Class) ((ParameterizedType) this.getClass()
+    protected final Class entityClass = (Class) ((ParameterizedType) this.getClass()
             .getGenericSuperclass()).getActualTypeArguments()[0];
-
     private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
     private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
@@ -51,14 +50,18 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
          * 此处先将就
          * 等扩展字段完善以后再来完善
          */
-        return select(condition, Arrays.asList(QueryAction.ALL_FIELD), null);
+        return select(condition,  null);
     }
 
     private List<Order> emptyDefaultModifyTime(List<Order> orders){
         return orders;
     }
 
-    final public List<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders) {
+    final public List<Map<String, Object>> select(Condition condition, List<Order> orders) {
+        return select(condition,moreBatis.getColumns(entityClass),orders);
+    }
+
+    final public List<Map<String, Object>> select(Condition condition, Collection<Column> columns, List<Order> orders) {
         final List<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).execute();
@@ -66,7 +69,11 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return camelizedResult;
     }
 
-    final public PageResult<Map<String, Object>> select(Condition condition, List<Column> columns, List<Order> orders, int pageNum, int pageSize) {
+    final public PageResult<Map<String, Object>> select(Condition condition, List<Order> orders, int pageNum, int pageSize) {
+        return select(condition,moreBatis.getColumns(entityClass),orders,pageNum,pageSize);
+    }
+
+    final public PageResult<Map<String, Object>> select(Condition condition, Collection<Column> columns, List<Order> orders, int pageNum, int pageSize) {
         final PageResult<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
                 .from(TableAnnoUtil.getTableSource(entityClass))
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
@@ -76,7 +83,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
     final public PageResult<Map<String, Object>> select(Condition condition, int pageNum, int pageSize) {
         //同上
-        return select(condition, Arrays.asList(QueryAction.ALL_FIELD), null, pageNum, pageSize);
+        return select(condition,  null, pageNum, pageSize);
     }
 
 
