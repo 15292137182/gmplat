@@ -1,5 +1,8 @@
 package com.bcx.plat.core.manager;
 
+import com.bcx.plat.core.entity.User;
+import org.apache.shiro.SecurityUtils;
+
 /**
  * Create By HCL at 2017/8/30
  */
@@ -16,15 +19,26 @@ public class SpApplicationManager {
    * @return 登录者 Id
    */
   public String getLoginUserId() {
-    // TODO 登录者 Id
-    return "admin";
+    return getLoginUser().getId();
   }
 
   /**
    * @return 登录者名称
    */
   public String getLoginUserName() {
-    // TODO 登录者名称
-    return "系统管理员";
+    return getLoginUser().getName();
+  }
+
+  /**
+   * 获取登录者信息
+   *
+   * @return 返回登录者
+   */
+  public User getLoginUser() {
+    User _user = (User) SecurityUtils.getSubject().getSession().getAttribute("user");
+    if (null != _user) {
+      return _user;
+    }
+    return new User();
   }
 }
