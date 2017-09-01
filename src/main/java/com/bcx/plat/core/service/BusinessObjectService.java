@@ -68,7 +68,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
         for (Map<String, Object> row : result) {
             row.put("tableCname", rowId1.get(0).get("tableCname"));
         }
-        return PlatResult.Msg(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS);
+        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
     }
 
     /**
@@ -283,7 +283,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * @return
      */
     public PlatResult queryTemplatePro(String rowId,LinkedList<Order> orders) {
-        LinkedList linkedList = new LinkedList();
+        List linkedList = new ArrayList();
         List<Map<String, Object>> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
         for (Map<String ,Object> bri: businessRowId){
             String  templateRowId = bri.get("templateRowId").toString();
@@ -291,9 +291,12 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                     .from(moreBatis.getTable(TemplateObjectPro.class))
                     .where(new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId))
                     .orderBy(orders).execute();
+
             List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
-            if (result.size()!=0) {
-                linkedList.add(list);
+            for (Map<String, Object> li :list) {
+                if (result.size() != 0) {
+                    linkedList.add(li);
+                }
             }
         }
         return new PlatResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,linkedList);

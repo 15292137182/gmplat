@@ -15,6 +15,12 @@
             line-height:24px;
             height:24px;
         }
+        table{
+            width:100% !important;
+        }
+        .cell.el-tooltip{
+            width:auto !important;
+        }
     </style>
 
 </head>
@@ -55,7 +61,7 @@
             </el-col>
         </el-row>
         <el-row style="padding:0 10px 10px 10px">
-            <el-col :span="24">
+            <el-col >
                 <template>
                     <el-table :data="tableData" ref="tableData" highlight-current-row
                               @row-click="currentChange" :height="leftHeight" border v-loading="loading"
@@ -151,13 +157,12 @@
                                                 </el-col>
                                             </el-row>
                                             <el-row style="padding:0px 10px 10px 10px">
-                                                <el-col :span="24">
-                                                    <template>
+                                                <el-col >
                                                         <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
                                                                   v-loading="loading"
                                                                   element-loading-text="加载中" @sort-change="headSort"
-                                                                  @row-click="currentRChange" class="tableStyle">
-
+                                                                  @row-click="currentRChange" class="tableStyle"
+                                                                  style="width: 100%">
                                                             <el-table-column type="expand">
                                                                 <template scope="props">
                                                                     <el-form label-position="left" inline class="demo-table-expand">
@@ -200,7 +205,6 @@
                                                                 </template>
                                                             </el-table-column>
                                                         </el-table>
-                                                    </template>
                                                     <el-row type="flex" justify="end" style="padding-top: 10px">
                                                         <div class="block">
                                                             <el-pagination
@@ -233,13 +237,13 @@
 </el-col>
 
 <template id="tempBlock">
-    <el-col :span="24" id="basRightTop">
-        <template>
+    <el-col  id="basRightTop">
             <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
                       v-loading="loading"
                       element-loading-text="加载中" @sort-change="headSort"
                       @row-click="currentChange"
-                      class="tableStyle">
+                      class="tableStyle"
+                      style="width: 100%">
                 <el-table-column type="expand">
                     <template scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
@@ -258,7 +262,6 @@
                         </el-form>
                     </template>
                 </el-table-column>
-
                 <el-table-column prop="code" label="代码" sortable="custom" width="160"
                                  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="cname" label="中文名称" width="100"
@@ -266,7 +269,6 @@
                 <el-table-column prop="ename" label="英文名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="valueType" label="值类型" show-overflow-tooltip></el-table-column>
             </el-table>
-        </template>
     </el-col>
 </template>
 <script src="metadata-manage.js"></script>

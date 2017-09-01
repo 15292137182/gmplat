@@ -60,7 +60,7 @@
         //el:哪一个框
         bind: function(el, binding) {
             var obj = binding.value;
-            console.log(obj)
+            //console.log(obj)
             if(obj != null) {
                 var key = Object.keys(binding.modifiers)[0] || "el";
                 Vue.set(obj, key, el);

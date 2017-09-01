@@ -25,5 +25,10 @@ public class BaseConstants {
   public static final String PAGE_NUM ="1";  //分页默认选择第一页
   public static final String PAGE_SIZE= "10"; //分页信息默认一页显示十条
 
+  public static final String ATTRIBUTE_SOURCE_BASE ="base";//基本属性
+  public static final String ATTRIBUTE_SOURCE_EXTEND ="extend";//扩展属性
+  public static final String ATTRIBUTE_SOURCE_MODULE ="module";//模块属性
+
+
 
 }

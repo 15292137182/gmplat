@@ -97,4 +97,22 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     }
 
 
+    /**
+     * 判断当前业务对象下是否有业务对象属性数据,有就全部删除
+     *
+     * @param rowId   业务对象rowId
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return serviceResult
+     */
+    @RequestMapping("/delete")
+    @Override
+    public Object delete(String rowId, HttpServletRequest request, Locale locale) {
+        if (UtilsTool.isValid(rowId)) {
+            return super.result(request,ServiceResult.Msg(keySetService.delete(rowId)),locale);
+        } else {
+            return super.result(request,ServiceResult.Msg(null),locale);
+        }
+    }
+
 }

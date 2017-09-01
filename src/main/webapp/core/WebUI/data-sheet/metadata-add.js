@@ -37,13 +37,13 @@ var em = new Vue({
             }],
             disabledBool3: false,//是否禁用
             multipleBool3: true,//是否多选
-            filterBool3: true,
+            filterBool3: false,
             disabledBool2: false,//是否禁用
-            multipleBool2: true,//是否多选
+            multipleBool2: false,//是否多选
             filterBool2: true,
             disabledBool1: false,//是否禁用
-            multipleBool1: true,//是否多选
-            filterBool1: true,
+            multipleBool1: false,//是否多选
+            filterBool1: false,
 
             selectDatas3: {
                 values: []//下拉框为空
@@ -80,15 +80,42 @@ var em = new Vue({
             //        return false;
             //    }
             //});
-            var _DOM;
+            var _DOM3;
+            this.multipleBool3 == true ? _DOM3 = this.selectDatas3.el.children[1].lastElementChild : _DOM3 = this.selectDatas3.el.children[0].lastElementChild;
+            var _DOM2;
+            this.multipleBool2 == true ? _DOM2 = this.selectDatas2.el.children[1].lastElementChild : _DOM2 = this.selectDatas2.el.children[0].lastElementChild;
+            var _DOM1;
+            this.multipleBool1 == true ? _DOM1 = this.selectDatas1.el.children[1].lastElementChild : _DOM1 = this.selectDatas1.el.children[0].lastElementChild;
 
-            this.multipleBool3 == true ? _DOM = this.selectDatas3.el.children[1].lastElementChild : _DOM = this.selectDatas3.el.children[0].lastElementChild;
-
-            if(this.selectDatas.values == "") {
+            if(this.selectDatas3.values == "") {
                 // 捕获到具体input节点
-                _DOM.style.borderColor = "red";
+                _DOM3.style.borderColor = "red";
                 this.$message({
-                    message: "请选择类型",
+                    message: "请选择类型3",
+                    customClass: "messageBox",	// 给消息弹出框添加类名
+                    showClose: true,
+                    duration: 5000,
+                    type: "warning"
+                });
+                return
+            }
+            if(this.selectDatas2.values == "") {
+                // 捕获到具体input节点
+                _DOM2.style.borderColor = "red";
+                this.$message({
+                    message: "请选择类型2",
+                    customClass: "messageBox",	// 给消息弹出框添加类名
+                    showClose: true,
+                    duration: 5000,
+                    type: "warning"
+                });
+                return
+            }
+            if(this.selectDatas1.values == "") {
+                // 捕获到具体input节点
+                _DOM1.style.borderColor = "red";
+                this.$message({
+                    message: "请选择类型1",
                     customClass: "messageBox",	// 给消息弹出框添加类名
                     showClose: true,
                     duration: 5000,
@@ -97,8 +124,6 @@ var em = new Vue({
                 return
             }
             if (operate == 1) {
-                console.log(em.ruleForm.reaTableObj)
-                console.log(em.ruleForm.tableInput)
                 //addObj.addOk(function(){
                 //    em.$http.jsonp(addUrl, {
                 //        objectName: em.addForm.nameInput,
@@ -137,37 +162,40 @@ var em = new Vue({
             }
         },
         afterClear1(datas) {
-            var _DOM;
+            var _DOM1;
 
-            this.multipleBool1 == true ? _DOM = this.selectDatas1.el.children[1].lastElementChild : _DOM = this.selectDatas1.el.children[0].lastElementChild;
+            this.multipleBool1 == true ? _DOM1 = this.selectDatas1.el.children[1].lastElementChild : _DOM1 = this.selectDatas1.el.children[0].lastElementChild;
 
             if(datas != "") {
-                _DOM.style.borderColor = "";
+                _DOM1.style.borderColor = "";
             }
 
-            this.selectDatas.values = datas;
+            this.selectDatas1.values = datas;
+            console.log(this.selectDatas1.values)
         },
         afterClear2(datas) {
-            var _DOM;
+            var _DOM2;
 
-            this.multipleBool2 == true ? _DOM = this.selectDatas2.el.children[1].lastElementChild : _DOM = this.selectDatas2.el.children[0].lastElementChild;
+            this.multipleBool2 == true ? _DOM2 = this.selectDatas2.el.children[1].lastElementChild : _DOM2 = this.selectDatas2.el.children[0].lastElementChild;
 
             if(datas != "") {
-                _DOM.style.borderColor = "";
+                _DOM2.style.borderColor = "";
             }
 
-            this.selectDatas.values = datas;
+            this.selectDatas2.values = datas;
+            console.log(this.selectDatas2.values)
         },
         afterClear3(datas) {
-            var _DOM;
+            var _DOM3;
 
-            this.multipleBool3 == true ? _DOM = this.selectDatas3.el.children[1].lastElementChild : _DOM = this.selectDatas3.el.children[0].lastElementChild;
+            this.multipleBool3 == true ? _DOM3 = this.selectDatas3.el.children[1].lastElementChild : _DOM3 = this.selectDatas3.el.children[0].lastElementChild;
 
             if(datas != "") {
-                _DOM.style.borderColor = "";
+                _DOM3.style.borderColor = "";
             }
 
-            this.selectDatas.values = datas;
+            this.selectDatas3.values = datas;
+            console.log(this.selectDatas3.values)
         },
         cancel() {
             ibcpLayer.Close(divIndex);

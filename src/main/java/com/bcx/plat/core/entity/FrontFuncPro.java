@@ -11,9 +11,10 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  * Created by Went on 2017/8/4.
  */
 @Table(TableInfo.T_FRONT_FUNC_PRO)
-public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
+public class FrontFuncPro extends BaseEntity<FrontFuncPro> {
     @TablePK
     private String rowId;//唯一标识
+    private String attrSource;//添加属性来源
     private String funcRowId;//功能块唯一标识
     private String relateBusiPro;//关联业务对象属性
     private String displayTitle;//显示标题
@@ -44,6 +45,13 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro>{
         return super.buildCreateInfo();
     }
 
+    public String getAttrSource() {
+        return attrSource;
+    }
+
+    public void setAttrSource(String attrSource) {
+        this.attrSource = attrSource;
+    }
 
     public String getRowId() {
         return rowId;

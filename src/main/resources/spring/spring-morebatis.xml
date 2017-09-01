@@ -164,6 +164,7 @@
             <list>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_row_id" p:alies="funcRowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="attr_source" p:alies="attrSource"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_busi_pro" p:alies="relateBusiPro"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="display_title" p:alies="displayTitle"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="wether_display" p:alies="wetherDisplay"/>
@@ -482,7 +483,7 @@
           </constructor-arg>
           <constructor-arg name="fields">
             <list>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="pro_row_id" p:alies="proRowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="template_obj_row_id" p:alies="templateObjRowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="code" p:alies="code"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="cname" p:alies="cname"/>
@@ -505,7 +506,7 @@
           </constructor-arg>
           <constructor-arg name="pks">
             <list>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="pro_row_id" p:alies="proRowId"/>
             </list>
           </constructor-arg>
         </bean>

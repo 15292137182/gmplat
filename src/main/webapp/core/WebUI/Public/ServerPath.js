@@ -59,6 +59,6 @@ function getRootPath() {
 }
 
 //完整路径
-var serverPath = getRootPath() + "/core";
+var serverPath = getRootPath() + "/gmp/sys/core";
 //测试路径
 // var serverPath = serverHead + "/gmplat/core";

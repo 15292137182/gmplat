@@ -57,8 +57,11 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
                     map.put("funcType", keySet.get("funcType").toString());
                 }
             }
-            linkedList.add(UtilsTool.underlineKeyMapListToCamel(funcRowId));
+            for (Map<String, Object> li : UtilsTool.underlineKeyMapListToCamel(funcRowId)){
+                linkedList.add(li);
+            }
         }
+        logger.info("查询功能块属性的数据");
         return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
     }
 }

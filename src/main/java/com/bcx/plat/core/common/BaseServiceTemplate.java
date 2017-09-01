@@ -17,6 +17,8 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;
@@ -32,6 +34,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
     private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
 
+    /**
+     * logger 日志操作
+     */
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private MoreBatis moreBatis;
