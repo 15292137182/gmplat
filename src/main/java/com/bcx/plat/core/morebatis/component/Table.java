@@ -5,9 +5,12 @@ import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.LinkedList;
 
-public class Table implements TableSource {
+public class Table implements TableSource<Table> {
 
   private String tableName;
+
+  private String schema;
+
   private SqlSegment sqlSegment;
 
   public Table(){}
@@ -17,13 +20,26 @@ public class Table implements TableSource {
     sqlSegment=new SqlSegment(getTableName());
   }
 
+  public Table(String schema,String tableName) {
+    this.tableName = tableName;
+    this.schema=schema;
+  }
+
   public String getTableName() {
     return tableName;
   }
 
   public void setTableName(String tableName) {
     this.tableName = tableName;
-    sqlSegment=new SqlSegment(tableName);
+    sqlSegment=new SqlSegment(getTableName());
+  }
+
+  public String getSchema() {
+    return schema;
+  }
+
+  public void setSchema(String schema) {
+    this.schema = schema;
   }
 
   public SqlSegment getSqlSegment() {

@@ -7,7 +7,7 @@ import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.util.MoreBatisUtil;
 import java.util.LinkedList;
 
-public class JoinTable implements TableSource {
+public class JoinTable implements TableSource<JoinTable> {
   TableSource tableFirst,tableSecond;
   JoinType joinType;
   Condition condition;

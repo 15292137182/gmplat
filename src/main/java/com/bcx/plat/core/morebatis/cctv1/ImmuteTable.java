@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /**
  * 供单例模式使用的不可变表
  */
-public class ImmuteTable implements TableSource {
+public class ImmuteTable implements TableSource<ImmuteTable> {
 
   TableSource tableSource;
 

@@ -1,21 +1,23 @@
 package com.bcx.plat.core.morebatis.component;
 
-import com.bcx.plat.core.morebatis.command.QueryAction;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.UtilsTool;
-import java.util.Arrays;
 
 /**
  * 普通字段
  */
-public class Field implements Column {
-
+public class Field implements AliasedColumn {
+  /**
+   * 所在表
+   */
+  private Table table;
   /**
    * 字段名
    */
   private String fieldName;
+
   /**
    * 别名
    */
@@ -52,6 +54,14 @@ public class Field implements Column {
 
   public String getFieldSource() {
     return getFieldName();
+  }
+
+  public Table getTable() {
+    return table;
+  }
+
+  public void setTable(Table table) {
+    this.table = table;
   }
 
   @Override

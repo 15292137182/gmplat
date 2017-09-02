@@ -1,5 +1,5 @@
 package com.bcx.plat.core.morebatis.phantom;
 
-public interface Column extends FieldAlies, FieldSource {
+public interface AliasedColumn extends Alias, FieldSource {
   String getColumnSqlFragment(SqlComponentTranslator translator);
 }

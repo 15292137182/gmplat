@@ -1,17 +1,17 @@
 package com.bcx.plat.core.morebatis.configuration;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.List;
 
 public class EntityEntry {
   private Class<? extends BaseEntity> entityClass;
-  private List<Column> pks;
-  private List<Column> fields;
+  private List<Field> pks;
+  private List<Field> fields;
   private TableSource table;
 
-  public EntityEntry(Class<? extends BaseEntity> entityClass,TableSource table,List<Column> fields,List<Column> pks) {
+  public EntityEntry(Class<? extends BaseEntity> entityClass, TableSource table, List<Field> fields, List<Field> pks) {
     this.entityClass = entityClass;
     this.fields = fields;
     this.table = table;
@@ -22,7 +22,7 @@ public class EntityEntry {
     return entityClass;
   }
 
-  public List<Column> getFields() {
+  public List<Field> getFields() {
     return fields;
   }
 
@@ -30,7 +30,7 @@ public class EntityEntry {
     return table;
   }
 
-  public List<Column> getPks() {
+  public List<Field> getPks() {
     return pks;
   }
 }

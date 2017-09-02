@@ -1,11 +1,9 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.Table;
-import com.bcx.plat.core.morebatis.phantom.Column;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
+
 import java.util.LinkedList;
 
 public class FieldInTable implements com.bcx.plat.core.morebatis.phantom.FieldInTable{

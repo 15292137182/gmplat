@@ -1,23 +1,23 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
 import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import java.util.LinkedList;
 
 public class ImmuteFieldInTable implements FieldInTable {
 
-  private Column column;
+  private AliasedColumn aliasedColumn;
   private TableInfo tableSource;
 
-  public ImmuteFieldInTable(Column column, TableInfo tableSource) {
-    this.column = column;
+  public ImmuteFieldInTable(AliasedColumn aliasedColumn, TableInfo tableSource) {
+    this.aliasedColumn = aliasedColumn;
     this.tableSource = tableSource;
   }
 
-  public Column getColumn() {
-    return column;
+  public AliasedColumn getAliasedColumn() {
+    return aliasedColumn;
   }
 
   public TableInfo getTableInfo() {
@@ -31,12 +31,12 @@ public class ImmuteFieldInTable implements FieldInTable {
 
   @Override
   public String getAlies() {
-    return column.getAlies();
+    return aliasedColumn.getAlies();
   }
 
   @Override
   public String getFieldSource() {
-    return column.getFieldSource();
+    return aliasedColumn.getFieldSource();
   }
 
   @Override

@@ -1,28 +1,33 @@
 package com.bcx.plat.core.morebatis.component;
 
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
-import java.util.Arrays;
-import java.util.List;
 
-public class Order implements Column{
+public class Order implements AliasedColumn{
   public static final int DESC=0,ASC=1;
 
-  private Column column;
+  private AliasedColumn aliasedColumn;
+
+  private String alias;
 
   private int order=DESC;
 
-  public Order(Column column, int order) {
-    this.column = column;
+  public Order(AliasedColumn aliasedColumn, int order) {
+    this.aliasedColumn = aliasedColumn;
     this.order = order;
   }
 
-  public Column getColumn() {
-    return column;
+  public Order(String alias, int order) {
+    this.alias = alias;
+    this.order = order;
   }
 
-  public void setColumn(Column column) {
-    this.column = column;
+  public AliasedColumn getAliasedColumn() {
+    return aliasedColumn;
+  }
+
+  public void setAliasedColumn(AliasedColumn aliasedColumn) {
+    this.aliasedColumn = aliasedColumn;
   }
 
   public int getOrder() {
@@ -35,16 +40,16 @@ public class Order implements Column{
 
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
-    return column.getColumnSqlFragment(translator);
+    return aliasedColumn.getColumnSqlFragment(translator);
   }
 
   @Override
   public String getAlies() {
-    return column.getAlies();
+    return aliasedColumn.getAlies();
   }
 
   @Override
   public String getFieldSource() {
-    return column.getFieldSource();
+    return aliasedColumn.getFieldSource();
   }
 }

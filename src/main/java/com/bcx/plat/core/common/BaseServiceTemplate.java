@@ -11,10 +11,8 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.bcx.plat.core.utils.TableAnnoUtil;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +24,9 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
-    protected final Class entityClass = (Class) ((ParameterizedType) this.getClass()
+    protected final Class<? extends BaseEntity> entityClass = (Class<? extends BaseEntity>) ((ParameterizedType) this.getClass()
             .getGenericSuperclass()).getActualTypeArguments()[0];
     private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
-    private final TableSource table = TableAnnoUtil.getTableSource(entityClass);
-    private final List<String> pkFields = TableAnnoUtil.getPkAnnoField(entityClass);
 
     /**
      * logger 日志操作
@@ -60,8 +56,8 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return selectColumns(condition, moreBatis.getColumns(entityClass), orders);
     }
 
-    public List<Map<String, Object>> selectColumns(Condition condition, Collection<Column> columns, List<Order> orders) {
-        return moreBatis.selectStatement().select(columns).from(TableAnnoUtil.getTableSource(entityClass))
+    public List<Map<String, Object>> selectColumns(Condition condition, Collection<AliasedColumn> aliasedColumns, List<Order> orders) {
+        return moreBatis.selectStatement().select(aliasedColumns).from(moreBatis.getTable(entityClass))
                 .orderBy(orders).where(condition).execute();
     }
 
@@ -69,9 +65,8 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         return selectColumns(condition, moreBatis.getColumns(entityClass), orders, pageNum, pageSize);
     }
 
-    private PageResult<Map<String, Object>> selectColumns(Condition condition, Collection<Column> columns, List<Order> orders, int pageNum, int pageSize) {
-        final PageResult<Map<String, Object>> queryResult = moreBatis.selectStatement().select(columns)
-                .from(TableAnnoUtil.getTableSource(entityClass))
+    private PageResult<Map<String, Object>> selectColumns(Condition condition, Collection<AliasedColumn> aliasedColumns, List<Order> orders, int pageNum, int pageSize) {
+        final PageResult<Map<String, Object>> queryResult = moreBatis.select(entityClass)
                 .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
         final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
         return camelizedResult;
@@ -112,8 +107,8 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
     @Deprecated
     private PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
-                                                              Collection<String> value, int pageNum, int pageSize, Collection<Column> columns, List<Order> orders) {
-        return selectColumns(UtilsTool.createBlankQuery(column, value), columns, orders, pageNum, pageSize);
+                                                              Collection<String> value, int pageNum, int pageSize, Collection<AliasedColumn> aliasedColumns, List<Order> orders) {
+        return selectColumns(UtilsTool.createBlankQuery(column, value), aliasedColumns, orders, pageNum, pageSize);
     }
 
     @Deprecated
@@ -125,7 +120,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     public int insert(Map args) {
         args = mapFilter(args);
         args.remove("etc");
-        InsertAction insertAction = moreBatis.insertStatement().into(table).cols(fieldNames).values(args);
+        InsertAction insertAction = moreBatis.insertStatement().into(moreBatis.getTable(entityClass)).cols(fieldNames).values(args);
         return insertAction.execute();
     }
 
@@ -133,14 +128,15 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         args = mapFilter(args);
         args.remove("etc");
         final Map<String, Object> finalCopy = args;
-        return update(finalCopy, new And(pkFields.stream().map((pk) -> {
-            return new FieldCondition(pk, Operator.EQUAL, finalCopy.get(pk));
-        }).collect(Collectors.toList())));
+        List<Condition> condition = (List<Condition>) moreBatis.getPks(entityClass).stream().map((pk) -> {
+            return new FieldCondition((AliasedColumn) pk, Operator.EQUAL, finalCopy.get(((AliasedColumn) pk).getAlies()));
+        }).collect(Collectors.toList());
+        return update(finalCopy, new And(condition));
     }
 
     public int update(Map args, Condition condition) {
         UpdateAction updateAction = moreBatis.updateStatement()
-                .from(table)
+                .from(moreBatis.getTable(entityClass))
                 .set(args)
                 .where(condition);
         return updateAction.execute();
@@ -154,7 +150,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
 
     public int delete(Condition condition) {
         DeleteAction deleteAction = moreBatis.deleteStatement()
-                .from(table)
+                .from(moreBatis.getTable(entityClass))
                 .where(condition);
         return deleteAction.execute();
     }

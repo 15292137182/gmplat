@@ -3,7 +3,7 @@ package com.bcx.plat.core.morebatis.command;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryAction {
-  private Collection<Column> columns;
+  private Collection<AliasedColumn> aliasedColumns;
   private TableSource tableSource;
   private Condition where;
   private List<Order> order;
@@ -46,12 +46,12 @@ public class QueryAction {
     return translator;
   }
 
-  public Collection<Column> getColumns() {
-    return columns;
+  public Collection<AliasedColumn> getAliasedColumns() {
+    return aliasedColumns;
   }
 
-  public void setColumns(Collection<Column> columns) {
-    this.columns = columns;
+  public void setAliasedColumns(Collection<AliasedColumn> aliasedColumns) {
+    this.aliasedColumns = aliasedColumns;
   }
 
   public List<FieldSource> getGroup() {
@@ -62,12 +62,12 @@ public class QueryAction {
     this.group = group;
   }
 
-  public QueryAction select(Column... column) {
-    return select(Arrays.asList(column));
+  public QueryAction select(AliasedColumn... aliasedColumn) {
+    return select(Arrays.asList(aliasedColumn));
   }
 
-  public QueryAction select(Collection<Column> column) {
-    setColumns(column);
+  public QueryAction select(Collection<AliasedColumn> aliasedColumn) {
+    setAliasedColumns(aliasedColumn);
     return this;
   }
 

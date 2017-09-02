@@ -1,16 +1,16 @@
 package com.bcx.plat.core.morebatis.component;
 
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 
 public class FieldCondition implements Condition<FieldCondition> {
-  Column field;
+  AliasedColumn field;
   boolean not=false;
   Operator operator;
   Object value;
 
-  public FieldCondition(Column field, Operator operator, Object value,boolean not) {
+  public FieldCondition(AliasedColumn field, Operator operator, Object value, boolean not) {
     this.field = field;
     this.operator = operator;
     this.value = value;
@@ -24,7 +24,7 @@ public class FieldCondition implements Condition<FieldCondition> {
     this.not=not;
   }
 
-  public FieldCondition(Column field, Operator operator, Object value) {
+  public FieldCondition(AliasedColumn field, Operator operator, Object value) {
     this.field = field;
     this.operator = operator;
     this.value = value;
@@ -36,11 +36,11 @@ public class FieldCondition implements Condition<FieldCondition> {
     this.value = value;
   }
 
-  public Column getField() {
+  public AliasedColumn getField() {
     return field;
   }
 
-  public void setField(Column field) {
+  public void setField(AliasedColumn field) {
     this.field = field;
   }
 

@@ -2,8 +2,8 @@ package com.bcx.plat.core.database.info;
 
 public class Fields {
 
-//  private static final HashMap<TableSource, Map<String, Column>> tableFieldMap = new HashMap<>();
-//  private static final HashMap<Class<? extends BaseEntity>, Map<String, Column>> entityFieldMap = new HashMap<>();
+//  private static final HashMap<TableSource, Map<String, AliasedColumn>> tableFieldMap = new HashMap<>();
+//  private static final HashMap<Class<? extends BaseEntity>, Map<String, AliasedColumn>> entityFieldMap = new HashMap<>();
 //
 //  static {
 //    for (Class<?> aClass : Fields.class.getDeclaredClasses()) {
@@ -11,8 +11,8 @@ public class Fields {
 //    }
 //  }
 //
-//  private static void putField(TableSource tableSource, Column column, String alies) {
-//    Map<String, Column> map = tableFieldMap.get(tableSource);
+//  private static void putField(TableSource tableSource, AliasedColumn column, String alies) {
+//    Map<String, AliasedColumn> map = tableFieldMap.get(tableSource);
 //    if (map == null) {
 //      map = new HashMap<>();
 //      tableFieldMap.put(tableSource, map);
@@ -20,16 +20,16 @@ public class Fields {
 //    map.put(alies, column);
 //  }
 //
-//  public static Column getField(TableSource tableSource, String alies) {
+//  public static AliasedColumn getField(TableSource tableSource, String alies) {
 //    return tableFieldMap.get(tableSource).get(alies);
 //  }
 //
-//  public static Column getField(Class<? extends BaseEntity> entityClass, String alies) {
+//  public static AliasedColumn getField(Class<? extends BaseEntity> entityClass, String alies) {
 //    return getFieldMap(entityClass).get(alies);
 //  }
 //
-//  public static Map<String, Column> getFieldMap(Class<? extends BaseEntity> entityClass) {
-//    Map<String, Column> columnMap = entityFieldMap.get(entityClass);
+//  public static Map<String, AliasedColumn> getFieldMap(Class<? extends BaseEntity> entityClass) {
+//    Map<String, AliasedColumn> columnMap = entityFieldMap.get(entityClass);
 //    if (columnMap == null) {
 //
 //      final TableSource tableSource = TableAnnoUtil.getTableSource(entityClass);
@@ -52,7 +52,7 @@ public class Fields {
 //
 //  }
 //
-//  public static Collection<Column> getFields(Class<? extends BaseEntity> entityClass) {
+//  public static Collection<AliasedColumn> getFields(Class<? extends BaseEntity> entityClass) {
 //    return getFieldMap(entityClass).values();
 //  }
 //

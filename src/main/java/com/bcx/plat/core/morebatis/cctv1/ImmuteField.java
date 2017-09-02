@@ -1,18 +1,17 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
-import com.bcx.plat.core.morebatis.phantom.Column;
-import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 
 
 /**
  * 只读字段包装器
  */
-public class ImmuteField implements Column {
+public class ImmuteField implements AliasedColumn {
 
-  Column field;
+  AliasedColumn field;
 
-  public ImmuteField(Column field) {
+  public ImmuteField(AliasedColumn field) {
     this.field = field;
   }
 

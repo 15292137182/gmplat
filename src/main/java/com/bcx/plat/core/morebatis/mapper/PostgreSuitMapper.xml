@@ -15,7 +15,7 @@
               #{item}
             </foreach>
           </when>
-          <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
+          <when test="i instanceof com.bcx.plat.core.morebatis.phantom.AliasedColumn">
           <!--这个地方以后要把column解析搬走-->
             ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.fieldSource)}
           </when>
@@ -34,7 +34,7 @@
               #{item}
             </foreach>
           </when>
-          <when test="i instanceof com.bcx.plat.core.morebatis.phantom.Column">
+          <when test="i instanceof com.bcx.plat.core.morebatis.phantom.AliasedColumn">
           <!--这个地方以后要把column解析搬走-->
             ${i.fieldSource}
           </when>
@@ -47,8 +47,8 @@
     resultType="hashmap">
     SELECT
     <trim suffixOverrides=",">
-      <foreach collection="columns" item="column">
-        ${column.getColumnSqlFragment(translator)},
+      <foreach collection="aliasedColumns" item="aliasedColumn">
+        ${aliasedColumn.getColumnSqlFragment(translator)},
       </foreach>
     </trim>
     FROM <include refid="solveTableSource"/>
@@ -63,7 +63,7 @@
     <if test="order!=null">
       <foreach open="order by" collection="order" item="o" separator=",">
         <choose>
-          <when test="o.column instanceof com.bcx.plat.core.morebatis.phantom.FieldInTable">
+          <when test="o.aliasedColumn instanceof com.bcx.plat.core.morebatis.phantom.FieldInTable">
             ${o.getColumnSqlFragment(translator)}
           </when>
           <otherwise>
@@ -82,8 +82,8 @@
     ${valuesRefresh}
     insert into
     <include refid="solveTableSource"/>
-    <foreach close=")" collection="columns" item="column" open="(" separator=",">
-      "${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(column)}"
+    <foreach close=")" collection="columns" item="aliasedColumn" open="(" separator=",">
+      "${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(aliasedColumn)}"
     </foreach>
     VALUES
     <foreach collection="values" item="row" separator=",">

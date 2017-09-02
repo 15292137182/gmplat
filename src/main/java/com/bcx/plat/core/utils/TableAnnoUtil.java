@@ -3,7 +3,7 @@ package com.bcx.plat.core.utils;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,7 @@ public class TableAnnoUtil {
 
   private static final HashMap<Class, List<String>> pkRegister = new HashMap<>();
   private static final HashMap<Class, TableSource> tableSourceRegister = new HashMap<>();
-  private static final HashMap<Class, Map<String,Column>> fieldInTableRegister = new HashMap<>();
+  private static final HashMap<Class, Map<String,AliasedColumn>> fieldInTableRegister = new HashMap<>();
 
   /**
    * 禁止以 new 的方式构造该函数

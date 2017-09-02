@@ -2,10 +2,10 @@ package com.bcx.plat.core.database.info;
 
 import com.bcx.plat.core.morebatis.cctv1.ImmuteField;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteTable;
-import com.bcx.plat.core.morebatis.phantom.Column;
+import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 
-public class FieldMeta implements Column {
+public class FieldMeta implements AliasedColumn {
   private final ImmuteTable tableSource;
   private final ImmuteField field;
 

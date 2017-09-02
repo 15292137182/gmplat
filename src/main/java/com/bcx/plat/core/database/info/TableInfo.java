@@ -6,7 +6,7 @@ import com.bcx.plat.core.morebatis.phantom.TableSource;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public enum TableInfo implements TableSource {
+public enum TableInfo implements TableSource<TableInfo> {
   T_SYS_CONFIG("t_sys_config"),
   T_SEQUENCE_RULE_CONFG("t_sequence_rule_config"),
   T_SEQUENCE_GENERATE("t_sequence_generate"),

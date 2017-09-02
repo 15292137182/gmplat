@@ -22,22 +22,6 @@ import java.util.List;
 
 public class PostgreSqlTranslator implements SqlComponentTranslator {
 
-  public static void main(String[] args) {
-    PostgreSqlTranslator postgreSqlTranslator = new PostgreSqlTranslator();
-    And and = new And(
-        new FieldCondition("satrurn", Operator.EQUAL, 10086).not()
-        , new FieldCondition("jupiter", Operator.IN, Arrays.asList(1, 2, 3, 4, 5)).not()
-        , new Or(new FieldCondition("earth", Operator.BETWEEN, new Object[]{"venus", "mars"})
-        , new FieldCondition("sun", Operator.EQUAL, "star")
-        , new And(new FieldCondition("a", Operator.EQUAL, "b").not(),
-        new FieldCondition("b", Operator.EQUAL, "a").not())
-    )
-    );
-
-    LinkedList<Object> result = postgreSqlTranslator.translate(and);
-    result.size();
-  }
-
   /*条件系列*/
   public LinkedList<Object> translate(Condition condition) {
     return translate(condition, new LinkedList<>());
@@ -124,6 +108,37 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
     return translateChainCondition(orCondition, list, "or");
   }
 
+  private LinkedList<Object> translateChainCondition(ChainCondition chainCondition,
+                                                     LinkedList<Object> list, String seperator) {
+    if (chainCondition.getConditions().size() == 0) {
+      return list;
+    }
+    if (chainCondition.isNot()) {
+      MoreBatisUtil.addSqlSegmentToList("not", list);
+    }
+    MoreBatisUtil.addSqlSegmentToList("(", list);
+    final List<Condition> conditions = chainCondition.getConditions();
+    Iterator<Condition> conditionIterator = conditions.iterator();
+    boolean notFirst = false;
+    // TODO 实现为主 混乱将就
+    for (Condition condition : conditions) {
+      if (notFirst) {
+        if (condition instanceof ChainCondition) {
+          if (!((ChainCondition) condition).getConditions().isEmpty()) {
+            MoreBatisUtil.addSqlSegmentToList(seperator, list);
+          }
+        } else {
+          MoreBatisUtil.addSqlSegmentToList(seperator, list);
+        }
+      } else {
+        notFirst = true;
+      }
+      translate(condition, list);
+    }
+    MoreBatisUtil.addSqlSegmentToList(")", list);
+    return list;
+  }
+
   /**
    * 这是真正的入口
    */
@@ -163,7 +178,7 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
   /*字段系列*/
   public LinkedList<Object> translate(FieldSource fieldSource, LinkedList<Object> list) {
     if (fieldSource instanceof FieldInTable) {
-//      return translate((FieldInTable) fieldSource, list);
+//      return translateCondition((FieldInTable) fieldSource, list);
 //      list.add(((FieldInTable) fieldSource).getTableSource(this)+((FieldInTable) fieldSource).getFieldSource());
       list.add(new SqlSegment(fieldSource.getFieldSource()));
     } else {
@@ -177,35 +192,4 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
     return list;
   }
   /*字段系列*/
-
-  private LinkedList<Object> translateChainCondition(ChainCondition chainCondition,
-      LinkedList<Object> list, String seperator) {
-    if (chainCondition.getConditions().size() == 0) {
-      return list;
-    }
-    if (chainCondition.isNot()) {
-      MoreBatisUtil.addSqlSegmentToList("not", list);
-    }
-    MoreBatisUtil.addSqlSegmentToList("(", list);
-    final List<Condition> conditions = chainCondition.getConditions();
-    Iterator<Condition> conditionIterator = conditions.iterator();
-    boolean notFirst = false;
-    // TODO 实现为主 混乱将就
-    for (Condition condition : conditions) {
-      if (notFirst) {
-        if (condition instanceof ChainCondition) {
-          if (!((ChainCondition) condition).getConditions().isEmpty()) {
-            MoreBatisUtil.addSqlSegmentToList(seperator, list);
-          }
-        } else {
-          MoreBatisUtil.addSqlSegmentToList(seperator, list);
-        }
-      } else {
-        notFirst = true;
-      }
-      translate(condition, list);
-    }
-    MoreBatisUtil.addSqlSegmentToList(")", list);
-    return list;
-  }
 }
