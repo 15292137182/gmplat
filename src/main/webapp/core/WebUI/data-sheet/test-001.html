@@ -18,7 +18,12 @@
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <multiple-selection @change-datas="multipleDatas"  :initial-value="value_3">
+                <multiple-selection @change-datas="multipleDatas_1" :is-disabled="disabledBool" :initial-value="value_3">
+                    <!---->
+                </multiple-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <multiple-selection @change-datas="multipleDatas_2" :initial-value="value_4">
                     <!---->
                 </multiple-selection>
             </el-col>
@@ -35,10 +40,13 @@
             el: "#app",
             data() {
                 return {
+                    // 设置下拉框禁用
                     disabledBool: true,
+                    // 设置下拉框初始值
                     value_1: "选项1",
                     value_2: "选项2",
-                    value_3: ["选项2", "选项3"],
+                    value_3: ["Beijing", "Shanghai"],
+                    value_4: ["Hangzhou", "Guangzhou"]
                 }
             },
             mounted() {
@@ -48,10 +56,9 @@
                 validate() {
 //                    console.log(this.value_1);
 //                    console.log(this.value_2);
-                    if(this.value_1 == "" || this.value_2 == "" || this.value_3 == "") {
+                    if(this.value_1 == "" || this.value_2 == "" || this.value_3 == "" || this.value_4 == "") {
                         this.$message({
                             message: "请选择类型",
-                            customClass: "messageBox",	// 给消息弹出框添加类名
                             showClose: true,
                             type: "warning"
                         });
@@ -59,22 +66,23 @@
                     }else {
                         this.$message({
                             message: "提交成功",
-                            customClass: "messageBox",
                             showClose: true,
                             type: "success"
                         });
                     }
                 },
+                // 父组件接收来自子组件的数据  必须！
                 getChildData_1(data) {
-                    // 子组件值传递给父组件
                     this.value_1 = data;
                 },
                 getChildData_2(data) {
-                    // 子组件值传递给父组件
                     this.value_2 = data;
                 },
-                multipleDatas(datas) {
+                multipleDatas_1(datas) {
                     this.value_3 = datas;
+                },
+                multipleDatas_2(datas) {
+                    this.value_4 = datas;
                 }
             }
         })
