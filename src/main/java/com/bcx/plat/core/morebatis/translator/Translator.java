@@ -1,7 +1,10 @@
 package com.bcx.plat.core.morebatis.translator;
 
+import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
+import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.*;
@@ -10,11 +13,9 @@ import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.*;
+import com.bcx.plat.core.utils.SpringContextHolder;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Translator {
     public static final SqlSegment SELECT=new SqlSegment("SELECT");
@@ -39,9 +40,23 @@ public class Translator {
     public static final SqlSegment TRUE=new SqlSegment("TRUE");
     public static final SqlSegment DOT=new SqlSegment(".");
     public static final SqlSegment COMMA=new SqlSegment(",");
+    public static final SqlSegment VALUES=new SqlSegment("VALUES");
+    public static final SqlSegment BRACKET_START=new SqlSegment("(");
+    public static final SqlSegment BRACKET_END=new SqlSegment(")");
     public static final SqlSegment ASC=new SqlSegment("ASC");
     public static final SqlSegment DESC=new SqlSegment("DESC");
     public static final SqlSegment ORDER_BY=new SqlSegment("ORDER BY");
+    public static final SqlSegment EQUAL=new SqlSegment("=");
+    public static final SqlSegment NOT_EQUAL=new SqlSegment("!=");
+
+    private MoreBatis moreBatis;
+
+    private MoreBatis getMoreBatis(){
+        if (moreBatis==null) {
+            moreBatis=SpringContextHolder.getBean("moreBatis");
+        }
+        return moreBatis;
+    }
 
     public LinkedList translateQueryAction(QueryAction queryAction,LinkedList linkedList){
         appendSql(SELECT, linkedList);
@@ -101,6 +116,51 @@ public class Translator {
 
     public LinkedList translateUpdateAction(UpdateAction updateAction,LinkedList linkedList){
         appendSql(UPDATE,linkedList);
+        translateTable((Table) updateAction.getTableSource(),linkedList);
+        appendSql(SET,linkedList);
+        Class<? extends BaseEntity> entityClass = updateAction.getEntityClass();
+        Iterator<Map.Entry<String, Object>> entryIterator = updateAction.getValues().entrySet().iterator();
+        while (entryIterator.hasNext()){
+            final Map.Entry<String, Object> entry = entryIterator.next();
+            Field field = getMoreBatis().getColumnByAliesWithoutCheck(entityClass, entry.getKey());
+            if (field==null) continue;
+            translateFieldOnlyName(field,linkedList);
+            appendSql(EQUAL,linkedList);
+            appendArgs(entry.getValue(),linkedList);
+            if (entryIterator.hasNext()) appendSql(COMMA,linkedList);
+        }
+        appendSql(WHERE,linkedList);
+        translateCondition(updateAction.getWhere(),linkedList);
+        return linkedList;
+    }
+
+    public LinkedList translateInsertAction(InsertAction insertAction,LinkedList linkedList){
+        appendSql(INSERT_INTO,linkedList);
+        translateTable((Table) insertAction.getTableSource(),linkedList);
+        Collection<Field> columns = getMoreBatis().getColumns(insertAction.getEntityClass());
+        Iterator<Field> iterator = columns.iterator();
+        appendSql(BRACKET_START,linkedList);
+        while (iterator.hasNext()) {
+            final Field field=iterator.next();
+            translateFieldOnlyName(field,linkedList);
+            if (iterator.hasNext()) appendSql(COMMA,linkedList);
+        }
+        appendSql(BRACKET_END,linkedList);
+        appendSql(VALUES,linkedList);
+        Iterator<Map<String, Object>> rowIterator = insertAction.getRows().iterator();
+        while (rowIterator.hasNext()) {
+            Map<String, Object> row = rowIterator.next();
+            appendSql(BRACKET_START,linkedList);
+            iterator = columns.iterator();
+            while (iterator.hasNext()) {
+                final Field field=iterator.next();
+                appendArgs(row.get(field.getAlies()),linkedList);
+                if (iterator.hasNext()) appendSql(COMMA,linkedList);
+            }
+
+            appendSql(BRACKET_END,linkedList);
+            if (rowIterator.hasNext()) appendSql(COMMA,linkedList);
+        }
 
         return linkedList;
     }

@@ -95,6 +95,15 @@ public class MoreBatis {
     }
   }
 
+  public <T extends BaseEntity<T>> Field getColumnByAliesWithoutCheck(Class<T> entityClass, String alies) {
+    final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
+    try {
+      return entityColumn.get(alies);
+    } catch (NullPointerException e) {
+        throw new NullPointerException("实体类没有注册:" + entityClass.getName());
+    }
+  }
+
   public <T extends BaseEntity<T>> List<Field> getColumnByAlies(Class<T> entityClass, Collection<String> alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     final LinkedList<Field> result=new LinkedList<>();
@@ -134,7 +143,9 @@ public class MoreBatis {
     TableSource table = entityTables.get(entityClass);
     Map<String, Object> values = entity.toMap();
     Map etc = (Map) values.remove("etc");
-    return this.insertStatement().into(table).cols(values.keySet()).values(Arrays.asList(values))
+    InsertAction insertAction = this.insertStatement();
+    insertAction.setEntityClass(entityClass);
+    return insertAction.into(table).cols(values.keySet()).values(Arrays.asList(values))
         .execute();
   }
 
@@ -161,7 +172,7 @@ public class MoreBatis {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
         })
         .collect(Collectors.toList());
-    return this.updateStatement().from(table).set(values).where(new And(pkConditions)).execute();
+    return this.update(entity.getClass(),values).where(new And(pkConditions)).execute();
   }
 
   public <T extends BaseEntity<T>> T selectEntityByPks(T entity) {
@@ -227,6 +238,18 @@ public class MoreBatis {
     return new QueryAction(this, translator);
   }
 
+  public UpdateAction update(Class<? extends BaseEntity> entity,Map<String,Object> values){
+    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
+    update.setEntityClass(entity);
+    return update;
+  }
+
+  public UpdateAction insert(Class<? extends BaseEntity> entity,Map<String,Object> values){
+    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
+    update.setEntityClass(entity);
+    return update;
+  }
+
   public InsertAction insertStatement() {
     return new InsertAction(this, translator);
   }
@@ -245,11 +268,13 @@ public class MoreBatis {
   }
 
   public int execute(InsertAction insertAction) {
-    return suitMapper.insert(insertAction);
+    LinkedList result = translatorX.translateInsertAction(insertAction, new LinkedList());
+    return suitMapper.plainInsert(result);
   }
 
   public int execute(UpdateAction updateAction) {
-    return suitMapper.update(updateAction);
+    LinkedList result = translatorX.translateUpdateAction(updateAction, new LinkedList());
+    return suitMapper.plainUpdate(result);
   }
 
   public int execute(DeleteAction deleteAction) {
