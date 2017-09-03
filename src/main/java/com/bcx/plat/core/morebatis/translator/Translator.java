@@ -1,13 +1,12 @@
 package com.bcx.plat.core.morebatis.translator;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
+import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
-import com.bcx.plat.core.morebatis.component.Field;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.Table;
+import com.bcx.plat.core.morebatis.component.*;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
+import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.*;
 
@@ -18,8 +17,16 @@ import java.util.List;
 
 public class Translator {
     public static final SqlSegment SELECT=new SqlSegment("SELECT");
+    public static final SqlSegment DELETE=new SqlSegment("DELETE");
     public static final SqlSegment AS=new SqlSegment("AS");
     public static final SqlSegment FROM=new SqlSegment("FROM");
+    public static final SqlSegment ON=new SqlSegment("ON");
+    public static final SqlSegment JOIN=new SqlSegment("JOIN");
+    public static final SqlSegment INNER=new SqlSegment("INNER");
+    public static final SqlSegment LEFT=new SqlSegment("LEFT");
+    public static final SqlSegment RIGHT=new SqlSegment("RIGHT");
+    public static final SqlSegment NATURAL=new SqlSegment("NATURAL");
+    public static final SqlSegment FULL=new SqlSegment("FULL");
     public static final SqlSegment WHERE=new SqlSegment("WHERE");
     public static final SqlSegment AND=new SqlSegment("AND");
     public static final SqlSegment OR=new SqlSegment("OR");
@@ -36,9 +43,10 @@ public class Translator {
         explainColumns(queryAction,linkedList);
         linkedList.add(FROM);
         translateTableSource(queryAction.getTableSource(),linkedList);
-        if (queryAction.getWhere()!=null) {
+        ChainCondition where = (ChainCondition) queryAction.getWhere();
+        if (where !=null&&!where.getConditions().isEmpty()) {
             linkedList.add(WHERE);
-            translateCondition(queryAction.getWhere(),linkedList);
+            translateCondition(where,linkedList);
         }
         final List<Order> orders = queryAction.getOrder();
         if (orders!=null&&!orders.isEmpty()) {
@@ -60,6 +68,15 @@ public class Translator {
             translateAliasedColumn(aliasedColumn,linkedList);
             if (iterator.hasNext()) linkedList.add(COMMA);
         }
+        return linkedList;
+    }
+
+    public LinkedList translateDeleteAction(DeleteAction deleteAction, LinkedList linkedList){
+        appendSql(DELETE,linkedList);
+        appendSql(FROM,linkedList);
+        translateTable((Table) deleteAction.getTableSource(),linkedList);
+        appendSql(WHERE,linkedList);
+        translateCondition(deleteAction.getWhere(),linkedList);
         return linkedList;
     }
 
@@ -99,15 +116,49 @@ public class Translator {
 
     public LinkedList translateFieldSource(Field field, LinkedList linkedList){
         final Table table = field.getTable();
-        linkedList.add(new SqlSegment(getTableStr(table)+"."+quoteStr(field.getFieldName())));
+        if (table!=null) {
+            linkedList.add(new SqlSegment(getTableStr(table)+"."+quoteStr(field.getFieldName())));
+        }else {
+            //TODO 所有对fieldCondition的访问移除以后 这个地方要删除
+            linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
+        }
         return linkedList;
     }
 
     public LinkedList translateTableSource(TableSource tableSource,LinkedList linkedList){
         if (tableSource instanceof Table) {
-            final Table table=(Table) tableSource;
-            linkedList.add(new SqlSegment(getTableStr(table)));
+            return translateTable((Table) tableSource,linkedList);
+        }else if (tableSource instanceof JoinTable) {
+            translateJoinTable((JoinTable) tableSource,linkedList);
         }
+        return linkedList;
+    }
+
+    private LinkedList translateTable(Table table,LinkedList linkedList) {
+        linkedList.add(new SqlSegment(getTableStr(table)));
+        return linkedList;
+    }
+
+    private LinkedList translateJoinTable(JoinTable joinTable,LinkedList linkedList) {
+        translateTableSource(joinTable.getTableFirst(),linkedList);
+        final JoinType joinType = joinTable.getJoinType();
+        if(joinType== JoinType.INNER_JOIN) {
+            appendSql(INNER,linkedList);
+        }else if (joinType== JoinType.LEFT_JOIN) {
+            appendSql(LEFT,linkedList);
+        }else if (joinType== JoinType.RIGHT_JOIN) {
+            appendSql(RIGHT,linkedList);
+        }else if (joinType== JoinType.FULL_JOIN) {
+            appendSql(FULL,linkedList);
+        }else if (joinType== JoinType.NATURAL_JOIN) {
+            appendSql(NATURAL,linkedList);
+        }else{
+            throw new UnsupportedOperationException("没有这种操作");
+        }
+        appendSql(JOIN,linkedList);
+        translateTableSource(joinTable.getTableSecond(),linkedList);
+        appendSql(ON,linkedList);
+        translateCondition(joinTable.getCondition(),linkedList);
         return linkedList;
     }
 
@@ -124,7 +175,7 @@ public class Translator {
             }
         } else if (condition instanceof FieldCondition) {
             final Operator operator = ((FieldCondition) condition).getOperator();
-            final Object value = ((FieldCondition) condition).getValue();
+            Object value = ((FieldCondition) condition).getValue();
             translateFieldSource(((FieldCondition) condition).getField(), list);
             switch (operator) {
                 case IN:
@@ -250,7 +301,11 @@ public class Translator {
     }
 
     private LinkedList appendArgs(Object args, LinkedList list){
-        list.add(args);
+        if (args instanceof FieldSource){
+            translateFieldSource((FieldSource) args,list);
+        }else {
+            list.add(args);
+        }
         return list;
     }
     /**

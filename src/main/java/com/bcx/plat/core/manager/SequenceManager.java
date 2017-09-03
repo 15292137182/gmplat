@@ -3,6 +3,7 @@ package com.bcx.plat.core.manager;
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -495,7 +496,9 @@ public class SequenceManager {
     }
     if (isValid(sequenceCode)) {
       List<Map<String, Object>> code = moreBatis.select(SequenceRuleConfig.class)
-              .where(new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)).execute();
+              .where(new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode",sequenceCode).endAnd().buildDone()
+//      new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)
+      ).execute();
       if (code.size() == 1) {
         String toJson = UtilsTool.objToJson(code.get(0));
         return UtilsTool.jsonToObj(toJson, SequenceRuleConfig.class);

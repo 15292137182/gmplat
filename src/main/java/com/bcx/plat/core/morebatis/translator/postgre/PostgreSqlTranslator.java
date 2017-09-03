@@ -1,6 +1,7 @@
 package com.bcx.plat.core.morebatis.translator.postgre;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.Table;
@@ -177,10 +178,11 @@ public class PostgreSqlTranslator implements SqlComponentTranslator {
 
   /*字段系列*/
   public LinkedList<Object> translate(FieldSource fieldSource, LinkedList<Object> list) {
-    if (fieldSource instanceof FieldInTable) {
+    if (fieldSource instanceof Field) {
 //      return translateCondition((FieldInTable) fieldSource, list);
 //      list.add(((FieldInTable) fieldSource).getTableSource(this)+((FieldInTable) fieldSource).getFieldSource());
-      list.add(new SqlSegment(fieldSource.getFieldSource()));
+      final Field field= (Field) fieldSource;
+      list.add(new SqlSegment(field.getTable().getTableName()+'.'+field.getFieldName()));
     } else {
       list.add(new SqlSegment(fieldSource.getFieldSource()));
     }

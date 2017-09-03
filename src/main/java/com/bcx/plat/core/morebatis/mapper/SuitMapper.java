@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface SuitMapper {
+
+  List<Map<String,Object>> plainSelect(List list);
+
+  int plainDelete(List list);
+
   /**
    * 通用查询方法.
    *
@@ -15,6 +20,7 @@ public interface SuitMapper {
    * @return 查询结果
    */
   List<Map<String,Object>> select(QueryAction queryActionLite);
+
 
   int insert(InsertAction insertAction);
 

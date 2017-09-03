@@ -2,6 +2,7 @@ package com.bcx.plat.core.morebatis.translator;
 
 import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.builder.OrderBuilder;
@@ -28,7 +29,8 @@ public class TranslatorTest extends BaseTest{
 
     @Test
     public void testSelect(){
-        QueryAction query = moreBatis.select(BusinessObject.class).where(new ConditionBuilder(BusinessObject.class)
+        QueryAction query = moreBatis.select(BusinessObject.class,BusinessObjectPro.class,"rowId","objRowId")
+                .where(new ConditionBuilder(BusinessObject.class)
                 .and().equal("rowId","10086").endAnd()
                 .buildDone()).orderBy(new OrderBuilder(BusinessObject.class).asc("objectCode").desc("rowId").done());
         LinkedList result = translator.translateQueryAction(query, new LinkedList());

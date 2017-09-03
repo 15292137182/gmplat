@@ -29,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.bcx.plat.core.morebatis.translator.Translator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,6 +38,7 @@ public class MoreBatis {
 
   private SuitMapper suitMapper;
   private SqlComponentTranslator translator;
+  Translator translatorX=new Translator();
   private Map<Class, Collection<Field>> entityColumns;
   private Map<Class, Collection<Field>> entityPks;
   private Map<Class, Map<String, Field>> aliesMaps;
@@ -237,7 +240,8 @@ public class MoreBatis {
   }
 
   public List<Map<String, Object>> execute(QueryAction queryAction) {
-    return suitMapper.select(queryAction);
+    final LinkedList list = translatorX.translateQueryAction(queryAction, new LinkedList());
+    return suitMapper.plainSelect(list);
   }
 
   public int execute(InsertAction insertAction) {
@@ -249,6 +253,7 @@ public class MoreBatis {
   }
 
   public int execute(DeleteAction deleteAction) {
-    return suitMapper.delete(deleteAction);
+    LinkedList list = translatorX.translateDeleteAction(deleteAction, new LinkedList());
+    return suitMapper.plainDelete(list);
   }
 }

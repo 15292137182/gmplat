@@ -66,6 +66,7 @@ public class Field implements AliasedColumn {
 
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
+    // TODO 另一个translator完成以后应该移除
     String alies = getAlies();
     final String fieldSource = getFieldSource();
     if (alies == null || alies.isEmpty()) {
