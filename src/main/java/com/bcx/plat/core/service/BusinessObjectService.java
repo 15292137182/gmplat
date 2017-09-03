@@ -64,10 +64,13 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
 
         List<Map<String, Object>> rowId1 =
                 maintDBTablesService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-        for (Map<String, Object> row : result) {
-            row.put("tableCname", rowId1.get(0).get("tableCname"));
+        if (UtilsTool.isValid(rowId1)) {
+            for (Map<String, Object> row : result) {
+                row.put("tableCname", rowId1.get(0).get("tableCname"));
+            }
+            return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
         }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
+        return PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
 
     /**

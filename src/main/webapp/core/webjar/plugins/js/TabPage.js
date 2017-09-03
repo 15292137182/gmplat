@@ -524,7 +524,7 @@ var SelectOptions = (function(){
             },
             methods: {
                 flush() {
-                    var _path = serverPath+"/keySet/queryKeyCode";
+                    var _path = serverPath+"/keySet/queryNumber";
                     var param = {"keyCode":keysetCode};
                     if(undefined != path && null != path && "" != path){
                         _path = path;
