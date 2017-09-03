@@ -77,7 +77,7 @@ public class JoinTableTest extends BaseTest {
     List<Map<String, Object>> result = joinTableTest.execute();
   }
 
-  @Test
+//  @Test
   public void groupByTest() {
     QueryAction joinTableTest;
     List<Map<String, Object>> result;

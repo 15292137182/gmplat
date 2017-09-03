@@ -3,6 +3,7 @@ package com.bcx.plat.core.morebatis.translator;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.*;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
@@ -18,6 +19,9 @@ import java.util.List;
 public class Translator {
     public static final SqlSegment SELECT=new SqlSegment("SELECT");
     public static final SqlSegment DELETE=new SqlSegment("DELETE");
+    public static final SqlSegment INSERT_INTO=new SqlSegment("INSERT INTO");
+    public static final SqlSegment UPDATE=new SqlSegment("UPDATE");
+    public static final SqlSegment SET=new SqlSegment("SET");
     public static final SqlSegment AS=new SqlSegment("AS");
     public static final SqlSegment FROM=new SqlSegment("FROM");
     public static final SqlSegment ON=new SqlSegment("ON");
@@ -28,6 +32,7 @@ public class Translator {
     public static final SqlSegment NATURAL=new SqlSegment("NATURAL");
     public static final SqlSegment FULL=new SqlSegment("FULL");
     public static final SqlSegment WHERE=new SqlSegment("WHERE");
+    public static final SqlSegment GROUP_BY=new SqlSegment("GROUP BY");
     public static final SqlSegment AND=new SqlSegment("AND");
     public static final SqlSegment OR=new SqlSegment("OR");
     public static final SqlSegment FALSE=new SqlSegment("FALSE");
@@ -50,6 +55,18 @@ public class Translator {
             }
             translateCondition(where,linkedList);
         }
+
+        List<FieldSource> group = queryAction.getGroup();
+        if (group!=null&&group.size()>0) {
+            appendSql(GROUP_BY,linkedList);
+            Iterator<FieldSource> groups = group.iterator();
+            while(groups.hasNext()){
+                FieldSource fieldSource=groups.next();
+                translateFieldSource(fieldSource,linkedList);
+                if (groups.hasNext()) appendSql(COMMA,linkedList);
+            }
+        }
+
         final List<Order> orders = queryAction.getOrder();
         if (orders!=null&&!orders.isEmpty()) {
             linkedList.add(ORDER_BY);
@@ -79,6 +96,12 @@ public class Translator {
         translateTable((Table) deleteAction.getTableSource(),linkedList);
         appendSql(WHERE,linkedList);
         translateCondition(deleteAction.getWhere(),linkedList);
+        return linkedList;
+    }
+
+    public LinkedList translateUpdateAction(UpdateAction updateAction,LinkedList linkedList){
+        appendSql(UPDATE,linkedList);
+
         return linkedList;
     }
 
@@ -113,6 +136,11 @@ public class Translator {
         if (fieldSource instanceof Field) {
             translateFieldSource((Field) fieldSource, linkedList);
         }
+        return linkedList;
+    }
+
+    public LinkedList translateFieldOnlyName(Field field,LinkedList linkedList){
+        linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
         return linkedList;
     }
 
