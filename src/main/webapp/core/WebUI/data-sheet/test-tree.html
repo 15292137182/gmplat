@@ -7,8 +7,8 @@
 <body>
     <div id="app">
         <el-row>
-            <el-col :span="12" :offset="6" style="margin-top: 20px;margin-bottom: 20px;">
-                <base-tree :is-filter="filterBool" :default-expanded-keys="expaned" @get-checked-node="getCheckedNodes"  @get-checked-key="getCheckedKeys"></base-tree>
+            <el-col :span="12" :offset="6" style="margin-top: 20px;">
+                <base-tree :is-filter="filterBool" :default-expanded-keys="expaned" :default-checked-keys="setCheck" @get-checked-node="getCheckedNodes"  @get-checked-key="getCheckedKeys"></base-tree>
             </el-col>
         </el-row>
     </div>
@@ -21,7 +21,8 @@
             data() {
                 return {
                     filterBool: true,
-                    expaned: [2, 3, 8]
+                    expaned: [2, 3, 8],
+                    setCheck: [10, 11]
                 }
             },
             methods: {

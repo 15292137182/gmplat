@@ -69,19 +69,27 @@ Vue.component("single-selection", {
                 label: '潮汕牛肉火锅'
             }],
             selectValue: {
-                values: []
+                values: [],
+                label: ""
             }
         };
     },
     methods: {
-        changeSelect() {
+        changeSelect(val) {
+            var _obj = {};
+            // 如果下拉框触发改变时 返回值不为空 则将option下与返回值相同的数据项传递给父组件
+            if(val != "") {
+                _obj = this.options.find(function(item) {
+                    return item.value === val;
+                });
+            }
             // 子组件向父组件传递的方法和参数
-            this.$emit("change-data", this.selectValue.values);
+            this.$emit("change-data", _obj);
         }
     },
     mounted() {
+        // 接收父组件传递的初始默认值 并将其赋值给子组件
         this.selectValue.values = this.initialValue;
-        // console.log(this.selectValue);
     },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
@@ -103,7 +111,7 @@ Vue.component("multiple-selection", {
     data() {
         return {
             // 为了将子组件和外部解耦 最好将受影响的数据写在子组件内部 这样子组件就形成一个相对封闭的区间
-            cities: [{
+            options: [{
                 value: 'Beijing',
                 label: '北京'
             }, {
@@ -132,10 +140,9 @@ Vue.component("multiple-selection", {
     },
     methods: {
         changeSelect() {
-            var _DOM = this.selectValue.el.children[1].lastElementChild;
+            // var _DOM = this.selectValue.el.children[1].lastElementChild;
             // 子组件向父组件传递的方法和参数
             this.$emit("change-datas", this.selectValue.values);
-            this.$emit("change-datas", _DOM);
         }
     },
     mounted() {
@@ -143,7 +150,7 @@ Vue.component("multiple-selection", {
     },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" multiple placeholder="请选择">
 					<el-option
-						v-for="item in cities"
+						v-for="item in options"
 						:key="item.value"
 						:label="item.label"
 						:value="item.value">
@@ -165,10 +172,7 @@ Vue.component("base-tree", {
     },
     data() {
         return {
-            filterBool: false,
             filterText: "",
-            defaultExpand: [],
-            defalutCheck: [],
             datas: [{
                 id: 1,
                 label: '一级 1',
@@ -234,9 +238,7 @@ Vue.component("base-tree", {
         }
     },
     mounted() {
-        this.filterBool = this.isFilter;
-        this.defaultExpand = this.defaultExpandedKeys;
-        this.defalutCheck = this.defaultCheckedKeys;
+        //
     },
     methods: {
         getCheckedNodes() {
@@ -251,8 +253,8 @@ Vue.component("base-tree", {
         }
     },
     template: `<div>
-                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="this.filterBool" style="margin-bottom: 8px;"></el-input>
-                    <el-tree :data="datas" show-checkbox @node-click="getCheckedNodes" @check-change="getCheckedKeys" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defalutCheck" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 8px;"></el-input>
+                    <el-tree :data="datas" show-checkbox @node-click="getCheckedNodes" @check-change="getCheckedKeys" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });

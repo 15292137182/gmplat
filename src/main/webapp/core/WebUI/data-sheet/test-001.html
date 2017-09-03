@@ -42,11 +42,14 @@
                 return {
                     // 设置下拉框禁用
                     disabledBool: true,
-                    // 设置下拉框初始值
+                    // 设置下拉框初始值 并且可以接受子组件传递的value
                     value_1: "选项1",
                     value_2: "选项2",
                     value_3: ["Beijing", "Shanghai"],
-                    value_4: ["Hangzhou", "Guangzhou"]
+                    value_4: ["Hangzhou", "Guangzhou"],
+                    // 获取子组件传递的label
+                    label_1: "",
+                    label_2: ""
                 }
             },
             mounted() {
@@ -54,8 +57,6 @@
             },
             methods: {
                 validate() {
-//                    console.log(this.value_1);
-//                    console.log(this.value_2);
                     if(this.value_1 == "" || this.value_2 == "" || this.value_3 == "" || this.value_4 == "") {
                         this.$message({
                             message: "请选择类型",
@@ -72,11 +73,13 @@
                     }
                 },
                 // 父组件接收来自子组件的数据  必须！
-                getChildData_1(data) {
-                    this.value_1 = data;
+                getChildData_1(datas) {
+                    this.value_1 = datas.values;
+                    this.label_1 = datas.label;
                 },
-                getChildData_2(data) {
-                    this.value_2 = data;
+                getChildData_2(datas) {
+                    this.value_2 = datas.values;
+                    this.label_2 = datas.label;
                 },
                 multipleDatas_1(datas) {
                     this.value_3 = datas;
