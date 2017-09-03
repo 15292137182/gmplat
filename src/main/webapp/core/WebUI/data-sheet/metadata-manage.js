@@ -165,8 +165,10 @@ var basLeft = new Vue({
                 var data=res.resp.content.data.result
                 if(data==null){
                     basRight.tableData=[];
+                    basRightTop.tableData=[];
                 }else{
                     basLeft.currentChange(basLeft.tableData[0]);
+                    basRight.currentRChange(basRightTop.tableData[0]);
                 }
 
             })
@@ -190,7 +192,7 @@ var basLeft = new Vue({
             this.searchLeftTable();
         },
         currentChange(row, event, column) {
-            //console.log(row)
+            console.log(row)
             //判断是否生效
             if (row !== undefined) {
                 //生效
@@ -242,7 +244,10 @@ var basLeft = new Vue({
 
     },
     updated() {
-        this.FindLFirstDate(this.tableData[0]);
+        if(this.tableData!=null){
+            this.FindLFirstDate(this.tableData[0]);
+        }
+
     }
 });
 
@@ -382,7 +387,7 @@ var basRightTop = new Vue({
         //不分页查询
         searchRightTopEvent(){
             pagingObj.Examples(tempObj,basLeft.currentId,'','','',this,function(res){
-               // console.log(res);
+                console.log(res);
                 //有数据选中第一行
                 var data=res.resp.content.data.result;
                 if(data.length!=0){
