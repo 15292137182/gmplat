@@ -211,7 +211,6 @@
           <constructor-arg name="fields">
             <list>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="number" p:alies="number"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_code" p:alies="keysetCode"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="keyset_name" p:alies="keysetName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="belong_module" p:alies="belongModule"/>

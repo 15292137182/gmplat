@@ -43,9 +43,11 @@ public class Translator {
         explainColumns(queryAction,linkedList);
         linkedList.add(FROM);
         translateTableSource(queryAction.getTableSource(),linkedList);
-        ChainCondition where = (ChainCondition) queryAction.getWhere();
-        if (where !=null&&!where.getConditions().isEmpty()) {
-            linkedList.add(WHERE);
+        Condition where = queryAction.getWhere();
+        if (where !=null) {
+            if (!((where instanceof ChainCondition)&&((ChainCondition)where).getConditions().size()==0)){
+                linkedList.add(WHERE);
+            }
             translateCondition(where,linkedList);
         }
         final List<Order> orders = queryAction.getOrder();
