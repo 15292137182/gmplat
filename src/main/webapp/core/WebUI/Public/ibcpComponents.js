@@ -252,11 +252,13 @@ Vue.component("base-tree", {
         //
     },
     methods: {
-        getCheckedNodes() {
-            this.$emit("get-checked-node", this.$refs.tree.getCheckedNodes())
+        // 点击节点 返回该节点对应的对象 对应的节点 节点本身
+        clickNode(obj, node, row) {
+            this.$emit("click-node", obj);
         },
-        getCheckedKeys() {
-            this.$emit("get-checked-key", this.$refs.tree.getCheckedKeys())
+        // 选择复选框 返回节点对应的对象 是否被选中 是否含有子节点
+        checkNode(obj, checked, node) {
+            this.$emit("checked-node", obj);
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -264,8 +266,33 @@ Vue.component("base-tree", {
         }
     },
     template: `<div>
-                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 8px;"></el-input>
-                    <el-tree :data="datas" show-checkbox @node-click="getCheckedNodes" @check-change="getCheckedKeys" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
+                    <el-tree :data="datas" show-checkbox @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
+});
+
+/**
+ * @description:时间选择器组件
+ * @author:liyuanquan
+ */
+Vue.component("time-picker", {
+    // 时间控件绑定的值  是否时时间段  是否可用  是否只读  时间格式化
+    props: ["value", "isRange", "isDisabled", "readOnly", "formatter"],
+    data() {
+        return {
+            //
+        }
+    },
+    methods: {
+        // 选择器值发生改变时 返回当前值
+        currentVal(date) {
+            // 如果change事件返回值为undefined 强制转为空
+            date == undefined ? date = "" : date = date;
+            // 将子组件返回值传递给父组件
+            this.$emit("selected-time", date);
+        }
+    },
+    template: `<el-time-picker v-model="value" @change="currentVal" :format="formatter" :is-range="isRange" :disabled="isDisabled" :readonly="readOnly" placeholder="选择时间">
+                </el-time-picker>`
 });
