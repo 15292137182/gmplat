@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -28,7 +29,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/maintTable")
-public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTablesService,MaintDBTables>{
+public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTablesService, MaintDBTables> {
 
     private BusinessObjectService businessObjectService;
     private DBTableColumnService dbTableColumnService;
@@ -41,7 +42,7 @@ public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTable
 
     @Override
     protected List<String> blankSelectFields() {
-        return Arrays.asList("tableSchema","tableEname","tableCname");
+        return Arrays.asList("tableSchema", "tableEname", "tableCname");
     }
 
     /**
@@ -50,25 +51,29 @@ public class MaintDBTablesController extends BaseControllerTemplate<MaintDBTable
      * @param rowId   按照rowId查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return
+     * @return Object
      */
     @RequestMapping("/delete")
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("relateTableRowId", rowId);
-        List<Map<String, Object>> tableRowId = businessObjectService.select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
-        if (tableRowId.size() == 0) {
-            List<Map<String, Object>> list = dbTableColumnService
-                    .select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
-            if (UtilsTool.isValid(list)) {
-                List<String> rowIds = list.stream().map((row) -> {
-                    return (String) row.get("rowId");
-                }).collect(Collectors.toList());
-                dbTableColumnService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+        AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
+        if (UtilsTool.isValid(rowId)) {
+            map.get().put("relateTableRowId", rowId);
+            List<Map<String, Object>> tableRowId = businessObjectService.select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
+            if (tableRowId.size() == 0) {
+                List<Map<String, Object>> list = dbTableColumnService
+                        .select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
+                if (UtilsTool.isValid(list)) {
+                    List<String> rowIds = list.stream().map((row) ->
+                            (String) row.get("rowId")).collect(Collectors.toList());
+                    dbTableColumnService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+                } else {
+                    return super.delete(rowId, request, locale);
+                }
             }
-            return super.delete(rowId, request, locale);
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+        } else {
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
         }
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
     }
 }

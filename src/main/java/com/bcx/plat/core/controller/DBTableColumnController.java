@@ -59,7 +59,10 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
                                 @RequestParam(value = "pageSize" ,defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                 String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        return super.result(request, ServiceResult.Msg(getEntityService().queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
+        if (UtilsTool.isValid(rowId)) {
+            return super.result(request, ServiceResult.Msg(getEntityService().queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
+        }
+        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
     }
 
     /**
@@ -72,7 +75,10 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      */
     @RequestMapping("/queryTabById")
     public Object singleInputSelect(String search, String rowId, HttpServletRequest request, Locale locale) {
-        return super.result(request,ServiceResult.Msg(getEntityService().queryTableById(rowId, search)),locale);
+        if (UtilsTool.isValid(rowId)) {
+            return super.result(request,ServiceResult.Msg(getEntityService().queryTableById(rowId, search)),locale);
+        }
+        return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)),locale);
     }
 
 
@@ -90,8 +96,9 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
         List<Map<String, Object>> busiPro = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
         if (busiPro.size() == 0) {
             return super.delete(rowId, request, locale);
+        }else{
+            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
     }
 
 }

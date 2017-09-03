@@ -39,13 +39,17 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class TemplateObjectController extends BaseControllerTemplate<TemplateObjectService, TemplateObject> {
 
 
+  private final TemplateObjectProService templateObjectProService;
+
+  @Autowired
+  public TemplateObjectController(TemplateObjectProService templateObjectProService) {
+    this.templateObjectProService = templateObjectProService;
+  }
+
   @Override
   protected List<String> blankSelectFields() {
     return Arrays.asList("templateCode", "templateCode", "templateName");
   }
-
-  @Autowired
-  private TemplateObjectProService templateObjectProService;
 
   /**
    * 根据业务对象rowId查找当前对象下的所有属性并分页显示
@@ -66,7 +70,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
                              HttpServletRequest request,
                              Locale locale) {
     LinkedList<Order> str = UtilsTool.dataSort(order);
-    PageResult<Map<String, Object>> result = null;
+    PageResult<Map<String, Object>> result ;
 
     if (UtilsTool.isValid(search)) {
       result = templateObjectProService.select(
@@ -78,7 +82,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
       if (result.getResult().size() == 0) {
         return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
       }
-      return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+      return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
     }
     result =
             templateObjectProService.select(
@@ -88,7 +92,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
     if (result.getResult().size() == 0) {
       return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
-    return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+    return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
   }
 
 }

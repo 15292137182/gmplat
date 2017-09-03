@@ -43,7 +43,7 @@ public class TXManager {
   /**
    * 获取事务管理器
    */
-  public static DataSourceTransactionManager getTxMananer() {
+  public static DataSourceTransactionManager getTxManager() {
     if (null == transactionManager) {
       transactionManager = SpringContextHolder.getBean(DataSourceTransactionManager.class);
     }
@@ -93,8 +93,6 @@ public class TXManager {
           transactionManager.rollback(status);
         }
         throw e;
-      }
-      if (status.isCompleted()) {
       }
     }
   }

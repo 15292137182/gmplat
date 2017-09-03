@@ -3,7 +3,10 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.*;
+import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.DBTableColumn;
+import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -26,8 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
 
-    @Autowired
-    private MoreBatis moreBatis;
+    private final MoreBatis moreBatis;
 
     private MaintDBTablesService maintDBTablesService;
     private BusinessObjectProService businessObjectProService;
@@ -39,13 +42,14 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
     @Autowired
     public BusinessObjectService(MaintDBTablesService maintDBTablesService, BusinessObjectProService businessObjectProService,
                                  DBTableColumnService dbTableColumnService, FrontFuncService frontFuncService,
-                                 FrontFuncProService frontFuncProService,BusinessRelateTemplateService businessRelateTemplateService) {
+                                 FrontFuncProService frontFuncProService, BusinessRelateTemplateService businessRelateTemplateService, MoreBatis moreBatis) {
         this.maintDBTablesService = maintDBTablesService;
         this.businessObjectProService = businessObjectProService;
         this.dbTableColumnService = dbTableColumnService;
         this.frontFuncService = frontFuncService;
         this.frontFuncProService = frontFuncProService;
         this.businessRelateTemplateService = businessRelateTemplateService;
+        this.moreBatis = moreBatis;
     }
 
     public List<String> blankSelectFields() {
@@ -68,9 +72,10 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             for (Map<String, Object> row : result) {
                 row.put("tableCname", rowId1.get(0).get("tableCname"));
             }
-            return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
+            return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
+        }else{
+            return PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
         }
-        return PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
     }
 
     /**
@@ -100,10 +105,10 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
     /**
      * 数据封装
      *
-     * @param result
-     * @return
+     * @param result 接受参数
+     * @return PageResult
      */
-    protected PageResult<Map<String, Object>> queryResultProcess(PageResult<Map<String, Object>> result) {
+    private PageResult<Map<String, Object>> queryResultProcess(PageResult<Map<String, Object>> result) {
         result.setResult(queryResultProcessAction(result.getResult()));
         return result;
     }
@@ -114,10 +119,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * @param result 返回值
      * @return 返回值
      */
-    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
-        List<String> rowIds = result.stream().map((row) -> {
-            return (String) row.get("relateTableRowId");
-        }).collect(Collectors.toList());
+    private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+        List<String> rowIds = result.stream().map((row) ->
+            (String) row.get("relateTableRowId")).collect(Collectors.toList());
         List<Map<String, Object>> results = maintDBTablesService
                 .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
@@ -156,7 +160,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
                 PageResult<Map<String, Object>> result1 = queryProPage(result);
-                return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
+                return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
             }
         } else {
             result =
@@ -168,7 +172,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
                 PageResult<Map<String, Object>> result1 = queryProPage(result);
-                return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
+                return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
             }
         }
     }
@@ -176,8 +180,8 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
     /**
      * 根据业务对象rowId查找当前对象下的所有属性
      *
-     * @param result result
-     * @return
+     * @param result 接受参数
+     * @return PageResult
      */
     private PageResult<Map<String, Object>> queryProPage(PageResult<Map<String, Object>> result) {
         Map<String, Object> map = new HashMap<>();
@@ -186,8 +190,8 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             List<Map<String, Object>> mapList = dbTableColumnService.select(new ConditionBuilder(DBTableColumn.class)
                     .and()
                     .equal("rowId", relateTableColumn).endAnd().buildDone());
-            for (int i = 0; i < mapList.size(); i++) {
-                map.put((String) mapList.get(i).get("rowId"), mapList.get(i).get("columnCname"));
+            for (Map<String, Object> aMapList : mapList) {
+                map.put((String) aMapList.get("rowId"), aMapList.get("columnCname"));
             }
         }
         for (Map<String, Object> rest : result.getResult()) {
@@ -206,9 +210,8 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
     public PlatResult changeOperat(String rowId) {
         Map<String, Object> oldRowId = new HashMap<>();
         List<Map<String, Object>> list = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        List<String> row = list.stream().map((rowIds) -> {
-            return (String) rowIds.get("changeOperat");
-        }).collect(Collectors.toList());
+        List<String> row = list.stream().map((rowIds) ->
+            (String) rowIds.get("changeOperat")).collect(Collectors.toList());
         if (UtilsTool.isValid(rowId) && row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
             List<Map<String, Object>> mapList = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
             Map<String, Object> objectMap = mapList.get(0);
@@ -217,12 +220,13 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             //将json数据转换为实体类
             BusinessObject businessObject = UtilsTool.jsonToObj(toJson, BusinessObject.class);
             //复制一份数据出来
+            assert businessObject != null;
             businessObject.setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
             businessObject.buildCreateInfo();
             //获取当前版本号
             String version = (String) mapList.get(0).get("version");
             //转换为double类型
-            double dou = new Double(version).doubleValue();
+            double dou = new Double(version);
             //++当前版本号
             String str = ++dou + "";
             // TODO 设置版本号
@@ -246,11 +250,11 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * 根据rowId删除业务对象数据
      *
      * @param rowId 唯一标示
-     * @return
+     * @return PlatResult
      */
     public PlatResult delete(String rowId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("relateBusiObj", rowId);
+        AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
+        map.get().put("relateBusiObj", rowId);
         List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
         for (Map<String, Object> busin : businObj) {
             String rowId1 = (String) busin.get("rowId");
@@ -263,9 +267,8 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             List<Map<String, Object>> list = businessObjectProService
                     .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
             if (UtilsTool.isValid(list)) {
-                List<String> rowIds = list.stream().map((row) -> {
-                    return (String) row.get("rowId");
-                }).collect(Collectors.toList());
+                List<String> rowIds = list.stream().map((row) ->
+                    (String) row.get("rowId")).collect(Collectors.toList());
                 businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
             } else if (rowId != null && rowId.length() > 0) {
                 Map<String, Object> args = new HashMap<>();
@@ -280,12 +283,12 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
 
     /**
      *  根据业务对象rowId查询出对应的模板记录
-     * @param rowId
-     * @param orders
-     * @return
+     * @param rowId 唯一标识
+     * @param orders    排序
+     * @return platResult
      */
-    public PlatResult queryTemplatePro(String rowId,LinkedList<Order> orders) {
-        List linkedList = new ArrayList();
+    public PlatResult<List<Map<String, Object>>> queryTemplatePro(String rowId, LinkedList<Order> orders) {
+        List<Map<String, Object>> linkedList = new ArrayList<>();
         List<Map<String, Object>> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
         for (Map<String ,Object> bri: businessRowId){
             String  templateRowId = bri.get("templateRowId").toString();
@@ -301,7 +304,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                 }
             }
         }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,linkedList);
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,linkedList);
     }
 
 

@@ -57,30 +57,36 @@ public class FrontFuncProController extends
     /**
      * 通过功能块rowId查询功能块属性下对应的数据
      *
-     * @param str            空格查询
-     * @param rowId 功能块rowId
-     * @param request        请求
-     * @param locale         国际化参数
+     * @param str     空格查询
+     * @param rowId   功能块rowId
+     * @param request 请求
+     * @param locale  国际化参数
      * @return 返回serviceResult
      */
     @RequestMapping("/queryPro")
     public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> result = getEntityService()
-                .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                        UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
-        result = queryResultProcess(result);
-        if (result.size() == 0) {
-            return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        if (UtilsTool.isValid(rowId)) {
+
+            List<Map<String, Object>> result = getEntityService()
+                    .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                            UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
+            result = queryResultProcess(result);
+            if (result.size() == 0) {
+                return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+            } else {
+                PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+                return result(request, ServiceResult.Msg(platResult), locale);
+            }
         }
-        PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
-        return result(request, ServiceResult.Msg(platResult), locale);
+        return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+
     }
 
 
     /**
      * 根据功能块rowId查找当前对象下的所有属性并分页显示
      *
-     * @param search     按照空格查询
+     * @param search   按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
      * @param request  request请求
@@ -89,17 +95,20 @@ public class FrontFuncProController extends
      */
     @RequestMapping("/queryProPage")
     public Object singleInputSelect(String rowId, String search,
-                                    @RequestParam(value = "pageNum" ,defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                    @RequestParam(value = "pageSize",defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                    HttpServletRequest request, Locale locale,String order) {
+                                    @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                    @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                    HttpServletRequest request, Locale locale, String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        PageResult<Map<String, Object>> result =
-                getEntityService().select(
-                        new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
-                        ,orders, pageNum, pageSize);
-        result = queryResultProcess(result);
-        return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result)), locale);
+        if (UtilsTool.isValid(rowId)) {
+            PageResult<Map<String, Object>> result =
+                    getEntityService().select(
+                            new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                                    UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
+                            , orders, pageNum, pageSize);
+            result = queryResultProcess(result);
+            return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+        }
+        return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
     }
 
 
@@ -111,13 +120,12 @@ public class FrontFuncProController extends
      */
     @Override
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
-        List<String> rowIds = result.stream().map((row) -> {
-            return (String) row.get("relateBusiPro");
-        }).collect(Collectors.toList());
+        List<String> rowIds = result.stream().map((row) ->
+                (String) row.get("relateBusiPro")).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectProService
                 .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
-                        , new Field("property_name", "propertyName")),null);
+                                , new Field("property_name", "propertyName")), null);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("propertyName"));

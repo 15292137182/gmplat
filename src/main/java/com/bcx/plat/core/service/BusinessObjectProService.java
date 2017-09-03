@@ -17,20 +17,25 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
+ * 业务对象
  * Created by Wen Tiehu on 2017/8/7.
  */
 @Service
 public class BusinessObjectProService extends BaseServiceTemplate<BusinessObjectPro> {
 
+    private final DBTableColumnService dbTableColumnService;
+    private final MoreBatis moreBatis;
+
+    @Autowired
+    public BusinessObjectProService(DBTableColumnService dbTableColumnService, MoreBatis moreBatis) {
+        this.dbTableColumnService = dbTableColumnService;
+        this.moreBatis = moreBatis;
+    }
+
     @Override
     public boolean isRemoveBlank() {
         return false;
     }
-
-    @Autowired
-    DBTableColumnService dbTableColumnService;
-    @Autowired
-    private MoreBatis moreBatis;
 
     /**
      * 根据业务对象属性rowId查询当前数据
@@ -45,27 +50,23 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
 
         List<Map<String, Object>> rowId1 =
                 dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
-//        if (rowId1.size() == 0) {
-//            logger.warn("根据业务对象属性rowId查询当前数据失败");
-//            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-//        }
         try {
             rowId1.get(0).get("columnCname");
         } catch (Exception e) {
-            return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+            return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
         }
         for (Map<String, Object> row : result) {
             row.put("columnCname", rowId1.get(0).get("columnCname"));
         }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }
 
     /**
      * 供前端功能块属性使用
      * 根据业务对象rowId查询当前业务对象下的所有属性
      *
-     * @param objRowId
-     * @return
+     * @param objRowId 业务对象唯一标识
+     * @return PlatResult
      */
     public PlatResult queryBusinPro(String objRowId) {
         //通过业务对象查找到对应的模板的rowId

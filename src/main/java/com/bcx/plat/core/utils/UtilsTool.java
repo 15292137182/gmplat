@@ -137,7 +137,7 @@ public class UtilsTool {
    * jsonToObj(json, List.class, Bean.class)
    */
   @SuppressWarnings("unchecked")
-  public static <T> T jsonToObj(String json, Class<T> clazz, Class<?> elements) {
+  public static <T> T jsonToObj(String json, Class<T> clazz, Class<?>... elements) {
     if (!isValid(json)) {
       return null;
     }
