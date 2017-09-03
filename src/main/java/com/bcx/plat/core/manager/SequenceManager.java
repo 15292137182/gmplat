@@ -41,6 +41,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * 【已废弃】*{a;6-b&d} 序列号 位数 影响的变量将会使重置号重置
  * 2017-09-01：
  * *{a;6-none-b&d} : a 变量名； 6 位数 ； none ：循环方式 ; b&d:受变量影响
+ * 循环方式: day,week,year,mouth,none
  * ------------------------------------------------------------------------------
  * eg:
  * Create By HCL at 2017/8/8
@@ -50,12 +51,11 @@ public class SequenceManager {
   /**
    * 定义循环类型
    */
-  private static String LOOP_NONE = "none"; // 不循环
-  private static String LOOP_DAY = "day"; // 按天
-  private static String LOOP_WEEK = "week"; // 按周
-  private static String LOOP_YEAR = "year"; // 按年
-  private static String LOOP_MOUTH = "mouth"; // 按月
-
+  private static final String LOOP_NONE = "none"; // 不循环
+  private static final String LOOP_DAY = "day"; // 按天
+  private static final String LOOP_WEEK = "week"; // 按周
+  private static final String LOOP_YEAR = "year"; // 按年
+  private static final String LOOP_MOUTH = "mouth"; // 按月
 
   private static MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
   private Logger logger = LoggerFactory.getLogger(getClass());
@@ -389,7 +389,7 @@ public class SequenceManager {
           branchValue = new StringBuilder();
           // 加入循环影响{}
           String loopType = r.length >= 2 ? r[1] : null;
-          branchValue.append(getLoopString(loopType));
+          branchValue.append("{").append(getLoopString(loopType)).append("}");
           // 加入影响变量
           String[] variables = r.length >= 3 ? r[2].split("&") : null;
           if (isValid(variables)) {
@@ -496,9 +496,9 @@ public class SequenceManager {
     }
     if (isValid(sequenceCode)) {
       List<Map<String, Object>> code = moreBatis.select(SequenceRuleConfig.class)
-              .where(new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode",sequenceCode).endAnd().buildDone()
+              .where(new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", sequenceCode).endAnd().buildDone()
 //      new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)
-      ).execute();
+              ).execute();
       if (code.size() == 1) {
         String toJson = UtilsTool.objToJson(code.get(0));
         return UtilsTool.jsonToObj(toJson, SequenceRuleConfig.class);

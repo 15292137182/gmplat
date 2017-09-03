@@ -38,6 +38,7 @@ public class BaseController {
    * @param locale        国际化
    * @return 返回
    */
+  @SuppressWarnings("unchecked")
   protected Object result(HttpServletRequest request, ServiceResult serviceResult, Locale locale) {
     Map map = new HashMap();
     String msg = serviceResult.getContent().getMsg();
