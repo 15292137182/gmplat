@@ -23,21 +23,21 @@
         </el-form-item>
 
         <el-form-item label="关联表" prop="reaTable">
-            <ibcp-selection v-dom="selectDatas1" :multiple-data="selectDatas1.values" :multiple-option="options1"
-                            @clear-event="afterClear1" :is-multiple="multipleBool1" :is-disabled="disabledBool1" :is-filterable="filterBool1">
-            </ibcp-selection>
+            <single-selection @change-data="getChildData_1"  :initial-value="value_1">
+                <!---->
+            </single-selection>
         </el-form-item>
 
         <el-form-item label="关联模板对象" prop="reaTableObj">
-            <ibcp-selection v-dom="selectDatas2" :multiple-data="selectDatas2.values" :multiple-option="options2"
-                            @clear-event="afterClear2" :is-multiple="multipleBool2" :is-disabled="disabledBool2" :is-filterable="filterBool2">
-            </ibcp-selection>
+            <multiple-selection @change-datas="multipleDatas_1" :initial-value="value_2">
+                <!---->
+            </multiple-selection>
         </el-form-item>
 
         <el-form-item label="所属模块" prop="tableInput">
-            <ibcp-selection v-dom="selectDatas3" :multiple-data="selectDatas3.values" :multiple-option="options3"
-                            @clear-event="afterClear3" :is-multiple="multipleBool3" :is-disabled="disabledBool3" :is-filterable="filterBool3">
-            </ibcp-selection>
+            <single-selection @change-data="getChildData_2" :initial-value="value_3">
+                <!---->
+            </single-selection>
         </el-form-item>
 
         <el-form-item label="版本">
@@ -53,22 +53,6 @@
         </el-col>
     </el-row>
 </div>
-<script type="text/javascript" src="components.js"></script>
-<script>
-    //使用自定义指定
-    Vue.directive("dom", {
-        //el:哪一个框
-        bind: function(el, binding) {
-            var obj = binding.value;
-            //console.log(obj)
-            if(obj != null) {
-                var key = Object.keys(binding.modifiers)[0] || "el";
-                Vue.set(obj, key, el);
-            }
-        }
-    });
-</script>
-
 <script src="metadata-add.js"></script>
 </body>
 

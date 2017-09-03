@@ -29,13 +29,19 @@
             </el-select>
         </el-form-item>
         <el-form-item label="关联表字段" prop="tableReaInput">
-            <select-contablefield ref="contablefield"></select-contablefield>
+            <single-selection @change-data="getChildData_1"  :initial-value="value_1">
+                <!---->
+            </single-selection>
         </el-form-item>
         <el-form-item label="值类型" prop="typeInput">
-            <select-vtype ref="vtype"></select-vtype>
+            <single-selection @change-data="getChildData_2"  :initial-value="value_2">
+                <!---->
+            </single-selection>
         </el-form-item>
         <el-form-item label="值来源类型" prop="typeComValue">
-            <select-vorigin ref="vorigin"></select-vorigin>
+            <single-selection @change-data="getChildData_3"  :initial-value="value_3">
+                <!---->
+            </single-selection>
         </el-form-item>
         <el-form-item label="值来源内容" prop="comContent">
             <el-select placeholder="请选择" v-model="checked1">

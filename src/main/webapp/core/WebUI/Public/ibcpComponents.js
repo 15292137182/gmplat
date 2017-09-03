@@ -91,6 +91,17 @@ Vue.component("single-selection", {
         // 接收父组件传递的初始默认值 并将其赋值给子组件
         this.selectValue.values = this.initialValue;
     },
+    updated: function () {
+        //ex:查询关联表
+        this.$http.jsonp(serverPath + "/maintTable/query",{
+            search:''
+        },{
+            jsonp: 'callback'
+        }).then(function (res) {
+           var data=res.data.resp.content.data.result;
+            console.log(data);
+        });
+    },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
 						v-for="item in options"
