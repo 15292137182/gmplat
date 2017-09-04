@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
@@ -51,41 +53,7 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
           String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
           Object value = map.get(fieldName);
           try {
-            if (Arrays.asList(method.getParameterTypes()[0].getInterfaces()).contains(BeanInterface.class)) {
-              Class clazz = method.getParameterTypes()[0];
-              BeanInterface bean = (BeanInterface) clazz.newInstance();
-              value = bean.fromMap(map);
-            } else if (fieldName.equalsIgnoreCase("etc")) {
-              Set<String> keys = toMap().keySet();
-              Map etc = new HashMap();
-              // 将数据读入 javaBean
-              if (null != getJoinTemplates()) {
-                for (BeanInterface bean : getJoinTemplates()) {
-                  if (null != bean) {
-                    bean.fromMap(map);
-                  }
-                }
-              }
-              map.forEach((k, v) -> {
-                if ("etc".equalsIgnoreCase(k.toString())) {
-                  // 处理扩属属性字段
-                  Map temp;
-                  if (v instanceof String) {
-                    temp = jsonToObj((String) v, Map.class);
-                  } else if (v instanceof Map) {
-                    temp = (Map) v;
-                  } else {
-                    temp = jsonToObj(objToJson(v), Map.class);
-                  }
-                  if (temp != null) {
-                    etc.putAll(temp);
-                  }
-                } else if (!keys.contains(k)) {
-                  etc.put(k, v);
-                }
-              });
-              value = etc;
-            } else if (value != null) {
+            if (value != null) {
               if (method.getParameterTypes()[0] != value.getClass()) {
                 if (value instanceof String) {
                   value = jsonToObj((String) value, value.getClass());

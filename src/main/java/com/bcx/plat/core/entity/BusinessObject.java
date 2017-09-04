@@ -3,10 +3,7 @@ package com.bcx.plat.core.entity;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import java.io.Serializable;
 
@@ -15,10 +12,8 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 /**
  * 业务对象实体类 Created by Went on 2017/8/1.
  */
-@Table(TableInfo.T_BUSINESS_OBJECT)
 public class BusinessObject extends BaseEntity<BusinessObject> implements Serializable {
 
-  @TablePK
   private String rowId; //唯一标识
   private String objectCode;  //对象代码
   private String objectName;  //对象名称
