@@ -59,6 +59,8 @@ public class BusinessObjectProController extends
     @RequestMapping("/queryById")
     @Override
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
+//        String attrSource = request.getParameter("attrSource");//属性来源
+//        attrSource =attrSource.equals("")?BaseConstants.ATTRIBUTE_SOURCE_BASE:BaseConstants.ATTRIBUTE_SOURCE_MODULE;
         if (!UtilsTool.isValid(rowId)) {
             return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
         }else{

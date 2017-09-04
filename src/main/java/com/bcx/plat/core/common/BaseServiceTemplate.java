@@ -121,6 +121,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
         args = mapFilter(args);
         args.remove("etc");
         InsertAction insertAction = moreBatis.insertStatement().into(moreBatis.getTable(entityClass)).cols(fieldNames).values(args);
+        insertAction.setEntityClass(entityClass);
         return insertAction.execute();
     }
 
@@ -135,9 +136,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     }
 
     public int update(Map args, Condition condition) {
-        UpdateAction updateAction = moreBatis.updateStatement()
-                .from(moreBatis.getTable(entityClass))
-                .set(args)
+        UpdateAction updateAction = moreBatis.update(entityClass,args)
                 .where(condition);
         return updateAction.execute();
     }

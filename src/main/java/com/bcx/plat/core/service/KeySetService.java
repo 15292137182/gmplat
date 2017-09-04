@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -46,13 +45,9 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
     public PlatResult queryKeySet(List list) {
         Map<Object, Object> maps = new HashMap<>();
         for (Object li : list) {
-            List lists = new ArrayList();
+            List<Object> lists = new ArrayList<>();
             lists.add(li);
-            QueryAction joinTableTest = moreBatis.select(entityClass)
-                    .from(new JoinTable(moreBatis.getTable(KeySet.class), JoinType.LEFT_JOIN,
-                            moreBatis.getTable(KeySetPro.class))
-                            .on(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "rowId"), Operator.EQUAL,
-                                    moreBatis.getColumnByAlies(KeySetPro.class, "relateKeysetRowId"))))
+            QueryAction joinTableTest = moreBatis.select(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", JoinType.LEFT_JOIN)
                     .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
             List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(joinTableTest.execute());
             maps.put(li, list1);
@@ -60,7 +55,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
                 return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             }
         }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.objToJson(maps));
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.objToJson(maps));
     }
 
     /**
@@ -84,7 +79,7 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
         if (result.size() == 0) {
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowIds);
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowIds);
     }
 
 
@@ -94,10 +89,10 @@ public class KeySetService extends BaseServiceTemplate<KeySet> {
      * @param rowId 唯一标示
      * @return PlatResult
      */
-    public PlatResult queryPro(String rowId) {
+    public PlatResult<List<Map<String, Object>>> queryPro(String rowId) {
         List<Map<String, Object>> rowId1 =
                 keySetProService.select(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
-        return new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, rowId1);
+        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, rowId1);
     }
 
 

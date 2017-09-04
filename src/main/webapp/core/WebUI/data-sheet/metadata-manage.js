@@ -58,22 +58,16 @@ var basTop = new Vue({
             operate = 1;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){
-                //查询关联表
-                basTop.$http.jsonp(conTable,{
-                    search:''
-                },{
-                    jsonp: 'callback'
-                }).then(function (res) {
-                   var data=res.data.resp.content.data.result;
-                    console.log(data);
-                    var a='';
-                    for(var i=0;i<data.length;i++){
-                        var s=data[i].tableCname
-                        a+=s;
-                    }
-                    em.options1.label=a;
-                    console.log(em.options1.label)
-                });
+                ////查询关联表
+                //basTop.$http.jsonp(conTable,{
+                //    search:''
+                //},{
+                //    jsonp: 'callback'
+                //}).then(function (res) {
+                //   var data=res.data.resp.content.data.result;
+                //    console.log(data);
+                //
+                //});
                 //查询关联模板对象
                 //basTop.$http.jsonp(belongModel,{
                 //    search:''

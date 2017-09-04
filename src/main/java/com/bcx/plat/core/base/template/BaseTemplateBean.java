@@ -2,6 +2,7 @@ package com.bcx.plat.core.base.template;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.manager.SpApplicationManager;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
@@ -35,8 +36,9 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
    */
   public BaseTemplateBean buildCreateInfo() {
     this.createTime = getDateTimeNow();
-    this.createUser = SpApplicationManager.getInstance().getLoginUserId();
-    this.createUserName = SpApplicationManager.getInstance().getLoginUserName();
+    User user = SpApplicationManager.getInstance().getLoginUser();
+    this.createUser = user.getId();
+    this.createUserName = user.getName();
     return this;
   }
 

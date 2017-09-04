@@ -57,9 +57,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      */
     @Override
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
-        List<String> rowIds = result.stream().map((row) -> {
-            return (String) row.get("relateBusiObj");
-        }).collect(Collectors.toList());
+        List<String> rowIds = result.stream().map((row) ->
+                (String) row.get("relateBusiObj")).collect(Collectors.toList());
         List<Map<String, Object>> results = businessObjectService
                 .select(new FieldCondition("rowId", Operator.IN, rowIds));
         HashMap<String, Object> map = new HashMap<>();

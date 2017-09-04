@@ -44,13 +44,11 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
         LinkedList linkedList = new LinkedList();
         List<Map<String, Object>> funcRowId = null;
         for (Object key : funcCode) {
-            List<Map<String, Object>> keysetCode = moreBatis.select(entityClass)
-                    .from(moreBatis.getTable(FrontFunc.class))
+            List<Map<String, Object>> keysetCode = moreBatis.select(FrontFunc.class)
                     .where(new FieldCondition("funcCode", Operator.EQUAL, key)).execute();
             List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(keysetCode);
             for (Map<String, Object> keySet : list) {
-                funcRowId = moreBatis.select(entityClass)
-                        .from(moreBatis.getTable(FrontFuncPro.class))
+                funcRowId = moreBatis.select(FrontFuncPro.class)
                         .where(new FieldCondition("funcRowId", Operator.EQUAL, keySet.get("rowId").toString()))
                         .execute();
                 for (Map<String, Object> map : funcRowId) {

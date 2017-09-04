@@ -40,14 +40,15 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
     /**
      * 根据业务对象属性rowId查询当前数据
      *
-     * @param rowId 唯一标识
+     * @param rowId      唯一标识
      * @return ServiceResult
      */
     public PlatResult queryById(String rowId) {
-
         List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        if (!UtilsTool.isValid(result)) {
+            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+        }
         String relateTableColumn = (String) result.get(0).get("relateTableColumn");
-
         List<Map<String, Object>> rowId1 =
                 dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
         try {
@@ -77,12 +78,7 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
             根据业务对象rowId查询出和业务对象属性关联的属性
             这里的业务对象的属性是基本属性
          */
-        List<Map<String, Object>> result = moreBatis.select(entityClass)
-                .from(new JoinTable(moreBatis.getTable(BusinessObject.class), JoinType.LEFT_JOIN, moreBatis.getTable(BusinessObjectPro.class))
-                        .on(new FieldCondition(
-                                moreBatis.getColumnByAlies(BusinessObject.class, "rowId"),
-                                Operator.EQUAL,
-                                moreBatis.getColumnByAlies(BusinessObjectPro.class, "objRowId"))))
+        List<Map<String, Object>> result = moreBatis.select(BusinessObject.class, BusinessObjectPro.class, "rowId", "objRowId", JoinType.LEFT_JOIN)
                 .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessObjectPro.class, "objRowId"), Operator.EQUAL, objRowId)).execute();
         /*
             遍历添加数据到results
@@ -94,12 +90,8 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
         /*
             根据业务对象rowId来查询关联表数据,获取到关联业务对象的模板对象的rowId
          */
-        List<Map<String, Object>> execute = moreBatis.select(entityClass)
-                .from(new JoinTable(moreBatis.getTable(BusinessObject.class), JoinType.LEFT_JOIN, moreBatis.getTable(BusinessRelateTemplate.class))
-                        .on(new FieldCondition(
-                                moreBatis.getColumnByAlies(BusinessObject.class, "rowId"),
-                                Operator.EQUAL,
-                                moreBatis.getColumnByAlies(BusinessRelateTemplate.class, "businessRowId"))))
+        List<Map<String, Object>> execute = moreBatis.select(BusinessObject.class, BusinessRelateTemplate.class,
+                "rowId", "businessRowId", JoinType.LEFT_JOIN)
                 .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessRelateTemplate.class, "businessRowId"), Operator.EQUAL, objRowId)).execute();
         /*
             将返回的结果下划线转为驼峰
@@ -114,12 +106,7 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
             /*
             通过获取到的模板对象的rowId来查询出模板对象关联的模板对象属性的数据
              */
-            execu = moreBatis.select(entityClass)
-                    .from(new JoinTable(moreBatis.getTable(TemplateObject.class), JoinType.LEFT_JOIN, moreBatis.getTable(TemplateObjectPro.class))
-                            .on(new FieldCondition(
-                                    moreBatis.getColumnByAlies(TemplateObject.class, "rowId"),
-                                    Operator.EQUAL,
-                                    moreBatis.getColumnByAlies(TemplateObjectPro.class, "templateObjRowId"))))
+            execu = moreBatis.select(TemplateObject.class, TemplateObjectPro.class, "rowId", "templateObjRowId", JoinType.LEFT_JOIN)
                     .where(new FieldCondition(moreBatis.getColumnByAlies(TemplateObjectPro.class, "templateObjRowId"), Operator.EQUAL, templateRowId)).execute();
             List<Map<String, Object>> exe = UtilsTool.underlineKeyMapListToCamel(execu);
             /*

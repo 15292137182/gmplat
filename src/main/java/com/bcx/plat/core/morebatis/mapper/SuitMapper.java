@@ -13,6 +13,10 @@ public interface SuitMapper {
 
   int plainDelete(List list);
 
+  int plainUpdate(List list);
+
+  int plainInsert(List list);
+
   /**
    * 通用查询方法.
    *

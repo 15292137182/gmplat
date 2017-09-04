@@ -71,7 +71,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     if (insert != 1) {
       return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
     } else {
-      return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, insert)), locale);
+      return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, insert)), locale);
     }
   }
 

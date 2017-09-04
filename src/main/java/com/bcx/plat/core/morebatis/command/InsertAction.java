@@ -1,5 +1,6 @@
 package com.bcx.plat.core.morebatis.command;
 
+import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
@@ -12,6 +13,7 @@ import java.util.Map;
 public class InsertAction {
 
   private TableSource tableSource;
+  private Class<? extends BaseEntity> entityClass;
   private Collection<String> columns;
   private List<Map<String, Object>> rows;
   private List<List<Object>> values;
@@ -29,6 +31,14 @@ public class InsertAction {
 
   public List<List<Object>> getValues() {
     return values;
+  }
+
+  public Class<? extends BaseEntity> getEntityClass() {
+    return entityClass;
+  }
+
+  public void setEntityClass(Class<? extends BaseEntity> entityClass) {
+    this.entityClass = entityClass;
   }
 
   public String getValuesRefresh() {
