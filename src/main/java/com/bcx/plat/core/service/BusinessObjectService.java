@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * Created by Wen Tiehu on 2017/8/7.
  */
 @Service
-public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
+public class BusinessObjectService extends BaseServiceTemplate {
 
     private final MoreBatis moreBatis;
 
