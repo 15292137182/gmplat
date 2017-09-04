@@ -4,147 +4,48 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../Public/publicjs.js"></script>
-    <script>
-        var DynamicStitching = (function(){
-            var dataHtmlObj = null;//用来保存vue实例对象
-            //查询块
-            var searchBlock = function(obj){//动态拼接查询块html代码片段
-                var str='';
-                var width = obj.widthSetting;
-                var keywordOne = obj.keywordOne;
-                var keywordTwo = obj.keywordTwo;
-                var keywordThree = obj.keywordThree;
-                str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
-                return str;
-            }
-
-            //表单块
-            var formBlock = function(obj){
-                if(obj.widthSetting){
-                    var width = obj.widthSetting;
-                }else{
-                    var width = 24;
-                }
-                var laberName = obj.displayTitle;
-                //单行文本框
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
-                //多行文本框
-
-                //单选框
-
-                //复选框
-
-                //日期框
-
-                //下拉框
-                return str;
-            }
-            var Concatenation = function(arr){//判断是什么功能块，并获取html片段
-                var htmlObj = {};
-                var str = '';
-                for(var i=0;i<arr.length;i++){
-                        var obj = arr[i];
-                        if(obj.funcType =='search'){
-                            htmlObj.search = searchBlock(obj);
-                        }
-                        if(obj.funcType =='form'){
-                            str +=formBlock(obj);
-                            if(i == arr.length-1){//判断是否全部拼接完
-                                htmlObj.form ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
-                            }
-                        }
-                }
-                return htmlObj;
-            }
-
-            var htmlComponent = function(code,callback){//得到后端接口数据
-                var str='';
-                for(var i =0;i<code.length;i++){
-                     str += '"'+code[i]+'"'+','
-                }
-                var newStr = str.substring(0,str.length-1);
-                var arr = "["+newStr+"]";
-                $.ajax({
-                    url:serverPath+'/fronc/queryFuncCode',
-                    type:'get',
-                    data:{funcCode:arr},
-                    dataType:"jsonp",
-                    success:function(res){
-                        var data = res.resp.content.data.result;
-                        var arr = [];
-                        for(var i=0;i<data.length;i++){
-                            arr.push(data[i]);
-                        }
-                        callback(arr);
-                    }
-                })
-            }
-            var searchSelect = function(){//父组件数据
-                return {
-                    props: [],
-                    ruleForm1:{//父组件属性
-                        input5:'',
-                        select:'',
-                        click:function(){//父组件查询块按钮事件
-                            var obj = dataHtmlObj;
-                            console.log(obj.ruleForm1.select);
-                            console.log(obj.ruleForm1.input5);
-                            console.log(obj.formTable.msg);
-                        }
-                    },
-                    inputDemo:{
-                        message: []
-                    },
-                    formTable:{
-                        msg:''
-                    }
-                }
-            }
-            var InstanceObject = function(obj){//获取当前实例对象
-                dataHtmlObj = obj;
-            }
-            return {
-                htmlComponent:htmlComponent,
-                InstanceObject:InstanceObject,
-                searchSelect:searchSelect,
-                Concatenation:Concatenation
-            }
-        })()
-    </script>
 </head>
 <body>
-<el-col :span="24" id="app">
-    <el-row>
+<div id="dataSetConfigButton">
+    <el-row type="flex" justify="end">
         <el-col :span="24">
-            <el-col :xs="24" :sm="24" :md="24">
-                <div class="bg-color"><span style="margin-left:20px">数据库信息</span></div>
+            <el-button type="info" icon="plus" size="small" @click.native="addDataSetConfig">新增测试</el-button>
+        </el-col>
+    </el-row>
+</div>
+<el-col :span="24" id="app">
+    <div class="allBorder">
+        <el-row>
+            <el-col :span="24">
+                <el-col :xs="24" :sm="24" :md="24">
+                    <div class="bg-color"><span style="margin-left:20px">动态生成页面demo</span></div>
+                </el-col>
             </el-col>
-        </el-col>
-    </el-row>
-    <el-row style="margin-bottom: 20px">
-        <el-col :xs="8" :sm="8" :md="8">
-            <div class="inputStyle">
-                <components :is="dynComponent" :search-input="ruleForm1"></components>
-            </div>
-        </el-col>
-    </el-row>
-    <el-row>
-        <el-col :span="9">
-            <components :is="inputwithbtn" :child-form-table="formTable"></components>
-        </el-col>
-    </el-row>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
+            <el-col :xs="8" :sm="8" :md="8">
+                <div class="inputStyle">
+                    <components :is="dynComponent" :search-input="ruleForm1"></components>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row style="padding:0 10px 10px 10px">
+            <el-col :span="24">
+                <components :is="tableBlock" :child-table="table"></components>
+            </el-col>
+        </el-row>
+    </div>
 </el-col>
 </body>
 <script>
-    var code = ["obj102017-08-31000001","obj102017-09-01000002"];
-    DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
-        var strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
-        var de = new Vue(
-            {
+        var code = ["obj102017-08-31000001","obj102017-09-01000002","obj102017-09-04000001"];
+        DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
+            var strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
+            var de = new Vue({
                 el: "#app",
                 data:DynamicStitching.searchSelect(),//获取父组件数据
                 computed:{//组件定义
-                    dynComponent() {//绑定组件方法
+                    dynComponent() {//绑定组件搜索框方法
                         var template = strHtml.search;//组件元素赋值html代码片段
                         var props = ["searchInput"];//子组件参数名
                         return {
@@ -159,16 +60,36 @@
                             template,
                             props
                         }
+                    },
+                    tableBlock(){//表格组件
+                        var template= strHtml.table;
+                        var props = ["table"];//子组件参数名
+                        return {
+                            template,
+                            props
+                        }
                     }
                 },
                 methods: {
 
                 },
-                created(){//创建实例是将实例对象传入方法
+                created(){//创建实例时将实例对象传入方法
                     DynamicStitching.InstanceObject(this);
                 }
+            })
+        });
+        var vm = new Vue({
+            el:"#dataSetConfigButton",
+            data:{
+                divIndex:'',
+            },
+            methods:{
+                addDataSetConfig(){
+                    this.divIndex = ibcpLayer.ShowDiv('demo1.html','新增信息测试','400px', '440px',function(){
+
+                    })
+                }
             }
-        )
-    });
+        })
 </script>
 </html>

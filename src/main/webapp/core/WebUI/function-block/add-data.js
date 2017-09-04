@@ -27,6 +27,7 @@ var em=new Vue({
         },
         funcRowId:'',//功能块ID
         dataId:'',//关联对象属性ID
+        attrSource:'',//关联对象属性所属模块
         isEdit:'',//是否编辑
         rowId:'',//行ID
         checked:true,//是否显示
@@ -37,7 +38,7 @@ var em=new Vue({
         sortArr:[],//排序数组
         url:serverPath+'/fronFuncPro/add',//新增接口
         queryUrl:serverPath+'/fronFuncPro/queryById',//查询指定ID功能块属性接口
-        queryDataUrl:serverPath+'/businObjPro/queryById',//查询指定ID业务对象属性接口
+        queryDataUrl:serverPath+'/businObjPro/queryById',//查询指定业务对象属性ID业务对象属性接口
         editUrl:serverPath+'/fronFuncPro/modify',//编辑功能块属性
         isDisabled:false,//是否禁用
         rightRowId:'',//右边表行ID
@@ -80,6 +81,7 @@ var em=new Vue({
             this.addObjectProperties();//新增
         },
         newAttribute(){//新增属性
+            console.log(em.attrSource);
             /**
              * tsj 07/8/29 新增数据ajax代码重构，增加字段
              **/
@@ -88,6 +90,7 @@ var em=new Vue({
                 "jsonData":{
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.dataId,//业务对象属性ID
+                    attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.formTable.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
                     displayWidget:em.$refs.show.value,//显示控件
@@ -124,6 +127,7 @@ var em=new Vue({
                     rowId:em.rowId,//新增属性的ID
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.dataId,//业务对象属性ID
+                    attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
                     displayWidget:em.$refs.show.value,//显示控件
@@ -186,6 +190,7 @@ var em=new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
+                console.log(res);
                 var data = res;
                 em.rowId=data[0].rowId;//新增成功后返回的ID
                 em.funcRowId=data[0].funcRowId;//功能块ID
@@ -242,6 +247,8 @@ var em=new Vue({
         this.rightRowId = window.parent.properties.rowId;
 
         if(window.parent.topButtonObj.isEdit){//编辑
+            var args={"Block":{funcType:"functionBlockType"},"blockAttribute":{displayWidget:"showControl"}};
+            TableKeyValueSet.init(args);
             this.loadComplete();
         }
     }

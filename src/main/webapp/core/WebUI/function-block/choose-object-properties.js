@@ -29,11 +29,14 @@ var em = new Vue({
             this.currentRow = val.propertyCode + "(" + val.propertyName + ")";
             //选中行的ID
             this.currentId = val.rowId;
+            //选中后所属模块
+            this.attrSource = val.attrSource;
         },
         conformEvent() {
             //将数据渲染到外面的input里面
             window.parent.em.formTable.tableInput = this.currentRow;
             window.parent.em.dataId = this.currentId;
+            window.parent.em.attrSource = this.attrSource;
             //执行关闭
             parent.layer.close(window.parent.littledivIndex);
         },

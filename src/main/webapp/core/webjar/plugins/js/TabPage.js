@@ -524,7 +524,7 @@ var SelectOptions = (function(){
             },
             methods: {
                 flush() {
-                    var _path = serverPath+"/keySet/queryNumber";
+                    var _path = serverPath+"/keySet/queryKeyCode";
                     var param = {"keyCode":keysetCode};
                     if(undefined != path && null != path && "" != path){
                         _path = path;
@@ -668,6 +668,153 @@ var TableKeyValueSet = (function(){
     }
 })()
 
+
+//动态加载html代码片段
+var DynamicStitching = (function(){
+    var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small">查看</el-button><el-button type="text" size="small">编辑</el-button></template></el-table-column>';
+    var dataHtmlObj = null;//用来保存vue实例对象
+    //查询块
+    var searchBlock = function(obj){//动态拼接查询块html代码片段
+        var str='';
+        var width = obj.widthSetting;
+        var keywordOne = obj.keywordOne;
+        var keywordTwo = obj.keywordTwo;
+        var keywordThree = obj.keywordThree;
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        return str;
+    }
+    //表单块
+    var formBlock = function(obj,caseName){
+        if(obj.widthSetting){
+            var width = obj.widthSetting;
+        }else{
+            var width = 24;
+        }
+        var laberName = obj.displayTitle;
+        switch (caseName){
+            case 'input'://单行文本框
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
+                break;
+            case 'textarea'://多行文本框
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
+                break;
+            case "select-base"://下拉框
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
+                break;
+            case "checkbox"://复选框
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox>复选框</el-checkbox></el-form-item></el-col></el-row>';
+                break;
+            case "radio"://单选框
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
+                break;
+            case "date"://日期框
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
+        }
+        return str;
+    }
+    //列表块
+    var tableBlock = function(obj){
+        var title = obj.displayTitle;
+        var column ='<el-table-column prop="" label='+title+'></el-table-column>'
+        return column;
+    }
+    var Concatenation = function(arr){//判断是什么功能块，并获取html片段
+        var htmlObj = {};
+        var str = '';
+        var tableColumn=null;
+        var i;
+        for(i=0;i<arr.length;i++){
+            var obj = arr[i];
+            if(obj.funcType =='search'){
+                htmlObj.search = searchBlock(obj);
+            }
+            if(obj.funcType =='form'){
+                if(obj.displayWidget=='input'){
+                    str +=formBlock(obj,'input');
+                }
+                if(obj.displayWidget=='textarea'){
+                    str +=formBlock(obj,'textarea');
+                }
+                if(obj.displayWidget=="select-base"){
+                    str +=formBlock(obj,"select-base");
+                }
+                if(obj.displayWidget=="checkbox"){
+                    str +=formBlock(obj,"checkbox");
+                }
+                if(obj.displayWidget=="radio"){
+                    str +=formBlock(obj,"radio");
+                }
+                if(obj.displayWidget=="date"){
+                    str +=formBlock(obj,"date");
+                }
+            }
+            if(obj.funcType =="grid"){
+                tableColumn += tableBlock(obj);
+            }
+        }
+        if(i == arr.length){//判断是否全部拼接完
+            htmlObj.form ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
+            htmlObj.table='<el-table border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
+        }
+        return htmlObj;
+    }
+    var htmlComponent = function(code,callback){//得到后端接口数据
+        var str='';
+        for(var i =0;i<code.length;i++){
+            str += '"'+code[i]+'"'+','
+        }
+        var newStr = str.substring(0,str.length-1);
+        var arr = "["+newStr+"]";
+        $.ajax({
+            url:serverPath+'/fronc/queryFuncCode',
+            type:'get',
+            data:{funcCode:arr},
+            dataType:"jsonp",
+            success:function(res){
+                var data = res.resp.content.data.result;
+                var arr = [];
+                for(var i=0;i<data.length;i++){
+                    arr.push(data[i]);
+                }
+                callback(arr);
+            }
+        })
+    }
+    var searchSelect = function(){//父组件数据
+        return {
+            props: [],
+            ruleForm1:{//父组件属性
+                input5:'',
+                select:'',
+                click:function(){//父组件查询块按钮事件
+                    var obj = dataHtmlObj;
+                    console.log(obj.ruleForm1.select);
+                    console.log(obj.ruleForm1.input5);
+                    console.log(obj.formTable.msg);
+                }
+            },
+            formTable:{//父组件表单对象
+                msg:''
+            },
+            table:{
+                tableData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }]
+            }
+        }
+    }
+    var InstanceObject = function(obj){//获取当前实例对象
+        dataHtmlObj = obj;
+    }
+    return {
+        htmlComponent:htmlComponent,
+        InstanceObject:InstanceObject,
+        searchSelect:searchSelect,
+        Concatenation:Concatenation
+    }
+})()
 
 
 
