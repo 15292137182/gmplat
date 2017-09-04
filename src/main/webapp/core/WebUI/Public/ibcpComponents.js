@@ -98,7 +98,7 @@ Vue.component("single-selection", {
         },{
             jsonp: 'callback'
         }).then(function (res) {
-           var data=res.data.resp.content.data.result;
+           var data = res.data.resp.content.data.result;
             console.log(data);
         });
     },
@@ -277,8 +277,8 @@ Vue.component("base-tree", {
  * @author:liyuanquan
  */
 Vue.component("time-picker", {
-    // 时间控件绑定的值  是否时时间段  是否可用  是否只读  时间格式化
-    props: ["value", "isRange", "isDisabled", "readOnly", "formatter"],
+    // 时间控件绑定的值  是否时时间段  是否可用  是否只读  时间格式化  是否可输入
+    props: ["value", "isRange", "isDisabled", "readOnly", "formatter", "editAble"],
     data() {
         return {
             //
@@ -293,6 +293,31 @@ Vue.component("time-picker", {
             this.$emit("selected-time", date);
         }
     },
-    template: `<el-time-picker v-model="value" @change="currentVal" :format="formatter" :is-range="isRange" :disabled="isDisabled" :readonly="readOnly" placeholder="选择时间">
+    template: `<el-time-picker v-model="value" @change="currentVal" :format="formatter" :is-range="isRange" :disabled="isDisabled" :readonly="readOnly" placeholder="选择时间" :editable="editAble">
                 </el-time-picker>`
+});
+
+/**
+ * @description:日期时间选择器组件
+ * @author:liyuanquan
+ */
+Vue.component("date-time-picker", {
+    // 控件类型(必选)  控件绑定值(必选)  快捷键选择值  输出格式化  是否只读  是否可用  是否禁用  是否可输入
+    props: ["pickerType", "dateTimeVal", "pickerOptions", "formatter", "readOnly", "isDisabled", "editAble"],
+    data() {
+        return {
+            //
+        }
+    },
+    methods: {
+        // 选择器值发生改变时 返回当前值
+        datetimeVal(datetime) {
+            // 如果change事件返回值为undefined 强制转为空
+            datetime == undefined ? datetime = "" : datetime = datetime;
+            // 将子组件返回值传递给父组件
+            this.$emit("selected-datetime", datetime);
+        }
+    },
+    template: `<el-date-picker @change="datetimeVal" v-model="dateTimeVal" :type="pickerType" :format="formatter" placeholder="选择日期时间范围" :picker-options="pickerOptions" :readonly="readOnly" :disabled="isDisabled" :editable="editAble">
+                </el-date-picker>`
 });
