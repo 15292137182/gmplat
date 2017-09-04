@@ -32,7 +32,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
   private String deleteTime;  // 删除时间
   private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
 
-  private HashMap<String,Object> etc;
+  private HashMap<String, Object> etc;
 
   /**
    * 构建 - 创建信息
@@ -236,7 +236,7 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
     this.deleteFlag = deleteFlag;
   }
 
-  public HashMap<String, Object> getEtc() {
+  public Map<String, Object> getEtc() {
     return etc;
   }
 

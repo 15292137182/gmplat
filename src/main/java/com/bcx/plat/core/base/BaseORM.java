@@ -9,7 +9,8 @@ import com.bcx.plat.core.utils.SpringContextHolder;
  * <p>
  * Create By HCL at 2017/9/4
  */
-public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<T> {
+// TODO 后面需要把这个 BaseEntity 去掉，现在加只是为了去除错误
+public abstract class BaseORM<T extends BeanInterface> extends BaseEntity implements BeanInterface<T> {
 
   /**
    * @return MoreBatis
