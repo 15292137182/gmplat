@@ -164,7 +164,6 @@
             <list>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="row_id" p:alies="rowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_row_id" p:alies="funcRowId"/>
-              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="func_row_id" p:alies="funcRowId"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="relate_busi_pro" p:alies="relateBusiPro"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="attr_source" p:alies="attrSource"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="display_title" p:alies="displayTitle"/>
