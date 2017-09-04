@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * 业务对象业务层
  * Created by Wen Tiehu on 2017/8/7.
  */
+// TODO 此处泛型已被删除，改造完成恢复
 @Service
 public class BusinessObjectService extends BaseServiceTemplate {
 
