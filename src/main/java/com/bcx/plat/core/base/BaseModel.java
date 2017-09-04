@@ -9,23 +9,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 基础 entity 类，建议所有实体类均继承此类
  * <p>
  * Create By HCL at 2017/7/31
  */
-public class BaseEntityReady<T extends BaseEntityReady> extends BaseORM<T> implements BeanInterface<T> {
+public class BaseModel<T extends BaseModel> extends BaseORM<T> implements BeanInterface<T> {
 
   @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();
-
   @JsonIgnore
   private Map etc;
-
   private String rowId;
+
+  /**
+   * 构建删除信息
+   *
+   * @return 返回自身
+   */
+  @SuppressWarnings("unchecked")
+  public T buildCreateInfo() {
+    templateBean.buildCreateInfo();
+    setRowId(lengthUUID(32));
+    return (T) this;
+  }
 
   public String getRowId() {
     return this.rowId;

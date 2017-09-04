@@ -1,20 +1,17 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.BaseModel;
 import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.manager.SequenceManager;
 
-import java.io.Serializable;
-
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 /**
  * 业务对象实体类 Created by Went on 2017/8/1.
+ * <p>
+ * 基础业务对象
  */
-public class BusinessObject extends BaseEntity<BusinessObject> implements Serializable {
+public class BusinessObject extends BaseModel<BusinessObject> {
 
-  private String rowId; //唯一标识
   private String objectCode;  //对象代码
   private String objectName;  //对象名称
   private String relateTableRowId;  //关联表
@@ -30,13 +27,11 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
    */
   @Override
   public BusinessObject buildCreateInfo() {
+    super.buildCreateInfo();
     this.objectCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT, null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
-    setRowId(lengthUUID(32));
-    // getBaseTemplateBean().setVersion(BaseConstants.VERSION);
-    setVersion(BaseConstants.VERSION);
-    // getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
-    setStatus(BaseConstants.UNUSED);
+    getBaseTemplateBean().setVersion(BaseConstants.VERSION);
+    getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
     return this;
   }
 
@@ -71,14 +66,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> implements Serial
 
   public void setChangeOperat(String changeOperat) {
     this.changeOperat = changeOperat;
-  }
-
-  public String getRowId() {
-    return rowId;
-  }
-
-  public void setRowId(String rowId) {
-    this.rowId = rowId;
   }
 
   public String getObjectCode() {
