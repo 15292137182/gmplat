@@ -1,7 +1,7 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.base.BaseModel;
+import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.manager.SequenceManager;
 
@@ -10,7 +10,7 @@ import com.bcx.plat.core.manager.SequenceManager;
  * <p>
  * 基础业务对象
  */
-public class BusinessObject extends BaseModel<BusinessObject> {
+public class BusinessObject extends BaseEntity<BusinessObject> {
 
   private String objectCode;  //对象代码
   private String objectName;  //对象名称
@@ -20,6 +20,7 @@ public class BusinessObject extends BaseModel<BusinessObject> {
   private String belongSystem;  //所属系统
   private String relateTemplateObject;  //关联模板对象
 
+  private String rowId;
   /**
    * 构建 - 创建信息
    *
@@ -30,11 +31,20 @@ public class BusinessObject extends BaseModel<BusinessObject> {
     super.buildCreateInfo();
     this.objectCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT, null);
     setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
-    getBaseTemplateBean().setVersion(BaseConstants.VERSION);
-    getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
+    // getBaseTemplateBean().setVersion(BaseConstants.VERSION);
+    setVersion(BaseConstants.VERSION);
+    // getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
+    setStatus(BaseConstants.UNUSED);
     return this;
   }
 
+  public String getRowId() {
+    return rowId;
+  }
+
+  public void setRowId(String rowId) {
+    this.rowId = rowId;
+  }
 
   public String getRelateTemplateObject() {
     return relateTemplateObject;

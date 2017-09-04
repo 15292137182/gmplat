@@ -56,7 +56,6 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @return
    */
   @RequestMapping("/add")
-  @Override
   public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     BusinessRelateTemplate brt = new BusinessRelateTemplate();
     int insert = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
