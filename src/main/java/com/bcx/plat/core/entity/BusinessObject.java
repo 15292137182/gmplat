@@ -19,6 +19,12 @@ public class BusinessObject extends BaseEntity<BusinessObject> {
   private String belongModule;  //所属模块
   private String belongSystem;  //所属系统
   private String relateTemplateObject;  //关联模板对象
+<<<<<<< 7beca563d68fde98a510313e24a8332e9b5ffef0
+=======
+
+  private String rowId;
+
+>>>>>>> 3d20647332bd77c44efe748542ef1faba01320cd
   /**
    * 构建 - 创建信息
    *
