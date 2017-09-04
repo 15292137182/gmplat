@@ -99,7 +99,7 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
 
     /**
      * 根据前端功能块的代码查询出对应的数据
-     * @param funcCode
+     * @param funcCode ["obj102017-08-31000001"]
      * @param request
      * @param locale
      * @return

@@ -11,6 +11,7 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
+import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.utils.PlatResult;
@@ -39,11 +40,13 @@ public class FrontFuncProController extends
 
     private final TemplateObjectProService templateObjectProService;
     private final BusinessObjectProService businessObjectProService;
+    private final DBTableColumnService dbTableColumnService;
 
     @Autowired
-    public FrontFuncProController(BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService) {
+    public FrontFuncProController(BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService, DBTableColumnService dbTableColumnService) {
         this.businessObjectProService = businessObjectProService;
         this.templateObjectProService = templateObjectProService;
+        this.dbTableColumnService = dbTableColumnService;
     }
 
     /**
@@ -147,6 +150,17 @@ public class FrontFuncProController extends
                 //拿到模板对象属性给功能块属性赋值
                 for (Map<String, Object> pro : proRwoId) {
                     res.put("propertyName", pro.get("cname").toString());
+                    res.put("ename", pro.get("ename").toString());
+                }
+            } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE)) {
+                String relateBusiPro = res.get("relateBusiPro").toString();
+                List<Map<String, Object>> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, relateBusiPro));
+                for (Map<String, Object> relate : relateTableColumn) {
+                    String relateTableRowId = relate.get("relateTableColumn").toString();
+                    List<Map<String, Object>> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+                    for (Map<String, Object> row : rowId) {
+                        res.put("ename", row.get("ename").toString());
+                    }
                 }
             }
         }
