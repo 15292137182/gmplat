@@ -67,8 +67,8 @@ public class DefaultRelam extends AuthorizingRealm {
             } else {
               user.setLastLoginDate(getDateTimeNow());
               // 更新时间日期
-//              userService.update(user.toMap(),
-//                      new FieldCondition("rowId", Operator.EQUAL, user.getRowId()));
+              userService.update(user.toMap(),
+                      new FieldCondition("rowId", Operator.EQUAL, user.getRowId()));
               // 将用户信息放入 session
               SecurityUtils.getSubject().getSession().setAttribute("user", user);
               return new SimpleAuthenticationInfo(userId, password, getName());
