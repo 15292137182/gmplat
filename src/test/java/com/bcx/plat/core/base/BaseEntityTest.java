@@ -24,9 +24,9 @@ public class BaseEntityTest extends BaseTest {
             .buildModifyInfo();
     @SuppressWarnings("unchecked")
     Map<String, Object> map = entity.toMap();
-    DBTableColumn entity1 = new DBTableColumn().fromMap(map, false);
+    DBTableColumn entity1 = new DBTableColumn().fromMap(map);
     // assert (entity1.getBaseTemplateBean().getCreateTime().equals(entity.getBaseTemplateBean().getCreateTime()));
-    assert (entity1.getCreateTime().equals(entity.getCreateTime()));
+    assert (entity1.getBaseTemplateBean().getCreateTime().equals(entity.getBaseTemplateBean().getCreateTime()));
 
     Map<String, Object> map2 = new HashMap<>();
     map2.put("etc", "{\"id\":\"00001\"}");

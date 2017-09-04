@@ -18,11 +18,26 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     return (MoreBatis) SpringContextHolder.getBean("moreBatis");
   }
 
+
   /**
    * Mr 汪，我需要你实现这些方法 -.-
    */
+  // TODO int insert Mr汪，实现下列方法
+  public int insert() {
+    return 0;
+  }
 
-  // TODO int insert Mr汪，实现这个方法
+  public T selectById() {
+    return null;
+  }
+
+  public int updateById() {
+    return 0;
+  }
+
+  public int deleteById() {
+    return 0;
+  }
 
   // TODO int deleteById() 删除当前这条数据
   // TODO int deleteByCondition(condition) 根据条件删除

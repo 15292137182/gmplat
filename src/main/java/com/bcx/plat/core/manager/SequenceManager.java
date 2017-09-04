@@ -555,7 +555,7 @@ public class SequenceManager {
         } else {
           sg.fromMap(list.get(0));
           sg.setCurrentValue(keys.get(variableKey).toString());
-          sg.buildModifyInfo();
+          sg.getBaseTemplateBean().buildModifyInfo();
           moreBatis.updateEntity(sg);
         }
       }

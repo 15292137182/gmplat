@@ -1,15 +1,14 @@
 package com.bcx.plat.core.base;
 
+import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.base.template.BaseTemplateBean;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.utils.SpringContextHolder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
@@ -17,63 +16,57 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  * <p>
  * Create By HCL at 2017/7/31
  */
-public class BaseEntity<T extends BaseEntity> implements Serializable {
+public class BaseEntity<T extends BeanInterface> extends BaseORM<T> implements BeanInterface<T> {
 
-  private String status;  // 状态
-  private String version; // 版本
-  private String createUser;  // 创建人
-  private String createUserName;  // 创建名称
-  private String createTime;  // 创建时间
-  private String modifyUser;  // 修改人
-  private String modifyUserName;  // 修改名称
-  private String modifyTime;  // 修改时间
-  private String deleteUser;  // 删除人
-  private String deleteUserName;  // 删除名称
-  private String deleteTime;  // 删除时间
-  private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
-
-  private HashMap<String, Object> etc;
+  @JsonIgnore
+  private BaseTemplateBean templateBean = new BaseTemplateBean();
+  @JsonIgnore
+  private Map etc;
+  private String rowId;
 
   /**
-   * 构建 - 创建信息
+   * 构建删除信息
    *
    * @return 返回自身
    */
   @SuppressWarnings("unchecked")
   public T buildCreateInfo() {
-    String data = getDateTimeNow();
-    setCreateTime(data);
-    setCreateUser("admin");
-    setCreateUserName("系统管理员");
-    setModifyTime(data);
+    templateBean.buildCreateInfo();
+    setRowId(lengthUUID(32));
     return (T) this;
   }
 
-  /**
-   * 构建 - 修改信息
-   *
-   * @return 返回自身
-   */
-  @SuppressWarnings("unchecked")
   public T buildModifyInfo() {
-    setModifyTime(getDateTimeNow());
-    setModifyUser("admin");
-    setModifyUserName("系统管理员");
+    templateBean.buildModifyInfo();
     return (T) this;
   }
 
-  /**
-   * 构建 - 删除信息
-   *
-   * @return 自身
-   */
-  @SuppressWarnings("unchecked")
   public T buildDeleteInfo() {
-    setDeleteTime(getDateTimeNow());
-    setDeleteUser("admin");
-    setDeleteUserName("系统管理员");
-    setDeleteFlag(DELETE_FLAG);
+    templateBean.buildDeleteInfo();
     return (T) this;
+  }
+
+  public String getRowId() {
+    return this.rowId;
+  }
+
+  public void setRowId(String rowId) {
+    this.rowId = rowId;
+  }
+
+  public BaseTemplateBean getBaseTemplateBean() {
+    return templateBean;
+  }
+
+  public void setBaseTemplateBean(BaseTemplateBean templateBean) {
+    this.templateBean = templateBean;
+  }
+
+  /**
+   * @return 返回加入的模版
+   */
+  public List<BeanInterface> getJoinTemplates() {
+    return Collections.singletonList(getBaseTemplateBean());
   }
 
   /**
@@ -82,9 +75,23 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    * @return map
    */
   @SuppressWarnings("unchecked")
+  @Override
   public Map<String, Object> toMap() {
-    return jsonToObj(objToJson(this), HashMap.class);
+    Map map = jsonToObj(objToJson(this), HashMap.class);
+    assert map != null;
+    if (this.etc != null) {
+      map.putAll(etc);
+    }
+    if (getJoinTemplates() != null) {
+      for (BeanInterface bean : getJoinTemplates()) {
+        if (null != bean) {
+          map.putAll(bean.toMap());
+        }
+      }
+    }
+    return map;
   }
+
 
   /**
    * 尝试从 map 中读取 entity 类
@@ -94,179 +101,83 @@ public class BaseEntity<T extends BaseEntity> implements Serializable {
    * @param map map数据
    * @return 返回实体类
    */
+  @Override
   @SuppressWarnings("unchecked")
-  public T fromMap(Map<String, Object> map) {
-    return fromMap(map, false);
-  }
-
-
-  /**
-   * 尝试从 map 中读取 entity 类
-   * <p>
-   * 为了满足需求，我决定造一个轮子
-   *
-   * @param map         map数据
-   * @param isUnderline 传入map的key是否为下划线命名
-   * @return 返回实体类
-   */
-  @SuppressWarnings("unchecked")
-  public T fromMap(Map<String, Object> map, boolean isUnderline) {
+  public T fromMap(Map map) {
     Class current = getClass();
-    do {
+    while (current != Object.class) {
       Method[] methods = current.getDeclaredMethods();
-      Object temp;
       for (Method method : methods) {
-        if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
-          String fieldName = underlineToCamel(
-                  method.getName().substring(3, method.getName().length()), false);
-          temp = isUnderline ? map.get(underlineToCamel(fieldName, false)) : map.get(fieldName);
-          if (null != temp && !temp.getClass().equals(method.getParameterTypes()[0])) {
-            if (temp instanceof String) {
-              temp = jsonToObj((String) temp, method.getParameterTypes()[0]);
-            } else {
-              temp = jsonToObj(objToJson(temp), method.getParameterTypes()[0]);
-            }
-          }
+        if (method.getName().startsWith("set")
+                && method.getAnnotationsByType(JsonIgnore.class).length == 0
+                && method.getParameterCount() == 1) {
+          String _fieldName = method.getName().substring(3, method.getName().length());
+          String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
+          Object value = map.get(fieldName);
           try {
-            method.invoke(this, temp);
-          } catch (IllegalAccessException | InvocationTargetException e) {
+            if (Arrays.asList(method.getParameterTypes()[0].getInterfaces()).contains(BeanInterface.class)) {
+              Class clazz = method.getParameterTypes()[0];
+              BeanInterface bean = (BeanInterface) clazz.newInstance();
+              value = bean.fromMap(map);
+            } else if (fieldName.equalsIgnoreCase("etc")) {
+              Set<String> keys = toMap().keySet();
+              Map etc = new HashMap();
+              // 将数据读入 javaBean
+              if (null != getJoinTemplates()) {
+                for (BeanInterface bean : getJoinTemplates()) {
+                  if (null != bean) {
+                    bean.fromMap(map);
+                  }
+                }
+              }
+              map.forEach((k, v) -> {
+                if ("etc".equalsIgnoreCase(k.toString())) {
+                  // 处理扩属属性字段
+                  Map temp;
+                  if (v instanceof String) {
+                    temp = jsonToObj((String) v, Map.class);
+                  } else if (v instanceof Map) {
+                    temp = (Map) v;
+                  } else {
+                    temp = jsonToObj(objToJson(v), Map.class);
+                  }
+                  if (temp != null) {
+                    etc.putAll(temp);
+                  }
+                } else if (!keys.contains(k)) {
+                  etc.put(k, v);
+                }
+              });
+              value = etc;
+            } else if (value != null) {
+              if (method.getParameterTypes()[0] != value.getClass()) {
+                if (value instanceof String) {
+                  value = jsonToObj((String) value, value.getClass());
+                } else {
+                  value = jsonToObj(objToJson(value), method.getParameterTypes()[0]);
+                }
+              }
+            }
+            if (value != null) method.invoke(this, value);
+          } catch (Exception e) {
             e.printStackTrace();
           }
         }
       }
       current = current.getSuperclass();
-    } while (current != Object.class);
-
+    }
     return (T) this;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public String getVersion() {
-    return version;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
-  }
-
-  public String getCreateUser() {
-    return createUser;
-  }
-
-  public void setCreateUser(String createUser) {
-    this.createUser = createUser;
-  }
-
-  public String getCreateUserName() {
-    return createUserName;
-  }
-
-  public void setCreateUserName(String createUserName) {
-    this.createUserName = createUserName;
-  }
-
-  public String getCreateTime() {
-    return createTime;
-  }
-
-  public void setCreateTime(String createTime) {
-    this.createTime = createTime;
-  }
-
-  public String getModifyUser() {
-    return modifyUser;
-  }
-
-  public void setModifyUser(String modifyUser) {
-    this.modifyUser = modifyUser;
-  }
-
-  public String getModifyUserName() {
-    return modifyUserName;
-  }
-
-  public void setModifyUserName(String modifyUserName) {
-    this.modifyUserName = modifyUserName;
-  }
-
-  public String getModifyTime() {
-    return modifyTime;
-  }
-
-  public void setModifyTime(String modifyTime) {
-    this.modifyTime = modifyTime;
-  }
-
-  public String getDeleteUser() {
-    return deleteUser;
-  }
-
-  public void setDeleteUser(String deleteUser) {
-    this.deleteUser = deleteUser;
-  }
-
-  public String getDeleteUserName() {
-    return deleteUserName;
-  }
-
-  public void setDeleteUserName(String deleteUserName) {
-    this.deleteUserName = deleteUserName;
-  }
-
-  public String getDeleteTime() {
-    return deleteTime;
-  }
-
-  public void setDeleteTime(String deleteTime) {
-    this.deleteTime = deleteTime;
-  }
-
-  public String getDeleteFlag() {
-    return deleteFlag;
-  }
-
-  public void setDeleteFlag(String deleteFlag) {
-    this.deleteFlag = deleteFlag;
-  }
-
-  public Map<String, Object> getEtc() {
-    return etc;
-  }
-
-  public void setEtc(HashMap<String, Object> etc) {
-    this.etc = etc;
   }
 
   private MoreBatis getMoreBatis() {
     return (MoreBatis) SpringContextHolder.getBean("moreBatis");
   }
 
-  public T insert() {
-    getMoreBatis().insertEntity((T) this);
-    return (T) this;
+  public Map getEtc() {
+    return etc;
   }
 
-  public T delete() {
-    getMoreBatis().deleteEntity((T) this);
-    return (T) this;
+  public void setEtc(Map etc) {
+    this.etc = etc;
   }
-
-  public T update() {
-    getMoreBatis().updateEntity((T) this);
-    return (T) this;
-  }
-
-
-  public T selectByPks() {
-    return (T) getMoreBatis().selectEntityByPks((T) this);
-  }
-
-
 }

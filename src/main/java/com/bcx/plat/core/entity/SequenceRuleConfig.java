@@ -1,11 +1,11 @@
 package com.bcx.plat.core.entity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.morebatis.annotations.TablePK;
+
+import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 序列号规则配置 pojo 类
@@ -26,7 +26,7 @@ public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
 
   @Override
   public SequenceRuleConfig buildCreateInfo() {
-    setVersion("1.0");
+    getBaseTemplateBean().setVersion("1.0");
     setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }

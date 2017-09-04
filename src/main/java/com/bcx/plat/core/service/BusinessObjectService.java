@@ -230,7 +230,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             //++当前版本号
             String str = ++dou + "";
             // TODO 设置版本号
-            businessObject.setVersion(str);
+            businessObject.getBaseTemplateBean().setVersion(str);
             String objectCode = (String) mapList.get(0).get("objectCode");
             businessObject.setObjectCode(objectCode);
             insert(businessObject.toMap());
