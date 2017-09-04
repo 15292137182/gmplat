@@ -12,6 +12,7 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
+import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -36,11 +37,13 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class FrontFuncProController extends
         BaseControllerTemplate<FrontFuncProService, FrontFuncPro> {
 
+    private final TemplateObjectProService templateObjectProService;
     private final BusinessObjectProService businessObjectProService;
 
     @Autowired
-    public FrontFuncProController(BusinessObjectProService businessObjectProService) {
+    public FrontFuncProController(BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService) {
         this.businessObjectProService = businessObjectProService;
+        this.templateObjectProService = templateObjectProService;
     }
 
     /**
@@ -108,7 +111,7 @@ public class FrontFuncProController extends
             result = queryResultProcess(result);
             return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
         }
-        return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
+        return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
 
 
@@ -127,11 +130,25 @@ public class FrontFuncProController extends
                         , Arrays.asList(new Field("row_id", "rowId")
                                 , new Field("property_name", "propertyName")), null);
         HashMap<String, Object> map = new HashMap<>();
+        //遍历获取业务对象基本属性
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("propertyName"));
         }
+        //拿到业务对象基本属性给功能块赋值
         for (Map<String, Object> row : result) {
             row.put("propertyName", map.get(row.get("relateBusiPro")));
+        }
+        //遍历模板对象
+        for (Map<String, Object> res : result) {
+            String attrSource = res.get("attrSource").toString();
+            if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_MODULE)) {
+                String relateBusiPro = res.get("relateBusiPro").toString();
+                List<Map<String, Object>> proRwoId = templateObjectProService.select(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
+                //拿到模板对象属性给功能块属性赋值
+                for (Map<String, Object> pro : proRwoId) {
+                    res.put("propertyName", pro.get("cname").toString());
+                }
+            }
         }
         return result;
     }

@@ -96,7 +96,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object singleInputSelect(String search, @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        pageNum = search == null && search.equals("")?pageNum=1:pageNum;
+        pageNum = search == null && search.equals("")?1:pageNum;
         PageResult<Map<String, Object>> result = entityService
                 .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)),  orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
