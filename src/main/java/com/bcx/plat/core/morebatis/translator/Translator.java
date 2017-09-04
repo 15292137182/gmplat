@@ -1,23 +1,29 @@
 package com.bcx.plat.core.morebatis.translator;
 
+import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
+import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.*;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.*;
+import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.UtilsTool;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Translator {
     public static final SqlSegment SELECT=new SqlSegment("SELECT");
     public static final SqlSegment DELETE=new SqlSegment("DELETE");
+    public static final SqlSegment INSERT_INTO=new SqlSegment("INSERT INTO");
+    public static final SqlSegment UPDATE=new SqlSegment("UPDATE");
+    public static final SqlSegment SET=new SqlSegment("SET");
     public static final SqlSegment AS=new SqlSegment("AS");
     public static final SqlSegment FROM=new SqlSegment("FROM");
     public static final SqlSegment ON=new SqlSegment("ON");
@@ -28,15 +34,30 @@ public class Translator {
     public static final SqlSegment NATURAL=new SqlSegment("NATURAL");
     public static final SqlSegment FULL=new SqlSegment("FULL");
     public static final SqlSegment WHERE=new SqlSegment("WHERE");
+    public static final SqlSegment GROUP_BY=new SqlSegment("GROUP BY");
     public static final SqlSegment AND=new SqlSegment("AND");
     public static final SqlSegment OR=new SqlSegment("OR");
     public static final SqlSegment FALSE=new SqlSegment("FALSE");
     public static final SqlSegment TRUE=new SqlSegment("TRUE");
     public static final SqlSegment DOT=new SqlSegment(".");
     public static final SqlSegment COMMA=new SqlSegment(",");
+    public static final SqlSegment VALUES=new SqlSegment("VALUES");
+    public static final SqlSegment BRACKET_START=new SqlSegment("(");
+    public static final SqlSegment BRACKET_END=new SqlSegment(")");
     public static final SqlSegment ASC=new SqlSegment("ASC");
     public static final SqlSegment DESC=new SqlSegment("DESC");
     public static final SqlSegment ORDER_BY=new SqlSegment("ORDER BY");
+    public static final SqlSegment EQUAL=new SqlSegment("=");
+    public static final SqlSegment NOT_EQUAL=new SqlSegment("!=");
+
+    private MoreBatis moreBatis;
+
+    private MoreBatis getMoreBatis(){
+        if (moreBatis==null) {
+            moreBatis=SpringContextHolder.getBean("moreBatis");
+        }
+        return moreBatis;
+    }
 
     public LinkedList translateQueryAction(QueryAction queryAction,LinkedList linkedList){
         appendSql(SELECT, linkedList);
@@ -50,6 +71,18 @@ public class Translator {
             }
             translateCondition(where,linkedList);
         }
+
+        List<FieldSource> group = queryAction.getGroup();
+        if (group!=null&&group.size()>0) {
+            appendSql(GROUP_BY,linkedList);
+            Iterator<FieldSource> groups = group.iterator();
+            while(groups.hasNext()){
+                FieldSource fieldSource=groups.next();
+                translateFieldSource(fieldSource,linkedList);
+                if (groups.hasNext()) appendSql(COMMA,linkedList);
+            }
+        }
+
         final List<Order> orders = queryAction.getOrder();
         if (orders!=null&&!orders.isEmpty()) {
             linkedList.add(ORDER_BY);
@@ -82,6 +115,57 @@ public class Translator {
         return linkedList;
     }
 
+    public LinkedList translateUpdateAction(UpdateAction updateAction,LinkedList linkedList){
+        appendSql(UPDATE,linkedList);
+        translateTable((Table) updateAction.getTableSource(),linkedList);
+        appendSql(SET,linkedList);
+        Class<? extends BaseEntity> entityClass = updateAction.getEntityClass();
+        Iterator<Map.Entry<String, Object>> entryIterator = updateAction.getValues().entrySet().iterator();
+        while (entryIterator.hasNext()){
+            final Map.Entry<String, Object> entry = entryIterator.next();
+            Field field = getMoreBatis().getColumnByAliesWithoutCheck(entityClass, entry.getKey());
+            if (field==null) continue;
+            translateFieldOnlyName(field,linkedList);
+            appendSql(EQUAL,linkedList);
+            appendArgs(entry.getValue(),linkedList);
+            if (entryIterator.hasNext()) appendSql(COMMA,linkedList);
+        }
+        appendSql(WHERE,linkedList);
+        translateCondition(updateAction.getWhere(),linkedList);
+        return linkedList;
+    }
+
+    public LinkedList translateInsertAction(InsertAction insertAction,LinkedList linkedList){
+        appendSql(INSERT_INTO,linkedList);
+        translateTable((Table) insertAction.getTableSource(),linkedList);
+        Collection<Field> columns = getMoreBatis().getColumns(insertAction.getEntityClass());
+        Iterator<Field> iterator = columns.iterator();
+        appendSql(BRACKET_START,linkedList);
+        while (iterator.hasNext()) {
+            final Field field=iterator.next();
+            translateFieldOnlyName(field,linkedList);
+            if (iterator.hasNext()) appendSql(COMMA,linkedList);
+        }
+        appendSql(BRACKET_END,linkedList);
+        appendSql(VALUES,linkedList);
+        Iterator<Map<String, Object>> rowIterator = insertAction.getRows().iterator();
+        while (rowIterator.hasNext()) {
+            Map<String, Object> row = rowIterator.next();
+            appendSql(BRACKET_START,linkedList);
+            iterator = columns.iterator();
+            while (iterator.hasNext()) {
+                final Field field=iterator.next();
+                appendArgs(row.get(field.getAlies()),linkedList);
+                if (iterator.hasNext()) appendSql(COMMA,linkedList);
+            }
+
+            appendSql(BRACKET_END,linkedList);
+            if (rowIterator.hasNext()) appendSql(COMMA,linkedList);
+        }
+
+        return linkedList;
+    }
+
     public LinkedList translateOrder(Order order, LinkedList linkedList){
         final String alies = order.getAliasedColumn().getAlies();
         if (alies==null) {
@@ -102,6 +186,9 @@ public class Translator {
     public LinkedList translateAliasedColumn(AliasedColumn aliasedColumn,LinkedList linkedList){
         translateFieldSource(aliasedColumn,linkedList);
         final String alies = aliasedColumn.getAlies();
+        if (aliasedColumn instanceof Field) {
+            String castType = ((Field) aliasedColumn).getCastType();
+        }
         if (alies !=null) {
             appendSql(AS, linkedList);
             appendSql(quoteStr(alies), linkedList);
@@ -113,6 +200,11 @@ public class Translator {
         if (fieldSource instanceof Field) {
             translateFieldSource((Field) fieldSource, linkedList);
         }
+        return linkedList;
+    }
+
+    public LinkedList translateFieldOnlyName(Field field,LinkedList linkedList){
+        linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
         return linkedList;
     }
 
@@ -305,7 +397,10 @@ public class Translator {
     private LinkedList appendArgs(Object args, LinkedList list){
         if (args instanceof FieldSource){
             translateFieldSource((FieldSource) args,list);
-        }else {
+        }else if (args instanceof Map){
+            list.add(UtilsTool.objToJson(args));
+            appendSql("::jsonb",list);
+        }else{
             list.add(args);
         }
         return list;

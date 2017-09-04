@@ -432,6 +432,7 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user" p:alies="deleteUser"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="etc" p:alies="etc"/>
             </list>
           </constructor-arg>
           <constructor-arg name="pks">

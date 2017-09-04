@@ -22,11 +22,11 @@ var proEm = new Vue({
                     dataId:'',
                     flag:true,
                 },
-                optionValue:[],
-                optionLeft: [],
-                optionRight: [],
                 checked: '',
                 checked1: '',
+                value_1:'',
+                value_2:'',
+                value_3:'',
             }
         },
         methods: {
@@ -95,6 +95,15 @@ var proEm = new Vue({
                         return false;
                     }
                 })
+
+            },
+            getChildData_1(){
+
+            },
+            getChildData_2(){
+
+            },
+            getChildData_3(){
 
             },
             cancel() {

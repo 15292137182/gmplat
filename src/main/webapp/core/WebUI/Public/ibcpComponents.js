@@ -69,19 +69,38 @@ Vue.component("single-selection", {
                 label: '潮汕牛肉火锅'
             }],
             selectValue: {
-                values: []
+                values: [],
+                label: ""
             }
         };
     },
     methods: {
-        changeSelect() {
+        changeSelect(val) {
+            var _obj = {};
+            // 如果下拉框触发改变时 返回值不为空 则将option下与返回值相同的数据项传递给父组件
+            if(val != "") {
+                _obj = this.options.find(function(item) {
+                    return item.value === val;
+                });
+            }
             // 子组件向父组件传递的方法和参数
-            this.$emit("change-data", this.selectValue.values);
+            this.$emit("change-data", _obj);
         }
     },
     mounted() {
+        // 接收父组件传递的初始默认值 并将其赋值给子组件
         this.selectValue.values = this.initialValue;
-        // console.log(this.selectValue);
+    },
+    updated: function () {
+        //ex:查询关联表
+        this.$http.jsonp(serverPath + "/maintTable/query",{
+            search:''
+        },{
+            jsonp: 'callback'
+        }).then(function (res) {
+           var data=res.data.resp.content.data.result;
+            console.log(data);
+        });
     },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
@@ -103,7 +122,7 @@ Vue.component("multiple-selection", {
     data() {
         return {
             // 为了将子组件和外部解耦 最好将受影响的数据写在子组件内部 这样子组件就形成一个相对封闭的区间
-            cities: [{
+            options: [{
                 value: 'Beijing',
                 label: '北京'
             }, {
@@ -132,10 +151,9 @@ Vue.component("multiple-selection", {
     },
     methods: {
         changeSelect() {
-            var _DOM = this.selectValue.el.children[1].lastElementChild;
+            // var _DOM = this.selectValue.el.children[1].lastElementChild;
             // 子组件向父组件传递的方法和参数
             this.$emit("change-datas", this.selectValue.values);
-            this.$emit("change-datas", _DOM);
         }
     },
     mounted() {
@@ -143,7 +161,7 @@ Vue.component("multiple-selection", {
     },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" multiple placeholder="请选择">
 					<el-option
-						v-for="item in cities"
+						v-for="item in options"
 						:key="item.value"
 						:label="item.label"
 						:value="item.value">
@@ -165,10 +183,7 @@ Vue.component("base-tree", {
     },
     data() {
         return {
-            filterBool: false,
             filterText: "",
-            defaultExpand: [],
-            defalutCheck: [],
             datas: [{
                 id: 1,
                 label: '一级 1',
@@ -234,16 +249,16 @@ Vue.component("base-tree", {
         }
     },
     mounted() {
-        this.filterBool = this.isFilter;
-        this.defaultExpand = this.defaultExpandedKeys;
-        this.defalutCheck = this.defaultCheckedKeys;
+        //
     },
     methods: {
-        getCheckedNodes() {
-            this.$emit("get-checked-node", this.$refs.tree.getCheckedNodes())
+        // 点击节点 返回该节点对应的对象 对应的节点 节点本身
+        clickNode(obj, node, row) {
+            this.$emit("click-node", obj);
         },
-        getCheckedKeys() {
-            this.$emit("get-checked-key", this.$refs.tree.getCheckedKeys())
+        // 选择复选框 返回节点对应的对象 是否被选中 是否含有子节点
+        checkNode(obj, checked, node) {
+            this.$emit("checked-node", obj);
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -251,8 +266,33 @@ Vue.component("base-tree", {
         }
     },
     template: `<div>
-                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="this.filterBool" style="margin-bottom: 8px;"></el-input>
-                    <el-tree :data="datas" show-checkbox @node-click="getCheckedNodes" @check-change="getCheckedKeys" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defalutCheck" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
+                    <el-tree :data="datas" show-checkbox @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
+});
+
+/**
+ * @description:时间选择器组件
+ * @author:liyuanquan
+ */
+Vue.component("time-picker", {
+    // 时间控件绑定的值  是否时时间段  是否可用  是否只读  时间格式化
+    props: ["value", "isRange", "isDisabled", "readOnly", "formatter"],
+    data() {
+        return {
+            //
+        }
+    },
+    methods: {
+        // 选择器值发生改变时 返回当前值
+        currentVal(date) {
+            // 如果change事件返回值为undefined 强制转为空
+            date == undefined ? date = "" : date = date;
+            // 将子组件返回值传递给父组件
+            this.$emit("selected-time", date);
+        }
+    },
+    template: `<el-time-picker v-model="value" @change="currentVal" :format="formatter" :is-range="isRange" :disabled="isDisabled" :readonly="readOnly" placeholder="选择时间">
+                </el-time-picker>`
 });

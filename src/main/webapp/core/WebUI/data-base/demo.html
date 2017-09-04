@@ -7,6 +7,7 @@
     <script>
         var DynamicStitching = (function(){
             var dataHtmlObj = null;//用来保存vue实例对象
+            //查询块
             var searchBlock = function(obj){//动态拼接查询块html代码片段
                 var str='';
                 var width = obj.widthSetting;
@@ -16,15 +17,44 @@
                 str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
                 return str;
             }
+
+            //表单块
+            var formBlock = function(obj){
+                if(obj.widthSetting){
+                    var width = obj.widthSetting;
+                }else{
+                    var width = 24;
+                }
+                var laberName = obj.displayTitle;
+                //单行文本框
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
+                //多行文本框
+
+                //单选框
+
+                //复选框
+
+                //日期框
+
+                //下拉框
+                return str;
+            }
             var Concatenation = function(arr){//判断是什么功能块，并获取html片段
+                var htmlObj = {};
                 var str = '';
                 for(var i=0;i<arr.length;i++){
                         var obj = arr[i];
                         if(obj.funcType =='search'){
-                            str = searchBlock(obj);
+                            htmlObj.search = searchBlock(obj);
+                        }
+                        if(obj.funcType =='form'){
+                            str +=formBlock(obj);
+                            if(i == arr.length-1){//判断是否全部拼接完
+                                htmlObj.form ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
+                            }
                         }
                 }
-                return str;
+                return htmlObj;
             }
 
             var htmlComponent = function(code,callback){//得到后端接口数据
@@ -40,7 +70,12 @@
                     data:{funcCode:arr},
                     dataType:"jsonp",
                     success:function(res){
-                        callback(res.resp.content.data.result);
+                        var data = res.resp.content.data.result;
+                        var arr = [];
+                        for(var i=0;i<data.length;i++){
+                            arr.push(data[i]);
+                        }
+                        callback(arr);
                     }
                 })
             }
@@ -54,7 +89,14 @@
                             var obj = dataHtmlObj;
                             console.log(obj.ruleForm1.select);
                             console.log(obj.ruleForm1.input5);
+                            console.log(obj.formTable.msg);
                         }
+                    },
+                    inputDemo:{
+                        message: []
+                    },
+                    formTable:{
+                        msg:''
                     }
                 }
             }
@@ -79,31 +121,31 @@
             </el-col>
         </el-col>
     </el-row>
-    <el-row>
+    <el-row style="margin-bottom: 20px">
         <el-col :xs="8" :sm="8" :md="8">
             <div class="inputStyle">
-                <components :is="dynComponent" :search-input="ruleForm1" funCode="obj10"></components>
+                <components :is="dynComponent" :search-input="ruleForm1"></components>
             </div>
         </el-col>
     </el-row>
     <el-row>
-        <el-col :span="8">
-            <components :is="inputwithbtn" :message="input"></components>
+        <el-col :span="9">
+            <components :is="inputwithbtn" :child-form-table="formTable"></components>
         </el-col>
     </el-row>
 </el-col>
 </body>
 <script>
-    var code = ["obj102017-08-31000001"];
+    var code = ["obj102017-08-31000001","obj102017-09-01000002"];
     DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
-        var strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段
+        var strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
         var de = new Vue(
             {
                 el: "#app",
                 data:DynamicStitching.searchSelect(),//获取父组件数据
                 computed:{//组件定义
                     dynComponent() {//绑定组件方法
-                        var template = strHtml;//组件元素赋值html代码片段
+                        var template = strHtml.search;//组件元素赋值html代码片段
                         var props = ["searchInput"];//子组件参数名
                         return {
                             template,
@@ -111,8 +153,8 @@
                         }
                     },
                     inputwithbtn(){//form输入框组件
-                        var template='';
-                        var props = ["message"];//子组件参数名
+                        var template= strHtml.form;
+                        var props = ["childFormTable"];//子组件参数名
                         return {
                             template,
                             props
