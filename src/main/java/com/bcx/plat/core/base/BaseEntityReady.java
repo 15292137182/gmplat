@@ -6,6 +6,9 @@ import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.utils.UtilsTool.*;
@@ -42,6 +45,14 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
   }
 
   /**
+   * @return 返回加入的模版
+   */
+  @Override
+  public List<BeanInterface> getJoinTemplates() {
+    return Collections.singletonList(getBaseTemplateBean());
+  }
+
+  /**
    * 将 entity 实体类转换为 map
    *
    * @return map
@@ -49,14 +60,17 @@ public class BaseEntityReady<T extends BaseEntityReady> implements BeanInterface
   @SuppressWarnings("unchecked")
   @Override
   public Map<String, Object> toMap() {
-    // 压入通用属性
-    Map<String, Object> map = this.templateBean.toMap();
-    if (null != etc) {
+    Map map = jsonToObj(objToJson(this), HashMap.class);
+    assert map != null;
+    if (this.etc != null) {
       map.putAll(etc);
     }
-    Map temp = jsonToObj(objToJson(this), Map.class);
-    if (null != temp) {
-      map.putAll(temp);
+    if (getJoinTemplates() != null) {
+      for (BeanInterface bean : getJoinTemplates()) {
+        if (null != bean) {
+          map.putAll(bean.toMap());
+        }
+      }
     }
     return map;
   }

@@ -5,6 +5,8 @@ import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.manager.SpApplicationManager;
 
+import java.util.List;
+
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
 
@@ -28,6 +30,13 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
   private String deleteTime;  // 删除时间
   private String deleteFlag = BaseConstants.NOT_DELETE_FLAG;  // 删除标记
 
+  /**
+   * @return 返回加入的模版
+   */
+  @Override
+  public List<BeanInterface> getJoinTemplates() {
+    return null;
+  }
 
   /**
    * 创建 - 创建信息

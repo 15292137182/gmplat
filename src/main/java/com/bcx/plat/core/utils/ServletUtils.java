@@ -29,7 +29,7 @@ public class ServletUtils {
       return false;
     } else {
       uri = uri.replaceFirst(PLAT_SYS_PREFIX, "");
-      String _uris = Global.getStringValue("web.platModulePrefix");
+      String _uris = Global.getStringValue("web.platURIPrefix");
       if (null != _uris) {
         String[] uris = _uris.split(",");
         for (String _uri : uris) {

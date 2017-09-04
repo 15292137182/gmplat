@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 import static com.bcx.plat.core.utils.UtilsTool.objToJson;
@@ -18,6 +15,8 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
  * Create By HCL at 2017/8/30
  */
 public interface BeanInterface<T extends BeanInterface> extends Serializable {
+
+  List<BeanInterface> getJoinTemplates();
 
   /**
    * 更多序列话配置
@@ -59,6 +58,14 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
             } else if (fieldName.equalsIgnoreCase("etc")) {
               Set<String> keys = toMap().keySet();
               Map etc = new HashMap();
+              // 将数据读入 javaBean
+              if (null != getJoinTemplates()) {
+                for (BeanInterface bean : getJoinTemplates()) {
+                  if (null != bean) {
+                    bean.fromMap(map);
+                  }
+                }
+              }
               map.forEach((k, v) -> {
                 if ("etc".equalsIgnoreCase(k.toString())) {
                   // 处理扩属属性字段
