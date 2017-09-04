@@ -1,7 +1,6 @@
 package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.base.support.BeanInterface;
-import com.bcx.plat.core.base.template.BaseORM;
 import com.bcx.plat.core.base.template.BaseTemplateBean;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.utils.SpringContextHolder;
@@ -81,12 +80,12 @@ public class BaseEntityReady<T extends BaseEntityReady> extends BaseORM<T> imple
    * <p>
    * 为了满足需求，我决定造一个轮子
    *
-   * @param map         map数据
-   * @param isUnderline 传入map的key是否为下划线命名
+   * @param map map数据
    * @return 返回实体类
    */
+  @Override
   @SuppressWarnings("unchecked")
-  public T fromMap(Map<String, Object> map, boolean isUnderline) {
+  public T fromMap(Map map) {
     Class current = getClass();
     while (current != Object.class) {
       Method[] methods = current.getDeclaredMethods();

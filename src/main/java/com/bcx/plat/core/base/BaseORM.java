@@ -1,4 +1,4 @@
-package com.bcx.plat.core.base.template;
+package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
