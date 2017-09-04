@@ -23,6 +23,8 @@ public class Field implements AliasedColumn {
    */
   private String alies;
 
+  private String castType;
+
   public Field(){}
 
   public Field(String fieldName) {
@@ -35,6 +37,12 @@ public class Field implements AliasedColumn {
     this.alies = alies;
   }
 
+  public Field(String fieldName, String alies,String castType) {
+    this.fieldName = fieldName;
+    this.alies = alies;
+    this.castType=castType;
+  }
+
 
   public String getFieldName() {
     return fieldName;
@@ -42,6 +50,14 @@ public class Field implements AliasedColumn {
 
   public void setFieldName(String fieldName) {
     this.fieldName = fieldName;
+  }
+
+  public String getCastType() {
+    return castType;
+  }
+
+  public void setCastType(String castType) {
+    this.castType = castType;
   }
 
   public String getAlies() {

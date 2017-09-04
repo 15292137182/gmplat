@@ -14,6 +14,7 @@ import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.*;
 import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.UtilsTool;
 
 import java.util.*;
 
@@ -185,6 +186,9 @@ public class Translator {
     public LinkedList translateAliasedColumn(AliasedColumn aliasedColumn,LinkedList linkedList){
         translateFieldSource(aliasedColumn,linkedList);
         final String alies = aliasedColumn.getAlies();
+        if (aliasedColumn instanceof Field) {
+            String castType = ((Field) aliasedColumn).getCastType();
+        }
         if (alies !=null) {
             appendSql(AS, linkedList);
             appendSql(quoteStr(alies), linkedList);
@@ -393,7 +397,10 @@ public class Translator {
     private LinkedList appendArgs(Object args, LinkedList list){
         if (args instanceof FieldSource){
             translateFieldSource((FieldSource) args,list);
-        }else {
+        }else if (args instanceof Map){
+            list.add(UtilsTool.objToJson(args));
+            appendSql("::jsonb",list);
+        }else{
             list.add(args);
         }
         return list;

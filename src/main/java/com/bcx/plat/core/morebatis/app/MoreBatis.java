@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.bcx.plat.core.morebatis.translator.Translator;
+import com.bcx.plat.core.utils.UtilsTool;
+import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -140,20 +142,20 @@ public class MoreBatis {
 
   public <T extends BaseEntity<T>> int insertEntity(T entity) {
     final Class<? extends BaseEntity> entityClass = entity.getClass();
-    TableSource table = entityTables.get(entityClass);
     Map<String, Object> values = entity.toMap();
-    Map etc = (Map) values.remove("etc");
-    InsertAction insertAction = this.insertStatement();
-    insertAction.setEntityClass(entityClass);
-    return insertAction.into(table).cols(values.keySet()).values(Arrays.asList(values))
-        .execute();
+    return insert(entityClass,values).execute();
+//    
+//    InsertAction insertAction = this.insertStatement();
+//    insertAction.setEntityClass(entityClass);
+//    return insertAction.into(table).cols(values.keySet()).values(Arrays.asList(values))
+//        .execute();
   }
 
   public <T extends BaseEntity<T>> int deleteEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
-    Map etc = (Map) values.remove("etc");
+    
     List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
@@ -166,7 +168,7 @@ public class MoreBatis {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
-    Map etc = (Map) values.remove("etc");
+    
     List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
@@ -179,13 +181,13 @@ public class MoreBatis {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
-    Map etc = (Map) values.remove("etc");
+//    
     List<Condition> pkConditions = pks.stream()
         .map((pk) -> {
           return new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies()));
         })
         .collect(Collectors.toList());
-    List<Map<String, Object>> result = this.select(entity.getClass()).from(table)
+    List<Map<String, Object>> result = this.select(entity.getClass())
         .where(new And(pkConditions)).execute();
     if (result.size() == 1) {
       HashMap<String, Object> _obj = new HashMap<>();
@@ -244,10 +246,16 @@ public class MoreBatis {
     return update;
   }
 
-  public UpdateAction insert(Class<? extends BaseEntity> entity,Map<String,Object> values){
-    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
-    update.setEntityClass(entity);
-    return update;
+  public InsertAction insert(Class<? extends BaseEntity> entity,List<Map<String,Object>> values){
+    InsertAction insertAction = insertStatement().values(values);
+    insertAction.setEntityClass(entity);
+    return insertAction;
+  }
+
+  public InsertAction insert(Class<? extends BaseEntity> entity,Map<String,Object> value){
+    InsertAction insertAction = insertStatement().into(entityTables.get(entity)).values(value);
+    insertAction.setEntityClass(entity);
+    return insertAction;
   }
 
   public InsertAction insertStatement() {
@@ -264,7 +272,20 @@ public class MoreBatis {
 
   public List<Map<String, Object>> execute(QueryAction queryAction) {
     final LinkedList list = translatorX.translateQueryAction(queryAction, new LinkedList());
-    return suitMapper.plainSelect(list);
+    List<Map<String, Object>> result = suitMapper.plainSelect(list);
+    return translateJson(result);
+  }
+
+  private List<Map<String, Object>> translateJson(List<Map<String, Object>> result) {
+    for (Map<String, Object> row : result) {
+      for (Map.Entry<String, Object> col : row.entrySet()) {
+        Object value = col.getValue();
+        if (value instanceof PGobject &&((PGobject)value).getType().startsWith("json")){
+          row.put(col.getKey(), UtilsTool.jsonToObj(value.toString(),HashMap.class));
+        }
+      }
+    }
+    return result;
   }
 
   public int execute(InsertAction insertAction) {
