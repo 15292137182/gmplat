@@ -248,6 +248,10 @@ public class MoreBatis {
     return insertAction;
   }
 
+  public DeleteAction delete(Class<? extends BeanInterface> entity){
+    return deleteStatement().from(getTable(entity));
+  }
+
   public DeleteAction delete(Class<? extends BeanInterface> entity,Condition condition){
     return deleteStatement().from(getTable(entity)).where(condition);
   }
