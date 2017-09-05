@@ -17,21 +17,23 @@
     <el-form :label-position="labelPosition" label-width="120px":model="addProForm" ref='addProForm'
              style="padding:0 20px" class="demo-ruleForm">
         <el-form-item label="属性代码" prop="codeProInput">
-            <el-input placeholder="请输入属性代码" v-model="addProForm.codeProInput" ref="addProForm.codeProInput" v-bind:disabled="addProForm.disabled"></el-input>
+            <el-input placeholder="请输入属性代码" v-model="addProForm.codeProInput" ref="addProForm.codeProInput" disabled></el-input>
         </el-form-item>
         <el-form-item label="属性名称" prop="nameProInput">
             <el-input placeholder="请输入属性名称" v-model="addProForm.nameProInput" ref="addProForm.nameProInput"></el-input>
         </el-form-item>
-        <el-form-item label="属性类型" prop="checked">
-            <el-select placeholder="请选择" v-model="checked">
-                <el-option value="基本属性"></el-option>
-                <el-option value="模板属性"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="关联表字段" prop="tableReaInput">
-            <single-selection @change-data="getChildData_1"  :initial-value="value_1">
+        <el-form-item label="属性类型">
+            <single-selection @change-data="getChildData_4"  :initial-value="value_4">
                 <!---->
             </single-selection>
+        </el-form-item>
+        <el-form-item label="关联表字段" prop="" v-show="reaTable">
+            <single-selection @change-data="getChildData_1"  :initial-value="value_1" >
+                <!---->
+            </single-selection>
+        </el-form-item>
+        <el-form-item label="扩展属性名" prop="" v-show="extendPro">
+            <el-input placeholder="请输入扩展属性名" v-model="addProForm.extendName" ></el-input>
         </el-form-item>
         <el-form-item label="值类型" prop="typeInput">
             <single-selection @change-data="getChildData_2"  :initial-value="value_2">
@@ -44,10 +46,9 @@
             </single-selection>
         </el-form-item>
         <el-form-item label="值来源内容" prop="comContent">
-            <el-select placeholder="请选择" v-model="checked1">
-                <el-option value="选择键值集合信息"></el-option>
-                <el-option value=" 选择序列规则配置信息"></el-option>
-            </el-select>
+            <single-selection @change-data="getChildData_5"  :initial-value="value_5">
+                <!---->
+            </single-selection>
         </el-form-item>
         <el-form-item label="默认值" prop="defaultValue">
             <el-input placeholder="请输入属性名称" v-model="addProForm.defaultValue" ref="addProForm.defaultValue"></el-input>
@@ -55,22 +56,13 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" size="small" @click.native="conformEvent('addProForm')">保存</el-button>
+            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
         </el-col>
     </el-row>
 </div>
-<template id="conTableField">
-    <el-select v-model="conTableFieldInput"  clearable filterable placeholder="请选择关联表字段">
-        <el-option v-for="item in options"
-                   :key="item.rowId"
-                   :label="item.columnCname"
-                   :value="item.rowId">
-        </el-option>
-    </el-select>
-</template>
 <script src="metadata-prop-add.js"></script>
 </body>
 </html>

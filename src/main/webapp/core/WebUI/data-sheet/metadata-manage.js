@@ -130,10 +130,14 @@ var basLeft = new Vue({
                 gmpAjax.showAjax(data,function(res){
                     //编辑拿到的数据
                     var data=res[0];
-                    //console.log(data)
+                    console.log(data);
+
+
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
-                    //em.$refs.selectTab.tableInput =data.relateTableRowId;//关联表
+                    em.value_1 =data.relateTableRowId;//关联表
+                    em.value_2=data.relateTemplateObject//关联模板对象
+                    em.ruleForm.system=data.belongModule//所属系统
                     em.ruleForm.versionInput =data.version;//版本
                 })
             });
@@ -361,10 +365,10 @@ var basRight=new Vue({
     },
     created() {
         $(document).ready(function () {
-            basRight.leftHeight = $(window).height() -214;
+            basRight.leftHeight = $(window).height() -260;
         });
         $(window).resize(function () {
-            basRight.leftHeight = $(window).height() -214;
+            basRight.leftHeight = $(window).height() -260;
         });
         var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
         TableKeyValueSet.init(args);
@@ -398,10 +402,10 @@ var basRightTop = new Vue({
     },
     created() {
         $(document).ready(function () {
-            basRightTop.leftHeight = $(window).height() - 104;
+            basRightTop.leftHeight = $(window).height() - 158;
         });
         $(window).resize(function () {
-            basRightTop.leftHeight = $(window).height() - 104;
+            basRightTop.leftHeight = $(window).height() - 158;
         });
         //var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
         //TableKeyValueSet.init(args);

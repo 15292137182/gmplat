@@ -1,109 +1,101 @@
 /**
  * Created by admin on 2017/8/30.
  */
-
-Vue.component('select-contablefield',SelectOptions.ConSetOpt('conTableField','conTableFieldInput',basLeft.relateTableRowId,conChildTable));
-Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
-Vue.component('select-vorigin', SelectOptions.setOpt('','value','valueTypeOrigin',''));
-
 var proEm = new Vue({
         el: '#addProEvent',
         data: function () {
             return {
                 labelPosition: 'right',
                 addProForm: {
-                    codeProInput: '',
-                    nameProInput: '',
+                    codeProInput: '',//代码
+                    nameProInput: '',//名称
                     comContent: '',
-                    disabled: true,
                     iconEvent: false,
                     checkEvent: false,
                     reaTabEvent:false,
-                    dataId:'',
-                    flag:true,
+                    defaultValue:'',//默认值
+                    extendName:'' //扩展属性名
                 },
-                checked: '',
-                checked1: '',
-                value_1:'',
-                value_2:'',
-                value_3:'',
+                value_1:'',//关联表字段
+                value_2:'',//值类型
+                value_3:'',//值来源类型
+                value_4:'1',//类型
+                value_5:'3',//值来源内容
+                reaTable:true,//关联表字段是否显示
+                extendPro:false,//关扩展属性名是否显示
             }
         },
         methods: {
-            searchProTable(){
-                this.checked = false  //点击选择表 按钮不选中
-                var htmlUrl = 'connect-child.html';
-                littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联表字段', '600px', '560px', false)
-            },
-            conformEvent(addProForm) {
-                console.log(proEm.$refs.contablefield.conTableFieldInput)
-                if(proEm.addProForm.checked==true&proEm.$refs.contablefield.conTableFieldInput!='') {
-                    ibcpLayer.ShowMsg('扩展属性与关联表字段只能选其一')
-                    return;
-                }
-                proEm.$refs[addProForm].validate(function (valid) {
-                    if (valid) {
+            conformEvent() {
                         if(operateOPr==1){
                             addObj.addOk(function(){
-                                proEm.$http.jsonp(serverPath + "/businObjPro/add", {
-                                    objRowId: basLeft.currentId,//左边表的ID
-                                    propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
-                                    wetherExpandPro: proEm.addProForm.checked,//是否为扩展属性
-                                    relateTableColumn: proEm.$refs.contablefield.conTableFieldInput,//关联表字段
-                                    valueType: proEm.$refs.vtype.value,//值类型
-                                    valueResourceType: proEm.$refs.vorigin.value,//值来源类型
-                                    valueResourceContent: proEm.addProForm.comContent,//值来源内容
-                                }, {
-                                    jsonp: 'callback'
-                                }).then(function (res) {
-                                    showMsg.MsgOk(basTop,res);
-                                    basRightBottom.rightInput='';
+                                var data={
+                                    "url":serverPath + "/businObjPro/add",
+                                    "jsonData":{
+                                        objRowId: basLeft.currentId,//左边表的ID
+                                        propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
+                                        wetherExpandPro: proEm.value_4,//属性类型
+                                        //wetherExpandPro: proEm.value_4,//扩展属性名
+                                        relateTableColumn: proEm.value_1,//关联表字段
+                                        valueType: proEm.value_2,//值类型
+                                        valueResourceType: proEm.value_3,//值来源类型
+                                        extendsEname: proEm.value_4,//值来源内容
+                                        valueResourceContent: proEm.addProForm.defaultValue,//默认值
+                                    },
+                                    "obj":basTop
+                                };
+                                gmpAjax.showAjax(data,function(res){
+                                    console.log(res);
                                     //分页跳回到第一页
-                                    basRightBottom.searchRight();
+                                    basRight.searchRight();
                                     ibcpLayer.Close(divIndex);
-                                });
-                            },function(){
-                                showMsg.MsgError(basTop)
+                                })
                             })
                         }
                         else if(operateOPr==2){
-                            console.log(basRightBottom.currentVal.rowId)
                             editObj.editOk(function(){
-                                proEm.$http.jsonp(serverPath + "/businObjPro/modify", {
-                                    rowId: basRightBottom.currentVal.rowId,//本生的ID
-                                    objRowId: basLeft.currentId,//左边表的ID
-                                    propertyCode: proEm.addProForm.codeProInput,//业务对象代码
-                                    propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
-                                    wetherExpandPro: proEm.addProForm.checked,//是否为扩展属性
-                                    relateTableColumn:  proEm.$refs.contablefield.conTableFieldInput,//关联表字段
-                                    valueType: proEm.$refs.vtype.value,//值类型
-                                    valueResourceType: proEm.$refs.vorigin.value,//值来源类型
-                                    valueResourceContent: proEm.addProForm.comContent,//值来源内容
-                                }, {
-                                    jsonp: 'callback'
-                                }).then(function (res) {
-                                    showMsg.MsgOk(basTop,res);
-                                    basRightBottom.rightInput='';
-                                    basRightBottom.searchRight();
+                                var data={
+                                    "url":serverPath + "/businObjPro/modify",
+                                    "jsonData":{
+                                        rowId: basRight.currentVal.rowId,//本生的ID
+                                        objRowId: basLeft.currentId,//左边表的ID
+                                        propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
+                                        wetherExpandPro: proEm.value_4,//是否为扩展属性
+                                        relateTableColumn: proEm.value_1,//关联表字段
+                                        valueType: proEm.value_2,//值类型
+                                        valueResourceType: proEm.value_3,//值来源类型
+                                        valueResourceContent: proEm.value_4,//值来源内容
+                                        //valueResourceContent: proEm.value_4,//默认值
+                                    },
+                                    "obj":basTop
+                                };
+                                gmpAjax.showAjax(data,function(res){
+                                    console.log(res);
+                                    //分页跳回到第一页
+                                    basRight.searchRight();
                                     ibcpLayer.Close(divIndex);
-                                });
-                            },function(){
-                                showMsg.MsgError(basTop)
+                                })
                             });
                         }
-                    }else {
-                        return false;
-                    }
-                })
+            },
+            getChildData_1(datas){
+                this.value_1=datas.value;
+            },
+            getChildData_2(datas){
+                this.value_2=datas.value;
+                //console.log(this.value_2)
+            },
+            getChildData_3(datas){
+                this.value_3=datas.value;
+            },
+            getChildData_4(datas){
+              this.value_4=datas.value;
+               console.log(this.value_4);
 
             },
-            getChildData_1(){
-
-            },
-            getChildData_2(){
-
-            },
-            getChildData_3(){
+            getChildData_5(datas){
+                this.value_5=datas.value;
+                console.log(this.value_5);
 
             },
             cancel() {
@@ -111,9 +103,23 @@ var proEm = new Vue({
             }
         },
         updated() {
-//            if(proEm.$refs.contablefield.conTableFieldInput!=''){
-//                proEm.addProForm.checked =true
-//            }
-            //console.log(proEm.$refs.contablefield.conTableFieldInput)
+            //基本属性
+            if(this.value_4=='1'){
+                proEm.reaTable=true;
+                proEm.extendPro=false;
+
+            }//扩展属性
+            else if(this.value_4=='2'){
+                proEm.reaTable=false;
+                proEm.extendPro=true;
+            }
+            //值类型来源(键值集合 序列规则)
+            if(this.value_3=='5'){
+                //console.log(111)
+                this.value_5='3'
+            }else if(this.value_3=='6'){
+                //console.log(222)
+                this.value_5='4'
+            }
         }
     })

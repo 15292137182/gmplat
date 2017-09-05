@@ -13,11 +13,12 @@ var em = new Vue({
                 reaTableObj:'',//关联模板对象
                 tableInput:'',//所属模块
                 versionInput: '',//版本
+                system:''
             },
             disabledBool:true,
             value_1: "",
             value_2: [],
-            value_3:"",
+           // value_3:"",
             rules: {
 
             }
@@ -46,59 +47,60 @@ var em = new Vue({
             //});
             if (operate == 1) {    //新增业务对象
                 addObj.addOk(function(){
-                    //var data={
-                    //    "url":addUrl,
-                    //    "jsonData":{objectName:em.ruleForm.nameInput,//名称
-                    //        relateTableRowId: em.,//关联表
-                    //        relateTemplateObject: em.,//关联模板对象
-                    //        belongModule: em.,//所属模块
-                    //    },
-                    //    "obj":basTop
-                    //};
-                    //gmpAjax.showAjax(data,function(res){
-                    //    //分页跳回到第一页
-                    //    basLeft.searchLeft();
-                    //    ibcpLayer.Close(divIndex);
-                    //})
+                    var data={
+                        "url":addUrl,
+                        "jsonData":{objectName:em.ruleForm.nameInput,//名称
+                            relateTableRowId: em.value_1,//关联表
+                            relateTemplateObject: em.value_2,//关联模板对象
+                            belongModule: em.ruleForm.system,//所属模块
+                        },
+                        "obj":basTop
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        console.log(res);
+                        //分页跳回到第一页
+                        basLeft.searchLeft();
+                        ibcpLayer.Close(divIndex);
+                    })
                 })
             }
             if (operate == 2) {  //新增业务对象
                 editObj.editOk(function(){
-                    //var data={
-                    //    "url":addUrl,
-                    //    "jsonData":{
-                    //        rowId: basLeft.currentVal.rowId,//ID
-                    //        objectName:em.ruleForm.nameInput,//名称
-                    //        relateTableRowId: em.,//关联表
-                    //        relateTemplateObject: em.,//关联模板对象
-                    //        belongModule: em.,//所属模块
-                    //    },
-                    //    "obj":basTop
-                    //};
-                    //gmpAjax.showAjax(data,function(res){
-                    //    //分页跳回到第一页
-                    //     basLeft.searchLeft();
-                    //        ibcpLayer.Close(divIndex);
-                    //})
+                    var data={
+                        "url":addUrl,
+                        "jsonData":{
+                            rowId: basLeft.currentVal.rowId,//ID
+                            objectName:em.ruleForm.nameInput,//名称
+                            relateTableRowId: em.value_1,//关联表
+                            relateTemplateObject: em.value_2,//关联模板对象
+                            belongModule: em.ruleForm.system,//所属模块
+                        },
+                        "obj":basTop
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        //分页跳回到第一页
+                         basLeft.searchLeft();
+                            ibcpLayer.Close(divIndex);
+                    })
                 })
             }
         },
         getChildData_1(datas){
             this.value_1 = datas.value;
-            //console.log( this.value_1)
+            this.label_1 = datas.label;
+            //console.log( this.label_1);
+            console.log( this.value_1);
 
         },
         multipleDatas_1(datas){
-            this.value_2 = datas.value;
-            //console.log( this.value_2)
-
-
+           this.value_2=JSON.stringify(datas);
+           console.log(this.value_2);
         },
-        getChildData_2(datas){
-            this.value_3 = datas.value;
-            //console.log( this.value_3)
-
-        },
+        //getChildData_2(datas){
+        //    this.value_3 = datas.value;
+        //    //console.log( this.value_3)
+        //
+        //},
         cancel() {
             ibcpLayer.Close(divIndex);
         }
