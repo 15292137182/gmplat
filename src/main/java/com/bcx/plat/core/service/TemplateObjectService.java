@@ -1,6 +1,6 @@
 package com.bcx.plat.core.service;
 
-import com.bcx.plat.core.common.BaseServiceTemplate;
+import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.TemplateObject;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +11,12 @@ import org.springframework.stereotype.Service;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                2017/8/28  Wen TieHu Create
  *          </pre>
  */
 @Service
-public class TemplateObjectService extends BaseServiceTemplate<TemplateObject>{
+public class TemplateObjectService extends BaseService<TemplateObject> {
 
-    @Override
-    public boolean isRemoveBlank() {
-        return false;
-    }
+
 }

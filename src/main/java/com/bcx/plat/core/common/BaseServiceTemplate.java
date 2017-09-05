@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService<T> {
+public class BaseServiceTemplate<T extends BaseEntity<T>> extends BaseService {
   protected final Class<? extends BaseEntity> entityClass = (Class<? extends BaseEntity>) ((ParameterizedType) this.getClass()
           .getGenericSuperclass()).getActualTypeArguments()[0];
   private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
@@ -89,12 +89,10 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> implements BaseService
     return select(UtilsTool.convertMapToFieldConditions(args));
   }
 
-  @Override
   public List<Map<String, Object>> select(Condition condition, Collection<String> columns, List<Order> orders) {
     return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, columns), orders);
   }
 
-  @Override
   public PageResult<Map<String, Object>> select(Condition condition, Collection<String> columns, List<Order> orders, int pageNum, int pageSize) {
     return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, columns), orders, pageNum, pageSize);
   }

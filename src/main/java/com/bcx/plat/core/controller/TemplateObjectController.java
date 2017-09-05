@@ -1,15 +1,13 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.common.BaseControllerTemplate;
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.TemplateObjectProService;
-import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -36,7 +34,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
-public class TemplateObjectController extends BaseControllerTemplate<TemplateObjectService, TemplateObject> {
+public class TemplateObjectController extends BaseController {
 
 
   private final TemplateObjectProService templateObjectProService;
@@ -46,7 +44,7 @@ public class TemplateObjectController extends BaseControllerTemplate<TemplateObj
     this.templateObjectProService = templateObjectProService;
   }
 
-  @Override
+
   protected List<String> blankSelectFields() {
     return Arrays.asList("templateCode", "templateCode", "templateName");
   }

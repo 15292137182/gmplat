@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -155,6 +156,10 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     return null;
   }
 
+  public List<T> selectList(Condition... conditions) {
+    return selectList(Arrays.asList(conditions));
+  }
+
   /**
    * 查询
    *
@@ -185,7 +190,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @return 返回页面查询信息
    */
   @SuppressWarnings("unchecked")
-  public PageResult<List<T>> select(List<Condition> conditions, int num, int size) {
+  public PageResult<List<T>> selectPage(List<Condition> conditions, int num, int size) {
     PageResult result = MORE_BATIS.select(getClass()).where(new And(conditions)).selectPage(num, size);
     List<T> data = UtilsTool.jsonToObj(UtilsTool.objToJson(result.getResult()), List.class, getClass());
     result.setResult(data);
