@@ -2,6 +2,7 @@ package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -9,6 +10,7 @@ import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.UtilsTool;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
@@ -27,6 +29,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   @JsonIgnore
   private static final MoreBatis MORE_BATIS = (MoreBatis) SpringContextHolder.getBean("moreBatis");
+  @JsonIgnore
   private static final Or NOT_DELETE_OR = getNoDeleteCondition();
 
   /**
@@ -68,7 +71,6 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     Serializable _rowId = this.getPk();
     if (null != _rowId) {
       List<Condition> conditions = new ArrayList<>();
-      conditions.add(NOT_DELETE_OR);
       conditions.add(new FieldCondition("rowId", Operator.EQUAL, _rowId));
       return update(conditions, false);
     } else {
@@ -85,7 +87,6 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     Serializable _rowId = this.getPk();
     if (null != _rowId) {
       List<Condition> conditions = new ArrayList<>();
-      conditions.add(NOT_DELETE_OR);
       conditions.add(new FieldCondition("rowId", Operator.EQUAL, _rowId));
       return update(conditions, true);
     } else {
@@ -111,13 +112,105 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
           }
         });
       }
-      UpdateAction ua = MORE_BATIS.update(this.getClass(), this.toMap());
       conditions.add(NOT_DELETE_OR);
-      // 这里不接受 collection -.-
-      ua.where(new And(conditions));
+      UpdateAction ua = MORE_BATIS.update(getClass(), map, new And(conditions));
       return ua.execute();
     } else {
       return -1;
+    }
+  }
+
+  /**
+   * 查询所有
+   *
+   * @return 结果集合
+   */
+  public List<T> selectAll() {
+    return selectList(new ArrayList<>());
+  }
+
+  /**
+   * 查询一个
+   *
+   * @return 状态码
+   */
+  public T selectOneById() {
+    return selectOneById(getPk());
+  }
+
+  /**
+   * 查询一个
+   *
+   * @return 结果
+   */
+  public T selectOneById(Serializable id) {
+    if (null != id) {
+      List<Condition> conditions = new ArrayList<>();
+      conditions.add(new FieldCondition("rowId", Operator.EQUAL, id));
+      List<T> ts = selectList(conditions);
+      if (!ts.isEmpty()) {
+        return ts.get(0);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 查询
+   *
+   * @param conditions 条件
+   * @return 结果集合
+   */
+  @SuppressWarnings("unchecked")
+  public List<T> selectList(List<Condition> conditions) {
+    conditions.add(NOT_DELETE_OR);
+    List<Map<String, Object>> result = MORE_BATIS.select(getClass()).where(new And(conditions)).execute();
+    return UtilsTool.jsonToObj(UtilsTool.objToJson(result), List.class, getClass());
+  }
+
+  /**
+   * 分页查询
+   *
+   * @param conditions 条件
+   * @param num        页面号
+   * @param size       大小
+   * @return 返回页面查询信息
+   */
+  @SuppressWarnings("unchecked")
+  public PageResult<List<T>> select(List<Condition> conditions, int num, int size) {
+    PageResult result = MORE_BATIS.select(getClass()).where(new And(conditions)).selectPage(num, size);
+    List<T> data = UtilsTool.jsonToObj(UtilsTool.objToJson(result.getResult()), List.class, getClass());
+    result.setResult(data);
+    return result;
+  }
+
+  /**
+   * 物理删除，所有删除模版都是物理删除
+   *
+   * @param conditions 条件
+   * @return 状态码
+   */
+  public int delete(List<Condition> conditions) {
+    conditions.add(NOT_DELETE_OR);
+    return MORE_BATIS.delete(getClass(), new And(conditions)).execute();
+  }
+
+  /**
+   * 物理删除所有数据
+   *
+   * @return 状态码
+   */
+  public int deleteAll() {
+    return delete(new ArrayList<>());
+  }
+
+  public int deleteById(Serializable id) {
+    if (null == id) {
+      return -1;
+    } else {
+      List<Condition> conditions = new ArrayList<>();
+      conditions.add(new FieldCondition("rowId", Operator.EQUAL, id));
+      return delete(conditions);
     }
   }
 
@@ -126,19 +219,5 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     FieldCondition notFlag = new FieldCondition("deleteFlag", Operator.EQUAL, DELETE_FLAG).not();
     return new Or(isNull, notFlag);
   }
-
-
-  // TODO int delete(condition)
-  // TODO int deleteAll()
-  // TODO int deleteById() 删除当前这条数据
-  // TODO int deleteByCondition(condition) 根据条件删除
-
-  // TODO List<T> selectAll()
-  // TODO List<T> selectOne(condition)
-  // TODO List<T> selectList(condition)
-  // TODO Page<List<T>> selectPage(page,condition)
-  // TODO T selectById()
-  // TODO T selectById(id)
-  // TODO int selectCount(condition)
 
 }
