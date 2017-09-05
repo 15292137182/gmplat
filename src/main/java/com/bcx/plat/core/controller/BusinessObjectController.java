@@ -85,7 +85,10 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
   @RequestMapping("/queryById")
   @Override
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
-    return super.result(request, ServiceResult.Msg(businessObjectService.queryById(rowId)), locale);
+    if (UtilsTool.isValid(rowId)) {
+      return super.result(request, ServiceResult.Msg(businessObjectService.queryById(rowId)), locale);
+    }
+    return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
   }
 
   /**
@@ -126,7 +129,12 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
                              @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                              String order, HttpServletRequest request, Locale locale) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
-    return super.result(request, ServiceResult.Msg(businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
+    if (UtilsTool.isValid(rowId)) {
+      return super.result(request, ServiceResult.Msg(businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
+    }else{
+      logger.error("业务对象rowId查找当前对象下的所有属性是失败");
+      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
+    }
   }
 
 
@@ -140,12 +148,13 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    */
   @RequestMapping("/changeOperat")
   public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
-    if (!UtilsTool.isValid(rowId)) {
-      return ServiceResult.ErrorMsg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-    } else {
+    if (UtilsTool.isValid(rowId)) {
       PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
               businessObjectService.changeOperat(rowId));
       return super.result(request, ServiceResult.Msg(platResult), locale);
+    } else {
+      logger.error("执行变更操作失败");
+      return ServiceResult.ErrorMsg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
   }
 
@@ -164,7 +173,8 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     if (UtilsTool.isValid(rowId)) {
       return super.result(request, ServiceResult.Msg(businessObjectService.delete(rowId)), locale);
     } else {
-      return super.result(request, ServiceResult.Msg(null), locale);
+      logger.error("删除业务对象失败");
+      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
     }
   }
 
@@ -183,7 +193,8 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
       LinkedList<Order> orders = UtilsTool.dataSort(order);
       return super.result(request, ServiceResult.Msg(businessObjectService.queryTemplatePro(rowId, orders)), locale);
     } else {
-      return super.result(request, ServiceResult.Msg(null), locale);
+      logger.error("查询出业务关联模板属性失败");
+      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
   }
 
