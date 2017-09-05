@@ -1,6 +1,8 @@
 package com.bcx.plat.core.morebatis.app;
 
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
@@ -157,12 +159,13 @@ public class MoreBatis {
   }
 
   public <T extends BeanInterface<T>> int updateEntity(T entity) {
-    Collection<Field> pks = entityPks.get(entity.getClass());
+    final Class<? extends BeanInterface> entityClass = entity.getClass();
+    Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
-    return this.update(entity.getClass(), values).where(new And(pkConditions)).execute();
+    return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
@@ -239,6 +242,10 @@ public class MoreBatis {
     InsertAction insertAction = insertStatement().into(entityTables.get(entity)).values(value);
     insertAction.setEntityClass(entity);
     return insertAction;
+  }
+
+  public DeleteAction delete(Class<? extends BeanInterface> entity,Condition condition){
+    return deleteStatement().from(getTable(entity)).where(condition);
   }
 
   public InsertAction insertStatement() {
