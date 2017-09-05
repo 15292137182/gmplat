@@ -281,15 +281,11 @@ public class UtilsTool {
    *
    * @param columns 列
    * @param values  关键字
-   * @return
+   * @return 返回
    */
   public static Or createBlankQuery(Collection<String> columns, Collection<String> values) {
     List<Condition> conditions = new LinkedList<>();
-    for (String column : columns) {
-      for (String value : values) {
-        conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value));
-      }
-    }
+    columns.forEach(column -> values.forEach(value -> conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value))));
     return new Or(conditions);
   }
 

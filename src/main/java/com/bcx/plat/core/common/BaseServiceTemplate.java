@@ -1,7 +1,6 @@
 package com.bcx.plat.core.common;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
@@ -22,7 +21,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-public class BaseServiceTemplate<T extends BaseEntity<T>> extends BaseService {
+public class BaseServiceTemplate<T extends BaseEntity<T>> {
 
   protected final Class<? extends BaseEntity> entityClass =
           (Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
