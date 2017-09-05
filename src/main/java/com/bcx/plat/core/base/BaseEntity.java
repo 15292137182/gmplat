@@ -6,6 +6,7 @@ import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -22,6 +23,11 @@ public class BaseEntity<T extends BeanInterface> extends BaseORM<T> implements B
   private BaseTemplateBean templateBean = new BaseTemplateBean();
   private Map etc;
   private String rowId;
+
+  @Override
+  public Serializable getPk() {
+    return rowId;
+  }
 
   /**
    * 构建删除信息

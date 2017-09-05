@@ -20,6 +20,12 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
 
   List<BeanInterface> getJoinTemplates();
 
+  default Serializable getPk() {
+    return null;
+  }
+
+  ;
+
   /**
    * 更多序列话配置
    *
