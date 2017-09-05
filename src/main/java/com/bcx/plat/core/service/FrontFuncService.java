@@ -7,6 +7,7 @@ import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -51,20 +52,21 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
      */
     public PlatResult<LinkedList<Map<String, Object>>> queryFuncCode(List funcCode) {
         LinkedList<Map<String, Object>> linkedList = new LinkedList<>();
-        List<Map<String, Object>> funcRowId = null;
+        List<Map<String, Object>> result = null;
         for (Object key : funcCode) {
             List<Map<String, Object>> keysetCode = moreBatis.select(FrontFunc.class)
                     .where(new FieldCondition("funcCode", Operator.EQUAL, key)).execute();
             List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(keysetCode);
+            LinkedList<Order> orders = UtilsTool.dataSort("{\"str\":\"displayTitle\", \"num\":1}");//默认按照显示标题排序
             for (Map<String, Object> keySet : list) {
-                funcRowId = moreBatis.select(FrontFuncPro.class)
-                        .where(new FieldCondition("funcRowId", Operator.EQUAL, keySet.get("rowId").toString()))
+                result = moreBatis.select(FrontFuncPro.class)
+                        .where(new FieldCondition("funcRowId", Operator.EQUAL, keySet.get("rowId").toString())).orderBy(orders)
                         .execute();
-                for (Map<String, Object> map : funcRowId) {
+                for (Map<String, Object> map : result) {
                     map.put("funcType", keySet.get("funcType").toString());
-
                     String relateBusiPro = map.get("relateBusiPro").toString();
-                    switch (map.get("attrSource").toString()) {
+                    String attrSource = map.get("attrSource").toString();
+                    switch (attrSource) {
                         case BaseConstants.ATTRIBUTE_SOURCE_MODULE:
                             List<Map<String, Object>> proRwoId = templateObjectProService.select(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
                             if (!UtilsTool.isValid(proRwoId)) {
@@ -98,7 +100,7 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
                 }
 
             }
-            linkedList.addAll(UtilsTool.underlineKeyMapListToCamel(funcRowId));
+            linkedList.addAll(UtilsTool.underlineKeyMapListToCamel(result));
         }
         logger.info("查询功能块属性的数据");
         return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
