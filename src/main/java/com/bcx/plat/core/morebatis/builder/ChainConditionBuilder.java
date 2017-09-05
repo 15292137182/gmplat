@@ -1,6 +1,6 @@
 package com.bcx.plat.core.morebatis.builder;
 
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -21,7 +21,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
 
   //许多条件放这里 记得返回当前节点的类型
 
-  public CURRENT_NODE equal(Class<? extends BaseEntity> entityClass,String alies, Object value) {
+  public CURRENT_NODE equal(Class<? extends BeanInterface> entityClass,String alies, Object value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.EQUAL, value));
   }
@@ -30,7 +30,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return equal(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE in(Class<? extends BaseEntity> entityClass,String alies, Collection value) {
+  public CURRENT_NODE in(Class<? extends BeanInterface> entityClass,String alies, Collection value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IN, value));
   }
@@ -39,7 +39,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return in(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE between(Class<? extends BaseEntity> entityClass,String alies, Object rangeStart, Object rangeEnd) {
+  public CURRENT_NODE between(Class<? extends BeanInterface> entityClass,String alies, Object rangeStart, Object rangeEnd) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.BETWEEN,
             new Object[]{rangeStart, rangeEnd}));
@@ -49,7 +49,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return between(conditionBuilderContext.getClz(),alies,rangeStart,rangeEnd);
   }
 
-  public CURRENT_NODE like(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE like(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_FULL, value));
   }
@@ -58,7 +58,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return like(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE endWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE endWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_LEFT, value));
   }
@@ -67,7 +67,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return endWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE startWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE startWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_RIGHT, value));
   }
@@ -76,7 +76,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return startWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE isNull(Class<? extends BaseEntity> entityClass,String alies) {
+  public CURRENT_NODE isNull(Class<? extends BeanInterface> entityClass,String alies) {
     return addCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IS_NULL, null));
   }
@@ -85,7 +85,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return isNull(conditionBuilderContext.getClz(),alies);
   }
 
-  public CURRENT_NODE notEqual(Class<? extends BaseEntity> entityClass,String alies, Object value) {
+  public CURRENT_NODE notEqual(Class<? extends BeanInterface> entityClass,String alies, Object value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.EQUAL, value));
   }
@@ -94,7 +94,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notEqual(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notIn(Class<? extends BaseEntity> entityClass,String alies, Collection value) {
+  public CURRENT_NODE notIn(Class<? extends BeanInterface> entityClass,String alies, Collection value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IN, value));
   }
@@ -103,7 +103,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notIn(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notBetween(Class<? extends BaseEntity> entityClass,String alies, Object rangeStart, Object rangeEnd) {
+  public CURRENT_NODE notBetween(Class<? extends BeanInterface> entityClass,String alies, Object rangeStart, Object rangeEnd) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.BETWEEN,
             new Object[]{rangeStart, rangeEnd}));
@@ -113,7 +113,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notBetween(conditionBuilderContext.getClz(),alies,rangeStart,rangeEnd);
   }
 
-  public CURRENT_NODE notLike(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE notLike(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_FULL, value));
   }
@@ -122,7 +122,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notLike(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notEndWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE notEndWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_LEFT, value));
   }
@@ -131,7 +131,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notEndWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notStartWith(Class<? extends BaseEntity> entityClass,String alies, String value) {
+  public CURRENT_NODE notStartWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_RIGHT, value));
   }
@@ -140,7 +140,7 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
     return notStartWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notNull(Class<? extends BaseEntity> entityClass,String alies) {
+  public CURRENT_NODE notNull(Class<? extends BeanInterface> entityClass,String alies) {
     return addNotCondition(
         new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IS_NULL, null));
   }

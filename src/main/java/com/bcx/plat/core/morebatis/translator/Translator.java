@@ -1,6 +1,6 @@
 package com.bcx.plat.core.morebatis.translator;
 
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
@@ -119,7 +119,7 @@ public class Translator {
         appendSql(UPDATE,linkedList);
         translateTable((Table) updateAction.getTableSource(),linkedList);
         appendSql(SET,linkedList);
-        Class<? extends BaseEntity> entityClass = updateAction.getEntityClass();
+        Class<? extends BeanInterface> entityClass = updateAction.getEntityClass();
         Iterator<Map.Entry<String, Object>> entryIterator = updateAction.getValues().entrySet().iterator();
         while (entryIterator.hasNext()){
             final Map.Entry<String, Object> entry = entryIterator.next();

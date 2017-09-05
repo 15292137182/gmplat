@@ -24,19 +24,19 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   // TODO int insert Mr汪，实现下列方法
   public int insert() {
-    return 0;
+    return getMoreBatis().insertEntity((T)this);
   }
 
   public T selectById() {
-    return null;
+    return (T) getMoreBatis().selectEntityByPks((T) this);
   }
 
   public int updateById() {
-    return 0;
+    return getMoreBatis().updateEntity((T)this);
   }
 
   public int deleteById() {
-    return 0;
+    return getMoreBatis().deleteEntity((T)this);
   }
 
   // TODO int deleteById() 删除当前这条数据

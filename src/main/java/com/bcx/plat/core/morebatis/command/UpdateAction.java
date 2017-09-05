@@ -1,6 +1,6 @@
 package com.bcx.plat.core.morebatis.command;
 
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class UpdateAction {
 
   private TableSource tableSource;
-  private Class<? extends BaseEntity> entityClass;
+  private Class<? extends BeanInterface> entityClass;
   private Map<String, Object> values;
   private Condition where;
   private MoreBatis app;
@@ -52,11 +52,11 @@ public class UpdateAction {
     this.where = where;
   }
 
-  public Class<? extends BaseEntity> getEntityClass() {
+  public Class<? extends BeanInterface> getEntityClass() {
     return entityClass;
   }
 
-  public void setEntityClass(Class<? extends BaseEntity> entityClass) {
+  public void setEntityClass(Class<? extends BeanInterface> entityClass) {
     this.entityClass = entityClass;
   }
 

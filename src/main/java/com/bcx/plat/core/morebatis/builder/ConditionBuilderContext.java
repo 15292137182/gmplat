@@ -1,6 +1,6 @@
 package com.bcx.plat.core.morebatis.builder;
 
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class ConditionBuilderContext {
   private TableSource tableSource;
-  private Class<? extends BaseEntity> clz;
+  private Class<? extends BeanInterface> clz;
   private static final MoreBatis moreBatis=SpringContextHolder.getBean("moreBatis");
 
-  public ConditionBuilderContext(Class<? extends BaseEntity> clz) {
+  public ConditionBuilderContext(Class<? extends BeanInterface> clz) {
     this.clz = clz;
     tableSource = moreBatis.getTable(clz);
 //    columns = new HashMap<>();
@@ -28,7 +28,7 @@ public class ConditionBuilderContext {
     return tableSource;
   }
 
-  public Class<? extends BaseEntity> getClz() {
+  public Class<? extends BeanInterface> getClz() {
     return clz;
   }
 

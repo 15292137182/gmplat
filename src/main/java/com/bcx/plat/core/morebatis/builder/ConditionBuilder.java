@@ -1,7 +1,7 @@
 package com.bcx.plat.core.morebatis.builder;
 
 import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 
@@ -10,7 +10,7 @@ public class ConditionBuilder implements ConditionContainer {
   private Condition condition;
   private ConditionBuilderContext conditionBuilderContext;
 
-  public ConditionBuilder(Class<? extends BaseEntity> entityClass) {
+  public ConditionBuilder(Class<? extends BeanInterface> entityClass) {
     conditionBuilderContext = new ConditionBuilderContext(entityClass);
   }
 

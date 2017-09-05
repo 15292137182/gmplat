@@ -2,7 +2,7 @@ package com.bcx.plat.core.morebatis.app;
 
 import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
-import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.cctv1.FieldInTable;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteField;
 import com.bcx.plat.core.morebatis.cctv1.ImmuteTable;
@@ -55,7 +55,7 @@ public class MoreBatis {
     entityTables = new HashMap<>();
     aliesMaps = new HashMap<>();
     for (EntityEntry entityEntry : entityEntries) {
-      final Class<? extends BaseEntity> entryClass = entityEntry.getEntityClass();
+      final Class<? extends BeanInterface> entryClass = entityEntry.getEntityClass();
       final TableSource entityEntryTable = entityEntry.getTable();
       Map<String, Field> aliesMap = aliesMaps.get(entryClass);
       LinkedList<Field> fieldInTables=new LinkedList<>();
@@ -72,19 +72,19 @@ public class MoreBatis {
     }
   }
 
-  public <T extends BaseEntity<T>> Collection<Field> getPks(Class<T> entityClass) {
+  public <T extends BeanInterface<T>> Collection<Field> getPks(Class<T> entityClass) {
     return entityPks.get(entityClass);
   }
 
-  public <T extends BaseEntity<T>> Collection<Field> getColumns(Class<T> entityClass) {
+  public <T extends BeanInterface<T>> Collection<Field> getColumns(Class<T> entityClass) {
     return entityColumns.get(entityClass);
   }
 
-  public <T extends BaseEntity<T>> TableSource getTable(Class<T> entityClass) {
+  public <T extends BeanInterface<T>> TableSource getTable(Class<T> entityClass) {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BaseEntity<T>> Field getColumnByAlies(Class<T> entityClass, String alies) {
+  public <T extends BeanInterface<T>> Field getColumnByAlies(Class<T> entityClass, String alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     try {
       return entityColumn.get(alies);
@@ -97,7 +97,7 @@ public class MoreBatis {
     }
   }
 
-  public <T extends BaseEntity<T>> Field getColumnByAliesWithoutCheck(Class<T> entityClass, String alies) {
+  public <T extends BeanInterface<T>> Field getColumnByAliesWithoutCheck(Class<T> entityClass, String alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     try {
       return entityColumn.get(alies);
@@ -106,7 +106,7 @@ public class MoreBatis {
     }
   }
 
-  public <T extends BaseEntity<T>> List<Field> getColumnByAlies(Class<T> entityClass, Collection<String> alies) {
+  public <T extends BeanInterface<T>> List<Field> getColumnByAlies(Class<T> entityClass, Collection<String> alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     final LinkedList<Field> result=new LinkedList<>();
     try {
@@ -140,8 +140,8 @@ public class MoreBatis {
 //    }).collect(Collectors.toList());
   }
 
-  public <T extends BaseEntity<T>> int insertEntity(T entity) {
-    final Class<? extends BaseEntity> entityClass = entity.getClass();
+  public <T extends BeanInterface<T>> int insertEntity(T entity) {
+    final Class<? extends BeanInterface> entityClass = entity.getClass();
     Map<String, Object> values = entity.toMap();
     return insert(entityClass,values).execute();
 //    
@@ -151,7 +151,7 @@ public class MoreBatis {
 //        .execute();
   }
 
-  public <T extends BaseEntity<T>> int deleteEntity(T entity) {
+  public <T extends BeanInterface<T>> int deleteEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
@@ -164,7 +164,7 @@ public class MoreBatis {
     return this.deleteStatement().from(table).where(new And(pkConditions)).execute();
   }
 
-  public <T extends BaseEntity<T>> int updateEntity(T entity) {
+  public <T extends BeanInterface<T>> int updateEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
@@ -177,7 +177,7 @@ public class MoreBatis {
     return this.update(entity.getClass(),values).where(new And(pkConditions)).execute();
   }
 
-  public <T extends BaseEntity<T>> T selectEntityByPks(T entity) {
+  public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
@@ -201,19 +201,19 @@ public class MoreBatis {
   }
 
 
-  public QueryAction select(Class<? extends BaseEntity> entity) {
+  public QueryAction select(Class<? extends BeanInterface> entity) {
     final Collection columns = entityColumns.get(entity);
     return selectStatement().select(columns)
         .from(entityTables.get(entity));
   }
 
-  public QueryAction select(Class<? extends BaseEntity> primary,
-                            Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary){
+  public QueryAction select(Class<? extends BeanInterface> primary,
+                            Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary){
     return select(primary,secondary,relationPrimary,relationSecondary,JoinType.INNER_JOIN);
   }
 
-  public QueryAction select(Class<? extends BaseEntity> primary,
-      Class<? extends BaseEntity> secondary, String relationPrimary, String relationSecondary,JoinType joinType) {
+  public QueryAction select(Class<? extends BeanInterface> primary,
+      Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary,JoinType joinType) {
     HashMap<String,Field> columns = new HashMap<>();
     for (Field Field : entityColumns.get(primary)) {
       columns.put(Field.getAlies(), Field);
@@ -229,7 +229,7 @@ public class MoreBatis {
             .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 
-  public QueryAction select(Class<? extends BaseEntity> entity, List<String> columns) {
+  public QueryAction select(Class<? extends BeanInterface> entity, List<String> columns) {
     Map<String, Field> columnMap = aliesMaps.get(entity);
     return selectStatement().select(columns.stream().map((columnAlies) -> {
       return columnMap.get(columnAlies);
@@ -240,19 +240,19 @@ public class MoreBatis {
     return new QueryAction(this, translator);
   }
 
-  public UpdateAction update(Class<? extends BaseEntity> entity,Map<String,Object> values){
+  public UpdateAction update(Class<? extends BeanInterface> entity,Map<String,Object> values){
     UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
     update.setEntityClass(entity);
     return update;
   }
 
-  public InsertAction insert(Class<? extends BaseEntity> entity,List<Map<String,Object>> values){
+  public InsertAction insert(Class<? extends BeanInterface> entity,List<Map<String,Object>> values){
     InsertAction insertAction = insertStatement().values(values);
     insertAction.setEntityClass(entity);
     return insertAction;
   }
 
-  public InsertAction insert(Class<? extends BaseEntity> entity,Map<String,Object> value){
+  public InsertAction insert(Class<? extends BeanInterface> entity,Map<String,Object> value){
     InsertAction insertAction = insertStatement().into(entityTables.get(entity)).values(value);
     insertAction.setEntityClass(entity);
     return insertAction;
