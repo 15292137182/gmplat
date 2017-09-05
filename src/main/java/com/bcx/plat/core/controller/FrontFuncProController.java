@@ -41,12 +41,14 @@ public class FrontFuncProController extends
     private final TemplateObjectProService templateObjectProService;
     private final BusinessObjectProService businessObjectProService;
     private final DBTableColumnService dbTableColumnService;
+    private final FrontFuncProService frontFuncProService;
 
     @Autowired
-    public FrontFuncProController(BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService, DBTableColumnService dbTableColumnService) {
+    public FrontFuncProController(FrontFuncProService frontFuncProService,BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService, DBTableColumnService dbTableColumnService) {
         this.businessObjectProService = businessObjectProService;
         this.templateObjectProService = templateObjectProService;
         this.dbTableColumnService = dbTableColumnService;
+        this.frontFuncProService = frontFuncProService;
     }
 
     /**
@@ -59,6 +61,32 @@ public class FrontFuncProController extends
         return Collections.singletonList("rowId");
     }
 
+
+    /**
+     * 通用新增方法
+     *
+     * @param entity  接受一个实体参数
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return
+     */
+    @RequestMapping("/add")
+    @Override
+    public Object insert(FrontFuncPro entity, HttpServletRequest request, Locale locale) {
+        String relateBusiPro = entity.getRelateBusiPro();
+        List<Map<String, Object>> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+        int insert =0;
+        if (UtilsTool.isValid(rowId)) {
+             insert = frontFuncProService.insert(entity.buildCreateInfo().toMap());
+            if (insert != 1) {
+                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+            }else {
+                return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,insert)), locale);
+            }
+        }else {
+            return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS,Message.DATA_QUOTE,insert)), locale);
+        }
+    }
 
     /**
      * 通过功能块rowId查询功能块属性下对应的数据
