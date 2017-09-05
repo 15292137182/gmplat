@@ -20,7 +20,6 @@ public class BaseEntity<T extends BeanInterface> extends BaseORM<T> implements B
 
   @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();
-  @JsonIgnore
   private Map etc;
   private String rowId;
 

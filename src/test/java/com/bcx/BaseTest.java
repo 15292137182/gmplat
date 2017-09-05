@@ -20,5 +20,4 @@ public class BaseTest {
 
   protected Logger logger = LoggerFactory.getLogger(getClass());
 
-
 }
