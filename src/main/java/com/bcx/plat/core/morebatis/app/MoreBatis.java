@@ -231,10 +231,12 @@ public class MoreBatis {
   }
 
   public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values,Condition condition) {
-    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values).where(condition);
+    UpdateAction update = updateStatement().from(entityTables.get(entity))
+            .set(values).where(condition);
     update.setEntityClass(entity);
     return update;
   }
+
 
   public InsertAction insert(Class<? extends BeanInterface> entity, List<Map<String, Object>> values) {
     InsertAction insertAction = insertStatement().values(values);
