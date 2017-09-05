@@ -207,11 +207,11 @@ public class SqlHelper {
    */
   private static Object wrapCollection(final Object object) {
     if (object instanceof List) {
-      Map<String, Object> map = new HashMap<String, Object>();
+      Map<String, Object> map = new HashMap<>();
       map.put("list", object);
       return map;
     } else if (object != null && object.getClass().isArray()) {
-      Map<String, Object> map = new HashMap<String, Object>();
+      Map<String, Object> map = new HashMap<>();
       map.put("array", object);
       return map;
     }

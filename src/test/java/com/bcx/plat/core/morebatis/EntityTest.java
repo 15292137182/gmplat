@@ -16,7 +16,7 @@ public class EntityTest extends BaseTest{
   public void entityTest(){
     BusinessObject businessObject=new BusinessObject();
     businessObject.setObjectName("testObject");
-    HashMap<String, Object> etc = new HashMap<String, Object>();
+    HashMap<String, Object> etc = new HashMap<>();
     etc.put("a",100);
     etc.put("b","b");
     businessObject.setEtc(etc);

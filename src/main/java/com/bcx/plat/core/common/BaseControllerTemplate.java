@@ -96,7 +96,7 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     public Object singleInputSelect(String search, @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        pageNum = (!UtilsTool.isValid(search))?1:pageNum;
+        pageNum = search == null || search.isEmpty()?1:pageNum;
         PageResult<Map<String, Object>> result = entityService
                 .select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)),  orders, pageNum, pageSize);
         return super.result(request, commonServiceResult(queryResultProcess(result), Message.QUERY_SUCCESS), locale);
@@ -187,6 +187,4 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
     private <T> ServiceResult<T> commonServiceResult(T content, String msg) {
         return ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, msg, content));
     }
-
-
 }

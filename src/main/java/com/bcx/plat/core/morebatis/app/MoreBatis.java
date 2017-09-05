@@ -231,9 +231,9 @@ public class MoreBatis {
 
   public QueryAction select(Class<? extends BeanInterface> entity, List<String> columns) {
     Map<String, Field> columnMap = aliesMaps.get(entity);
-    return selectStatement().select(columns.stream().map((columnAlies) -> {
-      return columnMap.get(columnAlies);
-    }).collect(Collectors.toList())).from(entityTables.get(entity));
+    return selectStatement().select(columns.stream().map(columnMap::get)
+            .collect(Collectors.toList()))
+            .from(entityTables.get(entity));
   }
 
   public QueryAction selectStatement() {

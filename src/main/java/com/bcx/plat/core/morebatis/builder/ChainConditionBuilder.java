@@ -150,22 +150,22 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
   }
 
   public AndConditionBuilder<CURRENT_NODE> and() {
-    return new AndConditionBuilder<CURRENT_NODE>(false, (CURRENT_NODE) this,
-        conditionBuilderContext);
+    return new AndConditionBuilder<>(false, (CURRENT_NODE) this,
+            conditionBuilderContext);
   }
 
   public AndConditionBuilder<CURRENT_NODE> andNot() {
-    return new AndConditionBuilder<CURRENT_NODE>(true, (CURRENT_NODE) this,
-        conditionBuilderContext);
+    return new AndConditionBuilder<>(true, (CURRENT_NODE) this,
+            conditionBuilderContext);
   }
 
   public OrConditionBuilder<CURRENT_NODE> or() {
-    return new OrConditionBuilder<CURRENT_NODE>(false, (CURRENT_NODE) this,
-        conditionBuilderContext);
+    return new OrConditionBuilder<>(false, (CURRENT_NODE) this,
+            conditionBuilderContext);
   }
 
   public OrConditionBuilder<CURRENT_NODE> orNot() {
-    return new OrConditionBuilder<CURRENT_NODE>(true, (CURRENT_NODE) this, conditionBuilderContext);
+    return new OrConditionBuilder<>(true, (CURRENT_NODE) this, conditionBuilderContext);
   }
 
   public CURRENT_NODE addCondition(Condition condition) {
