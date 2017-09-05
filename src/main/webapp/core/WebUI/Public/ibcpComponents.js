@@ -55,19 +55,7 @@ Vue.component("single-selection", {
         return {
             // 为了将子组件和外部解耦 最好将受影响的数据写在子组件内部 这样子组件就形成一个相对封闭的区间
             // options是调用后端接口 并且只获取一次
-            options: [{
-                value: '选项1',
-                label: '重庆火锅'
-            }, {
-                value: '选项2',
-                label: '老鸭粉丝汤'
-            }, {
-                value: '选项3',
-                label: '小杨生煎'
-            }, {
-                value: '选项4',
-                label: '潮汕牛肉火锅'
-            }],
+            options: [],
             selectValue: {
                 values: [],
                 label: ""
@@ -90,17 +78,20 @@ Vue.component("single-selection", {
     mounted() {
         // 接收父组件传递的初始默认值 并将其赋值给子组件
         this.selectValue.values = this.initialValue;
-    },
-    updated: function () {
         //ex:查询关联表
         this.$http.jsonp(serverPath + "/maintTable/query",{
             search:''
         },{
             jsonp: 'callback'
         }).then(function (res) {
-           var data = res.data.resp.content.data.result;
+            var data = res.data.resp.content.data.result;
             console.log(data);
+            // 动态拼接options
+            this.options = data;
         });
+    },
+    updated: function () {
+        //
     },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
@@ -277,11 +268,11 @@ Vue.component("base-tree", {
  * @author:liyuanquan
  */
 Vue.component("time-picker", {
-    // 时间控件绑定的值  是否时时间段  是否可用  是否只读  时间格式化  是否可输入
-    props: ["value", "isRange", "isDisabled", "readOnly", "formatter", "editAble"],
+    // 默认显示的时间  是否是时间段  是否可用  是否只读  时间格式化  是否可输入
+    props: ["initialTime", "isRange", "isDisabled", "readOnly", "formatter", "editAble"],
     data() {
         return {
-            //
+            value: []
         }
     },
     methods: {
@@ -302,11 +293,11 @@ Vue.component("time-picker", {
  * @author:liyuanquan
  */
 Vue.component("date-time-picker", {
-    // 控件类型(必选)  控件绑定值(必选)  快捷键选择值  输出格式化  是否只读  是否可用  是否禁用  是否可输入
-    props: ["pickerType", "dateTimeVal", "pickerOptions", "formatter", "readOnly", "isDisabled", "editAble"],
+    // 控件类型(必选)  默认显示日期  快捷键选择值  输出格式化  是否只读  是否可用  是否禁用  是否可输入
+    props: ["pickerType", "initialDate", "pickerOptions", "formatter", "readOnly", "isDisabled", "editAble"],
     data() {
         return {
-            //
+            dateTimeVal: []
         }
     },
     methods: {
@@ -320,4 +311,98 @@ Vue.component("date-time-picker", {
     },
     template: `<el-date-picker @change="datetimeVal" v-model="dateTimeVal" :type="pickerType" :format="formatter" placeholder="选择日期时间范围" :picker-options="pickerOptions" :readonly="readOnly" :disabled="isDisabled" :editable="editAble">
                 </el-date-picker>`
+});
+
+/**
+ * @description:级联选择组件
+ * @author:liyuanquan
+ */
+Vue.component("cascader", {
+    // 触发方式(点击或者滑过)  设置默认显示的值
+    props: ["triggerType", "initialVal"],
+    data() {
+        return {
+            options: [{
+                value: "beijing",
+                label: "北京市",
+                children: [{
+                    value: "chaoyang",
+                    label: "朝阳区",
+                    children: [{
+                        value: "huixinxijie",
+                        label: "惠新西街"
+                    }]
+                }, {
+                    value: "haidian",
+                    label: "海淀区"
+                }, {
+                    value: "dongcheng",
+                    label: "东城区"
+                }, {
+                    value: "xicheng",
+                    label: "西城区"
+                }]
+            }, {
+                value: "shanghai",
+                label: "上海市",
+                children: [{
+                    value: "baoshan",
+                    label: "宝山区",
+                    children: [{
+                        value: "youyilu",
+                        label: "友谊路"
+                    }]
+                }, {
+                    value: "pudong",
+                    label: "浦东新区"
+                }, {
+                    value: "jingan",
+                    label: "静安区"
+                }, {
+                    value: "putuo",
+                    label: "普陀区"
+                }]
+            }, {
+                value: "liaoning",
+                label: "辽宁省",
+                children: [{
+                    value: "shenyang",
+                    label: "沈阳市"
+                }, {
+                    value: "dalian",
+                    label: "大连市",
+                    children: [{
+                        value: "jinzhou",
+                        label: "金州区"
+                    }]
+                }]
+            }, {
+                value: "guangxi",
+                label: "广西壮族自治区",
+                children: [{
+                    value: "nanning",
+                    label: "南宁市"
+                }, {
+                    value: "liuzhou",
+                    label: "柳州市",
+                    children: [{
+                        value: "yufeng",
+                        label: "鱼峰区"
+                    }]
+                }]
+            }],
+            selectedOptions: []
+        }
+    },
+    methods: {
+        handleChange(val) {
+            // console.log(val);
+            this.$emit("get-select", val);
+        }
+    },
+    mounted() {
+        // 接收默认值
+        this.selectedOptions = this.initialVal;
+    },
+    template: `<el-cascader :expand-trigger="triggerType" :options="options" v-model="selectedOptions" @change="handleChange"></el-cascader>`
 });
