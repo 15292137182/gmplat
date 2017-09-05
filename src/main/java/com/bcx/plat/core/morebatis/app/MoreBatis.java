@@ -226,6 +226,10 @@ public class MoreBatis {
     return new QueryAction(this, translator);
   }
 
+  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values) {
+    return update(entity,values,null);
+  }
+
   public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values,Condition condition) {
     UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values).where(condition);
     update.setEntityClass(entity);
