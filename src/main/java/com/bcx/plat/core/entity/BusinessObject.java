@@ -19,9 +19,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> {
   private String belongModule;  //所属模块
   private String belongSystem;  //所属系统
   private String relateTemplateObject;  //关联模板对象
-
-  private String rowId;
-
   /**
    * 构建 - 创建信息
    *
@@ -35,14 +32,6 @@ public class BusinessObject extends BaseEntity<BusinessObject> {
     getBaseTemplateBean().setVersion(BaseConstants.VERSION);
     getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
     return this;
-  }
-
-  public String getRowId() {
-    return rowId;
-  }
-
-  public void setRowId(String rowId) {
-    this.rowId = rowId;
   }
 
   public String getRelateTemplateObject() {

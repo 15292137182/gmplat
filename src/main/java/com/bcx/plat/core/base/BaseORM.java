@@ -165,7 +165,15 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   public List<T> selectList(List<Condition> conditions) {
     conditions.add(NOT_DELETE_OR);
     List<Map<String, Object>> result = MORE_BATIS.select(getClass()).where(new And(conditions)).execute();
-    return UtilsTool.jsonToObj(UtilsTool.objToJson(result), List.class, getClass());
+    List<T> ts = new ArrayList<>();
+    result.forEach(map -> {
+      try {
+        ts.add((T) getClass().newInstance().fromMap(map));
+      } catch (InstantiationException | IllegalAccessException e) {
+        e.printStackTrace();
+      }
+    });
+    return ts;
   }
 
   /**
@@ -202,6 +210,10 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   public int deleteAll() {
     return delete(new ArrayList<>());
+  }
+
+  public int deleteById() {
+    return deleteById(getPk());
   }
 
   public int deleteById(Serializable id) {
