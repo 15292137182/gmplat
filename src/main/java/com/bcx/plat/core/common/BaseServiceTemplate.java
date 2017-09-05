@@ -23,8 +23,9 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class BaseServiceTemplate<T extends BaseEntity<T>> extends BaseService {
-  protected final Class<? extends BaseEntity> entityClass = (Class<? extends BaseEntity>) ((ParameterizedType) this.getClass()
-          .getGenericSuperclass()).getActualTypeArguments()[0];
+
+  protected final Class<? extends BaseEntity> entityClass =
+          (Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   private final Set<String> fieldNames = getFieldNamesFromClass(entityClass);
 
   /**
@@ -34,10 +35,6 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> extends BaseService {
 
   @Autowired
   private MoreBatis moreBatis;
-
-  public void setMoreBatis(MoreBatis moreBatis) {
-    this.moreBatis = moreBatis;
-  }
 
   final public List<Map<String, Object>> select(Condition condition) {
     /**
@@ -51,7 +48,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> extends BaseService {
     return orders;
   }
 
-  final public List<Map<String, Object>> select(Condition condition, List<Order> orders) {
+  public List<Map<String, Object>> select(Condition condition, List<Order> orders) {
     return selectColumns(condition, moreBatis.getColumns(entityClass), orders);
   }
 

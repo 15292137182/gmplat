@@ -18,5 +18,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class TemplateObjectService extends BaseService<TemplateObject> {
 
-
 }

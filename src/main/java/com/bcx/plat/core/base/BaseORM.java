@@ -3,8 +3,10 @@ package com.bcx.plat.core.base;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -15,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -46,21 +47,21 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   /**
    * 更新数据     ！！！空字符串更新，null不更新
    *
-   * @param conditions 条件
+   * @param condition 条件
    * @return 状态码
    */
-  public int update(List<Condition> conditions) {
-    return update(conditions, false);
+  public int update(Condition condition) {
+    return update(condition, false);
   }
 
   /**
    * 更新所有数据  包括 null
    *
-   * @param conditions 条件
+   * @param condition 条件
    * @return 状态码
    */
-  public int updateAllColums(List<Condition> conditions) {
-    return update(conditions, true);
+  public int updateAllColums(Condition condition) {
+    return update(condition, true);
   }
 
   /**
@@ -71,9 +72,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   public int updateById() {
     Serializable _rowId = this.getPk();
     if (null != _rowId) {
-      List<Condition> conditions = new ArrayList<>();
-      conditions.add(new FieldCondition("rowId", Operator.EQUAL, _rowId));
-      return update(conditions, false);
+      return update(new FieldCondition("rowId", Operator.EQUAL, _rowId), false);
     } else {
       return -1;
     }
@@ -87,9 +86,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   public int updateAllColumsById() {
     Serializable _rowId = this.getPk();
     if (null != _rowId) {
-      List<Condition> conditions = new ArrayList<>();
-      conditions.add(new FieldCondition("rowId", Operator.EQUAL, _rowId));
-      return update(conditions, true);
+      return update(new FieldCondition("rowId", Operator.EQUAL, _rowId), true);
     } else {
       return -1;
     }
@@ -98,12 +95,12 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   /**
    * 更新条件
    *
-   * @param conditions 条件
+   * @param condition  条件
    * @param allColumns 所有字段
    * @return 更新后的状态码
    */
   @SuppressWarnings("unchecked")
-  private int update(List<Condition> conditions, boolean allColumns) {
+  private int update(Condition condition, boolean allColumns) {
     Map map = this.toMap();
     if (null != map) {
       if (allColumns) {
@@ -113,8 +110,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
           }
         });
       }
-      conditions.add(NOT_DELETE_OR);
-      UpdateAction ua = MORE_BATIS.update(getClass(), map, new And(conditions));
+      UpdateAction ua = MORE_BATIS.update(getClass(), map, new And(condition, NOT_DELETE_OR));
       return ua.execute();
     } else {
       return -1;
@@ -127,7 +123,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @return 结果集合
    */
   public List<T> selectAll() {
-    return selectList(new ArrayList<>());
+    return selectList(null, null);
   }
 
   /**
@@ -146,9 +142,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   public T selectOneById(Serializable id) {
     if (null != id) {
-      List<Condition> conditions = new ArrayList<>();
-      conditions.add(new FieldCondition("rowId", Operator.EQUAL, id));
-      List<T> ts = selectList(conditions);
+      List<T> ts = selectSimple(new FieldCondition("rowId", Operator.EQUAL, id));
       if (!ts.isEmpty()) {
         return ts.get(0);
       }
@@ -156,20 +150,31 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     return null;
   }
 
-  public List<T> selectList(Condition... conditions) {
-    return selectList(Arrays.asList(conditions));
+  public List<T> selectSimple(Condition... condition) {
+    return selectList(new And(condition), (Order) null);
   }
 
   /**
    * 查询
    *
-   * @param conditions 条件
+   * @param condition 条件
    * @return 结果集合
    */
   @SuppressWarnings("unchecked")
-  public List<T> selectList(List<Condition> conditions) {
-    conditions.add(NOT_DELETE_OR);
-    List<Map<String, Object>> result = MORE_BATIS.select(getClass()).where(new And(conditions)).execute();
+  public List<T> selectList(Condition condition, Order... orders) {
+    Condition and;
+    if (null != condition) {
+      and = new And(condition, NOT_DELETE_OR);
+    } else {
+      and = new And(NOT_DELETE_OR);
+    }
+    QueryAction qa = MORE_BATIS.select(getClass()).where(and);
+    List<Map<String, Object>> result;
+    if (orders != null) {
+      result = qa.orderBy(orders).execute();
+    } else {
+      result = qa.execute();
+    }
     List<T> ts = new ArrayList<>();
     result.forEach(map -> {
       try {
@@ -184,14 +189,20 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   /**
    * 分页查询
    *
-   * @param conditions 条件
-   * @param num        页面号
-   * @param size       大小
+   * @param condition 条件
+   * @param num       页面号
+   * @param size      大小
    * @return 返回页面查询信息
    */
   @SuppressWarnings("unchecked")
-  public PageResult<List<T>> selectPage(List<Condition> conditions, int num, int size) {
-    PageResult result = MORE_BATIS.select(getClass()).where(new And(conditions)).selectPage(num, size);
+  public PageResult<List<T>> selectPage(Condition condition, int num, int size, Order... orders) {
+    Condition and;
+    if (null != condition) {
+      and = new And(condition, NOT_DELETE_OR);
+    } else {
+      and = new And(NOT_DELETE_OR);
+    }
+    PageResult result = MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
     List<T> data = UtilsTool.jsonToObj(UtilsTool.objToJson(result.getResult()), List.class, getClass());
     result.setResult(data);
     return result;
@@ -200,12 +211,18 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   /**
    * 物理删除，所有删除模版都是物理删除
    *
-   * @param conditions 条件
+   * @param condition 条件
    * @return 状态码
    */
-  public int delete(List<Condition> conditions) {
-    conditions.add(NOT_DELETE_OR);
-    return MORE_BATIS.delete(getClass(), new And(conditions)).execute();
+  public int delete(Condition condition) {
+    Condition and;
+    if (null != condition) {
+      and = new And(condition, NOT_DELETE_OR);
+    } else {
+      and = new And(NOT_DELETE_OR);
+    }
+    return MORE_BATIS.delete(getClass(), and).execute();
+
   }
 
   /**
@@ -214,7 +231,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @return 状态码
    */
   public int deleteAll() {
-    return delete(new ArrayList<>());
+    return delete(null);
   }
 
   public int deleteById() {
@@ -225,9 +242,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null == id) {
       return -1;
     } else {
-      List<Condition> conditions = new ArrayList<>();
-      conditions.add(new FieldCondition("rowId", Operator.EQUAL, id));
-      return delete(conditions);
+      return delete(new FieldCondition("rowId", Operator.EQUAL, id));
     }
   }
 

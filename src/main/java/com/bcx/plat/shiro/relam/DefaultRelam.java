@@ -54,7 +54,7 @@ public class DefaultRelam extends AuthorizingRealm {
     String password = String.valueOf(upToken.getPassword());
     if (isValid(userId) && isValid(password)) {
       List<User> userMaps = new User()
-              .selectList(new FieldCondition("id", Operator.EQUAL, userId));
+              .selectSimple(new FieldCondition("id", Operator.EQUAL, userId));
       if (userMaps.size() == 1) {
         User user = userMaps.get(0);
         if (null != user) {
