@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 /**
  * 对事务管理器进行单元测试
- *
+ * <p>
  * Create By HCL at 2017/8/14
  */
 public class TXManagerTest extends BaseTest {
@@ -20,9 +20,9 @@ public class TXManagerTest extends BaseTest {
   SequenceGenerateService mapper;
 
   /**
-   * 测试事务
+   * 测试事务,会抛出异常
    */
-  @Test
+  @Test(expected = RuntimeException.class)
   public void test() throws Exception {
     int size1 = mapper.select(new HashMap()).size();
     SequenceGenerate delete = new SequenceGenerate();
@@ -32,13 +32,17 @@ public class TXManagerTest extends BaseTest {
       generate.buildCreateInfo();
       generate.buildModifyInfo();
       mapper.insert(generate.toMap());
-      TXManager.doInNewTX(() -> { // 事务二
-        SequenceGenerate generate1 = new SequenceGenerate();
-        generate1.buildCreateInfo();
-        generate1.buildModifyInfo();
-        mapper.insert(generate1.toMap());
-        throw Lang.makeThrow("抛出一号异常-----");  // 抛出异常，事务二回滚，事务一不回滚
-      });
+      try {
+        TXManager.doInNewTX(() -> { // 事务二
+          SequenceGenerate generate1 = new SequenceGenerate();
+          generate1.buildCreateInfo();
+          generate1.buildModifyInfo();
+          mapper.insert(generate1.toMap());
+          throw Lang.makeThrow("抛出一号异常-----");  // 抛出异常，事务二回滚，事务一不回滚
+        });
+      } catch (RuntimeException ignore) {
+
+      }
       int size2 = mapper.select(new HashMap()).size();
       assert (size2 - size1 == 1); // 所以成功一个
 

@@ -25,7 +25,7 @@ public class BusinessObjectControllerTest extends BaseControllerTest<BusinessObj
 
     @Override
     protected String delete() {
-        return "/core/businObj/deleteEntity";
+      return "/core/businObj/delete";
     }
 
     @Override

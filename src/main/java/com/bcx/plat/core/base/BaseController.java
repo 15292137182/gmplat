@@ -1,5 +1,6 @@
 package com.bcx.plat.core.base;
 
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +42,15 @@ public class BaseController {
   @SuppressWarnings("unchecked")
   protected Object result(HttpServletRequest request, ServiceResult serviceResult, Locale locale) {
     Map map = new HashMap();
-    String msg = serviceResult.getContent().getMsg();
+    PlatResult content = serviceResult.getContent();
+    String msg = (content == null ? null : content.getMsg());
     String message = null;
-    try {
-      message = messageSource.getMessage(msg, null, locale);
-    } catch (Exception e) {
-      e.printStackTrace();
+    if (null != msg) {
+      try {
+        message = messageSource.getMessage(msg, null, locale);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
     if (isValid(message)) {
       serviceResult.getContent().setMsg(isValid(message) ? message : msg);

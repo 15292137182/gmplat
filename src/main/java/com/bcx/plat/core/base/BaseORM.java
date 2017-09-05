@@ -3,6 +3,7 @@ package com.bcx.plat.core.base;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.utils.SpringContextHolder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 基础 ORM 层，提供基本的方法
@@ -11,36 +12,21 @@ import com.bcx.plat.core.utils.SpringContextHolder;
  */
 public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<T> {
 
-  /**
-   * @return MoreBatis
-   */
-  private MoreBatis getMoreBatis() {
-    return (MoreBatis) SpringContextHolder.getBean("moreBatis");
-  }
+  @JsonIgnore
+  private static MoreBatis moreBatis = (MoreBatis) SpringContextHolder.getBean("moreBatis");
 
 
   /**
-   * Mr 汪，我需要你实现这些方法 -.-
+   * 插入数据方法
+   *
+   * @return 插入后的状态码
    */
-  // TODO int insert Mr汪，实现下列方法
+  @SuppressWarnings("unchecked")
   public int insert() {
-    return getMoreBatis().insertEntity((T)this);
+    return moreBatis.insertEntity((T) this);
   }
 
-  public T selectById() {
-    return (T) getMoreBatis().selectEntityByPks((T) this);
-  }
 
-  public int updateById() {
-    return getMoreBatis().updateEntity((T)this);
-  }
-
-  public int deleteById() {
-    return getMoreBatis().deleteEntity((T)this);
-  }
-
-  // TODO int deleteById() 删除当前这条数据
-  // TODO int deleteByCondition(condition) 根据条件删除
 
   // TODO int update(condition) 更新数据     ！！！空字符串更新，null不更新
   // TODO int updateAll(condition)  更新所有数据  包括 null
@@ -49,7 +35,8 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   // TODO int delete(condition)
   // TODO int deleteAll()
-  // TODO int deleteById
+  // TODO int deleteById() 删除当前这条数据
+  // TODO int deleteByCondition(condition) 根据条件删除
 
   // TODO List<T> selectAll()
   // TODO List<T> selectOne(condition)

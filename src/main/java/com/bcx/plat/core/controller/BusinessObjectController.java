@@ -62,10 +62,12 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
     String rowId = businessObject.getRowId();
     String rto = businessObject.getRelateTemplateObject();
     List list = UtilsTool.jsonToObj(rto, List.class);
-    for (Object li : list) {
-      brt.setBusinessRowId(rowId);
-      brt.setTemplateRowId(li.toString());
-      businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
+    if (null != list) {
+      for (Object li : list) {
+        brt.setBusinessRowId(rowId);
+        brt.setTemplateRowId(li.toString());
+        businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
+      }
     }
     if (insert != 1) {
       return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
