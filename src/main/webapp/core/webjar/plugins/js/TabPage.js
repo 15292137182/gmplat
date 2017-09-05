@@ -671,8 +671,20 @@ var TableKeyValueSet = (function(){
 
 //动态加载html代码片段
 var DynamicStitching = (function(){
+    var searchBlockArr = [];//查询块输入框key值集合
     var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small">查看</el-button><el-button type="text" size="small">编辑</el-button></template></el-table-column>';
     var dataHtmlObj = null;//用来保存vue实例对象
+    var formObj = {};
+    var searchObj = {//父组件属性
+        select:'',
+        click:function(){//父组件查询块按钮事件
+            var obj = dataHtmlObj;
+            console.log(obj.ruleForm1.select);
+            for(var j=0;j<searchBlockArr.length;j++){
+                console.log(obj.ruleForm1[searchBlockArr[j]]);
+            }
+        }
+    }
     //查询块
     var searchBlock = function(obj){//动态拼接查询块html代码片段
         var str='';
@@ -680,7 +692,13 @@ var DynamicStitching = (function(){
         var keywordOne = obj.keywordOne;
         var keywordTwo = obj.keywordTwo;
         var keywordThree = obj.keywordThree;
-        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        searchBlockArr.push(obj.ename);//key值
+        for(var j=0;j<searchBlockArr.length;j++){
+            searchObj[searchBlockArr[j]]='';
+            var demo1 = "searchInput." + searchBlockArr[j];
+        }
+        // str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ demo1 +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
         return str;
     }
     //表单块
@@ -693,7 +711,10 @@ var DynamicStitching = (function(){
         var laberName = obj.displayTitle;
         switch (caseName){
             case 'input'://单行文本框
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
+                var demo = obj.ename;
+                formObj[demo]='';
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="childFormTable.demo"></el-input></el-form-item></el-col></el-row>'
+                console.log(formObj[demo]);
                 break;
             case 'textarea'://多行文本框
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
@@ -709,6 +730,7 @@ var DynamicStitching = (function(){
                 break;
             case "date"://日期框
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
+                break;
         }
         return str;
     }
@@ -783,25 +805,20 @@ var DynamicStitching = (function(){
     var searchSelect = function(){//父组件数据
         return {
             props: [],
-            ruleForm1:{//父组件属性
-                input5:'',
-                select:'',
-                click:function(){//父组件查询块按钮事件
-                    var obj = dataHtmlObj;
-                    console.log(obj.ruleForm1.select);
-                    console.log(obj.ruleForm1.input5);
-                    console.log(obj.formTable.msg);
-                }
-            },
-            formTable:{//父组件表单对象
-                msg:''
-            },
+            // ruleForm1:{//父组件属性
+            //     input5:'',
+            //     select:'',
+            //     click:function(){//父组件查询块按钮事件
+            //         var obj = dataHtmlObj;
+            //         console.log(formObj);
+            //         console.log(obj.ruleForm1.select);
+            //         console.log(obj.ruleForm1.input5);
+            //     }
+            // },
+            ruleForm1:searchObj,
+            formTable:formObj,
             table:{
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }]
+                tableData: []
             }
         }
     }

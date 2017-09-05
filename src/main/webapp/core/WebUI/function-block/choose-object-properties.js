@@ -13,7 +13,8 @@ var em = new Vue({
         var data = {
             "url":serverPath + "/businObjPro/queryBusinPro",
             "jsonData":{
-                objRowId:window.parent.em.relateBusiObjId
+                objRowId:window.parent.em.relateBusiObjId,
+                frontRowId:window.parent.em.funcRowIds
             },
             "obj":this
         }

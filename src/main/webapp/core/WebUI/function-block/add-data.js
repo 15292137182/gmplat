@@ -44,10 +44,12 @@ var em=new Vue({
         rightRowId:'',//右边表行ID
         SupportSorting:'',//支持排序
         ExactSearch:'',//是否精确查询
+        funcRowIds:'',
     },
     methods:{
         searchConnectObj(){//查询所有对象属性，弹出对象属性表
             var htmlUrl = 'choose-object-properties.html';
+            this.funcRowIds = window.parent.topButtonObj.rowObjId;
             littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象属性', '450px', '500px',false);
         },
         isChecked(){//判断是否显示，选中
