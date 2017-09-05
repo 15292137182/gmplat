@@ -672,6 +672,7 @@ var TableKeyValueSet = (function(){
 //动态加载html代码片段
 var DynamicStitching = (function(){
     var searchBlockArr = [];//查询块输入框key值集合
+    var formBlockArr = [];//表单块单行文本框key值集合
     var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small">查看</el-button><el-button type="text" size="small">编辑</el-button></template></el-table-column>';
     var dataHtmlObj = null;//用来保存vue实例对象
     var formObj = {};
@@ -692,13 +693,11 @@ var DynamicStitching = (function(){
         var keywordOne = obj.keywordOne;
         var keywordTwo = obj.keywordTwo;
         var keywordThree = obj.keywordThree;
-        searchBlockArr.push(obj.ename);//key值
-        for(var j=0;j<searchBlockArr.length;j++){
-            searchObj[searchBlockArr[j]]='';
-            var demo1 = "searchInput." + searchBlockArr[j];
-        }
+        searchBlockArr.push(obj.ename);//存搜索框key值的数组
+        searchObj[obj.ename]='';//创建搜索框对象属性，名字为key名
+        var model = "searchInput." + obj.ename;//绑定v-model数据
         // str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
-        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ demo1 +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
         return str;
     }
     //表单块
@@ -711,10 +710,10 @@ var DynamicStitching = (function(){
         var laberName = obj.displayTitle;
         switch (caseName){
             case 'input'://单行文本框
-                var demo = obj.ename;
-                formObj[demo]='';
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="childFormTable.demo"></el-input></el-form-item></el-col></el-row>'
-                console.log(formObj[demo]);
+                formBlockArr.push(obj.ename);//存单行文本框key值的数组
+                formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case 'textarea'://多行文本框
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
@@ -743,7 +742,7 @@ var DynamicStitching = (function(){
     var Concatenation = function(arr){//判断是什么功能块，并获取html片段
         var htmlObj = {};
         var str = '';
-        var tableColumn=null;
+        var tableColumn=null;//table列
         var i;
         for(i=0;i<arr.length;i++){
             var obj = arr[i];
@@ -805,16 +804,6 @@ var DynamicStitching = (function(){
     var searchSelect = function(){//父组件数据
         return {
             props: [],
-            // ruleForm1:{//父组件属性
-            //     input5:'',
-            //     select:'',
-            //     click:function(){//父组件查询块按钮事件
-            //         var obj = dataHtmlObj;
-            //         console.log(formObj);
-            //         console.log(obj.ruleForm1.select);
-            //         console.log(obj.ruleForm1.input5);
-            //     }
-            // },
             ruleForm1:searchObj,
             formTable:formObj,
             table:{
@@ -829,7 +818,8 @@ var DynamicStitching = (function(){
         htmlComponent:htmlComponent,
         InstanceObject:InstanceObject,
         searchSelect:searchSelect,
-        Concatenation:Concatenation
+        Concatenation:Concatenation,
+        formBlockArr:formBlockArr
     }
 })()
 

@@ -39,8 +39,9 @@
 </body>
 <script>
         var code = ["obj102017-08-31000001","obj102017-09-01000002","obj102017-09-04000001"];
+        var strHtml='';
         DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
-            var strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
+             strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
             var de = new Vue({
                 el: "#app",
                 data:DynamicStitching.searchSelect(),//获取父组件数据
@@ -82,11 +83,12 @@
             el:"#dataSetConfigButton",
             data:{
                 divIndex:'',
+                strHtml:''
             },
             methods:{
                 addDataSetConfig(){
                     this.divIndex = ibcpLayer.ShowDiv('demo1.html','新增信息测试','400px', '500px',function(){
-
+                        vm.strHtml = strHtml;
                     })
                 }
             }
