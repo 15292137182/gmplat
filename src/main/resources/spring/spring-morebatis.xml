@@ -40,6 +40,8 @@
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_user_name" p:alies="deleteUserName"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="delete_flag" p:alies="deleteFlag"/>
               <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="obj_row_id" p:alies="objRowId"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="default_value" p:alies="defaultValue"/>
+              <bean class="com.bcx.plat.core.morebatis.component.Field" p:fieldName="extends_ename" p:alies="extendsEname"/>
             </list>
           </constructor-arg>
           <constructor-arg name="pks">

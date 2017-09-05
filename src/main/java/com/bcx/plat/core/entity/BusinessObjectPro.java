@@ -18,97 +18,116 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 @Table(TableInfo.T_BUSINESS_OBJECT_PRO)
 public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements Serializable {
 
-  @TablePK
-  private String rowId;//唯一标识
-  private String propertyCode;//业务对象属性代码
-  private String propertyName;//业务对象属性名称
-  private String relateTableColumn;//关联表字段
-  private String valueType;//值类型
-  private String valueResourceType;//值来源类型
-  private String valueResourceContent;//值来源内容
-  private String wetherExpandPro;//是否为扩展属性
-  private String objRowId;//业务对象关联rowId
+    @TablePK
+    private String rowId;//唯一标识
+    private String propertyCode;//业务对象属性代码
+    private String propertyName;//业务对象属性名称
+    private String relateTableColumn;//关联表字段
+    private String valueType;//值类型
+    private String valueResourceType;//值来源类型
+    private String valueResourceContent;//值来源内容
+    private String wetherExpandPro;//是否为扩展属性
+    private String objRowId;//业务对象关联rowId
+    private String defaultValue;//默认值
+    private String extendsEname;//扩展字段英文名
 
-  /**
-   * 构建 - 创建信息
-   *
-   * @return 返回自身
-   */
-  @Override
-  public BusinessObjectPro buildCreateInfo() {
-    setPropertyCode(SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT_PRO, null));
-    setRowId(lengthUUID(32));
-    return super.buildCreateInfo();
-  }
-  public String getObjRowId() {
-    return objRowId;
-  }
+    /**
+     * 构建 - 创建信息
+     *
+     * @return 返回自身
+     */
+    @Override
+    public BusinessObjectPro buildCreateInfo() {
+        setPropertyCode(SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT_PRO, null));
+        setRowId(lengthUUID(32));
+        return super.buildCreateInfo();
+    }
 
-  public void setObjRowId(String objRowId) {
-    this.objRowId = objRowId;
-  }
+    public String getDefaultValue() {
+        return defaultValue;
+    }
 
-  public String getRowId() {
-    return rowId;
-  }
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 
-  public void setRowId(String rowId) {
-    this.rowId = rowId;
-  }
+    public String getExtendsEname() {
+        return extendsEname;
+    }
 
-  public String getPropertyCode() {
-    return propertyCode;
-  }
+    public void setExtendsEname(String extendsEname) {
+        this.extendsEname = extendsEname;
+    }
 
-  public void setPropertyCode(String propertyCode) {
-    this.propertyCode = propertyCode;
-  }
+    public String getObjRowId() {
+        return objRowId;
+    }
 
-  public String getPropertyName() {
-    return propertyName;
-  }
+    public void setObjRowId(String objRowId) {
+        this.objRowId = objRowId;
+    }
 
-  public void setPropertyName(String propertyName) {
-    this.propertyName = propertyName;
-  }
+    public String getRowId() {
+        return rowId;
+    }
 
-  public String getRelateTableColumn() {
-    return relateTableColumn;
-  }
+    public void setRowId(String rowId) {
+        this.rowId = rowId;
+    }
 
-  public void setRelateTableColumn(String relateTableColumn) {
-    this.relateTableColumn = relateTableColumn;
-  }
+    public String getPropertyCode() {
+        return propertyCode;
+    }
 
-  public String getValueType() {
-    return valueType;
-  }
+    public void setPropertyCode(String propertyCode) {
+        this.propertyCode = propertyCode;
+    }
 
-  public void setValueType(String valueType) {
-    this.valueType = valueType;
-  }
+    public String getPropertyName() {
+        return propertyName;
+    }
 
-  public String getValueResourceType() {
-    return valueResourceType;
-  }
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
 
-  public void setValueResourceType(String valueResourceType) {
-    this.valueResourceType = valueResourceType;
-  }
+    public String getRelateTableColumn() {
+        return relateTableColumn;
+    }
 
-  public String getValueResourceContent() {
-    return valueResourceContent;
-  }
+    public void setRelateTableColumn(String relateTableColumn) {
+        this.relateTableColumn = relateTableColumn;
+    }
 
-  public void setValueResourceContent(String valueResourceContent) {
-    this.valueResourceContent = valueResourceContent;
-  }
+    public String getValueType() {
+        return valueType;
+    }
 
-  public String getWetherExpandPro() {
-    return wetherExpandPro;
-  }
+    public void setValueType(String valueType) {
+        this.valueType = valueType;
+    }
 
-  public void setWetherExpandPro(String wetherExpandPro) {
-    this.wetherExpandPro = wetherExpandPro;
-  }
+    public String getValueResourceType() {
+        return valueResourceType;
+    }
+
+    public void setValueResourceType(String valueResourceType) {
+        this.valueResourceType = valueResourceType;
+    }
+
+    public String getValueResourceContent() {
+        return valueResourceContent;
+    }
+
+    public void setValueResourceContent(String valueResourceContent) {
+        this.valueResourceContent = valueResourceContent;
+    }
+
+    public String getWetherExpandPro() {
+        return wetherExpandPro;
+    }
+
+    public void setWetherExpandPro(String wetherExpandPro) {
+        this.wetherExpandPro = wetherExpandPro;
+    }
 }

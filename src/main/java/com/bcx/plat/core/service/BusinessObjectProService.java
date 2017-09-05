@@ -142,10 +142,8 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
                     String relateBusiPro1 = null;
                     try {
                         relateBusiPro1 = results.get(i).get("objRowId").toString();
-                    } catch (Exception e) {
-                        if ((!UtilsTool.isValid(relateBusiPro1))) {
-                            continue;
-                        }
+                    } catch (NullPointerException e) {
+                        continue;
                     }
                     if ((!UtilsTool.isValid(relateBusiPro1))) {
                         continue;
