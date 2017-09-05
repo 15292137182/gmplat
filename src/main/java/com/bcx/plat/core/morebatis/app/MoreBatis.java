@@ -165,7 +165,7 @@ public class MoreBatis {
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
-    return this.update(entityClass, values).where(new And(pkConditions)).execute();
+    return this.update(entityClass, values,new And(pkConditions)).execute();
   }
 
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
@@ -226,8 +226,8 @@ public class MoreBatis {
     return new QueryAction(this, translator);
   }
 
-  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values) {
-    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
+  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values,Condition condition) {
+    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values).where(condition);
     update.setEntityClass(entity);
     return update;
   }
