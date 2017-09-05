@@ -75,13 +75,14 @@ public class BusinessObjectProController extends
      *
      * @param objRowId 根据业务对象rowId查找业务对象下所有属性
      * @param request  request请求
+     * @param frontRowId  功能块rowId
      * @param locale   国际化参数
      * @return ServiceResult
      */
     @RequestMapping("/queryBusinPro")
-    public Object queryBusinPro(String objRowId, HttpServletRequest request, Locale locale) {
+    public Object queryBusinPro(String objRowId, String frontRowId,HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(objRowId)) {
-            PlatResult platResult = businessObjectProService.queryBusinPro(objRowId);
+            PlatResult platResult = businessObjectProService.queryBusinPro(objRowId,frontRowId);
             return result(request, ServiceResult.Msg(platResult), locale);
         }else{
             return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,null)), locale);

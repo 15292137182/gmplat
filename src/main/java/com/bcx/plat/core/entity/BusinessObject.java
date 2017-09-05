@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.manager.SequenceManager;
+import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * 业务对象实体类 Created by Went on 2017/8/1.
@@ -35,6 +36,7 @@ public class BusinessObject extends BaseEntity<BusinessObject> {
     setVersion(BaseConstants.VERSION);
     // getBaseTemplateBean().setStatus(BaseConstants.UNUSED);
     setStatus(BaseConstants.UNUSED);
+    this.rowId = UtilsTool.lengthUUID(32);
     return this;
   }
 

@@ -5,6 +5,7 @@ import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
@@ -40,7 +41,7 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
     /**
      * 根据业务对象属性rowId查询当前数据
      *
-     * @param rowId      唯一标识
+     * @param rowId 唯一标识
      * @return ServiceResult
      */
     public PlatResult queryById(String rowId) {
@@ -66,10 +67,11 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
      * 供前端功能块属性使用
      * 根据业务对象rowId查询当前业务对象下的所有属性
      *
-     * @param objRowId 业务对象唯一标识
+     * @param objRowId   业务对象唯一标识
+     * @param frontRowId 功能块唯一标识
      * @return PlatResult
      */
-    public PlatResult queryBusinPro(String objRowId) {
+    public PlatResult queryBusinPro(String objRowId, String frontRowId) {
         //通过业务对象查找到对应的模板的rowId
         String templateRowId;
         List<Map<String, Object>> execu;
@@ -121,6 +123,43 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
                 results.add(map);
             }
         }
+//        for (Map<String, Object> res : results) {
+//            String obj = res.get("objRowId").toString();
+//            List<Map<String, Object>> relateBusiPro = moreBatis.select(FrontFuncPro.class).where(new FieldCondition("relateBusiPro", Operator.EQUAL, obj)).execute();
+//            if (!UtilsTool.isValid(relateBusiPro)) {
+//                continue;
+//            }
+//            for (Map<String,Object> relate : relateBusiPro){
+//                if (relate.get("funcRowId").equals(frontRowId)) {
+//                    res.remove(res);
+//                }
+//            }
+//        }
+        List<Map<String, Object>> relateBusiPro = moreBatis.select(FrontFuncPro.class).where(new FieldCondition("funcRowId", Operator.EQUAL, frontRowId)).execute();
+        for (Map<String, Object> relate : relateBusiPro) {
+            if (relate.get("relateBusiPro").equals(objRowId)) {
+                for (int i = 0; i < results.size(); i++) {
+                    String relateBusiPro1 = null;
+                    try {
+                        relateBusiPro1 = results.get(i).get("objRowId").toString();
+                    } catch (Exception e) {
+                        if ((!UtilsTool.isValid(relateBusiPro1))) {
+                            continue;
+                        }
+                        if (relateBusiPro1.equals(objRowId)) {
+                            results.remove(i);
+                        }
+                    }
+                    if ((!UtilsTool.isValid(relateBusiPro1))) {
+                        continue;
+                    }
+                    if (relateBusiPro1.equals(objRowId)) {
+                        results.remove(i);
+                    }
+                }
+            }
+        }
+
         if (result.size() == 0) {
             logger.warn("根据业务对象rowId查询当前业务对象下的所有属性_失败");
             return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);

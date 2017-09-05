@@ -292,8 +292,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
         List<Map<String, Object>> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
         for (Map<String ,Object> bri: businessRowId){
             String  templateRowId = bri.get("templateRowId").toString();
-            List<Map<String, Object>> result = moreBatis.select(entityClass)
-                    .from(moreBatis.getTable(TemplateObjectPro.class))
+            List<Map<String, Object>> result = moreBatis.select(TemplateObjectPro.class)
                     .where(new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId))
                     .orderBy(orders).execute();
 
