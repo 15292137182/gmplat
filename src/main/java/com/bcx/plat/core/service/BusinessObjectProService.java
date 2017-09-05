@@ -146,9 +146,6 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
                         if ((!UtilsTool.isValid(relateBusiPro1))) {
                             continue;
                         }
-                        if (relateBusiPro1.equals(objRowId)) {
-                            results.remove(i);
-                        }
                     }
                     if ((!UtilsTool.isValid(relateBusiPro1))) {
                         continue;
