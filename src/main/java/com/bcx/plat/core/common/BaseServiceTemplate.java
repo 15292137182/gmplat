@@ -129,7 +129,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
   }
 
   public int update(Map args, Condition condition) {
-    return 0;
+    return moreBatis.update(entityClass,args).where(condition).execute();
   }
 
   public int delete(Map args) {

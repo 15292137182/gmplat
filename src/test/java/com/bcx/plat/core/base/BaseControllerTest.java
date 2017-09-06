@@ -75,6 +75,7 @@ public abstract class BaseControllerTest<T> extends BaseTest {
     sb.delete(0, sb.indexOf("{")).delete(sb.lastIndexOf("}") + 1, sb.length());
     // 客户端获得 serviceResult
 //    ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+    //TODO 序列化失败了
     PlatResult platResult = jsonToObj(sb.toString(), PlatResult.class);
 
     List<Map<String, Object>> data = (List<Map<String, Object>>) platResult.getData();

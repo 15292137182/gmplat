@@ -128,8 +128,9 @@ public class Translator {
             translateFieldOnlyName(field,linkedList);
             appendSql(EQUAL,linkedList);
             appendArgs(entry.getValue(),linkedList);
-            if (entryIterator.hasNext()) appendSql(COMMA,linkedList);
+            appendSql(COMMA,linkedList);
         }
+        if (linkedList.getLast()==COMMA) linkedList.removeLast();
         appendSql(WHERE,linkedList);
         translateCondition(updateAction.getWhere(),linkedList);
         return linkedList;

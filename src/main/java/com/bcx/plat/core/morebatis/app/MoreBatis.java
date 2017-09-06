@@ -165,7 +165,7 @@ public class MoreBatis {
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
-    return this.update(entityClass, values,new And(pkConditions)).execute();
+    return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
@@ -227,15 +227,17 @@ public class MoreBatis {
   }
 
   public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values) {
-    return update(entity,values,null);
-  }
-
-  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values,Condition condition) {
-    UpdateAction update = updateStatement().from(entityTables.get(entity))
-            .set(values).where(condition);
+    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
     update.setEntityClass(entity);
     return update;
   }
+
+//  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values,Condition condition) {
+//    UpdateAction update = updateStatement().from(entityTables.get(entity))
+//            .set(values).where(condition);
+//    update.setEntityClass(entity);
+//    return update;
+//  }
 
 
   public InsertAction insert(Class<? extends BeanInterface> entity, List<Map<String, Object>> values) {
@@ -254,9 +256,9 @@ public class MoreBatis {
     return deleteStatement().from(getTable(entity));
   }
 
-  public DeleteAction delete(Class<? extends BeanInterface> entity,Condition condition){
-    return deleteStatement().from(getTable(entity)).where(condition);
-  }
+//  public DeleteAction delete(Class<? extends BeanInterface> entity,Condition condition){
+//    return deleteStatement().from(getTable(entity)).where(condition);
+//  }
 
   public InsertAction insertStatement() {
     return new InsertAction(this, translator);
