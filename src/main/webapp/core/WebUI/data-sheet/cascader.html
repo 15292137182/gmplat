@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>级联下拉框</title>
+</head>
+<body>
+    <div id="app">
+        <el-row>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <single-selection @change-data="getData_1" :initial-value="value_1">
+                    <!---->
+                </single-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <single-selection @change-data="getData_2" ref="childMethod" :initial-value="value_2">
+                    <!---->
+                </single-selection>
+            </el-col>
+        </el-row>
+    </div>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script type="text/javascript" src="../Public/gmpComponent.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    value_1: "",
+                    value_2: ""
+                }
+            },
+            methods: {
+                getData_1(datas) {
+                    this.value_1 = datas.values;
+
+                    if (datas != "" || datas != undefined) {
+                        this.value_1 = datas.value;
+                        this.label_1 = datas.label;
+                        this.$refs.childMethod.cascaderEvent("Shanghai");
+                    }
+                    if(JSON.stringify(datas) === "{}") {
+                        this.$refs.childMethod.cascaderEvent("");
+                    }
+                },
+                getData_2(datas) {
+                    this.value_2 = datas.values;
+                },
+            },
+        })
+    </script>
+</body>
+</html>
