@@ -109,7 +109,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
           }
         });
       }
-      UpdateAction ua = MORE_BATIS.update(getClass(), map).where( new And(condition, NOT_DELETE_OR));
+      UpdateAction ua = MORE_BATIS.update(getClass(), map).where(new And(condition, NOT_DELETE_OR));
       return ua.execute();
     } else {
       return -1;
@@ -206,15 +206,14 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null != condition) {
       and = new And(condition, NOT_DELETE_OR);
     } else {
-      and = new And(NOT_DELETE_OR);
+      and = NOT_DELETE_OR;
     }
     QueryAction qa = MORE_BATIS.select(getClass()).where(and);
     List<Map<String, Object>> result;
     if (orders != null) {
-      result = qa.orderBy(orders).execute();
-    } else {
-      result = qa.execute();
+      qa = qa.orderBy(orders);
     }
+    result = qa.execute();
     if (convert) {
       List<T> ts = new ArrayList<>();
       result.forEach(map -> {

@@ -35,7 +35,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   }
 
   /**
-   * 根据参数查询实体类
+   * 根据参数查询实体类，不分页
    *
    * @param condition 条件
    * @return 返回查询结果
