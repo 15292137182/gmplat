@@ -79,8 +79,9 @@ public class Translator {
             while(groups.hasNext()){
                 FieldSource fieldSource=groups.next();
                 translateFieldSource(fieldSource,linkedList);
-                if (groups.hasNext()) appendSql(COMMA,linkedList);
+                appendSql(COMMA,linkedList);
             }
+            if (linkedList.getLast()==COMMA) linkedList.removeLast();
         }
 
         final List<Order> orders = queryAction.getOrder();
@@ -90,8 +91,9 @@ public class Translator {
             while (iterator.hasNext()) {
                 final Order order=iterator.next();
                 translateOrder(order,linkedList);
-                if (iterator.hasNext()) appendSql(COMMA,linkedList);
+                appendSql(COMMA,linkedList);
             }
+            if (linkedList.getLast()==COMMA) linkedList.removeLast();
         }
         return linkedList;
     }
@@ -145,8 +147,9 @@ public class Translator {
         while (iterator.hasNext()) {
             final Field field=iterator.next();
             translateFieldOnlyName(field,linkedList);
-            if (iterator.hasNext()) appendSql(COMMA,linkedList);
+            appendSql(COMMA,linkedList);
         }
+        if (linkedList.getLast()==COMMA) linkedList.removeLast();
         appendSql(BRACKET_END,linkedList);
         appendSql(VALUES,linkedList);
         Iterator<Map<String, Object>> rowIterator = insertAction.getRows().iterator();
@@ -157,13 +160,13 @@ public class Translator {
             while (iterator.hasNext()) {
                 final Field field=iterator.next();
                 appendArgs(row.get(field.getAlies()),linkedList);
-                if (iterator.hasNext()) appendSql(COMMA,linkedList);
+                appendSql(COMMA,linkedList);
             }
-
+            if (linkedList.getLast()==COMMA) linkedList.removeLast();
             appendSql(BRACKET_END,linkedList);
-            if (rowIterator.hasNext()) appendSql(COMMA,linkedList);
+            appendSql(COMMA,linkedList);
         }
-
+        if (linkedList.getLast()==COMMA) linkedList.removeLast();
         return linkedList;
     }
 
