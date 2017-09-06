@@ -13,7 +13,7 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,7 +61,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    * @param pageSize 一页显示多少条
    * @param request  request请求
    * @param locale   国际化参数
-   * @return ServiceResult
+   * @return PlatResult
    */
   @RequestMapping("/queryProPage")
   public Object queryProPage(String rowId,
@@ -84,10 +84,10 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
       // 返回结果
       PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
       if (result.getResult().size() != 0) {
-        return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+        return super.result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
       }
     }
-    return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+    return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
   }
 
   /**
@@ -107,7 +107,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    *
    * @param rowId  功能块rowId
    * @param locale 国际化参数
-   * @return ServiceResult
+   * @return PlatResult
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId, Locale locale) {
@@ -120,16 +120,14 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    * @param search   按照空格查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
-   * @param request  request请求
    * @param locale   国际化参数
-   * @return ServiceResult
+   * @return PlatResult
    */
   @RequestMapping("/queryPage")
   public Object singleInputSelect(String search,
                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                   String order,
-                                  HttpServletRequest request,
                                   Locale locale) {
     LinkedList<Order> orders = dataSort(order);
     pageNum = search == null || search.isEmpty() ? 1 : pageNum;
@@ -147,11 +145,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/add")
   public Object insert(TemplateObject entity, HttpServletRequest request, Locale locale) {
-    int insert = entity.buildCreateInfo().insert();
-    if (insert != 1) {
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
-    }
-    return super.result(request, commonServiceResult(entity, Message.NEW_ADD_SUCCESS), locale);
+    return super.insert(entity, request, locale);
   }
 
 
@@ -165,12 +159,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/modify")
   public Object update(TemplateObject entity, HttpServletRequest request, Locale locale) {
-    entity.getBaseTemplateBean().buildModifyInfo();
-    int update = entity.updateById();
-    if (update != 1) {
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
-    }
-    return super.result(request, commonServiceResult(entity, Message.UPDATE_SUCCESS), locale);
+    return super.updateById(entity, request, locale);
   }
 
   /**
@@ -183,22 +172,8 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/delete")
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-    if (isValid(rowId)) {
-      int i = new TemplateObject().deleteById(rowId);
-      return super.result(request, commonServiceResult(i, Message.DELETE_SUCCESS), locale);
-    }
-    return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
+    return deleteByIds(request, locale, rowId);
   }
 
-  /**
-   * 接受参数和消息进行封装
-   *
-   * @param content 接受的参数
-   * @param msg     消息
-   * @param <T>     参数泛型
-   * @return 返回
-   */
-  private <T> ServiceResult commonServiceResult(T content, String msg) {
-    return ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, msg, content));
-  }
+
 }

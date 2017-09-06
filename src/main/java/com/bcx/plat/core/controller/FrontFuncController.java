@@ -10,7 +10,7 @@ import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,7 +92,7 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
             }
             return super.delete(rowId, request, locale);
         }
-        return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)),locale);
+        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
 
 
@@ -108,8 +108,8 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
     public Object queryFuncCode(String funcCode, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(funcCode)) {
             List list = UtilsTool.jsonToObj(funcCode, List.class);
-            return super.result(request, ServiceResult.Msg(frontFuncService.queryFuncCode(list)),locale);
+            return super.result(request, PlatResult.Msg(frontFuncService.queryFuncCode(list)), locale);
         }
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)),locale);
+        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
 }

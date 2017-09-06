@@ -5,17 +5,18 @@ import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 业务对象
@@ -42,12 +43,12 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
      * 根据业务对象属性rowId查询当前数据
      *
      * @param rowId 唯一标识
-     * @return ServiceResult
+     * @return PlatResult
      */
-    public PlatResult queryById(String rowId) {
+    public ServerResult queryById(String rowId) {
         List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         if (!UtilsTool.isValid(result)) {
-            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
         String relateTableColumn = (String) result.get(0).get("relateTableColumn");
         List<Map<String, Object>> rowId1 =
@@ -55,12 +56,12 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
         try {
             rowId1.get(0).get("columnCname");
         } catch (Exception e) {
-            return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
         }
         for (Map<String, Object> row : result) {
             row.put("columnCname", rowId1.get(0).get("columnCname"));
         }
-        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }
 
     /**
@@ -69,9 +70,9 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
      *
      * @param objRowId   业务对象唯一标识
      * @param frontRowId 功能块唯一标识
-     * @return PlatResult
+     * @return ServerResult
      */
-    public PlatResult queryBusinPro(String objRowId, String frontRowId) {
+    public ServerResult queryBusinPro(String objRowId, String frontRowId) {
         //通过业务对象查找到对应的模板的rowId
         String templateRowId;
         List<Map<String, Object>> execu;
@@ -157,9 +158,9 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
 
         if (result.size() == 0) {
             logger.warn("根据业务对象rowId查询当前业务对象下的所有属性_失败");
-            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));
     }
 
 

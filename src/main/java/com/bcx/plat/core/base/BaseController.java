@@ -3,11 +3,13 @@ package com.bcx.plat.core.base;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
@@ -88,9 +90,9 @@ public abstract class BaseController<SERVER extends BaseService> {
       o = result;
     }
     if (success) {
-      return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, o)), locale);
+      return result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, o)), locale);
     }
-    return result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, o)), locale);
+    return result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, o)), locale);
   }
 
   /**
@@ -131,12 +133,87 @@ public abstract class BaseController<SERVER extends BaseService> {
   }
 
   /**
+   * 通用新增方法
+   *
+   * @param entity  实体类
+   * @param request 请求信息
+   * @param locale  本地化信息
+   * @return 返回
+   */
+  protected Object insert(BeanInterface entity, HttpServletRequest request, Locale locale) {
+    if (entity instanceof BaseEntity) {
+      BaseEntity _entity = (BaseEntity) entity;
+      int insert = _entity.buildCreateInfo().insert();
+      if (insert == -1) {
+        return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+      }
+      return result(request, commonServiceResult(entity, Message.NEW_ADD_SUCCESS), locale);
+    }
+    return new Object();
+  }
+
+  /**
+   * 根据 rowId进行更新
+   *
+   * @param entity  实体
+   * @param request 请求
+   * @param locale  本地化信息
+   * @return 返回
+   */
+  protected Object updateById(BeanInterface entity, HttpServletRequest request, Locale locale) {
+    if (entity instanceof BaseEntity) {
+      BaseEntity _entity = (BaseEntity) entity;
+      _entity.getBaseTemplateBean().buildModifyInfo();
+      int update = _entity.updateById();
+      if (update == -1) {
+        return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+      }
+      return result(request, commonServiceResult(entity, Message.UPDATE_SUCCESS), locale);
+    }
+    return new Object();
+  }
+
+  /**
+   * 根据 rowId进行删除
+   *
+   * @param request 请求
+   * @param locale  本地化信息
+   * @return 返回
+   */
+  protected Object deleteByIds(HttpServletRequest request, Locale locale, String... strings) {
+    return deleteByIds(request, locale, Arrays.asList(strings));
+  }
+
+  /**
+   * 根据 rowId进行删除
+   *
+   * @param request 请求
+   * @param locale  本地化信息
+   * @return 返回
+   */
+  protected Object deleteByIds(HttpServletRequest request, Locale locale, List<String> rowIds) {
+    int delete = -1;
+    Condition condition = new FieldCondition("rowId", Operator.IN, rowIds);
+    try {
+      delete = getBeanClass().newInstance().delete(condition);
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    if (delete != -1) {
+      return result(request, commonServiceResult(delete, Message.DELETE_SUCCESS), locale);
+    }
+    return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
+  }
+
+
+  /**
    * 转换消息
    *
    * @param msg    消息代码
    * @param locale 本地化信息
    * @return 返回消息
    */
+
   protected String convertMsg(String msg, Locale locale) {
     String _msg = null;
     try {
@@ -153,19 +230,19 @@ public abstract class BaseController<SERVER extends BaseService> {
   /**
    * 对返回的结果进行处理
    *
-   * @param request       请求
-   * @param serviceResult 结果信息
-   * @param locale        国际化
+   * @param request    请求
+   * @param platResult 结果信息
+   * @param locale     国际化
    * @return 返回
    */
   @SuppressWarnings("unchecked")
-  protected Object result(HttpServletRequest request, ServiceResult serviceResult, Locale locale) {
+  protected Object result(HttpServletRequest request, PlatResult platResult, Locale locale) {
     Map map = new HashMap();
-    PlatResult content = serviceResult.getContent();
-    serviceResult.getContent().setMsg(convertMsg(content.getMsg(), locale));
-    map.put("resp", serviceResult);
+    ServerResult content = platResult.getContent();
+    platResult.getContent().setMsg(convertMsg(content.getMsg(), locale));
+    map.put("resp", platResult);
     if (isValid(request.getParameter("callback"))) {
-      map.put("resp", serviceResult);
+      map.put("resp", platResult);
       MappingJacksonValue value = new MappingJacksonValue(map);
       value.setJsonpFunction(request.getParameter("callback"));
       return value;
@@ -180,8 +257,7 @@ public abstract class BaseController<SERVER extends BaseService> {
   protected Set<String> getBeanKeys() {
     BeanInterface bean = null;
     try {
-      Class _class = (Class) ((ParameterizedType) getServiceClass().getGenericSuperclass()).getActualTypeArguments()[0];
-      bean = (BeanInterface) _class.newInstance();
+      bean = getBeanClass().newInstance();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -189,6 +265,10 @@ public abstract class BaseController<SERVER extends BaseService> {
       return bean.toMap().keySet();
     }
     return null;
+  }
+
+  protected Class<? extends BaseEntity> getBeanClass() {
+    return (Class) ((ParameterizedType) getServiceClass().getGenericSuperclass()).getActualTypeArguments()[0];
   }
 
   /**
@@ -204,5 +284,17 @@ public abstract class BaseController<SERVER extends BaseService> {
   @SuppressWarnings("unchecked")
   protected Class<SERVER> getServiceClass() {
     return (Class<SERVER>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+  }
+
+  /**
+   * 接受参数和消息进行封装
+   *
+   * @param content 接受的参数
+   * @param msg     消息
+   * @param <T>     参数泛型
+   * @return 返回
+   */
+  protected <T> PlatResult commonServiceResult(T content, String msg) {
+    return PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, msg, content));
   }
 }

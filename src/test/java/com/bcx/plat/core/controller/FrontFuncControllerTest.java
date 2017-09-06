@@ -1,18 +1,7 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseControllerTest;
-import com.bcx.plat.core.utils.ServiceResult;
-import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  *  前端功能块Controller层测试
@@ -116,7 +105,7 @@ public class FrontFuncControllerTest extends BaseControllerTest<FrontFuncControl
 //        StringBuilder sb = new StringBuilder(mvcResult.getResponse().getContentAsString());
 //        sb.deleteEntity(0, sb.indexOf("{")).deleteEntity(sb.lastIndexOf("}") + 1, sb.length());
 //        // 客户端获得 serviceResult
-//        ServiceResult serviceResult = jsonToObj(sb.toString(), ServiceResult.class);
+//        PlatResult serviceResult = jsonToObj(sb.toString(), PlatResult.class);
 //        List<Map<String,Object>> data = (List<Map<String,Object>> )serviceResult.getData();
 //
 //        logger.info("查询数据共"+data.size()+"条"+data);

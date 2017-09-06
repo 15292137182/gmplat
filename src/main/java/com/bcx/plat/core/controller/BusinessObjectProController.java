@@ -9,7 +9,7 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +54,7 @@ public class BusinessObjectProController extends
      * @param rowId     唯一标识
      * @param request  request请求
      * @param locale   国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryById")
     @Override
@@ -62,9 +62,9 @@ public class BusinessObjectProController extends
 //        String attrSource = request.getParameter("attrSource");//属性来源
 //        attrSource =attrSource.equals("")?BaseConstants.ATTRIBUTE_SOURCE_BASE:BaseConstants.ATTRIBUTE_SOURCE_MODULE;
         if (!UtilsTool.isValid(rowId)) {
-            return ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+            return PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }else{
-            return super.result(request,ServiceResult.Msg(businessObjectProService.queryById(rowId)),locale);
+            return super.result(request, PlatResult.Msg(businessObjectProService.queryById(rowId)), locale);
         }
 
     }
@@ -77,15 +77,15 @@ public class BusinessObjectProController extends
      * @param request  request请求
      * @param frontRowId  功能块rowId
      * @param locale   国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryBusinPro")
     public Object queryBusinPro(String objRowId, String frontRowId,HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(objRowId)) {
-            PlatResult platResult = businessObjectProService.queryBusinPro(objRowId,frontRowId);
-            return result(request, ServiceResult.Msg(platResult), locale);
+            ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
+            return result(request, PlatResult.Msg(serverResult), locale);
         }else{
-            return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,null)), locale);
+            return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, null)), locale);
         }
     }
 
@@ -105,7 +105,7 @@ public class BusinessObjectProController extends
         if (busiPro.size() == 0) {
             return super.delete(rowId, request, locale);
         }else{
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }
     }
 }

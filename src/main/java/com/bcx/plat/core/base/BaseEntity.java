@@ -17,7 +17,7 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  * <p>
  * Create By HCL at 2017/7/31
  */
-public class BaseEntity<T extends BeanInterface> extends BaseORM<T> implements BeanInterface<T> {
+public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInterface<T> {
 
   @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();

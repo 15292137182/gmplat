@@ -2,7 +2,6 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.MaintDBTables;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,7 +21,7 @@ public class MaintDBTablesService extends BaseServiceTemplate<MaintDBTables> {
 //    }
 
 //
-//    public ServiceResult deleteMaint(String rowId){
+//    public PlatResult deleteMaint(String rowId){
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("relateTableRowId", rowId);
 //        List<Map<String, Object>> tableRowId = businessObjectService.select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
@@ -36,7 +35,7 @@ public class MaintDBTablesService extends BaseServiceTemplate<MaintDBTables> {
 //                dbTableColumnService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
 //            }
 //        }
-//        return ServiceResult.Msg(new PlatResult().Msg(BaseConstants.STATUS_FAIL,Message.DATA_QUOTE));
+//        return PlatResult.Msg(new ServerResult().Msg(BaseConstants.STATUS_FAIL,Message.DATA_QUOTE));
 //    }
 
 

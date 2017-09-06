@@ -12,7 +12,7 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.SequenceGenerateService;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +55,7 @@ public class SequenceRuleConfigController extends
     @RequestMapping("/mock")
     public Object mockSequenceNo(HttpServletRequest request, Locale locale) {
         String _content = request.getParameter("content");
-        PlatResult<List<String>> _sr = new PlatResult<>();
+        ServerResult<List<String>> _sr = new ServerResult<>();
         if (isValid(_content)) {
             _sr.setState(STATUS_SUCCESS);
             String _args = request.getParameter("args");
@@ -74,7 +74,7 @@ public class SequenceRuleConfigController extends
             _sr.setState(STATUS_FAIL);
             _sr.setMsg("INVALID_REQUEST");
         }
-        return super.result(request, ServiceResult.Msg(_sr), locale);
+        return super.result(request, PlatResult.Msg(_sr), locale);
     }
 
     /**
@@ -87,7 +87,7 @@ public class SequenceRuleConfigController extends
     @RequestMapping(value = "/reset")
     public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
         String rowId = request.getParameter("rowId");
-        PlatResult<List<String>> _sr = new PlatResult<>();
+        ServerResult<List<String>> _sr = new ServerResult<>();
         _sr.setState(STATUS_FAIL);
         _sr.setMsg("INVALID_REQUEST");
         if (isValid(rowId)) {
@@ -124,7 +124,7 @@ public class SequenceRuleConfigController extends
                 _sr.setMsg(message);
             }
         }
-        return super.result(request, ServiceResult.Msg(_sr), locale);
+        return super.result(request, PlatResult.Msg(_sr), locale);
     }
 
     /**
@@ -133,7 +133,7 @@ public class SequenceRuleConfigController extends
      * @param rowId   按照空格查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryById")
     public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
@@ -151,12 +151,12 @@ public class SequenceRuleConfigController extends
                 maplists.put("variableKey", variableKey);
             }
             if (mapList.size() == 0) {
-                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+                return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
             } else {
-                return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList)), locale);
+                return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapList)), locale);
             }
         } else {
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
 
     }

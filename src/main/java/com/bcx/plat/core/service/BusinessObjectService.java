@@ -14,7 +14,7 @@ import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,9 +60,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * 根据rowId查询数据
      *
      * @param rowId 唯一标示
-     * @return PlatResult
+     * @return ServerResult
      */
-    public PlatResult queryById(String rowId) {
+    public ServerResult queryById(String rowId) {
         List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         String relateTableRowId = (String) result.get(0).get("relateTableRowId");
 
@@ -72,9 +72,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             for (Map<String, Object> row : result) {
                 row.put("tableCname", rowId1.get(0).get("tableCname"));
             }
-            return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS,result);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
         }else{
-            return PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL);
+            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
     }
 
@@ -85,20 +85,20 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * @param pageNum  页码
      * @param pageSize 一页显示条数
      * @param order    排序
-     * @return PlatResult
+     * @return ServerResult
      */
-    public PlatResult queryPage(String search, int pageNum, int pageSize, List<Order> order) {
+    public ServerResult queryPage(String search, int pageNum, int pageSize, List<Order> order) {
         pageNum = !UtilsTool.isValid(search) ? pageNum = 1 : pageNum;
         PageResult<Map<String, Object>> result;
         result = singleInputSelect(blankSelectFields(), UtilsTool.collectToSet(search),
                 pageNum, pageSize, order);
         if (result.getResult().size() == 0) {
-            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         } else {
             for (Map<String, Object> rest : result.getResult()) {
                 rest.put("disableButton", false);//前端页面删除,编辑,禁用按钮
             }
-            return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, queryResultProcess(result));
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, queryResultProcess(result));
         }
     }
 
@@ -145,9 +145,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * @param pageNum  页码
      * @param pageSize 一页显示条数
      * @param order    排序
-     * @return PlatResult
+     * @return ServerResult
      */
-    public PlatResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
+    public ServerResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
         PageResult<Map<String, Object>> result;
         if (UtilsTool.isValid(search)) {
             result = businessObjectProService.select(
@@ -157,10 +157,10 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                                     UtilsTool.collectToSet(search))).endOr().endAnd().buildDone()
                     ,  order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
-                return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+                return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
                 PageResult<Map<String, Object>> result1 = queryProPage(result);
-                return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
+                return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
             }
         } else {
             result =
@@ -169,10 +169,10 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                                     .equal("objRowId", rowId).endAnd().buildDone()
                             ,  order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
-                return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+                return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
                 PageResult<Map<String, Object>> result1 = queryProPage(result);
-                return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
+                return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
             }
         }
     }
@@ -205,9 +205,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * 根据rowId来执行变更操作
      *
      * @param rowId 唯一标示
-     * @return PlatResult
+     * @return ServerResult
      */
-    public PlatResult changeOperat(String rowId) {
+    public ServerResult changeOperat(String rowId) {
         Map<String, Object> oldRowId = new HashMap<>();
         List<Map<String, Object>> list = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         List<String> row = list.stream().map((rowIds) ->
@@ -239,9 +239,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             oldRowId.put("status", BaseConstants.INVALID);
             oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
             update(oldRowId);
-            return PlatResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+            return ServerResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
         } else {
-            return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
         }
 
     }
@@ -250,9 +250,9 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * 根据rowId删除业务对象数据
      *
      * @param rowId 唯一标示
-     * @return PlatResult
+     * @return ServerResult
      */
-    public PlatResult delete(String rowId) {
+    public ServerResult delete(String rowId) {
         AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
         map.get().put("relateBusiObj", rowId);
         List<Map<String, Object>> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
@@ -260,7 +260,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
             String rowId1 = (String) busin.get("rowId");
             List<Map<String, Object>> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
             if (funcRowId.size() != 0) {
-                return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+                return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
             }
         }
         if (businObj.size() == 0) {
@@ -274,10 +274,10 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                 Map<String, Object> args = new HashMap<>();
                 args.put("rowId", rowId);
                 delete(args);
-                return PlatResult.Msg(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+                return ServerResult.Msg(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
             }
         }
-        return PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+        return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
 
     }
 
@@ -287,7 +287,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
      * @param orders    排序
      * @return platResult
      */
-    public PlatResult<List<Map<String, Object>>> queryTemplatePro(String rowId, LinkedList<Order> orders) {
+    public ServerResult<List<Map<String, Object>>> queryTemplatePro(String rowId, LinkedList<Order> orders) {
         List<Map<String, Object>> linkedList = new ArrayList<>();
         List<Map<String, Object>> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
         for (Map<String ,Object> bri: businessRowId){
@@ -303,7 +303,7 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
                 }
             }
         }
-        return new PlatResult<>(BaseConstants.STATUS_SUCCESS,Message.QUERY_SUCCESS,linkedList);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
     }
 
 

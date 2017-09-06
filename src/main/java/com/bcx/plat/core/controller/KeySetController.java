@@ -7,7 +7,7 @@ import com.bcx.plat.core.entity.KeySet;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,16 +47,16 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
      * @param search  按照空格查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      * ["demo","test"]
      */
     @RequestMapping("/queryKeySet")
     public Object queryKeySet(String search, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(search)) {
             List list = UtilsTool.jsonToObj(search, List.class);
-            return super.result(request, ServiceResult.Msg(keySetService.queryKeySet(list)), locale);
+            return super.result(request, PlatResult.Msg(keySetService.queryKeySet(list)), locale);
         } else {
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
     }
 
@@ -66,14 +66,14 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
      * @param keyCode 按照空格查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryKeyCode")
     public Object queryKeyCode(String keyCode, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(keyCode)) {
-            return super.result(request, ServiceResult.Msg(keySetService.queryKeyCode(keyCode)), locale);
+            return super.result(request, PlatResult.Msg(keySetService.queryKeyCode(keyCode)), locale);
         } else {
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
     }
 
@@ -88,9 +88,9 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     @RequestMapping("/queryPro")
     public Object queryPro(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, ServiceResult.Msg(keySetService.queryPro(rowId)), locale);
+            return super.result(request, PlatResult.Msg(keySetService.queryPro(rowId)), locale);
         } else {
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
     }
 
@@ -103,7 +103,7 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
      * @param pageSize 一页显示多少条
      * @param request  request请求
      * @param locale   国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryProPage")
     public Object queryProPage(String rowId, String search,
@@ -112,9 +112,9 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
                                String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, ServiceResult.Msg(keySetService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
+            return super.result(request, PlatResult.Msg(keySetService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
         } else {
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
     }
 
@@ -131,9 +131,9 @@ public class KeySetController extends BaseControllerTemplate<KeySetService, KeyS
     @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, ServiceResult.Msg(keySetService.delete(rowId)), locale);
+            return super.result(request, PlatResult.Msg(keySetService.delete(rowId)), locale);
         } else {
-            return super.result(request, ServiceResult.Msg(null), locale);
+            return super.result(request, PlatResult.Msg(null), locale);
         }
     }
 

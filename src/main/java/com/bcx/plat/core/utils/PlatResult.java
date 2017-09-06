@@ -1,70 +1,82 @@
 package com.bcx.plat.core.utils;
 
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.constants.SysMessage;
 
-import java.util.HashMap;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
- * <p>Title: PlatResult</p>
- * <p>Description: the is PlatResult</p>
- * <p>Copyright: Shanghai Batchsight GMP Information of management platform, Inc. Copyright(c) 2017</p>
- *
- * @author Wen TieHu
- * @version 1.0
- *          <pre>Histroy:
- *                         2017/8/27  Wen TieHu Create
- *          </pre>
+ * Service 返回的结果
+ * <p>
+ * Create By HCL at 2017/7/31
  */
-public class PlatResult<T> {
-    private int state;
-    private String msg;
-    private T data;
+public class PlatResult<T> implements Serializable {
 
+    private static final long serialVersionUID = 812376774103405857L;
+
+    private Map extra;
+    private String respCode;
+    private String respMsg;
+    private ServerResult<T> content;
+
+
+    /**
+     * 空的构造方法，供 json 转换时使用
+     * <p>
+     * Create By HCL at 2017/8/7
+     */
     public PlatResult() {
     }
 
-    public PlatResult(int state, String msg, T data) {
-        this.state = state;
-        this.msg = msg;
-        try {
-            ((PageResult) data).getResult();
-        } catch (Exception e) {
-            Map<String,Object> map = new HashMap<>();
-            map.put("result",data);
-            this.data = (T)map;
-            return;
-        }
-        this.data = data;
-
+    /**
+     * 全参数构造方法
+     *  @param respCode    数据信息
+     * @param respMsg   状态
+     * @param content 消息
+     */
+    public PlatResult(String respCode, String respMsg, ServerResult<T> content) {
+        this.respCode = respCode;
+        this.respMsg = respMsg;
+        this.content = content;
     }
 
-    public static PlatResult Msg(int state, String msg) {
-        return new PlatResult(state, msg, null);
+    public static PlatResult ErrorMsg(ServerResult content) {
+        return new PlatResult(SysMessage.SERVICE_RESPONSE_FAILED_CODE, SysMessage.SERVICE_RESPONSE_FAILED, content);
     }
 
-    public int getState() {
-        return state;
+    public static PlatResult Msg(ServerResult content) {
+        return new PlatResult(SysMessage.SERVICE_RESPONSE_SUCCESSFUL_CODE, SysMessage.SERVICE_RESPONSE_SUCCESSFUL, content);
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public Map getExtra() {
+        return extra;
     }
 
-    public String getMsg() {
-        return msg;
+    public void setExtra(Map extra) {
+        this.extra = extra;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public String getRespCode() {
+        return respCode;
     }
 
-    public T getData() {
-        return data;
+    public void setRespCode(String respCode) {
+        this.respCode = respCode;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public String getRespMsg() {
+        return respMsg;
+    }
+
+    public void setRespMsg(String respMsg) {
+        this.respMsg = respMsg;
+    }
+
+    public ServerResult<T> getContent() {
+        return content;
+    }
+
+    public void setContent(ServerResult<T> content) {
+        this.content = content;
     }
 }

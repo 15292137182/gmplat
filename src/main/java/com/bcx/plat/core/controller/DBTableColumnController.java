@@ -10,7 +10,7 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +51,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      * @param pageSize 一页显示多少条
      * @param request  request请求
      * @param locale   国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryPageById")
     public Object queryPageById(String search, String rowId,
@@ -60,9 +60,9 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
                                 String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, ServiceResult.Msg(getEntityService().queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
+            return super.result(request, PlatResult.Msg(getEntityService().queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
         }
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
+        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
 
     /**
@@ -71,14 +71,14 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      * @param search    按照空格查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryTabById")
     public Object singleInputSelect(String search, String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request,ServiceResult.Msg(getEntityService().queryTableById(rowId, search)),locale);
+            return super.result(request, PlatResult.Msg(getEntityService().queryTableById(rowId, search)), locale);
         }
-        return super.result(request,ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)),locale);
+        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
 
 
@@ -97,7 +97,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
         if (busiPro.size() == 0) {
             return super.delete(rowId, request, locale);
         }else{
-            return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }
     }
 

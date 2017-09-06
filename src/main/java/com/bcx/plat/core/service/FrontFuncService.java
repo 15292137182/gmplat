@@ -10,7 +10,7 @@ import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,9 +49,9 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
    * 根据前端功能块的代码查询功能块属性的数据
    *
    * @param funcCode 代码
-   * @return PlatResult
+   * @return ServerResult
    */
-  public PlatResult<LinkedList<Map<String, Object>>> queryFuncCode(List funcCode) {
+  public ServerResult<LinkedList<Map<String, Object>>> queryFuncCode(List funcCode) {
     LinkedList<Map<String, Object>> linkedList = new LinkedList<>();
     List<Map<String, Object>> result = null;
     for (Object key : funcCode) {
@@ -96,7 +96,7 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
               }
               break;
             default:
-              return new PlatResult<>(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, linkedList);
+              return new ServerResult<>(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, linkedList);
           }
         }
 
@@ -104,6 +104,6 @@ public class FrontFuncService extends BaseServiceTemplate<FrontFunc> {
       linkedList.addAll(UtilsTool.underlineKeyMapListToCamel(result));
     }
     logger.info("查询功能块属性的数据");
-    return new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
+    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
   }
 }

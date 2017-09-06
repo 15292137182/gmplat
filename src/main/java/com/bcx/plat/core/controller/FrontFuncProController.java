@@ -15,7 +15,7 @@ import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,12 +79,12 @@ public class FrontFuncProController extends
 //        if (UtilsTool.isValid(rowId)) {
 //             insert = frontFuncProService.insert(entity.buildCreateInfo().toMap());
 //            if (insert != 1) {
-//                return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+//                return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
 //            }else {
-//                return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,insert)), locale);
+//                return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,insert)), locale);
 //            }
 //        }else {
-//            return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS,Message.DATA_QUOTE,insert)), locale);
+//            return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS,Message.DATA_QUOTE,insert)), locale);
 //        }
 //    }
 
@@ -106,13 +106,13 @@ public class FrontFuncProController extends
                             UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
             result = queryResultProcess(result);
             if (result.size() == 0) {
-                return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+                return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
             } else {
-                PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
-                return result(request, ServiceResult.Msg(platResult), locale);
+                ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+                return result(request, PlatResult.Msg(serverResult), locale);
             }
         }
-        return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 
     }
 
@@ -125,7 +125,7 @@ public class FrontFuncProController extends
      * @param pageSize 一页显示多少条
      * @param request  request请求
      * @param locale   国际化参数
-     * @return ServiceResult
+     * @return PlatResult
      */
     @RequestMapping("/queryProPage")
     public Object singleInputSelect(String rowId, String search,
@@ -140,9 +140,9 @@ public class FrontFuncProController extends
                                     UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
                             , orders, pageNum, pageSize);
             result = queryResultProcess(result);
-            return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+            return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
         }
-        return result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
 
 

@@ -2,7 +2,7 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -32,33 +32,33 @@ public class SystemController extends BaseController {
    * @return 返回
    */
   @RequestMapping("/login")
-  public ServiceResult login(HttpServletRequest request) {
-    PlatResult platResult = new PlatResult();
+  public PlatResult login(HttpServletRequest request) {
+    ServerResult serverResult = new ServerResult();
     String userId = request.getParameter("username");
     String password = request.getParameter("password");
     UsernamePasswordToken token = new UsernamePasswordToken(userId, password);
     Subject subject = SecurityUtils.getSubject();
-    platResult.setState(STATUS_FAIL);
+    serverResult.setState(STATUS_FAIL);
     // 开始登陆认证
     try {
       subject.login(token);
-      platResult.setState(STATUS_SUCCESS);
-      platResult.setMsg("登陆成功！");
+      serverResult.setState(STATUS_SUCCESS);
+      serverResult.setMsg("登陆成功！");
     } catch (IncorrectCredentialsException e) {
-      platResult.setMsg("帐号密码不匹配 ~");
-      logger.warn(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      serverResult.setMsg("帐号密码不匹配 ~");
+      logger.warn(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     } catch (DisabledAccountException e) {
-      platResult.setMsg("帐号已被禁用 ~ ");
-      logger.warn(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      serverResult.setMsg("帐号已被禁用 ~ ");
+      logger.warn(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     } catch (UnknownAccountException e) {
-      platResult.setMsg("账号不存在 ~ ");
-      logger.warn(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      serverResult.setMsg("账号不存在 ~ ");
+      logger.warn(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     } catch (Exception e) {
-      platResult.setMsg("系统内部响应异常，请稍后重试 ~ ");
-      logger.error(platResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
+      serverResult.setMsg("系统内部响应异常，请稍后重试 ~ ");
+      logger.error(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     }
 
-    return ServiceResult.Msg(platResult);
+    return PlatResult.Msg(serverResult);
   }
 
 }

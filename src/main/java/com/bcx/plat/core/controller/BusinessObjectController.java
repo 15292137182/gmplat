@@ -9,7 +9,7 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.BusinessRelateTemplateService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServiceResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,9 +70,9 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
       }
     }
     if (insert != 1) {
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
+      return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
     } else {
-      return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, insert)), locale);
+      return super.result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, insert)), locale);
     }
   }
 
@@ -82,15 +82,15 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @param rowId   唯一标识
    * @param request request请求
    * @param locale  国际化参数
-   * @return ServiceResult
+   * @return PlatResult
    */
   @RequestMapping("/queryById")
   @Override
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
-      return super.result(request, ServiceResult.Msg(businessObjectService.queryById(rowId)), locale);
+      return super.result(request, PlatResult.Msg(businessObjectService.queryById(rowId)), locale);
     }
-    return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
+    return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
   }
 
   /**
@@ -101,7 +101,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @param pageSize 一页显示多少条
    * @param request  request请求
    * @param locale   国际化参数
-   * @return ServiceResult
+   * @return PlatResult
    */
   @RequestMapping("/queryPage")
   @Override
@@ -111,7 +111,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
                                   String order, HttpServletRequest request, Locale locale) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     pageNum = !UtilsTool.isValid(search) ? pageNum = 1 : pageNum;
-    return super.result(request, ServiceResult.Msg(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
+    return super.result(request, PlatResult.Msg(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
   }
 
 
@@ -123,7 +123,7 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @param pageSize 一页显示多少条
    * @param request  request请求
    * @param locale   国际化参数
-   * @return ServiceResult
+   * @return PlatResult
    */
   @RequestMapping("/queryProPage")
   public Object queryProPage(String rowId, String search,
@@ -132,10 +132,10 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
                              String order, HttpServletRequest request, Locale locale) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {
-      return super.result(request, ServiceResult.Msg(businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
+      return super.result(request, PlatResult.Msg(businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders)), locale);
     }else{
       logger.error("业务对象rowId查找当前对象下的所有属性是失败");
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL)), locale);
+      return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
   }
 
@@ -151,12 +151,12 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
   @RequestMapping("/changeOperat")
   public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
-      PlatResult platResult = new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
+      ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
               businessObjectService.changeOperat(rowId));
-      return super.result(request, ServiceResult.Msg(platResult), locale);
+      return super.result(request, PlatResult.Msg(serverResult), locale);
     } else {
       logger.error("执行变更操作失败");
-      return ServiceResult.ErrorMsg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return PlatResult.ErrorMsg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
   }
 
@@ -173,10 +173,10 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
   @Override
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
-      return super.result(request, ServiceResult.Msg(businessObjectService.delete(rowId)), locale);
+      return super.result(request, PlatResult.Msg(businessObjectService.delete(rowId)), locale);
     } else {
       logger.error("删除业务对象失败");
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
+      return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
     }
   }
 
@@ -193,10 +193,10 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
   public Object queryTemplate(String rowId, String order, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
       LinkedList<Order> orders = UtilsTool.dataSort(order);
-      return super.result(request, ServiceResult.Msg(businessObjectService.queryTemplatePro(rowId, orders)), locale);
+      return super.result(request, PlatResult.Msg(businessObjectService.queryTemplatePro(rowId, orders)), locale);
     } else {
       logger.error("查询出业务关联模板属性失败");
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+      return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
   }
 
