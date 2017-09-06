@@ -8,9 +8,9 @@
   <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
 
   <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatis">
-    <constructor-arg ref="postgreSuitMapper"/>
-    <constructor-arg ref="conditionTranslator"/>
-    <constructor-arg>
+    <constructor-arg name="suitMapper" ref="postgreSuitMapper"/>
+    <constructor-arg name="translator" ref="conditionTranslator"/>
+    <constructor-arg name="entityEntries">
       <list>
         <bean class="com.bcx.plat.core.morebatis.configuration.EntityEntry">
           <constructor-arg name="entityClass" value="com.bcx.plat.core.entity.BusinessObjectPro"/>

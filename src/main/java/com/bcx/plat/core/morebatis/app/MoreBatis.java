@@ -66,14 +66,29 @@ public class MoreBatis {
     }
   }
 
+  /**
+   * 获取实体类全部主键字段
+   * @param entityClass 实体类class
+   * @return
+   */
   public <T extends BeanInterface<T>> Collection<Field> getPks(Class<T> entityClass) {
     return entityPks.get(entityClass);
   }
 
+  /**
+   * 获取实体类全部字段
+   * @param entityClass 实体类class
+   * @return
+   */
   public <T extends BeanInterface<T>> Collection<Field> getColumns(Class<T> entityClass) {
     return entityColumns.get(entityClass);
   }
 
+  /**
+   * 获取实体类对应表
+   * @param entityClass 实体类class
+   * @return
+   */
   public <T extends BeanInterface<T>> TableSource getTable(Class<T> entityClass) {
     return entityTables.get(entityClass);
   }
@@ -91,6 +106,12 @@ public class MoreBatis {
     }
   }
 
+  /**
+   * 根据实体类的class对象与实体类属性名称获取对应字段对象
+   * @param entityClass 实体类
+   * @param alies       实体类属性名称
+   * @return
+   */
   public <T extends BeanInterface<T>> Field getColumnByAliesWithoutCheck(Class<T> entityClass, String alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     try {
@@ -100,6 +121,12 @@ public class MoreBatis {
     }
   }
 
+  /**
+   * 根据实体类的class对象与实体类属性名称获取对应字段对象
+   * @param entityClass 实体类
+   * @param alies       实体类属性名称
+   * @return
+   */
   public <T extends BeanInterface<T>> List<Field> getColumnByAlies(Class<T> entityClass, Collection<String> alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     final LinkedList<Field> result = new LinkedList<>();
@@ -135,10 +162,8 @@ public class MoreBatis {
   }
 
   /**
-   * 新增实体信息
-   *
-   * @param entity 实体
-   * @param <T>    类型限定
+   * 插入一个实体类
+   * @param entity 要插入的实体类
    * @return 返回插入的结果标识
    */
   public <T extends BeanInterface<T>> int insertEntity(T entity) {
@@ -147,17 +172,26 @@ public class MoreBatis {
     return insert(entityClass, values).execute();
   }
 
+  /**
+   * 根据主键删除一个实体类
+   * @param entity  要更新的实体类
+   * @return
+   */
   public <T extends BeanInterface<T>> int deleteEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
-
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
     return this.deleteStatement().from(table).where(new And(pkConditions)).execute();
   }
 
+  /**
+   * 根据主键更新一个实体类
+   * @param entity  要更新的实体类
+   * @return
+   */
   public <T extends BeanInterface<T>> int updateEntity(T entity) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
@@ -168,6 +202,11 @@ public class MoreBatis {
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
+  /**
+   * 根据主键查找对象
+   * @param entity 入数据
+   * @return
+   */
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
@@ -186,18 +225,40 @@ public class MoreBatis {
     }
   }
 
-
+  /**
+   * 单表查询
+   * @param entity  要查询的实体类class
+   * @return
+   */
   public QueryAction select(Class<? extends BeanInterface> entity) {
     final Collection columns = entityColumns.get(entity);
     return selectStatement().select(columns)
             .from(entityTables.get(entity));
   }
 
+  /**
+   * 两个表的inner join查询
+   * @param primary           主表class对象
+   * @param secondary         从表class对象
+   * @param relationPrimary   主表中与从表关联的字段
+   * @param relationSecondary 从表中与主表关联的字段
+   * @return 未设置条件的查询语句对象
+   */
   public QueryAction select(Class<? extends BeanInterface> primary,
                             Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary) {
     return select(primary, secondary, relationPrimary, relationSecondary, JoinType.INNER_JOIN);
   }
 
+
+  /**
+   * 两个表join查询
+   * @param primary           主表class对象
+   * @param secondary         从表class对象
+   * @param relationPrimary   主表中与从表关联的字段
+   * @param relationSecondary 从表中与主表关联的字段
+   * @param joinType          join类型
+   * @return 未设置条件的查询语句对象
+   */
   public QueryAction select(Class<? extends BeanInterface> primary,
                             Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
     HashMap<String, Field> columns = new HashMap<>();
@@ -215,60 +276,71 @@ public class MoreBatis {
                     .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 
-  public QueryAction select(Class<? extends BeanInterface> entity, List<String> columns) {
+  private QueryAction select(Class<? extends BeanInterface> entity, List<String> columns) {
     Map<String, Field> columnMap = aliesMaps.get(entity);
     return selectStatement().select(columns.stream().map(columnMap::get)
             .collect(Collectors.toList()))
             .from(entityTables.get(entity));
   }
 
-  public QueryAction selectStatement() {
+  private QueryAction selectStatement() {
     return new QueryAction(this, translator);
   }
 
-  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values) {
-    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(values);
+  /**
+   * 更新操作（未设置条件）
+   * @param entity 实体类的对象
+   * @param value  要更新的值(支持null)
+   * @return
+   */
+  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> value) {
+    UpdateAction update = updateStatement().from(entityTables.get(entity)).set(value);
     update.setEntityClass(entity);
     return update;
   }
 
-//  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> values,Condition condition) {
-//    UpdateAction update = updateStatement().from(entityTables.get(entity))
-//            .set(values).where(condition);
-//    update.setEntityClass(entity);
-//    return update;
-//  }
-
-
+  /**
+   * 多行插入
+   * @param entity 实体类的class
+   * @param values 插入数据库的多行数据
+   * @return
+   */
   public InsertAction insert(Class<? extends BeanInterface> entity, List<Map<String, Object>> values) {
     InsertAction insertAction = insertStatement().values(values);
     insertAction.setEntityClass(entity);
     return insertAction;
   }
 
+  /**
+   * 单行插入
+   * @param entity 实体类的class
+   * @param value  插入数据库的单行数据
+   * @return 未执行的插入语句对象
+   */
   public InsertAction insert(Class<? extends BeanInterface> entity, Map<String, Object> value) {
     InsertAction insertAction = insertStatement().into(entityTables.get(entity)).values(value);
     insertAction.setEntityClass(entity);
     return insertAction;
   }
 
+  /**
+   * 删除(未设置条件)
+   * @param entity 实体类的class
+   * @return 未设置条件的删除语句对象
+   */
   public DeleteAction delete(Class<? extends BeanInterface> entity){
     return deleteStatement().from(getTable(entity));
   }
 
-//  public DeleteAction delete(Class<? extends BeanInterface> entity,Condition condition){
-//    return deleteStatement().from(getTable(entity)).where(condition);
-//  }
-
-  public InsertAction insertStatement() {
+  private InsertAction insertStatement() {
     return new InsertAction(this, translator);
   }
 
-  public UpdateAction updateStatement() {
+  private UpdateAction updateStatement() {
     return new UpdateAction(this, translator);
   }
 
-  public DeleteAction deleteStatement() {
+  private DeleteAction deleteStatement() {
     return new DeleteAction(this, translator);
   }
 
