@@ -20,6 +20,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 public abstract class BaseController {
 
+
   /**
    * logger 日志操作
    */
@@ -30,6 +31,7 @@ public abstract class BaseController {
    */
   @Autowired
   protected ResourceBundleMessageSource messageSource;
+
 
   /**
    * 对返回的结果进行处理
@@ -64,4 +66,5 @@ public abstract class BaseController {
     }
     return map;
   }
+
 }

@@ -4,18 +4,16 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
-import com.bcx.plat.core.entity.TemplateObjectPro;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServiceResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * <p>Title: TemplateObjectController</p>
@@ -43,8 +42,6 @@ public class TemplateObjectController extends BaseController {
 
   @Autowired
   private TemplateObjectService templateObjectService;
-  @Autowired
-  private MoreBatis moreBatis;
   @Autowired
   private TemplateObjectProService templateObjectProService;
 
@@ -73,50 +70,35 @@ public class TemplateObjectController extends BaseController {
                              String order,
                              HttpServletRequest request,
                              Locale locale) {
+    // 构造查询条件
+    List<Condition> ors = new ArrayList<>();
+    if (isValid(search)) {
+      ors.add(createBlankQuery(blankSelectFields(), collectToSet(search)));
+    }
+    if (isValid(rowId)) {
+      ors.add(new FieldCondition("templateObjRowId", Operator.EQUAL, rowId));
+    }
+    Condition condition = new Or(ors);
+
     // 构建排序信息
-    LinkedList<Order> str = UtilsTool.dataSort(order);
+    List<Order> orders = dataSort(order);
+
     // 返回结果
-    PageResult<Map<String, Object>> result = null;
-    if (UtilsTool.isValid(search)) {  // 当搜索条件有效时
+    PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
 
-      new ConditionBuilder(TemplateObjectPro.class).and()
-              .equal("templateObjRowId", rowId).or()
-              .addCondition(UtilsTool.createBlankQuery(Arrays.asList("code", "cname", "ename"), Arrays.asList("code", "cname", "ename")));
-
-      result = moreBatis.select(TemplateObjectPro.class, Collections.singletonList("emplateObjRowId"))
-              .where(new FieldCondition("cname", Operator.EQUAL, UtilsTool.collectToSet(search))).selectPage(pageNum, pageSize);
-
-//      templateObjectProService.select(
-//              new ConditionBuilder(TemplateObjectPro.class).and()
-//                      .equal("templateObjRowId", rowId).or()
-//                      .addCondition(UtilsTool.createBlankQuery(Arrays.asList("code", "cname", "ename"),
-//                              Arrays.asList("code", "cname", "ename"))),
-//              UtilsTool.collectToSet(search).endOr().endAnd().buildDone());
-      if (result.getResult().size() == 0) {
-        return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-      }
+    if (result.getResult().size() != 0) {
       return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
     }
-//    result = templateObjectProService.select(
-//            new ConditionBuilder(TemplateObjectPro.class).and()
-//                    .equal("templateObjRowId", rowId).endAnd().buildDone()
-//            , str, pageNum, pageSize);
-
-    result = moreBatis.select(TemplateObjectPro.class).where(new FieldCondition("templateObjRowId", Operator.EQUAL, rowId)).selectPage(pageNum, pageSize);
-    if (result.getResult().size() == 0) {
-      return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-    }
-    return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+    return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
   }
-
 
   @RequestMapping("/query")
   public Object singleInputSelect(String search, HttpServletRequest request, Locale locale) {
-    List<TemplateObject> result = templateObjectService.select(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)));
+    List<TemplateObject> result = templateObjectService.select(createBlankQuery(blankSelectFields(), collectToSet(search)));
     if (result.size() == 0) {
       return super.result(request, ServiceResult.Msg(PlatResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
-    return super.result(request, ServiceResult.Msg(new PlatResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+    return super.result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
   }
 
   /**
@@ -151,10 +133,10 @@ public class TemplateObjectController extends BaseController {
   @RequestMapping("/queryPage")
   public Object singleInputSelect(String search, @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order, HttpServletRequest request, Locale locale) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = dataSort(order);
     pageNum = search == null || search.isEmpty() ? 1 : pageNum;
     PageResult<Map<String, Object>> result = templateObjectService
-            .selectPageMap(UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)), orders, pageNum, pageSize);
+            .selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
     return result(request, ServiceResult.Msg(new PlatResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
   }
 
@@ -205,7 +187,7 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/delete")
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       int i = new TemplateObject().deleteById(rowId);
       return super.result(request, commonServiceResult(i, Message.DELETE_SUCCESS), locale);
     }

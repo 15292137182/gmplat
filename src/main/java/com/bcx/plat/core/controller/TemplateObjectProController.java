@@ -1,8 +1,6 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.common.BaseControllerTemplate;
-import com.bcx.plat.core.entity.TemplateObjectPro;
-import com.bcx.plat.core.service.TemplateObjectProService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +22,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
-public class TemplateObjectProController extends BaseControllerTemplate<TemplateObjectProService, TemplateObjectPro> {
+public class TemplateObjectProController extends BaseControllerTemplate {
 
   @Override
   protected List<String> blankSelectFields() {
