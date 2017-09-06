@@ -128,7 +128,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                   String order,
-                                  Locale locale) {
+                                  Locale locale, HttpServletRequest request) {
     LinkedList<Order> orders = dataSort(order);
     pageNum = search == null || search.isEmpty() ? 1 : pageNum;
     return selectPage(locale, createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
@@ -144,8 +144,8 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(TemplateObject entity, HttpServletRequest request, Locale locale) {
-    return super.insert(entity, request, locale);
+  public Object insert(Map entity, HttpServletRequest request, Locale locale) {
+    return super.insert(new TemplateObject().fromMap(entity), request, locale);
   }
 
 
@@ -158,8 +158,8 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    * @return 返回操作信息
    */
   @RequestMapping("/modify")
-  public Object update(TemplateObject entity, HttpServletRequest request, Locale locale) {
-    return super.updateById(entity, request, locale);
+  public Object update(Map entity, HttpServletRequest request, Locale locale) {
+    return super.updateById(new TemplateObject().fromMap(entity), request, locale);
   }
 
   /**

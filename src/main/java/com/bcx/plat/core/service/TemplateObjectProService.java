@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 /**
  * <p>Title: TemplateObjectProService</p>
  * <p>Description: 模板对象属性业务层</p>
- * <p>Copyright: Shanghai Batchsight GMP Information of management platform, Inc. Copyright(c) 2017</p>
+ * <p>Copyright: Shanghai BatchSight GMP Information of management platform, Inc. Copyright(c) 2017</p>
  *
  * @author Wen TieHu
  * @version 1.0
- * <pre>Histroy:
+ * <pre>History:
  * 2017/8/28  Wen TieHu Create
  * </pre>
  */

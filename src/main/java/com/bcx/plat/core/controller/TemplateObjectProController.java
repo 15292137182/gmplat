@@ -1,6 +1,7 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.service.TemplateObjectProService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,8 +23,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
-public class TemplateObjectProController extends BaseController {
-
+public class TemplateObjectProController extends BaseController<TemplateObjectProService> {
 
   /**
    * 参与空格查询的字段
