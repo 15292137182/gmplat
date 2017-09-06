@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
+        input {
+            -webkit-user-select: auto !important;
+        }
+    </style>
+</head>
+<body>
+<div id="SequenceRuleConfigAdd" style="margin-top:10px">
+    <el-form :label-position="labelPosition" label-width="80px" :model="formTable">
+        <el-row class="row-bg">
+            <el-col :span="10">
+                <el-form-item label="代码">
+                    <el-input placeholder="请输入代码" :disabled="disabled" v-model="formTable.seqCodeInput"
+                              ref="seqCodeInput"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="名称">
+                    <el-input placeholder="请输入名称" v-model="formTable.seqNameInput" ref="seqNameInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="15">
+                <el-form-item label="内容">
+                    <el-input v-model="formTable.seqContentInput" :disabled="true"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5" style="margin-left: 10px">
+                <el-form-item>
+                    <el-select placeholder="请选择" v-model="name" style="width: 150px">
+                        <el-option v-for="item in names"
+                                   :key="item.name"
+                                   :label="item.label"
+                                   :value="item.name" placeholder="请选择"></el-option>
+                    </el-select>
+                    <el-button icon="plus" type="primary" @click="add"></el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <!--<div id="content">
+             <el-row>
+                 <el-col :span="1">
+                     <el-form-item>
+                         <el-button type="text" size="small" icon="delete"></el-button>
+                     </el-form-item>
+
+                 </el-col>
+                 <el-col :span="5">
+                     <el-form-item label="常量" label-width="40px">
+                         <el-input placeholder="请输入值" ></el-input>
+                     </el-form-item>
+                 </el-col>
+             </el-row>
+
+             <el-row>
+                 <el-col :span="1">
+                     <el-form-item>
+                         <el-button @click.native="" type="text" size="small" icon="delete"></el-button>
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="9">
+                     <el-form-item label="变量" label-width="40px">
+                         <el-select placeholder="请选择" v-model="name" style="width: 150px">
+                             <el-option v-for="item in names"
+                                        :key="item.name"
+                                        :label="item.label"
+                                        :value="item.name" placeholder="请选择"></el-option>
+                         </el-select>
+                         <el-select placeholder="请选择" v-model="name" style="width: 150px">
+                             <el-option v-for="item in names"
+                                        :key="item.name"
+                                        :label="item.label"
+                                        :value="item.name" placeholder="请选择"></el-option>
+                         </el-select>
+                     </el-form-item>
+                 </el-col>
+                 <el-col :span="4">
+                     <el-form-item label="或" label-width="20px">
+                         <el-input placeholder="请输入键"/>
+                     </el-form-item>
+                 </el-col>
+                 <el-col :span="5">
+                     <el-form-item label="默认值">
+                         <el-input placeholder="请输入默认值"/>
+                     </el-form-item>
+                 </el-col>
+                 <el-col :span="5">
+                     <el-form-item label="是否显示">
+                         <el-checkbox></el-checkbox>
+                     </el-form-item>
+                 </el-col>
+             </el-row>
+
+             <el-row>
+                 <el-col :span="1">
+                     <el-form-item>
+                         <el-button type="text" size="small" icon="delete"></el-button>
+                     </el-form-item>
+                 </el-col>
+                 <el-col :span="5">
+                     <el-form-item label="日期" label-width="40px">
+                         <el-input placeholder="请输入键" ></el-input>
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="4">
+                     <el-form-item >
+                         （如：yyyy-MM-dd）
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="5">
+                     <el-form-item label="是否显示">
+                         <el-checkbox></el-checkbox>
+                     </el-form-item>
+                 </el-col>
+             </el-row>
+
+             <el-row>
+                 <el-col :span="1">
+                     <el-form-item>
+                         <el-button type="text" size="small" icon="delete"></el-button>
+                     </el-form-item>
+                 </el-col>
+                 <el-col :span="5">
+                     <el-form-item label="序号" label-width="40px">
+                         <el-input placeholder="请输入键" ></el-input>
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="4">
+                     <el-form-item label="长度" label-width="70px">
+                         <el-input placeholder="请输入" ></el-input>
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="4">
+                     <el-form-item label="循环" label-width="70px">
+                         <el-select placeholder="请选择" v-model="name" style="width: 100px">
+                             <el-option v-for="item in names"
+                                        :key="item.name"
+                                        :label="item.label"
+                                        :value="item.name" placeholder="请选择"></el-option>
+                         </el-select>
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="5">
+                     <el-form-item label="关联变量键" label-width="120px">
+                         <el-input placeholder="请输入" ></el-input>
+                     </el-form-item>
+                 </el-col>
+
+                 <el-col :span="5">
+                     <el-form-item label="是否显示">
+                         <el-checkbox></el-checkbox>
+                     </el-form-item>
+                 </el-col>
+             </el-row>
+         </div>-->
+        <div :is="item.component" v-for="item in items"></div>
+
+        <el-row type="flex" class="row-bg">
+            <el-col :span="10">
+                <el-form-item label="所属模块" prop="belongModuleInput">
+                    <el-input placeholder="请输入名称" v-model="formTable.belongModuleInput" ref="belongModuleInput"></el-input>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="10">
+                <el-form-item label="所属类型" prop="belongSystemInput">
+                    <el-input placeholder="请输入名称" v-model="formTable.belongSystemInput" ref="belongSystemInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row type="flex" class="row-bg">
+            <el-col :span="10">
+                <el-form-item label="说明">
+                    <el-input placeholder="请输入说明" v-model="formTable.despInput" ref="despInput"></el-input>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="10">
+                <el-form-item label="版本">
+                    <el-input placeholder="系统自动生成版本" disabled="" v-model="formTable.versionInput"
+                              ref="versionInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click.native="confirm">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script src="add-sequence-rule-config.js"></script>
+</body>
+</html>

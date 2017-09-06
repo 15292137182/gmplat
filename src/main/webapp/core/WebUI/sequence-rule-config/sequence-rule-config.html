@@ -40,7 +40,7 @@
                 <el-row style="padding:0 10px 10px 10px">
                     <el-col :span="24">
                         <template>
-                            <el-table :data="tableData" border :height="Height" highlight-current-row
+                            <el-table :data="tableData" border :height="leftHeight" highlight-current-row
                                       v-loading="loading"
                                       element-loading-text="加载中"
                                       highlight-current-row
@@ -53,8 +53,9 @@
                                 </el-table-column>
                                 <el-table-column prop="seqContent" label="内容" width="450">
                                 </el-table-column>
-                                <el-table-column prop="desp" label="说明" width="">
-                                </el-table-column>
+                                <el-table-column label="所属模块" prop="belongModule" width="100"></el-table-column>
+                                <el-form-column label="所属类型" prop="belongSystem" width="100"></el-form-column>
+                                <el-table-column prop="desp" label="说明" width=""></el-table-column>
                                 <el-table-column sortable="custom" prop="version" label="版本" width="">
                                 </el-table-column>
                                 <el-table-column  prop="" fixed="right"
