@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
  * @author Wen TieHu
  * @version 1.0
  * <pre>Histroy:
- *                2017/8/28  Wen TieHu Create
- *          </pre>
+ * 2017/8/28  Wen TieHu Create
+ * </pre>
  */
 @Service
 public class TemplateObjectService extends BaseService<TemplateObject> {

@@ -121,8 +121,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    *
    * @return 结果集合
    */
+  @SuppressWarnings("unchecked")
   public List<T> selectAll() {
-    return selectList(null, null);
+    return selectList(null, null, true);
   }
 
   /**
@@ -149,8 +150,48 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     return null;
   }
 
+  @SuppressWarnings("unchecked")
   public List<T> selectSimple(Condition... condition) {
-    return selectList(new And(condition), null);
+    return selectList(new And(condition), null, true);
+  }
+
+  /**
+   * 查询所有
+   *
+   * @return 结果集合
+   */
+  @SuppressWarnings("unchecked")
+  public List<Map> selectAllMap() {
+    return selectList(null, null, false);
+  }
+
+  /**
+   * 查询一个
+   *
+   * @return 状态码
+   */
+  public Map selectOneByIdMap() {
+    return selectOneByIdMap(getPk());
+  }
+
+  /**
+   * 查询一个
+   *
+   * @return 结果
+   */
+  public Map selectOneByIdMap(Serializable id) {
+    if (null != id) {
+      List<Map> ts = selectSimpleMap(new FieldCondition("rowId", Operator.EQUAL, id));
+      if (!ts.isEmpty()) {
+        return ts.get(0);
+      }
+    }
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<Map> selectSimpleMap(Condition... condition) {
+    return selectList(new And(condition), null, false);
   }
 
   /**
@@ -160,7 +201,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @return 结果集合
    */
   @SuppressWarnings("unchecked")
-  public List<T> selectList(Condition condition, List<Order> orders) {
+  public List selectList(Condition condition, List<Order> orders, boolean convert) {
     Condition and;
     if (null != condition) {
       and = new And(condition, NOT_DELETE_OR);
@@ -174,15 +215,19 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     } else {
       result = qa.execute();
     }
-    List<T> ts = new ArrayList<>();
-    result.forEach(map -> {
-      try {
-        ts.add((T) getClass().newInstance().fromMap(map));
-      } catch (InstantiationException | IllegalAccessException e) {
-        e.printStackTrace();
-      }
-    });
-    return ts;
+    if (convert) {
+      List<T> ts = new ArrayList<>();
+      result.forEach(map -> {
+        try {
+          ts.add((T) getClass().newInstance().fromMap(map));
+        } catch (InstantiationException | IllegalAccessException e) {
+          e.printStackTrace();
+        }
+      });
+      return ts;
+    } else {
+      return result;
+    }
   }
 
   /**

@@ -10,9 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.bcx.plat.core.utils.UtilsTool.createBlankQuery;
 
@@ -46,10 +44,33 @@ public abstract class BaseService<T extends BaseEntity<T>> {
     return select(condition, null);
   }
 
+  /**
+   * 根据参数查询，查询泛型为 map
+   *
+   * @param condition 条件
+   * @return 返回查询结果
+   */
+  public List<Map> selectMap(Condition condition) {
+    return selectMap(condition, null);
+  }
+
+  @SuppressWarnings("unchecked")
   public List<T> select(Condition condition, List<Order> orders) {
     List<T> result = new ArrayList<>();
     try {
-      result = getTClass().newInstance().selectList(condition, orders);
+      result = getTClass().newInstance().selectList(condition, orders, true);
+    } catch (InstantiationException | IllegalAccessException e) {
+      logger.error(e.getMessage());
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<Map> selectMap(Condition condition, List<Order> orders) {
+    List<Map> result = new ArrayList<>();
+    try {
+      result = getTClass().newInstance().selectList(condition, orders, false);
     } catch (InstantiationException | IllegalAccessException e) {
       logger.error(e.getMessage());
       e.printStackTrace();
@@ -58,7 +79,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   }
 
   /**
-   * 分页查询
+   * 分页查询,返回查询结果为 类型 T
    *
    * @param condition 条件
    * @param orders    排序
@@ -69,6 +90,25 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   public PageResult<T> selectPage(Condition condition, List<Order> orders, int pageNum, int pageSize) {
     try {
       return getTClass().newInstance().selectPage(condition, pageNum, pageSize, orders);
+    } catch (InstantiationException | IllegalAccessException e) {
+      logger.error(e.getMessage());
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
+   * 分页查询,返回查询结果为 类型 Map<String, Object>
+   *
+   * @param condition 条件
+   * @param orders    排序
+   * @param pageNum   页码
+   * @param pageSize  页面大小
+   * @return 返回查询结果
+   */
+  public PageResult<Map<String, Object>> selectPageMap(Condition condition, List<Order> orders, int pageNum, int pageSize) {
+    try {
+      return getTClass().newInstance().selectPageMap(condition, pageNum, pageSize, orders);
     } catch (InstantiationException | IllegalAccessException e) {
       logger.error(e.getMessage());
       e.printStackTrace();
@@ -99,11 +139,12 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    */
   @SuppressWarnings("unchecked")
   public PageResult<T> blankQuerySelect(String blankInput,
+                                        List blankFields,
                                         Condition condition,
                                         int pageNum,
                                         int pageSize,
                                         List<Order> orders) {
-    return blankQuerySelectCommon(blankInput, condition, pageNum, pageSize, orders, true);
+    return blankQuerySelectCommon(blankInput, blankFields, condition, pageNum, pageSize, orders, true);
   }
 
   /**
@@ -116,23 +157,25 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * @return 返回查询结果, 泛型为 Map
    */
   @SuppressWarnings("unchecked")
-  public PageResult<T> blankQuerySelectMap(String blankInput,
-                                           Condition condition,
-                                           int pageNum,
-                                           int pageSize,
-                                           List<Order> orders) {
-    return blankQuerySelectCommon(blankInput, condition, pageNum, pageSize, orders, false);
+  public PageResult<Map> blankQuerySelectMap(String blankInput,
+                                             List blankFields,
+                                             Condition condition,
+                                             int pageNum,
+                                             int pageSize,
+                                             List<Order> orders) {
+    return blankQuerySelectCommon(blankInput, blankFields, condition, pageNum, pageSize, orders, false);
   }
 
 
   private PageResult blankQuerySelectCommon(String blankInput,
+                                            List blankFields,
                                             Condition condition,
                                             int pageNum,
                                             int pageSize,
                                             List<Order> orders,
                                             boolean convert) {
     List<Condition> conditions = new ArrayList<>();
-    Or or = getSingleInputOr(blankInput);
+    Or or = getSingleInputOr(blankInput, blankFields);
     if (null != or) {
       conditions.add(or);
     }
@@ -160,14 +203,16 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * @param singleValue 输入框的值
    * @return 返回条件
    */
-  private Or getSingleInputOr(String singleValue) {
+  private Or getSingleInputOr(String singleValue, Collection<String> blankFields) {
     Set<String> values = UtilsTool.collectToSet(singleValue);
     if (!values.isEmpty()) {
-      Set<String> keys = null;
-      try {
-        keys = getTClass().newInstance().toMap().keySet();
-      } catch (InstantiationException | IllegalAccessException e) {
-        e.printStackTrace();
+      Collection<String> keys = blankFields;
+      if (null == keys) {
+        try {
+          keys = getTClass().newInstance().toMap().keySet();
+        } catch (InstantiationException | IllegalAccessException e) {
+          e.printStackTrace();
+        }
       }
       if (keys != null) {
         return createBlankQuery(keys, values);

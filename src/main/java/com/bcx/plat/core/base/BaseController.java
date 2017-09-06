@@ -18,7 +18,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 /**
  * 基础控制器
  */
-public class BaseController {
+public abstract class BaseController {
 
   /**
    * logger 日志操作
