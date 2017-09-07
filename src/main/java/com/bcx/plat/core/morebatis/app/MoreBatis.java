@@ -283,7 +283,7 @@ public class MoreBatis {
             .from(entityTables.get(entity));
   }
 
-  private QueryAction selectStatement() {
+  public QueryAction selectStatement() {
     return new QueryAction(this, translator);
   }
 
@@ -332,7 +332,7 @@ public class MoreBatis {
     return deleteStatement().from(getTable(entity));
   }
 
-  private InsertAction insertStatement() {
+  public InsertAction insertStatement() {
     return new InsertAction(this, translator);
   }
 
@@ -340,7 +340,7 @@ public class MoreBatis {
     return new UpdateAction(this, translator);
   }
 
-  private DeleteAction deleteStatement() {
+  public DeleteAction deleteStatement() {
     return new DeleteAction(this, translator);
   }
 

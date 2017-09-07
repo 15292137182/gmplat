@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -174,11 +175,12 @@ public class FrontFuncProController extends
             String attrSource = res.get("attrSource").toString();
             if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_MODULE)) {
                 String relateBusiPro = res.get("relateBusiPro").toString();
-                List<Map<String, Object>> proRwoId = templateObjectProService.select(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
+                List<TemplateObjectPro> proRowId = templateObjectProService.select(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
                 //拿到模板对象属性给功能块属性赋值
-                for (Map<String, Object> pro : proRwoId) {
-                    res.put("propertyName", pro.get("cname").toString());
-                    res.put("ename", pro.get("ename").toString());
+                for (TemplateObjectPro pro : proRowId) {
+
+                    res.put("propertyName", pro.getCname());
+                    res.put("ename", pro.getEname());
                 }
             } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE)) {
                 String relateBusiPro = res.get("relateBusiPro").toString();

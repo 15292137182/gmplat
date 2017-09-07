@@ -181,10 +181,9 @@ public abstract class BaseControllerTemplate<T extends BaseServiceTemplate, Y ex
      *
      * @param content 接受的参数
      * @param msg     消息
-     * @param <T>
      * @return
      */
-    private <T> PlatResult<T> commonServiceResult(T content, String msg) {
+    private  PlatResult<T> commonServiceResult(T content, String msg) {
         return PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, msg, content));
     }
 }
