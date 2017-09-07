@@ -171,7 +171,7 @@
                  </el-col>
              </el-row>
          </div>-->
-        <div :is="item.component" v-for="item in items"></div>
+        <div :is="item.component" v-for="(item, index) in items" :key="item.key" :prop="index"></div>
 
         <el-row type="flex" class="row-bg">
             <el-col :span="10">

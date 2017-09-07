@@ -20,9 +20,13 @@ var constantComponent = Vue.extend({
     methods: {
         //删除按钮
         remove(){
-
-        },
-    },
+            // 获取当前新增组件的index
+            var _index = this.$el.attributes[1].value;
+            if(_index != null) {
+                add.items.splice(_index, 1);
+            }
+        }
+    }
 });
 
 //变量组件
@@ -40,7 +44,7 @@ var alterComponent = Vue.extend({
     template: '<el-row>'+
                 '<el-col :span="1">'+
                     '<el-form-item>'+
-                        '<el-button @click="" type="text" size="small" icon="delete"></el-button>'+
+                        '<el-button @click="remove" type="text" size="small" icon="delete"></el-button>'+
                     '</el-form-item>'+
                 '</el-col>'+
                 '<el-col :span="6">'+
@@ -65,7 +69,17 @@ var alterComponent = Vue.extend({
                 '<el-checkbox v-model="checked"></el-checkbox>'+
                 '</el-form-item>'+
                 '</el-col>'+
-            '</el-row>'
+            '</el-row>',
+    methods: {
+        //删除按钮
+        remove(){
+            // 获取当前新增组件的index
+            var _index = this.$el.attributes[1].value;
+            if(_index != null) {
+                add.items.splice(_index, 1);
+            }
+        }
+    }
 });
 
 //日期组件
@@ -79,7 +93,7 @@ var dateComponent = Vue.extend({
     template: '<el-row>'+
                 '<el-col :span="1">'+
                     '<el-form-item>'+
-                        '<el-button type="text" size="small" icon="delete"></el-button>'+
+                        '<el-button type="text" size="small" icon="delete" @click="remove"></el-button>'+
                     '</el-form-item>'+
                 '</el-col>'+
                 '<el-col :span="5">'+
@@ -96,7 +110,17 @@ var dateComponent = Vue.extend({
                         '<el-checkbox v-model="checked"></el-checkbox>'+
                     '</el-form-item>'+
                 '</el-col>'+
-                '</el-row>'
+                '</el-row>',
+    methods: {
+        //删除按钮
+        remove(){
+            // 获取当前新增组件的index
+            var _index = this.$el.attributes[1].value;
+            if(_index != null) {
+                add.items.splice(_index, 1);
+            }
+        }
+    }
 });
 
 //序号组件
@@ -115,7 +139,7 @@ var numComponent = Vue.extend({
     template:'<el-row>'+
                 '<el-col :span="1">'+
                 '   <el-form-item>'+
-                        '<el-button type="text" size="small" icon="delete"></el-button>'+
+                        '<el-button type="text" size="small" icon="delete" @click="remove"></el-button>'+
                     '</el-form-item>'+
                 '</el-col>'+
                 '<el-col :span="5">'+
@@ -149,7 +173,17 @@ var numComponent = Vue.extend({
                 '       <el-checkbox v-model="checked"></el-checkbox>'+
                 '   </el-form-item>'+
                 '</el-col>'+
-                '</el-row>'
+                '</el-row>',
+    methods: {
+        //删除按钮
+        remove(){
+            // 获取当前新增组件的index
+            var _index = this.$el.attributes[1].value;
+            if(_index != null) {
+                add.items.splice(_index, 1);
+            }
+        }
+    }
 })
 
 var add=new Vue({
