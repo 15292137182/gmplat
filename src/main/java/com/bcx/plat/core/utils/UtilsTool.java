@@ -260,23 +260,6 @@ public class UtilsTool {
     return sb.toString();
   }
 
-  /**
-   * 将map中的键值对转换为一组and条件
-   *
-   * @param args
-   * @return
-   */
-  public static And convertMapToFieldConditions(Map<String, Object> args) {
-    return new And(args.entrySet().stream().map((entry) -> {
-      final Object value = entry.getValue();
-      if (value instanceof Collection) {
-        return new FieldCondition(entry.getKey(), Operator.IN, value);
-      } else {
-        return new FieldCondition(entry.getKey(), Operator.EQUAL, value);
-      }
-    }).collect(Collectors.toList()));
-  }
-
   public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass,Map<String, Object> args){
     AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
