@@ -43,6 +43,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
     return select(condition, null);
   }
 
+  final public List<T> selectEntity(Condition condition) {
+    List<Map<String, Object>> list = select(condition, null);
+    return list.stream().map((row)->{
+      return (T) UtilsTool.jsonToObj(UtilsTool.objToJson(row),entityClass);
+    }).collect(Collectors.toList());
+  }
+
   private List<Order> emptyDefaultModifyTime(List<Order> orders) {
     return orders;
   }
