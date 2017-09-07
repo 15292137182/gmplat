@@ -289,7 +289,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   private Condition getNoDeleteCondition() {
     return new ConditionBuilder(this.getClass())
-            .or().isNull("deleteFlag").equal("deleteFlag",DELETE_FLAG).endOr()
+            .or().isNull("deleteFlag").notEqual("deleteFlag",DELETE_FLAG).endOr()
             .buildDone();
   }
 
