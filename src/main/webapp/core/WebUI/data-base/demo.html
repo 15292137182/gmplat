@@ -23,7 +23,7 @@
             </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-            <el-col :xs="8" :sm="8" :md="8">
+            <el-col :xs="12" :sm="12" :md="12">
                 <div class="inputStyle">
                     <components :is="dynComponent" :search-input="ruleForm1" code=""></components>
                 </div>
@@ -31,14 +31,13 @@
         </el-row>
         <el-row style="padding:0 10px 10px 10px">
             <el-col :span="24">
-                <components :is="tableBlock" :child-table="table"></components>
+                <components data="first" :is="tableBlock" :child-table="table"></components>
             </el-col>
         </el-row>
     </div>
 </el-col>
 </body>
 <script>
-    console.log(GmpForm.init({postUrl:"http://www.baidu.com"}));
         var code = ["obj102017-08-31000001","obj102017-09-01000002","obj102017-09-04000001"];
         var strHtml='';
         DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
