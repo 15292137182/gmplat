@@ -58,20 +58,9 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
     return selectColumns(condition, moreBatis.getColumns(entityClass), orders);
   }
 
-  public List<Map<String, Object>> selectColumns(Condition condition, Collection<AliasedColumn> aliasedColumns, List<Order> orders) {
-    return moreBatis.selectStatement().select(aliasedColumns).from(moreBatis.getTable(entityClass))
-            .orderBy(orders).where(condition).execute();
-  }
 
   public PageResult<Map<String, Object>> select(Condition condition, List<Order> orders, int pageNum, int pageSize) {
     return selectColumns(condition, moreBatis.getColumns(entityClass), orders, pageNum, pageSize);
-  }
-
-  private PageResult<Map<String, Object>> selectColumns(Condition condition, Collection<AliasedColumn> aliasedColumns, List<Order> orders, int pageNum, int pageSize) {
-    final PageResult<Map<String, Object>> queryResult = moreBatis.select(entityClass)
-            .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
-    final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
-    return camelizedResult;
   }
 
   public PageResult<Map<String, Object>> select(Condition condition, int pageNum, int pageSize) {
@@ -92,12 +81,12 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
     return select(UtilsTool.convertMapToFieldConditions(args));
   }
 
-  public List<Map<String, Object>> select(Condition condition, Collection<String> columns, List<Order> orders) {
-    return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, columns), orders);
+  public List<Map<String, Object>> select(Condition condition, Collection<String> alias, List<Order> orders) {
+    return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, alias), orders);
   }
 
-  public PageResult<Map<String, Object>> select(Condition condition, Collection<String> columns, List<Order> orders, int pageNum, int pageSize) {
-    return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, columns), orders, pageNum, pageSize);
+  public PageResult<Map<String, Object>> select(Condition condition, Collection<String> alias, List<Order> orders, int pageNum, int pageSize) {
+    return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, alias), orders, pageNum, pageSize);
   }
 
   public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
@@ -155,6 +144,18 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
 
   public Map<String, Object> mapFilter(Map<String, Object> map) {
     return mapFilter(map, isRemoveNull(), isRemoveBlank());
+  }
+
+  private List<Map<String, Object>> selectColumns(Condition condition, Collection<AliasedColumn> aliasedColumns, List<Order> orders) {
+    return moreBatis.selectStatement().select(aliasedColumns).from(moreBatis.getTable(entityClass))
+            .orderBy(orders).where(condition).execute();
+  }
+
+  private PageResult<Map<String, Object>> selectColumns(Condition condition, Collection<AliasedColumn> aliasedColumns, List<Order> orders, int pageNum, int pageSize) {
+    final PageResult<Map<String, Object>> queryResult = moreBatis.select(entityClass)
+            .where(UtilsTool.excludeDeleted(condition)).orderBy(emptyDefaultModifyTime(orders)).selectPage(pageNum, pageSize);
+    final PageResult<Map<String, Object>> camelizedResult = UtilsTool.underlineKeyMapListToCamel(queryResult);
+    return camelizedResult;
   }
 
   private Map<String, Object> mapFilter(Map<String, Object> map, boolean removeNull, boolean removeBlank) {
