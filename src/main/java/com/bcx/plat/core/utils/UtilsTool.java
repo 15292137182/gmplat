@@ -272,6 +272,19 @@ public class UtilsTool {
     return (And) conditionBuilder.endAnd().buildDone();
   }
 
+  public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass,Map<String, Object> args){
+    AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+    for (Map.Entry<String, Object> entry : args.entrySet()) {
+      final Object value = entry.getValue();
+      if (value instanceof Collection) {
+        conditionBuilder.in(entry.getKey(), (Collection) value);
+      } else {
+        conditionBuilder.equal(entry.getKey(),value);
+      }
+    }
+    return (And) conditionBuilder.endAnd().buildDone();
+  }
+
   /**
    * 创建空格查询的查询条件
    *
