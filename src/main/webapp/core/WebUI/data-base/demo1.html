@@ -20,8 +20,8 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="24">
-                <el-button @click="demo">1</el-button>
+            <el-col :span="10" offset="8">
+                <el-button type="info" @click="demo">获取json对象</el-button>
             </el-col>
         </el-row>
     </div>
@@ -42,12 +42,7 @@
         },
         methods:{
             demo(){
-                var arr = DynamicStitching.formBlockArr;
-                var data = {};
-                for(var i=0;i<arr.length;i++){
-                    data[arr[i]]=this.formTable[arr[i]];
-                }
-            console.log(data);
+                console.log(GmpForm.getData());
             }
         }
     })

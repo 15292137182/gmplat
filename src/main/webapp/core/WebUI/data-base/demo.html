@@ -25,7 +25,7 @@
         <el-row style="margin-bottom: 20px">
             <el-col :xs="8" :sm="8" :md="8">
                 <div class="inputStyle">
-                    <components :is="dynComponent" :search-input="ruleForm1"></components>
+                    <components :is="dynComponent" :search-input="ruleForm1" code=""></components>
                 </div>
             </el-col>
         </el-row>
@@ -38,6 +38,7 @@
 </el-col>
 </body>
 <script>
+    console.log(GmpForm.init({postUrl:"http://www.baidu.com"}));
         var code = ["obj102017-08-31000001","obj102017-09-01000002","obj102017-09-04000001"];
         var strHtml='';
         DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
@@ -64,7 +65,7 @@
                     },
                     tableBlock(){//表格组件
                         var template= strHtml.table;
-                        var props = ["table"];//子组件参数名
+                        var props = ["childTable"];//子组件参数名
                         return {
                             template,
                             props
