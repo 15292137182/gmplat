@@ -11,12 +11,10 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
@@ -306,46 +304,18 @@ public class UtilsTool {
    * @param origin 输入MapList
    * @return
    */
-  static public List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
+  @SuppressWarnings("unchecked")
+  public static List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
-      HashMap<String, Object> out = new HashMap<>();
-      for (Entry<String, Object> entry : row.entrySet()) {
-        out.put(UtilsTool.underlineToCamel(entry.getKey(), false), entry.getValue());
-      }
+      Map out = new HashMap<>();
+      row.forEach((key, value) -> out.put(underlineToCamel(key, false), value));
       return out;
     }).collect(Collectors.toList());
   }
 
-  static public And excludeDeleted(Condition condition) {
+  public static And excludeDeleted(Condition condition) {
     return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
             new FieldCondition("delete_flag", Operator.IS_NULL, null)), condition);
-  }
-
-  /**
-   * 获取属性代码字段信息
-   *
-   * @param key 接受properties可以对应的key
-   * @return 返回properies中value值
-   */
-  static public String loadProperties(String key) {
-    Properties properties = new Properties();
-    InputStream resourceAsStream = UtilsTool.class.getClassLoader()
-            .getResourceAsStream("properties/sequence.properties");
-    try {
-      properties.load(resourceAsStream);
-      return properties.getProperty(key);
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (resourceAsStream != null) {
-        try {
-          resourceAsStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-    return null;
   }
 
   /**
@@ -366,42 +336,5 @@ public class UtilsTool {
     String s = UtilsTool.camelToUnderline(str);
     orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(s), num));
     return orders;
-  }
-
-
-  /**
-   * 版本号叠加升级
-   *
-   * @param version 接受版本号
-   * @return
-   */
-  public static String upgradeVersion(String version) {
-    StringBuffer sb = new StringBuffer();
-    boolean findUnm = false;
-    String s = version + "_0.1d";
-    double sum = 0D;
-    for (int i = 0; i < s.length(); i++) {
-      char c = s.charAt(i);
-      if (c == '.' || (c >= '0' && c <= '9')) {
-        sb.append(c);
-        findUnm = true;
-      } else if (findUnm) {
-        try {
-          sum += Double.parseDouble(sb.toString());
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        sb = new StringBuffer();
-        findUnm = false;
-      }
-    }
-    StringBuilder sf = new StringBuilder();
-    String str = sum + "";
-    String substring = str.substring(str.indexOf(".") + 1);
-    if (substring.equals("0")) {
-      sf.append(str).append(".0");
-      return sf + "";
-    }
-    return str + "";
   }
 }

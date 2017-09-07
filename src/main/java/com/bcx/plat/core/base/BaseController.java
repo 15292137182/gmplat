@@ -180,8 +180,8 @@ public abstract class BaseController<SERVER extends BaseService> {
    * @param locale  本地化信息
    * @return 返回
    */
-  protected Object deleteByIds(HttpServletRequest request, Locale locale, String... strings) {
-    return deleteByIds(request, locale, Arrays.asList(strings));
+  protected Object deleteByIds(HttpServletRequest request, Locale locale, String... rowIds) {
+    return deleteByIds(request, locale, Arrays.asList(rowIds));
   }
 
   /**

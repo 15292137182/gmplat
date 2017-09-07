@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -305,6 +306,10 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   public int deleteById() {
     return deleteById(getPk());
+  }
+
+  public int deleteByIds(Collection<Serializable> ids) {
+    return delete(new FieldCondition("rowId", Operator.IN, ids));
   }
 
   public int deleteById(Serializable id) {

@@ -1,7 +1,6 @@
 package com.bcx.plat.core.service;
 
-import com.bcx.plat.core.common.BaseServiceTemplate;
-import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.entity.KeySetPro;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,5 @@ import org.springframework.stereotype.Service;
  *          </pre>
  */
 @Service
-public class KeySetProService extends BaseServiceTemplate<KeySetPro>{
-    @Override
-    public boolean isRemoveBlank() {
-        return false;
-    }
+public class KeySetProService extends BaseService<KeySetPro> {
 }
