@@ -1,6 +1,9 @@
 package com.bcx.plat.core.utils;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -272,6 +275,19 @@ public class UtilsTool {
         return new FieldCondition(entry.getKey(), Operator.EQUAL, value);
       }
     }).collect(Collectors.toList()));
+  }
+
+  public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass,Map<String, Object> args){
+    AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+    for (Map.Entry<String, Object> entry : args.entrySet()) {
+      final Object value = entry.getValue();
+      if (value instanceof Collection) {
+        conditionBuilder.in(entry.getKey(), (Collection) value);
+      } else {
+        conditionBuilder.equal(entry.getKey(),value);
+      }
+    }
+    return (And) conditionBuilder.endAnd().buildDone();
   }
 
   /**

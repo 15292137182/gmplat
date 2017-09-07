@@ -72,13 +72,13 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
   @Deprecated
   public PageResult<Map<String, Object>> select(Map args, int pageNum, int pageSize) {
     args = mapFilter(args);
-    return select(UtilsTool.convertMapToFieldConditions(args), pageNum, pageSize);
+    return select(UtilsTool.convertMapToAndCondition(entityClass,args), pageNum, pageSize);
   }
 
   @Deprecated
   public List<Map<String, Object>> select(Map args) {
     args = mapFilter(args);
-    return select(UtilsTool.convertMapToFieldConditions(args));
+    return select(UtilsTool.convertMapToAndCondition(entityClass,args));
   }
 
   public List<Map<String, Object>> select(Condition condition, Collection<String> alias, List<Order> orders) {
@@ -107,16 +107,11 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
   }
 
   public int insert(Map args) {
-    args = mapFilter(args);
-    args.remove("etc");
-    InsertAction insertAction = moreBatis.insertStatement().into(moreBatis.getTable(entityClass)).cols(fieldNames).values(args);
-    insertAction.setEntityClass(entityClass);
-    return insertAction.execute();
+    return moreBatis.insert(entityClass,mapFilter(args)).execute();
   }
 
   public int update(Map args) {
     args = mapFilter(args);
-    args.remove("etc");
     final Map<String, Object> finalCopy = args;
     List<Condition> condition = (List<Condition>) moreBatis.getPks(entityClass).stream().map((pk) -> {
       return new FieldCondition((AliasedColumn) pk, Operator.EQUAL, finalCopy.get(((AliasedColumn) pk).getAlies()));
@@ -131,7 +126,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
   public int delete(Map args) {
     args = mapFilter(args);
     args.remove("etc");
-    return delete(UtilsTool.convertMapToFieldConditions(args));
+    return delete(UtilsTool.convertMapToAndCondition(entityClass,args));
   }
 
   public int delete(Condition condition) {
@@ -183,7 +178,6 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
               Collectors.toList()));
       clz = clz.getSuperclass();
     }
-    result.remove("etc");
     return result;
   }
 
