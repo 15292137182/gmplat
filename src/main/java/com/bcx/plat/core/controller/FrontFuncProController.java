@@ -5,12 +5,14 @@ import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.entity.TemplateObjectPro;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -157,10 +159,9 @@ public class FrontFuncProController extends
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
         List<String> rowIds = result.stream().map((row) ->
                 (String) row.get("relateBusiPro")).collect(Collectors.toList());
+        Condition condition = new ConditionBuilder(getBeanClass()).and().in("rowId", rowIds).endAnd().buildDone();
         List<Map<String, Object>> results = businessObjectProService
-                .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
-                        , Arrays.asList(new Field("row_id", "rowId")
-                                , new Field("property_name", "propertyName")), null);
+                .select(condition, Arrays.asList("rowId","propertyName"),null);
         HashMap<String, Object> map = new HashMap<>();
         //遍历获取业务对象基本属性
         for (Map<String, Object> row : results) {
