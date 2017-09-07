@@ -32,7 +32,7 @@ public class EntityTest extends BaseTest {
     final String rowId = businessObject.getRowId();
     BusinessObject businessObject1 = new BusinessObject();
     businessObject1.setRowId(rowId);
-    businessObject1 = businessObject1.selectOneById();
+    businessObject1 = businessObject1.selectByPks();
     //查找与新增测试
     Assert.assertTrue("插入失败", businessObject1.getObjectName().equals("testObject"));
     Assert.assertTrue("map没有被插入到数据库", businessObject1.getEtc().get("a").equals(100));
@@ -44,13 +44,13 @@ public class EntityTest extends BaseTest {
     businessObject1.updateById();
     businessObject1.setObjectName("anotherName");
     businessObject1.setEtc(null);
-    businessObject1 = businessObject1.selectOneById();
+    businessObject1 = businessObject1.selectByPks();
     businessObject1.getEtc().put("a","update");
     businessObject1.getEtc().put("b","successed");
     businessObject1.updateById();
     businessObject1.setObjectName("anotherName");
     businessObject1.setEtc(null);
-//    businessObject1.selectById();
+    businessObject1.selectByPks();
     //更新测试
     Assert.assertTrue("更新失败", businessObject1.getObjectName().equals("secondName"));
     Assert.assertTrue("map没有被更新到数据库", businessObject1.getEtc().get("a").equals("update"));
@@ -58,7 +58,7 @@ public class EntityTest extends BaseTest {
 
     businessObject1.deleteById();
     //删除测试
-    Assert.assertTrue("删除失败", businessObject1.selectOneById() == null);
+    Assert.assertTrue("删除失败", businessObject1.selectByPks() == null);
 //    Assert.assertTrue("删除失败", businessObject1.selectById() == null);
   }
 }
