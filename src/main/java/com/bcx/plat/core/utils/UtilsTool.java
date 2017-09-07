@@ -304,11 +304,12 @@ public class UtilsTool {
    * @param origin 输入MapList
    * @return
    */
-  @SuppressWarnings("unchecked")
   public static List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
-      Map out = new HashMap<>();
-      row.forEach((key, value) -> out.put(underlineToCamel(key, false), value));
+      HashMap<String, Object> out = new HashMap<>();
+      for (Map.Entry<String, Object> entry : row.entrySet()) {
+        out.put(UtilsTool.underlineToCamel(entry.getKey(), false), entry.getValue());
+      }
       return out;
     }).collect(Collectors.toList());
   }
