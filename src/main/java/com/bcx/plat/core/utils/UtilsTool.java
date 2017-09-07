@@ -304,7 +304,6 @@ public class UtilsTool {
    * @param origin 输入MapList
    * @return
    */
-  @SuppressWarnings("unchecked")
   public static List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
       HashMap<String, Object> out = new HashMap<>();
