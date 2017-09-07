@@ -182,7 +182,6 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   /**
    * 查询
-   *
    * @param condition 条件
    * @return 结果集合
    */
@@ -211,7 +210,6 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   /**
    * 分页查询
-   *
    * @param condition 条件
    * @param num       页面号
    * @param size      大小
@@ -261,7 +259,6 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     return MORE_BATIS.delete(getClass())
             .where(andNoDelete(condition))
             .execute();
-
   }
 
   /**
@@ -273,7 +270,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     return delete(null);
   }
 
-  public int deleteById() {
+  public int delete() {
     return MORE_BATIS.deleteEntity((T) this);
   }
 
