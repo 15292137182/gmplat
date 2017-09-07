@@ -16,7 +16,7 @@
     <div id="app1">
         <el-row>
             <el-col :span="24">
-                <components :is="inputwithbtn" :child-form-table="formTable"></components>
+                <components data="first1" :is="inputwithbtn" :child-form-table="formTable"></components>
             </el-col>
         </el-row>
         <el-row>
@@ -25,8 +25,18 @@
             </el-col>
         </el-row>
     </div>
+<button id="bt">click</button>
 </body>
 <script>
+    $("#bt").click(function(){
+        DynamicStitching.formObj.a = true;
+        console.log(DynamicStitching.formObj.a);
+        var json = GmpForm.getData();
+        json.test = "id2";
+        json.test00 = "ids2";
+        json.l = true;
+        GmpForm.loadData(json);
+    })
     var de1 = new Vue({
         el: "#app1",
         data: DynamicStitching.searchSelect(),//获取父组件数据
@@ -43,6 +53,13 @@
         methods:{
             demo(){
                 console.log(GmpForm.getData());
+                var dom =GmpForm.getItem("l");
+                console.log($(dom));
+                $(dom).change(function(){
+                    alert("in");
+                })
+                GmpForm.setItemValue("l",true);
+                console.log(GmpForm.getItemValue("l"));
             }
         }
     })
