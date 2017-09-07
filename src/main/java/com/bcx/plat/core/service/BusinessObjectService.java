@@ -14,6 +14,7 @@ import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +66,8 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
     public ServerResult queryById(String rowId) {
         List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         String relateTableRowId = (String) result.get(0).get("relateTableRowId");
-
-        List<Map<String, Object>> rowId1 =
-                maintDBTablesService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+        List<Map> rowId1 =
+                maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
         if (UtilsTool.isValid(rowId1)) {
             for (Map<String, Object> row : result) {
                 row.put("tableCname", rowId1.get(0).get("tableCname"));
@@ -122,11 +122,8 @@ public class BusinessObjectService extends BaseServiceTemplate<BusinessObject> {
     private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
         List<String> rowIds = result.stream().map((row) ->
             (String) row.get("relateTableRowId")).collect(Collectors.toList());
-        List<Map<String, Object>> results = maintDBTablesService
-                .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
-                        , Arrays.asList(new Field("row_id", "rowId")
-                                , new Field("table_cname", "tableCname")
-                                , new Field("table_schema", "tableSchema")), null);
+        Condition condition = new ConditionBuilder(entityClass).and().in("rowId", rowIds).endAnd().buildDone();
+        List<Map> results = maintDBTablesService.selectMap(condition);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {
             map.put((String) row.get("rowId"), row.get("tableCname"));
