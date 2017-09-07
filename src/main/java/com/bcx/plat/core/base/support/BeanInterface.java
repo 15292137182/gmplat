@@ -24,8 +24,6 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
     return null;
   }
 
-  ;
-
   /**
    * 更多序列话配置
    *

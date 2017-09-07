@@ -26,7 +26,7 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
 
   @Override
   public Serializable getPk() {
-    return rowId;
+    return this.rowId;
   }
 
   /**
