@@ -56,7 +56,7 @@ public class EntityTest extends BaseTest {
     Assert.assertTrue("map没有被更新到数据库", businessObject1.getEtc().get("a").equals("update"));
     Assert.assertTrue("map没有被更新到数据库", businessObject1.getEtc().get("b").equals("successed"));
 
-    businessObject1.deleteById();
+    businessObject1.delete();
     //删除测试
     Assert.assertTrue("删除失败", businessObject1.selectByPks() == null);
 //    Assert.assertTrue("删除失败", businessObject1.selectById() == null);
