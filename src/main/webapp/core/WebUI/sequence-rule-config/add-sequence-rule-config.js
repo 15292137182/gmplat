@@ -21,7 +21,7 @@ var constantComponent = Vue.extend({
         //删除按钮
         remove(){
             // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
+            var _index = this.$el.attributes.prop.value;
             if(_index != null) {
                 add.items.splice(_index, 1);
             }
@@ -74,7 +74,7 @@ var alterComponent = Vue.extend({
         //删除按钮
         remove(){
             // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
+            var _index = this.$el.attributes.prop.value;
             if(_index != null) {
                 add.items.splice(_index, 1);
             }
@@ -115,7 +115,7 @@ var dateComponent = Vue.extend({
         //删除按钮
         remove(){
             // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
+            var _index = this.$el.attributes.prop.value;
             if(_index != null) {
                 add.items.splice(_index, 1);
             }
@@ -178,7 +178,7 @@ var numComponent = Vue.extend({
         //删除按钮
         remove(){
             // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
+            var _index = this.$el.attributes.prop.value;
             if(_index != null) {
                 add.items.splice(_index, 1);
             }

@@ -49,34 +49,34 @@ Vue.component("gmp-table", {
  * @author:liyuanquan
  */
 Vue.component("single-selection", {
-    // type
+    // 是否可用  获取options的接口  默认值
     props: ["isDisabled", "url", "initialValue"],
     data() {
         return {
-            // 为了将子组件和外部解耦 最好将受影响的数据写在子组件内部 这样子组件就形成一个相对封闭的区间
-            // options是调用后端接口 并且只获取一次
-            options: [{
-                value: 'Beijing',
-                label: '北京'
-            }, {
-                value: 'Shanghai',
-                label: '上海'
-            }, {
-                value: 'Nanjing',
-                label: '南京'
-            }, {
-                value: 'Chengdu',
-                label: '成都'
-            }, {
-                value: 'Shenzhen',
-                label: '深圳'
-            }, {
-                value: 'Guangzhou',
-                label: '广州'
-            }, {
-                value: 'Hangzhou',
-                label: '杭州'
-            }],
+            // 获取后端数据 并赋值给options
+            options: [],
+            // options: [{
+            //     value: 'Beijing',
+            //     label: '北京'
+            // }, {
+            //     value: 'Shanghai',
+            //     label: '上海'
+            // }, {
+            //     value: 'Nanjing',
+            //     label: '南京'
+            // }, {
+            //     value: 'Chengdu',
+            //     label: '成都'
+            // }, {
+            //     value: 'Shenzhen',
+            //     label: '深圳'
+            // }, {
+            //     value: 'Guangzhou',
+            //     label: '广州'
+            // }, {
+            //     value: 'Hangzhou',
+            //     label: '杭州'
+            // }],
             selectValue: {
                 values: [],
                 label: ""
@@ -98,6 +98,43 @@ Vue.component("single-selection", {
         // 级联下拉框方法
         cascaderEvent(val) {
             this.selectValue.values = val;
+        },
+        // 拼接option测试方法
+        serverOptions(type) {
+            if(type == "op_1") {
+                return [{
+                    deleteFlag: "0",
+                    desp: "00",
+                    value: "5243fc43-a9c6-42f0-a0c8-fd74e7fb",
+                    label: "demo1",
+                    tableEname: "demo2",
+                    tableSchema: "demo"
+                }, {
+                    deleteFlag: "0",
+                    desp: "11",
+                    value: "6243gd43-a9c6-42f0-a0c8-fd74e7fb",
+                    label: "demo11",
+                    tableEname: "demo2",
+                    tableSchema: "demo"
+                }]
+            }
+            if(type == "op_2") {
+                return [{
+                    deleteFlag: "0",
+                    desp: "22",
+                    value: "7243fc43-a9c6-42f0-a0c8-fd74e7fb",
+                    label: "demo22",
+                    tableEname: "demo2",
+                    tableSchema: "demo"
+                }, {
+                    deleteFlag: "0",
+                    desp: "33",
+                    value: "8243gd43-a9c6-42f0-a0c8-fd74e7fb",
+                    label: "demo33",
+                    tableEname: "demo2",
+                    tableSchema: "demo"
+                }]
+            }
         }
     },
     mounted() {
@@ -110,10 +147,11 @@ Vue.component("single-selection", {
         //     jsonp: 'callback'
         // }).then(function (res) {
         //     var data = res.data.resp.content.data.result;
-        //     console.log(data);
+        //     // console.log(data);
         //     // 动态拼接options
         //     this.options = data;
         // });
+        this.options = this.serverOptions(this.url)
     },
     updated: function () {
         //
@@ -133,11 +171,11 @@ Vue.component("single-selection", {
  * @author:liyuanquan
  */
 Vue.component("multiple-selection", {
-    // type
+    // 是否可用  获取options的接口  默认值
     props: ["isDisabled", "url", "initialValue"],
     data() {
         return {
-            // 为了将子组件和外部解耦 最好将受影响的数据写在子组件内部 这样子组件就形成一个相对封闭的区间
+            // 获取后端数据 并赋值给options
             options: [{
                 value: 'Beijing',
                 label: '北京'

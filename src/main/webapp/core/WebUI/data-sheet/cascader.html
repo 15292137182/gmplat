@@ -8,12 +8,12 @@
     <div id="app">
         <el-row>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection @change-data="getData_1" :initial-value="value_1">
+                <single-selection @change-data="getData_1" :initial-value="value_1" :url="url_1">
                     <!---->
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection @change-data="getData_2" ref="childMethod" :initial-value="value_2">
+                <single-selection @change-data="getData_2" ref="childMethod" :initial-value="value_2" :url="url_2">
                     <!---->
                 </single-selection>
             </el-col>
@@ -28,23 +28,27 @@
             data() {
                 return {
                     value_1: "",
-                    value_2: ""
+                    value_2: "",
+                    // 测试使用url
+                    url_1: "op_1",
+                    url_2: "op_2"
                 }
             },
             methods: {
                 getData_1(datas) {
+                    // 父组件接收子组件返回值
                     this.value_1 = datas.values;
-
+                    // 级联选择方法
                     if (datas != "" || datas != undefined) {
                         this.value_1 = datas.value;
-                        this.label_1 = datas.label;
-                        this.$refs.childMethod.cascaderEvent("Shanghai");
+                        this.$refs.childMethod.cascaderEvent("8243gd43-a9c6-42f0-a0c8-fd74e7fb");
                     }
                     if(JSON.stringify(datas) === "{}") {
                         this.$refs.childMethod.cascaderEvent("");
                     }
                 },
                 getData_2(datas) {
+                    // 父组件接收子组件返回值
                     this.value_2 = datas.values;
                 },
             },

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>页面渲染后追加组件</title>
+</head>
+<body>
+    <div id="app">
+        <el-row>
+            <el-col :span="12" :offset="7" style="margin-top: 20px;">
+                <el-form>
+                    <el-form-item label="新增类型" label-width="80px">
+                        <el-select placeholder="请选择类型" v-model="name" style="width: 150px">
+                            <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择类型"></el-option>
+                        </el-select>
+                        <el-button icon="plus" type="primary" @click="add"></el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="12" :offset="7">
+                <el-form ref="form" :model="form" label-width="80px">
+                    <el-form-item label="活动名称">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="活动区域">
+                        <el-select v-model="form.region" placeholder="请选择活动区域">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="活动时间">
+                        <el-col :span="11">
+                            <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+                        </el-col>
+                        <el-col class="line" :span="2" style="text-align: center;">-</el-col>
+                        <el-col :span="11">
+                            <el-time-picker type="fixed-time" placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item label="即时配送">
+                        <el-switch on-text="" off-text="" v-model="form.delivery"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="活动性质">
+                        <el-checkbox-group v-model="form.type">
+                            <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
+                            <el-checkbox label="地推活动" name="type"></el-checkbox>
+                            <el-checkbox label="线下主题活动" name="type"></el-checkbox>
+                            <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                    <el-form-item label="特殊资源">
+                        <el-radio-group v-model="form.resource">
+                            <el-radio label="线上品牌商赞助"></el-radio>
+                            <el-radio label="线下场地免费"></el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="活动形式">
+                        <el-input type="textarea" v-model="form.desc"></el-input>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col>
+                <el-form>
+                    <div v-for="(item, index) in items" :is="item.component" :prop="index"></div>
+                </el-form>
+            </el-col>
+        </el-row>
+
+    </div>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        // 定义组件类型
+        var xInput = Vue.extend({
+            prop: ["child-index"],
+            data() {
+                return {
+                    message: ""
+                }
+            },
+            methods: {
+                remove() {
+                    // 获取当前新增组件的index
+                    var _index = this.$el.attributes.prop.value;
+                    if (_index != null) {
+                        vm.items.splice(_index, 1);
+                    }
+                }
+            },
+            template: `<el-row>
+                            <el-col :span=12 :offset="7">
+                                <el-form-item label="活动名称" label-width="80px">
+                                    <el-input v-model="message"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2" :offset="1">
+                                <el-form-item>
+                                    <el-button type="text" icon="delete" @click="remove"></el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>`
+        });
+
+        var xArea = Vue.extend({
+            prop: ["child-index"],
+            data() {
+                return {
+                    message: ""
+                }
+            },
+            methods: {
+                remove() {
+                    // 获取当前新增组件的index
+                    var _index = this.$el.attributes.prop.value;
+                    if (_index != null) {
+                        vm.items.splice(_index, 1);
+                    }
+                }
+            },
+            template: `<el-row>
+                            <el-col :span="12" :offset="7">
+                                <el-form-item label="活动形式" label-width="80px">
+                                    <el-input type="textarea" v-model="message"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2" :offset="1">
+                                <el-form-item>
+                                    <el-button type="text" icon="delete" @click="remove"></el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>`
+        });
+
+        var xSelect = Vue.extend({
+            prop: ["child-index"],
+            data() {
+                return {
+                    region: ""
+                }
+            },
+            methods: {
+                remove() {
+                    // 获取当前新增组件的index
+                    var _index = this.$el.attributes.prop.value;
+                    if (_index != null) {
+                        vm.items.splice(_index, 1);
+                    }
+                }
+            },
+            template: `<el-row>
+                            <el-col :span="12" :offset="7">
+                                <el-form-item label="活动区域" label-width="80px">
+                                    <el-select v-model="region" placeholder="请选择活动区域">
+                                        <el-option label="区域一" value="shanghai"></el-option>
+                                        <el-option label="区域二" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2" :offset="1">
+                                <el-form-item>
+                                    <el-button type="text" icon="delete" @click="remove"></el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>`
+        });
+
+        var xDate = Vue.extend({
+            prop: ["child-index"],
+            data() {
+                return {
+                    date1: "",
+                    date2: ""
+                }
+            },
+            methods: {
+                remove() {
+                    // 获取当前新增组件的index
+                    var _index = this.$el.attributes.prop.value;
+                    if (_index != null) {
+                        vm.items.splice(_index, 1);
+                    }
+                }
+            },
+            template: `<el-row>
+                            <el-col :span="12" :offset="7">
+                                <el-form-item label="活动时间" label-width="80px">
+                                    <el-col :span="11">
+                                        <el-date-picker type="date" placeholder="选择日期" v-model="date1" style="width: 100%;"></el-date-picker>
+                                    </el-col>
+                                    <el-col class="line" :span="2" style="text-align: center;">-</el-col>
+                                    <el-col :span="11">
+                                        <el-time-picker type="fixed-time" placeholder="选择时间" v-model="date2" style="width: 100%;"></el-time-picker>
+                                    </el-col>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2" :offset="1">
+                                <el-form-item>
+                                    <el-button type="text" icon="delete" @click="remove"></el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>`
+        });
+
+        var xSwitch = Vue.extend({
+            prop: ["child-index"],
+            data() {
+                return {
+                    delivery: ""
+                }
+            },
+            methods: {
+                remove() {
+                    // 获取当前新增组件的index
+                    var _index = this.$el.attributes.prop.value;
+                    if (_index != null) {
+                        vm.items.splice(_index, 1);
+                    }
+                }
+            },
+            template: `<el-row>
+                            <el-col :span="1" :offset="7">
+                                <el-form-item label="即时配送" label-width="80px">
+                                    <el-switch on-text="" off-text="" v-model="delivery"></el-switch>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2" :offset="1">
+                                <el-form-item>
+                                    <el-button type="text" icon="delete" @click="remove"></el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>`
+        });
+
+        var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    name: "",
+                    form: {
+                        name: '',
+                        region: '',
+                        date1: '',
+                        date2: '',
+                        delivery: false,
+                        type: [],
+                        resource: '',
+                        desc: ''
+                    },
+                    type: [{
+                        value: 1,
+                        label: "输入框"
+                    }, {
+                        value: 2,
+                        label: "文本域"
+                    }, {
+                        value: 3,
+                        label: "下拉框"
+                    }, {
+                        value: 4,
+                        label: "日期时间"
+                    }, {
+                        value: 5,
+                        label: "开关"
+                    }],
+                    items: []
+                }
+            },
+            components: {
+                "x-input": xInput,
+                "x-area": xArea,
+                "x-select": xSelect,
+                "x-date": xDate,
+                "x-switch": xSwitch
+            },
+            methods: {
+                add() {
+                    switch (this.name) {
+                        case 1:
+                            this.items.push({
+                                "component": "x-input"
+                            });
+                            break;
+                        case 2:
+                            this.items.push({
+                                "component": "x-area"
+                            });
+                            break;
+                        case 3:
+                            this.items.push({
+                                "component": "x-select"
+                            });
+                            break;
+                        case 4:
+                            this.items.push({
+                                "component": "x-date"
+                            });
+                            break;
+                        case 5:
+                            this.items.push({
+                                "component": "x-switch"
+                            });
+                            break;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
