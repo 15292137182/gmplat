@@ -1,6 +1,5 @@
 package com.bcx.plat.core.utils;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -313,16 +312,11 @@ public class UtilsTool {
     }).collect(Collectors.toList());
   }
 
-  public static And excludeDeleted(Condition condition) {
-    return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
-            new FieldCondition("delete_flag", Operator.IS_NULL, null)), condition);
-  }
-
   /**
    * 数据排序
    * "{\"field\":\"rowId\", \"sort\":1}"
    *
-   * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__为倒序
+   * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__ 为倒序
    * @return linkedList参数
    */
   public static LinkedList<Order> dataSort(String order) {

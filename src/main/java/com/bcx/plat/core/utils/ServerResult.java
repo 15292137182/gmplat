@@ -12,58 +12,59 @@ import java.util.Map;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                         2017/8/27  Wen TieHu Create
  *          </pre>
  */
 public class ServerResult<T> {
-    private int state;
-    private String msg;
-    private T data;
 
-    public ServerResult() {
+  private int state;
+  private String msg;
+  private T data;
+
+  public ServerResult() {
+  }
+
+  public ServerResult(int state, String msg, T data) {
+    this.state = state;
+    this.msg = msg;
+    try {
+      ((PageResult) data).getResult();
+    } catch (Exception e) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("result", data);
+      this.data = (T) map;
+      return;
     }
+    this.data = data;
 
-    public ServerResult(int state, String msg, T data) {
-        this.state = state;
-        this.msg = msg;
-        try {
-            ((PageResult) data).getResult();
-        } catch (Exception e) {
-            Map<String,Object> map = new HashMap<>();
-            map.put("result",data);
-            this.data = (T)map;
-            return;
-        }
-        this.data = data;
+  }
 
-    }
+  public static ServerResult Msg(int state, String msg) {
+    return new ServerResult(state, msg, null);
+  }
 
-    public static ServerResult Msg(int state, String msg) {
-        return new ServerResult(state, msg, null);
-    }
+  public int getState() {
+    return state;
+  }
 
-    public int getState() {
-        return state;
-    }
+  public void setState(int state) {
+    this.state = state;
+  }
 
-    public void setState(int state) {
-        this.state = state;
-    }
+  public String getMsg() {
+    return msg;
+  }
 
-    public String getMsg() {
-        return msg;
-    }
+  public void setMsg(String msg) {
+    this.msg = msg;
+  }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+  public T getData() {
+    return data;
+  }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
+  public void setData(T data) {
+    this.data = data;
+  }
 }
