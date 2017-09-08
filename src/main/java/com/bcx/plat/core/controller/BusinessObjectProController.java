@@ -1,9 +1,11 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
@@ -30,7 +32,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObjPro")
 @RestController
 public class BusinessObjectProController extends
-        BaseControllerTemplate<BusinessObjectProService, BusinessObjectPro> {
+        BaseController<BusinessObjectProService> {
 
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectProService businessObjectProService;
@@ -57,7 +59,6 @@ public class BusinessObjectProController extends
      * @return PlatResult
      */
     @RequestMapping("/queryById")
-    @Override
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
 //        String attrSource = request.getParameter("attrSource");//属性来源
 //        attrSource =attrSource.equals("")?BaseConstants.ATTRIBUTE_SOURCE_BASE:BaseConstants.ATTRIBUTE_SOURCE_MODULE;
@@ -99,11 +100,10 @@ public class BusinessObjectProController extends
      * @return serviceResult
      */
     @RequestMapping("/delete")
-    @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> busiPro = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
-        if (busiPro.size() == 0) {
-            return super.delete(rowId, request, locale);
+        List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
+        if (frontFuncPros.size() == 0) {
+            return super.deleteByIds(request,locale,rowId);
         }else{
             return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }

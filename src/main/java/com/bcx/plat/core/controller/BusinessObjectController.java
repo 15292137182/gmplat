@@ -1,6 +1,7 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
@@ -30,7 +31,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObj")
-public class BusinessObjectController extends BaseControllerTemplate<BusinessObjectService, BusinessObject> {
+public class BusinessObjectController extends BaseController<BusinessObjectService> {
 
   private final BusinessObjectService businessObjectService;
   private final BusinessRelateTemplateService businessRelateTemplateService;
@@ -58,7 +59,8 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
   @RequestMapping("/add")
   public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     BusinessRelateTemplate brt = new BusinessRelateTemplate();
-    int insert = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
+//    int insert = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
+    int insert = new BusinessObject().buildCreateInfo().insert();
     String rowId = businessObject.getRowId();
     String rto = businessObject.getRelateTemplateObject();
     List list = UtilsTool.jsonToObj(rto, List.class);
@@ -66,7 +68,8 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
       for (Object li : list) {
         brt.setBusinessRowId(rowId);
         brt.setTemplateRowId(li.toString());
-        businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
+        new BusinessRelateTemplate().buildCreateInfo().insert();
+//        businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
       }
     }
     if (insert != 1) {
@@ -85,7 +88,6 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @return PlatResult
    */
   @RequestMapping("/queryById")
-  @Override
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
       return super.result(request, PlatResult.Msg(businessObjectService.queryById(rowId)), locale);
@@ -104,7 +106,6 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  @Override
   public Object singleInputSelect(String search,
                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
@@ -170,12 +171,10 @@ public class BusinessObjectController extends BaseControllerTemplate<BusinessObj
    * @return serviceResult
    */
   @RequestMapping("/delete")
-  @Override
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
       return super.result(request, PlatResult.Msg(businessObjectService.delete(rowId)), locale);
     } else {
-      logger.error("删除业务对象失败");
       return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
     }
   }

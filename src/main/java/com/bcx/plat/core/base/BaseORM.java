@@ -244,7 +244,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null != condition) {
       and = new And(condition, NOT_DELETE_OR);
     } else {
-      and = new And(NOT_DELETE_OR);
+      and = NOT_DELETE_OR;
     }
     PageResult result = MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
     List<T> data = new ArrayList<>();
@@ -273,7 +273,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null != condition) {
       and = new And(condition, NOT_DELETE_OR);
     } else {
-      and = new And(NOT_DELETE_OR);
+      and = NOT_DELETE_OR;
     }
     return MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
   }
@@ -289,7 +289,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null != condition) {
       and = new And(condition, NOT_DELETE_OR);
     } else {
-      and = new And(NOT_DELETE_OR);
+      and = NOT_DELETE_OR;
     }
     return MORE_BATIS.delete(getClass()).where(and).execute();
 

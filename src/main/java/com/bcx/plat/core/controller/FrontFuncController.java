@@ -1,9 +1,13 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.FrontFunc;
+import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
@@ -27,7 +31,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronc")
 @RestController
-public class FrontFuncController extends BaseControllerTemplate<FrontFuncService, FrontFunc> {
+public class FrontFuncController extends BaseController<FrontFuncService> {
     private final FrontFuncService frontFuncService;
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectService businessObjectService;
@@ -55,15 +59,15 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      * @param result 接受serviceResult封装的参数
      * @return list
      */
-    @Override
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
         List<String> rowIds = result.stream().map((row) ->
                 (String) row.get("relateBusiObj")).collect(Collectors.toList());
-        List<Map<String, Object>> results = businessObjectService
+
+        List<BusinessObject> results = businessObjectService
                 .select(new FieldCondition("rowId", Operator.IN, rowIds));
         HashMap<String, Object> map = new HashMap<>();
-        for (Map<String, Object> row : results) {
-            map.put((String) row.get("rowId"), row.get("objectName"));
+        for (BusinessObject row : results) {
+            map.put((String) row.getRowId(), row.getObjectName());
         }
         for (Map<String, Object> row : result) {
             row.put("objectName", map.get(row.get("relateBusiObj")));
@@ -79,18 +83,16 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
      * @param locale  国际化参数
      */
     @RequestMapping("/delete")
-    @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            List<Map<String, Object>> list = frontFuncProService
+            List<FrontFuncPro> funcRowId = frontFuncProService
                     .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
-            if (UtilsTool.isValid(list)) {
-                List<String> rowIds = list.stream().map((row) -> {
-                    return (String) row.get("rowId");
-                }).collect(Collectors.toList());
-                frontFuncProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+
+            if (UtilsTool.isValid(funcRowId)) {
+                List<String> rowIds = funcRowId.stream().map((row) -> (String) row.getRowId()).collect(Collectors.toList());
+                List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
             }
-            return super.delete(rowId, request, locale);
+            return deleteByIds(request, locale, rowId);
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
@@ -112,4 +114,35 @@ public class FrontFuncController extends BaseControllerTemplate<FrontFuncService
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
+
+
+
+
+    /**
+     * 通用新增方法
+     *
+     * @param entity  接受一个实体参数
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return 返回操作信息
+     */
+    @RequestMapping("/add")
+    public Object insert(Map entity, HttpServletRequest request, Locale locale) {
+        return super.insert(new TemplateObject().fromMap(entity), request, locale);
+    }
+
+
+    /**
+     * 通过修改方法
+     *
+     * @param entity  接受一个实体参数
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return 返回操作信息
+     */
+    @RequestMapping("/modify")
+    public Object update(Map entity, HttpServletRequest request, Locale locale) {
+        return super.updateById(new TemplateObject().fromMap(entity), request, locale);
+    }
+
 }

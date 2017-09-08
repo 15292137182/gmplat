@@ -1,8 +1,10 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -27,14 +29,13 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/dbTableColumn")
-public class DBTableColumnController extends BaseControllerTemplate<DBTableColumnService, DBTableColumn> {
-
-    private final BusinessObjectProService businessObjectProService;
-
+public class DBTableColumnController extends BaseController<DBTableColumnService> {
     @Autowired
-    public DBTableColumnController(BusinessObjectProService businessObjectProService) {
-        this.businessObjectProService = businessObjectProService;
-    }
+    private DBTableColumnService dbTableColumnService;
+    @Autowired
+    private BusinessObjectProService businessObjectProService;
+
+
 
     @Override
     protected List<String> blankSelectFields() {
@@ -60,7 +61,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
                                 String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, PlatResult.Msg(getEntityService().queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
+            return super.result(request, PlatResult.Msg(dbTableColumnService.queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
@@ -76,7 +77,7 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
     @RequestMapping("/queryTabById")
     public Object singleInputSelect(String search, String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, PlatResult.Msg(getEntityService().queryTableById(rowId, search)), locale);
+            return super.result(request, PlatResult.Msg(dbTableColumnService.queryTableById(rowId, search)), locale);
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
@@ -91,11 +92,10 @@ public class DBTableColumnController extends BaseControllerTemplate<DBTableColum
      * @return serviceResult
      */
     @RequestMapping("/delete")
-    @Override
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-        List<Map<String, Object>> busiPro = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
-        if (busiPro.size() == 0) {
-            return super.delete(rowId, request, locale);
+        List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
+        if (relateTableColumn.size() == 0) {
+            return super.deleteByIds(request,locale,rowId);
         }else{
             return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }

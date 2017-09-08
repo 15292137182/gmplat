@@ -307,12 +307,13 @@ public class UtilsTool {
   @SuppressWarnings("unchecked")
   public static List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
-      Map out = new HashMap<>();
-      row.forEach((key, value) -> out.put(underlineToCamel(key, false), value));
+      HashMap<String, Object> out = new HashMap<>();
+      for (Map.Entry<String, Object> entry : row.entrySet()) {
+        out.put(UtilsTool.underlineToCamel(entry.getKey(), false), entry.getValue());
+      }
       return out;
     }).collect(Collectors.toList());
   }
-
   public static And excludeDeleted(Condition condition) {
     return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
             new FieldCondition("delete_flag", Operator.IS_NULL, null)), condition);

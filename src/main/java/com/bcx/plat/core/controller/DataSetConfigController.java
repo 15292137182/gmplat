@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.entity.DataSetConfig;
 import com.bcx.plat.core.service.DataSetConfigService;
@@ -18,7 +19,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/dataSetConfig")
-public class DataSetConfigController extends BaseControllerTemplate<DataSetConfigService, DataSetConfig> {
+public class DataSetConfigController extends BaseController<DataSetConfigService> {
 
     @Override
     protected List<String> blankSelectFields() {

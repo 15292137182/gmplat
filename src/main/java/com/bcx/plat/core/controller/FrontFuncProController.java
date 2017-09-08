@@ -1,8 +1,11 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -37,7 +40,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
 public class FrontFuncProController extends
-        BaseControllerTemplate<FrontFuncProService, FrontFuncPro> {
+        BaseController<FrontFuncProService> {
 
     private final TemplateObjectProService templateObjectProService;
     private final BusinessObjectProService businessObjectProService;
@@ -45,7 +48,7 @@ public class FrontFuncProController extends
     private final FrontFuncProService frontFuncProService;
 
     @Autowired
-    public FrontFuncProController(FrontFuncProService frontFuncProService,BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService, DBTableColumnService dbTableColumnService) {
+    public FrontFuncProController(FrontFuncProService frontFuncProService, BusinessObjectProService businessObjectProService, TemplateObjectProService templateObjectProService, DBTableColumnService dbTableColumnService) {
         this.businessObjectProService = businessObjectProService;
         this.templateObjectProService = templateObjectProService;
         this.dbTableColumnService = dbTableColumnService;
@@ -102,14 +105,14 @@ public class FrontFuncProController extends
     public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
 
-            List<Map<String, Object>> result = getEntityService()
+            List<FrontFuncPro> frontFuncPros = frontFuncProService
                     .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                             UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
-            result = queryResultProcess(result);
-            if (result.size() == 0) {
+//            frontFuncPros = queryResultProcess(frontFuncPros);
+            if (frontFuncPros.size() == 0) {
                 return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
             } else {
-                ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+                ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, frontFuncPros);
                 return result(request, PlatResult.Msg(serverResult), locale);
             }
         }
@@ -135,12 +138,13 @@ public class FrontFuncProController extends
                                     HttpServletRequest request, Locale locale, String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
-            PageResult<Map<String, Object>> result =
-                    getEntityService().select(
-                            new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                                    UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
-                            , orders, pageNum, pageSize);
-            result = queryResultProcess(result);
+            PageResult<Map<String, Object>> pageResult = frontFuncProService.selectPageMap(
+                    new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+                            UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
+                    , orders, pageNum, pageSize);
+            PageResult<Map<String, Object>> result = pageResult;
+
+//            result = queryResultProcess(result);
             return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
         }
         return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
@@ -153,19 +157,22 @@ public class FrontFuncProController extends
      * @param result 接受ServiceResult
      * @return list
      */
-    @Override
     protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
         List<String> rowIds = result.stream().map((row) ->
                 (String) row.get("relateBusiPro")).collect(Collectors.toList());
-        List<Map<String, Object>> results = businessObjectProService
-                .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
+
+//        businessObjectProService.selectMap(new FieldCondition("rowId", Operator.IN, rowIds)
+//                , Arrays.asList(new Field("row_id", "rowId")
+//                        , new Field("property_name", "propertyName"),null));
+
+                /*.selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
-                                , new Field("property_name", "propertyName")), null);
+                                , new Field("property_name", "propertyName")), null);*/
         HashMap<String, Object> map = new HashMap<>();
         //遍历获取业务对象基本属性
-        for (Map<String, Object> row : results) {
-            map.put((String) row.get("rowId"), row.get("propertyName"));
-        }
+//        for (Map<String, Object> row : results) {
+//            map.put((String) row.get("rowId"), row.get("propertyName"));
+//        }
         //拿到业务对象基本属性给功能块赋值
         for (Map<String, Object> row : result) {
             row.put("propertyName", map.get(row.get("relateBusiPro")));
@@ -184,12 +191,12 @@ public class FrontFuncProController extends
                 }
             } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE)) {
                 String relateBusiPro = res.get("relateBusiPro").toString();
-                List<Map<String, Object>> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, relateBusiPro));
-                for (Map<String, Object> relate : relateTableColumn) {
-                    String relateTableRowId = relate.get("relateTableColumn").toString();
-                    List<Map<String, Object>> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-                    for (Map<String, Object> row : rowId) {
-                        res.put("ename", row.get("ename").toString());
+                List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, relateBusiPro));
+                for (BusinessObjectPro relate : relateTableColumn) {
+                    String relateTableRowId = relate.getRelateTableColumn();
+                    List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+                    for (DBTableColumn row : rowId) {
+                        res.put("ename",row.getColumnEname());
                     }
                 }
             }
