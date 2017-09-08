@@ -54,6 +54,9 @@ var resAdd = new Vue({
                     })
                 })
             }
+        },
+        cancel() {
+            ibcpLayer.Close(divIndex);
         }
     }
 })
