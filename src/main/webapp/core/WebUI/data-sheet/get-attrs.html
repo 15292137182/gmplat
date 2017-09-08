@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>获取动态组件属性</title>
+</head>
+
+<body>
+    <div id="app">
+        <el-row>
+            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+                <components :is="select" v-code="{code: 'asdads'}" :values="datas.value" :options="datas.options"></components>
+            </el-col>
+            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+                <components :is="input" v-code="{code: 12345}" :message="datas.message"></components>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+                <components :is="select" v-code="{code: 'asdf'}" :values="datas.value" :options="datas.options"></components>
+            </el-col>
+            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+                <components :is="input" v-code="{code: 'zxvc'}" :message="datas.message"></components>
+            </el-col>
+        </el-row>
+    </div>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        var code = [];
+        // 获取prop
+//        $(function() {
+//            var target = $("#app").find("div");
+//            var targetVal = [];
+//            for(var i = 0;i < target.length;i++) {
+//                var val = $(target[i]).attr("prop");
+//                if(val != undefined) {
+//                    targetVal.push(val);
+//                }
+//            }
+//        });
+
+        Vue.directive("dom", {
+            bind: function(el, binding) {
+                console.log(binding);
+                var _obj = binding.value;
+                if(_obj != null) {
+                    var key = Object.keys(binding.modifiers)[0] || "el";
+                }
+                Vue.set(_obj, key, el);
+            }
+        });
+
+        Vue.directive("code", {
+            bind: function(el, binding) {
+                code.push(binding.value.code);
+            }
+        });
+
+        var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    datas: {
+                        checked: false,
+                        message: [],
+                        value: "",
+                        options: [{
+                            value: 'Beijing',
+                            label: '北京'
+                        }, {
+                            value: 'Shanghai',
+                            label: '上海'
+                        }, {
+                            value: 'Nanjing',
+                            label: '南京'
+                        }, {
+                            value: 'Chengdu',
+                            label: '成都'
+                        }, {
+                            value: 'Shenzhen',
+                            label: '深圳'
+                        }, {
+                            value: 'Guangzhou',
+                            label: '广州'
+                        }, {
+                            value: 'Hangzhou',
+                            label: '杭州'
+                        }]
+                    }
+                }
+            },
+            mounted() {
+                this.getDOM();
+                console.log(code);
+            },
+            computed: {
+                select() {
+                    var template = `<el-select v-model="values" placeholder="请选择">
+                                        <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>`;
+
+                    var props = ["values", "options"];
+
+                    return {
+                        template,
+                        props
+                    }
+                },
+                input() {
+                    var template = `<el-input placeholder="请输入内容" v-model="message">
+                                        <el-button slot="append" icon="search"></el-button>
+                                    </el-input>`;
+                    var props = ["message"];
+
+                    return {
+                        template,
+                        props
+                    }
+                },
+                checkbox() {
+                    var template = `<el-checkbox v-model="checked"></el-checkbox>`;
+                    var props = ["checked"];
+
+                    return {
+                        template,
+                        props
+                    }
+                }
+            },
+            methods: {
+                // any methods
+                getDOM() {
+//                    console.log(this.datas);
+                    console.log(this.datas.aa);
+//                    console.log(this.datas.bb);
+//                    console.log(this.datas.aa.attributes[1].nodeValue);
+//                    console.log(this.datas.bb.attributes[1].nodeValue);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
