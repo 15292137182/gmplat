@@ -241,7 +241,7 @@ public abstract class BaseController<SERVER extends BaseService> {
     ServerResult content = platResult.getContent();
     platResult.getContent().setMsg(convertMsg(content.getMsg(), locale));
     map.put("resp", platResult);
-    if (isValid(request.getParameter("callback"))) {
+    if (null != request && isValid(request.getParameter("callback"))) {
       map.put("resp", platResult);
       MappingJacksonValue value = new MappingJacksonValue(map);
       value.setJsonpFunction(request.getParameter("callback"));
