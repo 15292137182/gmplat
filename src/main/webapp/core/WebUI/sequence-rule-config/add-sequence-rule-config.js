@@ -5,6 +5,11 @@
 //常量组件
 var constantComponent = Vue.extend({
     props: [],
+    data(){
+        return{
+
+        }
+    },
     template: '<el-row>'+
                 '<el-col :span="1">'+
                     '<el-form-item>'+
@@ -13,20 +18,23 @@ var constantComponent = Vue.extend({
                 '</el-col>'+
                 '<el-col :span="5">'+
                     '<el-form-item label="常量"  label-width="40px">'+
-                        '<el-input placeholder="请输入值" ></el-input>'+
+                        '<el-input @blur="getDataInput" placeholder="请输入值"></el-input>'+
                     '</el-form-item>'+
                 '</el-col>'+
                 '</el-row>',
     methods: {
         //删除按钮
         remove(){
-            // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
-            if(_index != null) {
-                add.items.splice(_index, 1);
-            }
+            var _index = this.$el.attributes.prop.value;
+            add.items.splice(_index, 1);
+        },
+        //获得数据
+        getDataInput(ev){
+            var val = ev.path[0].value
+            var str='@{'+val+'}';
+            this.$emit("on-blur", str);
         }
-    }
+    },
 });
 
 //变量组件
@@ -34,6 +42,8 @@ var alterComponent = Vue.extend({
     props: [],
     data(){
         return {
+            keyInput:'',
+            valueInput:'',
             checked:true,
             obj: '',
             objs: [
@@ -41,43 +51,45 @@ var alterComponent = Vue.extend({
                 {value:2,label:"变量2"}],
         }
     },
-    template: '<el-row>'+
-                '<el-col :span="1">'+
-                    '<el-form-item>'+
-                        '<el-button @click="remove" type="text" size="small" icon="delete"></el-button>'+
+    template: '<div id="alter" class="compontentClass">'+
+                '<el-row>'+
+                    '<el-col :span="1">'+
+                        '<el-form-item>'+
+                            '<el-button @click="remove" type="text" size="small" icon="delete"></el-button>'+
+                        '</el-form-item>'+
+                    '</el-col>'+
+                    '<el-col :span="6">'+
+                        '<el-form-item label="变量" label-width="40px">'+
+                            '<el-select placeholder="请选择" v-model="obj" style="width: 160px">'+
+                                '<el-option v-for="item in objs" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>'+
+                            '</el-select>'+
+                        '</el-form-item>'+
+                    '</el-col>'+
+                    '<el-col :span="4">'+
+                        '<el-form-item label="或" label-width="20px">'+
+                            '<el-input @blur="getKeyDataInput" v-model="keyInput" placeholder="请输入键"/>'+
+                        '</el-form-item>'+
+                    '</el-col>'+
+                    '<el-col :span="5">'+
+                        '<el-form-item label="默认值">'+
+                            '<el-input @blur="getKeyDataInput" v-model="valueInput" placeholder="请输入默认值"/>'+
+                        '</el-form-item>'+
+                    '</el-col>'+
+                    '<el-col :span="5">'+
+                    '<el-form-item label="是否显示">'+
+                    '<el-checkbox @blur="getKeyDataInput" v-model="checked"></el-checkbox>'+
                     '</el-form-item>'+
-                '</el-col>'+
-                '<el-col :span="6">'+
-                    '<el-form-item label="变量" label-width="40px">'+
-                        '<el-select placeholder="请选择" v-model="obj" style="width: 160px">'+
-                            '<el-option v-for="item in objs" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>'+
-                        '</el-select>'+
-                    '</el-form-item>'+
-                '</el-col>'+
-                '<el-col :span="4">'+
-                    '<el-form-item label="或" label-width="20px">'+
-                        '<el-input placeholder="请输入键"/>'+
-                    '</el-form-item>'+
-                '</el-col>'+
-                '<el-col :span="5">'+
-                    '<el-form-item label="默认值">'+
-                        '<el-input placeholder="请输入默认值"/>'+
-                    '</el-form-item>'+
-                '</el-col>'+
-                '<el-col :span="5">'+
-                '<el-form-item label="是否显示">'+
-                '<el-checkbox v-model="checked"></el-checkbox>'+
-                '</el-form-item>'+
-                '</el-col>'+
-            '</el-row>',
-    methods: {
+                    '</el-col>'+
+                '</el-row>'+
+            '</div>',
+    methods:{
         //删除按钮
         remove(){
-            // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
-            if(_index != null) {
-                add.items.splice(_index, 1);
-            }
+            var _index = this.$el.attributes.prop.value;
+            add.items.splice(_index, 1);
+        },
+        getKeyDataInput(){
+            this.$emit("on-blur",this.keyInput);
         }
     }
 });
@@ -93,7 +105,7 @@ var dateComponent = Vue.extend({
     template: '<el-row>'+
                 '<el-col :span="1">'+
                     '<el-form-item>'+
-                        '<el-button type="text" size="small" icon="delete" @click="remove"></el-button>'+
+                        '<el-button @click="remove" type="text" size="small" icon="delete"></el-button>'+
                     '</el-form-item>'+
                 '</el-col>'+
                 '<el-col :span="5">'+
@@ -111,14 +123,11 @@ var dateComponent = Vue.extend({
                     '</el-form-item>'+
                 '</el-col>'+
                 '</el-row>',
-    methods: {
-        //删除按钮
+    methods:{
+        //刪除按鈕
         remove(){
-            // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
-            if(_index != null) {
-                add.items.splice(_index, 1);
-            }
+            var _index = this.$el.attributes.prop.value;
+            add.items.splice(_index, 1);
         }
     }
 });
@@ -139,7 +148,7 @@ var numComponent = Vue.extend({
     template:'<el-row>'+
                 '<el-col :span="1">'+
                 '   <el-form-item>'+
-                        '<el-button type="text" size="small" icon="delete" @click="remove"></el-button>'+
+                '       <el-button @click="remove" type="text" size="small" icon="delete"></el-button>'+
                     '</el-form-item>'+
                 '</el-col>'+
                 '<el-col :span="5">'+
@@ -174,19 +183,26 @@ var numComponent = Vue.extend({
                 '   </el-form-item>'+
                 '</el-col>'+
                 '</el-row>',
-    methods: {
-        //删除按钮
+    methods:{
+        //刪除按鈕
         remove(){
-            // 获取当前新增组件的index
-            var _index = this.$el.attributes[1].value;
-            if(_index != null) {
-                add.items.splice(_index, 1);
-            }
+            var _index = this.$el.attributes.prop.value;
+            add.items.splice(_index, 1);
         }
     }
 })
 
-var add=new Vue({
+//变量Vue
+var alter=new Vue({
+    el:"#alter",
+    data:{
+        keyInput:'',
+        valueInput:'',
+    }
+})
+
+
+var add = new Vue({
     el:"#SequenceRuleConfigAdd",
     data:{
         name:'',
@@ -264,9 +280,85 @@ var add=new Vue({
             this.items.push({
                 'component':'num-component'
             });
-        }
+        },
+        getData(ee) {
+             var key=alter.keyInput;
+             var value=alter.valueInput;
+             console.log(ee);
+        },
+        //确定按钮
+        confirm(){
+            //新增
+            if (window.parent.config.operate == 1) {
+                addObj.addOk(function(){
+                    var data={
+                        "url":window.parent.insertUrl,
+                        "jsonData":{
+                            seqCode:add.formTable.seqCodeInput,
+                            seqName:add.formTable.seqNameInput,
+                            seqContent:add.formTable.seqContentInput,
+                            belongModule:add.formTable.belongModuleInput,
+                            belongSystem:add.formTable.belongSystemInput,
+                            desp:add.formTable.despInput
+                        },
+                        "obj":add
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config);
+                        parent.layer.close(window.parent.config.divIndex);
+                    })
+                })
+            }
+            //编辑
+            if(window.parent.config.operate ==2){
+                editObj.editOk(function(){
+                    var data={
+                        "url":window.parent.modifyUrl,
+                        "jsonData":{
+                            rowId:window.parent.config.rowId,
+                            seqCode:add.formTable.seqCodeInput,
+                            seqName:add.formTable.seqNameInput,
+                            seqContent:add.formTable.seqContentInput,
+                            belongModule:add.formTable.belongModuleInput,
+                            belongSystem:add.formTable.belongSystemInput,
+                            desp:add.formTable.despInput
+                        },
+                        "obj":add
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config);
+                        parent.layer.close(window.parent.config.divIndex);
+                    })
+                })
+            }
+        },
+        //编辑时将数据绑定在控件中
+        bindValue(){
+            this.rowId=window.parent.config.rowId;
+            var data={
+                "url":window.parent.queryById,
+                "jsonData":{rowId:this.rowId},
+                "obj":this
+            }
+            gmpAjax.showAjax(data,function(res){
+                var data=res;
+                add.formTable.seqCodeInput=data[0].seqCode;
+                add.formTable.seqNameInput=data[0].seqName;
+                add.formTable.seqContentInput=data[0].seqContent;
+                add.formTable.belongModuleInput=data[0].belongModule;
+                add.formTable.belongSystemInput=data[0].belongSystem;
+                add.formTable.despInput=data[0].desp;
+                add.formTable.versionInput=data[0].version;
+            })
+        },
     },
     created(){
-        this.init();
+        if(window.parent.config.operate ==1){
+            this.init();
+        }
+
+        if(window.parent.config.operate == 2){
+            this.bindValue();
+        }
     }
 })
