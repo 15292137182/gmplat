@@ -2,14 +2,11 @@ package com.bcx.plat.core.manager;
 
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.utils.SpringContextHolder;
-import com.bcx.plat.core.utils.UtilsTool;
 import com.bcx.plat.core.utils.extra.lang.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +54,6 @@ public class SequenceManager {
   private static final String LOOP_YEAR = "year"; // 按年
   private static final String LOOP_MOUTH = "mouth"; // 按月
 
-  private static MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
   private Logger logger = LoggerFactory.getLogger(getClass());
 
   // 变量的参数值取不到的时候默认值
@@ -128,11 +124,9 @@ public class SequenceManager {
    */
   public int resetSequenceNo(String rowId, String serialId, int startValue, String... objSigns) {
     if (isValid(rowId)) {
-      List<Map<String, Object>> ruleConfigs = moreBatis.select(SequenceRuleConfig.class)
-              .where(new FieldCondition("rowId", Operator.EQUAL, rowId))
-              .execute();
+      List<SequenceRuleConfig> ruleConfigs = new SequenceRuleConfig().selectSimple(new FieldCondition("rowId", Operator.EQUAL, rowId));
       if (ruleConfigs.size() == 1) {
-        String content = (String) ruleConfigs.get(0).get("seqContent");
+        String content = ruleConfigs.get(0).getSeqContent();
         // 如果传入的是全是数字
         // 检查是否存在有变量，并获得变量个数
         Matcher matcher = serialNumPattern.matcher(content);
@@ -194,14 +188,12 @@ public class SequenceManager {
         }
       }
       conditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os.toString()));
-
-      List<Map<String, Object>> result = moreBatis.select(SequenceGenerate.class)
-              .where(new And(conditions)).execute();
+      List<SequenceGenerate> result = new SequenceGenerate().selectSimple(new And(conditions));
       if (result.size() == 1) {
-        SequenceGenerate generate = new SequenceGenerate().fromMap(result.get(0));
+        SequenceGenerate generate = result.get(0);
         String _aimV = String.valueOf(aimValue - 1);
         generate.setCurrentValue(_aimV);
-        return moreBatis.updateEntity(generate);
+        return generate.updateById();
       }
     } else {
       throwError("需要重置的序列：%s 长度溢出 ！", seqRowId);
@@ -467,11 +459,9 @@ public class SequenceManager {
       }
       fieldConditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os.toString()));
 
-      List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
-              .where(new And(fieldConditions)).execute();
+      List<SequenceGenerate> list = new SequenceGenerate().selectSimple(new And(fieldConditions));
       if (list.size() == 1) {
-        String json = UtilsTool.objToJson(list.get(0));
-        SequenceGenerate generate = UtilsTool.jsonToObj(json, SequenceGenerate.class);
+        SequenceGenerate generate = list.get(0);
         if (null == generate) {
           throw Lang.makeThrow("获取当前变量值时出现错误！");
         }
@@ -495,13 +485,9 @@ public class SequenceManager {
       return ruleConfig;
     }
     if (isValid(sequenceCode)) {
-      List<Map<String, Object>> code = moreBatis.select(SequenceRuleConfig.class)
-              .where(new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", sequenceCode).endAnd().buildDone()
-//      new FieldCondition("seqCode", Operator.EQUAL, sequenceCode)
-              ).execute();
+      List<SequenceRuleConfig> code = new SequenceRuleConfig().selectSimple(new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", sequenceCode).endAnd().buildDone());
       if (code.size() == 1) {
-        String toJson = UtilsTool.objToJson(code.get(0));
-        return UtilsTool.jsonToObj(toJson, SequenceRuleConfig.class);
+        return code.get(0);
       }
     }
     return null;
@@ -540,9 +526,7 @@ public class SequenceManager {
           }
         }
         fieldConditions.add(new FieldCondition("objectSigns", Operator.EQUAL, os.toString()));
-
-        List<Map<String, Object>> list = moreBatis.select(SequenceGenerate.class)
-                .where(new And(fieldConditions)).execute();
+        List<SequenceGenerate> list = new SequenceGenerate().selectSimple(new And(fieldConditions));
         SequenceGenerate sg = new SequenceGenerate();
         if (list.isEmpty()) {
           sg.setSeqRowId(seqRowId);
@@ -551,12 +535,12 @@ public class SequenceManager {
           sg.setBranchSign(branchSign);
           sg.setObjectSigns(os.toString());
           sg.buildCreateInfo();
-          moreBatis.insertEntity(sg);
+          sg.insert();
         } else {
-          sg.fromMap(list.get(0));
+          sg = list.get(0);
           sg.setCurrentValue(keys.get(variableKey).toString());
           sg.getBaseTemplateBean().buildModifyInfo();
-          moreBatis.updateEntity(sg);
+          sg.updateById();
         }
       }
     }
