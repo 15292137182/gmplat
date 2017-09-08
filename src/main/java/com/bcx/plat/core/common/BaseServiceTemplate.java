@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
-import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -82,11 +81,11 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
   }
 
   public List<Map<String, Object>> select(Condition condition, Collection<String> alias, List<Order> orders) {
-    return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, alias), orders);
+    return selectColumns(condition, moreBatis.getColumnByAlias(entityClass, alias), orders);
   }
 
   public PageResult<Map<String, Object>> select(Condition condition, Collection<String> alias, List<Order> orders, int pageNum, int pageSize) {
-    return selectColumns(condition, moreBatis.getColumnByAlies(entityClass, alias), orders, pageNum, pageSize);
+    return selectColumns(condition, moreBatis.getColumnByAlias(entityClass, alias), orders, pageNum, pageSize);
   }
 
   public PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
@@ -94,13 +93,11 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
     return singleInputSelect(column, value, pageNum, pageSize, moreBatis.getColumns(entityClass), orders);
   }
 
-  @Deprecated
   private PageResult<Map<String, Object>> singleInputSelect(Collection<String> column,
                                                             Collection<String> value, int pageNum, int pageSize, Collection<AliasedColumn> aliasedColumns, List<Order> orders) {
     return selectColumns(UtilsTool.createBlankQuery(column, value), aliasedColumns, orders, pageNum, pageSize);
   }
 
-  @Deprecated
   public List<Map<String, Object>> singleInputSelect(Collection<String> column,
                                                      Collection<String> value) {
     return select(UtilsTool.createBlankQuery(column, value));
@@ -114,7 +111,7 @@ public class BaseServiceTemplate<T extends BaseEntity<T>> {
     args = mapFilter(args);
     final Map<String, Object> finalCopy = args;
     List<Condition> condition = (List<Condition>) moreBatis.getPks(entityClass).stream().map((pk) -> {
-      return new FieldCondition((AliasedColumn) pk, Operator.EQUAL, finalCopy.get(((AliasedColumn) pk).getAlies()));
+      return new FieldCondition((AliasedColumn) pk, Operator.EQUAL, finalCopy.get(((AliasedColumn) pk).getAlias()));
     }).collect(Collectors.toList());
     return update(finalCopy, new And(condition));
   }

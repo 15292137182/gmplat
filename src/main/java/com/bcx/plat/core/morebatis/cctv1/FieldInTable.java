@@ -27,13 +27,13 @@ public class FieldInTable implements com.bcx.plat.core.morebatis.phantom.FieldIn
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
 //    return column.getColumnSqlFragment(translator);
-    return getFieldSource()+(field.getAlies()==null||field.getAlies().isEmpty()?"":" as \""+field.getAlies()+"\"");
+    return getFieldSource()+(field.getAlias()==null||field.getAlias().isEmpty()?"":" as \""+field.getAlias()+"\"");
 //    return getFieldSource();
   }
 
   @Override
-  public String getAlies() {
-    return field.getAlies();
+  public String getAlias() {
+    return field.getAlias();
   }
 
   @Override
