@@ -35,7 +35,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
 public class FrontFuncProController extends
-        BaseController<FrontFuncProService> {
+        BaseController/*<FrontFuncProService>*/ {
 
     private final TemplateObjectProService templateObjectProService;
     private final BusinessObjectProService businessObjectProService;
@@ -49,16 +49,16 @@ public class FrontFuncProController extends
         this.dbTableColumnService = dbTableColumnService;
         this.frontFuncProService = frontFuncProService;
     }
-
-    /**
-     * 模糊查询的字段
-     *
-     * @return 字段
-     */
-    @Override
-    protected List<String> blankSelectFields() {
-        return Collections.singletonList("rowId");
-    }
+//
+//    /**
+//     * 模糊查询的字段
+//     *
+//     * @return 字段
+//     */
+//    @Override
+//    protected List<String> blankSelectFields() {
+//        return Collections.singletonList("rowId");
+//    }
 
 
 //    /**
@@ -200,31 +200,31 @@ public class FrontFuncProController extends
     }
 
 
-
-    /**
-     * 通用新增方法
-     *
-     * @param entity  接受一个实体参数
-     * @param request request请求
-     * @param locale  国际化参数
-     * @return 返回操作信息
-     */
-    @RequestMapping("/add")
-    public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-        return super.insert(new FrontFuncPro().fromMap(entity), request, locale);
-    }
-
-
-    /**
-     * 通过修改方法
-     *
-     * @param entity  接受一个实体参数
-     * @param request request请求
-     * @param locale  国际化参数
-     * @return 返回操作信息
-     */
-    @RequestMapping("/modify")
-    public Object update(Map entity, HttpServletRequest request, Locale locale) {
-        return super.updateById(new TemplateObject().fromMap(entity), request, locale);
-    }
+//
+//    /**
+//     * 通用新增方法
+//     *
+//     * @param entity  接受一个实体参数
+//     * @param request request请求
+//     * @param locale  国际化参数
+//     * @return 返回操作信息
+//     */
+//    @RequestMapping("/add")
+//    public Object insert(Map entity, HttpServletRequest request, Locale locale) {
+//        return super.insert(new FrontFuncPro().fromMap(entity), request, locale);
+//    }
+//
+//
+//    /**
+//     * 通过修改方法
+//     *
+//     * @param entity  接受一个实体参数
+//     * @param request request请求
+//     * @param locale  国际化参数
+//     * @return 返回操作信息
+//     */
+//    @RequestMapping("/modify")
+//    public Object update(Map entity, HttpServletRequest request, Locale locale) {
+//        return super.updateById(new TemplateObject().fromMap(entity), request, locale);
+//    }
 }

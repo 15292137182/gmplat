@@ -37,7 +37,7 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
-public class TemplateObjectController extends BaseController<TemplateObjectService> {
+public class TemplateObjectController extends BaseController/*<TemplateObjectService> */{
 
   private final TemplateObjectProService templateObjectProService;
 
@@ -99,7 +99,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/query")
   public Object singleInputSelect(String search, Locale locale) {
-    return selectList(locale, createBlankQuery(blankSelectFields(), collectToSet(search)));
+    return /*selectList(locale, createBlankQuery(blankSelectFields(), collectToSet(search)))*/ null;
   }
 
   /**
@@ -111,7 +111,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId, Locale locale) {
-    return selectList(locale, new FieldCondition("rowId", Operator.EQUAL, rowId));
+    return /*selectList(locale, new FieldCondition("rowId", Operator.EQUAL, rowId))*/ null;
   }
 
   /**
@@ -131,7 +131,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
                                   Locale locale, HttpServletRequest request) {
     LinkedList<Order> orders = dataSort(order);
     pageNum = search == null || search.isEmpty() ? 1 : pageNum;
-    return selectPage(locale, createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
+    return /*selectPage(locale, createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize)*/ null;
   }
 
 
@@ -144,7 +144,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/add")
   public Object insert(@RequestParam Map<String,String> param, HttpServletRequest request, Locale locale) {
-    return super.insert(new TemplateObject().fromMap(param), request, locale);
+    return /*super.insert(new TemplateObject().fromMap(param), request, locale)*/ null;
   }
 
 
@@ -158,7 +158,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/modify")
   public Object update(Map entity, HttpServletRequest request, Locale locale) {
-    return super.updateById(new TemplateObject().fromMap(entity), request, locale);
+    return /*super.updateById(new TemplateObject().fromMap(entity), request, locale)*/ null;
   }
 
   /**
@@ -171,7 +171,7 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
    */
   @RequestMapping("/delete")
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
-    return deleteByIds(request, locale, rowId);
+    return /*deleteByIds(request, locale, rowId)*/null;
   }
 
 

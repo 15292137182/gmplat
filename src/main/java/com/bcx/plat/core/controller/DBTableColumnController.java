@@ -30,7 +30,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/dbTableColumn")
-public class DBTableColumnController extends BaseController<DBTableColumnService> {
+public class DBTableColumnController extends BaseController/*<DBTableColumnService>*/ {
     @Autowired
     private DBTableColumnService dbTableColumnService;
     @Autowired
@@ -38,7 +38,7 @@ public class DBTableColumnController extends BaseController<DBTableColumnService
 
 
 
-    @Override
+    /*@Override*/
     protected List<String> blankSelectFields() {
         return Arrays.asList("columnEname", "columnCname");
     }
@@ -96,7 +96,7 @@ public class DBTableColumnController extends BaseController<DBTableColumnService
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
         if (relateTableColumn.size() == 0) {
-            return super.deleteByIds(request,locale,rowId);
+            return /*super.deleteByIds(request,locale,rowId)*/ null;
         }else{
             return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }

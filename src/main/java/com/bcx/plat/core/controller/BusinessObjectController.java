@@ -30,7 +30,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObj")
-public class BusinessObjectController extends BaseController<BusinessObjectService> {
+public class BusinessObjectController extends BaseController/*<BusinessObjectService>*/ {
 
   private final BusinessObjectService businessObjectService;
   private final BusinessRelateTemplateService businessRelateTemplateService;
@@ -41,7 +41,7 @@ public class BusinessObjectController extends BaseController<BusinessObjectServi
     this.businessRelateTemplateService = businessRelateTemplateService;
   }
 
-  @Override
+ /* @Override*/
   protected List<String> blankSelectFields() {
     return Arrays.asList("objectCode", "objectName");
   }

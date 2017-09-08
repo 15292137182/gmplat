@@ -29,7 +29,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObjPro")
 @RestController
 public class BusinessObjectProController extends
-        BaseController<BusinessObjectProService> {
+        BaseController/*<BusinessObjectProService> */{
 
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectProService businessObjectProService;
@@ -41,7 +41,7 @@ public class BusinessObjectProController extends
     }
 
 
-    @Override
+    /*@Override*/
     protected List<String> blankSelectFields() {
         return Arrays.asList("propertyCode", "propertyName");
     }
@@ -100,7 +100,10 @@ public class BusinessObjectProController extends
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
         if (frontFuncPros.size() == 0) {
+/*
             return super.deleteByIds(request,locale,rowId);
+*/
+return null;
         }else{
             return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }

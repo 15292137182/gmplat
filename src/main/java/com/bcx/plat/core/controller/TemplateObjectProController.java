@@ -23,7 +23,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
-public class TemplateObjectProController extends BaseController<TemplateObjectProService> {
+public class TemplateObjectProController extends BaseController/*<TemplateObjectProService>*/ {
 
   /**
    * 参与空格查询的字段

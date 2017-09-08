@@ -17,9 +17,9 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/dataSetConfig")
-public class DataSetConfigController extends BaseController<DataSetConfigService> {
+public class DataSetConfigController extends BaseController/*<DataSetConfigService>*/ {
 
-    @Override
+    /*@Override*/
     protected List<String> blankSelectFields() {
         return Arrays.asList("datasetCode", "datasetName", "datasetType");
     }

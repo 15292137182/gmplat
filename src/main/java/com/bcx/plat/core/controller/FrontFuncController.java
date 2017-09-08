@@ -30,7 +30,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronc")
 @RestController
-public class FrontFuncController extends BaseController<FrontFuncService> {
+public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
     private final FrontFuncService frontFuncService;
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectService businessObjectService;
@@ -47,7 +47,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
      *
      * @return 表字段
      */
-    @Override
+    /*@Override*/
     protected List<String> blankSelectFields() {
         return Arrays.asList("funcCode", "funcName");
     }
@@ -91,7 +91,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
                 List<String> rowIds = funcRowId.stream().map((row) -> (String) row.getRowId()).collect(Collectors.toList());
                 List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
             }
-            return deleteByIds(request, locale, rowId);
+            return /*deleteByIds(request, locale, rowId)*/ null;
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
@@ -127,7 +127,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
      */
     @RequestMapping("/add")
     public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-        return super.insert(new FrontFunc().fromMap(entity), request, locale);
+        return /*super.insert(new FrontFunc().fromMap(entity), request, locale)*/ null;
     }
 
 
@@ -141,7 +141,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
      */
     @RequestMapping("/modify")
     public Object update(Map entity, HttpServletRequest request, Locale locale) {
-        return super.updateById(new FrontFunc().fromMap(entity), request, locale);
+        return /*super.updateById(new FrontFunc().fromMap(entity), request, locale)*/ null;
     }
 
 }
