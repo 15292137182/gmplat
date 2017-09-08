@@ -6,7 +6,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.utils.SpringContextHolder;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 public class OrderBuilder {
     private Class<? extends BeanInterface> entityClass;
@@ -24,7 +23,7 @@ public class OrderBuilder {
     }
 
     public OrderBuilder asc(Class<? extends BeanInterface> entityClass,String alias){
-        orders.add(new Order(moreBatis.getColumnByAlies(entityClass,alias),Order.ASC));
+        orders.add(new Order(moreBatis.getColumnByAlias(entityClass,alias),Order.ASC));
         return this;
     }
 
@@ -33,7 +32,7 @@ public class OrderBuilder {
     }
 
     public OrderBuilder desc(Class<? extends BeanInterface> entityClass,String alias){
-        orders.add(new Order(moreBatis.getColumnByAlies(entityClass,alias),Order.DESC));
+        orders.add(new Order(moreBatis.getColumnByAlias(entityClass,alias),Order.DESC));
         return this;
     }
 
