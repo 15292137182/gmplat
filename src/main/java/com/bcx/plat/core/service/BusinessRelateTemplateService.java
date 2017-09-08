@@ -1,7 +1,6 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseService;
-import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.entity.BusinessRelateTemplate;
 import org.springframework.stereotype.Service;
 

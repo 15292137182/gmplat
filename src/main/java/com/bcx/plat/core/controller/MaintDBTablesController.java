@@ -66,8 +66,8 @@ public class MaintDBTablesController extends BaseController<MaintDBTablesService
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-    return super.insert(new MaintDBTables().fromMap(entity), request, locale);
+  public Object insert(MaintDBTables entity, HttpServletRequest request, Locale locale) {
+    return super.insert(entity, request, locale);
   }
 
 

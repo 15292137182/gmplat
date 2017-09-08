@@ -2,14 +2,9 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.entity.TemplateObjectPro;
+import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -202,5 +197,34 @@ public class FrontFuncProController extends
             }
         }
         return result;
+    }
+
+
+
+    /**
+     * 通用新增方法
+     *
+     * @param entity  接受一个实体参数
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return 返回操作信息
+     */
+    @RequestMapping("/add")
+    public Object insert(Map entity, HttpServletRequest request, Locale locale) {
+        return super.insert(new FrontFuncPro().fromMap(entity), request, locale);
+    }
+
+
+    /**
+     * 通过修改方法
+     *
+     * @param entity  接受一个实体参数
+     * @param request request请求
+     * @param locale  国际化参数
+     * @return 返回操作信息
+     */
+    @RequestMapping("/modify")
+    public Object update(Map entity, HttpServletRequest request, Locale locale) {
+        return super.updateById(new TemplateObject().fromMap(entity), request, locale);
     }
 }

@@ -2,7 +2,6 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.FrontFunc;
@@ -67,7 +66,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
                 .select(new FieldCondition("rowId", Operator.IN, rowIds));
         HashMap<String, Object> map = new HashMap<>();
         for (BusinessObject row : results) {
-            map.put((String) row.getRowId(), row.getObjectName());
+            map.put(row.getRowId(), row.getObjectName());
         }
         for (Map<String, Object> row : result) {
             row.put("objectName", map.get(row.get("relateBusiObj")));
@@ -128,7 +127,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
      */
     @RequestMapping("/add")
     public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-        return super.insert(new TemplateObject().fromMap(entity), request, locale);
+        return super.insert(new FrontFunc().fromMap(entity), request, locale);
     }
 
 
@@ -142,7 +141,7 @@ public class FrontFuncController extends BaseController<FrontFuncService> {
      */
     @RequestMapping("/modify")
     public Object update(Map entity, HttpServletRequest request, Locale locale) {
-        return super.updateById(new TemplateObject().fromMap(entity), request, locale);
+        return super.updateById(new FrontFunc().fromMap(entity), request, locale);
     }
 
 }

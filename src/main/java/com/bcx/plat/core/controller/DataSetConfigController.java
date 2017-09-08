@@ -1,8 +1,6 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.common.BaseControllerTemplate;
-import com.bcx.plat.core.entity.DataSetConfig;
 import com.bcx.plat.core.service.DataSetConfigService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
