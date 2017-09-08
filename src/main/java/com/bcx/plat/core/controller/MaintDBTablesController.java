@@ -97,7 +97,7 @@ public class MaintDBTablesController extends BaseController<MaintDBTablesService
     AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
     if (UtilsTool.isValid(rowId)) {
       map.get().put("relateTableRowId", rowId);
-      List<BusinessObject> relateTableRowId = businessObjectService.select(new FieldCondition("relateTableRowId"
+      List<BusinessObject> relateTableRowId = businessObjectService.selectEntity(new FieldCondition("relateTableRowId"
               , Operator.EQUAL, rowId));
       if (relateTableRowId.size() == 0) {
         List<Map> list = getService().selectMap(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
