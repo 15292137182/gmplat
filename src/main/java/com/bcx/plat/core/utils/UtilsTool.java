@@ -319,7 +319,7 @@ public class UtilsTool {
 
   /**
    * 数据排序
-   * "{\"str\":\"rowId\", \"num\":1}"
+   * "{\"field\":\"rowId\", \"sort\":1}"
    *
    * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__为倒序
    * @return linkedList参数

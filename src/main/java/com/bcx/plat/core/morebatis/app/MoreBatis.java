@@ -1,8 +1,6 @@
 package com.bcx.plat.core.morebatis.app;
 
 import com.bcx.plat.core.base.support.BeanInterface;
-import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
@@ -202,28 +200,6 @@ public class MoreBatis {
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
-
-  /**
-   * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
-   */
-  public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
-    Collection<Field> pks = entityPks.get(entityClass);
-    final Map<String, Object> values = entity.toMap();
-    final Map<String, Object> valuesCopy = new HashMap<>();
-    for (Map.Entry<String, Object> entry : values.entrySet()) {
-      final Object value = entry.getValue();
-      if (value!=excluded) valuesCopy.put(entry.getKey(),entry.getValue());
-    }
-    List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlies())))
-            .collect(Collectors.toList());
-    return this.update(entityClass, values).where(new And(pkConditions)).execute();
-  }
-
-
   /**
    * 根据主键更新一个实体类
    * @param entity  要更新的实体类
@@ -266,31 +242,6 @@ public class MoreBatis {
             .collect(Collectors.toList());
     return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
   }
-
-
-  /**
-   * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
-   */
-  public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
-    Collection<Field> pks = entityPks.get(entityClass);
-    Map<String, Object> values = entity.toMap();
-//    values.forEach((key,value)->{
-//      if (excluded.contains(value)) values.remove(key);
-//    });
-    final Map<String, Object> valuesCopy = new HashMap<>();
-    for (Map.Entry<String, Object> entry : values.entrySet()) {
-      final Object value = entry.getValue();
-      if (!excluded.contains(value)) valuesCopy.put(entry.getKey(),entry.getValue());
-    }
-    List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlies())))
-            .collect(Collectors.toList());
-    return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
-  }
-
 
   /**
    * 根据主键查找对象
