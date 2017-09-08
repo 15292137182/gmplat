@@ -77,7 +77,7 @@ public class BusinessObjectProController extends
      * @param locale   国际化参数
      * @return PlatResult
      */
-    @RequestMapping("/queryBusinPro")
+    /*@RequestMapping("/queryBusinPro")
     public Object queryBusinPro(String objRowId, String frontRowId,HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(objRowId)) {
             ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
@@ -85,7 +85,7 @@ public class BusinessObjectProController extends
         }else{
             return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, null)), locale);
         }
-    }
+    }*/
 
 
     /**
