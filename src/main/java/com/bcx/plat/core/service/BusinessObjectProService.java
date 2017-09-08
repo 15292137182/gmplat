@@ -1,6 +1,7 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
@@ -23,7 +24,7 @@ import java.util.Map;
  * Created by Wen Tiehu on 2017/8/7.
  */
 @Service
-public class BusinessObjectProService extends BaseServiceTemplate<BusinessObjectPro> {
+public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
 
     private final DBTableColumnService dbTableColumnService;
     private final MoreBatis moreBatis;
@@ -34,10 +35,6 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
         this.moreBatis = moreBatis;
     }
 
-    @Override
-    public boolean isRemoveBlank() {
-        return false;
-    }
 
     /**
      * 根据业务对象属性rowId查询当前数据
@@ -46,22 +43,25 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
      * @return PlatResult
      */
     public ServerResult queryById(String rowId) {
-        List<Map<String, Object>> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        if (!UtilsTool.isValid(result)) {
+        List<BusinessObjectPro> businessObjectPros = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        if (!UtilsTool.isValid(businessObjectPros)) {
             return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        String relateTableColumn = (String) result.get(0).get("relateTableColumn");
-        List<Map<String, Object>> rowId1 =
-                dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
+        String relateTableColumn =businessObjectPros.get(0).getRelateTableColumn();
+
+        List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
         try {
-            rowId1.get(0).get("columnCname");
+            dbTableColumns.get(0).getColumnCname();
         } catch (Exception e) {
-            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, dbTableColumns);
         }
-        for (Map<String, Object> row : result) {
-            row.put("columnCname", rowId1.get(0).get("columnCname"));
+        for (DBTableColumn row : dbTableColumns) {
+            Map<String,Object> map = new HashMap<>();
+            map.put("columnCname",dbTableColumns.get(0).getColumnCname());
+            row.setEtc(map);
+//            row.put("columnCname", rowId1.get(0).get("columnCname"));
         }
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, dbTableColumns);
     }
 
     /**
@@ -157,7 +157,6 @@ public class BusinessObjectProService extends BaseServiceTemplate<BusinessObject
         }
 
         if (result.size() == 0) {
-            logger.warn("根据业务对象rowId查询当前业务对象下的所有属性_失败");
             return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));

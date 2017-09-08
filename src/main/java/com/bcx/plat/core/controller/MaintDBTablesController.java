@@ -3,6 +3,7 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.MaintDBTables;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -96,8 +97,9 @@ public class MaintDBTablesController extends BaseController<MaintDBTablesService
     AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
     if (UtilsTool.isValid(rowId)) {
       map.get().put("relateTableRowId", rowId);
-      List<Map<String, Object>> tableRowId = businessObjectService.select(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
-      if (tableRowId.size() == 0) {
+      List<BusinessObject> relateTableRowId = businessObjectService.select(new FieldCondition("relateTableRowId"
+              , Operator.EQUAL, rowId));
+      if (relateTableRowId.size() == 0) {
         List<Map> list = getService().selectMap(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
         if (UtilsTool.isValid(list)) {
           List<String> rowIds = list.stream().map((row) ->

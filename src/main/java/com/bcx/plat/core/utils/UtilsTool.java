@@ -312,7 +312,6 @@ public class UtilsTool {
       return out;
     }).collect(Collectors.toList());
   }
-
   public static And excludeDeleted(Condition condition) {
     return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
             new FieldCondition("delete_flag", Operator.IS_NULL, null)), condition);

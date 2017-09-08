@@ -136,14 +136,13 @@ public class KeySetController extends BaseController<KeySetService> {
   /**
    * 通用新增方法
    *
-   * @param entity  接受一个实体参数
    * @param request request请求
    * @param locale  国际化参数
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-    return super.insert(new KeySet().fromMap(entity), request, locale);
+  public Object insert(HttpServletRequest request, Locale locale) {
+    return super.insert(new KeySet().fromMap(request.getParameterMap()), request, locale);
   }
 
   /**

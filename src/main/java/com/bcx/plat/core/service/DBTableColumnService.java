@@ -1,6 +1,7 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.common.BaseServiceTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DBTableColumn;
@@ -22,7 +23,7 @@ import java.util.Map;
  * Create By HCL at 2017/8/1
  */
 @Service
-public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
+public class DBTableColumnService extends BaseService<DBTableColumn> {
 
     /**
      * 通过表信息字段rowId查询表信息并分页显示
@@ -36,10 +37,10 @@ public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
      */
     public ServerResult queryPageById(String search, String rowId, LinkedList<Order> orders, int pageNum, int pageSize) {
         pageNum =UtilsTool.isValid(search)?1:pageNum;
-        PageResult<Map<String, Object>> result = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
-                                UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))),
-                         orders, pageNum, pageSize);
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        PageResult<Map<String, Object>> relateTableRowId = selectPageMap(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
+                        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))),
+                orders, pageNum, pageSize);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateTableRowId);
     }
 
     /**
@@ -49,12 +50,12 @@ public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
      * @return ServerResult
      */
     public ServerResult queryTableById(String rowId, String search) {
-        List<Map<String, Object>> result = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
+        List<DBTableColumn> relateTableRowId = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
                 UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
-        if (result.size() == 0) {
+        if (relateTableRowId.size() == 0) {
             return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateTableRowId);
     }
 
 
@@ -67,8 +68,4 @@ public class DBTableColumnService extends BaseServiceTemplate<DBTableColumn>{
         return Arrays.asList("columnEname", "columnCname");
     }
 
-    @Override
-    public boolean isRemoveBlank() {
-        return false;
-    }
 }
