@@ -45,7 +45,7 @@ var config=new Vue({
         },
         editEvent(){
             this.operate=2;
-            var htmlUrl = 'add-sequence-rule-config.html';
+            var htmlUrl = 'sequence-rule-config-add.html';
             this.divIndex = ibcpLayer.ShowIframe(htmlUrl, '编辑序列号规则配置', '1000px', '500px');
         },
         deleteEvent(){

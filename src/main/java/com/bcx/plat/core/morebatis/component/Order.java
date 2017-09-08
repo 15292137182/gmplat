@@ -44,8 +44,8 @@ public class Order implements AliasedColumn{
   }
 
   @Override
-  public String getAlias() {
-    return aliasedColumn.getAlias();
+  public String getAlies() {
+    return aliasedColumn.getAlies();
   }
 
   @Override

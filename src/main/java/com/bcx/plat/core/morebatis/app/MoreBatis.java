@@ -1,6 +1,8 @@
 package com.bcx.plat.core.morebatis.app;
 
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
@@ -13,7 +15,6 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
-import com.bcx.plat.core.morebatis.configuration.builder.EntityEntryBuilder;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
@@ -36,36 +37,28 @@ public class MoreBatis {
   Translator translatorX = new Translator();
   private Map<Class, Collection<Field>> entityColumns;
   private Map<Class, Collection<Field>> entityPks;
-  private Map<Class, Map<String, Field>> aliasMap;
+  private Map<Class, Map<String, Field>> aliesMaps;
   private Map<Class, TableSource> entityTables;
 
   public MoreBatis(SuitMapper suitMapper, SqlComponentTranslator translator,
-                   Collection entityEntries) {
+                   List<EntityEntry> entityEntries) {
     this.suitMapper = suitMapper;
     this.translator = translator;
     entityColumns = new HashMap<>();
     entityPks = new HashMap<>();
     entityTables = new HashMap<>();
-    aliasMap = new HashMap<>();
-    for (Object entry : entityEntries) {
-      EntityEntry entityEntry;
-      if (entry instanceof EntityEntry) {
-        entityEntry= (EntityEntry) entry;
-      }else if(entry instanceof EntityEntryBuilder){
-        entityEntry= ((EntityEntryBuilder) entry).getEntry();
-      }else{
-        throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
-      }
+    aliesMaps = new HashMap<>();
+    for (EntityEntry entityEntry : entityEntries) {
       final Class<? extends BeanInterface> entryClass = entityEntry.getEntityClass();
       final TableSource entityEntryTable = entityEntry.getTable();
-      Map<String, Field> aliasMap = this.aliasMap.get(entryClass);
+      Map<String, Field> aliesMap = aliesMaps.get(entryClass);
       LinkedList<Field> fieldInTables = new LinkedList<>();
-      if (aliasMap == null) {
-        aliasMap = new HashMap<>();
-        this.aliasMap.put(entryClass, aliasMap);
+      if (aliesMap == null) {
+        aliesMap = new HashMap<>();
+        aliesMaps.put(entryClass, aliesMap);
       }
       for (Field Field : entityEntry.getFields()) {
-        aliasMap.put(Field.getAlias(), Field);
+        aliesMap.put(Field.getAlies(), Field);
       }
       entityColumns.put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getFields())));
       entityTables.put(entryClass, entityEntryTable);
@@ -100,15 +93,15 @@ public class MoreBatis {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alias) {
-    final Map<String, Field> entityColumn = aliasMap.get(entityClass);
+  public <T extends BeanInterface<T>> Field getColumnByAlies(Class<T> entityClass, String alies) {
+    final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     try {
-      return entityColumn.get(alias);
+      return entityColumn.get(alies);
     } catch (NullPointerException e) {
       if (entityColumn == null) {
         throw new NullPointerException("实体类没有注册:" + entityClass.getName());
       } else {
-        throw new NullPointerException("无效的字段别名:" + alias);
+        throw new NullPointerException("无效的字段别名:" + alies);
       }
     }
   }
@@ -116,13 +109,13 @@ public class MoreBatis {
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    * @param entityClass 实体类
-   * @param alias       实体类属性名称
+   * @param alies       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alias) {
-    final Map<String, Field> entityColumn = aliasMap.get(entityClass);
+  public <T extends BeanInterface<T>> Field getColumnByAliesWithoutCheck(Class<T> entityClass, String alies) {
+    final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     try {
-      return entityColumn.get(alias);
+      return entityColumn.get(alies);
     } catch (NullPointerException e) {
       throw new NullPointerException("实体类没有注册:" + entityClass.getName());
     }
@@ -131,21 +124,21 @@ public class MoreBatis {
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    * @param entityClass 实体类
-   * @param alias       实体类属性名称
+   * @param alies       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alias) {
-    final Map<String, Field> entityColumn = aliasMap.get(entityClass);
+  public <T extends BeanInterface<T>> List<Field> getColumnByAlies(Class<T> entityClass, Collection<String> alies) {
+    final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     final LinkedList<Field> result = new LinkedList<>();
     try {
-      for (String aly : alias) {
+      for (String aly : alies) {
         result.add(entityColumn.get(aly));
       }
     } catch (NullPointerException e) {
       if (entityColumn == null) {
         throw new NullPointerException("实体类没有注册:" + entityClass.getName());
       } else {
-        throw new NullPointerException("无效的字段别名:" + alias);
+        throw new NullPointerException("无效的字段别名:" + alies);
       }
     }
     return result;
@@ -189,7 +182,7 @@ public class MoreBatis {
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
+            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
     return this.deleteStatement().from(table).where(new And(pkConditions)).execute();
   }
@@ -204,28 +197,7 @@ public class MoreBatis {
     Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toMap();
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
-            .collect(Collectors.toList());
-    return this.update(entityClass, values).where(new And(pkConditions)).execute();
-  }
-
-
-  /**
-   * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
-   */
-  public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
-    Collection<Field> pks = entityPks.get(entityClass);
-    final Map<String, Object> values = entity.toMap();
-    final Map<String, Object> valuesCopy = new HashMap<>();
-    for (Map.Entry<String, Object> entry : values.entrySet()) {
-      final Object value = entry.getValue();
-      if (value!=excluded) valuesCopy.put(entry.getKey(),entry.getValue());
-    }
-    List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
+            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
@@ -315,30 +287,6 @@ public class MoreBatis {
     }
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlies())))
-            .collect(Collectors.toList());
-    return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
-  }
-
-
-  /**
-   * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
-   */
-  public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
-    Collection<Field> pks = entityPks.get(entityClass);
-    Map<String, Object> values = entity.toMap();
-//    values.forEach((key,value)->{
-//      if (excluded.contains(value)) values.remove(key);
-//    });
-    final Map<String, Object> valuesCopy = new HashMap<>();
-    for (Map.Entry<String, Object> entry : values.entrySet()) {
-      final Object value = entry.getValue();
-      if (!excluded.contains(value)) valuesCopy.put(entry.getKey(),entry.getValue());
-    }
-    List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
             .collect(Collectors.toList());
     return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
   }
@@ -354,7 +302,7 @@ public class MoreBatis {
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toMap();
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
+            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlies())))
             .collect(Collectors.toList());
     List<Map<String, Object>> result = this.select(entity.getClass())
             .where(new And(pkConditions)).execute();
@@ -405,13 +353,13 @@ public class MoreBatis {
                             Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
     HashMap<String, Field> columns = new HashMap<>();
     for (Field Field : entityColumns.get(primary)) {
-      columns.put(Field.getAlias(), Field);
+      columns.put(Field.getAlies(), Field);
     }
     for (Field Field : entityColumns.get(secondary)) {
-      columns.put(Field.getAlias(), Field);
+      columns.put(Field.getAlies(), Field);
     }
-    Field primaryField = getColumnByAlias(primary, relationPrimary);
-    Field secondaryField = getColumnByAlias(secondary, relationSecondary);
+    Field primaryField = getColumnByAlies(primary, relationPrimary);
+    Field secondaryField = getColumnByAlies(secondary, relationSecondary);
     final Collection values = columns.values();
     return selectStatement().select(values).from(
             new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
@@ -419,7 +367,7 @@ public class MoreBatis {
   }
 
   private QueryAction select(Class<? extends BeanInterface> entity, List<String> columns) {
-    Map<String, Field> columnMap = aliasMap.get(entity);
+    Map<String, Field> columnMap = aliesMaps.get(entity);
     return selectStatement().select(columns.stream().map(columnMap::get)
             .collect(Collectors.toList()))
             .from(entityTables.get(entity));

@@ -125,7 +125,7 @@ public class Translator {
         Iterator<Map.Entry<String, Object>> entryIterator = updateAction.getValues().entrySet().iterator();
         while (entryIterator.hasNext()){
             final Map.Entry<String, Object> entry = entryIterator.next();
-            Field field = getMoreBatis().getColumnByAliasWithoutCheck(entityClass, entry.getKey());
+            Field field = getMoreBatis().getColumnByAliesWithoutCheck(entityClass, entry.getKey());
             if (field==null) continue;
             translateFieldOnlyName(field,linkedList);
             appendSql(EQUAL,linkedList);
@@ -159,7 +159,7 @@ public class Translator {
             iterator = columns.iterator();
             while (iterator.hasNext()) {
                 final Field field=iterator.next();
-                appendArgs(row.get(field.getAlias()),linkedList);
+                appendArgs(row.get(field.getAlies()),linkedList);
                 appendSql(COMMA,linkedList);
             }
             if (linkedList.getLast()==COMMA) linkedList.removeLast();
@@ -171,11 +171,11 @@ public class Translator {
     }
 
     public LinkedList translateOrder(Order order, LinkedList linkedList){
-        final String alias = order.getAliasedColumn().getAlias();
-        if (alias==null) {
+        final String alies = order.getAliasedColumn().getAlies();
+        if (alies==null) {
             translateFieldSource(order.getAliasedColumn(),linkedList);
         }else {
-            appendSql(order.getAlias(),linkedList);
+            appendSql(order.getAlies(),linkedList);
         }
         if (order.getOrder()== Order.DESC) {
             appendSql(DESC,linkedList);
@@ -189,10 +189,13 @@ public class Translator {
     
     public LinkedList translateAliasedColumn(AliasedColumn aliasedColumn,LinkedList linkedList){
         translateFieldSource(aliasedColumn,linkedList);
-        final String alias = aliasedColumn.getAlias();
-        if (alias !=null) {
+        final String alies = aliasedColumn.getAlies();
+        if (aliasedColumn instanceof Field) {
+            String castType = ((Field) aliasedColumn).getCastType();
+        }
+        if (alies !=null) {
             appendSql(AS, linkedList);
-            appendSql(quoteStr(alias), linkedList);
+            appendSql(quoteStr(alies), linkedList);
         }
         return linkedList;
     }

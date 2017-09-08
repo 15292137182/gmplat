@@ -20,7 +20,7 @@ public class ConditionBuilderContext {
     tableSource = moreBatis.getTable(clz);
 //    columns = new HashMap<>();
 //    for (AliasedColumn aliasedColumn : (Collection<AliasedColumn>)moreBatis.getColumns(clz)) {
-//      columns.put(aliasedColumn.getAlias(), aliasedColumn);
+//      columns.put(aliasedColumn.getAlies(), aliasedColumn);
 //    }
   }
 

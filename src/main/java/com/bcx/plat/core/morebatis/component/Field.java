@@ -2,6 +2,7 @@ package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
@@ -20,25 +21,26 @@ public class Field implements AliasedColumn {
   /**
    * 别名
    */
-  private String alias;
+  private String alies;
+
+  private String castType;
 
   public Field(){}
 
-  @Deprecated
-  public Field(String alias) {
-    this.fieldName = UtilsTool.camelToUnderline(alias);
-    this.alias = alias;
+  public Field(String fieldName) {
+    this.fieldName = UtilsTool.camelToUnderline(fieldName);
+    this.alies= fieldName;
   }
 
-  public Field(String fieldName, String alias) {
+  public Field(String fieldName, String alies) {
     this.fieldName = fieldName;
-    this.alias = alias;
+    this.alies = alies;
   }
 
-  public Field(Table table,String fieldName, String alias) {
-    this.table=table;
+  public Field(String fieldName, String alies,String castType) {
     this.fieldName = fieldName;
-    this.alias = alias;
+    this.alies = alies;
+    this.castType=castType;
   }
 
 
@@ -50,12 +52,20 @@ public class Field implements AliasedColumn {
     this.fieldName = fieldName;
   }
 
-  public String getAlias() {
-    return alias;
+  public String getCastType() {
+    return castType;
   }
 
-  public void setAlias(String alias) {
-    this.alias = alias;
+  public void setCastType(String castType) {
+    this.castType = castType;
+  }
+
+  public String getAlies() {
+    return alies;
+  }
+
+  public void setAlies(String alies) {
+    this.alies = alies;
   }
 
   public String getFieldSource() {
@@ -73,12 +83,12 @@ public class Field implements AliasedColumn {
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
     // TODO 另一个translator完成以后应该移除
-    String alias = getAlias();
+    String alies = getAlies();
     final String fieldSource = getFieldSource();
-    if (alias == null || alias.isEmpty()) {
+    if (alies == null || alies.isEmpty()) {
       return fieldSource;
     } else {
-      return fieldSource + " as \"" + getAlias()+"\"";
+      return fieldSource + " as \"" + getAlies()+"\"";
     }
   }
 }

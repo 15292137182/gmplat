@@ -23,15 +23,15 @@
             </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-            <el-col :xs="12" :sm="12" :md="12">
+            <el-col :xs="8" :sm="8" :md="8">
                 <div class="inputStyle">
-                    <components :is="dynComponent" :search-input="ruleForm1" code=""></components>
+                    <components :is="dynComponent" :search-input="ruleForm1"></components>
                 </div>
             </el-col>
         </el-row>
         <el-row style="padding:0 10px 10px 10px">
             <el-col :span="24">
-                <components data="first" :is="tableBlock" :child-table="table"></components>
+                <components :is="tableBlock" :child-table="table"></components>
             </el-col>
         </el-row>
     </div>
@@ -64,7 +64,7 @@
                     },
                     tableBlock(){//表格组件
                         var template= strHtml.table;
-                        var props = ["childTable"];//子组件参数名
+                        var props = ["table"];//子组件参数名
                         return {
                             template,
                             props

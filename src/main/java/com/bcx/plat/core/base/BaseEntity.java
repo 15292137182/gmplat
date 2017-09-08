@@ -3,7 +3,6 @@ package com.bcx.plat.core.base;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.base.template.BaseTemplateBean;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,7 +19,6 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  */
 public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInterface<T> {
 
-  @IgnoredField
   @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();
   private Map etc;

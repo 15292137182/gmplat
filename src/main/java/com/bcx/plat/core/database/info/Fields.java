@@ -11,21 +11,21 @@ public class Fields {
 //    }
 //  }
 //
-//  private static void putField(TableSource tableSource, AliasedColumn column, String alias) {
+//  private static void putField(TableSource tableSource, AliasedColumn column, String alies) {
 //    Map<String, AliasedColumn> map = tableFieldMap.get(tableSource);
 //    if (map == null) {
 //      map = new HashMap<>();
 //      tableFieldMap.put(tableSource, map);
 //    }
-//    map.put(alias, column);
+//    map.put(alies, column);
 //  }
 //
-//  public static AliasedColumn getField(TableSource tableSource, String alias) {
-//    return tableFieldMap.get(tableSource).get(alias);
+//  public static AliasedColumn getField(TableSource tableSource, String alies) {
+//    return tableFieldMap.get(tableSource).get(alies);
 //  }
 //
-//  public static AliasedColumn getField(Class<? extends BaseEntity> entityClass, String alias) {
-//    return getFieldMap(entityClass).get(alias);
+//  public static AliasedColumn getField(Class<? extends BaseEntity> entityClass, String alies) {
+//    return getFieldMap(entityClass).get(alies);
 //  }
 //
 //  public static Map<String, AliasedColumn> getFieldMap(Class<? extends BaseEntity> entityClass) {
@@ -77,9 +77,9 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_BUSINESS_OBJECT(TableInfo tableSource, String fieldName, String alias) {
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//    T_BUSINESS_OBJECT(TableInfo tableSource, String fieldName, String alies) {
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -93,8 +93,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -122,15 +122,15 @@ public class Fields {
 //    DELETE_FLAG(TableInfo.T_SYS_CONFIG, "delete_flag", "deleteFlag");
 //    public final ImmuteFieldInTable field;
 //
-//    T_SYS_CONFIG(TableInfo tableSource, String fieldName, String alias) {
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//    T_SYS_CONFIG(TableInfo tableSource, String fieldName, String alies) {
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -170,10 +170,10 @@ public class Fields {
 //    DELETE_FLAG(TableInfo.T_SEQUENCE_RULE_CONFIG, "delete_flag", "deleteFlag");
 //    public final ImmuteFieldInTable field;
 //
-//    T_SEQUENCE_RULE_CONFIG(TableInfo tableSource, String fieldName, String alias) {
+//    T_SEQUENCE_RULE_CONFIG(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -187,8 +187,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -219,10 +219,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_SEQUENCE_GENERATE(TableInfo tableSource, String fieldName, String alias) {
+//    T_SEQUENCE_GENERATE(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -236,8 +236,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -267,10 +267,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_SEQ_BUSI_GENERATE(TableInfo tableSource, String fieldName, String alias) {
+//    T_SEQ_BUSI_GENERATE(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -284,8 +284,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -318,10 +318,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_KEYSET(TableInfo tableSource, String fieldName, String alias) {
+//    T_KEYSET(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -335,8 +335,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -374,10 +374,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_FRONT_FUNC_PRO(TableInfo tableSource, String fieldName, String alias) {
+//    T_FRONT_FUNC_PRO(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -391,8 +391,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -425,10 +425,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_FRONT_FUNC(TableInfo tableSource, String fieldName, String alias) {
+//    T_FRONT_FUNC(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -442,8 +442,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -474,10 +474,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_DB_TABLES(TableInfo tableSource, String fieldName, String alias) {
+//    T_DB_TABLES(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -491,8 +491,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -523,10 +523,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_DB_TABLE_COLUMN(TableInfo tableSource, String fieldName, String alias) {
+//    T_DB_TABLE_COLUMN(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -540,8 +540,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -573,10 +573,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_DATASET_CONFIG(TableInfo tableSource, String fieldName, String alias) {
+//    T_DATASET_CONFIG(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -590,8 +590,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override
@@ -629,10 +629,10 @@ public class Fields {
 //
 //    public final ImmuteFieldInTable field;
 //
-//    T_BUSINESS_OBJECT_PRO(TableInfo tableSource, String fieldName, String alias) {
+//    T_BUSINESS_OBJECT_PRO(TableInfo tableSource, String fieldName, String alies) {
 //
-//      this.field = new ImmuteFieldInTable(new Field(fieldName, alias), tableSource);
-//      putField(tableSource, this.field, alias);
+//      this.field = new ImmuteFieldInTable(new Field(fieldName, alies), tableSource);
+//      putField(tableSource, this.field, alies);
 //    }
 //
 //    @Override
@@ -646,8 +646,8 @@ public class Fields {
 //    }
 //
 //    @Override
-//    public String getAlias() {
-//      return field.getAlias();
+//    public String getAlies() {
+//      return field.getAlies();
 //    }
 //
 //    @Override

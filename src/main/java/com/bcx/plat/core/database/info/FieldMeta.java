@@ -21,8 +21,8 @@ public class FieldMeta implements AliasedColumn {
   }
 
   @Override
-  public String getAlias() {
-    return field.getAlias();
+  public String getAlies() {
+    return field.getAlies();
   }
 
   @Override
