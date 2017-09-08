@@ -54,16 +54,16 @@ var resCol=new Vue({
         deleteResEvent() {
             deleteObj.del(function(){
                 var deleteId = resCol.currentValue.rowId;  //row的ID
-                resCol.$http.jsonp(delUrl, {
-                    rowId: deleteId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (ref) {
-                    resCol. searchTable();
-                    showMsg.MsgOk(resTop,ref)
-                },function(){
-                    showMsg.MsgError(resTop)
-                });
+                var data = {
+                    "url": delUrl,
+                    "jsonData": {
+                        rowId: deleteId
+                    },
+                    "obj": resTop
+                };
+                gmpAjax.showAjax(data, function (res) {
+                    resCol.searchTable();
+                })
             })
         },
         currentChange(row, event, column) {

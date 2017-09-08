@@ -45,7 +45,6 @@ var proEm = new Vue({
                                     "obj":basTop
                                 };
                                 gmpAjax.showAjax(data,function(res){
-                                    console.log(res);
                                     //分页跳回到第一页
                                     basRight.searchRight();
                                     ibcpLayer.Close(divIndex);
@@ -86,7 +85,18 @@ var proEm = new Vue({
                 //console.log(this.value_2)
             },
             getChildData_3(datas){
-                this.value_3=datas.value;
+                this.value_3 = datas.value;
+                //设置默认值
+                if (datas != "" || datas != undefined) {
+                    this.value_3 = datas.value;
+                    this.label_3 = datas.label;
+                    this.$refs.childMethod.cascaderEvent("Shanghai");
+                }
+                if(JSON.stringify(datas) === "{}") {
+                    this.$refs.childMethod.cascaderEvent("");
+                }
+
+
             },
             getChildData_4(datas){
               this.value_4=datas.value;

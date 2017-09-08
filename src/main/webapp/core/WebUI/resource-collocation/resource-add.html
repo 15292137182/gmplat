@@ -26,94 +26,13 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" size="small" @click.native="conformEvent('colForm')">保存</el-button>
+            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
         </el-col>
     </el-row>
 </div>
-<script>
-    var resAdd = new Vue({
-        el: '#addEvent',
-        data: function () {
-            return {
-                labelPosition: 'right',
-                colForm: {
-                    codeInput: '',  //键
-                    nameInput: '',  //值
-                    tableInput: '', //描述
-                    disabled: false  //开始键的内容可以写
-                },
-                rules: {
-                    codeInput: [
-                        {required: true, message: '请输入键', trigger: 'blur'},
-                        //{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                    ],
-                    nameInput: [
-                        {required: true, message: '请输入值', trigger: 'blur'}
-                    ],
-//                    tableInput: [
-//                        {required: true, message: '请输入说明', trigger: 'blur'}
-//                    ]
-                }
-            }
-
-        },
-        methods: {
-            conformEvent(formName) {
-                this.$refs[formName].validate(function (valid) {
-                    if (valid) {
-                        if (operate == 1) { //新增的时候
-                            addObj.addOk(function(){
-                                resAdd.$http.jsonp(addUrl, {
-                                    confKey: resAdd.colForm.codeInput,
-                                    confValue: resAdd.colForm.nameInput,
-                                    desp: resAdd.colForm.tableInput
-                                }, {
-                                    jsonp: 'callback'
-                                }).then(function (res) {
-                                    showMsg.MsgOk(resTop,res);
-                                    //新增的时候将搜索框清空
-                                    resCol.resInput='';
-                                    resCol.searchTable();
-                                    ibcpLayer.Close(divIndex);
-                                });
-                            },function(){
-                                showMsg.MsgError(resTop)
-                            })
-                        }
-                        if (operate == 2) {
-                            editObj.editOk(function(){
-                                resAdd.$http.jsonp(editUrl, {
-                                    //拿到这条数据的ID
-                                    rowId: resCol.currentValue.rowId,
-                                    confValue: resAdd.colForm.nameInput,
-                                    desp: resAdd.colForm.tableInput
-                                }, {
-                                    jsonp: 'callback'
-                                }).then(function (res) {
-
-                                    showMsg.MsgOk(resTop,res);
-                                    //编辑的时候将搜索框清空
-                                    resCol.resInput='';
-                                    resCol.searchTable();
-                                    ibcpLayer.Close(divIndex);
-                                });
-                            },function(){
-                                showMsg.MsgError(resTop)
-                            })
-                        }
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            cancel() {
-                ibcpLayer.Close(divIndex);
-            }
-        }
-    })
-</script>
+<script src="resource-add.js"> </script>
 </body>
 </html>

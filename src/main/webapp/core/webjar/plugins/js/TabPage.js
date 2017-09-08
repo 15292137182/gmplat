@@ -473,9 +473,10 @@ var gmpAjax = (function(){
         var data = dataJson;
         $.ajax({
             url:data.url,
-            type:"get",
+            type:"post",
             data:data.jsonData,
-            dataType:"jsonp",
+            xhrFields: {withCredentials: true},
+            dataType:"json",
             success:function(res){
                 if(res.resp.content.state==1){
                     if (typeof callback == "function") {
