@@ -668,6 +668,29 @@ var TableKeyValueSet = (function(){
     }
 })()
 
+//测试代码
+var index = 0;
+var getSelectData = function(){
+    if(index==0){
+        var obj = {arr1:[{
+            value: 'id1',
+            label: '测试Value'
+        },{
+            value: 'id2',
+            label: '测试Value1'
+        }]}
+    }else{
+        var obj ={arr2:[{
+            value: 'ids1',
+            label: '测试V'
+        },{
+            value: 'ids2',
+            label: '测试V1'
+        }]}
+    }
+        index++;
+        return obj;
+}
 
 //动态加载html代码片段
 var DynamicStitching = (function(){
@@ -676,13 +699,7 @@ var DynamicStitching = (function(){
     var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit"></el-button><el-button type="text" size="small" icon="delete"></el-button></template></el-table-column>';
     var dataHtmlObj = null;//用来保存vue实例对象
     var formObj = {//form表单对象
-        options: [{
-            value: '测试Code',
-            label: '测试Value'
-        },{
-            value: '测试Code1',
-            label: '测试Value1'
-        }]
+        a:false
     };
     var tableObjArr = [];
     var searchObj = {//父组件属性
@@ -699,6 +716,9 @@ var DynamicStitching = (function(){
     var searchBlock = function(obj){//动态拼接查询块html代码片段
         var str='';
         var width = obj.widthSetting;
+        if(width==''){
+            width="24";
+        }
         // var keywordOne = obj.keywordOne;
         // var keywordTwo = obj.keywordTwo;
         // var keywordThree = obj.keywordThree;
@@ -734,16 +754,22 @@ var DynamicStitching = (function(){
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case "select-base"://下拉框
-                formBlockArr.push(obj.ename);//存单行文本框key值的数组
+                formBlockArr.push(obj.ename);//存下拉框key值的数组
                 formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var op =getSelectData();
+                var keys
+                for( keys in op){
+                    formObj[keys]=op[keys];
+                }
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="'+model+'" placeholder="请选择"><el-option v-for="item in childFormTable.options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select></el-form-item></el-col></el-row>';
+                var options ="item in childFormTable."+keys;
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="'+model+'" placeholder="请选择" :disabled="childFormTable.a"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框
                 formBlockArr.push(obj.ename);//存单行文本框key值的数组
                 formObj[obj.ename]='';//创建表单对象属性，名字为key名
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox data="'+obj.ename+'"  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
                 break;
             case "radio"://单选框
                 formBlockArr.push(obj.ename);//存单行文本框key值的数组
@@ -821,7 +847,6 @@ var DynamicStitching = (function(){
             data:{funcCode:arr},
             dataType:"jsonp",
             success:function(res){
-                console.log(res.resp.content.data.result);
                 var data = res.resp.content.data.result;
                 var arr = [];
                 for(var i=0;i<data.length;i++){
@@ -860,6 +885,7 @@ var GmpTable = (function(){
 
 //表单对象
 var GmpForm = (function(){
+    var data = {};
     //初始化
     var init = function(json){
         var obj = {
@@ -877,7 +903,6 @@ var GmpForm = (function(){
     var getData = function(){
         var arr = DynamicStitching.formBlockArr;
         var formObj = DynamicStitching.formObj;
-        var data = {};
         for(var i=0;i<arr.length;i++){
             if(formObj[arr[i]] instanceof Date){
                 var date = new Date(formObj[arr[i]]);
@@ -897,9 +922,34 @@ var GmpForm = (function(){
         }
         return data;
     }
+    //修改表单加载数据
+    var loadData = function(jsonData){
+        data = jsonData;
+        for(var key in jsonData){
+            DynamicStitching.formObj[key] = jsonData[key];
+        }
+    }
+    //获取表单域中控件的对象
+    var getItem = function(key){
+        var select = "[data="+key+"]";
+        var domObj = $(select);
+        return domObj;
+    }
+    //获取表单域中控件的值
+    var getItemValue = function(key){
+        return DynamicStitching.formObj[key]
+    }
+    //设置表单域中控制的值
+    var setItemValue = function(key,value){
+        DynamicStitching.formObj[key] = value;
+    }
     return {
         init:init,
-        getData:getData
+        getData:getData,
+        loadData:loadData,
+        getItem:getItem,
+        getItemValue:getItemValue,
+        setItemValue:setItemValue
     }
 })()
 
