@@ -1,20 +1,12 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.entity.FrontFunc;
-import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
-import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,7 +73,7 @@ public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
      * @param request request请求
      * @param locale  国际化参数
      */
-    @RequestMapping("/delete")
+    /*@RequestMapping("/delete")
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
             List<FrontFuncPro> funcRowId = frontFuncProService
@@ -91,10 +83,10 @@ public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
                 List<String> rowIds = funcRowId.stream().map((row) -> (String) row.getRowId()).collect(Collectors.toList());
                 List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
             }
-            return /*deleteByIds(request, locale, rowId)*/ null;
+            return *//*deleteByIds(request, locale, rowId)*//* null;
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-    }
+    }*/
 
 
 
@@ -105,14 +97,14 @@ public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
      * @param locale
      * @return
      */
-    @RequestMapping("/queryFuncCode")
+    /*@RequestMapping("/queryFuncCode")
     public Object queryFuncCode(String funcCode, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(funcCode)) {
             List list = UtilsTool.jsonToObj(funcCode, List.class);
             return super.result(request, PlatResult.Msg(frontFuncService.queryFuncCode(list)), locale);
         }
         return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-    }
+    }*/
 
 
 

@@ -1,12 +1,8 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.service.TemplateObjectProService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -18,21 +14,11 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  * @author Wen TieHu
  * @version 1.0
  * <pre> Histroy:
- *                2017/8/28  Wen TieHu Create
- *          </pre>
+ * 2017/8/28  Wen TieHu Create
+ * </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
-public class TemplateObjectProController extends BaseController/*<TemplateObjectProService>*/ {
-
-  /**
-   * 参与空格查询的字段
-   *
-   * @return 返回
-   */
-  protected List<String> blankSelectFields() {
-    return Arrays.asList("code", "cname", "ename");
-  }
-
+public class TemplateObjectProController extends BaseController {
 
 }

@@ -2,28 +2,21 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.TemplateObject;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
-import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.TemplateObjectProService;
-import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static com.bcx.plat.core.utils.UtilsTool.*;
+import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 
 /**
  * Title: TemplateObjectController</p>
@@ -37,33 +30,16 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
-public class TemplateObjectController extends BaseController/*<TemplateObjectService> */{
-
-  private final TemplateObjectProService templateObjectProService;
+public class TemplateObjectController extends BaseController {
 
   @Autowired
-  public TemplateObjectController(TemplateObjectProService templateObjectProService) {
-    this.templateObjectProService = templateObjectProService;
-  }
+  private TemplateObjectProService templateObjectProService;
 
-  /**
-   * @return 需要参与参与 空格查询 的字段
-   */
-  protected List<String> blankSelectFields() {
-    return Arrays.asList("templateCode", "templateCode", "templateName");
-  }
-
-  /**
-   * 查询模版对象子表，必须传入模版对象的 rowId,否则将返回空的信息
-   *
-   * @param search   按照空格查询
-   * @param pageNum  当前第几页
-   * @param pageSize 一页显示多少条
-   * @param request  request请求
-   * @param locale   国际化参数
-   * @return PlatResult
-   */
   @RequestMapping("/queryProPage")
+  public PlatResult queryPropertiesPage(String blankSearch) {
+    return PlatResult.success(null);
+  }
+  /*
   public Object queryProPage(String rowId,
                              String search,
                              @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
@@ -88,7 +64,7 @@ public class TemplateObjectController extends BaseController/*<TemplateObjectSer
       }
     }
     return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-  }
+  }*/
 
   /**
    * 查询信息
@@ -143,7 +119,7 @@ public class TemplateObjectController extends BaseController/*<TemplateObjectSer
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(@RequestParam Map<String,String> param, HttpServletRequest request, Locale locale) {
+  public Object insert(@RequestParam Map<String, String> param, HttpServletRequest request, Locale locale) {
     return /*super.insert(new TemplateObject().fromMap(param), request, locale)*/ null;
   }
 

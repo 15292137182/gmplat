@@ -2,27 +2,22 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.*;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.DBTableColumn;
+import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.TemplateObjectProService;
-import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -96,7 +91,7 @@ public class FrontFuncProController extends
      * @param locale  国际化参数
      * @return 返回serviceResult
      */
-    @RequestMapping("/queryPro")
+    /*@RequestMapping("/queryPro")
     public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
 
@@ -113,7 +108,7 @@ public class FrontFuncProController extends
         }
         return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 
-    }
+    }*/
 
 
     /**
@@ -126,7 +121,7 @@ public class FrontFuncProController extends
      * @param locale   国际化参数
      * @return PlatResult
      */
-    @RequestMapping("/queryProPage")
+    /*@RequestMapping("/queryProPage")
     public Object singleInputSelect(String rowId, String search,
                                     @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
@@ -143,7 +138,7 @@ public class FrontFuncProController extends
             return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
         }
         return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-    }
+    }*/
 
 
     /**

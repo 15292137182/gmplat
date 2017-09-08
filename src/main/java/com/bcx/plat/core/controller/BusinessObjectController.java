@@ -1,26 +1,8 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.entity.BusinessRelateTemplate;
-import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.service.BusinessObjectService;
-import com.bcx.plat.core.service.BusinessRelateTemplateService;
-import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -32,7 +14,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObj")
 public class BusinessObjectController extends BaseController/*<BusinessObjectService>*/ {
 
-  private final BusinessObjectService businessObjectService;
+  /*private final BusinessObjectService businessObjectService;
   private final BusinessRelateTemplateService businessRelateTemplateService;
 
   @Autowired
@@ -41,20 +23,20 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
     this.businessRelateTemplateService = businessRelateTemplateService;
   }
 
- /* @Override*/
+ *//* @Override*//*
   protected List<String> blankSelectFields() {
     return Arrays.asList("objectCode", "objectName");
   }
 
 
-  /**
+  *//**
    * 通用新增方法
    *
    * @param businessObject 接受一个实体参数
    * @param request        request请求
    * @param locale         国际化参数
    * @return
-   */
+   *//*
   @RequestMapping("/add")
   public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     BusinessRelateTemplate brt = new BusinessRelateTemplate();
@@ -79,14 +61,14 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
     }
   }
 
-  /**
+  *//**
    * 根据业务对象rowId查询当前数据
    *
    * @param rowId   唯一标识
    * @param request request请求
    * @param locale  国际化参数
    * @return PlatResult
-   */
+   *//*
   @RequestMapping("/queryById")
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
@@ -95,7 +77,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
     return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
   }
 
-  /**
+  *//**
    * 查询业务对象全部数据并分页显示
    *
    * @param search   按照空格查询
@@ -104,7 +86,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
    * @param request  request请求
    * @param locale   国际化参数
    * @return PlatResult
-   */
+   *//*
   @RequestMapping("/queryPage")
   public Object singleInputSelect(String search,
                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
@@ -116,7 +98,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
   }
 
 
-  /**
+  *//**
    * 根据业务对象rowId查找当前对象下的所有属性并分页显示
    *
    * @param search   按照空格查询
@@ -125,7 +107,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
    * @param request  request请求
    * @param locale   国际化参数
    * @return PlatResult
-   */
+   *//*
   @RequestMapping("/queryProPage")
   public Object queryProPage(String rowId, String search,
                              @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
@@ -141,14 +123,14 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
   }
 
 
-  /**
+  *//**
    * 执行变更操作
    *
    * @param rowId   业务对象rowId
    * @param request request请求
    * @param locale  国际化参数
    * @return serviceResult
-   */
+   *//*
   @RequestMapping("/changeOperat")
   public Object changeOperat(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
@@ -162,14 +144,14 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
   }
 
 
-  /**
+  *//**
    * 判断当前业务对象下是否有业务对象属性数据,有就全部删除
    *
    * @param rowId   业务对象rowId
    * @param request request请求
    * @param locale  国际化参数
    * @return serviceResult
-   */
+   *//*
   @RequestMapping("/delete")
   public Object delete(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
@@ -179,7 +161,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
     }
   }
 
-  /**
+  *//**
    * 根据业务对象唯一标识查询出业务关联模板属性的信息
    *
    * @param rowId
@@ -187,7 +169,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
    * @param request
    * @param locale
    * @return
-   */
+   *//*
   @RequestMapping("/queryTemplatePro")
   public Object queryTemplate(String rowId, String order, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
@@ -197,7 +179,7 @@ public class BusinessObjectController extends BaseController/*<BusinessObjectSer
       logger.error("查询出业务关联模板属性失败");
       return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }
-  }
+  }*/
 
 
 //    /**

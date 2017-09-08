@@ -7,14 +7,15 @@ package com.bcx.plat.core.constants;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                2017/8/27  Wen TieHu Create
  *          </pre>
  */
 public class SysMessage {
-    public static final String SERVICE_RESPONSE_SUCCESSFUL="服务响应成功";
-    public static final String SERVICE_RESPONSE_SUCCESSFUL_CODE="000";
-    public static final String SERVICE_RESPONSE_FAILED ="服务响应失败";
-    public static final String SERVICE_RESPONSE_FAILED_CODE ="001";
+
+  public static final String SERVICE_RESPONSE_SUCCESSFUL = "服务响应成功";
+  public static final String SERVICE_RESPONSE_SUCCESSFUL_CODE = "000";
+  public static final String SERVICE_RESPONSE_FAILED = "服务响应失败";
+  public static final String SERVICE_RESPONSE_FAILED_CODE = "001";
 
 }

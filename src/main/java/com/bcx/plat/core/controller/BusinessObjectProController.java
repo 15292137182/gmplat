@@ -1,24 +1,14 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
-import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -55,7 +45,7 @@ public class BusinessObjectProController extends
      * @param locale   国际化参数
      * @return PlatResult
      */
-    @RequestMapping("/queryById")
+    /*@RequestMapping("/queryById")
     public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
 //        String attrSource = request.getParameter("attrSource");//属性来源
 //        attrSource =attrSource.equals("")?BaseConstants.ATTRIBUTE_SOURCE_BASE:BaseConstants.ATTRIBUTE_SOURCE_MODULE;
@@ -65,7 +55,7 @@ public class BusinessObjectProController extends
             return super.result(request, PlatResult.Msg(businessObjectProService.queryById(rowId)), locale);
         }
 
-    }
+    }*/
 
     /**
      * 供前端功能块属性使用
@@ -96,16 +86,16 @@ public class BusinessObjectProController extends
      * @param locale  国际化参数
      * @return serviceResult
      */
-    @RequestMapping("/delete")
+    /*@RequestMapping("/delete")
     public Object delete(String rowId, HttpServletRequest request, Locale locale) {
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
         if (frontFuncPros.size() == 0) {
-/*
+*//*
             return super.deleteByIds(request,locale,rowId);
-*/
+*//*
 return null;
         }else{
             return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }
-    }
+    }*/
 }

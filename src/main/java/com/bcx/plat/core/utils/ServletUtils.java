@@ -1,6 +1,11 @@
 package com.bcx.plat.core.utils;
 
 import com.bcx.plat.core.constants.Global;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Locale;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -37,7 +42,33 @@ public class ServletUtils {
         }
       }
     }
-
     return false;
+  }
+
+  /**
+   * 获取国际化信息
+   *
+   * @param messageKey 国际化信息的 key
+   * @param params     参数(如果需要)
+   * @return 返回
+   */
+  protected static String getMessage(String messageKey, String... params) {
+    String message = null;
+    try {
+      // 获取当前的国际化语言
+      String languageTag = String.valueOf(
+              ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                      .getRequest()
+                      .getAttribute("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE"));
+      Locale locale = Locale.forLanguageTag(languageTag);
+      ResourceBundleMessageSource messageSource = SpringContextHolder.getBean(ResourceBundleMessageSource.class);
+      message = messageSource.getMessage(messageKey, params, locale);
+    } catch (RuntimeException e) {
+      e.printStackTrace();
+    }
+    if (null != message) {
+      return message;
+    }
+    return messageKey;
   }
 }

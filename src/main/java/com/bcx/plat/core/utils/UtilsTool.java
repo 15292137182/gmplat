@@ -260,14 +260,14 @@ public class UtilsTool {
     return sb.toString();
   }
 
-  public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass,Map<String, Object> args){
+  public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
     AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       final Object value = entry.getValue();
       if (value instanceof Collection) {
         conditionBuilder.in(entry.getKey(), (Collection) value);
       } else {
-        conditionBuilder.equal(entry.getKey(),value);
+        conditionBuilder.equal(entry.getKey(), value);
       }
     }
     return (And) conditionBuilder.endAnd().buildDone();
@@ -312,6 +312,7 @@ public class UtilsTool {
       return out;
     }).collect(Collectors.toList());
   }
+
   public static And excludeDeleted(Condition condition) {
     return new And(new Or(new FieldCondition("delete_flag", Operator.EQUAL, BaseConstants.NOT_DELETE_FLAG),
             new FieldCondition("delete_flag", Operator.IS_NULL, null)), condition);
@@ -324,7 +325,7 @@ public class UtilsTool {
    * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__为倒序
    * @return linkedList参数
    */
-  static public LinkedList<Order> dataSort(String order) {
+  public static LinkedList<Order> dataSort(String order) {
     LinkedList<Order> orders = new LinkedList<>();
     if (order == null) {
       return orders;
