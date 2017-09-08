@@ -21,132 +21,132 @@ public abstract class ChainConditionBuilder<CONDITION extends ChainCondition<CON
 
   //许多条件放这里 记得返回当前节点的类型
 
-  public CURRENT_NODE equal(Class<? extends BeanInterface> entityClass, String alias, Object value) {
+  public CURRENT_NODE equal(Class<? extends BeanInterface> entityClass,String alies, Object value) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.EQUAL, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.EQUAL, value));
   }
 
-  public CURRENT_NODE equal(String alias, Object value){
-    return equal(conditionBuilderContext.getClz(), alias,value);
+  public CURRENT_NODE equal(String alies, Object value){
+    return equal(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE in(Class<? extends BeanInterface> entityClass, String alias, Collection value) {
+  public CURRENT_NODE in(Class<? extends BeanInterface> entityClass,String alies, Collection value) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.IN, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IN, value));
   }
 
-  public CURRENT_NODE in(String alias, Collection value) {
-    return in(conditionBuilderContext.getClz(), alias,value);
+  public CURRENT_NODE in(String alies, Collection value) {
+    return in(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE between(Class<? extends BeanInterface> entityClass, String alias, Object rangeStart, Object rangeEnd) {
+  public CURRENT_NODE between(Class<? extends BeanInterface> entityClass,String alies, Object rangeStart, Object rangeEnd) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.BETWEEN,
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.BETWEEN,
             new Object[]{rangeStart, rangeEnd}));
   }
 
-  public CURRENT_NODE between(String alias, Object rangeStart, Object rangeEnd){
-    return between(conditionBuilderContext.getClz(), alias,rangeStart,rangeEnd);
+  public CURRENT_NODE between(String alies, Object rangeStart, Object rangeEnd){
+    return between(conditionBuilderContext.getClz(),alies,rangeStart,rangeEnd);
   }
 
-  public CURRENT_NODE like(Class<? extends BeanInterface> entityClass, String alias, String value) {
+  public CURRENT_NODE like(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.LIKE_FULL, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_FULL, value));
   }
 
-  public CURRENT_NODE like(String alias, String value) {
-    return like(conditionBuilderContext.getClz(), alias,value);
+  public CURRENT_NODE like(String alies, String value) {
+    return like(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE endWith(Class<? extends BeanInterface> entityClass, String alias, String value) {
+  public CURRENT_NODE endWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.LIKE_LEFT, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_LEFT, value));
   }
 
-  public CURRENT_NODE endWith(String alias, String value) {
-    return endWith(conditionBuilderContext.getClz(), alias,value);
+  public CURRENT_NODE endWith(String alies, String value) {
+    return endWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE startWith(Class<? extends BeanInterface> entityClass, String alias, String value) {
+  public CURRENT_NODE startWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.LIKE_RIGHT, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_RIGHT, value));
   }
 
-  public CURRENT_NODE startWith(String alias, String value) {
-    return startWith(conditionBuilderContext.getClz(), alias,value);
+  public CURRENT_NODE startWith(String alies, String value) {
+    return startWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE isNull(Class<? extends BeanInterface> entityClass,String alias) {
+  public CURRENT_NODE isNull(Class<? extends BeanInterface> entityClass,String alies) {
     return addCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.IS_NULL, null));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IS_NULL, null));
   }
 
-  public CURRENT_NODE isNull(String alias) {
-    return isNull(conditionBuilderContext.getClz(), alias);
+  public CURRENT_NODE isNull(String alies) {
+    return isNull(conditionBuilderContext.getClz(),alies);
   }
 
-  public CURRENT_NODE notEqual(Class<? extends BeanInterface> entityClass, String alias, Object value) {
+  public CURRENT_NODE notEqual(Class<? extends BeanInterface> entityClass,String alies, Object value) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass, alias), Operator.EQUAL, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.EQUAL, value));
   }
 
-  public CURRENT_NODE notEqual(String alias, Object value) {
-    return notEqual(conditionBuilderContext.getClz(),alias,value);
+  public CURRENT_NODE notEqual(String alies, Object value) {
+    return notEqual(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notIn(Class<? extends BeanInterface> entityClass,String alias, Collection value) {
+  public CURRENT_NODE notIn(Class<? extends BeanInterface> entityClass,String alies, Collection value) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass,alias), Operator.IN, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IN, value));
   }
 
-  public CURRENT_NODE notIn(String alias, Collection value) {
-    return notIn(conditionBuilderContext.getClz(),alias,value);
+  public CURRENT_NODE notIn(String alies, Collection value) {
+    return notIn(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notBetween(Class<? extends BeanInterface> entityClass,String alias, Object rangeStart, Object rangeEnd) {
+  public CURRENT_NODE notBetween(Class<? extends BeanInterface> entityClass,String alies, Object rangeStart, Object rangeEnd) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass,alias), Operator.BETWEEN,
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.BETWEEN,
             new Object[]{rangeStart, rangeEnd}));
   }
 
-  public CURRENT_NODE notBetween(String alias, Object rangeStart, Object rangeEnd) {
-    return notBetween(conditionBuilderContext.getClz(),alias,rangeStart,rangeEnd);
+  public CURRENT_NODE notBetween(String alies, Object rangeStart, Object rangeEnd) {
+    return notBetween(conditionBuilderContext.getClz(),alies,rangeStart,rangeEnd);
   }
 
-  public CURRENT_NODE notLike(Class<? extends BeanInterface> entityClass,String alias, String value) {
+  public CURRENT_NODE notLike(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass,alias), Operator.LIKE_FULL, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_FULL, value));
   }
 
-  public CURRENT_NODE notLike(String alias, String value) {
-    return notLike(conditionBuilderContext.getClz(),alias,value);
+  public CURRENT_NODE notLike(String alies, String value) {
+    return notLike(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notEndWith(Class<? extends BeanInterface> entityClass,String alias, String value) {
+  public CURRENT_NODE notEndWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass,alias), Operator.LIKE_LEFT, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_LEFT, value));
   }
 
-  public CURRENT_NODE notEndWith(String alias, String value) {
-    return notEndWith(conditionBuilderContext.getClz(),alias,value);
+  public CURRENT_NODE notEndWith(String alies, String value) {
+    return notEndWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notStartWith(Class<? extends BeanInterface> entityClass,String alias, String value) {
+  public CURRENT_NODE notStartWith(Class<? extends BeanInterface> entityClass,String alies, String value) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass,alias), Operator.LIKE_RIGHT, value));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.LIKE_RIGHT, value));
   }
 
-  public CURRENT_NODE notStartWith(String alias, String value) {
-    return notStartWith(conditionBuilderContext.getClz(),alias,value);
+  public CURRENT_NODE notStartWith(String alies, String value) {
+    return notStartWith(conditionBuilderContext.getClz(),alies,value);
   }
 
-  public CURRENT_NODE notNull(Class<? extends BeanInterface> entityClass,String alias) {
+  public CURRENT_NODE notNull(Class<? extends BeanInterface> entityClass,String alies) {
     return addNotCondition(
-        new FieldCondition(moreBatis.getColumnByAlias(entityClass,alias), Operator.IS_NULL, null));
+        new FieldCondition(moreBatis.getColumnByAlies(entityClass,alies), Operator.IS_NULL, null));
   }
 
-  public CURRENT_NODE notNull(String alias) {
-    return notNull(conditionBuilderContext.getClz(),alias);
+  public CURRENT_NODE notNull(String alies) {
+    return notNull(conditionBuilderContext.getClz(),alies);
   }
 
   public AndConditionBuilder<CURRENT_NODE> and() {

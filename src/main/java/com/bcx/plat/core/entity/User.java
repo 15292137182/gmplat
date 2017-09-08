@@ -10,8 +10,10 @@ import com.bcx.plat.core.morebatis.annotations.TablePK;
  *
  * Create By HCL at 2017/8/17
  */
+@Table(TableInfo.T_SYS_USER)
 public class User extends BaseEntity<User> {
 
+  @TablePK
   private String rowId;
 
   private String id;

@@ -204,7 +204,7 @@ public class SequenceRuleConfigController extends BaseController<SequenceRuleCon
   public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
     if (UtilsTool.isValid(rowId)) {
       List<Map> mapLists = getService().selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
-      List<SequenceGenerate> generates = sequenceGenerateService.selectEntity(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
+      List<SequenceGenerate> generates = sequenceGenerateService.select(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
       SequenceGenerate generate = generates.get(0);
       for (Map<String, Object> mapList : mapLists) {
         mapList.put("currentValue", generate.getCurrentValue());

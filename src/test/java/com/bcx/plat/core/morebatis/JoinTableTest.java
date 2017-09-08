@@ -7,9 +7,12 @@ import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.KeySet;
 import com.bcx.plat.core.entity.KeySetPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.JoinTable;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import java.util.List;
@@ -54,15 +57,15 @@ public class JoinTableTest extends BaseTest {
 
   @Test
   public void innerJoinTest() {
-    QueryAction joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"))
+    QueryAction joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))
         .from(new JoinTable(moreBatis.getTable(BusinessObject.class), JoinType.INNER_JOIN,
             moreBatis.getTable(BusinessObjectPro.class))
 //    new FieldCondition(Fields.T_BUSINESS_OBJECT.ROW_ID
-            .on(new FieldCondition(moreBatis.getColumnByAlias(BusinessObject.class,"rowId"), Operator.EQUAL,
-                moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"))))
+            .on(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL,
+                moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))))
                 //T_BUSINESS_OBJECT_PRO.OBJ_ROW_ID
 
-        .where(new FieldCondition(moreBatis.getColumnByAlias(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId));
+        .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId));
 //        .groupBy(Fields.T_BUSINESS_OBJECT_PRO.ROW_ID);
     List<Map<String, Object>> result = joinTableTest.execute();
     Assert.assertEquals(5, result.size());
@@ -70,7 +73,7 @@ public class JoinTableTest extends BaseTest {
   @Test
   public void smogTest() {
     QueryAction joinTableTest = moreBatis.select(KeySet.class,KeySetPro.class,"rowId","relateKeysetRowId")
-        .where(new FieldCondition(moreBatis.getColumnByAlias(KeySet.class,"keysetCode"), Operator.EQUAL, "124"));
+        .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class,"keysetCode"), Operator.EQUAL, "124"));
     List<Map<String, Object>> result = joinTableTest.execute();
   }
 
@@ -78,13 +81,13 @@ public class JoinTableTest extends BaseTest {
   public void groupByTest() {
     QueryAction joinTableTest;
     List<Map<String, Object>> result;
-    joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"))
+    joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))
         .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
             TableInfo.T_BUSINESS_OBJECT_PRO)
-            .on(new FieldCondition(moreBatis.getColumnByAlias(BusinessObject.class,"rowId"), Operator.EQUAL,
-                moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"))))
-        .where(new FieldCondition(moreBatis.getColumnByAlias(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId))
-        .groupBy(moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"));
+            .on(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL,
+                moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"))))
+        .where(new FieldCondition(moreBatis.getColumnByAlies(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId))
+        .groupBy(moreBatis.getColumnByAlies(BusinessObjectPro.class,"objRowId"));
     result = joinTableTest.execute();
     Assert.assertEquals(1, result.size());
   }
