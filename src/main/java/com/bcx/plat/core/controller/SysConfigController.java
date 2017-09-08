@@ -60,9 +60,8 @@ public class SysConfigController extends BaseController<SysConfigService> {
    * @return 返回操作信息
    */
   @RequestMapping(value = "/add" ,method = POST)
-  public Object insert(HttpServletRequest request, Locale locale) {
-    Map<String, String[]> parameterMap = request.getParameterMap();
-    SysConfig sysConfig = new SysConfig().fromMap(parameterMap);
+  public Object insert(@RequestParam Map<String,Object> param, HttpServletRequest request, Locale locale) {
+    SysConfig sysConfig = new SysConfig().fromMap(param);
     return super.insert(sysConfig, request, locale);
   }
 

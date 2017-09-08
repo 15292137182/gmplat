@@ -48,7 +48,7 @@ public class KeySetService extends BaseService<KeySet> {
       List<Object> lists = new ArrayList<>();
       lists.add(li);
       QueryAction joinTableTest = moreBatis.select(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", JoinType.LEFT_JOIN)
-              .where(new FieldCondition(moreBatis.getColumnByAlies(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
+              .where(new FieldCondition(moreBatis.getColumnByAlias(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
       List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(joinTableTest.execute());
       maps.put(li, list1);
       if (maps.size() == 0) {
