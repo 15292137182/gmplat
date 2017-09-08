@@ -33,7 +33,7 @@
         <el-row>
             <el-col :span="15">
                 <el-form-item label="内容">
-                    <el-input v-model="formTable.seqContentInput" :disabled="true"></el-input>
+                    <el-input v-model="formTable.seqContentInput"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="5" style="margin-left: 10px">
@@ -171,7 +171,8 @@
                  </el-col>
              </el-row>
          </div>-->
-        <div :is="item.component" v-for="(item, index) in items" :key="item.key" :prop="index"></div>
+
+        <div :is="item.component" v-for="(item, index) in items" :prop="index" :key="item.key" @on-blur="getData"></div>
 
         <el-row type="flex" class="row-bg">
             <el-col :span="10">
