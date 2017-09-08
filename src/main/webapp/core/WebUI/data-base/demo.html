@@ -41,7 +41,7 @@
         var code = ["obj102017-08-31000001","obj102017-09-01000002","obj102017-09-04000001"];
         var strHtml='';
         DynamicStitching.htmlComponent(code,function(arr){//获取动态html组件
-             strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
+            strHtml = DynamicStitching.Concatenation(arr);//得到动态html片段对象
             var de = new Vue({
                 el: "#app",
                 data:DynamicStitching.searchSelect(),//获取父组件数据

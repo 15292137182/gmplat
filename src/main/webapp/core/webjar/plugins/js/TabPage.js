@@ -669,14 +669,40 @@ var TableKeyValueSet = (function(){
     }
 })()
 
+//测试代码
+var index = 0;
+var getSelectData = function(){
+    if(index==0){
+        var obj = {arr1:[{
+            value: 'id1',
+            label: '测试Value'
+        },{
+            value: 'id2',
+            label: '测试Value1'
+        }]}
+    }else{
+        var obj ={arr2:[{
+            value: 'ids1',
+            label: '测试V'
+        },{
+            value: 'ids2',
+            label: '测试V1'
+        }]}
+    }
+        index++;
+        return obj;
+}
 
 //动态加载html代码片段
 var DynamicStitching = (function(){
     var searchBlockArr = [];//查询块输入框key值集合
-    var formBlockArr = [];//表单块单行文本框key值集合
-    var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small">查看</el-button><el-button type="text" size="small">编辑</el-button></template></el-table-column>';
+    var formBlockArr = [];//表单块key值集合
+    var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit"></el-button><el-button type="text" size="small" icon="delete"></el-button></template></el-table-column>';
     var dataHtmlObj = null;//用来保存vue实例对象
-    var formObj = {};
+    var formObj = {//form表单对象
+        a:false
+    };
+    var tableObjArr = [];
     var searchObj = {//父组件属性
         select:'',
         click:function(){//父组件查询块按钮事件
@@ -691,14 +717,20 @@ var DynamicStitching = (function(){
     var searchBlock = function(obj){//动态拼接查询块html代码片段
         var str='';
         var width = obj.widthSetting;
-        var keywordOne = obj.keywordOne;
-        var keywordTwo = obj.keywordTwo;
-        var keywordThree = obj.keywordThree;
+        if(width==''){
+            width="24";
+        }
+        // var keywordOne = obj.keywordOne;
+        // var keywordTwo = obj.keywordTwo;
+        // var keywordThree = obj.keywordThree;
+        var keywordOne = "关键字1";
+        var keywordTwo = "关键字2";
+        var keywordThree = "关键字3";
         searchBlockArr.push(obj.ename);//存搜索框key值的数组
         searchObj[obj.ename]='';//创建搜索框对象属性，名字为key名
         var model = "searchInput." + obj.ename;//绑定v-model数据
         // str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="searchInput.input5"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
-        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label=keywordTwo value="2"></el-option><el-option label=keywordThree value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label='+keywordTwo+' value="2"></el-option><el-option label='+keywordThree+' value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
         return str;
     }
     //表单块
@@ -717,27 +749,50 @@ var DynamicStitching = (function(){
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case 'textarea'://多行文本框
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="childFormTable.msg"></el-input></el-form-item></el-col></el-row>'
+                formBlockArr.push(obj.ename);//存单行文本框key值的数组
+                formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case "select-base"://下拉框
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
+                formBlockArr.push(obj.ename);//存下拉框key值的数组
+                formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var op =getSelectData();
+                var keys
+                for( keys in op){
+                    formObj[keys]=op[keys];
+                }
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var options ="item in childFormTable."+keys;
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="'+model+'" placeholder="请选择" :disabled="childFormTable.a"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框
-                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox>复选框</el-checkbox></el-form-item></el-col></el-row>';
+                formBlockArr.push(obj.ename);//存单行文本框key值的数组
+                formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox data="'+obj.ename+'"  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
                 break;
             case "radio"://单选框
-                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
+                formBlockArr.push(obj.ename);//存单行文本框key值的数组
+                formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio v-model="'+model+'" class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
                 break;
             case "date"://日期框
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
+                formBlockArr.push(obj.ename);//存单行文本框key值的数组
+                formObj[obj.ename]='';//创建表单对象属性，名字为key名
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker v-model="'+model+'" placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
                 break;
         }
         return str;
     }
     //列表块
     var tableBlock = function(obj){
+        tableObjArr.push(obj.ename);//存表格列key值的数组
         var title = obj.displayTitle;
-        var column ='<el-table-column prop="" label='+title+'></el-table-column>'
+        var data = obj.ename;
+        var column ='<el-table-column prop="'+data+'" label='+title+'></el-table-column>'
         return column;
     }
     var Concatenation = function(arr){//判断是什么功能块，并获取html片段
@@ -776,7 +831,7 @@ var DynamicStitching = (function(){
         }
         if(i == arr.length){//判断是否全部拼接完
             htmlObj.form ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
-            htmlObj.table='<el-table border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
+            htmlObj.table='<el-table :data="childTable.tableData" border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
         }
         return htmlObj;
     }
@@ -808,7 +863,7 @@ var DynamicStitching = (function(){
             ruleForm1:searchObj,
             formTable:formObj,
             table:{
-                tableData: []
+                tableData: [{l:"测试",test00:"demo"}]
             }
         }
     }
@@ -816,15 +871,229 @@ var DynamicStitching = (function(){
         dataHtmlObj = obj;
     }
     return {
-        htmlComponent:htmlComponent,
-        InstanceObject:InstanceObject,
-        searchSelect:searchSelect,
-        Concatenation:Concatenation,
-        formBlockArr:formBlockArr
+        htmlComponent:htmlComponent,//
+        InstanceObject:InstanceObject,//
+        searchSelect:searchSelect,//
+        Concatenation:Concatenation,//
+        formBlockArr:formBlockArr,//表单块key值集合
+        formObj:formObj//表单对象
     }
 })()
 
 
 
+//动态加载html代码片段
+var DynamicStitchings = (function(){
+    //查询块
+    var searchBlock = function(obj){//动态拼接查询块html代码片段
+        var str='';
+        var width = obj.widthSetting;
+        if(width==''){
+            width="24";
+        }
+        var keywordOne = "关键字1";
+        var keywordTwo = "关键字2";
+        var keywordThree = "关键字3";
+        var model = "searchInput." + obj.ename;//绑定v-model数据
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label='+keywordTwo+' value="2"></el-option><el-option label='+keywordThree+' value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        return str;
+    }
+    //表单块
+    var formBlock = function(obj,caseName){
+        if(obj.widthSetting){
+            var width = obj.widthSetting;
+        }else{
+            var width = 24;
+        }
+        var laberName = obj.displayTitle;
+        switch (caseName){
+            case 'input'://单行文本框
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input data="'+obj.ename+'" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
+                break;
+            case 'textarea'://多行文本框
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
+                break;
+            case "select-base"://下拉框
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
+                break;
+            case "checkbox"://复选框
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox data="'+obj.ename+'"  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
+                break;
+            case "radio"://单选框
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio v-model="'+model+'" class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
+                break;
+            case "date"://日期框
+                var model = "childFormTable." + obj.ename;//绑定v-model数据
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker v-model="'+model+'" placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
+                break;
+        }
+        return str;
+    }
+    //列表块
+    var tableBlock = function(obj){
+        var title = obj.displayTitle;
+        var data = obj.ename;
+        var column ='<el-table-column prop="'+data+'" label='+title+'></el-table-column>'
+        return column;
+    }
+    var Concatenation = function(arr){//判断是什么功能块，并获取html片段
+        var htmlObj = {
+            item : arr
+        };
+        var html = '';
+        var str = '';
+        var tableColumn=null;//table列
+        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit"></el-button><el-button type="text" size="small" icon="delete"></el-button></template></el-table-column>';
+        var i;
+        for(i=0;i<arr.length;i++){
+            var obj = arr[i];
+            if(obj.funcType =='search'){
+                htmlObj.type = obj.funcType;
+                html = searchBlock(obj);
+            }
+            if(obj.funcType =='form'){
+                htmlObj.type = obj.funcType;
+                if(obj.displayWidget=='input'){
+                    str +=formBlock(obj,'input');
+                }
+                if(obj.displayWidget=='textarea'){
+                    str +=formBlock(obj,'textarea');
+                }
+                if(obj.displayWidget=="select-base"){
+                    str +=formBlock(obj,"select-base");
+                }
+                if(obj.displayWidget=="checkbox"){
+                    str +=formBlock(obj,"checkbox");
+                }
+                if(obj.displayWidget=="radio"){
+                    str +=formBlock(obj,"radio");
+                }
+                if(obj.displayWidget=="date"){
+                    str +=formBlock(obj,"date");
+                }
+            }
+            if(obj.funcType =="grid"){
+                htmlObj.type = obj.funcType;
+                tableColumn += tableBlock(obj);
+            }
+        }
+        if(i == arr.length){//判断是否全部拼接完
+            if(obj.funcType =='form'){
+                html ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
+            }
+            if(obj.funcType =="grid"){
+                html='<el-table :data="childTable.tableData" border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
+            }
+        }
+        htmlObj.html = html;
+        return htmlObj;
+    }
+    return {
+        Concatenation:Concatenation
+    }
+})()
+//动态表单对象
+function GmpForm1(compId, blockId, formBlockItems, vueEl){
+    this.compId = compId;//父组件名字
+    this.blockId = blockId; //功能块标识
+    this.formBlockItems = formBlockItems;//表单块key值集合
 
+    this.vueEl = vueEl;     //vue el
+    this.vueObj = null;    //vue对象实例
+    this.formObj = {}; //表单数据Key : value
+}
+//获取vue实例对象
+GmpForm1.prototype.getVueObj = function(){
+    return this.vueObj;
+}
+//父组件数据
+GmpForm1.prototype.searchSelect = function(){
+    var compId = this.compId;
+    var arr = this.formBlockItems;
+    for(var j=0;j<arr.length;j++){
+        var obj =arr[j].ename;
+        this.formObj[obj] = '';
+    }
+    var obj = {
+        props:[]
+    }
+    obj[compId] = this.formObj;
+    return obj;
+}
+//构建表单组件
+GmpForm1.prototype.bulidComponent = function(exeFunction){
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
+    var that = this;
+    var id = that.vueEl;
+    var vue = new Vue({
+        el: id,
+        data:that.searchSelect(),//获取父组件数据
+        computed:{//表单组件定义
+            inputwithbtn(){//form输入框组件
+                var template= strHtml.html;
+                var props = ["childFormTable"];//子组件参数名
+                return {
+                    template,
+                    props
+                }
+            }
+        },
+        methods: {
+            // demo(){
+            //     console.log(that.getData());
+            // }
+            demo:exeFunction
+        }
+    });
+    this.vueObj = vue;
+}
 
+//获取表单数据
+GmpForm1.prototype.getData = function(){
+    var arr = this.formBlockItems;
+    var formObj = this.formObj;
+    var data = {};
+    for(var i=0;i<arr.length;i++){
+        if(formObj[arr[i].ename] instanceof Date){
+            var date = new Date(formObj[arr[i].ename]);
+            var y = date.getFullYear();
+            var m =date.getMonth()+1;
+            var d = date.getDate();
+            if( m < 10){
+                m = "0" + m;
+            }
+            if( d < 10){
+                d ="0" + d;
+            }
+            var newDate = y+"-"+m+"-"+d;
+            formObj[arr[i].ename] = newDate;
+        }
+        data[arr[i].ename]=formObj[arr[i].ename];
+    }
+    return data;
+}
+//数据直接加载表单域
+GmpForm1.prototype.loadData = function(json){
+    var formObj = this.formObj;
+    for(var key in json){
+        formObj[key] = json[key];
+    }
+}
+//获取表单域中控件的值
+GmpForm1.prototype.getItemValue = function(key){
+    return this.formObj[key];
+}
+//设置表单域中控制的值
+GmpForm1.prototype.setItemValue = function(key,value){
+    this.formObj[key] = value;
+}
+//获取表单域中控件的对象
+GmpForm1.prototype.getItem = function(key){
+    var selectDom = "[data=" +key+ "]";
+    var dom = $(selectDom).children();
+    return dom;
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
+        .el-picker-panel{
+            z-index: 999000000 !important;
+        }
+    </style>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+<div>
+    <el-row id="app">
+        <el-col :span="24">
+            <components data="first1" :is="inputwithbtn" :child-form-table="formTable"></components>
+        </el-col>
+        <el-col :span="10" offset="8">
+            <el-button type="info" @click="demo">获取json对象</el-button>
+        </el-col>
+    </el-row>
+    <el-row id="app1">
+        <el-col :span="24">
+            <components data="first1" :is="inputwithbtn" :child-form-table="formTable1"></components>
+        </el-col>
+        <el-col :span="10" offset="8">
+            <el-button data="demo" type="info" @click="demo">获取json对象1</el-button>
+        </el-col>
+    </el-row>
+</div>
+<button id="bt">click</button>
+</body>
+<script>
+    var arr = [{displayTitle:'代码',funcType:'form',displayWidget:'input',ename:'code'}];
+    var arr1 = [{displayTitle:'代码1',funcType:'form',displayWidget:'input',ename:'code1'}];
+    var obj = new GmpForm1("formTable","codeId",arr,"#app");
+    var obj1 = new GmpForm1("formTable1","codeId",arr1,"#app1");
+    obj.bulidComponent(function(){
+        var dom = obj.getItem("code");
+        console.log($(dom).val());
+    });
+    obj1.bulidComponent();
+</script>
+</html>
