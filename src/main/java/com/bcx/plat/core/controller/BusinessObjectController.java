@@ -2,7 +2,6 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.common.BaseControllerTemplate;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessRelateTemplate;
@@ -59,6 +58,7 @@ public class BusinessObjectController extends BaseController<BusinessObjectServi
   @RequestMapping("/add")
   public Object insert(BusinessObject businessObject, HttpServletRequest request, Locale locale) {
     BusinessRelateTemplate brt = new BusinessRelateTemplate();
+    businessObject.buildCreateInfo().insert();
 //    int insert = businessObjectService.insert(businessObject.buildCreateInfo().toMap());
     int insert = new BusinessObject().buildCreateInfo().insert();
     String rowId = businessObject.getRowId();
@@ -68,7 +68,7 @@ public class BusinessObjectController extends BaseController<BusinessObjectServi
       for (Object li : list) {
         brt.setBusinessRowId(rowId);
         brt.setTemplateRowId(li.toString());
-        new BusinessRelateTemplate().buildCreateInfo().insert();
+        brt.buildCreateInfo().insert();
 //        businessRelateTemplateService.insert(brt.buildCreateInfo().toMap());
       }
     }

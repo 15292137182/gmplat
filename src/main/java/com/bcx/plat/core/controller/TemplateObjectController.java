@@ -138,14 +138,13 @@ public class TemplateObjectController extends BaseController<TemplateObjectServi
   /**
    * 通用新增方法
    *
-   * @param entity  接受一个实体参数
    * @param request request请求
    * @param locale  国际化参数
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-    return super.insert(new TemplateObject().fromMap(entity), request, locale);
+  public Object insert(@RequestParam Map<String,String> param, HttpServletRequest request, Locale locale) {
+    return super.insert(new TemplateObject().fromMap(param), request, locale);
   }
 
 

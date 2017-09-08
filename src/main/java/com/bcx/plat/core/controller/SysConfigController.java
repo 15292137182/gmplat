@@ -14,6 +14,7 @@ import java.util.*;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.*;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 /**
@@ -53,14 +54,15 @@ public class SysConfigController extends BaseController<SysConfigService> {
   /**
    * 通用新增方法
    *
-   * @param entity  接受一个实体参数
+//   * @param entity  接受一个实体参数
    * @param request request请求
    * @param locale  国际化参数
    * @return 返回操作信息
    */
-  @RequestMapping("/add")
-  public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-    return super.insert(new SysConfig().fromMap(entity), request, locale);
+  @RequestMapping(value = "/add" ,method = POST)
+  public Object insert(@RequestParam Map<String,Object> param, HttpServletRequest request, Locale locale) {
+    SysConfig sysConfig = new SysConfig().fromMap(param);
+    return super.insert(sysConfig, request, locale);
   }
 
 

@@ -66,8 +66,8 @@ public class MaintDBTablesController extends BaseController<MaintDBTablesService
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-    return super.insert(new MaintDBTables().fromMap(entity), request, locale);
+  public Object insert(MaintDBTables entity, HttpServletRequest request, Locale locale) {
+    return super.insert(entity, request, locale);
   }
 
 
@@ -97,7 +97,7 @@ public class MaintDBTablesController extends BaseController<MaintDBTablesService
     AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
     if (UtilsTool.isValid(rowId)) {
       map.get().put("relateTableRowId", rowId);
-      List<BusinessObject> relateTableRowId = businessObjectService.selectEntity(new FieldCondition("relateTableRowId"
+      List<Map> relateTableRowId = businessObjectService.selectMap(new FieldCondition("relateTableRowId"
               , Operator.EQUAL, rowId));
       if (relateTableRowId.size() == 0) {
         List<Map> list = getService().selectMap(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId));
