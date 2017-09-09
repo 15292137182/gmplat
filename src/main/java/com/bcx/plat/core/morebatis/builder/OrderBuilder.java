@@ -6,7 +6,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.utils.SpringContextHolder;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 public class OrderBuilder {
     private Class<? extends BeanInterface> entityClass;
