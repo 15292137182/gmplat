@@ -50,10 +50,10 @@ public class MoreBatis {
     for (Object entry : entityEntries) {
       EntityEntry entityEntry;
       if (entry instanceof EntityEntry) {
-        entityEntry = (EntityEntry) entry;
-      } else if (entry instanceof EntityEntryBuilder) {
-        entityEntry = ((EntityEntryBuilder) entry).getEntry();
-      } else {
+        entityEntry= (EntityEntry) entry;
+      }else if(entry instanceof EntityEntryBuilder){
+        entityEntry= ((EntityEntryBuilder) entry).getEntry();
+      }else{
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
       }
       final Class<? extends BeanInterface> entryClass = entityEntry.getEntityClass();
@@ -100,15 +100,15 @@ public class MoreBatis {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alias) {
+  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alies) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
-      return entityColumn.get(alias);
+      return entityColumn.get(alies);
     } catch (NullPointerException e) {
       if (entityColumn == null) {
         throw new NullPointerException("实体类没有注册:" + entityClass.getName());
       } else {
-        throw new NullPointerException("无效的字段别名:" + alias);
+        throw new NullPointerException("无效的字段别名:" + alies);
       }
     }
   }
@@ -116,13 +116,13 @@ public class MoreBatis {
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    * @param entityClass 实体类
-   * @param alias       实体类属性名称
+   * @param alies       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alias) {
+  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alies) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
-      return entityColumn.get(alias);
+      return entityColumn.get(alies);
     } catch (NullPointerException e) {
       throw new NullPointerException("实体类没有注册:" + entityClass.getName());
     }
@@ -131,21 +131,21 @@ public class MoreBatis {
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    * @param entityClass 实体类
-   * @param alias       实体类属性名称
+   * @param alies       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alias) {
+  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alies) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     final LinkedList<Field> result = new LinkedList<>();
     try {
-      for (String aly : alias) {
+      for (String aly : alies) {
         result.add(entityColumn.get(aly));
       }
     } catch (NullPointerException e) {
       if (entityColumn == null) {
         throw new NullPointerException("实体类没有注册:" + entityClass.getName());
       } else {
-        throw new NullPointerException("无效的字段别名:" + alias);
+        throw new NullPointerException("无效的字段别名:" + alies);
       }
     }
     return result;
@@ -209,7 +209,6 @@ public class MoreBatis {
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
-
   /**
    * 根据主键更新一个实体类
    * @param entity  要更新的实体类
@@ -252,7 +251,6 @@ public class MoreBatis {
             .collect(Collectors.toList());
     return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
   }
-
 
   /**
    * 根据主键查找对象
