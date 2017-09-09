@@ -6,6 +6,7 @@ import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
 import com.bcx.plat.core.utils.UtilsTool;
 
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,11 +17,39 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
 
     Collection<String> pks;
 
+    public DefaultEntryBuilder() {
+    }
+
     public DefaultEntryBuilder(Class entityClass, String tableName, Collection<String> pks) {
         this.entityClass = entityClass;
         this.tableName = tableName;
         this.pks = pks;
     }
+
+    public Class getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(Class entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public Collection<String> getPks() {
+        return pks;
+    }
+
+    public void setPks(Collection<String> pks) {
+        this.pks = pks;
+    }
+
 
     @Override
     public EntityEntry getEntry() {
@@ -31,7 +60,7 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
         while (clz != Object.class) {
             for (java.lang.reflect.Field field : clz.getDeclaredFields()) {
                 // TODO 父类必须遍历反射
-                if (field.getName().startsWith("$")||field.getAnnotation(IgnoredField.class)!=null) continue;
+                if (Modifier.isStatic(field.getModifiers())||field.getName().startsWith("$")||field.getAnnotation(IgnoredField.class)!=null) continue;
                 String fieldName = field.getName();
                 Field f = new Field(table, UtilsTool.camelToUnderline(fieldName), fieldName);
                 aliasMap.put(fieldName,f);
@@ -46,13 +75,6 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
             }
             return field;
         }).collect(Collectors.toList());
-//        Arrays.stream(entityClass.getDeclaredFields()).map((field)->{
-//            String fieldName = field.getName();
-//            return new Field(table, UtilsTool.underlineToCamel(fieldName,false),fieldName);
-//        }).collect(Collectors.toList());
-//        pks.stream().map((pk)->{
-//            new Field()
-//        }).collect(Collectors.toList());
         return new EntityEntry(entityClass, table,fields,pkFields);
     }
 }
