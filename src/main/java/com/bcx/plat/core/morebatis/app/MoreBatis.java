@@ -100,15 +100,15 @@ public class MoreBatis {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alies) {
+  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
-      return entityColumn.get(alies);
+      return entityColumn.get(alias);
     } catch (NullPointerException e) {
       if (entityColumn == null) {
         throw new NullPointerException("实体类没有注册:" + entityClass.getName());
       } else {
-        throw new NullPointerException("无效的字段别名:" + alies);
+        throw new NullPointerException("无效的字段别名:" + alias);
       }
     }
   }
@@ -116,13 +116,13 @@ public class MoreBatis {
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    * @param entityClass 实体类
-   * @param alies       实体类属性名称
+   * @param alias       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alies) {
+  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
-      return entityColumn.get(alies);
+      return entityColumn.get(alias);
     } catch (NullPointerException e) {
       throw new NullPointerException("实体类没有注册:" + entityClass.getName());
     }
@@ -131,21 +131,21 @@ public class MoreBatis {
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    * @param entityClass 实体类
-   * @param alies       实体类属性名称
+   * @param alias       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alies) {
+  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     final LinkedList<Field> result = new LinkedList<>();
     try {
-      for (String aly : alies) {
+      for (String aly : alias) {
         result.add(entityColumn.get(aly));
       }
     } catch (NullPointerException e) {
       if (entityColumn == null) {
         throw new NullPointerException("实体类没有注册:" + entityClass.getName());
       } else {
-        throw new NullPointerException("无效的字段别名:" + alies);
+        throw new NullPointerException("无效的字段别名:" + alias);
       }
     }
     return result;
