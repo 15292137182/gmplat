@@ -72,9 +72,9 @@ public class Field implements AliasedColumn {
   @Override
   public String getColumnSqlFragment(SqlComponentTranslator translator) {
     // TODO 另一个translator完成以后应该移除
-    String alies = getAlias();
+    String alias = getAlias();
     final String fieldSource = getFieldSource();
-    if (alies == null || alies.isEmpty()) {
+    if (alias == null || alias.isEmpty()) {
       return fieldSource;
     } else {
       return fieldSource + " as \"" + getAlias()+"\"";
