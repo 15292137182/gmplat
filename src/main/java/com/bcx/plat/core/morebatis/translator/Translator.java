@@ -171,8 +171,8 @@ public class Translator {
     }
 
     public LinkedList translateOrder(Order order, LinkedList linkedList){
-        final String alies = order.getAliasedColumn().getAlias();
-        if (alies==null) {
+        final String alias = order.getAliasedColumn().getAlias();
+        if (alias==null) {
             translateFieldSource(order.getAliasedColumn(),linkedList);
         }else {
             appendSql(order.getAlias(),linkedList);
@@ -189,13 +189,10 @@ public class Translator {
     
     public LinkedList translateAliasedColumn(AliasedColumn aliasedColumn,LinkedList linkedList){
         translateFieldSource(aliasedColumn,linkedList);
-        final String alies = aliasedColumn.getAlias();
-        if (aliasedColumn instanceof Field) {
-            String castType = ((Field) aliasedColumn).getCastType();
-        }
-        if (alies !=null) {
+        final String alias = aliasedColumn.getAlias();
+        if (alias !=null) {
             appendSql(AS, linkedList);
-            appendSql(quoteStr(alies), linkedList);
+            appendSql(quoteStr(alias), linkedList);
         }
         return linkedList;
     }
