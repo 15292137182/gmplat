@@ -85,7 +85,7 @@ public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
             }
             return *//*deleteByIds(request, locale, rowId)*//* null;
         }
-        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }*/
 
 
@@ -101,9 +101,9 @@ public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
     public Object queryFuncCode(String funcCode, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(funcCode)) {
             List list = UtilsTool.jsonToObj(funcCode, List.class);
-            return super.result(request, PlatResult.Msg(frontFuncService.queryFuncCode(list)), locale);
+            return super.result(request, SystemResult.Msg(frontFuncService.queryFuncCode(list)), locale);
         }
-        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }*/
 
 

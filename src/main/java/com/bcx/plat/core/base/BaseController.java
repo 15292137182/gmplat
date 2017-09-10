@@ -1,14 +1,11 @@
 package com.bcx.plat.core.base;
 
-import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.SystemResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -31,13 +28,13 @@ public abstract class BaseController {
    * 对返回的结果进行处理
    *
    * @param request 请求
-   * @param platResult 结果信息
+   * @param systemResult 结果信息
    * @param locale 国际化
    * @return 返回
    */
-  protected Map result(HttpServletRequest request, PlatResult platResult, Locale locale) {
+  protected Map result(HttpServletRequest request, SystemResult systemResult, Locale locale) {
     Map map = new HashMap();
-    ServerResult serviceResult = (ServerResult) platResult.get("content");
+    ServerResult serviceResult = (ServerResult) systemResult.get("content");
     String msg = serviceResult.getMsg();
 
     if (null != serviceResult) {
