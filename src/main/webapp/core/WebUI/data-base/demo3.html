@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+</head>
+<body>
+    <div id="box">
+        <el-row>
+            <el-col :span="12">
+                <el-button type="info" @click="add">新增表单测试</el-button>
+            </el-col>
+        </el-row>
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el:"#box",
+        data:{
+            divIndex:'',
+        },
+        methods:{
+            add(){
+                this.divIndex = ibcpLayer.ShowDiv('demo2.html','新增表单测试','400px', '500px',function(){
+
+                })
+            }
+        }
+    })
+</script>
+</html>

@@ -10,8 +10,11 @@
         .el-picker-panel{
             z-index: 999000000 !important;
         }
+        .el-form-item{
+            margin-bottom: 10px;
+        }
     </style>
-    <script src="../Public/publicjs.js"></script>
+    <!--<script src="../Public/publicjs.js"></script>-->
 </head>
 <body>
 <div>
@@ -23,26 +26,24 @@
             <el-button type="info" @click="demo">获取json对象</el-button>
         </el-col>
     </el-row>
-    <el-row id="app1">
-        <el-col :span="24">
-            <components data="first1" :is="inputwithbtn" :child-form-table="formTable1"></components>
-        </el-col>
-        <el-col :span="10" offset="8">
-            <el-button data="demo" type="info" @click="demo">获取json对象1</el-button>
-        </el-col>
-    </el-row>
 </div>
-<button id="bt">click</button>
 </body>
 <script>
-    var arr = [{displayTitle:'代码',funcType:'form',displayWidget:'input',ename:'code'}];
-    var arr1 = [{displayTitle:'代码1',funcType:'form',displayWidget:'input',ename:'code1'}];
-    var obj = new GmpForm1("formTable","codeId",arr,"#app");
-    var obj1 = new GmpForm1("formTable1","codeId",arr1,"#app1");
-    obj.bulidComponent(function(){
-        var dom = obj.getItem("code");
-        console.log($(dom).val());
+    var arr = [
+                {displayTitle:'代码',funcType:'form',displayWidget:'input',ename:'code'},
+                {displayTitle:'名称',funcType:'form',displayWidget:'input',ename:'name'},
+                {displayTitle:'类型',funcType:'form',displayWidget:'select-base',ename:'typeName'},
+                {displayTitle:'内容',funcType:'form',displayWidget:'textarea',ename:'content'},
+                {displayTitle:'所属模块',funcType:'form',displayWidget:'input',ename:'block'},
+                {displayTitle:'所属系统',funcType:'form',displayWidget:'input',ename:'syso'},
+                {displayTitle:'说明',funcType:'form',displayWidget:'input',ename:'desp'},
+                {displayTitle:'版本',funcType:'form',displayWidget:'input',ename:'version'},
+                ];
+    htmlAjax.keyValue(function(res){
+        var obj = new GmpForm1("formTable","codeId",arr,"#app","www.baidu.com",{rowId:"123"});
+        obj.bulidComponent(function(){
+            console.log(obj.getData());
+        });
     });
-    obj1.bulidComponent();
 </script>
 </html>

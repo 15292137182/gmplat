@@ -881,7 +881,24 @@ var DynamicStitching = (function(){
 })()
 
 
-
+var htmlAjax = (function(){
+    var keyValue = function(callback){
+        $.ajax({
+            url:"http://192.168.100.93:9090/local/gmp/sys/core/dataSetConfig/queryPage",
+            type:"get",
+            data:{},
+            success:function(res){
+                alert("in");
+                if(callback){
+                    callback(res);
+                }
+            }
+        })
+    }
+    return {
+        keyValue:keyValue
+    }
+})();
 //动态加载html代码片段
 var DynamicStitchings = (function(){
     //查询块
@@ -997,7 +1014,7 @@ var DynamicStitchings = (function(){
     }
 })()
 //动态表单对象
-function GmpForm1(compId, blockId, formBlockItems, vueEl){
+function GmpForm1(compId, blockId, formBlockItems, vueEl,postUrl,postParam){
     this.compId = compId;//父组件名字
     this.blockId = blockId; //功能块标识
     this.formBlockItems = formBlockItems;//表单块key值集合
@@ -1005,6 +1022,9 @@ function GmpForm1(compId, blockId, formBlockItems, vueEl){
     this.vueEl = vueEl;     //vue el
     this.vueObj = null;    //vue对象实例
     this.formObj = {}; //表单数据Key : value
+
+    this.postUrl = postUrl //获取后端数据接口
+    this.postParam = postParam //请求参数参数json
 }
 //获取vue实例对象
 GmpForm1.prototype.getVueObj = function(){
@@ -1096,4 +1116,40 @@ GmpForm1.prototype.getItem = function(key){
     var selectDom = "[data=" +key+ "]";
     var dom = $(selectDom).children();
     return dom;
+}
+//获取 表单配置参数
+GmpForm1.prototype.getOptions = function(){
+   var data = {};
+    data.compId = this.compId;//父组件名字
+    data.blockId = this.blockId; //功能块标识
+    data.formBlockItems = this.formBlockItems;//表单块key值集合
+
+    data.vueEl = this.vueEl;     //vue el
+    data.vueObj = this.vueObj;    //vue对象实例
+    data.formObj = this.formObj; //表单数据Key : value
+
+    data.postUrl = this.postUrl; //获取后端数据接口
+    data.postParam = this.postParam; //请求参数参数json
+    return data;
+}
+//设置 表单ajax参数
+GmpForm1.prototype.setOptions = function(json){
+    this.postUrl = json.postUrl; //获取后端数据接口
+    this.postParam = json.postParam; //请求参数参数json
+}
+//获取表单域数据
+GmpForm1.prototype.request = function(callback){
+    var data = this.postParam;
+    console.log(this.postParam);
+    var url = this.postUrl;
+    $.ajax({
+        url:url,
+        type:"get",
+        data:{data},
+        success:function(res){
+            if(callback){
+                callback(res);
+            }
+        }
+    })
 }
