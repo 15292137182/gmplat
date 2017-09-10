@@ -1,5 +1,10 @@
 package com.bcx.plat.core.utils;
 
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.constants.Message;
+
+import static com.bcx.plat.core.utils.ServletUtils.getMessage;
+
 /**
  * <p>Title: ServerResult</p>
  * <p>Description: the is ServerResult</p>
@@ -7,7 +12,7 @@ package com.bcx.plat.core.utils;
  *
  * @author Wen TieHu
  * @version 1.0
- * <pre>Histroy:
+ * <pre>History:
  * 2017/8/27  Wen TieHu Create
  * </pre>
  */
@@ -18,8 +23,23 @@ public class ServerResult<T> {
   private T data;
 
   public ServerResult() {
+    this.state = BaseConstants.STATUS_SUCCESS;
+    this.msg = getMessage(Message.OPERATOR_SUCCESS);
   }
 
+  public ServerResult(T data) {
+    this.state = BaseConstants.STATUS_SUCCESS;
+    this.msg = getMessage(Message.OPERATOR_SUCCESS);
+    this.data = data;
+  }
+
+  /**
+   * 全参构造方法
+   *
+   * @param state 状态
+   * @param msg   消息
+   * @param data  数据
+   */
   public ServerResult(int state, String msg, T data) {
     this.state = state;
     this.msg = msg;
@@ -35,7 +55,7 @@ public class ServerResult<T> {
    */
   public ServerResult<T> setStateMessage(int state, String msgKey, String... strings) {
     this.state = state;
-    this.msg = ServletUtils.getMessage(msgKey, strings);
+    this.msg = getMessage(msgKey, strings);
     return this;
   }
 

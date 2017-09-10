@@ -1,60 +1,28 @@
-//package com.bcx.plat.core.controller;
-//
-//
-//import com.bcx.plat.core.base.BaseConstants;
-//import com.bcx.plat.core.base.BaseController;
-//import com.bcx.plat.core.constants.Message;
-//import com.bcx.plat.core.entity.SequenceGenerate;
-//import com.bcx.plat.core.entity.SequenceRuleConfig;
-//import com.bcx.plat.core.manager.SequenceManager;
-//import com.bcx.plat.core.manager.TXManager;
-//import com.bcx.plat.core.morebatis.component.FieldCondition;
-//import com.bcx.plat.core.morebatis.component.Order;
-//import com.bcx.plat.core.morebatis.component.constant.Operator;
-//import com.bcx.plat.core.service.SequenceGenerateService;
-//import com.bcx.plat.core.service.SequenceRuleConfigService;
-//import com.bcx.plat.core.utils.PlatResult;
-//import com.bcx.plat.core.utils.ServerResult;
-//import com.bcx.plat.core.utils.UtilsTool;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import javax.servlet.http.HttpServletRequest;
-//import java.util.*;
-//
-//import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
-//import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
-//import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-//import static com.bcx.plat.core.utils.UtilsTool.*;
-//
-///**
-// * 序列号管理类
-// *
-// * Create By HCL at 2017/8/8
-// */
-//@RestController
-//@RequestMapping(PLAT_SYS_PREFIX + "/core/sequenceRule")
-//public class SequenceRuleConfigController extends BaseController<SequenceRuleConfigService> {
-//
-//  private final SequenceGenerateService sequenceGenerateService;
-//
-//  /**
-//   * 自动装配 Service
-//   *
-//   * @param sequenceGenerateService 装入 Service
-//   */
-//  @Autowired
-//  public SequenceRuleConfigController(SequenceGenerateService sequenceGenerateService) {
-//    this.sequenceGenerateService = sequenceGenerateService;
-//  }
-//
-//  @Override
-//  protected List<String> blankSelectFields() {
-//    return Arrays.asList("seqCode", "seqName", "seqContent", "desp");
-//  }
-//
+package com.bcx.plat.core.controller;
+
+import com.bcx.plat.core.base.BaseConstants;
+import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+
+@RestController
+@RequestMapping(PLAT_SYS_PREFIX + "/core/sequenceRule")
+public class SequenceRuleConfigController extends BaseController {
+
+  /**
+   * @return 参与空格查询的字段
+   */
+  private List<String> blankSelectFields() {
+    return makeAsList("seqCode", "seqCode", "seqName", "seqContent", "desp");
+  }
+
 //  /**
 //   * 通用查询方法
 //   *
@@ -69,12 +37,21 @@
 //                                  @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
 //                                  @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
 //                                  String order,
-//                                  Locale locale, HttpServletRequest request) {
+//                                  HttpServletRequest request) {
 //    LinkedList<Order> orders = dataSort(order);
 //    pageNum = search == null || search.isEmpty() ? 1 : pageNum;
 //    return selectPage(locale, createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
 //  }
-//
+
+  @RequestMapping("/queryPage")
+  public PlatResult selectWithPage(String search,
+                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                   String order) {
+
+    return PlatResult.success(new ServerResult());
+  }
+
 //  /**
 //   * 通用新增方法
 //   *
@@ -220,4 +197,4 @@
 //    }
 //
 //  }
-//}
+}
