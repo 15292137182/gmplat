@@ -1,9 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
@@ -17,10 +14,8 @@ import com.bcx.plat.core.utils.UtilsTool;
  *                2017/8/28  Wen TieHu Create
  *          </pre>
  */
-@Table(TableInfo.T_TEMPLATE_OBJECT_PRO)
 public class TemplateObjectPro extends BaseEntity<TemplateObjectPro>{
 
-    @TablePK
     private String proRowId;//唯一标示
     private String templateObjRowId;//关联模板对象rowId
     private String code;//代码

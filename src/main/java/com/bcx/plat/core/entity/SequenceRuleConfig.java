@@ -1,9 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
@@ -12,11 +9,9 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  *
  * Create By HCL at 2017/8/6
  */
-@Table(TableInfo.T_SEQUENCE_RULE_CONFG)
 public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
 
-  @TablePK
-  private String rowId;
+
   private String seqCode;
   private String seqName;
   private String seqContent;

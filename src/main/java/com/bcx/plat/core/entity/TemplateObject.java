@@ -1,8 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
@@ -15,7 +13,6 @@ import com.bcx.plat.core.utils.UtilsTool;
  * <p>
  * 2017/8/28  Wen TieHu Create
  */
-@Table(TableInfo.T_TEMPLATE_OBJECT)
 public class TemplateObject extends BaseEntity<TemplateObject> {
 
   private String templateCode;//模板代码

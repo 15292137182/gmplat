@@ -23,8 +23,8 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
   @IgnoredField
   @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();
-  private Map etc;
-  private String rowId;
+  protected Map etc;
+  protected String rowId;
 
   @Override
   public Serializable getPk() {

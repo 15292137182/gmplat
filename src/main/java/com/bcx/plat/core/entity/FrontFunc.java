@@ -2,21 +2,16 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 /**
  * 前端功能块实体类 Created by Went on 2017/8/2.
  */
-@Table(TableInfo.T_FRONT_FUNC)
 public class FrontFunc extends BaseEntity<FrontFunc> {
 
-  @TablePK
-  private String rowId;//唯一标示
+
   private String funcCode;//功能代码
   private String funcName;//功能名称
   private String funcType;//功能类型

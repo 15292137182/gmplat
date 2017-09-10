@@ -1,9 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
@@ -12,11 +9,7 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  *
  * Create By HCL at 2017/8/8
  */
-@Table(TableInfo.T_SEQUENCE_GENERATE)
 public class SequenceGenerate extends BaseEntity<SequenceGenerate> {
-
-  @TablePK
-  private String rowId;
   private String seqRowId;
   private String variableKey;
   private String currentValue;
@@ -35,14 +28,6 @@ public class SequenceGenerate extends BaseEntity<SequenceGenerate> {
 
   public void setObjectSigns(String objectSigns) {
     this.objectSigns = objectSigns;
-  }
-
-  public String getRowId() {
-    return rowId;
-  }
-
-  public void setRowId(String rowId) {
-    this.rowId = rowId;
   }
 
   public String getSeqRowId() {

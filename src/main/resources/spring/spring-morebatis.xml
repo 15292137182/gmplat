@@ -13,6 +13,10 @@
         <constructor-arg name="entityEntries">
             <list>
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.BusinessObject" p:tableName="t_business_object"
+                      p:pks="#{'rowId'}"/>
+
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.BusinessObjectPro" p:tableName="t_business_object_pro"
                       p:pks="#{'rowId'}"/>
 

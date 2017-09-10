@@ -3,22 +3,17 @@ package com.bcx.plat.core.entity;
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.database.info.TableInfo;
 
 /**
  * 数据库表信息 Create By HCL at 2017/7/31
  */
-@Table(TableInfo.T_DB_TABLE_COLUMN)
 public class DBTableColumn extends BaseEntity<DBTableColumn> {
 
   private String relateTableRowId;
   private String columnEname;
   private String columnCname;
   private String desp;
-  @TablePK
-  private String rowId;
+
 
   /**
    * 重载构建 - 创建信息方法，加入rowId

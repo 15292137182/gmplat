@@ -1,12 +1,7 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
-
-import java.lang.reflect.UndeclaredThrowableException;
 
 /**
  * <p>Title: </p>
@@ -19,10 +14,7 @@ import java.lang.reflect.UndeclaredThrowableException;
  *                2017/8/30  Wen TieHu Create
  *          </pre>
  */
-@Table(TableInfo.T_BUSINESS_RELATE_TEMPLATE)
 public class BusinessRelateTemplate extends BaseEntity<BusinessRelateTemplate>{
-    @TablePK
-    private String rowId;//唯一标示
     private String businessRowId;//关联业务对象
     private String templateRowId;//关联模板对象
 

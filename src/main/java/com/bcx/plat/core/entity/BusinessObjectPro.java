@@ -2,11 +2,7 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.manager.SequenceManager;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
-import com.bcx.plat.core.utils.UtilsTool;
 
 import java.io.Serializable;
 
@@ -15,11 +11,9 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 /**
  * 业务对象属性实体类 Created by Went on 2017/8/1.
  */
-@Table(TableInfo.T_BUSINESS_OBJECT_PRO)
 public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements Serializable {
 
-    @TablePK
-    private String rowId;//唯一标识
+
     private String propertyCode;//业务对象属性代码
     private String propertyName;//业务对象属性名称
     private String relateTableColumn;//关联表字段

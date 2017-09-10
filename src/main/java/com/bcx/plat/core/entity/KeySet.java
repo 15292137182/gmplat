@@ -1,9 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 
 import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
 
@@ -11,10 +8,8 @@ import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
  * 键值集合实体类
  * Created by Went on 2017/8/3.
  */
-@Table(TableInfo.T_KEYSET)
 public class KeySet extends BaseEntity<KeySet>{
-    @TablePK
-    private String rowId;//唯一标示
+
     private String keysetCode;//键值代码
     private String keysetName;//键值名称
     private String belongModule;//所属模块

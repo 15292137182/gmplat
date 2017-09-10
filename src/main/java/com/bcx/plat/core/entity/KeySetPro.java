@@ -1,9 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.database.info.TableInfo;
-import com.bcx.plat.core.morebatis.annotations.Table;
-import com.bcx.plat.core.morebatis.annotations.TablePK;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
@@ -17,10 +14,8 @@ import com.bcx.plat.core.utils.UtilsTool;
  *                2017/8/30  Wen TieHu Create
  *          </pre>
  */
-@Table(TableInfo.T_KEYSET_PRO)
 public class KeySetPro extends BaseEntity<KeySetPro>{
-    @TablePK
-    private String rowId;//唯一标识
+
     private String relateKeysetRowId;//关联键值集合唯一标示
     private String confKey;//键
     private String confValue;//值
