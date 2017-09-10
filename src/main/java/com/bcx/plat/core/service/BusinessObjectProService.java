@@ -43,7 +43,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
      * 根据业务对象属性rowId查询当前数据
      *
      * @param rowId 唯一标识
-     * @return SystemResult
+     * @return PlatResult
      */
     public ServerResult queryById(String rowId) {
         List<BusinessObjectPro> businessObjectPros = select(new FieldCondition("rowId", Operator.EQUAL, rowId));

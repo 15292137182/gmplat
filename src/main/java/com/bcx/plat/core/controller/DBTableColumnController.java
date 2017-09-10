@@ -40,7 +40,7 @@ public class DBTableColumnController extends BaseController/*<DBTableColumnServi
      * @param pageSize 一页显示多少条
      * @param request  request请求
      * @param locale   国际化参数
-     * @return SystemResult
+     * @return PlatResult
      */
     /*@RequestMapping("/queryPageById")
     public Object queryPageById(String search, String rowId,
@@ -49,9 +49,9 @@ public class DBTableColumnController extends BaseController/*<DBTableColumnServi
                                 String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, SystemResult.Msg(dbTableColumnService.queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
+            return super.result(request, PlatResult.Msg(dbTableColumnService.queryPageById(search, rowId, orders, pageNum, pageSize)), locale);
         }
-        return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }*/
 
     /**
@@ -60,14 +60,14 @@ public class DBTableColumnController extends BaseController/*<DBTableColumnServi
      * @param search    按照空格查询
      * @param request request请求
      * @param locale  国际化参数
-     * @return SystemResult
+     * @return PlatResult
      */
     /*@RequestMapping("/queryTabById")
     public Object singleInputSelect(String search, String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, SystemResult.Msg(dbTableColumnService.queryTableById(rowId, search)), locale);
+            return super.result(request, PlatResult.Msg(dbTableColumnService.queryTableById(rowId, search)), locale);
         }
-        return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
     }*/
 
 
@@ -85,7 +85,7 @@ public class DBTableColumnController extends BaseController/*<DBTableColumnServi
         if (relateTableColumn.size() == 0) {
             return *//*super.deleteByIds(request,locale,rowId)*//* null;
         }else{
-            return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+            return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
         }
     }*/
 

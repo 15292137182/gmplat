@@ -10,7 +10,7 @@
 //import com.bcx.plat.core.morebatis.component.constant.Operator;
 //import com.bcx.plat.core.service.BusinessObjectService;
 //import com.bcx.plat.core.service.MaintDBTablesService;
-//import com.bcx.plat.core.utils.SystemResult;
+//import com.bcx.plat.core.utils.PlatResult;
 //import com.bcx.plat.core.utils.ServerResult;
 //import com.bcx.plat.core.utils.UtilsTool;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +110,7 @@
 //        }
 //      }
 //    }
-//    return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+//    return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
 //  }
 //
 //

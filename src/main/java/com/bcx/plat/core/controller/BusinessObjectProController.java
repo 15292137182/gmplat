@@ -42,15 +42,15 @@ public class BusinessObjectProController extends
      * @param rowId   唯一标识
      * @param request request请求
      * @param locale  国际化参数
-     * @return SystemResult
+     * @return PlatResult
      */
 //    @RequestMapping("/queryById")
 //    public Map queryById(String rowId, HttpServletRequest request, Locale locale) {
 //        if (UtilsTool.isValid(rowId)) {
 //            ServerResult serverResult = businessObjectProService.queryById(rowId);
-//            return super.result(request, SystemResult.success(serverResult), locale);
+//            return super.result(request, PlatResult.success(serverResult), locale);
 //        } else {
-//            return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+//            return super.result(request, PlatResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 //        }
 //
 //    }
@@ -63,15 +63,15 @@ public class BusinessObjectProController extends
 //     * @param request    request请求
 //     * @param frontRowId 功能块rowId
 //     * @param locale     国际化参数
-//     * @return SystemResult
+//     * @return PlatResult
 //     */
 //    @RequestMapping("/queryBusinPro")
 //    public Object queryBusinPro(String objRowId, String frontRowId, HttpServletRequest request, Locale locale) {
 //        if (UtilsTool.isValid(objRowId)) {
 //            ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
-//            return result(request, SystemResult.success(serverResult), locale);
+//            return result(request, PlatResult.success(serverResult), locale);
 //        } else {
-//            return result(request, SystemResult.success(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, null)), locale);
+//            return result(request, PlatResult.success(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, null)), locale);
 //        }
 //    }
 //
@@ -87,7 +87,7 @@ public class BusinessObjectProController extends
 //    public Map addBusinessObjPro(@RequestParam Map<String, Object> paramEntity, HttpServletRequest request, Locale locale) {
 //        BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
 //        int insert = businessObjectPro.insert();
-//        return super.result(request, SystemResult.success(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_FAIL, insert)), locale);
+//        return super.result(request, PlatResult.success(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_FAIL, insert)), locale);
 //    }
 //
 //    /**
@@ -105,7 +105,7 @@ public class BusinessObjectProController extends
 //            BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
 //            rowId = businessObjectPro.updateById();
 //        }
-//        return super.result(request, SystemResult.success(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, rowId)), locale);
+//        return super.result(request, PlatResult.success(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, rowId)), locale);
 //    }
 //
 //    /**
@@ -122,7 +122,7 @@ public class BusinessObjectProController extends
 //        if (frontFuncPros.size() == 0) {
 //            return new BusinessObjectPro().deleteById(rowId);
 //        } else {
-//            return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
+//            return super.result(request, PlatResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE)), locale);
 //        }
 //    }
 }

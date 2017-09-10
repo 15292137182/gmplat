@@ -37,7 +37,7 @@
 //   * @param pageNum  当前第几页
 //   * @param pageSize 一页显示多少条
 //   * @param locale   国际化参数
-//   * @return SystemResult
+//   * @return PlatResult
 //   */
 //  @RequestMapping("/queryPage")
 //  public Object singleInputSelect(String search,

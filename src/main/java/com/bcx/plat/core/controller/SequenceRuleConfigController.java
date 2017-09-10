@@ -13,7 +13,7 @@
 //import com.bcx.plat.core.morebatis.component.constant.Operator;
 //import com.bcx.plat.core.service.SequenceGenerateService;
 //import com.bcx.plat.core.service.SequenceRuleConfigService;
-//import com.bcx.plat.core.utils.SystemResult;
+//import com.bcx.plat.core.utils.PlatResult;
 //import com.bcx.plat.core.utils.ServerResult;
 //import com.bcx.plat.core.utils.UtilsTool;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@
 //   * @param pageNum  当前第几页
 //   * @param pageSize 一页显示多少条
 //   * @param locale   国际化参数
-//   * @return SystemResult
+//   * @return PlatResult
 //   */
 //  @RequestMapping("/queryPage")
 //  public Object singleInputSelect(String search,
@@ -138,7 +138,7 @@
 //      _sr.setState(STATUS_FAIL);
 //      _sr.setMsg("INVALID_REQUEST");
 //    }
-//    return super.result(request, SystemResult.Msg(_sr), locale);
+//    return super.result(request, PlatResult.Msg(_sr), locale);
 //  }
 //
 //  /**
@@ -188,7 +188,7 @@
 //        _sr.setMsg(message);
 //      }
 //    }
-//    return super.result(request, SystemResult.Msg(_sr), locale);
+//    return super.result(request, PlatResult.Msg(_sr), locale);
 //  }
 //
 //  /**
@@ -197,7 +197,7 @@
 //   * @param rowId   按照空格查询
 //   * @param request request请求
 //   * @param locale  国际化参数
-//   * @return SystemResult
+//   * @return PlatResult
 //   */
 //  @RequestMapping("/queryById")
 //  @SuppressWarnings("unchecked")
@@ -211,12 +211,12 @@
 //        mapList.put("variableKey", generate.getVariableKey());
 //      }
 //      if (mapLists.size() == 0) {
-//        return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+//        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 //      } else {
-//        return super.result(request, SystemResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists)), locale);
+//        return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists)), locale);
 //      }
 //    } else {
-//      return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+//      return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 //    }
 //
 //  }
