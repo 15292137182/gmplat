@@ -4,7 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.TemplateObjectProService;
-import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.SystemResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +36,8 @@ public class TemplateObjectController extends BaseController {
   private TemplateObjectProService templateObjectProService;
 
   @RequestMapping("/queryProPage")
-  public PlatResult queryPropertiesPage(String blankSearch) {
-    return PlatResult.success(null);
+  public SystemResult queryPropertiesPage(String blankSearch) {
+    return SystemResult.success(null);
   }
   /*
   public Object queryProPage(String rowId,
@@ -60,10 +60,10 @@ public class TemplateObjectController extends BaseController {
       // 返回结果
       PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
       if (result.getResult().size() != 0) {
-        return super.result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+        return super.result(request, SystemResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
       }
     }
-    return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+    return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
   }*/
 
   /**
@@ -83,7 +83,7 @@ public class TemplateObjectController extends BaseController {
    *
    * @param rowId  功能块rowId
    * @param locale 国际化参数
-   * @return PlatResult
+   * @return SystemResult
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId, Locale locale) {
@@ -97,7 +97,7 @@ public class TemplateObjectController extends BaseController {
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
    * @param locale   国际化参数
-   * @return PlatResult
+   * @return SystemResult
    */
   @RequestMapping("/queryPage")
   public Object singleInputSelect(String search,

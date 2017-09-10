@@ -1,7 +1,7 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.SystemResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -32,7 +32,7 @@ public class SystemController extends BaseController {
    * @return 返回
    */
   @RequestMapping("/login")
-  public PlatResult login(HttpServletRequest request) {
+  public SystemResult login(HttpServletRequest request) {
     ServerResult serverResult = new ServerResult();
     String userId = request.getParameter("username");
     String password = request.getParameter("password");
@@ -58,7 +58,7 @@ public class SystemController extends BaseController {
       logger.error(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     }
 
-    return PlatResult.success(serverResult);
+    return SystemResult.success(serverResult);
   }
 
 }

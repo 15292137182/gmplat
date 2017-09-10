@@ -8,7 +8,7 @@ import org.springframework.ui.ModelMap;
  * <p>
  * Create By HCL at 2017/7/31
  */
-public class PlatResult extends ModelMap {
+public class SystemResult extends ModelMap {
 
   private static final long serialVersionUID = 812376774103405857L;
 
@@ -17,7 +17,7 @@ public class PlatResult extends ModelMap {
    * <p>
    * Create By HCL at 2017/8/7
    */
-  public PlatResult() {
+  public SystemResult() {
   }
 
   /**
@@ -27,7 +27,7 @@ public class PlatResult extends ModelMap {
    * @param respMsg  返回消息
    * @param sr       数据
    */
-  public PlatResult(String respCode, String respMsg, ServerResult sr) {
+  public SystemResult(String respCode, String respMsg, ServerResult sr) {
     addAttribute("respCode", respCode);
     addAttribute("respMsg", respMsg);
     addAttribute("content", sr);
@@ -39,7 +39,7 @@ public class PlatResult extends ModelMap {
    * @param sr 服务层数据
    * @return 返回平台的结果信息
    */
-  public static PlatResult success(ServerResult sr) {
-    return new PlatResult(SysMessage.SERVICE_RESPONSE_SUCCESSFUL_CODE, SysMessage.SERVICE_RESPONSE_SUCCESSFUL, sr);
+  public static SystemResult success(ServerResult sr) {
+    return new SystemResult(SysMessage.SERVICE_RESPONSE_SUCCESSFUL_CODE, SysMessage.SERVICE_RESPONSE_SUCCESSFUL, sr);
   }
 }

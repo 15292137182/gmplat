@@ -1,29 +1,60 @@
-package com.bcx.plat.core.controller;
-
-import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.ServerResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-
-@RestController
-@RequestMapping(PLAT_SYS_PREFIX + "/core/sequenceRule")
-public class SequenceRuleConfigController extends BaseController {
-
-  /**
-   * @return 参与空格查询的字段
-   */
-  private List<String> blankSelectFields() {
-    return Arrays.asList("seqCode", "seqCode", "seqName", "seqContent", "desp");
-  }
-
+//package com.bcx.plat.core.controller;
+//
+//
+//import com.bcx.plat.core.base.BaseConstants;
+//import com.bcx.plat.core.base.BaseController;
+//import com.bcx.plat.core.constants.Message;
+//import com.bcx.plat.core.entity.SequenceGenerate;
+//import com.bcx.plat.core.entity.SequenceRuleConfig;
+//import com.bcx.plat.core.manager.SequenceManager;
+//import com.bcx.plat.core.manager.TXManager;
+//import com.bcx.plat.core.morebatis.component.FieldCondition;
+//import com.bcx.plat.core.morebatis.component.Order;
+//import com.bcx.plat.core.morebatis.component.constant.Operator;
+//import com.bcx.plat.core.service.SequenceGenerateService;
+//import com.bcx.plat.core.service.SequenceRuleConfigService;
+//import com.bcx.plat.core.utils.SystemResult;
+//import com.bcx.plat.core.utils.ServerResult;
+//import com.bcx.plat.core.utils.UtilsTool;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//import javax.servlet.http.HttpServletRequest;
+//import java.util.*;
+//
+//import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
+//import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
+//import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+//import static com.bcx.plat.core.utils.UtilsTool.*;
+//
+///**
+// * 序列号管理类
+// *
+// * Create By HCL at 2017/8/8
+// */
+//@RestController
+//@RequestMapping(PLAT_SYS_PREFIX + "/core/sequenceRule")
+//public class SequenceRuleConfigController extends BaseController<SequenceRuleConfigService> {
+//
+//  private final SequenceGenerateService sequenceGenerateService;
+//
+//  /**
+//   * 自动装配 Service
+//   *
+//   * @param sequenceGenerateService 装入 Service
+//   */
+//  @Autowired
+//  public SequenceRuleConfigController(SequenceGenerateService sequenceGenerateService) {
+//    this.sequenceGenerateService = sequenceGenerateService;
+//  }
+//
+//  @Override
+//  protected List<String> blankSelectFields() {
+//    return Arrays.asList("seqCode", "seqName", "seqContent", "desp");
+//  }
+//
 //  /**
 //   * 通用查询方法
 //   *
@@ -31,17 +62,19 @@ public class SequenceRuleConfigController extends BaseController {
 //   * @param pageNum  当前第几页
 //   * @param pageSize 一页显示多少条
 //   * @param locale   国际化参数
-//   * @return PlatResult
+//   * @return SystemResult
 //   */
-  @RequestMapping("/queryPage")
-  public PlatResult selectWithPage(String search,
-                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                   String order) {
-
-    return PlatResult.success(new ServerResult());
-  }
-
+//  @RequestMapping("/queryPage")
+//  public Object singleInputSelect(String search,
+//                                  @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+//                                  @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+//                                  String order,
+//                                  Locale locale, HttpServletRequest request) {
+//    LinkedList<Order> orders = dataSort(order);
+//    pageNum = search == null || search.isEmpty() ? 1 : pageNum;
+//    return selectPage(locale, createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
+//  }
+//
 //  /**
 //   * 通用新增方法
 //   *
@@ -105,7 +138,7 @@ public class SequenceRuleConfigController extends BaseController {
 //      _sr.setState(STATUS_FAIL);
 //      _sr.setMsg("INVALID_REQUEST");
 //    }
-//    return super.result(request, PlatResult.Msg(_sr), locale);
+//    return super.result(request, SystemResult.Msg(_sr), locale);
 //  }
 //
 //  /**
@@ -155,7 +188,7 @@ public class SequenceRuleConfigController extends BaseController {
 //        _sr.setMsg(message);
 //      }
 //    }
-//    return super.result(request, PlatResult.Msg(_sr), locale);
+//    return super.result(request, SystemResult.Msg(_sr), locale);
 //  }
 //
 //  /**
@@ -164,7 +197,7 @@ public class SequenceRuleConfigController extends BaseController {
 //   * @param rowId   按照空格查询
 //   * @param request request请求
 //   * @param locale  国际化参数
-//   * @return PlatResult
+//   * @return SystemResult
 //   */
 //  @RequestMapping("/queryById")
 //  @SuppressWarnings("unchecked")
@@ -178,13 +211,13 @@ public class SequenceRuleConfigController extends BaseController {
 //        mapList.put("variableKey", generate.getVariableKey());
 //      }
 //      if (mapLists.size() == 0) {
-//        return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+//        return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 //      } else {
-//        return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists)), locale);
+//        return super.result(request, SystemResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists)), locale);
 //      }
 //    } else {
-//      return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+//      return super.result(request, SystemResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
 //    }
 //
 //  }
-}
+//}

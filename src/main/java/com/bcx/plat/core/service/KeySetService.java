@@ -25,7 +25,7 @@ public class KeySetService extends BaseService<KeySet> {
    * 根据编号number查询，以数组的形式传入数据进来
    *
    * @param list 搜索条件
-   * @return PlatResult
+   * @return SystemResult
    *//*
   public ServerResult queryKeySet(List list) {
     Map<Object, Object> maps = new HashMap<>();
