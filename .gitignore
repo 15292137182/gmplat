@@ -1,3 +1,31 @@
-.idea/
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+.idea/.name
+.idea/artifacts/
+.idea/compiler.xml
+.idea/dataSources.xml
+.idea/dataSources/
+.idea/deployment.xml
+.idea/encodings.xml
+.idea/inspectionProfiles/
+.idea/libraries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/sqldialects.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/workspace.xml
+gmplat.iml
+out/
+src/main/java/com/bcx/plat/core/filter/
+src/main/webapp/META-INF/
+src/test/resources/
 target/
-GMPlat.iml
+/.idea/
