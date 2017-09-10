@@ -12,6 +12,7 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,7 +33,9 @@ import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<T> {
 
     @JsonIgnore
+    @IgnoredField
     private static final MoreBatis MORE_BATIS = (MoreBatis) SpringContextHolder.getBean("moreBatis");
+    @IgnoredField
     @JsonIgnore
     private static final Or NOT_DELETE_OR = getNoDeleteCondition();
 

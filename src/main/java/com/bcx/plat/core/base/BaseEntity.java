@@ -72,6 +72,7 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
   /**
    * @return 返回加入的模版
    */
+  @JsonIgnore
   public List<BeanInterface> getJoinTemplates() {
     return Collections.singletonList(getBaseTemplateBean());
   }
