@@ -325,10 +325,12 @@ public class UtilsTool {
       return orders;
     }
     HashMap hashMap = UtilsTool.jsonToObj(order, HashMap.class);
-    String str = (String) hashMap.get("str");
-    int num = Integer.parseInt(hashMap.get("num").toString());
-    String s = UtilsTool.camelToUnderline(str);
-    orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(s), num));
+    if (hashMap != null) {
+      String str = String.valueOf(hashMap.get("str"));
+      int num = Integer.parseInt(hashMap.get("num").toString());
+      String s = UtilsTool.camelToUnderline(str);
+      orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(s), num));
+    }
     return orders;
   }
 }

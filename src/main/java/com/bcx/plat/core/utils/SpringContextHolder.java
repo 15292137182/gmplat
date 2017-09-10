@@ -70,7 +70,7 @@ public class SpringContextHolder implements ApplicationContextAware {
   private static void checkApplicationContext() {
     if (null == applicationContext) {
       LoggerFactory
-          .getLogger("com.sw.plat.core.utils.SpringContextHolder")
+          .getLogger("com.bcx.plat.core.utils.SpringContextHolder")
           .error("applicationContext未注入,请确保该类被注册为 javaBean");
       throw new IllegalStateException("applicationContext未注入,请确保该类被注册为 javaBean");
     }

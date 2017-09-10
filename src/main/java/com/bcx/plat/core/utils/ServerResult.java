@@ -33,6 +33,8 @@ public class ServerResult<T> {
     this.data = data;
   }
 
+
+
   /**
    * 全参构造方法
    *
@@ -59,6 +61,15 @@ public class ServerResult<T> {
     return this;
   }
 
+  /**
+   * 设置server参数
+   * @param state
+   * @param msg
+   * @return
+   */
+  public static ServerResult setMessage(int state, String msg) {
+    return new ServerResult(state,msg,null);
+  }
 
   public int getState() {
     return state;

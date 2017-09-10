@@ -13,6 +13,7 @@ import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.ServletUtils;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,8 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     public ServerResult queryById(String rowId) {
         List<BusinessObjectPro> businessObjectPros = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
         if (!UtilsTool.isValid(businessObjectPros)) {
-            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            ServerResult serverResult = new ServerResult();
+            return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, ServletUtils.getMessage(Message.QUERY_FAIL));
         }
         String relateTableColumn = businessObjectPros.get(0).getRelateTableColumn();
 
@@ -56,7 +58,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
         try {
             dbTableColumns.get(0).getColumnCname();
         } catch (Exception e) {
-            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, dbTableColumns);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, ServletUtils.getMessage(Message.QUERY_FAIL), dbTableColumns);
         }
         for (DBTableColumn row : dbTableColumns) {
             Map<String, Object> map = new HashMap<>();
@@ -64,7 +66,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
             row.setEtc(map);
 //            row.put("columnCname", rowId1.get(0).get("columnCname"));
         }
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, dbTableColumns);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,dbTableColumns);
     }
 
     /**
@@ -173,7 +175,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
         }
 
         if (result.size() == 0) {
-            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));
     }
