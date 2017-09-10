@@ -15,9 +15,11 @@
 <body>
 <div id="app">
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+
         <el-form-item label="活动名称" prop="name">
             <el-input v-model="ruleForm2.name"></el-input>
         </el-form-item>
+
         <el-form-item label="活动区域" prop="region">
             <el-select v-model="ruleForm2.region" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
@@ -58,34 +60,38 @@
            var checkDate = function(rule, value, callback){
                if (!value) {
                    return callback(new Error('日期不能为空'));
+               }else{
+                   callback();
                }
 
            };
            var validateName = function(rule, value, callback){
-               console.log(callback)
                if (value === '') {
-                      callback(new Error('请输入活动名称'));
-                   setTimeout(function(){
-                       console.log(111)
-                       $('.el-form-item__error').css("display", "none")
-                       //$('.el-form-item__error').html('111')
-                       console.log(222)
-                   },1000)
+                      callback(new Error(rule.message));
+               }else{
+                   callback();
                }
            };
            var validateDate = function(rule, value, callback){
                if (value === '') {
-                   callback(new Error('请选择活动区域'));
+                   callback(new Error(rule.message));
+               }else{
+                   callback();
                }
            };
            var checkType=function(rule, value, callback) {
                if (value.length === 0) {
-                   callback(new Error('请至少选择一个活动性质'));
+                   callback(new Error(rule.message));
+               }else{
+                   callback();
                }
            };
            var checkResource=function(rule, value, callback) {
-               if (value.length === 0) {
-                   callback(new Error('请选择活动资源'));
+               console.log(callback);
+               if (value==='') {
+                   callback(new Error(rule.message));
+               }else{
+                   callback();
                }
            };
            return {
@@ -98,19 +104,19 @@
                },
                rules2: {
                    name: [
-                       { validator: validateName, trigger: 'blur' }
+                       { validator: validateName, trigger: 'blur' ,message:'请输入活动名称'}
                    ],
                    region: [
-                       { validator: validateDate, trigger: 'blur' }
+                       { validator: validateDate, trigger: 'change',message:'请选择活动区域' }
                    ],
                    date: [
-                       { validator: checkDate, trigger: 'blur' }
+                       { validator: checkDate, trigger: 'blur',message:'请选择活动事件'}
                    ],
                    type: [
-                       { validator: checkType, trigger: 'change' }
+                       { validator: checkType, trigger: 'change',message:'请至少选择一个活动性质' }
                    ],
                    resource: [
-                       { validator: checkResource, trigger: 'change' }
+                       { validator: checkResource, trigger: 'change',message:'请选择一种资源' }
                    ]
                }
            };
@@ -118,11 +124,13 @@
        methods: {
            submitForm(formName) {
                this.$refs[formName].validate(function(valid){
+                   console.log(valid);
                    if (valid) {
                        alert('submit!');
                    } else {
-                       console.log('error submit!!');
-                       return false;
+                       $('.el-form-item__error').fadeIn();;
+                       vm.judgeMent();
+
                    }
                });
 
@@ -130,9 +138,12 @@
            resetForm(formName) {
                this.$refs[formName].resetFields();
            },
-           startRequest(){
-               console.log(333)
+           judgeMent(){
+               setTimeout(function () {
+                    $('.el-form-item__error').fadeOut();
+               }, 2000)
            }
+
        }
    })
 

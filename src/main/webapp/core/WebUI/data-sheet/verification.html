@@ -97,39 +97,25 @@
         },
         methods: {
             submitForm(formName) {
-                console.log(this.$refs[formName])
-                var child=this.$refs[formName].$children;
-                var messgae=this.$refs[formName].$parent.rules;
-                //console.log(child);
-                //console.log( messgae);
-                var arr=[];
-                for(var i=0;i< child.length;i++){
-                    var needRequest=child[i].$el;
-                    if($(needRequest).hasClass('is-required')){
-                        arr.push(needRequest)
+                this.$refs[formName].validate(function(valid){
+                    if (valid) {
+                        alert('submit!');
                     }
-                }
-                //console.log(arr);
-                $(arr).each(function(item){
-                    $(this).append("<div class='el-form-item__error' style='position: relative'>2222</div>");
-                })
-
-
-//                this.$refs[formName].validate(function(valid){
-//                    if (valid) {
-//                        alert('submit!');
-//                    }
-//                    else {
-////                        console.log('error submit!!');
-////                        return false;
-//                    }
-//               });
+                    else {
+                        $('.el-form-item__error').css("display", "block");
+                        vm.judgeMent();
+                        return false;
+                    }
+                });
             },
             resetForm(formName) {
-                //methods:{resetFields:function(){this.model&&this.fields.forEach(function(e){e.resetField()})}
-                //this.$refs[formName].resetFields();
-//                console.log(this.$refs[formName].this.model&&this.fields.forEach(function(e){e.resetField()}))
+                this.$refs[formName].resetFields();
             },
+            judgeMent(){
+                setTimeout(function(){
+                    $('.el-form-item__error').css("display", "none");
+                },2000)
+            }
         }
     })
 </script>
