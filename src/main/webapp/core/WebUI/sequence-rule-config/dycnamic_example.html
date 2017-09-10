@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态生成vue实例</title>
+</head>
+<body>
+    <div id="main">
+        <el-row style="margin-top: 20px;">
+            <el-col :span="4" :offset="10">
+                <el-select v-model="name" placeholder="请选择">
+                    <el-option
+                        v-for="item in allType"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="1">
+                <el-button type="primary" icon="plus" @click="add"></el-button>
+            </el-col>
+        </el-row>
+        <div v-for="(item, index) in items" :is="item.html" :child-index="index"></div>
+    </div>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        // 构造函数
+        function new_vue() {};
+        // 构造函数原型链
+        new_vue.prototype.creat = function(_id, num, type) {
+            // vue实例名称
+            var _name;
+            _name = "vm_" + num;
+
+            // 定义模板
+            var _template;
+            if(type == "input") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-input placeholder="请输入内容" v-model="message">
+					                    <el-button slot="append" icon="search"></el-button>
+					                </el-input>
+					            </el-col>
+					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            	<el-button type="primary" icon="search" @click="search"></el-button>
+					            </el-col>
+					        </el-row>`;
+            }
+            if(type == "select") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-select v-model="value" placeholder="请选择">
+										<el-option
+											v-for="item in options"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value">
+										</el-option>
+									</el-select>
+					            </el-col>
+					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            	<el-button type="primary" icon="search" @click="search"></el-button>
+					            </el-col>
+					        </el-row>`;
+            }
+            if(type == "switch") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-tooltip :content="'Switch value: ' + value1" placement="top">
+										<el-switch v-model="value1" on-color="#13ce66" off-color="#ff4949" on-value="100" off-value="0">
+										</el-switch>
+									</el-tooltip>
+					            </el-col>
+					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            	<el-button type="primary" icon="search" @click="search"></el-button>
+					            </el-col>
+					        </el-row>`;
+            }
+            if(type == "datetime") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-date-picker v-model="value2" type="datetime" placeholder="选择日期时间">
+									</el-date-picker>
+					            </el-col>
+					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            	<el-button type="primary" icon="search" @click="search"></el-button>
+					            </el-col>
+					        </el-row>`;
+            }
+
+            // 拼接vue实例
+            console.log(_id);
+            console.log(_name);
+            _name = new Vue({
+                el: _id,
+                template: _template,
+                data() {
+                    return {
+                        message: "",
+                        value: "",
+                        options: [{
+                            value: 'Beijing',
+                            label: '北京'
+                        }, {
+                            value: 'Shanghai',
+                            label: '上海'
+                        }, {
+                            value: 'Nanjing',
+                            label: '南京'
+                        }, {
+                            value: 'Chengdu',
+                            label: '成都'
+                        }, {
+                            value: 'Shenzhen',
+                            label: '深圳'
+                        }, {
+                            value: 'Guangzhou',
+                            label: '广州'
+                        }, {
+                            value: 'Hangzhou',
+                            label: '杭州'
+                        }],
+                        value1: "100",
+                        value2: ""
+                    }
+                },
+                methods: {
+                    search() {
+                        console.log(this._data);
+                    }
+                }
+            })
+        };
+
+        var _html = Vue.extend({
+            props: ["childIndex"],
+            data() {
+                return {
+                    //
+                }
+            },
+            template: "<div id='cnt-1'></div>"
+        });
+
+        var $app = new Vue({
+            el: "#main",
+            data() {
+                return {
+                    items: [],
+                    name: "",
+                    num: 0,
+                    allType: [{
+                        value: "input",
+                        label: "输入框"
+                    }, {
+                        value: "select",
+                        label: "下拉框"
+                    }, {
+                        value: "switch",
+                        label: "开关"
+                    }, {
+                        value: "datetime",
+                        label: "日期时间"
+                    }]
+                }
+            },
+            components: {
+                "$html": _html
+            },
+            methods: {
+                add() {
+                    this.num += 1;
+                    this.items.push({
+                        "html": "$html"
+                    });
+                    // 新增vue实例
+                    var $obj = new new_vue();
+                    $obj.creat("#cnt-" + this.num, this.num, this.name);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
