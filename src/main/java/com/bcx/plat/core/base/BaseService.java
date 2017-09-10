@@ -1,10 +1,14 @@
 package com.bcx.plat.core.base;
 
+import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -237,6 +241,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
 
     /**
      * 通用更新方法
+     *
      * @param condition 接受参数
      * @return int
      */
@@ -247,5 +252,78 @@ public abstract class BaseService<T extends BaseEntity<T>> {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    /**
+     * 通用删除方法
+     *
+     * @param condition 接受参数
+     * @return int
+     */
+    public int delete(Condition condition) {
+        try {
+            return getTClass().newInstance().delete(condition);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
+
+    /**
+     * 主从表关联查询数据
+     *
+     * @param primary           主表Class
+     * @param secondary         从表Class
+     * @param relationPrimary   主表连接条件
+     * @param relationSecondary 从表连接条件
+     * @param condition         过滤参数
+     * @return List
+     */
+    protected List<Map<String, Object>> leftAssociationQuery(Class<? extends BeanInterface> primary,
+                                                             Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, Condition condition) {
+        try {
+            return getTClass().newInstance().associationQuery(primary, secondary, relationPrimary, relationSecondary, condition);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 提供关联查询时的过滤条件
+     *
+     * @param entityClass Class
+     * @param alias       别名
+     * @return Field
+     */
+    protected Field columnByAlias(Class entityClass, String alias) {
+        Field field = null;
+        if (entityClass != null && (!alias.isEmpty())) {
+            try {
+                field = getTClass().newInstance().columnByAlias(entityClass, alias);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return field;
+    }
+
+    /**
+     * 单表执行查询
+     * @param entityClass   接受一个实体
+     * @param condition 过滤条件
+     * @return  List
+     */
+    protected List<Map<String, Object>> singleSelect(Class entityClass, Condition condition) {
+        List<Map<String, Object>> list = null;
+        try {
+            list = getTClass().newInstance().singleSelect(entityClass, condition);
+
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

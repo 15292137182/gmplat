@@ -91,7 +91,7 @@ public class MoreBatis {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BeanInterface<T>> Field getColumnByAlies(Class<T> entityClass, String alies) {
+  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alies) {
     final Map<String, Field> entityColumn = aliesMaps.get(entityClass);
     try {
       return entityColumn.get(alies);
@@ -309,8 +309,8 @@ public class MoreBatis {
     for (Field Field : entityColumns.get(secondary)) {
       columns.put(Field.getAlies(), Field);
     }
-    Field primaryField = getColumnByAlies(primary, relationPrimary);
-    Field secondaryField = getColumnByAlies(secondary, relationSecondary);
+    Field primaryField = getColumnByAlias(primary, relationPrimary);
+    Field secondaryField = getColumnByAlias(secondary, relationSecondary);
     final Collection values = columns.values();
     return selectStatement().select(values).from(
             new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
