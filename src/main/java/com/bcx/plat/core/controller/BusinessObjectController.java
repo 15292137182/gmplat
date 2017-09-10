@@ -53,8 +53,8 @@ public class BusinessObjectController extends BaseController {
     public SystemResult insert(@RequestParam Map<String, Object> param, HttpServletRequest request, Locale locale) {
         //新增业务对象数据
         BusinessObject businessObject = new BusinessObject().buildCreateInfo().fromMap(param);
-        ServerResult serverResult = businessObjectService.addBusiness(businessObject);
-        return super.result(serverResult);
+      // ServerResult serverResult = businessObjectService.addBusiness(businessObject);
+      return null; //return super.result(serverResult);
     }
 
     /**
@@ -68,9 +68,10 @@ public class BusinessObjectController extends BaseController {
     @RequestMapping("/queryById")
     public Map queryById(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, SystemResult.success(businessObjectService.queryById(rowId)), locale);
+          // return super.result(request, SystemResult.success(businessObjectService.queryById(rowId)), locale);
         }
-        return SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return null;
+      //return SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
     /**
@@ -90,7 +91,7 @@ public class BusinessObjectController extends BaseController {
                                  String order, HttpServletRequest request, Locale locale) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
-        return super.result(request, SystemResult.success(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
+      return null;//return super.result(request, SystemResult.success(businessObjectService.queryPage(search, pageNum, pageSize, orders)), locale);
     }
 
 
@@ -112,10 +113,11 @@ public class BusinessObjectController extends BaseController {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders);
-            return super.result(request, SystemResult.success(serverResult), locale);
+          //return super.result(request, SystemResult.success(serverResult), locale);
         } else {
-            return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+          //return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
+      return null;
     }
 
 
@@ -132,10 +134,10 @@ public class BusinessObjectController extends BaseController {
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
                     businessObjectService.changeOperat(rowId));
-            return SystemResult.success(serverResult);
+          return null;//return SystemResult.success(serverResult);
         } else {
             logger.error("执行变更操作失败");
-            return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+          return null;//return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
     }
 
@@ -157,7 +159,7 @@ public class BusinessObjectController extends BaseController {
             int update = businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
             serverResult = new ServerResult(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, update);
         }
-        return super.result(request, SystemResult.success(serverResult), locale);
+      return null;//return super.result(request, SystemResult.success(serverResult), locale);
     }
 
 
@@ -172,10 +174,11 @@ public class BusinessObjectController extends BaseController {
     @RequestMapping("/delete")
     public Map delete(String rowId, HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(rowId)) {
-            return super.result(request, SystemResult.success(businessObjectService.delete(rowId)), locale);
+          //return super.result(request, SystemResult.success(businessObjectService.delete(rowId)), locale);
         } else {
-            return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
+          //return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL)), locale);
         }
+      return null;
     }
 
     /**
@@ -192,11 +195,12 @@ public class BusinessObjectController extends BaseController {
         if (UtilsTool.isValid(rowId)) {
             LinkedList<Order> orders = UtilsTool.dataSort(order);
             ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
-            return super.result(request, SystemResult.success(serverResult), locale);
+          //return super.result(request, SystemResult.success(serverResult), locale);
         } else {
             logger.error("查询出业务关联模板属性失败");
-            return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+          //return super.result(request, SystemResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
         }
+      return null;//
     }
 
 
