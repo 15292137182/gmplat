@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -20,7 +21,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @return 参与空格查询的字段
    */
   private List<String> blankSelectFields() {
-    return makeAsList("seqCode", "seqCode", "seqName", "seqContent", "desp");
+    return Arrays.asList("seqCode", "seqCode", "seqName", "seqContent", "desp");
   }
 
 //  /**
@@ -32,17 +33,6 @@ public class SequenceRuleConfigController extends BaseController {
 //   * @param locale   国际化参数
 //   * @return PlatResult
 //   */
-//  @RequestMapping("/queryPage")
-//  public Object singleInputSelect(String search,
-//                                  @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-//                                  @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-//                                  String order,
-//                                  HttpServletRequest request) {
-//    LinkedList<Order> orders = dataSort(order);
-//    pageNum = search == null || search.isEmpty() ? 1 : pageNum;
-//    return selectPage(locale, createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
-//  }
-
   @RequestMapping("/queryPage")
   public PlatResult selectWithPage(String search,
                                    @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
