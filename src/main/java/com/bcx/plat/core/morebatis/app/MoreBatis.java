@@ -55,6 +55,7 @@ public class MoreBatis {
         entityEntry= ((EntityEntryBuilder) entry).getEntry();
       }else{
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
+
       }
       final Class<? extends BeanInterface> entryClass = entityEntry.getEntityClass();
       final TableSource entityEntryTable = entityEntry.getTable();
