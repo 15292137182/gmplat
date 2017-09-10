@@ -1,16 +1,18 @@
 package com.bcx.plat.core.utils;
 
 import com.bcx.plat.core.constants.SysMessage;
-import org.springframework.ui.ModelMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Service 返回的结果
  * <p>
  * Create By HCL at 2017/7/31
  */
-public class SystemResult extends ModelMap {
+public class SystemResult {
 
-  private static final long serialVersionUID = 812376774103405857L;
+  private Map<String, Object> resp = new HashMap<>();
 
   /**
    * 空的构造方法，供 json 转换时使用
@@ -28,9 +30,9 @@ public class SystemResult extends ModelMap {
    * @param sr       数据
    */
   public SystemResult(String respCode, String respMsg, ServerResult sr) {
-    addAttribute("respCode", respCode);
-    addAttribute("respMsg", respMsg);
-    addAttribute("content", sr);
+    resp.put("respCode", respCode);
+    resp.put("respMsg", respMsg);
+    resp.put("content", sr);
   }
 
   /**
@@ -41,5 +43,13 @@ public class SystemResult extends ModelMap {
    */
   public static SystemResult success(ServerResult sr) {
     return new SystemResult(SysMessage.SERVICE_RESPONSE_SUCCESSFUL_CODE, SysMessage.SERVICE_RESPONSE_SUCCESSFUL, sr);
+  }
+
+  public Map<String, Object> getResp() {
+    return resp;
+  }
+
+  public void setResp(Map<String, Object> resp) {
+    this.resp = resp;
   }
 }
