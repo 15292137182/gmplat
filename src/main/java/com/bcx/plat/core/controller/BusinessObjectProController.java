@@ -1,14 +1,22 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
+import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -19,7 +27,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObjPro")
 @RestController
 public class BusinessObjectProController extends
-        BaseController/*<BusinessObjectProService> */{
+        BaseController{
 
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectProService businessObjectProService;
@@ -31,10 +39,11 @@ public class BusinessObjectProController extends
     }
 
 
-    /*@Override*/
     protected List<String> blankSelectFields() {
         return Arrays.asList("propertyCode", "propertyName");
     }
+
+
 
 
     /**
@@ -45,17 +54,16 @@ public class BusinessObjectProController extends
      * @param locale   国际化参数
      * @return PlatResult
      */
-    /*@RequestMapping("/queryById")
-    public Object queryById(String rowId,HttpServletRequest request,Locale locale) {
-//        String attrSource = request.getParameter("attrSource");//属性来源
-//        attrSource =attrSource.equals("")?BaseConstants.ATTRIBUTE_SOURCE_BASE:BaseConstants.ATTRIBUTE_SOURCE_MODULE;
-        if (!UtilsTool.isValid(rowId)) {
-            return PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    @RequestMapping("/queryById")
+    public Map queryById(String rowId, HttpServletRequest request, Locale locale) {
+        if (UtilsTool.isValid(rowId)) {
+            ServerResult serverResult = businessObjectProService.queryById(rowId);
+            return super.result(request, PlatResult.success(serverResult), locale);
         }else{
-            return super.result(request, PlatResult.Msg(businessObjectProService.queryById(rowId)), locale);
+            return super.result(request,PlatResult.success(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)),locale);
         }
 
-    }*/
+    }
 
     /**
      * 供前端功能块属性使用
@@ -67,15 +75,15 @@ public class BusinessObjectProController extends
      * @param locale   国际化参数
      * @return PlatResult
      */
-    /*@RequestMapping("/queryBusinPro")
+    @RequestMapping("/queryBusinPro")
     public Object queryBusinPro(String objRowId, String frontRowId,HttpServletRequest request, Locale locale) {
         if (UtilsTool.isValid(objRowId)) {
             ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
-            return result(request, PlatResult.Msg(serverResult), locale);
+            return result(request, PlatResult.success(serverResult), locale);
         }else{
-            return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, null)), locale);
+            return result(request, PlatResult.success(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, null)), locale);
         }
-    }*/
+    }
 
 
     /**

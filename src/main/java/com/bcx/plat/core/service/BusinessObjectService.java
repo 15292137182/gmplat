@@ -11,6 +11,7 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,34 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     public List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
+
+    /**
+     * 新增业务对象
+     * @param businessObject 业务对象实体
+     * @return ServerResult
+     */
+    public ServerResult addBusiness(BusinessObject businessObject){
+        //实例化业务对象关联模板对象
+        BusinessRelateTemplate brt = new BusinessRelateTemplate();
+        int insert = businessObject.insert();
+        String rowId = businessObject.getRowId();
+        String relateTemplateObject = businessObject.getRelateTemplateObject();
+        List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
+        if (null != list) {
+            for (Object li : list) {
+                brt.setBusinessRowId(rowId);
+                brt.setTemplateRowId(li.toString());
+                //将业务对象业务对新增数据添加到关联表中
+                new BusinessRelateTemplate().fromMap(brt.toMap()).insert();
+            }
+        }
+        if (insert != 1) {
+            return ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+        } else {
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, insert);
+        }
+    }
+
 
     /**
      * 根据rowId查询数据
@@ -229,13 +258,13 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
             businessObject.getBaseTemplateBean().setVersion(str);
             String objectCode = businessObjectList.get(0).getObjectCode();
             businessObject.setObjectCode(objectCode);
-            businessObject.insert();
-//            insert(businessObject.toMap());
+            BusinessObject businessObject1 = new BusinessObject().buildCreateInfo();
+            businessObject1.fromMap(businessObject.toMap()).insert();
+//            businessObject.insert();
 
             oldRowId.put("rowId", rowId);
             oldRowId.put("status", BaseConstants.INVALID);
             oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
-
 //            update(oldRowId);
             return ServerResult.Msg(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
         } else {
@@ -243,6 +272,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         }
 
     }
+
 
     /**
      * 根据rowId删除业务对象数据
@@ -267,12 +297,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
             if (UtilsTool.isValid(list)) {
                 List<String> rowIds = list.stream().map((row) ->
                     (String) row.getRowId()).collect(Collectors.toList());
-//                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
 
             } else if (rowId != null && rowId.length() > 0) {
                 Map<String, Object> args = new HashMap<>();
                 args.put("rowId", rowId);
-//                delete(args);
+                new BusinessObject().delete(new FieldCondition("rowId",Operator.EQUAL,rowId));
                 return ServerResult.Msg(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
             }
         }

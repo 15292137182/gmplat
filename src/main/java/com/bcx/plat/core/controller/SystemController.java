@@ -58,7 +58,7 @@ public class SystemController extends BaseController {
       logger.error(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());
     }
 
-    return PlatResult.Msg(serverResult);
+    return PlatResult.success(serverResult);
   }
 
 }
