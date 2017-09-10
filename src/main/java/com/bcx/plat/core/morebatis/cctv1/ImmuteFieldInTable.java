@@ -1,17 +1,18 @@
 package com.bcx.plat.core.morebatis.cctv1;
 
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.FieldInTable;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
+
 import java.util.LinkedList;
 
 public class ImmuteFieldInTable implements FieldInTable {
 
   private AliasedColumn aliasedColumn;
-  private TableInfo tableSource;
+  private TableSource tableSource;
 
-  public ImmuteFieldInTable(AliasedColumn aliasedColumn, TableInfo tableSource) {
+  public ImmuteFieldInTable(AliasedColumn aliasedColumn, TableSource tableSource) {
     this.aliasedColumn = aliasedColumn;
     this.tableSource = tableSource;
   }
@@ -20,7 +21,7 @@ public class ImmuteFieldInTable implements FieldInTable {
     return aliasedColumn;
   }
 
-  public TableInfo getTableInfo() {
+  public TableSource getTableSource() {
     return tableSource;
   }
 

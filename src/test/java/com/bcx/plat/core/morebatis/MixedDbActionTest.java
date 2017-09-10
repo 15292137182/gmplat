@@ -24,7 +24,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 public class MixedDbActionTest{
-//
+
 //  @Autowired
 //  MoreBatis moreBatis;
 //
@@ -129,7 +129,7 @@ public class MixedDbActionTest{
 //    row.put("testFirst", "json works");
 //    row.put("testSecond", "json works2");
 //    row.put("jsonTest", jsonTest);
-//    InsertAction insertAction = moreBatis.insertEntity().into(TableInfo.TEST)
+//    InsertAction insertAction = moreBatis.insert().into(TableInfo.TEST)
 //        .cols(Arrays.asList("id", "testFirst","testSecond", "jsonTest"))
 //        .values(Arrays.asList(row));
 //    QueryAction queryAction = moreBatis.select().selectAll().from(TableInfo.TEST)

@@ -1,7 +1,6 @@
 package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.KeySet;
@@ -78,11 +77,7 @@ public class JoinTableTest extends BaseTest {
   public void groupByTest() {
     QueryAction joinTableTest;
     List<Map<String, Object>> result;
-    joinTableTest = moreBatis.selectStatement().select(moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"))
-        .from(new JoinTable(TableInfo.T_BUSINESS_OBJECT, JoinType.INNER_JOIN,
-            TableInfo.T_BUSINESS_OBJECT_PRO)
-            .on(new FieldCondition(moreBatis.getColumnByAlias(BusinessObject.class,"rowId"), Operator.EQUAL,
-                moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"))))
+    joinTableTest = moreBatis.select(BusinessObject.class,BusinessObjectPro.class,"rowId","objRowId")
         .where(new FieldCondition(moreBatis.getColumnByAlias(BusinessObject.class,"rowId"), Operator.EQUAL, primaryRowId))
         .groupBy(moreBatis.getColumnByAlias(BusinessObjectPro.class,"objRowId"));
     result = joinTableTest.execute();
