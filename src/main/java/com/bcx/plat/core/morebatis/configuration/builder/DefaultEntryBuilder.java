@@ -16,6 +16,9 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
 
     Collection<String> pks;
 
+    public DefaultEntryBuilder() {
+    }
+
     public DefaultEntryBuilder(Class entityClass, String tableName, Collection<String> pks) {
         this.entityClass = entityClass;
         this.tableName = tableName;
@@ -54,5 +57,29 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
 //            new Field()
 //        }).collect(Collectors.toList());
         return new EntityEntry(entityClass, table,fields,pkFields);
+    }
+
+    public Class getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(Class entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public Collection<String> getPks() {
+        return pks;
+    }
+
+    public void setPks(Collection<String> pks) {
+        this.pks = pks;
     }
 }
