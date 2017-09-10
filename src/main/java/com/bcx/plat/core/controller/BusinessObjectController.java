@@ -8,8 +8,8 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
-import com.bcx.plat.core.utils.SystemResult;
 import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.SystemResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,11 +50,11 @@ public class BusinessObjectController extends BaseController {
      * @return
      */
     @RequestMapping("/add")
-    public Map insert(@RequestParam Map<String, Object> param, HttpServletRequest request, Locale locale) {
+    public SystemResult insert(@RequestParam Map<String, Object> param, HttpServletRequest request, Locale locale) {
         //新增业务对象数据
         BusinessObject businessObject = new BusinessObject().buildCreateInfo().fromMap(param);
         ServerResult serverResult = businessObjectService.addBusiness(businessObject);
-        return super.result(request, SystemResult.success(serverResult), locale);
+        return super.result(serverResult);
     }
 
     /**

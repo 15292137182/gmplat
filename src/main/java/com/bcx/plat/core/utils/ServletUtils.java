@@ -60,9 +60,12 @@ public class ServletUtils {
               ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                       .getRequest()
                       .getAttribute("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE"));
-      Locale locale = Locale.forLanguageTag(languageTag);
-      ResourceBundleMessageSource messageSource = SpringContextHolder.getBean(ResourceBundleMessageSource.class);
-      message = messageSource.getMessage(messageKey, params, locale);
+      String[] tags = languageTag.split("_", 2);
+      if (tags.length == 2) {
+        Locale locale = new Locale(tags[0], tags[1]);
+        ResourceBundleMessageSource messageSource = SpringContextHolder.getBean(ResourceBundleMessageSource.class);
+        message = messageSource.getMessage(messageKey, params, locale);
+      }
     } catch (RuntimeException e) {
       e.printStackTrace();
     }
