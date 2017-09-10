@@ -1,20 +1,15 @@
 package com.bcx.plat.core.utils;
 
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * <p>Title: ServerResult</p>
  * <p>Description: the is ServerResult</p>
- * <p>Copyright: Shanghai Batchsight GMP Information of management platform, Inc. Copyright(c) 2017</p>
+ * <p>Copyright: Shanghai BatchSight GMP Information of management platform, Inc. Copyright(c) 2017</p>
  *
  * @author Wen TieHu
  * @version 1.0
  * <pre>Histroy:
- *                         2017/8/27  Wen TieHu Create
- *          </pre>
+ * 2017/8/27  Wen TieHu Create
+ * </pre>
  */
 public class ServerResult<T> {
 
@@ -28,21 +23,22 @@ public class ServerResult<T> {
   public ServerResult(int state, String msg, T data) {
     this.state = state;
     this.msg = msg;
-    try {
-      ((PageResult) data).getResult();
-    } catch (Exception e) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("result", data);
-      this.data = (T) map;
-      return;
-    }
     this.data = data;
-
   }
 
-  public static ServerResult Msg(int state, String msg) {
-    return new ServerResult(state, msg, null);
+  /**
+   * 设置状态和消息,该构造参数中的消息会被自动国际化处理
+   *
+   * @param state  状态
+   * @param msgKey 消息
+   * @return 返回
+   */
+  public ServerResult<T> setStateMessage(int state, String msgKey, String... strings) {
+    this.state = state;
+    this.msg = ServletUtils.getMessage(msgKey, strings);
+    return this;
   }
+
 
   public int getState() {
     return state;
