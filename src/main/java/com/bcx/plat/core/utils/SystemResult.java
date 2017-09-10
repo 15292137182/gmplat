@@ -5,6 +5,11 @@ import com.bcx.plat.core.constants.SysMessage;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Service 返回的结果
  * <p>
@@ -34,6 +39,7 @@ public class SystemResult {
     resp.put("respMsg", respMsg);
     resp.put("content", sr);
   }
+
 
   /**
    * 返回成功的信息
