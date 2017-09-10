@@ -239,9 +239,9 @@ public abstract class BaseService<T extends BaseEntity<T>> {
         return -1;
     }
 
-    /**
-     * 通用更新方法
-     *
+    /**`
+     * 通用更新方法``
+     *`
      * @param condition 接受参数
      * @return int
      */

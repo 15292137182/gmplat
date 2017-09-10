@@ -52,7 +52,7 @@ public class ServletUtils {
    * @param params     参数(如果需要)
    * @return 返回
    */
-  protected static String getMessage(String messageKey, String... params) {
+  public static String getMessage(String messageKey, String... params) {
     String message = null;
     try {
       // 获取当前的国际化语言
