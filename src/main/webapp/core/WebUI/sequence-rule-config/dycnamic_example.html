@@ -6,8 +6,11 @@
 </head>
 <body>
     <div id="main">
-        <el-row style="margin-top: 20px;">
-            <el-col :span="4" :offset="10">
+        <el-row :gutter="10" style="margin-top: 20px;">
+            <el-col :span="6" :offset="4">
+                <el-input v-model="allValue"></el-input>
+            </el-col>
+            <el-col :span="4">
                 <el-select v-model="name" placeholder="请选择">
                     <el-option
                         v-for="item in allType"
@@ -139,15 +142,19 @@
                     getData(data) {
                         if(type == "input") {
                             console.log(data.target.value);
+                            $app.allValue += data.target.value + ",";
                         }
                         if(type == "select") {
                             console.log(data);
+                            $app.allValue += data + ",";
                         }
                         if(type == "checkbox") {
                             console.log(data.target.checked);
+                            $app.allValue += data.target.checked + ",";
                         }
                         if(type == "datetime") {
                             console.log(data);
+                            $app.allValue += data + ",";
                         }
                     }
                 }
@@ -172,6 +179,7 @@
             el: "#main",
             data() {
                 return {
+                    allValue: "",
                     items: [],
                     name: "",
                     num: 0,
