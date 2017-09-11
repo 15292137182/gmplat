@@ -6,7 +6,6 @@ import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.entity.KeySetPro;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +29,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronc")
 @RestController
-public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
+public class FrontFuncController extends BaseController {
     private final FrontFuncService frontFuncService;
     private final FrontFuncProService frontFuncProService;
     private final BusinessObjectService businessObjectService;
@@ -106,7 +104,7 @@ public class FrontFuncController extends BaseController/*<FrontFuncService>*/ {
      * 根据前端功能块的代码查询出对应的数据
      *
      * @param funcCode ["obj102017-08-31000001"]
-     * @return
+     * @return PlatResult
      */
     @RequestMapping("/queryFuncCode")
     public PlatResult queryFuncCode(String funcCode) {

@@ -2,22 +2,30 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
+import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.entity.TemplateObjectPro;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.TemplateObjectProService;
+import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -30,7 +38,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
 public class FrontFuncProController extends
-        BaseController/*<FrontFuncProService>*/ {
+        BaseController {
 
     private final TemplateObjectProService templateObjectProService;
     private final BusinessObjectProService businessObjectProService;
@@ -44,71 +52,66 @@ public class FrontFuncProController extends
         this.dbTableColumnService = dbTableColumnService;
         this.frontFuncProService = frontFuncProService;
     }
-//
-//    /**
-//     * 模糊查询的字段
-//     *
-//     * @return 字段
-//     */
-//    @Override
-//    protected List<String> blankSelectFields() {
-//        return Collections.singletonList("rowId");
-//    }
+
+    /**
+     * 模糊查询的字段
+     *
+     * @return 字段
+     */
+    protected List<String> blankSelectFields() {
+        return Collections.singletonList("rowId");
+    }
 
 
-//    /**
-//     * 通用新增方法
-//     *
-//     * @param entity  接受一个实体参数
-//     * @param request request请求
-//     * @param locale  国际化参数
-//     * @return
-//     */
-//    @RequestMapping("/add")
-//    @Override
-//    public Object insert(FrontFuncPro entity, HttpServletRequest request, Locale locale) {
-//        String relateBusiPro = entity.getRelateBusiPro();
-//        List<Map<String, Object>> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-//        int insert =0;
-//        if (UtilsTool.isValid(rowId)) {
-//             insert = frontFuncProService.insert(entity.buildCreateInfo().toMap());
-//            if (insert != 1) {
-//                return super.result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL)), locale);
-//            }else {
-//                return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS,Message.NEW_ADD_SUCCESS,insert)), locale);
-//            }
-//        }else {
-//            return super.result(request, PlatResult.Msg(new ServerResult(BaseConstants.STATUS_SUCCESS,Message.DATA_QUOTE,insert)), locale);
-//        }
-//    }
+    /**
+     * 通用新增方法
+     *
+     * @param paramEntity 接受一个实体参数
+     * @return
+     */
+    @RequestMapping("/add")
+    public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
+        String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));
+        List<FrontFuncPro> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+        int insert = -1;
+        if (UtilsTool.isValid(rowId)) {
+            FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
+            insert = frontFuncPro.insert();
+            if (insert == -1) {
+                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+            } else {
+                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            }
+        } else {
+            return super.result(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
+        }
+    }
 
     /**
      * 通过功能块rowId查询功能块属性下对应的数据
      *
-     * @param str     空格查询
-     * @param rowId   功能块rowId
-     * @param request 请求
-     * @param locale  国际化参数
+     * @param search   空格查询
+     * @param rowId 功能块rowId
      * @return 返回serviceResult
      */
-    /*@RequestMapping("/queryPro")
-    public Object singleQuery(String str, String rowId, HttpServletRequest request, Locale locale) {
+    @RequestMapping("/queryPro")
+    public PlatResult singleQuery(String search, String rowId) {
         if (UtilsTool.isValid(rowId)) {
 
             List<FrontFuncPro> frontFuncPros = frontFuncProService
                     .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                            UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(str))));
+                            UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
 //            frontFuncPros = queryResultProcess(frontFuncPros);
             if (frontFuncPros.size() == 0) {
-                return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+                return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
             } else {
                 ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, frontFuncPros);
-                return result(request, PlatResult.Msg(serverResult), locale);
+                return result(serverResult);
             }
         }
-        return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
+        return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
 
-    }*/
+    }
 
 
     /**
@@ -121,11 +124,11 @@ public class FrontFuncProController extends
      * @param locale   国际化参数
      * @return PlatResult
      */
-    /*@RequestMapping("/queryProPage")
-    public Object singleInputSelect(String rowId, String search,
-                                    @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                    @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                    HttpServletRequest request, Locale locale, String order) {
+    @RequestMapping("/queryProPage")
+    public PlatResult singleInputSelect(String rowId, String search,
+                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                        @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                        HttpServletRequest request, Locale locale, String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
             PageResult<Map<String, Object>> pageResult = frontFuncProService.selectPageMap(
@@ -135,10 +138,10 @@ public class FrontFuncProController extends
             PageResult<Map<String, Object>> result = pageResult;
 
 //            result = queryResultProcess(result);
-            return result(request, PlatResult.Msg(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result)), locale);
+            return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
         }
-        return result(request, PlatResult.Msg(ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL)), locale);
-    }*/
+        return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    }
 
 
     /**
@@ -147,11 +150,11 @@ public class FrontFuncProController extends
      * @param result 接受ServiceResult
      * @return list
      */
-    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+    private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
         List<String> rowIds = result.stream().map((row) ->
                 (String) row.get("relateBusiPro")).collect(Collectors.toList());
 
-//        businessObjectProService.selectMap(new FieldCondition("rowId", Operator.IN, rowIds)
+//        businessPlatResultProService.selectMap(new FieldCondition("rowId", Operator.IN, rowIds)
 //                , Arrays.asList(new Field("row_id", "rowId")
 //                        , new Field("property_name", "propertyName"),null));
 
@@ -186,7 +189,7 @@ public class FrontFuncProController extends
                     String relateTableRowId = relate.getRelateTableColumn();
                     List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
                     for (DBTableColumn row : rowId) {
-                        res.put("ename",row.getColumnEname());
+                        res.put("ename", row.getColumnEname());
                     }
                 }
             }
@@ -194,32 +197,4 @@ public class FrontFuncProController extends
         return result;
     }
 
-
-//
-//    /**
-//     * 通用新增方法
-//     *
-//     * @param entity  接受一个实体参数
-//     * @param request request请求
-//     * @param locale  国际化参数
-//     * @return 返回操作信息
-//     */
-//    @RequestMapping("/add")
-//    public Object insert(Map entity, HttpServletRequest request, Locale locale) {
-//        return super.insert(new FrontFuncPro().fromMap(entity), request, locale);
-//    }
-//
-//
-//    /**
-//     * 通过修改方法
-//     *
-//     * @param entity  接受一个实体参数
-//     * @param request request请求
-//     * @param locale  国际化参数
-//     * @return 返回操作信息
-//     */
-//    @RequestMapping("/modify")
-//    public Object update(Map entity, HttpServletRequest request, Locale locale) {
-//        return super.updateById(new TemplateObject().fromMap(entity), request, locale);
-//    }
 }

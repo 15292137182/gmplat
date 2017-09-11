@@ -46,8 +46,8 @@ public class FrontFuncService extends BaseService<FrontFunc> {
         LinkedList<Map<String, Object>> linkedList = new LinkedList<>();
         List<Map<String, Object>> result = null;
         for (Object key : funcCode) {
-            List<Map<String, Object>> keysetCode = moreBatis.select(FrontFunc.class)
-                    .where(new FieldCondition("funcCode", Operator.EQUAL, key)).execute();
+            FieldCondition fieldCondition = new FieldCondition("funcCode", Operator.EQUAL, key);
+            List<Map<String, Object>> keysetCode = singleSelect(FrontFunc.class, fieldCondition);
             List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(keysetCode);
             LinkedList<Order> orders = UtilsTool.dataSort("{\"str\":\"displayTitle\", \"num\":1}");//默认按照显示标题排序
             for (Map<String, Object> keySet : list) {
@@ -60,7 +60,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                     String attrSource = map.get("attrSource").toString();
                     switch (attrSource) {
                         case BaseConstants.ATTRIBUTE_SOURCE_MODULE:
-                            List<Map> proRwoId = new TemplateObject().selectSimpleMap(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
+                            List<Map> proRwoId = new TemplateObjectPro().selectSimpleMap(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
                             if (!UtilsTool.isValid(proRwoId)) {
                                 continue;
                             }

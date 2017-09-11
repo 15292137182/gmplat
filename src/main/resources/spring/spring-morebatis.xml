@@ -62,7 +62,7 @@
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.TemplateObjectPro" p:tableName="t_template_object_pro"
-                      p:pks="#{'rowId'}"/>
+                      p:pks="#{'proRowId'}"/>
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
