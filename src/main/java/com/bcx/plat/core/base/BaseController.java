@@ -40,8 +40,8 @@ public abstract class BaseController {
    * @return 返回处理后的 Map
    */
   @SuppressWarnings("unchecked")
-  protected Map adapterPageResult(PageResult<Map> pageResult) {
-    Map result = null;
+  protected Map adapterPageResult(PageResult<Map<String,Object>> pageResult) {
+    Map result ;
     result = jsonToObj(objToJson(pageResult), HashMap.class);
     if (null != result) {
       result.put("data", result.get("result"));

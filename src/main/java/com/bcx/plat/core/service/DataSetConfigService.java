@@ -29,25 +29,25 @@ public class DataSetConfigService extends BaseService<DataSetConfig> {
         return Arrays.asList("objectCode", "objectName");
     }
 
-    /**
-     * 数据集查询全部数据并分页显示
-     * @param blankSearch   空白查询
-     * @param pageNum   当前页码
-     * @param pageSize  一页显示条数
-     * @param orders    排序
-     * @return  ServerResult
-     */
-    public ServerResult queryPage(String blankSearch, int pageNum, int pageSize, LinkedList<Order> orders) {
-//        pageNum = !UtilsTool.isValid(blankSearch) ? 1 : pageNum;
-        PageResult<Map<String, Object>> result;
-        result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(blankSearch)),
-                orders, pageNum, pageSize);
-        if (result.getResult().size() == 0) {
-            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-        } else {
-            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
-        }
-    }
+//    /**
+//     * 数据集查询全部数据并分页显示
+//     * @param blankSearch   空白查询
+//     * @param pageNum   当前页码
+//     * @param pageSize  一页显示条数
+//     * @param orders    排序
+//     * @return  ServerResult
+//     */
+//    public ServerResult queryPage(String blankSearch, int pageNum, int pageSize, LinkedList<Order> orders) {
+////        pageNum = !UtilsTool.isValid(blankSearch) ? 1 : pageNum;
+//        PageResult<Map<String, Object>> result;
+//        result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(blankSearch)),
+//                orders, pageNum, pageSize);
+//        if (result.getResult().size() == 0) {
+//            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+//        } else {
+//            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+//        }
+//    }
 
 
 }

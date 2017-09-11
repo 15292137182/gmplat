@@ -316,7 +316,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
      * @param condition 过滤条件
      * @return  List
      */
-    protected List<Map<String, Object>> singleSelect(Class entityClass, Condition condition) {
+    public List<Map<String, Object>> singleSelect(Class entityClass, Condition condition) {
         List<Map<String, Object>> list = null;
         try {
             list = getTClass().newInstance().singleSelect(entityClass, condition);

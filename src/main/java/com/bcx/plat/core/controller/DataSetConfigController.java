@@ -3,12 +3,12 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DataSetConfig;
-import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.service.DataSetConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -111,19 +111,17 @@ public class DataSetConfigController extends BaseController {
      * @return PlatResult
      */
     @RequestMapping("/queryPage")
-    public PlatResult queryPage(String rowId, String search,
-                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                   String order) {
+    public PlatResult queryPage(String search,
+                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        if (UtilsTool.isValid(rowId)) {
-            ServerResult serverResult = dataSetConfigService.queryPage(search, rowId, pageNum, pageSize, orders);
-            return super.result(serverResult);
-        } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-        }
+        Or blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        PageResult<Map<String, Object>> result = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+        Map map = adapterPageResult(result);
+        ServerResult<Map> mapServerResult = new ServerResult<>(map);
+        return result(mapServerResult);
     }
-
 
 
 }
