@@ -21,7 +21,7 @@
                 <el-button type="primary" icon="plus" @click="add"></el-button>
             </el-col>
         </el-row>
-        <div v-for="(item, index) in items" :is="item.html" :child-index="index"></div>
+        <div v-for="(item, index) in items" :is="item.html" :child-index="num"></div>
     </div>
 
     <script type="text/javascript" src="../Public/publicjs.js"></script>
@@ -38,12 +38,10 @@
             var _template;
             if(type == "input") {
                 _template = `<el-row>
-					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
-					                <el-input placeholder="请输入内容" v-model="message">
-					                    <el-button slot="append" icon="search"></el-button>
-					                </el-input>
+					            <el-col :span="3" :offset="10" style="margin-top: 20px;">
+					                <el-input placeholder="请输入内容" v-model="message"></el-input>
 					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            <el-col :span="1" :offset="1" style="margin-top: 20px;">
 					            	<el-button type="primary" icon="search" @click="search"></el-button>
 					            </el-col>
 					        </el-row>`;
@@ -60,7 +58,7 @@
 										</el-option>
 									</el-select>
 					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            <el-col :span="1" style="margin-top: 20px;">
 					            	<el-button type="primary" icon="search" @click="search"></el-button>
 					            </el-col>
 					        </el-row>`;
@@ -73,7 +71,7 @@
 										</el-switch>
 									</el-tooltip>
 					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            <el-col :span="1" style="margin-top: 20px;">
 					            	<el-button type="primary" icon="search" @click="search"></el-button>
 					            </el-col>
 					        </el-row>`;
@@ -84,15 +82,13 @@
 					                <el-date-picker v-model="value2" type="datetime" placeholder="选择日期时间">
 									</el-date-picker>
 					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;text-align: right;">
+					            <el-col :span="1" style="margin-top: 20px;">
 					            	<el-button type="primary" icon="search" @click="search"></el-button>
 					            </el-col>
 					        </el-row>`;
             }
 
             // 拼接vue实例
-            console.log(_id);
-            console.log(_name);
             _name = new Vue({
                 el: _id,
                 template: _template,
@@ -138,10 +134,14 @@
             props: ["childIndex"],
             data() {
                 return {
-                    //
+                    name: ""
                 }
             },
-            template: "<div id='cnt-1'></div>"
+            mounted() {
+              // 拼接新增HTML的id
+              this.name = "cnt-" + this.childIndex;
+            },
+            template: "<div :id='this.name'></div>"
         });
 
         var $app = new Vue({
@@ -171,14 +171,18 @@
             },
             methods: {
                 add() {
+                    // 新增一次标识自加
                     this.num += 1;
+                    // 将模板push到对象数组里
                     this.items.push({
                         "html": "$html"
                     });
-                    // 新增vue实例
-                    var $obj = new new_vue();
-                    $obj.creat("#cnt-" + this.num, this.num, this.name);
                 }
+            },
+            updated() {
+                // 新增创建vue实例
+                var $obj = new new_vue();
+                $obj.creat("#cnt-" + this.num, this.num, this.name);
             }
         });
     </script>
