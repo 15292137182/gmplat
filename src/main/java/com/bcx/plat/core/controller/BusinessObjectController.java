@@ -52,8 +52,7 @@ public class BusinessObjectController extends BaseController {
     @RequestMapping("/add")
     public PlatResult insert(@RequestParam Map<String, Object> param) {
         //新增业务对象数据
-        BusinessObject businessObject = new BusinessObject().fromMap(param).buildCreateInfo();
-        ServerResult serverResult = businessObjectService.addBusiness(businessObject);
+        ServerResult serverResult = businessObjectService.addBusiness(param);
         return super.result(serverResult);
     }
 

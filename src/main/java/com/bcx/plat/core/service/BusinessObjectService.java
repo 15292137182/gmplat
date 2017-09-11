@@ -61,10 +61,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     /**
      * 新增业务对象
      *
-     * @param businessObject 业务对象实体
+     * @param param 业务对象实体
      * @return ServerResult
      */
-    public ServerResult addBusiness(BusinessObject businessObject) {
+    public ServerResult addBusiness(Map<String, Object> param) {
+        //新增业务对象数据
+        BusinessObject businessObject = new BusinessObject().fromMap(param).buildCreateInfo();
         //实例化业务对象关联模板对象
         BusinessRelateTemplate brt = new BusinessRelateTemplate();
         int insert = businessObject.insert();
@@ -76,7 +78,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
                 brt.setBusinessRowId(rowId);
                 brt.setTemplateRowId(li.toString());
                 //将业务对象业务对新增数据添加到关联表中
-                new BusinessRelateTemplate().fromMap(brt.toMap()).insert();
+                new BusinessRelateTemplate().buildCreateInfo().fromMap(brt.toMap()).insert();
             }
         }
         if (insert != 1) {
@@ -84,7 +86,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
             return ServerResult.setMessage(BaseConstants.STATUS_FAIL, message);
         } else {
             String message = ServletUtils.getMessage(Message.NEW_ADD_SUCCESS);
-            return new ServerResult<>(BaseConstants.STATUS_SUCCESS,message, insert);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, message, insert);
         }
     }
 
@@ -126,7 +128,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(search)),
                 order, pageNum, pageSize);
         if (result.getResult().size() == 0) {
-            return null;//  ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         } else {
             for (Map<String, Object> rest : result.getResult()) {
                 rest.put("disableButton", false);//前端页面删除,编辑,禁用按钮

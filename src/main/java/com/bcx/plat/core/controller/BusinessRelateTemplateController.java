@@ -17,7 +17,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/busiRelate")
-public class BusinessRelateTemplateController extends BaseController/*<DataSetConfigService>*/ {
+public class BusinessRelateTemplateController extends BaseController{
 
     protected List<String> blankSelectFields() {
         return Arrays.asList("datasetCode", "datasetName", "datasetType");

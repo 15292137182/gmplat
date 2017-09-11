@@ -158,7 +158,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
         for (Map<String, Object> relate : relateBusiPro) {
             if (relate.get("relateBusiPro").equals(objRowId)) {
                 for (int i = 0; i < results.size(); i++) {
-                    String relateBusiPro1 = null;
+                    String relateBusiPro1 ;
                     try {
                         relateBusiPro1 = results.get(i).get("objRowId").toString();
                     } catch (NullPointerException e) {

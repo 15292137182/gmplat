@@ -2,6 +2,7 @@ package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.ServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public abstract class BaseController {
    * @return 平台包装后的结果
    */
   protected PlatResult result(ServerResult serverResult) {
+    String msg = serverResult.getMsg();
+    String message = ServletUtils.getMessage(msg);
+    serverResult.setMsg(message);
     return PlatResult.success(serverResult);
   }
 
