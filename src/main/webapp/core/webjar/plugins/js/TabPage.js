@@ -880,7 +880,7 @@ var DynamicStitching = (function(){
     }
 })()
 
-
+//获取html内容
 var htmlAjax = (function(){
     var keyValue = function(callback){
         $.ajax({
@@ -888,7 +888,6 @@ var htmlAjax = (function(){
             type:"get",
             data:{},
             success:function(res){
-                alert("in");
                 if(callback){
                     callback(res);
                 }
@@ -926,26 +925,32 @@ var DynamicStitchings = (function(){
         switch (caseName){
             case 'input'://单行文本框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input data="'+obj.ename+'" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
+                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input data="'+obj.ename+'" :disabled="'+disab+'" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case 'textarea'://多行文本框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
+                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" :disabled="'+disab+'" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case "select-base"://下拉框
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
+                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select :disabled="'+disab+'" placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox data="'+obj.ename+'"  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
+                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox :disabled="'+disab+'" data="'+obj.ename+'"  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
                 break;
             case "radio"://单选框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio v-model="'+model+'" class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
+                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio :disabled="'+disab+'" v-model="'+model+'" class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
                 break;
             case "date"://日期框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker v-model="'+model+'" placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
+                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker :disabled="'+disab+'" v-model="'+model+'" placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
                 break;
         }
         return str;
@@ -1014,17 +1019,20 @@ var DynamicStitchings = (function(){
     }
 })()
 //动态表单对象
-function GmpForm1(compId, blockId, formBlockItems, vueEl,postUrl,postParam){
+function GmpForm1(compId, blockId, formBlockItems, vueEl,postUrl,postParam,formUrl){
     this.compId = compId;//父组件名字
     this.blockId = blockId; //功能块标识
     this.formBlockItems = formBlockItems;//表单块key值集合
 
     this.vueEl = vueEl;     //vue el
     this.vueObj = null;    //vue对象实例
-    this.formObj = {}; //表单数据Key : value
+    this.formObj = {
+        disabled:{}
+    }; //表单数据Key : value
 
     this.postUrl = postUrl //获取后端数据接口
     this.postParam = postParam //请求参数参数json
+    this.formUrl = formUrl //提交接口
 }
 //获取vue实例对象
 GmpForm1.prototype.getVueObj = function(){
@@ -1036,7 +1044,9 @@ GmpForm1.prototype.searchSelect = function(){
     var arr = this.formBlockItems;
     for(var j=0;j<arr.length;j++){
         var obj =arr[j].ename;
+        var disa = arr[j].ename + "Disabled";
         this.formObj[obj] = '';
+        this.formObj.disabled[disa] = false;
     }
     var obj = {
         props:[]
@@ -1077,6 +1087,7 @@ GmpForm1.prototype.getData = function(){
     var arr = this.formBlockItems;
     var formObj = this.formObj;
     var data = {};
+    var dataConfig = {};
     for(var i=0;i<arr.length;i++){
         if(formObj[arr[i].ename] instanceof Date){
             var date = new Date(formObj[arr[i].ename]);
@@ -1092,9 +1103,13 @@ GmpForm1.prototype.getData = function(){
             var newDate = y+"-"+m+"-"+d;
             formObj[arr[i].ename] = newDate;
         }
-        data[arr[i].ename]=formObj[arr[i].ename];
+        data[arr[i].ename] = formObj[arr[i].ename];
+        dataConfig[(arr[i].ename)+"Disabled"] = formObj.disabled[(arr[i].ename)+"Disabled"];
     }
-    return data;
+    return {
+        data:data,
+        dataConfig:dataConfig
+    };
 }
 //数据直接加载表单域
 GmpForm1.prototype.loadData = function(json){
@@ -1130,6 +1145,7 @@ GmpForm1.prototype.getOptions = function(){
 
     data.postUrl = this.postUrl; //获取后端数据接口
     data.postParam = this.postParam; //请求参数参数json
+    data.formUrl = this.formUrl;//提交地址
     return data;
 }
 //设置 表单ajax参数
@@ -1146,6 +1162,57 @@ GmpForm1.prototype.request = function(callback){
         url:url,
         type:"get",
         data:{data},
+        success:function(res){
+            if(callback){
+                callback(res);
+            }
+        }
+    })
+}
+//禁用 表单域控件
+GmpForm1.prototype.lock = function(keyArr){
+    for(var j=0;j<keyArr.length;j++){
+        var disabled = keyArr[j] + "disa";
+        this.formObj[disabled] = true;
+    }
+}
+//启用 表单域控件
+GmpForm1.prototype.unlock = function(keyArr){
+    for(var j=0;j<keyArr.length;j++){
+        var disabled = keyArr[j] + "disa";
+        this.formObj[disabled] = false;
+    }
+}
+//清空表单域数据
+GmpForm1.prototype.clear = function(){
+    var formObj = this.formObj;
+    for(var key in formObj){
+        if(key !="disabled"){
+            formObj[key]= '';
+        }
+    }
+}
+//提交表单
+GmpForm1.prototype.submit = function(json,callback){
+    var that = this;
+    if(json["formUrl"] == 'undefined'){
+        if(that.formUrl ==''){
+            alert("未定义提交接口");
+            return
+        }
+        json["formUrl"] = that.formUrl;
+    }
+    if(json["data"] == 'undefined'){
+        var datas = that.getData();
+        json["data"] = datas.data;
+    }
+    if(json["isValidate"]){
+        //验证方法
+    }
+    $.ajax({
+        url:json["formUrl"],
+        type:"post",
+        data:json["data"],
         success:function(res){
             if(callback){
                 callback(res);

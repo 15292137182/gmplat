@@ -29,6 +29,16 @@
 </div>
 </body>
 <script>
+    var json = {
+        block : "block",
+        code : "code",
+        content : "content",
+        desp : "desp",
+        name : "name",
+        syso : "syso",
+        typeName : "",
+        version : "version"
+    }
     var arr = [
                 {displayTitle:'代码',funcType:'form',displayWidget:'input',ename:'code'},
                 {displayTitle:'名称',funcType:'form',displayWidget:'input',ename:'name'},
@@ -44,6 +54,9 @@
         obj.bulidComponent(function(){
             console.log(obj.getData());
         });
+        if(vm.edit){
+            obj.loadData(json);
+        }
     });
 </script>
 </html>

@@ -9,7 +9,12 @@
     <div id="box">
         <el-row>
             <el-col :span="12">
-                <el-button type="info" @click="add">新增表单测试</el-button>
+                <el-button type="info" @click="addBlock">新增表单测试</el-button>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="12">
+                <el-button type="info" @click="editBlock">编辑表单测试</el-button>
             </el-col>
         </el-row>
     </div>
@@ -19,11 +24,18 @@
         el:"#box",
         data:{
             divIndex:'',
+            divIndex1:'',
+            edit:''
         },
         methods:{
-            add(){
+            addBlock(){
                 this.divIndex = ibcpLayer.ShowDiv('demo2.html','新增表单测试','400px', '500px',function(){
-
+                    vm.edit = false;
+                })
+            },
+            editBlock(){
+                this.divIndex1 = ibcpLayer.ShowDiv('demo2.html','编辑表单测试','400px', '500px',function(){
+                    vm.edit = true;
                 })
             }
         }
