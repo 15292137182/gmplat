@@ -7,15 +7,19 @@ import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DataSetConfig;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.service.DataSetConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +33,9 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/dataSetConfig")
 public class DataSetConfigController extends BaseController {
+
+    @Autowired
+    DataSetConfigService dataSetConfigService;
 
     protected List<String> blankSelectFields() {
         return Arrays.asList("datasetCode", "datasetName", "datasetType");
@@ -94,6 +101,29 @@ public class DataSetConfigController extends BaseController {
             return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
+
+    /**
+     * 根据数据集rowId查找数据
+     *
+     * @param search   按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @return PlatResult
+     */
+    @RequestMapping("/queryPage")
+    public PlatResult queryPage(String rowId, String search,
+                                   @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                   @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                   String order) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
+        if (UtilsTool.isValid(rowId)) {
+            ServerResult serverResult = dataSetConfigService.queryPage(search, rowId, pageNum, pageSize, orders);
+            return super.result(serverResult);
+        } else {
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        }
+    }
+
 
 
 }

@@ -123,7 +123,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
      * @return ServerResult
      */
     public ServerResult queryPage(String search, int pageNum, int pageSize, List<Order> order) {
-        pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
+//        pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
         PageResult<Map<String, Object>> result;
         result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(search)),
                 order, pageNum, pageSize);

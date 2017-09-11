@@ -83,7 +83,7 @@ public class FrontFuncProController extends
                 return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
             }
         } else {
-            return super.result(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
+            return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
         }
     }
 

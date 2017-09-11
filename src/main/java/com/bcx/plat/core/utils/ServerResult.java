@@ -44,7 +44,7 @@ public class ServerResult<T> {
    */
   public ServerResult(int state, String msg, T data) {
     this.state = state;
-    this.msg = msg;
+    this.msg = ServletUtils.getMessage(msg);
     this.data = data;
   }
 
