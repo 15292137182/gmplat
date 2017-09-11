@@ -36,11 +36,12 @@ public class DataSetConfigController extends BaseController {
 
     /**
      * 新增数据集
+     *
      * @param param 接受实体参数
      * @return PlatResult
      */
     @RequestMapping("/add")
-    public PlatResult addDataSet(@RequestParam Map<String,Object> param){
+    public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
         DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
         int insert = dataSetConfig.insert();
         if (insert != -1) {
@@ -52,16 +53,24 @@ public class DataSetConfigController extends BaseController {
 
     /**
      * 修改数据集数据
+     *
      * @param param 接受实体参数
-     * @return  platResult
+     * @return platResult
      */
     @RequestMapping("/modify")
-    public PlatResult modifyDataSet(@RequestParam Map<String,Object> param){
+    public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
+        int update;
         if (UtilsTool.isValid(param.get("rowId"))) {
             DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
-            dataSetConfig.updateById();
+            update = dataSetConfig.updateById();
+            if (update != -1) {
+                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+            } else {
+                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+            }
+        } else {
+            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
-        return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
     }
 
     /**
