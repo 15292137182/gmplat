@@ -99,6 +99,29 @@ Vue.component("single-selection", {
         cascaderEvent(val) {
             this.selectValue.values = val;
         },
+        _data() {
+            $.ajax({
+                url:serverPath + "/maintTable/query",
+                type:"get",
+                data:{
+                    search:"",
+                    pageSize:"",
+                    pageNum:""
+                },
+                dataType:"json",
+                success:function(res){
+                    console.log(res);
+                    if(res.resp.respCode == "000"){
+                        if(res.resp.content.state == -1){
+                            //
+                        }
+                    }
+                },
+                error:function(){
+                    alert("错误")
+                }
+            })
+        },
         // 拼接option测试方法
         serverOptions(type) {
             if(type == "op_1") {
@@ -151,7 +174,7 @@ Vue.component("single-selection", {
         //     // 动态拼接options
         //     this.options = data;
         // });
-        this.options = this.serverOptions(this.url)
+        this._data();
     },
     updated: function () {
         //
