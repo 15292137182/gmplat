@@ -74,8 +74,9 @@ public class DBTableColumnController extends BaseController {
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = dbTableColumnService.queryTableById(rowId, search);
             return super.result(new ServerResult<>(serverResult));
+        }else {
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
 

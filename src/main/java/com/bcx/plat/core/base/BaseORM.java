@@ -245,13 +245,13 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
      */
     @SuppressWarnings("unchecked")
     public PageResult<T> selectPage(Condition condition, int num, int size, List<Order> orders) {
-        Condition and;
+        Condition or;
         if (null != condition) {
-            and = new And(condition, NOT_DELETE_OR);
+            or = new Or(condition, NOT_DELETE_OR);
         } else {
-            and = NOT_DELETE_OR;
+            or = NOT_DELETE_OR;
         }
-        PageResult result = MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
+        PageResult result = MORE_BATIS.select(getClass()).where(or).orderBy(orders).selectPage(num, size);
         List<T> data = new ArrayList<>();
         result.getResult().forEach(map -> {
             try {

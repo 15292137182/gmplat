@@ -9,6 +9,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
@@ -123,10 +124,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
      * @return ServerResult
      */
     public ServerResult queryPage(String search, int pageNum, int pageSize, List<Order> order) {
-//        pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
+        pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
         PageResult<Map<String, Object>> result;
-        result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(search)),
-                order, pageNum, pageSize);
+        Or blankQuery = createBlankQuery(blankSelectFields(), collectToSet(search));
+        result = selectPageMap(blankQuery, order, pageNum, pageSize);
         if (result.getResult().size() == 0) {
             return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         } else {
@@ -157,7 +158,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
         List<String> rowIds = result.stream().map((row) ->
                 (String) row.get("relateTableRowId")).collect(Collectors.toList());
-        Condition condition = new ConditionBuilder(BusinessObject.class).and().in("rowId", rowIds).endAnd().buildDone();
+        Condition condition = new ConditionBuilder(MaintDBTables.class).and().in("rowId", rowIds).endAnd().buildDone();
         List<Map> results = maintDBTablesService.selectMap(condition);
         HashMap<String, Object> map = new HashMap<>();
         for (Map<String, Object> row : results) {

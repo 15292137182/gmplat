@@ -50,7 +50,7 @@ public class MaintDBTablesController extends BaseController {
                                         String order) {
         LinkedList<Order> orders = dataSort(order);
         pageNum = search == null || search.isEmpty() ? 1 : pageNum;
-        Or blankQuery = createBlankQuery(blankSelectFields(), collectToSet(search));
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<MaintDBTables> maintDBTablesPageResult = maintDBTablesService.selectPage(blankQuery, orders, pageNum, pageSize);
         ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
         return result(pageResultServerResult);

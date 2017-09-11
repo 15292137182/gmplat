@@ -6,7 +6,10 @@ import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -155,5 +158,28 @@ public class FrontFuncController extends BaseController {
         }
         return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
+
+
+    /**
+     * 查询前端功能块数据
+     *
+     * @param search   按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @return PlatResult
+     */
+    @RequestMapping("/queryPage")
+    public PlatResult queryPage(String search,
+                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                String order) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        PageResult<Map<String, Object>> result = frontFuncService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+        Map map = adapterPageResult(result);
+        ServerResult<Map> mapServerResult = new ServerResult<>(map);
+        return result(mapServerResult);
+    }
+
 
 }

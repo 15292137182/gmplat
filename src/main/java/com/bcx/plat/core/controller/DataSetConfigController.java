@@ -4,9 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DataSetConfig;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.service.DataSetConfigService;
@@ -116,7 +114,7 @@ public class DataSetConfigController extends BaseController {
                                 @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                 String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        Or blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<Map<String, Object>> result = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
         Map map = adapterPageResult(result);
         ServerResult<Map> mapServerResult = new ServerResult<>(map);

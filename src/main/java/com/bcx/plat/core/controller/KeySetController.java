@@ -4,13 +4,16 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 
 /**
  * 键值集合Controller层
@@ -120,7 +124,7 @@ public class KeySetController extends BaseController {
      * @param rowId 业务对象rowId
      * @return serviceResult
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public PlatResult delete(String rowId) {
         int del;
         if (!rowId.isEmpty()) {
@@ -142,7 +146,7 @@ public class KeySetController extends BaseController {
      * @param param 接受一个实体参数
      * @return 返回操作信息
      */
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public PlatResult insert(@RequestParam Map<String, Object> param) {
         KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
         int insert = keySet.insert();
@@ -159,7 +163,7 @@ public class KeySetController extends BaseController {
      * @param param 接受一个实体参数
      * @return 返回操作信息
      */
-    @RequestMapping("/modify")
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public PlatResult update(@RequestParam Map<String, Object> param) {
         int update;
         if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
@@ -174,5 +178,34 @@ public class KeySetController extends BaseController {
         }
         return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
+
+
+    /**
+     * 键值集合查询方法
+     *
+     * @param search   按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @return PlatResult
+     */
+    @RequestMapping("/queryPage")
+    public PlatResult singleInputSelect(String search,
+                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                        @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                        String order) {
+        LinkedList<Order> orders = dataSort(order);
+        pageNum = search == null || search.isEmpty() ? 1 : pageNum;
+        Or blankQuery;
+        if (search.isEmpty()) {
+            blankQuery = null;
+        } else {
+            blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        }
+        PageResult<Map<String,Object>> sysConfigPageResult = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+        Map map = adapterPageResult(sysConfigPageResult);
+        ServerResult<Map> mapServerResult = new ServerResult<>(map);
+        return result(mapServerResult);
+    }
+
 
 }

@@ -21,6 +21,7 @@ import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 /**
@@ -69,7 +71,7 @@ public class FrontFuncProController extends
      * @param paramEntity 接受一个实体参数
      * @return
      */
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = POST)
     public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
         String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));
         List<FrontFuncPro> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
@@ -90,8 +92,8 @@ public class FrontFuncProController extends
     /**
      * 通过功能块rowId查询功能块属性下对应的数据
      *
-     * @param search   空格查询
-     * @param rowId 功能块rowId
+     * @param search 空格查询
+     * @param rowId  功能块rowId
      * @return 返回serviceResult
      */
     @RequestMapping("/queryPro")
@@ -195,6 +197,28 @@ public class FrontFuncProController extends
             }
         }
         return result;
+    }
+
+    /**
+     * 键值集合根据rowId修改数据
+     *
+     * @param param 接受一个实体参数
+     * @return 返回操作信息
+     */
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public PlatResult update(@RequestParam Map<String, Object> param) {
+        int update;
+        if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+            FrontFuncPro frontFuncPro = new FrontFuncPro();
+            FrontFuncPro modify = frontFuncPro.fromMap(param).buildModifyInfo();
+            update = modify.updateById();
+            if (update != -1) {
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+            } else {
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+            }
+        }
+        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
 }

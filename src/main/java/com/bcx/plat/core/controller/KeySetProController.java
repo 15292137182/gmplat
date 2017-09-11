@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * <p>Title: KeySetProController</p>
@@ -24,8 +25,8 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  * @author Wen TieHu
  * @version 1.0
  *          <pre>Histroy:
- *                         2017/8/30  Wen TieHu Create
- *                   </pre>
+ *                                  2017/8/30  Wen TieHu Create
+ *                            </pre>
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/keySetProPro")
 @RestController
@@ -42,7 +43,7 @@ public class KeySetProController extends BaseController {
      * @param param 接受一个实体参数
      * @return 返回操作信息
      */
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = POST)
     public PlatResult insert(@RequestParam Map<String, Object> param) {
         KeySetPro KeySetPro = new KeySetPro().buildCreateInfo().fromMap(param);
         int insert = KeySetPro.insert();
@@ -59,7 +60,7 @@ public class KeySetProController extends BaseController {
      * @param param 接受一个实体参数
      * @return 返回操作信息
      */
-    @RequestMapping("/modify")
+    @RequestMapping(value = "/modify", method = POST)
     public PlatResult update(@RequestParam Map<String, Object> param) {
         int update;
         if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
@@ -81,7 +82,7 @@ public class KeySetProController extends BaseController {
      * @param rowId 业务对象rowId
      * @return serviceResult
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete", method = POST)
     public PlatResult delete(String rowId) {
         int del;
         if (!rowId.isEmpty()) {
