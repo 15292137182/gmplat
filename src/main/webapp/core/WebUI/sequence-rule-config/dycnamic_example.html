@@ -28,73 +28,19 @@
     <script>
         // 构造函数
         function new_vue() {};
-        // 构造函数原型链
-        new_vue.prototype.creat = function(_id, num, type) {
-            // vue实例名称
-            var _name;
-            _name = "vm_" + num;
-
-            // 定义模板
-            var _template;
+        // 构造data返回值函数
+        new_vue.prototype.data = function(type) {
+//            var data;
             if(type == "input") {
-                _template = `<el-row>
-					            <el-col :span="3" :offset="10" style="margin-top: 20px;">
-					                <el-input placeholder="请输入内容" v-model="message"></el-input>
-					            </el-col>
-					            <el-col :span="1" :offset="1" style="margin-top: 20px;">
-					            	<el-button type="primary" icon="search" @click="search"></el-button>
-					            </el-col>
-					        </el-row>`;
+                return function() {
+                    return {
+                        message: ""
+                    }
+                }
             }
             if(type == "select") {
-                _template = `<el-row>
-					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
-					                <el-select v-model="value" placeholder="请选择">
-										<el-option
-											v-for="item in options"
-											:key="item.value"
-											:label="item.label"
-											:value="item.value">
-										</el-option>
-									</el-select>
-					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;">
-					            	<el-button type="primary" icon="search" @click="search"></el-button>
-					            </el-col>
-					        </el-row>`;
-            }
-            if(type == "switch") {
-                _template = `<el-row>
-					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
-					                <el-tooltip :content="'Switch value: ' + value1" placement="top">
-										<el-switch v-model="value1" on-color="#13ce66" off-color="#ff4949" on-value="100" off-value="0">
-										</el-switch>
-									</el-tooltip>
-					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;">
-					            	<el-button type="primary" icon="search" @click="search"></el-button>
-					            </el-col>
-					        </el-row>`;
-            }
-            if(type == "datetime") {
-                _template = `<el-row>
-					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
-					                <el-date-picker v-model="value2" type="datetime" placeholder="选择日期时间">
-									</el-date-picker>
-					            </el-col>
-					            <el-col :span="1" style="margin-top: 20px;">
-					            	<el-button type="primary" icon="search" @click="search"></el-button>
-					            </el-col>
-					        </el-row>`;
-            }
-
-            // 拼接vue实例
-            _name = new Vue({
-                el: _id,
-                template: _template,
-                data() {
+                return function() {
                     return {
-                        message: "",
                         value: "",
                         options: [{
                             value: 'Beijing',
@@ -117,14 +63,92 @@
                         }, {
                             value: 'Hangzhou',
                             label: '杭州'
-                        }],
-                        value1: "100",
-                        value2: ""
+                        }]
                     }
-                },
+                }
+            }
+            if(type == "datetime") {
+                return function() {
+                    return {
+                        value: ""
+                    }
+                }
+            }
+            if(type == "checkbox") {
+                return function() {
+                    return {
+                        checked: false
+                    }
+                }
+            }
+        };
+        // 构造函数原型链
+        new_vue.prototype.creat = function(_id, num, type) {
+            // vue实例名称
+            var _name;
+            _name = "vm_" + num;
+
+            // 实例化对象 绑定接收组件参数
+            var _obj = new new_vue();
+
+            // 定义模板
+            var _template;
+            if(type == "input") {
+                _template = `<el-row>
+					            <el-col :span="3" :offset="10" style="margin-top: 20px;">
+					                <el-input placeholder="请输入内容" @blur="getData" v-model="message"></el-input>
+					            </el-col>
+					        </el-row>`;
+            }
+            if(type == "select") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-select v-model="value" @change="getData" placeholder="请选择">
+										<el-option
+											v-for="item in options"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value">
+										</el-option>
+									</el-select>
+					            </el-col>
+					        </el-row>`;
+            }
+            if(type == "checkbox") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-checkbox @change="getData" v-model="checked">是否显示</el-checkbox>
+					            </el-col>
+					        </el-row>`;
+            }
+            if(type == "datetime") {
+                _template = `<el-row>
+					            <el-col :span="4" :offset="10" style="margin-top: 20px;">
+					                <el-date-picker @change="getData" v-model="value" type="datetime" placeholder="选择日期时间">
+									</el-date-picker>
+					            </el-col>
+					        </el-row>`;
+            }
+
+            // 拼接vue实例
+            _name = new Vue({
+                el: _id,
+                template: _template,
+                data: _obj.data(type),
                 methods: {
-                    search() {
-                        console.log(this._data);
+                    getData(data) {
+                        if(type == "input") {
+                            console.log(data.target.value);
+                        }
+                        if(type == "select") {
+                            console.log(data);
+                        }
+                        if(type == "checkbox") {
+                            console.log(data.target.checked);
+                        }
+                        if(type == "datetime") {
+                            console.log(data);
+                        }
                     }
                 }
             })
@@ -158,8 +182,8 @@
                         value: "select",
                         label: "下拉框"
                     }, {
-                        value: "switch",
-                        label: "开关"
+                        value: "checkbox",
+                        label: "复选框"
                     }, {
                         value: "datetime",
                         label: "日期时间"
