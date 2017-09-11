@@ -53,7 +53,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     List<DBTableColumn> relateTableRowId = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
             UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
     if (relateTableRowId.size() == 0) {
-      return null;//  ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateTableRowId);
   }

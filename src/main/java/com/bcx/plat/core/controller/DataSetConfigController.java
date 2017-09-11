@@ -45,9 +45,9 @@ public class DataSetConfigController extends BaseController {
         DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
         int insert = dataSetConfig.insert();
         if (insert != -1) {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -64,12 +64,12 @@ public class DataSetConfigController extends BaseController {
             DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
             update = dataSetConfig.updateById();
             if (update != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
@@ -80,18 +80,18 @@ public class DataSetConfigController extends BaseController {
      * @return serviceResult
      */
     @RequestMapping("/delete")
-    public Object delete(String rowId) {
+    public PlatResult delete(String rowId) {
         int del;
         if (!rowId.isEmpty()) {
             DataSetConfig dataSetConfig = new DataSetConfig();
             del = dataSetConfig.deleteById(rowId);
             if (del != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             }
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 

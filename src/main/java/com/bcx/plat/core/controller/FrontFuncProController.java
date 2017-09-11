@@ -78,9 +78,9 @@ public class FrontFuncProController extends
             FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
             insert = frontFuncPro.insert();
             if (insert == -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
             }
         } else {
             return super.result(new ServerResult(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
@@ -103,13 +103,13 @@ public class FrontFuncProController extends
                             UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
 //            frontFuncPros = queryResultProcess(frontFuncPros);
             if (frontFuncPros.size() == 0) {
-                return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
             } else {
                 ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, frontFuncPros);
                 return result(serverResult);
             }
         }
-        return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
 
     }
 
@@ -140,7 +140,7 @@ public class FrontFuncProController extends
 //            result = queryResultProcess(result);
             return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
         }
-        return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
 

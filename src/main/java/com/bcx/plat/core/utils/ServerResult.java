@@ -29,7 +29,7 @@ public class ServerResult<T> {
 
   public ServerResult(T data) {
     this.state = BaseConstants.STATUS_SUCCESS;
-    this.msg = getMessage(Message.OPERATOR_SUCCESS);
+    this.msg = getMessage(Message.QUERY_SUCCESS);
     this.data = data;
   }
 
@@ -61,15 +61,6 @@ public class ServerResult<T> {
     return this;
   }
 
-  /**
-   * 设置server参数
-   * @param state
-   * @param msg
-   * @return
-   */
-  public static ServerResult setMessage(int state, String msg) {
-    return new ServerResult(state,msg,null);
-  }
 
   public int getState() {
     return state;

@@ -90,12 +90,12 @@ public class FrontFuncController extends BaseController {
             FrontFunc frontFunc = new FrontFunc();
             int del = frontFunc.buildDeleteInfo().deleteById(rowId);
             if (del != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -113,7 +113,7 @@ public class FrontFuncController extends BaseController {
             ServerResult<LinkedList<Map<String, Object>>> linkedListServerResult = frontFuncService.queryFuncCode(list);
             return super.result(linkedListServerResult);
         }
-        return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
 
@@ -128,9 +128,9 @@ public class FrontFuncController extends BaseController {
         FrontFunc frontFunc = new FrontFunc().buildCreateInfo().fromMap(param);
         int insert = frontFunc.insert();
         if (insert != -1) {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -148,12 +148,12 @@ public class FrontFuncController extends BaseController {
             FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
             update = modify.updateById();
             if (update != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         }
-        return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
 }

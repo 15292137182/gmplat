@@ -175,7 +175,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
         }
 
         if (result.size() == 0) {
-            return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));
     }

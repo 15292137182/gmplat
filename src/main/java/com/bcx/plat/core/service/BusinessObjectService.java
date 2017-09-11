@@ -83,7 +83,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         }
         if (insert != 1) {
             String message = ServletUtils.getMessage(Message.NEW_ADD_FAIL);
-            return ServerResult.setMessage(BaseConstants.STATUS_FAIL, message);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, message);
         } else {
             String message = ServletUtils.getMessage(Message.NEW_ADD_SUCCESS);
             return new ServerResult<>(BaseConstants.STATUS_SUCCESS, message, insert);
@@ -128,7 +128,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(search)),
                 order, pageNum, pageSize);
         if (result.getResult().size() == 0) {
-            return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         } else {
             for (Map<String, Object> rest : result.getResult()) {
                 rest.put("disableButton", false);//前端页面删除,编辑,禁用按钮
@@ -189,7 +189,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
                                     collectToSet(search))).endOr().endAnd().buildDone()
                     , order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
-                return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
                 PageResult<Map<String, Object>> result1 = queryProPage(result);
                 return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
@@ -201,7 +201,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
                                     .equal("objRowId", rowId).endAnd().buildDone()
                             , order, pageNum, pageSize);
             if (result.getResult().size() == 0) {
-                return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
             } else {
                 PageResult<Map<String, Object>> result1 = queryProPage(result);
                 return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
@@ -273,9 +273,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
             oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
 
 //            update(oldRowId);
-            return ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
         } else {
-            return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
         }
 
     }
@@ -294,7 +294,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
             String rowId1 = busin.getRowId();
             List<FrontFuncPro> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
             if (funcRowId.size() != 0) {
-                return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
             }
         }
         if (businObj.size() == 0) {
@@ -309,10 +309,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
                 Map<String, Object> args = new HashMap<>();
                 args.put("rowId", rowId);
 //                delete(args);
-                return ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+                return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
             }
         }
-        return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+        return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
 
     }
 

@@ -54,7 +54,7 @@ public class KeySetController extends BaseController {
             ServerResult serverResult = keySetService.queryKeySet(list);
             return super.result(serverResult);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -70,7 +70,7 @@ public class KeySetController extends BaseController {
             ServerResult serverResult = keySetService.queryKeyCode(keyCode);
             return super.result(serverResult);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -86,7 +86,7 @@ public class KeySetController extends BaseController {
             ServerResult<List<Map<String, Object>>> listServerResult = keySetService.queryPro(rowId);
             return super.result(listServerResult);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -109,7 +109,7 @@ public class KeySetController extends BaseController {
             ServerResult serverResult = keySetService.queryProPage(search, rowId, pageNum, pageSize, orders);
             return super.result(serverResult);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -127,12 +127,12 @@ public class KeySetController extends BaseController {
             KeySet keySet = new KeySet();
             del = keySet.deleteById(rowId);
             if (del != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             }
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
@@ -147,9 +147,9 @@ public class KeySetController extends BaseController {
         KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
         int insert = keySet.insert();
         if (insert != -1) {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -167,12 +167,12 @@ public class KeySetController extends BaseController {
             KeySet modify = keySet.fromMap(param).buildModifyInfo();
             update = modify.updateById();
             if (update != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         }
-        return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
 }

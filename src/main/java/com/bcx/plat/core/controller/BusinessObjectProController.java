@@ -58,7 +58,7 @@ public class BusinessObjectProController extends BaseController {
             ServerResult serverResult = businessObjectProService.queryById(rowId);
             return super.result(serverResult);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
 
     }
@@ -77,7 +77,7 @@ public class BusinessObjectProController extends BaseController {
             ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
             return result(serverResult);
         } else {
-            return result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -92,10 +92,10 @@ public class BusinessObjectProController extends BaseController {
         BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
         int insert = businessObjectPro.insert();
         if (insert != -1) {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
 
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -111,7 +111,7 @@ public class BusinessObjectProController extends BaseController {
             BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
             businessObjectPro.updateById();
         }
-        return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
     }
 
     /**
@@ -128,12 +128,12 @@ public class BusinessObjectProController extends BaseController {
             BusinessObjectPro businessObjectPro = new BusinessObjectPro();
             del = businessObjectPro.deleteById(rowId);
             if (del != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
         }
     }
 }

@@ -68,7 +68,7 @@ public class BusinessObjectController extends BaseController {
             ServerResult serverResult = businessObjectService.queryById(rowId);
             return super.result(serverResult);
         }
-        return PlatResult.success(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return PlatResult.success(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
     /**
@@ -109,7 +109,7 @@ public class BusinessObjectController extends BaseController {
             ServerResult serverResult = businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders);
             return super.result(serverResult);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -128,7 +128,7 @@ public class BusinessObjectController extends BaseController {
             return PlatResult.success(serverResult);
         } else {
             logger.error("执行变更操作失败");
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -164,7 +164,7 @@ public class BusinessObjectController extends BaseController {
             ServerResult delete = businessObjectService.delete(rowId);
             return super.result(delete);
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
         }
     }
 
@@ -183,7 +183,7 @@ public class BusinessObjectController extends BaseController {
             return super.result(serverResult);
         } else {
             logger.error("查询出业务关联模板属性失败");
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 

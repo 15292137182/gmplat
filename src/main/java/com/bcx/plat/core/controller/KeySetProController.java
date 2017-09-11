@@ -47,9 +47,9 @@ public class KeySetProController extends BaseController {
         KeySetPro KeySetPro = new KeySetPro().buildCreateInfo().fromMap(param);
         int insert = KeySetPro.insert();
         if (insert != -1) {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -67,12 +67,12 @@ public class KeySetProController extends BaseController {
             KeySetPro modify = keySetPro.fromMap(param).buildModifyInfo();
             update = modify.updateById();
             if (update != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         }
-        return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
     /**
@@ -88,12 +88,12 @@ public class KeySetProController extends BaseController {
             KeySetPro keySetPro = new KeySetPro();
             del = keySetPro.deleteById(rowId);
             if (del != -1) {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return super.result(ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 

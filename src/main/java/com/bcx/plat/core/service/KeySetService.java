@@ -53,7 +53,7 @@ public class KeySetService extends BaseService<KeySet> {
       List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(joinTableTest.execute());
       maps.put(li, list1);
       if (maps.size() == 0) {
-        return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+        return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
       }
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.objToJson(maps));
@@ -62,8 +62,8 @@ public class KeySetService extends BaseService<KeySet> {
   /**
    * 根据键值集合编号查询对应的数据
    *
-   * @param keyCode
-   * @return
+   * @param keyCode 键值代码
+   * @return  ServerResult
    */
   public ServerResult queryKeyCode(String keyCode) {
     List<Map<String, Object>> result = moreBatis.select(KeySet.class)
@@ -77,7 +77,7 @@ public class KeySetService extends BaseService<KeySet> {
     }
     List<Map<String, Object>> relateKeysetRowIds = UtilsTool.underlineKeyMapListToCamel(relateKeysetRowId);
     if (result.size() == 0) {
-      return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowIds);
   }
@@ -89,10 +89,10 @@ public class KeySetService extends BaseService<KeySet> {
    * @param rowId 唯一标示
    * @return ServerResult
    */
-  public ServerResult<List<Map<String, Object>>> queryPro(String rowId) {
+  public ServerResult<List<Map>> queryPro(String rowId) {
     List<Map> rowId1 =
             keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
-    return new ServerResult(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, rowId1);
+    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, rowId1);
   }
 
 
@@ -120,7 +120,7 @@ public class KeySetService extends BaseService<KeySet> {
    * 根据rowId删除业务对象数据
    *
    * @param rowId 唯一标示
-   * @return
+   * @return  ServerResult
    */
   public ServerResult delete(String rowId) {
     List<Map> rkrd = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
@@ -129,7 +129,7 @@ public class KeySetService extends BaseService<KeySet> {
       new KeySetPro().deleteById(_rowId);
     }
     new KeySet().deleteById(rowId);
-    return ServerResult.setMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+    return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
 
   }
 
