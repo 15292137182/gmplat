@@ -6,7 +6,7 @@
  * 修改下拉框 jms
  * @type {Vue}
  */
-Vue.component('select-dsctype', SelectOptions.setOpt('','','dataSetConfigType',''));
+//Vue.component('select-dsctype', SelectOptions.setOpt('','','dataSetConfigType',''));
 
 var addDataSet = new Vue({
     el:'#addDataSet',
@@ -22,6 +22,7 @@ var addDataSet = new Vue({
             belongModule:'',//模块
             belongSystem:'',//系统
         },
+        value_1:'',
         isEdit:'',//是否编辑
         addUrl:serverPath+'/dataSetConfig/add',//新增
         editUrl:serverPath+'/dataSetConfig/modify',//编辑
@@ -101,6 +102,10 @@ var addDataSet = new Vue({
         },
         cancel(){//取消
             ibcpLayer.Close(dataSetConfigButton.divIndex);
+        },
+        getChildData_1(datas){
+            console.log(datas);
+            this.value_1=datas.value;
         }
     }
 })

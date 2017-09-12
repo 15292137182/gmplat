@@ -32,9 +32,14 @@
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="类型">
-                    <!--<el-input placeholder="请输入类型" v-model="formTable.typeInput" ref="typeInput"></el-input>-->
-                    <select-dsctype ref="dsctype"></select-dsctype>
+                    <single-selection @change-data="getChildData_1"  :initial-value="value_1">
+                        <!---->
+                    </single-selection>
                 </el-form-item>
+                <!--<el-form-item label="类型">-->
+                    <!--&lt;!&ndash;<el-input placeholder="请输入类型" v-model="formTable.typeInput" ref="typeInput"></el-input>&ndash;&gt;-->
+                    <!--<select-dsctype ref="dsctype"></select-dsctype>-->
+                <!--</el-form-item>-->
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">

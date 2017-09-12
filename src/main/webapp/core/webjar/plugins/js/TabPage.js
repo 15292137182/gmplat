@@ -10,8 +10,10 @@ var pagingObj = (function(){
                 pageSize:pageSize,
                 pageNum:pageNum
             },
-            dataType:"jsonp",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
             success:function(res){
+                console.log(res);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.state==-1){
@@ -20,7 +22,7 @@ var pagingObj = (function(){
                         obj.pageNum = 1;//当前页
                         return;
                     }
-                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    //dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = res.resp.content.data.pageNum;//当前页
@@ -47,7 +49,8 @@ var pagingObj = (function(){
                 pageSize:pageSize,
                 pageNum:pageNum
             },
-            dataType:"jsonp",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
@@ -57,7 +60,7 @@ var pagingObj = (function(){
                         obj.pageNum = 1;//当前页
                         return;
                     }
-                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    //dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
@@ -98,7 +101,8 @@ var pagingObj = (function(){
                 pageNum:pageNum,
                 order:datas
             },
-            dataType:"jsonp",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
@@ -108,7 +112,7 @@ var pagingObj = (function(){
                         obj.pageNum = 1;//当前页
                         return;
                     }
-                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    //dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
@@ -149,7 +153,8 @@ var pagingObj = (function(){
                 pageNum:1,
                 order:datas
             },
-            dataType:"jsonp",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
@@ -159,7 +164,7 @@ var pagingObj = (function(){
                         obj.pageNum = 1;//当前页
                         return;
                     }
-                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    //dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
@@ -201,7 +206,8 @@ var pagingObj = (function(){
                 pageNum:1,
                 order:datas
             },
-            dataType:"jsonp",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
@@ -211,7 +217,7 @@ var pagingObj = (function(){
                         obj.pageNum = 1;//当前页
                         return;
                     }
-                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    //dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = 1;//定位到第一页
@@ -304,11 +310,12 @@ var queryData = (function(){
                     pageSize:obj.pageSize,
                     pageNum:1
                 },
-                dataType:"jsonp",
+                dataType:"json",
+                xhrFields: {withCredentials: true},
                 success:function(res){
                     obj.loading=false;
                     if(res.resp.respCode=="000"){
-                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        //dataConversion.conversion(obj,res.resp.content.data.result);
                         obj.tableData = res.resp.content.data.result;//数据源
                         obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                         obj.pageNum = res.resp.content.data.pageNum;//当前页
@@ -336,7 +343,8 @@ var queryData = (function(){
                 pageSize:obj.pageSize,
                 pageNum:1
             },
-            dataType:"jsonp",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
@@ -478,11 +486,16 @@ var gmpAjax = (function(){
             xhrFields: {withCredentials: true},
             dataType:"json",
             success:function(res){
+                console.log(res);
                 if(res.resp.content.state==1){
                     if (typeof callback == "function") {
-                        callback(res.resp.content.data.result);
+                        console.log(res);
+                        callback(res.resp.content);
                         showMsg.MsgOk(data.obj,res.resp.content.msg);
                     }
+                }else{
+                    callback(res.resp.content);
+                    showMsg.MsgOk(data.obj,res.resp.content.msg);
                 }
             },
             error:function(res){
@@ -625,7 +638,8 @@ var TableKeyValueSet = (function(){
                 data:{
                     search:arr
                 },
-                dataType:"jsonp",
+                dataType:"json",
+                xhrFields: {withCredentials: true},
                 success:function(res){
                     var param={};
                     // var jsonStr=JSON.parse(res.data);res.resp.content.data.result
@@ -633,7 +647,8 @@ var TableKeyValueSet = (function(){
                     /**
                      * tsj 07/8/30 修改后端返回数据结构
                      **/
-                    var jsonStr=JSON.parse(res.resp.content.data.result);
+                        console.log(res);
+                    var jsonStr=JSON.parse(res.resp.content.data);
                     for(k in jsonStr){
                         var _param={};
                         for(m in jsonStr[k]){

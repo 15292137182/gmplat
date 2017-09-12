@@ -28,6 +28,7 @@ var tableBase = new Vue({
             gmpAjax.showAjax(data,function(res){
                 //showMsg.MsgOk(dataBase,msg);
                 queryData.getData(dataBase.url,dataBase.input,dataBase);
+                console.log(topButtonObj.divIndex);
                 ibcpLayer.Close(topButtonObj.divIndex);
             })
         },
