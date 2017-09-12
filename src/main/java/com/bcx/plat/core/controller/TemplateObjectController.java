@@ -165,6 +165,4 @@ public class TemplateObjectController extends BaseController {
     }
     return result(new ServerResult<>(STATUS_FAIL, Message.DELETE_FAIL, null));
   }
-
-
 }
