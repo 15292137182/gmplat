@@ -31,11 +31,23 @@
         </el-row>
 
         <el-row>
-            <el-col :span="15">
+            <el-col :span="10">
                 <el-form-item label="内容">
-                    <el-input v-model="formTable.seqContentInput" :disabled="true"></el-input>
+                    <el-input v-model="formTable.seqContentInput"></el-input>
                 </el-form-item>
             </el-col>
+
+            <el-col :span="2" style="margin-left: 10px">
+                <el-popover
+                        placement="bottom"
+                        title="模拟流水号生成"
+                        width="120"
+                        @show="show">
+                    <el-input v-model="contentShow" type="textarea" :rows="5" readonly></el-input>
+                    <el-button type="primary" slot="reference" >预览</el-button>
+                </el-popover>
+            </el-col>
+
             <el-col :span="5" style="margin-left: 10px">
                 <el-form-item>
                     <el-select placeholder="请选择" v-model="name" style="width: 150px">
@@ -48,130 +60,6 @@
                 </el-form-item>
             </el-col>
         </el-row>
-
-        <!--<div id="content">
-             <el-row>
-                 <el-col :span="1">
-                     <el-form-item>
-                         <el-button type="text" size="small" icon="delete"></el-button>
-                     </el-form-item>
-
-                 </el-col>
-                 <el-col :span="5">
-                     <el-form-item label="常量" label-width="40px">
-                         <el-input placeholder="请输入值" ></el-input>
-                     </el-form-item>
-                 </el-col>
-             </el-row>
-
-             <el-row>
-                 <el-col :span="1">
-                     <el-form-item>
-                         <el-button @click.native="" type="text" size="small" icon="delete"></el-button>
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="9">
-                     <el-form-item label="变量" label-width="40px">
-                         <el-select placeholder="请选择" v-model="name" style="width: 150px">
-                             <el-option v-for="item in names"
-                                        :key="item.name"
-                                        :label="item.label"
-                                        :value="item.name" placeholder="请选择"></el-option>
-                         </el-select>
-                         <el-select placeholder="请选择" v-model="name" style="width: 150px">
-                             <el-option v-for="item in names"
-                                        :key="item.name"
-                                        :label="item.label"
-                                        :value="item.name" placeholder="请选择"></el-option>
-                         </el-select>
-                     </el-form-item>
-                 </el-col>
-                 <el-col :span="4">
-                     <el-form-item label="或" label-width="20px">
-                         <el-input placeholder="请输入键"/>
-                     </el-form-item>
-                 </el-col>
-                 <el-col :span="5">
-                     <el-form-item label="默认值">
-                         <el-input placeholder="请输入默认值"/>
-                     </el-form-item>
-                 </el-col>
-                 <el-col :span="5">
-                     <el-form-item label="是否显示">
-                         <el-checkbox></el-checkbox>
-                     </el-form-item>
-                 </el-col>
-             </el-row>
-
-             <el-row>
-                 <el-col :span="1">
-                     <el-form-item>
-                         <el-button type="text" size="small" icon="delete"></el-button>
-                     </el-form-item>
-                 </el-col>
-                 <el-col :span="5">
-                     <el-form-item label="日期" label-width="40px">
-                         <el-input placeholder="请输入键" ></el-input>
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="4">
-                     <el-form-item >
-                         （如：yyyy-MM-dd）
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="5">
-                     <el-form-item label="是否显示">
-                         <el-checkbox></el-checkbox>
-                     </el-form-item>
-                 </el-col>
-             </el-row>
-
-             <el-row>
-                 <el-col :span="1">
-                     <el-form-item>
-                         <el-button type="text" size="small" icon="delete"></el-button>
-                     </el-form-item>
-                 </el-col>
-                 <el-col :span="5">
-                     <el-form-item label="序号" label-width="40px">
-                         <el-input placeholder="请输入键" ></el-input>
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="4">
-                     <el-form-item label="长度" label-width="70px">
-                         <el-input placeholder="请输入" ></el-input>
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="4">
-                     <el-form-item label="循环" label-width="70px">
-                         <el-select placeholder="请选择" v-model="name" style="width: 100px">
-                             <el-option v-for="item in names"
-                                        :key="item.name"
-                                        :label="item.label"
-                                        :value="item.name" placeholder="请选择"></el-option>
-                         </el-select>
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="5">
-                     <el-form-item label="关联变量键" label-width="120px">
-                         <el-input placeholder="请输入" ></el-input>
-                     </el-form-item>
-                 </el-col>
-
-                 <el-col :span="5">
-                     <el-form-item label="是否显示">
-                         <el-checkbox></el-checkbox>
-                     </el-form-item>
-                 </el-col>
-             </el-row>
-         </div>-->
-        <div :is="item.component" v-for="(item, index) in items" :key="item.key" :prop="index"></div>
 
         <el-row type="flex" class="row-bg">
             <el-col :span="10">
@@ -202,6 +90,11 @@
             </el-col>
         </el-row>
     </el-form>
+
+    <el-form>
+        <div :is="item.html" v-for="item in items" :child-index="num"></div>
+    </el-form>
+
     <el-row>
         <el-col :span="11" style="text-align:right">
             <el-button type="primary" @click.native="confirm">保存</el-button>
