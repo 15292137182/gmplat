@@ -85,4 +85,8 @@ public class ServerResult<T> {
   public void setData(T data) {
     this.data = data;
   }
+
+  public static ServerResult Msg(Object object,Object object1){
+    return null;
+  }
 }

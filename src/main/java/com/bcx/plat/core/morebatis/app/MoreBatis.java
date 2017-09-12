@@ -33,7 +33,7 @@ public class MoreBatis {
 
   private SuitMapper suitMapper;
   private SqlComponentTranslator translator;
-  Translator translatorX = new Translator();
+  private Translator translatorX = new Translator();
   private Map<Class, Collection<Field>> entityColumns;
   private Map<Class, Collection<Field>> entityPks;
   private Map<Class, Map<String, Field>> aliasMap;

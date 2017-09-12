@@ -1,7 +1,6 @@
 package com.bcx.plat.core.morebatis;
 
 import com.bcx.BaseTest;
-import com.bcx.plat.core.database.info.TableInfo;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;

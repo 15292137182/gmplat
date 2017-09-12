@@ -10,11 +10,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DefaultEntryBuilder implements EntityEntryBuilder{
-    Class entityClass;
+    private Class entityClass;
 
-    String tableName;
+    private String tableName;
 
-    Collection<String> pks;
+    private String schema;
+
+    private Collection<String> pks;
+
+    public DefaultEntryBuilder() {
+    }
 
     public DefaultEntryBuilder(Class entityClass, String tableName, Collection<String> pks) {
         this.entityClass = entityClass;
@@ -22,9 +27,33 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
         this.pks = pks;
     }
 
+    public Class getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(Class entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public Collection<String> getPks() {
+        return pks;
+    }
+
+    public void setPks(Collection<String> pks) {
+        this.pks = pks;
+    }
+
     @Override
     public EntityEntry getEntry() {
-        final Table table = new Table(tableName);
+        final Table table = new Table(schema,tableName);
         final List<Field> fields=new LinkedList<>();
         final HashMap<String,Field> aliasMap=new HashMap<>();
         Class clz=entityClass;
