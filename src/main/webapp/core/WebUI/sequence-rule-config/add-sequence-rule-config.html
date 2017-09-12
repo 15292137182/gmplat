@@ -91,9 +91,7 @@
         </el-row>
     </el-form>
 
-    <el-form>
-        <div :is="item.html" v-for="item in items" :child-index="num"></div>
-    </el-form>
+    <div :is="item.html" v-for="item in items" :child-index="num"></div>
 
     <el-row>
         <el-col :span="11" style="text-align:right">

@@ -46,7 +46,8 @@ new_vue.prototype.data=function (type) {
                 numLen:'',
                 dateCircle:'',
                 relatedConstantKey:'',
-                checked:''
+                checked:'',
+                dates: ''
             }
         }
     }
@@ -63,111 +64,114 @@ new_vue.prototype.creat=function(_id,num,type){
 
     //常量模板
     if(type=='1'){
-        _template=`<el-row>
-                        <el-col :span="1">
-                            <el-form-item>
-                                <el-button type="text" size="small" @click="remove" icon="delete"></el-button>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="5">
-                            <el-form-item label="常量" label-width="40px">
-                                <el-input @blur="getData" v-model="constantValue" placeholder="请输入值"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>`;
+        _template=`<el-form>
+                        <el-row>
+                            <el-col :span="1">
+                                <el-form-item>
+                                    <el-button type="text" size="small" @click="remove" icon="delete"></el-button>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                                <el-form-item label="常量" label-width="40px">
+                                    <el-input @blur="getData" v-model="constantValue" placeholder="请输入值"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>`;
     }
     if(type=='2'){
-        _template=`<el-row>
-                    <el-col :span="1">
-                        <el-form-item>
-                            <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="变量" label-width="40px">
-                            <el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4">
-                        <el-form-item label="或" label-width="20px">
-                            <el-input @blur="getData" v-model="keyInput" placeholder="请输入键"/>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="默认值">
-                            <el-input @blur="getData" v-model="valueInput" placeholder="请输入默认值"/>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                    <el-form-item label="是否显示">
-                    <el-checkbox @blur="getData" v-model="checked"></el-checkbox>
-                    </el-form-item>
-                    </el-col>
-                </el-row>`;
+        _template=`<el-form>
+                        <el-row>
+                            <el-col :span="1">
+                                <el-form-item>
+                                    <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="变量" label-width="40px">
+                                    <el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-form-item label="或" label-width="20px">
+                                    <el-input @blur="getData" v-model="keyInput" placeholder="请输入键"/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                                <el-form-item label="默认值" label-width="80px">
+                                    <el-input @blur="getData" v-model="valueInput" placeholder="请输入默认值"/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                            <el-form-item label="是否显示">
+                            <el-checkbox @blur="getData" v-model="checked"></el-checkbox>
+                            </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>`;
     }
     if(type=='3'){
-        _template=`<el-row>
-                        <el-col :span="1">
-                            <el-form-item>
-                                <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="5">
-                            <el-form-item label="日期" label-width="40px">
-                                <el-input placeholder="请输入值" v-model="dateValue"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="4">
-                                <el-form-item >（如：yyyy-MM-dd）</el-form-item>
-                        </el-col>
-            
-                        <el-col :span="5">
-                            <el-form-item label="是否显示">
-                                <el-checkbox v-model="checked"></el-checkbox>
-                            </el-form-item>
-                        </el-col>
-                </el-row>`;
+        _template=`<el-form>
+                        <el-row>
+                                <el-col :span="1">
+                                    <el-form-item>
+                                        <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="5">
+                                    <el-form-item label="日期" label-width="40px">
+                                        <el-input placeholder="请输入值" v-model="dateValue"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="4">
+                                        <el-form-item >（如：yyyy-MM-dd）</el-form-item>
+                                </el-col>
+                    
+                                <el-col :span="5">
+                                    <el-form-item label="是否显示">
+                                        <el-checkbox v-model="checked"></el-checkbox>
+                                    </el-form-item>
+                                </el-col>
+                        </el-row>
+                    </el-form>`;
     }
     if(type=='4'){
-        _template=`<el-row>
-                        <el-col :span="1">
-                           <el-form-item>
-                               <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
-                        </el-form-item>
-                        </el-col>
-                        
-                        <el-col :span="5">
-                        <el-form-item label="序号" label-width="40px">
-                        <el-input placeholder="请输入键" v-model="numKey"></el-input>
-                        </el-form-item>
-                        </el-col>
-                       
-                        <el-col :span="4">
-                           <el-form-item label="长度" label-width="70px">
-                               <el-input placeholder="请输入" v-model="numLen"></el-input>
-                           </el-form-item>
-                        </el-col>
-                       
-                        <el-col :span="4">
-                           <el-form-item label="循环" label-width="70px">
-                               <el-select placeholder="请选择" v-model="dateCircle" style="width: 100px">
-                                   <el-option v-for="item in dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>
-                               </el-select>
-                           </el-form-item>
-                        </el-col>
-                       
-                        <el-col :span="5">
-                           <el-form-item label="关联变量键" label-width="120px">
-                               <el-input placeholder="请输入" v-model="relatedConstantKey"></el-input>
-                           </el-form-item>
-                        </el-col>
-                
-                        <el-col :span="5">
-                           <el-form-item label="是否显示">
-                               <el-checkbox v-model="checked"></el-checkbox>
-                           </el-form-item>
-                        </el-col>
-                </el-row>`;
+        _template=`<el-form>
+                        <el-row>
+                            <el-col :span="1">
+                               <el-form-item>
+                                   <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                                <el-form-item label="序号" label-width="40px">
+                                    <el-input placeholder="请输入键" v-model="numKey"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                               <el-form-item label="长度" label-width="70px">
+                                   <el-input placeholder="请输入" v-model="numLen"></el-input>
+                               </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                               <el-form-item label="循环" label-width="70px">
+                                   <el-select placeholder="请选择" v-model="dateCircle" style="width: 100px">
+                                       <el-option v-for="item in dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>
+                                   </el-select>
+                               </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                               <el-form-item label="关联变量键" label-width="120px">
+                                   <el-input placeholder="请输入" v-model="relatedConstantKey"></el-input>
+                               </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                               <el-form-item label="是否显示">
+                                   <el-checkbox v-model="checked"></el-checkbox>
+                               </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>`;
     }
 
     //实例化对象，绑定接受组件参数
@@ -196,14 +200,14 @@ var _html=Vue.extend({
     props:["childIndex"],
     data() {
         return {
-            _name: ""
+            name: ""
         }
     },
     mounted() {
         // 拼接新增HTML的id
-        this._name = "cnt-" + this.childIndex;
+        this.name = "cnt-" + this.childIndex;
     },
-    template: "<div :id='this._name'></div>"
+    template: "<div :id='this.name'></div>"
 });
 
 
