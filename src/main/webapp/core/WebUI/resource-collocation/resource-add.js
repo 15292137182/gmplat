@@ -43,6 +43,7 @@ var resAdd = new Vue({
                         "url": editUrl,
                         "jsonData": {
                             rowId: resCol.currentValue.rowId,
+                            confKey: resAdd.colForm.codeInput,
                             confValue: resAdd.colForm.nameInput,
                             desp: resAdd.colForm.tableInput
                         },

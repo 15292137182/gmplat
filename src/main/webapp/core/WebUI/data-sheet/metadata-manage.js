@@ -279,8 +279,8 @@ var basRight=new Vue({
         //转到第一页查询
         searchRight(){
             queryData.getDatas(qurProUrl,basRight.input,basLeft.currentId,basRight,function(res){
-               // console.log(res);
-                var data=res.resp.content.data.result
+                //console.log(res);
+                var data=res.resp.content.data;
                 if(data!=null){
                     basRight.currentRChange(basRight.tableData[0]);
                 }
@@ -387,8 +387,9 @@ var basRightTop = new Vue({
             pagingObj.Examples(tempObj,basLeft.currentId,'','','',this,function(res){
                 console.log(res);
                 //有数据选中第一行
-                var data=res.resp.content.data.result;
-                if(data.length!=0){
+                var data=res.resp.content.data;
+                console.log(data);
+                if(data!=null){
                     basRight.currentRChange(basRightTop.tableData[0]);
                 }
             })

@@ -79,7 +79,7 @@ var basLeft = new Vue({
                 gmpAjax.showAjax(data,function(res){
                     //编辑拿到的数据
                     console.log(res);
-                    var data=res[0];
+                    var data=res.data[0];
                     addTemp.addTempObj.codeInput=data.templateCode;
                     addTemp.addTempObj.nameInput=data.templateName;
                     addTemp.addTempObj.comContent=data.desp;
@@ -180,8 +180,10 @@ var basRight = new Vue({
         },
         //右边点击事件
         currentRChange(row){
-            console.log(row);
-            this.currentId=row.rowId;
+            if(row !=undefined){
+                this.currentId=row.rowId;
+            }
+
         },
         //编辑事件
         editProp(){
@@ -190,17 +192,16 @@ var basRight = new Vue({
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象属性', '400px', '480px',function() {
                 var data={
                     "url":editQueryObjTemp,
-                    "jsonData":{rowId:basLeft.currentId},
+                    "jsonData":{rowId:basRight.currentId},
                     "obj":basRight
                 };
                 gmpAjax.showAjax(data, function (res) {
                     //编辑拿到的数据
-                    var data = res[0];
-                    console.log(data);
+                    var data = res.data[0];
                     addTempProp.addTempPropObj.codeInput=data.code;
                     addTempProp.addTempPropObj.engNameInput=data.ename;
                     addTempProp.addTempPropObj.chnNameInput=data.cname;
-                    addTempProp.$refs.vtype.value=data.valueType;
+                    addTempProp.value_1=data.valueType;
                     addTempProp.addTempPropObj.default=data.defaultValue;
                     addTempProp.addTempPropObj.comContent=data.desp;
                 })

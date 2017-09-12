@@ -2,9 +2,6 @@
  * Created by admin on 2017/8/27.
  */
 
-Vue.component('select-vtype', SelectOptions.setOpt('','value','valueType',''));
-
-
 var addTempProp = new Vue({
     "el": "#addEventProp",
     data: function () {
@@ -16,7 +13,8 @@ var addTempProp = new Vue({
                     chnNameInput: '',
                     default:'',
                     comContent:''
-                }
+                },
+                value_1:'',
             }
         },
     methods: {
@@ -29,7 +27,7 @@ var addTempProp = new Vue({
                         "jsonData":{templateObjRowId:basLeft.currentId,
                             ename:addTempProp.addTempPropObj.engNameInput,
                             cname:addTempProp.addTempPropObj.chnNameInput,
-                            valueType:addTempProp.$refs.vtype.value,
+                            valueType:addTempProp.value_1,
                             defaultValue:addTempProp.addTempPropObj.default,
                             desp:addTempProp.addTempPropObj.comContent
                         },
@@ -47,10 +45,10 @@ var addTempProp = new Vue({
                     var data={
                         "url":editObjTemp,
                         "jsonData":{templateObjRowId:basLeft.currentId,
-                            rowId:basRight.currentId,
+                            proRowId:basRight.currentId,
                             ename:addTempProp.addTempPropObj.engNameInput,
                             cname:addTempProp.addTempPropObj.chnNameInput,
-                            valueType:addTempProp.$refs.vtype.value,
+                            valueType:addTempProp.value_1,
                             defaultValue:addTempProp.addTempPropObj.default,
                             desp:addTempProp.addTempPropObj.comContent
                         },
@@ -69,6 +67,9 @@ var addTempProp = new Vue({
         //取消事件
         cancelTempProp(){
             ibcpLayer.Close(divIndex);
+        },
+        getChildData_1(datas){
+            this.value_1 = datas.value;
         }
 
     }

@@ -49,7 +49,7 @@ var addDataSet = new Vue({
                 "url":addDataSet.addUrl,
                 "jsonData":{
                     datasetName:this.formTable.nameInput,
-                    datasetType:this.$refs.dsctype.value,
+                    datasetType:this.value_1,
                     datasetContent:this.formTable.content,
                     desp:this.formTable.desp,
                     belongModule:this.formTable.belongModule,
@@ -71,7 +71,7 @@ var addDataSet = new Vue({
                 "jsonData":{
                     rowId:dataSetConfig.rowObjId,
                     datasetName:this.formTable.nameInput,
-                    datasetType:this.$refs.dsctype.value,
+                    datasetType:this.value_1,
                     datasetContent:this.formTable.content,
                     desp:this.formTable.desp,
                     belongModule:this.formTable.belongModule,
@@ -80,7 +80,7 @@ var addDataSet = new Vue({
                 "obj":addDataSet
             }
             gmpAjax.showAjax(data,function(res){
-                showMsg.MsgOk(dataSetConfig,res);
+                //showMsg.MsgOk(dataSetConfig,res);
                 ibcpLayer.Close(dataSetConfigButton.divIndex);
                 queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
             })

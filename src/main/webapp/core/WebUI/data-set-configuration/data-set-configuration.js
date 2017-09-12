@@ -89,12 +89,14 @@ var dataSetConfigButton = new Vue({
                     "obj":dataSetConfigButton
                 }
                 gmpAjax.showAjax(data,function(res){
-                    var data =res[0];
+                    var data =res.data[0];
+                    console.log(res);
                     addDataSet.isEdit = true;
                     addDataSet.formTable.datasetCode = data.datasetCode;
                     addDataSet.formTable.nameInput =data.datasetName;
                         //类型下拉框赋值修改  jms  2017/8/21
-                    addDataSet.$refs.dsctype.value = data.datasetType;
+                    //addDataSet.$refs.dsctype.value = data.datasetType;
+                    addDataSet.value_1 = data.datasetType;
 
                     addDataSet.formTable.content = data.datasetContent;
                     addDataSet.formTable.desp = data.desp;

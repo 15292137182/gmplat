@@ -2,7 +2,6 @@
  * Created by admin on 2017/8/27.
  */
 
-
 var addTemp = new Vue({
     "el": "#addEvent",
     data: function () {
@@ -42,7 +41,7 @@ var addTemp = new Vue({
                 editObj.editOk(function(){
                     var data={
                         "url":editTempObj,
-                        "jsonData":{rowId:basLeft.currentId,templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,
+                        "jsonData":{templateCode:addTemp.addTempObj.codeInput,rowId:basLeft.currentId,templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,
                             belongModule:addTemp.addTempObj.modules, belongSystem:addTemp.addTempObj.system},
                         "obj":basLeft
                     };

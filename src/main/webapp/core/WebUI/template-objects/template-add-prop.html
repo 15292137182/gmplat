@@ -25,9 +25,13 @@
         <el-form-item label="中文名称" prop="chnNameInput">
             <el-input placeholder="请输入中文名称" v-model="addTempPropObj.chnNameInput"></el-input>
         </el-form-item>
-        <el-form-item label="值类型" prop="typeInput">
-            <select-vtype ref="vtype"></select-vtype>
+
+        <el-form-item label="值类型">
+            <single-selection @change-data="getChildData_1"  :initial-value="value_1">
+                <!---->
+            </single-selection>
         </el-form-item>
+
         <el-form-item label="默认值" prop="default">
             <el-input placeholder="请输入默认值" v-model="addTempPropObj.default"></el-input>
         </el-form-item>
