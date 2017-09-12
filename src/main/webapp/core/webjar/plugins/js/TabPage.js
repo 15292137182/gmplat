@@ -899,7 +899,6 @@ var DynamicStitching = (function(){
 var htmlAjax = (function(){
     var keyValue = function(code,callback){
         var codes = '['+'"'+code+'"'+']';
-        console.log(codes);
         $.ajax({
             url:serverPath+'/fronc/queryFuncCode',
             type:"get",
@@ -990,8 +989,7 @@ var DynamicStitchings = (function(){
         var html = '';
         var str = '';
         var tableColumn='';//table列
-        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click=""></el-button><el-button type="text" size="small" icon="delete"></el-button></template></el-table-column>';
-        console.log(OperationColumn);
+        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow"></el-button></template></el-table-column>';
         var i;
         for(i=0;i<arr.length;i++){
             var obj = arr[i];
@@ -1030,7 +1028,7 @@ var DynamicStitchings = (function(){
                 html ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
             }
             if(obj.funcType =="grid"){
-                html='<el-table :data="tableData" border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
+                html='<el-table :data="tableData" @row-click="tableData.clickRow" border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
             }
         }
         htmlObj.html = html;
@@ -1245,7 +1243,7 @@ GmpForm1.prototype.submit = function(json,callback){
 
 
 //动态表格对象
-function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,postParam,formUrl){
+function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,postParam,formUrl,jsonFunction){
     this.compId = compId;//父组件名字
     this.blockId = blockId; //功能块标识
     this.formBlockItems = formBlockItems;//表格块key值集合
@@ -1257,19 +1255,27 @@ function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,postParam,for
     this.postUrl = postUrl //获取后端数据接口
     this.postParam = postParam //请求参数参数json
     this.formUrl = formUrl //提交接口
-}
-GmpTableBlock.prototype.clickEdit = function(){
-    alert('in');
+
+    this.onClickRow = jsonFunction.onClickRow;//单击行事件
+    this.onEditRow = jsonFunction.onEditRow;//编辑行事件
+    this.onDeleteRow = jsonFunction.onDeleteRow;//删除行事件
 }
 //父组件数据
 GmpTableBlock.prototype.searchSelect = function(){
+    var that = this;
     var compId = this.compId;
-    var arr = this.formBlockItems;
-    var arrObj ={};
-    for(var j=0;j<arr.length;j++){
-        arrObj[arr[j]["ename"]] ='';
+    //单击行事件
+    this.tableObjArr["clickRow"] = function(row){
+        that.onClickRow(row);
     }
-    this.tableObjArr.push(arrObj);
+    //编辑事件
+    this.tableObjArr["editRow"] = function(){
+        that.onEditRow();
+    }
+    //删除事件
+    this.tableObjArr["deleteRow"] = function(){
+        that.onDeleteRow();
+    }
     var obj = {
         props:[],
     }
@@ -1290,15 +1296,39 @@ GmpTableBlock.prototype.bulidComponent = function(){
                 var props = ["tableData"];//子组件参数名
                 return {
                     template,
-                    props
+                    props,
                 }
             }
         },
         methods: {
-            click(){
-                alert("in");
-            }
+
         }
     });
     this.vueObj = vue;
 }
+//表格点击
+GmpTableBlock.prototype.clickTable = function(){
+    console.log(this.tableObjArr.click());
+}
+//表格数据加载事件
+GmpTableBlock.prototype.reload = function(){
+    var arr = this.formBlockItems;
+    var arrObj ={};
+    //循环赋值
+    for(var j=0;j<arr.length;j++){
+        arrObj[arr[j]["ename"]] = '1';
+    }
+    this.tableObjArr.push(arrObj);
+    var parentComponentName = this.compId;
+    this.vueObj[parentComponentName] = this.tableObjArr;
+    console.log(this.tableObjArr);
+}
+//表格由给定数据加载
+GmpTableBlock.prototype.loadRecord = function(data){
+    for(var j=0;j<data.length;j++){
+        this.tableObjArr.push(data[j]);
+    }
+    var parentComponentName = this.compId;
+    this.vueObj[parentComponentName] = this.tableObjArr;
+    console.log(this.tableObjArr);
+};

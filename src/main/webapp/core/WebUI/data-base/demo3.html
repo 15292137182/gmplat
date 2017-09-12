@@ -71,8 +71,19 @@
         {displayTitle:'说明',funcType:'grid',displayWidget:'tableCell',ename:'desp'},
         {displayTitle:'版本',funcType:'grid',displayWidget:'tableCell',ename:'version'},
     ];
-    var tObj = new GmpTableBlock("tables","codeId",arrs,"#dataSetConfig","www.baidu.com",{rowId:"123"});
+    var tObj = new GmpTableBlock("tables","codeId",arrs,"#dataSetConfig","www.baidu.com",{rowId:"123"},"www.baidu.com",{"onClickRow":function(row){
+        console.log("执行单击行-----------------");
+        console.log(row);
+    },
+        onEditRow:function(){
+            console.log("执行编辑行----------------");
+        },
+        onDeleteRow:function(){
+            console.log("执行删除-------------");
+        }
+    });
     tObj.bulidComponent();
-
+//    tObj.reload();
+    tObj.loadRecord([{code:"1"}]);//给数据加载表格数据
 </script>
 </html>
