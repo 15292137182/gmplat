@@ -5,7 +5,6 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.entity.MaintDBTables;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -60,12 +59,13 @@ public class DBTableColumnController extends BaseController {
                                     @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                     @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                     String order) {
+        ServerResult result = new ServerResult();
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = dbTableColumnService.queryPageById(search, rowId, orders, pageNum, pageSize);
             return result(serverResult);
         }
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
     /**
@@ -76,11 +76,12 @@ public class DBTableColumnController extends BaseController {
      */
     @RequestMapping("/queryTabById")
     public Object singleInputSelect(String search, String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = dbTableColumnService.queryTableById(rowId, search);
             return super.result(new ServerResult<>(serverResult));
-        }else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        } else {
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -92,7 +93,7 @@ public class DBTableColumnController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
-        ServerResult serverResult = new ServerResult();
+        ServerResult result = new ServerResult();
         String columnEname = String.valueOf(param.get("columnEname"));
         Condition condition = new ConditionBuilder(DBTableColumn.class).and().equal("columnEname", columnEname).endAnd().buildDone();
         List<DBTableColumn> select = dbTableColumnService.select(condition);
@@ -100,12 +101,12 @@ public class DBTableColumnController extends BaseController {
             DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
             int insert = dbTableColumn.insert();
             if (insert != -1) {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
             } else {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
             }
         } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
         }
     }
 
@@ -118,17 +119,17 @@ public class DBTableColumnController extends BaseController {
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
-        ServerResult serverResult = new ServerResult();
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(param.get("rowId"))) {
             DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
             int update = dbTableColumn.updateById();
             if (update != -1) {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
 
         }
     }
@@ -142,21 +143,22 @@ public class DBTableColumnController extends BaseController {
      */
     @RequestMapping("/delete")
     public Object delete(String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
             if (relateTableColumn.size() == 0) {
                 DBTableColumn dbTableColumn = new DBTableColumn().buildDeleteInfo();
                 int del = dbTableColumn.deleteById(rowId);
                 if (del != -1) {
-                    return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+                    return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
                 } else {
-                    return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+                    return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
                 }
             } else {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
             }
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 

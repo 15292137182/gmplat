@@ -50,7 +50,7 @@ public class BusinessObjectController extends BaseController {
     public PlatResult insert(@RequestParam Map<String, Object> param) {
         //新增业务对象数据
         ServerResult serverResult = businessObjectService.addBusiness(param);
-        return super.result(serverResult);
+        return result(serverResult);
     }
 
     /**
@@ -61,11 +61,12 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/queryById")
     public PlatResult queryById(String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = businessObjectService.queryById(rowId);
-            return super.result(serverResult);
+            return result(serverResult);
         }
-        return PlatResult.success(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
     /**
@@ -102,11 +103,12 @@ public class BusinessObjectController extends BaseController {
                                    @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                    String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders);
-            return super.result(serverResult);
+            return result(serverResult);
         } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -119,13 +121,14 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/changeOperat")
     public PlatResult changeOperation(String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
                     businessObjectService.changeOperat(rowId));
             return PlatResult.success(serverResult);
         } else {
             logger.error("执行变更操作失败");
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -157,11 +160,12 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/delete")
     public PlatResult delete(String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             ServerResult delete = businessObjectService.delete(rowId);
             return super.result(delete);
         } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
         }
     }
 
@@ -174,13 +178,14 @@ public class BusinessObjectController extends BaseController {
      */
     @RequestMapping("/queryTemplatePro")
     public PlatResult queryTemplate(String rowId, String order) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             LinkedList<Order> orders = UtilsTool.dataSort(order);
             ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
             return super.result(serverResult);
         } else {
             logger.error("查询出业务关联模板属性失败");
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 

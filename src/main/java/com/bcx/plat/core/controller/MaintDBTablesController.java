@@ -82,7 +82,7 @@ public class MaintDBTablesController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
-        ServerResult serverResult = new ServerResult();
+        ServerResult result = new ServerResult();
         String tableEname = String.valueOf(param.get("tableEname"));
         Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).endAnd().buildDone();
         List<MaintDBTables> select = maintDBTablesService.select(condition);
@@ -90,12 +90,12 @@ public class MaintDBTablesController extends BaseController {
             MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
             int insert = maintDBTables.insert();
             if (insert != -1) {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
             } else {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
             }
         } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
         }
     }
 
@@ -108,17 +108,17 @@ public class MaintDBTablesController extends BaseController {
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
-        ServerResult serverResult = new ServerResult();
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(param.get("rowId"))) {
             MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
             int update = maintDBTables.updateById();
             if (update != -1) {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
 
         }
     }

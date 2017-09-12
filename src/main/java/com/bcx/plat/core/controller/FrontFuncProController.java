@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,6 +72,7 @@ public class FrontFuncProController extends
      */
     @RequestMapping(value = "/add", method = POST)
     public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
+        ServerResult result = new ServerResult();
         String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));
         List<FrontFuncPro> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
         int insert = -1;
@@ -80,9 +80,9 @@ public class FrontFuncProController extends
             FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
             insert = frontFuncPro.insert();
             if (insert == -1) {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
             } else {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
             }
         } else {
             return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
@@ -98,20 +98,20 @@ public class FrontFuncProController extends
      */
     @RequestMapping("/queryPro")
     public PlatResult singleQuery(String search, String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
-
             List<FrontFuncPro> frontFuncPros = frontFuncProService
                     .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
                             UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
 //            frontFuncPros = queryResultProcess(frontFuncPros);
             if (frontFuncPros.size() == 0) {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
             } else {
                 ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, frontFuncPros);
                 return result(serverResult);
             }
         }
-        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
 
     }
 
@@ -122,15 +122,14 @@ public class FrontFuncProController extends
      * @param search   按照空格查询
      * @param pageNum  当前第几页
      * @param pageSize 一页显示多少条
-     * @param request  request请求
-     * @param locale   国际化参数
      * @return PlatResult
      */
     @RequestMapping("/queryProPage")
     public PlatResult singleInputSelect(String rowId, String search,
                                         @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                                         @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                        HttpServletRequest request, Locale locale, String order) {
+                                        String order) {
+        ServerResult serverResult = new ServerResult();
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         if (UtilsTool.isValid(rowId)) {
             PageResult<Map<String, Object>> pageResult = frontFuncProService.selectPageMap(
@@ -142,7 +141,7 @@ public class FrontFuncProController extends
 //            result = queryResultProcess(result);
             return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
         }
-        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
 
@@ -207,18 +206,19 @@ public class FrontFuncProController extends
      */
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public PlatResult update(@RequestParam Map<String, Object> param) {
+        ServerResult result = new ServerResult();
         int update;
         if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
             FrontFuncPro frontFuncPro = new FrontFuncPro();
             FrontFuncPro modify = frontFuncPro.fromMap(param).buildModifyInfo();
             update = modify.updateById();
             if (update != -1) {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         }
-        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
 }

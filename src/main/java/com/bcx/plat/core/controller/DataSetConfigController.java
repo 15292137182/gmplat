@@ -5,8 +5,10 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DataSetConfig;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.service.DataSetConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -47,12 +49,13 @@ public class DataSetConfigController extends BaseController {
      */
     @RequestMapping("/add")
     public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
+        ServerResult result = new ServerResult();
         DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
         int insert = dataSetConfig.insert();
         if (insert != -1) {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -64,17 +67,18 @@ public class DataSetConfigController extends BaseController {
      */
     @RequestMapping("/modify")
     public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
+        ServerResult result = new ServerResult();
         int update;
         if (UtilsTool.isValid(param.get("rowId"))) {
             DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
             update = dataSetConfig.updateById();
             if (update != -1) {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
@@ -86,17 +90,18 @@ public class DataSetConfigController extends BaseController {
      */
     @RequestMapping("/delete")
     public PlatResult delete(String rowId) {
+        ServerResult result = new ServerResult();
         int del;
         if (!rowId.isEmpty()) {
             DataSetConfig dataSetConfig = new DataSetConfig();
             del = dataSetConfig.deleteById(rowId);
             if (del != -1) {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             }
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
@@ -119,5 +124,19 @@ public class DataSetConfigController extends BaseController {
         return result(new ServerResult<>(result));
     }
 
-
+    /**
+     * 根据功能块rowId查询当前数据
+     *
+     * @param rowId 功能块rowId
+     * @return PlatResult
+     */
+    @RequestMapping("/queryById")
+    public Object queryById(String rowId) {
+        ServerResult serverResult = new ServerResult();
+        List result = dataSetConfigService.select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+        if (result.size() == 0) {
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        }
+        return result(new ServerResult<>(result));
+    }
 }

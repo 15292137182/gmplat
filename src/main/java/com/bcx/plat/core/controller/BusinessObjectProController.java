@@ -54,11 +54,12 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/queryById")
     public PlatResult queryById(String rowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = businessObjectProService.queryById(rowId);
-            return super.result(serverResult);
+            return result(serverResult);
         } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
 
     }
@@ -73,11 +74,12 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/queryBusinPro")
     public Object queryBusinPro(String objRowId, String frontRowId) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(objRowId)) {
             ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
             return result(serverResult);
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
 
@@ -89,13 +91,14 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/add")
     public PlatResult addBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
+        ServerResult result = new ServerResult();
         BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
         int insert = businessObjectPro.insert();
         if (insert != -1) {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
 
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -107,11 +110,12 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/modify")
     public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
+        ServerResult result = new ServerResult();
         if (UtilsTool.isValid(paramEntity.get("rowId"))) {
             BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
             businessObjectPro.updateById();
         }
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
     }
 
     /**
@@ -122,18 +126,19 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/delete")
     public Object delete(String rowId) {
+        ServerResult result = new ServerResult();
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
         int del;
         if (frontFuncPros.size() == 0) {
             BusinessObjectPro businessObjectPro = new BusinessObjectPro();
             del = businessObjectPro.deleteById(rowId);
             if (del != -1) {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
             } else {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
         }
     }
 }

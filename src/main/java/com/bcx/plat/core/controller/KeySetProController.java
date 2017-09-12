@@ -25,8 +25,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * @author Wen TieHu
  * @version 1.0
  *          <pre>Histroy:
- *                                  2017/8/30  Wen TieHu Create
- *                            </pre>
+ *                                           2017/8/30  Wen TieHu Create
+ *                                     </pre>
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/keySetProPro")
 @RestController
@@ -45,12 +45,13 @@ public class KeySetProController extends BaseController {
      */
     @RequestMapping(value = "/add", method = POST)
     public PlatResult insert(@RequestParam Map<String, Object> param) {
+        ServerResult result = new ServerResult();
         KeySetPro KeySetPro = new KeySetPro().buildCreateInfo().fromMap(param);
         int insert = KeySetPro.insert();
         if (insert != -1) {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -62,18 +63,19 @@ public class KeySetProController extends BaseController {
      */
     @RequestMapping(value = "/modify", method = POST)
     public PlatResult update(@RequestParam Map<String, Object> param) {
+        ServerResult result = new ServerResult();
         int update;
         if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
             KeySetPro keySetPro = new KeySetPro();
             KeySetPro modify = keySetPro.fromMap(param).buildModifyInfo();
             update = modify.updateById();
             if (update != -1) {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         }
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
     /**
@@ -84,17 +86,18 @@ public class KeySetProController extends BaseController {
      */
     @RequestMapping(value = "/delete", method = POST)
     public PlatResult delete(String rowId) {
+        ServerResult result = new ServerResult();
         int del;
         if (!rowId.isEmpty()) {
             KeySetPro keySetPro = new KeySetPro();
             del = keySetPro.deleteById(rowId);
             if (del != -1) {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
