@@ -14,6 +14,7 @@ import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -136,20 +137,22 @@ public class TemplateObjectController extends BaseController {
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(@RequestParam("data") Map<String, String> entity) {
-    return result(new ServerResult<>(new TemplateObject().fromMap(entity).buildCreateInfo().insert()));
+  public Object insert(String data) {
+    Map _data = UtilsTool.jsonToObj(data, HashMap.class);
+    return result(new ServerResult<>(new TemplateObject().fromMap(_data).buildCreateInfo().insert()));
   }
 
 
   /**
    * 通过修改方法
    *
-   * @param entity 接受一个实体参数
+   * @param data 实体类的json字符串
    * @return 返回操作信息
    */
   @RequestMapping("/modify")
-  public Object update(@RequestParam("data") Map entity) {
-    return result(new ServerResult<>(new TemplateObject().fromMap(entity).buildCreateInfo().insert()));
+  public Object update(String data) {
+    Map _data = UtilsTool.jsonToObj(data, HashMap.class);
+    return result(new ServerResult<>(new TemplateObject().fromMap(_data).buildCreateInfo().insert()));
   }
 
   /**
