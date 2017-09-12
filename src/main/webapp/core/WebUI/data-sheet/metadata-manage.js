@@ -58,26 +58,6 @@ var basTop = new Vue({
             operate = 1;
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){
-                ////查询关联表
-                //basTop.$http.jsonp(conTable,{
-                //    search:''
-                //},{
-                //    jsonp: 'callback'
-                //}).then(function (res) {
-                //   var data=res.data.resp.content.data.result;
-                //    console.log(data);
-                //
-                //});
-                //查询关联模板对象
-                //basTop.$http.jsonp(belongModel,{
-                //    search:''
-                //},{
-                //    jsonp: 'callback'
-                //}).then(function (res) {
-                //    console.log(res);
-                //});
-                //查询所属模块
-
             });
         },
         //新增业务对象属性
@@ -131,8 +111,6 @@ var basLeft = new Vue({
                     //编辑拿到的数据
                     var data=res[0];
                     console.log(data);
-
-
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
                     em.value_1 =data.relateTableRowId;//关联表
@@ -166,7 +144,7 @@ var basLeft = new Vue({
                     basRightTop.tableData=[];
                 }else{
                     basLeft.currentChange(basLeft.tableData[0]);
-                    basRight.currentRChange(basRightTop.tableData[0]);
+                    //basRight.currentRChange(basRightTop.tableData[0]);
                 }
 
             })
@@ -193,6 +171,7 @@ var basLeft = new Vue({
             console.log(row)
             //判断是否生效
             if (row !== undefined) {
+                basTop.addAttr=false;
                 //生效
                 if (row.status == '0') {  //没啥变化
                     basTop.addAttr = false;
@@ -298,7 +277,7 @@ var basRight=new Vue({
                 gmpAjax.showAjax(data, function (res) {
                     console.log(res);
                     ///编辑拿到的数据
-                    var data = res[0];
+                    var data = res.data[0];
                     proEm.addProForm.codeProInput=data.propertyCode;   //代码
                     proEm.addProForm.nameProInput=data.propertyName;   //名称
                     if(data.wetherExpandPro=='true'){
@@ -385,13 +364,14 @@ var basRightTop = new Vue({
         //不分页查询
         searchRightTopEvent(){
             pagingObj.Examples(tempObj,basLeft.currentId,'','','',this,function(res){
-                console.log(res);
+                //console.log(res);
                 //有数据选中第一行
-                var data=res.resp.content.data;
-                console.log(data);
-                if(data!=null){
-                    basRight.currentRChange(basRightTop.tableData[0]);
-                }
+                //var data=res.resp.content.data;
+                //console.log(data);
+                //if(data!=null){
+                //    console.log(basRightTop.tableData)
+                //    basRightTop.currentRChange(basRightTop.tableData[0]);
+                //}
             })
         },
         headSort(column){//列头排序

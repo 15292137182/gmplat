@@ -19,8 +19,8 @@ var proEm = new Vue({
                 value_1:'',//关联表字段
                 value_2:'',//值类型
                 value_3:'',//值来源类型
-                value_4:'1',//类型
-                value_5:'3',//值来源内容
+                value_4:'',//类型
+                value_5:'',//值来源内容
                 reaTable:true,//关联表字段是否显示
                 extendPro:false,//关扩展属性名是否显示
             }
@@ -100,12 +100,12 @@ var proEm = new Vue({
             },
             getChildData_4(datas){
               this.value_4=datas.value;
-               console.log(this.value_4);
+               //console.log(this.value_4);
 
             },
             getChildData_5(datas){
                 this.value_5=datas.value;
-                console.log(this.value_5);
+                //console.log(this.value_5);
 
             },
             cancel() {
