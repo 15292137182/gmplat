@@ -14,7 +14,6 @@ import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -138,22 +137,28 @@ public class TemplateObjectController extends BaseController {
    * @return 返回操作信息
    */
   @RequestMapping("/add")
-  public Object insert(String data) {
-    Map _data = UtilsTool.jsonToObj(data, HashMap.class);
-    return result(new ServerResult<>(new TemplateObject().fromMap(_data).buildCreateInfo().insert()));
+  public Object insert(@RequestParam Map map) {
+    int status = new TemplateObject().fromMap(map).buildCreateInfo().insert();
+    if (-1 == status) {
+      return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS, status));
+    }
+    return result(new ServerResult<>(STATUS_FAIL, Message.DELETE_FAIL, status));
   }
 
 
   /**
    * 通过修改方法
    *
-   * @param data 实体类的json字符串
+   * @param map 实体类的json字符串
    * @return 返回操作信息
    */
   @RequestMapping("/modify")
-  public Object update(String data) {
-    Map _data = UtilsTool.jsonToObj(data, HashMap.class);
-    return result(new ServerResult<>(new TemplateObject().fromMap(_data).buildCreateInfo().insert()));
+  public Object update(@RequestParam Map map) {
+    int status = new TemplateObject().fromMap(map).buildModifyInfo().updateById();
+    if (-1 == status) {
+      return result(new ServerResult<>(STATUS_SUCCESS, Message.UPDATE_SUCCESS, status));
+    }
+    return result(new ServerResult<>(STATUS_FAIL, Message.UPDATE_FAIL, status));
   }
 
   /**
@@ -164,9 +169,10 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/delete")
   public Object delete(String rowId) {
-    if (isValid(rowId)) {
-      return result(new ServerResult<>(new TemplateObject().deleteById(rowId)));
+    int status = new TemplateObject().buildDeleteInfo().deleteById(rowId);
+    if (-1 == status) {
+      return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS, status));
     }
-    return result(new ServerResult<>(STATUS_FAIL, Message.DELETE_FAIL, null));
+    return result(new ServerResult<>(STATUS_FAIL, Message.DELETE_FAIL, status));
   }
 }
