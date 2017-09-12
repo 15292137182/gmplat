@@ -134,7 +134,7 @@ public class SequenceRuleConfigController extends BaseController {
      */
     @RequestMapping("/mock")
     @SuppressWarnings("unchecked")
-    public PlatResult mockSequenceNo(HttpServletRequest request, Locale locale) {
+    public PlatResult mockSequenceNo(HttpServletRequest request) {
         String _content = request.getParameter("content");
         ServerResult<List<String>> _sr = new ServerResult<>();
         if (isValid(_content)) {
@@ -156,11 +156,10 @@ public class SequenceRuleConfigController extends BaseController {
      * 重置序列号，接受的参数名称为:seqCode,值为序列号的代码值
      *
      * @param request 请求
-     * @param locale  国际化信息
      * @return 返回
      */
     @RequestMapping(value = "/reset")
-    public Object resetSequenceNo(HttpServletRequest request, Locale locale) {
+    public Object resetSequenceNo(HttpServletRequest request) {
         String rowId = request.getParameter("rowId");
         ServerResult<List<String>> _sr = new ServerResult<>();
         _sr.setState(STATUS_FAIL);
@@ -205,24 +204,26 @@ public class SequenceRuleConfigController extends BaseController {
     /**
      * 通用查询方法
      *
-     * @param rowId   按照空格查询
-     * @param request request请求
-     * @param locale  国际化参数
+     * @param rowId 按照空格查询
      * @return PlatResult
      */
     @RequestMapping("/queryById")
     @SuppressWarnings("unchecked")
-    public Object queryById(String rowId, HttpServletRequest request, Locale locale) {
+    public Object queryById(String rowId) {
         if (isValid(rowId)) {
             List<Map> mapLists = sequenceRuleConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
             List<SequenceGenerate> generates = sequenceGenerateService.select(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
-            SequenceGenerate generate = generates.get(0);
-            for (Map<String, Object> mapList : mapLists) {
-                mapList.put("currentValue", generate.getCurrentValue());
-                mapList.put("variableKey", generate.getVariableKey());
-            }
-            if (mapLists.size() == 0) {
-                return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
+            if (generates.size() > 0) {
+                SequenceGenerate generate = generates.get(0);
+                for (Map<String, Object> mapList : mapLists) {
+                    mapList.put("currentValue", generate.getCurrentValue());
+                    mapList.put("variableKey", generate.getVariableKey());
+                }
+                if (mapLists.size() == 0) {
+                    return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
+                } else {
+                    return super.result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists));
+                }
             } else {
                 return super.result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists));
             }

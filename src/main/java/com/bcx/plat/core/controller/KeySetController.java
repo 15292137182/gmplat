@@ -203,15 +203,9 @@ public class KeySetController extends BaseController {
                                         @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                         String order) {
         LinkedList<Order> orders = dataSort(order);
-        pageNum = search == null || search.isEmpty() ? 1 : pageNum;
-        Or blankQuery;
-        if (search.isEmpty()) {
-            blankQuery = null;
-        } else {
-            blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-        }
-        PageResult<Map<String, Object>> sysConfigPageResult = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        return result(new ServerResult<>(sysConfigPageResult));
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        PageResult<Map<String, Object>> keySet = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+        return result(new ServerResult<>(keySet));
     }
 
     /**
@@ -230,7 +224,6 @@ public class KeySetController extends BaseController {
         } else {
             return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
-
     }
 
 

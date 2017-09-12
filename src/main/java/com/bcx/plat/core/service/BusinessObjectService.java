@@ -59,6 +59,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         BusinessObject businessObject = new BusinessObject().fromMap(param).buildCreateInfo();
         //实例化业务对象关联模板对象
         BusinessRelateTemplate brt = new BusinessRelateTemplate();
+        Map<String, Object> map = businessObject.toMap();
         int insert = businessObject.insert();
         String rowId = businessObject.getRowId();
         String relateTemplateObject = businessObject.getRelateTemplateObject();

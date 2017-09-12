@@ -181,7 +181,11 @@ public class BusinessObjectController extends BaseController {
         if (UtilsTool.isValid(rowId)) {
             LinkedList<Order> orders = UtilsTool.dataSort(order);
             ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
-            return super.result(serverResult);
+            if (serverResult != null) {
+                return super.result(serverResult);
+            } else {
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            }
         } else {
             logger.error("查询出业务关联模板属性失败");
             return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
