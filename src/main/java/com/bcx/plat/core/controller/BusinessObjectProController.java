@@ -61,7 +61,6 @@ public class BusinessObjectProController extends BaseController {
         } else {
             return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
-
     }
 
     /**

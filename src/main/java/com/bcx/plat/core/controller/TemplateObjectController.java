@@ -78,7 +78,7 @@ public class TemplateObjectController extends BaseController {
       Condition condition = new Or(ors);
       List<Order> orders = dataSort(order);
       PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
-      return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, adapterPageResult(result)));
+      return result(new ServerResult<>(result));
     }
     return result(new ServerResult<>(STATUS_FAIL, Message.QUERY_FAIL, null));
   }
@@ -126,8 +126,9 @@ public class TemplateObjectController extends BaseController {
                                   String order) {
     LinkedList<Order> orders = dataSort(order);
     pageNum = search == null || search.isEmpty() ? 1 : pageNum;
-    PageResult<Map<String, Object>> pageResult = templateObjectService.selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(search)), orders, pageNum, pageSize);
-    return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, adapterPageResult(pageResult)));
+    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    PageResult<Map<String, Object>> pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult));
   }
 
 

@@ -4,9 +4,11 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -208,8 +210,27 @@ public class KeySetController extends BaseController {
         } else {
             blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         }
-        PageResult<Map<String,Object>> sysConfigPageResult = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+        PageResult<Map<String, Object>> sysConfigPageResult = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
         return result(new ServerResult<>(sysConfigPageResult));
+    }
+
+    /**
+     * 根据rowId查询数据
+     *
+     * @param rowId 唯一标识
+     * @return PlatResult
+     */
+    @RequestMapping("/queryById")
+    public PlatResult queryById(String rowId) {
+        ServerResult serverResult = new ServerResult();
+        if (!rowId.isEmpty()) {
+            Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rowId).endAnd().buildDone();
+            List<KeySet> select = keySetService.select(condition);
+            return result(new ServerResult<>(select));
+        } else {
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        }
+
     }
 
 
