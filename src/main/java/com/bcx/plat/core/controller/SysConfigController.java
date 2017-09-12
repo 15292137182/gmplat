@@ -58,9 +58,7 @@ public class SysConfigController extends BaseController {
         pageNum = search == null || search.isEmpty() ? 1 : pageNum;
         Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<Map<String, Object>> sysConfigPageResult = sysConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        Map map = adapterPageResult(sysConfigPageResult);
-        ServerResult<Map> mapServerResult = new ServerResult<>(map);
-        return result(mapServerResult);
+        return result(new ServerResult<>(sysConfigPageResult));
     }
 
     /**

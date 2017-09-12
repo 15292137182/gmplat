@@ -53,6 +53,7 @@
         /gmp/sys/system/login=anon
         /logout=logout
         /**/*.js=anon
+        /**/*=anon
         /**/*.css=anon
         /**/*.jpg=anon
         /**/*.png=anon

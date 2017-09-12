@@ -116,9 +116,7 @@ public class DataSetConfigController extends BaseController {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<Map<String, Object>> result = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        Map map = adapterPageResult(result);
-        ServerResult<Map> mapServerResult = new ServerResult<>(map);
-        return result(mapServerResult);
+        return result(new ServerResult<>(result));
     }
 
 

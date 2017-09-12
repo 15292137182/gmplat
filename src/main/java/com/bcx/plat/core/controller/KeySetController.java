@@ -202,9 +202,7 @@ public class KeySetController extends BaseController {
             blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         }
         PageResult<Map<String,Object>> sysConfigPageResult = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        Map map = adapterPageResult(sysConfigPageResult);
-        ServerResult<Map> mapServerResult = new ServerResult<>(map);
-        return result(mapServerResult);
+        return result(new ServerResult(sysConfigPageResult));
     }
 
 

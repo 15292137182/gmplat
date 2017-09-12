@@ -31,12 +31,9 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/businObj")
 public class BusinessObjectController extends BaseController {
 
-    private final BusinessObjectService businessObjectService;
-
     @Autowired
-    public BusinessObjectController(BusinessObjectService businessObjectService) {
-        this.businessObjectService = businessObjectService;
-    }
+    private BusinessObjectService businessObjectService;
+
 
     protected List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");

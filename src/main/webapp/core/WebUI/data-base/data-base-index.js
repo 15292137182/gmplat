@@ -15,9 +15,7 @@ var dataBase = new Vue({
     }),
     methods:{
         get(){//分页查询
-            pagingObj.Example(this.url,this.input,this.pageSize,this.pageNum,this,function(){
-
-            });
+            pagingObj.Example(this.url,this.input,this.pageSize,this.pageNum,this)
         },
         click(row, event, column){//点击table
             this.rowObj = row;

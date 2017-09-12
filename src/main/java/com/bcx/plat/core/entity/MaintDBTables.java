@@ -25,7 +25,9 @@ public class MaintDBTables extends BaseEntity<MaintDBTables> implements Serializ
    */
   @Override
   public MaintDBTables buildCreateInfo() {
+    this.getBaseTemplateBean().getDeleteFlag();
     this.rowId = lengthUUID(32);
+
     return super.buildCreateInfo();
   }
 

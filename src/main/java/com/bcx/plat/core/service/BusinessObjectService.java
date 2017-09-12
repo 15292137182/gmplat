@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -32,27 +31,20 @@ import static com.bcx.plat.core.utils.UtilsTool.createBlankQuery;
 @Service
 public class BusinessObjectService extends BaseService<BusinessObject> {
 
-    private final MoreBatis moreBatis;
-
-    private MaintDBTablesService maintDBTablesService;
-    private BusinessObjectProService businessObjectProService;
-    private DBTableColumnService dbTableColumnService;
-    private FrontFuncService frontFuncService;
-    private FrontFuncProService frontFuncProService;
-    private BusinessRelateTemplateService businessRelateTemplateService;
 
     @Autowired
-    public BusinessObjectService(MaintDBTablesService maintDBTablesService, BusinessObjectProService businessObjectProService,
-                                 DBTableColumnService dbTableColumnService, FrontFuncService frontFuncService,
-                                 FrontFuncProService frontFuncProService, BusinessRelateTemplateService businessRelateTemplateService, MoreBatis moreBatis) {
-        this.maintDBTablesService = maintDBTablesService;
-        this.businessObjectProService = businessObjectProService;
-        this.dbTableColumnService = dbTableColumnService;
-        this.frontFuncService = frontFuncService;
-        this.frontFuncProService = frontFuncProService;
-        this.businessRelateTemplateService = businessRelateTemplateService;
-        this.moreBatis = moreBatis;
-    }
+    private MaintDBTablesService maintDBTablesService;
+    @Autowired
+    private BusinessObjectProService businessObjectProService;
+    @Autowired
+    private DBTableColumnService dbTableColumnService;
+    @Autowired
+    private FrontFuncService frontFuncService;
+    @Autowired
+    private FrontFuncProService frontFuncProService;
+    @Autowired
+    private BusinessRelateTemplateService businessRelateTemplateService;
+
 
     public List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
@@ -329,9 +321,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
         for (BusinessRelateTemplate bri : businessRowId) {
             String templateRowId = bri.getTemplateRowId();
-            List<Map<String, Object>> result = moreBatis.select(TemplateObjectPro.class)
-                    .where(new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId))
-                    .orderBy(orders).execute();
+            List<Map<String, Object>> result = singleSelect(TemplateObjectPro.class, new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId));
 
             List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
             for (Map<String, Object> li : list) {

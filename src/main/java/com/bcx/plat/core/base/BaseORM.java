@@ -46,7 +46,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
      */
     @SuppressWarnings("unchecked")
     public int insert() {
-        return MORE_BATIS.insertEntity((T) this);
+        return MORE_BATIS.insertEntity((T)  this);
     }
 
     /**
@@ -245,13 +245,13 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
      */
     @SuppressWarnings("unchecked")
     public PageResult<T> selectPage(Condition condition, int num, int size, List<Order> orders) {
-        Condition or;
+        Condition and;
         if (null != condition) {
-            or = new Or(condition, NOT_DELETE_OR);
+            and = new And(condition, NOT_DELETE_OR);
         } else {
-            or = NOT_DELETE_OR;
+            and = NOT_DELETE_OR;
         }
-        PageResult result = MORE_BATIS.select(getClass()).where(or).orderBy(orders).selectPage(num, size);
+        PageResult result = MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
         List<T> data = new ArrayList<>();
         result.getResult().forEach(map -> {
             try {
