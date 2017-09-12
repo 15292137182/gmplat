@@ -49,7 +49,7 @@ var leftKeyValueSet=new Vue({
                     "obj":leftKeyValueSet
                 }
                 gmpAjax.showAjax(data,function(res){
-                    var data=res;
+                     var data=res.data;
                     topButtonObj.isEdit=true;
                     keyValueSetAdd.keyForm.keysetCodeInput =data[0].keysetCode;
                     keyValueSetAdd.keyForm.keysetNameInput = data[0].keysetName;
@@ -153,7 +153,7 @@ var rightKeyValueSet=new Vue({
                 gmpAjax.showAjax(data,function(res){
                     // showMsg.MsgOk(keyValueSet,res);
                     //code值
-                    var data=res;
+                    var data=res.data;
                     topButtonObj.isEdit=true;
                     keyValueSetProAdd.keyForm.confKeyInput = data[0].confKey;
                     keyValueSetProAdd.keyForm.confValueInput = data[0].confValue;
