@@ -8,15 +8,36 @@
 <body>
     <div id="box">
         <el-row>
-            <el-col :span="12">
+            <el-col :span="3">
                 <el-button type="info" @click="addBlock">新增表单测试</el-button>
             </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="12">
+            <el-col :span="3">
                 <el-button type="info" @click="editBlock">编辑表单测试</el-button>
             </el-col>
         </el-row>
+    </div>
+    <div id="dataSetConfig">
+        <el-col :span="24" >
+            <div class="allBorder">
+                <el-row>
+                    <el-col>
+                        <div class="bg-color"><span>动态表格</span></div>
+                    </el-col>
+                </el-row>
+                <el-row class="inputStyle">
+                    <el-col :xs="10" :sm="10" :md="10">
+                        <div>
+                            <!--<el-input placeholder="请输入内容" v-model="input" size="small">-->
+                            <!--<el-button slot="append" icon="search" @click.native="searchResTable"></el-button>-->
+                            <!--</el-input>-->
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row style="padding:0 10px 10px 10px">
+                    <components :is="gmpTable" :table-data="tables"></components>
+                </el-row>
+            </div>
+        </el-col>
     </div>
 </body>
 <script>
@@ -40,5 +61,18 @@
             }
         }
     })
+    var arrs = [
+        {displayTitle:'代码',funcType:'grid',displayWidget:'tableCell',ename:'code'},
+        {displayTitle:'名称',funcType:'grid',displayWidget:'tableCell',ename:'name'},
+        {displayTitle:'类型',funcType:'grid',displayWidget:'tableCell',ename:'typeName'},
+        {displayTitle:'内容',funcType:'grid',displayWidget:'tableCell',ename:'content'},
+        {displayTitle:'所属模块',funcType:'grid',displayWidget:'tableCell',ename:'block'},
+        {displayTitle:'所属系统',funcType:'grid',displayWidget:'tableCell',ename:'syso'},
+        {displayTitle:'说明',funcType:'grid',displayWidget:'tableCell',ename:'desp'},
+        {displayTitle:'版本',funcType:'grid',displayWidget:'tableCell',ename:'version'},
+    ];
+    var tObj = new GmpTableBlock("tables","codeId",arrs,"#dataSetConfig","www.baidu.com",{rowId:"123"});
+    tObj.bulidComponent();
+
 </script>
 </html>

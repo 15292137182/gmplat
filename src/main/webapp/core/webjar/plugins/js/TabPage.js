@@ -882,15 +882,21 @@ var DynamicStitching = (function(){
 
 //获取html内容
 var htmlAjax = (function(){
-    var keyValue = function(callback){
+    var keyValue = function(code,callback){
+        var codes = '['+'"'+code+'"'+']';
+        console.log(codes);
         $.ajax({
-            url:"http://192.168.100.93:9090/local/gmp/sys/core/dataSetConfig/queryPage",
+            url:serverPath+'/fronc/queryFuncCode',
             type:"get",
-            data:{},
+            dataType:"json",
+            data:{funcCode:codes},
             success:function(res){
                 if(callback){
                     callback(res);
                 }
+            },
+            error:function (res) {
+                console.log(res);
             }
         })
     }
@@ -925,31 +931,31 @@ var DynamicStitchings = (function(){
         switch (caseName){
             case 'input'://单行文本框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input data="'+obj.ename+'" :disabled="'+disab+'" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case 'textarea'://多行文本框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-input type="textarea" :disabled="'+disab+'" placeholder=请输入'+laberName+' v-model="'+model+'"></el-input></el-form-item></el-col></el-row>'
                 break;
             case "select-base"://下拉框
-                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select :disabled="'+disab+'" placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
                 var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-checkbox :disabled="'+disab+'" data="'+obj.ename+'"  v-model="'+model+'">复选框</el-checkbox></el-form-item></el-col></el-row>';
                 break;
             case "radio"://单选框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
                 var str='<el-row><el-col :span="20"><el-form-item style="margin-top: -15px" label='+laberName+'><el-radio :disabled="'+disab+'" v-model="'+model+'" class="radio">单选框</el-radio></el-form-item></el-col></el-row>';
                 break;
             case "date"://日期框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
-                var disab = "childFormTable." + "disabled" + obj.ename + "Disabled";
+                var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><div class="block"><el-date-picker :disabled="'+disab+'" v-model="'+model+'" placeholder="选择日期时间"></el-date-picker></div></el-form-item></el-col></el-row>'
                 break;
         }
@@ -968,8 +974,9 @@ var DynamicStitchings = (function(){
         };
         var html = '';
         var str = '';
-        var tableColumn=null;//table列
-        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit"></el-button><el-button type="text" size="small" icon="delete"></el-button></template></el-table-column>';
+        var tableColumn='';//table列
+        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click=""></el-button><el-button type="text" size="small" icon="delete"></el-button></template></el-table-column>';
+        console.log(OperationColumn);
         var i;
         for(i=0;i<arr.length;i++){
             var obj = arr[i];
@@ -1008,7 +1015,7 @@ var DynamicStitchings = (function(){
                 html ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
             }
             if(obj.funcType =="grid"){
-                html='<el-table :data="childTable.tableData" border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
+                html='<el-table :data="tableData" border style="width: 100%">'+tableColumn+OperationColumn+'</el-table>';
             }
         }
         htmlObj.html = html;
@@ -1043,9 +1050,9 @@ GmpForm1.prototype.searchSelect = function(){
     var compId = this.compId;
     var arr = this.formBlockItems;
     for(var j=0;j<arr.length;j++){
-        var obj =arr[j].ename;
+        var objs =arr[j].ename;
         var disa = arr[j].ename + "Disabled";
-        this.formObj[obj] = '';
+        this.formObj[objs] = '';
         this.formObj.disabled[disa] = false;
     }
     var obj = {
@@ -1063,7 +1070,7 @@ GmpForm1.prototype.bulidComponent = function(exeFunction){
         el: id,
         data:that.searchSelect(),//获取父组件数据
         computed:{//表单组件定义
-            inputwithbtn(){//form输入框组件
+            gmpForm(){//form输入框组件
                 var template= strHtml.html;
                 var props = ["childFormTable"];//子组件参数名
                 return {
@@ -1172,14 +1179,14 @@ GmpForm1.prototype.request = function(callback){
 //禁用 表单域控件
 GmpForm1.prototype.lock = function(keyArr){
     for(var j=0;j<keyArr.length;j++){
-        var disabled = keyArr[j] + "disa";
-        this.formObj[disabled] = true;
+        var disabled = keyArr[j] + "Disabled";
+        this.formObj.disabled[disabled] = true;
     }
 }
 //启用 表单域控件
 GmpForm1.prototype.unlock = function(keyArr){
     for(var j=0;j<keyArr.length;j++){
-        var disabled = keyArr[j] + "disa";
+        var disabled = keyArr[j] + "Disabled";
         this.formObj[disabled] = false;
     }
 }
@@ -1219,4 +1226,64 @@ GmpForm1.prototype.submit = function(json,callback){
             }
         }
     })
+}
+
+
+//动态表格对象
+function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,postParam,formUrl){
+    this.compId = compId;//父组件名字
+    this.blockId = blockId; //功能块标识
+    this.formBlockItems = formBlockItems;//表格块key值集合
+
+    this.vueEl = vueEl;     //vue el
+    this.vueObj = null;    //vue对象实例
+    this.tableObjArr = [];//表格数组对象数据
+
+    this.postUrl = postUrl //获取后端数据接口
+    this.postParam = postParam //请求参数参数json
+    this.formUrl = formUrl //提交接口
+}
+GmpTableBlock.prototype.clickEdit = function(){
+    alert('in');
+}
+//父组件数据
+GmpTableBlock.prototype.searchSelect = function(){
+    var compId = this.compId;
+    var arr = this.formBlockItems;
+    var arrObj ={};
+    for(var j=0;j<arr.length;j++){
+        arrObj[arr[j]["ename"]] ='';
+    }
+    this.tableObjArr.push(arrObj);
+    var obj = {
+        props:[],
+    }
+    obj[compId] = this.tableObjArr;
+    return obj;
+}
+//构建表格组件
+GmpTableBlock.prototype.bulidComponent = function(){
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
+    var that = this;
+    var id = that.vueEl;
+    var vue = new Vue({
+        el: id,
+        data:that.searchSelect(),//获取父组件数据
+        computed:{//表单组件定义
+            gmpTable(){//表格组件
+                var template= strHtml.html;
+                var props = ["tableData"];//子组件参数名
+                return {
+                    template,
+                    props
+                }
+            }
+        },
+        methods: {
+            click(){
+                alert("in");
+            }
+        }
+    });
+    this.vueObj = vue;
 }

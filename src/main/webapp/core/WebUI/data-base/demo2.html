@@ -20,7 +20,7 @@
 <div>
     <el-row id="app">
         <el-col :span="24">
-            <components data="first1" :is="inputwithbtn" :child-form-table="formTable"></components>
+            <components data="first1" :is="gmpForm" :child-form-table="formTable"></components>
         </el-col>
         <el-col :span="10" offset="8">
             <el-button type="info" @click="demo">获取json对象</el-button>
@@ -29,34 +29,36 @@
 </div>
 </body>
 <script>
-    var json = {
-        block : "block",
-        code : "code",
-        content : "content",
-        desp : "desp",
-        name : "name",
-        syso : "syso",
-        typeName : "",
-        version : "version"
-    }
-    var arr = [
-                {displayTitle:'代码',funcType:'form',displayWidget:'input',ename:'code'},
-                {displayTitle:'名称',funcType:'form',displayWidget:'input',ename:'name'},
-                {displayTitle:'类型',funcType:'form',displayWidget:'select-base',ename:'typeName'},
-                {displayTitle:'内容',funcType:'form',displayWidget:'textarea',ename:'content'},
-                {displayTitle:'所属模块',funcType:'form',displayWidget:'input',ename:'block'},
-                {displayTitle:'所属系统',funcType:'form',displayWidget:'input',ename:'syso'},
-                {displayTitle:'说明',funcType:'form',displayWidget:'input',ename:'desp'},
-                {displayTitle:'版本',funcType:'form',displayWidget:'input',ename:'version'},
-                ];
-    htmlAjax.keyValue(function(res){
-        var obj = new GmpForm1("formTable","codeId",arr,"#app","www.baidu.com",{rowId:"123"});
-        obj.bulidComponent(function(){
-            console.log(obj.getData());
-        });
-        if(vm.edit){
-            obj.loadData(json);
-        }
-    });
+//    var json = {
+//        block : "block",
+//        code : "code",
+//        content : "content",
+//        desp : "desp",
+//        name : "name",
+//        syso : "syso",
+//        typeName : "",
+//        version : "version"
+//    }
+//    var arr = [
+//                {displayTitle:'代码',funcType:'form',displayWidget:'input',ename:'code'},
+//                {displayTitle:'名称',funcType:'form',displayWidget:'input',ename:'name'},
+//                {displayTitle:'类型',funcType:'form',displayWidget:'select-base',ename:'typeName'},
+//                {displayTitle:'内容',funcType:'form',displayWidget:'textarea',ename:'content'},
+//                {displayTitle:'所属模块',funcType:'form',displayWidget:'input',ename:'block'},
+//                {displayTitle:'所属系统',funcType:'form',displayWidget:'input',ename:'syso'},
+//                {displayTitle:'说明',funcType:'form',displayWidget:'input',ename:'desp'},
+//                {displayTitle:'版本',funcType:'form',displayWidget:'input',ename:'version'},
+//                ];
+//    var obj = new GmpForm1("formTable","codeId",arr,"#app","www.baidu.com",{rowId:"123"});
+//    obj.bulidComponent(function(){
+//        console.log(obj.lock(["code"]));
+//    });
+//var code = '['+'"'+"obj102017-09-01000002"+'"'+']';
+var code = "obj102017-09-01000002"
+htmlAjax.keyValue(code,function(res){
+    var arr = res.resp.content.data;
+    var form = new GmpForm1("formTable","codeId",arr,"#app","www.baidu.com",{rowId:"123"});
+    form.bulidComponent();
+})
 </script>
 </html>
