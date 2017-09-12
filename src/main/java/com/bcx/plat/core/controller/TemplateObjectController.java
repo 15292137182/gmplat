@@ -80,7 +80,7 @@ public class TemplateObjectController extends BaseController {
             Condition condition = new And(ors);
             List<Order> orders = dataSort(order);
             PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
-            return result(new ServerResult<>(result));
+          return result(new ServerResult<>(adapterPageResult(result)));
         }
         return result(serverResult.setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
     }
@@ -123,12 +123,10 @@ public class TemplateObjectController extends BaseController {
                                         @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                         String order) {
         LinkedList<Order> orders = dataSort(order);
-        pageNum = search == null || search.isEmpty() ? 1 : pageNum;
         Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<Map<String, Object>> pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult));
+      return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, adapterPageResult(pageResult)));
     }
-
 
     /**
      * 通用新增方法
@@ -144,7 +142,6 @@ public class TemplateObjectController extends BaseController {
         }
         return result(serverResult.setStateMessage(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
     }
-
 
     /**
      * 通过修改方法
