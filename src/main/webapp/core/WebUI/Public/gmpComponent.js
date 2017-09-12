@@ -174,7 +174,27 @@ Vue.component("single-selection", {
         //     // 动态拼接options
         //     this.options = data;
         // });
-        this._data();
+        var that = this;
+        $.ajax({
+            url:serverPath + "/maintTable/query",
+            type:"get",
+            data:{
+                search:"",
+                pageSize:"",
+                pageNum:""
+            },
+            dataType:"json",
+            success:function(res){
+                if(res.resp.respCode == "000"){
+                    if(res.resp.content.state == "1"){
+                        that.options = res.resp.content.data;
+                    }
+                }
+            },
+            error:function(){
+                alert("错误");
+            }
+        });
     },
     updated: function () {
         //
@@ -199,28 +219,29 @@ Vue.component("multiple-selection", {
     data() {
         return {
             // 获取后端数据 并赋值给options
-            options: [{
-                value: 'Beijing',
-                label: '北京'
-            }, {
-                value: 'Shanghai',
-                label: '上海'
-            }, {
-                value: 'Nanjing',
-                label: '南京'
-            }, {
-                value: 'Chengdu',
-                label: '成都'
-            }, {
-                value: 'Shenzhen',
-                label: '深圳'
-            }, {
-                value: 'Guangzhou',
-                label: '广州'
-            }, {
-                value: 'Hangzhou',
-                label: '杭州'
-            }],
+            options: [],
+            // options: [{
+            //     value: 'Beijing',
+            //     label: '北京'
+            // }, {
+            //     value: 'Shanghai',
+            //     label: '上海'
+            // }, {
+            //     value: 'Nanjing',
+            //     label: '南京'
+            // }, {
+            //     value: 'Chengdu',
+            //     label: '成都'
+            // }, {
+            //     value: 'Shenzhen',
+            //     label: '深圳'
+            // }, {
+            //     value: 'Guangzhou',
+            //     label: '广州'
+            // }, {
+            //     value: 'Hangzhou',
+            //     label: '杭州'
+            // }],
             selectValue: {
                 values: []
             }
@@ -235,6 +256,29 @@ Vue.component("multiple-selection", {
     },
     mounted() {
         this.selectValue.values = this.initialValue;
+        // 获取options
+        // var that = this;
+        // $.ajax({
+        //     url:serverPath + "/maintTable/query",
+        //     type:"get",
+        //     data:{
+        //         search:"",
+        //         pageSize:"",
+        //         pageNum:""
+        //     },
+        //     dataType:"json",
+        //     success:function(res){
+        //         if(res.resp.respCode == "000"){
+        //             if(res.resp.content.state == "1"){
+        //                 that.options = res.resp.content.data;
+        //                 console.log(JSON.stringify(that.options));
+        //             }
+        //         }
+        //     },
+        //     error:function(){
+        //         alert("错误");
+        //     }
+        // });
     },
     template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" multiple placeholder="请选择">
 					<el-option
