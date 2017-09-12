@@ -21,9 +21,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
-import static com.bcx.plat.core.utils.UtilsTool.createBlankQuery;
-
 /**
  * 业务对象业务层
  * Created by Wen Tiehu on 2017/8/7.
@@ -116,9 +113,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
      * @return ServerResult
      */
     public ServerResult queryPage(String search, int pageNum, int pageSize, List<Order> order) {
-        pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
         PageResult<Map<String, Object>> result;
-        Or blankQuery = createBlankQuery(blankSelectFields(), collectToSet(search));
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         result = selectPageMap(blankQuery, order, pageNum, pageSize);
         if (result.getResult().size() == 0) {
             return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
@@ -173,32 +169,23 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
      * @return ServerResult
      */
     public ServerResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
-        PageResult<Map<String, Object>> result;
+        //查询属性的搜索条件
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode","propertyName","valueType"), UtilsTool.collectToSet(search));
+        Condition condition;
         if (UtilsTool.isValid(search)) {
-            result = businessObjectProService.selectPageMap(
-                    new ConditionBuilder(BusinessObjectPro.class).and()
-                            .equal("objRowId", rowId).or()
-                            .addCondition(createBlankQuery(Arrays.asList("propertyCode", "propertyName"),
-                                    collectToSet(search))).endOr().endAnd().buildDone()
-                    , order, pageNum, pageSize);
-            if (result.getResult().size() == 0) {
-                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-            } else {
-                PageResult<Map<String, Object>> result1 = queryProPage(result);
-                return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
-            }
+            condition = new ConditionBuilder(BusinessObjectPro.class)
+                    .and().equal("objRowId", rowId)
+                    .or().addCondition(blankQuery).endOr()
+                    .endAnd().buildDone();
         } else {
-            result =
-                    businessObjectProService.selectPageMap(
-                            new ConditionBuilder(BusinessObjectPro.class).and()
-                                    .equal("objRowId", rowId).endAnd().buildDone()
-                            , order, pageNum, pageSize);
-            if (result.getResult().size() == 0) {
-                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-            } else {
-                PageResult<Map<String, Object>> result1 = queryProPage(result);
-                return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result1);
-            }
+            condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", rowId).endAnd().buildDone();
+        }
+        PageResult<Map<String, Object>> result = businessObjectProService.selectPageMap(condition, order, pageNum, pageSize);
+        if (result.getResult().size() == 0) {
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+        } else {
+            PageResult<Map<String, Object>> pageResult = queryProPage(result);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult);
         }
     }
 

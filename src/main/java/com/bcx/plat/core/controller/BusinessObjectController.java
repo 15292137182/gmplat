@@ -83,7 +83,6 @@ public class BusinessObjectController extends BaseController {
                                         @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                         String order) {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
-        pageNum = !UtilsTool.isValid(search) ? 1 : pageNum;
         ServerResult serverResult = businessObjectService.queryPage(search, pageNum, pageSize, orders);
         return super.result(serverResult);
     }
