@@ -7,7 +7,7 @@
 
     <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
 
-    <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatis">
+    <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatisImpl">
         <constructor-arg name="suitMapper" ref="postgreSuitMapper"/>
         <constructor-arg name="translator" ref="conditionTranslator"/>
         <constructor-arg name="entityEntries">
