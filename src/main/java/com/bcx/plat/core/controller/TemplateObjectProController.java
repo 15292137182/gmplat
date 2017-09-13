@@ -36,6 +36,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class TemplateObjectProController extends BaseController {
 
     @Autowired
+    private
     TemplateObjectProService templateObjectProService;
 
     /**
@@ -45,12 +46,13 @@ public class TemplateObjectProController extends BaseController {
      */
     @RequestMapping("/add")
     public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
+        ServerResult serverResult = new ServerResult();
         TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
         int insert = templateObjectPro.insert();
         if (insert != -1) {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -58,14 +60,14 @@ public class TemplateObjectProController extends BaseController {
     /**
      * 根据rowId查询数据
      *
-     * @param rowId 唯一标识
+     * @param proRowId 唯一标识
      * @return PlatResult
      */
     @RequestMapping("/queryById")
-    public PlatResult queryById(String rowId) {
+    public PlatResult queryById(String proRowId) {
         ServerResult serverResult = new ServerResult();
-        if (!rowId.isEmpty()) {
-            Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+        if (!proRowId.isEmpty()) {
+            Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", proRowId).endAnd().buildDone();
             List<TemplateObjectPro> select = templateObjectProService.select(condition);
             return result(new ServerResult<>(select));
         } else {
@@ -82,18 +84,19 @@ public class TemplateObjectProController extends BaseController {
      */
     @RequestMapping("/modify")
     public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
+        ServerResult serverResult = new ServerResult();
         int update;
         if (UtilsTool.isValid(param.get("proRowId"))) {
             TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
             Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", param.get("proRowId")).endAnd().buildDone();
             update = templateObjectPro.update(condition);
             if (update != -1) {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
             }
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
@@ -105,17 +108,18 @@ public class TemplateObjectProController extends BaseController {
      */
     @RequestMapping("/delete")
     public Object delete(String rowId) {
+        ServerResult serverResult = new ServerResult();
         int del;
         if (!rowId.isEmpty()) {
             TemplateObjectPro templateObjectPro = new TemplateObjectPro();
             del = templateObjectPro.deleteById(rowId);
             if (del != -1) {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             } else {
-                return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 }

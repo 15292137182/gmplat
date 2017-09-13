@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
+import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
 
 /**
  * 业务对象业务层
@@ -73,11 +75,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
             }
         }
         if (insert != 1) {
-            String message = ServletUtils.getMessage(Message.NEW_ADD_FAIL);
-            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, message);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, NEW_ADD_FAIL);
         } else {
-            String message = ServletUtils.getMessage(Message.NEW_ADD_SUCCESS);
-            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, message, insert);
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, NEW_ADD_SUCCESS, insert);
         }
     }
 
@@ -171,7 +171,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
      */
     public ServerResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
         //查询属性的搜索条件
-        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode","propertyName","valueType"), UtilsTool.collectToSet(search));
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), UtilsTool.collectToSet(search));
         Condition condition;
         if (UtilsTool.isValid(search)) {
             condition = new ConditionBuilder(BusinessObjectPro.class)
@@ -268,28 +268,28 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
      * @return ServerResult
      */
     public ServerResult delete(String rowId) {
-        AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
-        map.get().put("relateBusiObj", rowId);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("relateBusiObj", rowId);
         List<FrontFunc> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
-        for (FrontFunc busin : businObj) {
-            String rowId1 = busin.getRowId();
-            List<FrontFuncPro> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
-            if (funcRowId.size() != 0) {
-                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+        if (businObj.size() > 0) {
+            for (FrontFunc busin : businObj) {
+                String rowId1 = busin.getRowId();
+                List<FrontFuncPro> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
+                if (funcRowId.size() != 0) {
+                    return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+                }
             }
-        }
-        if (businObj.size() == 0) {
+        } else if (businObj.size() == 0) {
             List<BusinessObjectPro> list = businessObjectProService
                     .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
             if (UtilsTool.isValid(list)) {
                 List<String> rowIds = list.stream().map((row) ->
                         (String) row.getRowId()).collect(Collectors.toList());
-//                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
+                businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
 
             } else if (rowId != null && rowId.length() > 0) {
-                Map<String, Object> args = new HashMap<>();
-                args.put("rowId", rowId);
-//                delete(args);
+                Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
+                delete(condition);
                 return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
             }
         }

@@ -180,7 +180,7 @@ public class FrontFuncController extends BaseController {
         LinkedList<Order> orders = UtilsTool.dataSort(order);
         Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<Map<String, Object>> result = frontFuncService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        return result(new ServerResult(result));
+        return result(new ServerResult<>(result));
     }
 
 

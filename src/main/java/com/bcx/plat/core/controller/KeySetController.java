@@ -138,7 +138,7 @@ public class KeySetController extends BaseController {
             KeySet keySet = new KeySet();
             del = keySet.deleteById(rowId);
             if (del != -1) {
-                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
             } else {
                 return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             }
@@ -161,7 +161,7 @@ public class KeySetController extends BaseController {
         if (insert != -1) {
             return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
     }
 

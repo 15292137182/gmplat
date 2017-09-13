@@ -87,7 +87,7 @@ public class KeySetProController extends BaseController {
         int update;
         if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
             KeySetPro keySetPro = new KeySetPro();
-//            KeySetPro modify = keySetPro.fromMap(param).buildModifyInfo();
+            KeySetPro modify = keySetPro.fromMap(param).buildModifyInfo();
             update = moreBatis.update(KeySetPro.class, param).where(new FieldCondition("rowId", Operator.EQUAL, param.get("rowId"))).execute();
 //            update = modify.updateById();
             if (update != -1) {

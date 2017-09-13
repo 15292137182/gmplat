@@ -181,9 +181,9 @@ var basRight = new Vue({
         //右边点击事件
         currentRChange(row){
             if(row !=undefined){
-                this.currentId=row.rowId;
+                // this.currentId=row.rowId;
+                this.currentProId=row.proRowId;
             }
-
         },
         //编辑事件
         editProp(){
@@ -192,10 +192,11 @@ var basRight = new Vue({
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑模板对象属性', '400px', '480px',function() {
                 var data={
                     "url":editQueryObjTemp,
-                    "jsonData":{rowId:basRight.currentId},
+                    "jsonData":{proRowId:basRight.currentProId},
                     "obj":basRight
                 };
                 gmpAjax.showAjax(data, function (res) {
+                    console.log(res);
                     //编辑拿到的数据
                     var data = res.data[0];
                     addTempProp.addTempPropObj.codeInput=data.code;

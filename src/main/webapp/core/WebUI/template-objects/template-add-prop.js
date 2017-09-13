@@ -45,7 +45,7 @@ var addTempProp = new Vue({
                     var data={
                         "url":editObjTemp,
                         "jsonData":{templateObjRowId:basLeft.currentId,
-                            proRowId:basRight.currentId,
+                            proRowId:basRight.currentProId,
                             ename:addTempProp.addTempPropObj.engNameInput,
                             cname:addTempProp.addTempPropObj.chnNameInput,
                             valueType:addTempProp.value_1,

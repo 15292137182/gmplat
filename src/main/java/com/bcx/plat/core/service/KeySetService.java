@@ -51,9 +51,11 @@ public class KeySetService extends BaseService<KeySet> {
         for (Object li : list) {
             List<Object> lists = new ArrayList<>();
             lists.add(li);
-            QueryAction joinTableTest = moreBatis.select(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", JoinType.LEFT_JOIN)
-                    .where(new FieldCondition(moreBatis.getColumnByAlias(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
-            List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(joinTableTest.execute());
+            Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", lists).endAnd().buildDone();
+            List<Map<String, Object>> leftAssociationQuery = leftAssociationQuery(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", condition);
+//            QueryAction joinTableTest = moreBatis.select(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", JoinType.LEFT_JOIN)
+//                    .where(new FieldCondition(moreBatis.getColumnByAlias(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
+            List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(leftAssociationQuery);
             maps.put(li, list1);
             if (maps.size() == 0) {
                 return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
