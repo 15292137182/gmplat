@@ -10,6 +10,7 @@ var seqReset=new Vue({
             seqContent:'',
         },
         labelPosition: 'right',
+
         queryUrl:serverPath+'/sequenceRule/queryById',
         resetUrl:serverPath+'/sequenceRule/reset',
     },

@@ -109,13 +109,14 @@ var basLeft = new Vue({
                 };
                 gmpAjax.showAjax(data,function(res){
                     //编辑拿到的数据
-                    var data=res[0];
+                    var data=res.data[0];
                     console.log(data);
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
                     em.value_1 =data.relateTableRowId;//关联表
                     em.value_2=data.relateTemplateObject//关联模板对象
-                    em.ruleForm.system=data.belongModule//所属系统
+                    em.ruleForm.system=data.system//所属系统
+                    em.ruleForm.belongModule=data.belongModule//所属模块
                     em.ruleForm.versionInput =data.version;//版本
                 })
             });

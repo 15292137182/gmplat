@@ -23,27 +23,25 @@
         </el-form-item>
 
         <el-form-item label="关联表" prop="reaTable">
-            <single-selection @change-data="getChildData_1"  :initial-value="value_1" :isDisabled="disabledBool">
+            <single-selection @change-data="getChildData_1"  :initial-value="value_1" :isDisabled="disabledBool" :url="serverPath + '/maintTable/query'">
                 <!---->
             </single-selection>
         </el-form-item>
 
         <el-form-item label="关联模板对象" prop="reaTableObj">
-            <multiple-selection @change-datas="multipleDatas_1" :initial-value="value_2">
+            <multiple-selection @change-datas="multipleDatas_1" :initial-value="value_2" >
                 <!---->
             </multiple-selection>
         </el-form-item>
 
 
-        <el-form-item label="所属系统" prop="system">
-            <el-input placeholder="请输入所属系统" v-model="ruleForm.system"></el-input>
-        </el-form-item>
-
-        <!--<el-form-item label="所属模块" prop="tableInput">-->
-            <!--<single-selection @change-data="getChildData_2" :initial-value="value_3">-->
-                <!--&lt;!&ndash;&ndash;&gt;-->
-            <!--</single-selection>-->
+        <!--<el-form-item label="所属系统" prop="system">-->
+            <!--<el-input placeholder="请输入所属系统" v-model="ruleForm.system"></el-input>-->
         <!--</el-form-item>-->
+
+        <el-form-item label="所属模块" prop="belongModule">
+            <el-input placeholder="请输入所属模块" v-model="ruleForm.belongModule"></el-input>
+        </el-form-item>
 
         <el-form-item label="版本">
             <el-input  v-model="ruleForm.versionInput" disabled></el-input>

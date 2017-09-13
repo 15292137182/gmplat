@@ -45,7 +45,7 @@ var config=new Vue({
         },
         editEvent(){
             this.operate=2;
-            var htmlUrl = 'sequence-rule-config-add.html';
+            var htmlUrl = 'add-sequence-rule-config.html';
             this.divIndex = ibcpLayer.ShowIframe(htmlUrl, '编辑序列号规则配置', '1000px', '500px');
         },
         deleteEvent(){
@@ -83,7 +83,7 @@ var config=new Vue({
                     "obj":config
                 }
                 gmpAjax.showAjax(data, function(res){
-                        var data=res;
+                        var data=res.data;
                         seqReset.resetform.seqCode=data[0].seqCode;
                         seqReset.resetform.seqName=data[0].seqName;
                         seqReset.resetform.seqContent=data[0].seqContent;

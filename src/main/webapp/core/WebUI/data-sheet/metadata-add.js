@@ -11,7 +11,7 @@ var em = new Vue({
                 nameInput: '',//名称
                 reaTable:'',//关联表
                 reaTableObj:'',//关联模板对象
-                tableInput:'',//所属模块
+                belongModule:'',//所属模块
                 versionInput: '',//版本
                 system:''
             },
@@ -52,7 +52,7 @@ var em = new Vue({
                         "jsonData":{objectName:em.ruleForm.nameInput,//名称
                             relateTableRowId: em.value_1,//关联表
                             relateTemplateObject: em.value_2,//关联模板对象
-                            belongModule: em.ruleForm.system,//所属模块
+                            belongModule: em.ruleForm.belongModule,//所属模块
                         },
                         "obj":basTop
                     };
@@ -67,20 +67,20 @@ var em = new Vue({
             if (operate == 2) {  //新增业务对象
                 editObj.editOk(function(){
                     var data={
-                        "url":addUrl,
+                        "url":editUrl,
                         "jsonData":{
                             rowId: basLeft.currentVal.rowId,//ID
                             objectName:em.ruleForm.nameInput,//名称
                             relateTableRowId: em.value_1,//关联表
                             relateTemplateObject: em.value_2,//关联模板对象
-                            belongModule: em.ruleForm.system,//所属模块
+                            belongModule: em.ruleForm.belongModule,//所属模块
                         },
                         "obj":basTop
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页跳回到第一页
                          basLeft.searchLeft();
-                            ibcpLayer.Close(divIndex);
+                        ibcpLayer.Close(divIndex);
                     })
                 })
             }
@@ -93,6 +93,7 @@ var em = new Vue({
 
         },
         multipleDatas_1(datas){
+            console.log(datas)
            this.value_2=JSON.stringify(datas);
            console.log(this.value_2);
         },

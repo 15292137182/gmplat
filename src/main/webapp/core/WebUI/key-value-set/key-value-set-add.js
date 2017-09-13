@@ -58,7 +58,8 @@ var keyValueSetAdd = new Vue({
                     keysetName:this.keyForm.keysetNameInput,
                     belongModule:this.keyForm.belongModuleInput,
                //     belongSystem:this.keyForm.belongSystemInput,
-                    desp:this.keyForm.despInput
+                    desp:this.keyForm.despInput,
+                    version:"1.0"
                 },
                 "obj":keyValueSetAdd
             }

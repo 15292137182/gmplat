@@ -25,7 +25,7 @@ new_vue.prototype.data=function (type) {
                 keyInput:'',
                 valueInput:'',
                 checked:true,
-                childObjoptions: window.parent.config.objoptions,
+                childObjoptions: add.childObjoptions,
             }
         }
     }
@@ -46,7 +46,7 @@ new_vue.prototype.data=function (type) {
                 numLen:'',
                 dateCircle:'',
                 relatedConstantKey:'',
-                checked:'',
+                checked:true,
                 dates: ''
             }
         }
@@ -103,7 +103,7 @@ new_vue.prototype.creat=function(_id,num,type){
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
-                            <el-form-item label="是否显示">
+                            <el-form-item label="是否显示" label-width="80px">
                             <el-checkbox @blur="getData" v-model="checked"></el-checkbox>
                             </el-form-item>
                             </el-col>
@@ -166,7 +166,7 @@ new_vue.prototype.creat=function(_id,num,type){
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
-                               <el-form-item label="是否显示">
+                               <el-form-item label="是否显示" label-width="80px">
                                    <el-checkbox v-model="checked"></el-checkbox>
                                </el-form-item>
                             </el-col>
@@ -185,13 +185,14 @@ new_vue.prototype.creat=function(_id,num,type){
         methods:{
             //删除
             remove(){
-                // var _index = this.$el.attributes.prop.value;
-                // add.items.splice(_index, 1);
+                // var _index = this.$el.attributes[0].value;
+                add.items.splice(_index, 1);
             },
             //失去焦点触发
-            // getData(val){
-            //
-            // },
+            getData(val){
+             //   var len=add.items.length;
+
+            },
         }
     })
 };
@@ -206,6 +207,7 @@ var _html=Vue.extend({
     mounted() {
         // 拼接新增HTML的id
         this.name = "cnt-" + this.childIndex;
+
     },
     template: "<div :id='this.name'></div>"
 });
@@ -241,7 +243,8 @@ var add = new Vue({
             seqNameInput: [
                 {required: true, message: '请输入名称', trigger: 'blur'}
             ],
-        }
+        },
+        childObjoptions: window.parent.config.objoptions,
     },
     components: {
         '$html': _html
@@ -345,7 +348,7 @@ var add = new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
-                var data=res;
+                var data=res.data;
                 add.formTable.seqCodeInput=data[0].seqCode;
                 add.formTable.seqNameInput=data[0].seqName;
                 add.formTable.seqContentInput=data[0].seqContent;
@@ -357,15 +360,15 @@ var add = new Vue({
         },
 
     },
-    // created(){
+    created(){
     //     if(window.parent.config.operate ==1){
     //         this.init();
     //     }
     //
-    //     if(window.parent.config.operate == 2){
-    //         this.bindValue();
-    //     }
-    // },
+        if(window.parent.config.operate == 2){
+            this.bindValue();
+        }
+    },
     updated(){
         //新增创建vue实例
         var _obj=new new_vue();
