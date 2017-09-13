@@ -61,8 +61,6 @@
             </el-col>
         </el-row>
 
-        <div :is="item.html" v-for="(item,index) in items" :child-index="num" :prop="index"></div>
-
         <el-row type="flex" class="row-bg">
             <el-col :span="10">
                 <el-form-item label="所属模块" prop="belongModuleInput">
@@ -93,6 +91,7 @@
         </el-row>
     </el-form>
 
+    <div :is="item.html" v-for="(item, index) in items" :index="index" :child-num="num"></div>
 
     <el-row>
         <el-col :span="11" style="text-align:right">

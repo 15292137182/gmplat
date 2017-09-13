@@ -49,38 +49,16 @@ Vue.component("gmp-table", {
  * @author:liyuanquan
  */
 Vue.component("single-selection", {
-    // 是否可用  获取options的接口  默认值
-    props: ["isDisabled", "url", "initialValue"],
+    // 设置参数
+    props: ["initial"],
     data() {
         return {
-            // 获取后端数据 并赋值给options
-            options: [],
-            // options: [{
-            //     value: 'Beijing',
-            //     label: '北京'
-            // }, {
-            //     value: 'Shanghai',
-            //     label: '上海'
-            // }, {
-            //     value: 'Nanjing',
-            //     label: '南京'
-            // }, {
-            //     value: 'Chengdu',
-            //     label: '成都'
-            // }, {
-            //     value: 'Shenzhen',
-            //     label: '深圳'
-            // }, {
-            //     value: 'Guangzhou',
-            //     label: '广州'
-            // }, {
-            //     value: 'Hangzhou',
-            //     label: '杭州'
-            // }],
-            selectValue: {
-                values: [],
-                label: ""
-            }
+            value: "",  // 下拉框选中绑定值
+            label: "",
+            isDisabled: false,  // 下拉框是否禁用
+            options: [],    // 下拉框option
+            url: "",    // 获取option接口
+            params: {}  // 调用接口参数
         };
     },
     methods: {
@@ -97,92 +75,45 @@ Vue.component("single-selection", {
         },
         // 级联下拉框方法
         cascaderEvent(val) {
-            this.selectValue.values = val;
-        },
-        _data() {
-            $.ajax({
-                url:serverPath + "/maintTable/query",
-                type:"get",
-                data:{
-                    search:"",
-                    pageSize:"",
-                    pageNum:""
-                },
-                dataType:"json",
-                success:function(res){
-                    console.log(res);
-                    if(res.resp.respCode == "000"){
-                        if(res.resp.content.state == -1){
-                            //
-                        }
-                    }
-                },
-                error:function(){
-                    alert("错误")
-                }
-            })
-        },
-        // 拼接option测试方法
-        serverOptions(type) {
-            if(type == "op_1") {
-                return [{
-                    deleteFlag: "0",
-                    desp: "00",
-                    value: "5243fc43-a9c6-42f0-a0c8-fd74e7fb",
-                    label: "demo1",
-                    tableEname: "demo2",
-                    tableSchema: "demo"
-                }, {
-                    deleteFlag: "0",
-                    desp: "11",
-                    value: "6243gd43-a9c6-42f0-a0c8-fd74e7fb",
-                    label: "demo11",
-                    tableEname: "demo2",
-                    tableSchema: "demo"
-                }]
-            }
-            if(type == "op_2") {
-                return [{
-                    deleteFlag: "0",
-                    desp: "22",
-                    value: "7243fc43-a9c6-42f0-a0c8-fd74e7fb",
-                    label: "demo22",
-                    tableEname: "demo2",
-                    tableSchema: "demo"
-                }, {
-                    deleteFlag: "0",
-                    desp: "33",
-                    value: "8243gd43-a9c6-42f0-a0c8-fd74e7fb",
-                    label: "demo33",
-                    tableEname: "demo2",
-                    tableSchema: "demo"
-                }]
-            }
+            // this.selectValue.values = val;
         }
     },
     mounted() {
-        // 接收父组件传递的初始默认值 并将其赋值给子组件
-        this.selectValue.values = this.initialValue;
-        //ex:查询关联表
-        // this.$http.jsonp(serverPath + "/maintTable/query",{
-        //     search:''
-        // },{
-        //     jsonp: 'callback'
-        // }).then(function (res) {
-        //     var data = res.data.resp.content.data.result;
-        //     // console.log(data);
-        //     // 动态拼接options
-        //     this.options = data;
-        // });
-        var that = this;
-        $.ajax({
-            url:serverPath + "/maintTable/query",
-            type:"get",
-            data:{
+        // 获取初始默认值
+        if(this.initial.value == "" || this.initial.value == undefined) {
+            this.value = ""
+        }else {
+            this.value = this.initial.value;
+        }
+
+        // 获取禁用标记
+        if(this.initial.disabled == "false" || this.initial.disabled == "" || this.initial.disabled == undefined) {
+            this.isDisabled = false;
+        }else {
+            this.isDisabled = true;
+        }
+
+        // 获取options的url
+        if(this.initial.url) {
+            this.url = this.initial.url;
+            this.params = {
                 search:"",
                 pageSize:"",
                 pageNum:""
-            },
+            }
+        }else if(this.initial.params) {
+            // 键值集合
+            this.url = serverPath + "/keySet/queryKeyCode";
+            this.params = {
+                keyCode: this.initial.params
+            };
+        }
+        // 调用接口获取options
+        var that = this;
+        $.ajax({
+            url:this.url,
+            type:"get",
+            data: this.params,
             dataType:"json",
             success:function(res){
                 if(res.resp.respCode == "000"){
@@ -199,7 +130,7 @@ Vue.component("single-selection", {
     updated: function () {
         //
     },
-    template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" clearable="true" placeholder="请选择">
+    template: `<el-select @change="changeSelect" v-model="value" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
 						v-for="item in options"
 						:key="item.value"
@@ -214,73 +145,72 @@ Vue.component("single-selection", {
  * @author:liyuanquan
  */
 Vue.component("multiple-selection", {
-    // 是否可用  获取options的接口  默认值
-    props: ["isDisabled", "url", "initialValue"],
+    // 设置参数
+    props: ["initial"],
     data() {
         return {
-            // 获取后端数据 并赋值给options
-            options: [],
-            // options: [{
-            //     value: 'Beijing',
-            //     label: '北京'
-            // }, {
-            //     value: 'Shanghai',
-            //     label: '上海'
-            // }, {
-            //     value: 'Nanjing',
-            //     label: '南京'
-            // }, {
-            //     value: 'Chengdu',
-            //     label: '成都'
-            // }, {
-            //     value: 'Shenzhen',
-            //     label: '深圳'
-            // }, {
-            //     value: 'Guangzhou',
-            //     label: '广州'
-            // }, {
-            //     value: 'Hangzhou',
-            //     label: '杭州'
-            // }],
-            selectValue: {
-                values: []
-            }
+            value: "",  // 下拉框选中绑定值
+            label: "",
+            isDisabled: false,  // 下拉框是否禁用
+            options: [],    // 下拉框option
+            url: "",    // 获取option接口
+            params: {}  // 调用接口参数
         };
     },
     methods: {
         changeSelect() {
-            // var _DOM = this.selectValue.el.children[1].lastElementChild;
             // 子组件向父组件传递的方法和参数
-            this.$emit("change-datas", this.selectValue.values);
+            this.$emit("change-datas", this.value);
         }
     },
     mounted() {
-        this.selectValue.values = this.initialValue;
-        // 获取options
-        // var that = this;
-        // $.ajax({
-        //     url:serverPath + "/maintTable/query",
-        //     type:"get",
-        //     data:{
-        //         search:"",
-        //         pageSize:"",
-        //         pageNum:""
-        //     },
-        //     dataType:"json",
-        //     success:function(res){
-        //         if(res.resp.respCode == "000"){
-        //             if(res.resp.content.state == "1"){
-        //                 that.options = res.resp.content.data;
-        //                 console.log(JSON.stringify(that.options));
-        //             }
-        //         }
-        //     },
-        //     error:function(){
-        //         alert("错误");
-        //     }
-        // });
+        // 获取初始默认值
+        if(this.initial.value == "" || this.initial.value == undefined) {
+            this.value = ""
+        }else {
+            this.value = this.initial.value;
+        }
+
+        // 获取禁用标记
+        if(this.initial.disabled == "false" || this.initial.disabled == "" || this.initial.disabled == undefined) {
+            this.isDisabled = false;
+        }else {
+            this.isDisabled = true;
+        }
+
+        // 获取options的url
+        if(this.initial.url) {
+            this.url = this.initial.url;
+            this.params = {
+                search:"",
+                pageSize:"",
+                pageNum:""
+            }
+        }else if(this.initial.params) {
+            // 键值集合
+            this.url = serverPath + "";
+            this.params = this.initial.params;
+        }
+        // 调用接口获取options
+        var that = this;
+        $.ajax({
+            url:this.url,
+            type:"get",
+            data: this.params,
+            dataType:"json",
+            success:function(res){
+                if(res.resp.respCode == "000"){
+                    if(res.resp.content.state == "1"){
+                        that.options = res.resp.content.data;
+                    }
+                }
+            },
+            error:function(){
+                alert("错误");
+            }
+        });
     },
-    template: `<el-select @change="changeSelect" v-dom="selectValue" v-model="selectValue.values" :disabled="isDisabled" multiple placeholder="请选择">
+    template: `<el-select @change="changeSelect" v-model="value" :disabled="isDisabled" multiple placeholder="请选择">
 					<el-option
 						v-for="item in options"
 						:key="item.value"

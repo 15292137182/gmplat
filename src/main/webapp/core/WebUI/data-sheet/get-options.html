@@ -8,17 +8,14 @@
     <div id="app">
         <el-row>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection @change-data="getChildData_1" :initial-value="value_1">
+                <single-selection :initial="initial">
                     <!---->
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection @change-data="getChildData_2" :initial-value="value_2">
+                <single-selection :initial="initial_1">
                     <!---->
                 </single-selection>
-            </el-col>
-            <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <multiple-selection @change-datas="multiple_data"></multiple-selection>
             </el-col>
         </el-row>
     </div>
@@ -30,21 +27,14 @@
             el: "#app",
             data() {
                 return {
-                    value_1: "",
-                    value_2: "",
-                    multiple_value: []
+                    // 数据库表查询: 查询接口  默认值  是否禁用
+                    initial: {url: serverPath + "/maintTable/query", value: "", disabled: "false"},
+                    // 键值集合设置参数: 参数(键值集合)  默认值  是否禁用
+                    initial_1: {params: "functionBlockAlign", value: "center", disabled: "false"}
                 }
             },
             methods: {
-                getChildData_1(datas) {
-                    this.value_1 = datas.values;
-                },
-                getChildData_2(datas) {
-                    this.value_2 = datas.values;
-                },
-                multiple_data(data) {
-                    this.multiple_value = data;
-                }
+                //
             }
         })
     </script>

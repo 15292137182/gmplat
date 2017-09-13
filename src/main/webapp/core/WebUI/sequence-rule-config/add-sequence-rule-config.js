@@ -5,6 +5,11 @@
 var queryObj=serverPath+"/businObj/query";
 var queryPro=serverPath+"/businObj/queryProPage";
 
+// 页面动态加载vue实例集合
+var _vue = [];
+// 防止页面数更新 创建无效vue实例的标识
+var flag = false;
+
 //构造函数
 function  new_vue(){};
 
@@ -25,7 +30,7 @@ new_vue.prototype.data=function (type) {
                 keyInput:'',
                 valueInput:'',
                 checked:true,
-                childObjoptions: add.childObjoptions,
+                childObjoptions: window.parent.config.objoptions,
             }
         }
     }
@@ -46,7 +51,7 @@ new_vue.prototype.data=function (type) {
                 numLen:'',
                 dateCircle:'',
                 relatedConstantKey:'',
-                checked:true,
+                checked: false,
                 dates: ''
             }
         }
@@ -54,17 +59,13 @@ new_vue.prototype.data=function (type) {
 };
 
 //构造函数原型链
-new_vue.prototype.creat=function(_id,num,type){
-    //vue实例名称
-    var _name;
-    _name="vm_"+num;
-
+new_vue.prototype.creat = function(_id, type) {
     //定义模板
     var _template;
 
     //常量模板
     if(type=='1'){
-        _template=`<el-form>
+        _template=`<el-form :prop="index" type="1">
                         <el-row>
                             <el-col :span="1">
                                 <el-form-item>
@@ -73,14 +74,14 @@ new_vue.prototype.creat=function(_id,num,type){
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="常量" label-width="40px">
-                                    <el-input @blur="getData" v-model="constantValue" placeholder="请输入值"></el-input>
+                                    <el-input @blur="getData" v-data="constantValue" v-model="constantValue" placeholder="请输入值"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>`;
     }
     if(type=='2'){
-        _template=`<el-form>
+        _template=`<el-form :prop="index" type="2">
                         <el-row>
                             <el-col :span="1">
                                 <el-form-item>
@@ -94,24 +95,24 @@ new_vue.prototype.creat=function(_id,num,type){
                             </el-col>
                             <el-col :span="4">
                                 <el-form-item label="或" label-width="20px">
-                                    <el-input @blur="getData" v-model="keyInput" placeholder="请输入键"/>
+                                    <el-input @blur="getData" v-data="keyInput" v-model="keyInput" placeholder="请输入键"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="默认值" label-width="80px">
-                                    <el-input @blur="getData" v-model="valueInput" placeholder="请输入默认值"/>
+                                    <el-input @blur="getData" v-data="valueInput" v-model="valueInput" placeholder="请输入默认值"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
-                            <el-form-item label="是否显示" label-width="80px">
-                            <el-checkbox @blur="getData" v-model="checked"></el-checkbox>
-                            </el-form-item>
+                                <el-form-item label="是否显示">
+                                    <el-checkbox @blur="getData" v-data="checked" v-model="checked"></el-checkbox>
+                                </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>`;
     }
     if(type=='3'){
-        _template=`<el-form>
+        _template=`<el-form :prop="index" type="3">
                         <el-row>
                                 <el-col :span="1">
                                     <el-form-item>
@@ -120,23 +121,23 @@ new_vue.prototype.creat=function(_id,num,type){
                                 </el-col>
                                 <el-col :span="5">
                                     <el-form-item label="日期" label-width="40px">
-                                        <el-input placeholder="请输入值" v-model="dateValue"></el-input>
+                                        <el-input placeholder="请输入日期格式" @blur="getData" v-data="dateValue" v-model="dateValue"></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="4">
-                                        <el-form-item >（如：yyyy-MM-dd）</el-form-item>
+                                        <el-form-item > （如：yyyy-MM-dd）</el-form-item>
                                 </el-col>
                     
                                 <el-col :span="5">
                                     <el-form-item label="是否显示">
-                                        <el-checkbox v-model="checked"></el-checkbox>
+                                        <el-checkbox @change="getData" v-data="checked" v-model="checked"></el-checkbox>
                                     </el-form-item>
                                 </el-col>
                         </el-row>
                     </el-form>`;
     }
     if(type=='4'){
-        _template=`<el-form>
+        _template=`<el-form :prop="index" type="4">
                         <el-row>
                             <el-col :span="1">
                                <el-form-item>
@@ -145,29 +146,29 @@ new_vue.prototype.creat=function(_id,num,type){
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="序号" label-width="40px">
-                                    <el-input placeholder="请输入键" v-model="numKey"></el-input>
+                                    <el-input placeholder="请输入键" @blur="getData" v-data="numKey" v-model="numKey"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
                                <el-form-item label="长度" label-width="70px">
-                                   <el-input placeholder="请输入" v-model="numLen"></el-input>
+                                   <el-input placeholder="请输入" @blur="getData" v-data="numLen" v-model="numLen"></el-input>
                                </el-form-item>
                             </el-col>
                             <el-col :span="4">
                                <el-form-item label="循环" label-width="70px">
-                                   <el-select placeholder="请选择" v-model="dateCircle" style="width: 100px">
+                                   <el-select placeholder="请选择" @change="getData" v-data="dateCircle" v-model="dateCircle" style="width: 100px">
                                        <el-option v-for="item in dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>
                                    </el-select>
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
                                <el-form-item label="关联变量键" label-width="120px">
-                                   <el-input placeholder="请输入" v-model="relatedConstantKey"></el-input>
+                                   <el-input placeholder="请输入" @blur="getData" v-data="relatedConstantKey" v-model="relatedConstantKey"></el-input>
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
-                               <el-form-item label="是否显示" label-width="80px">
-                                   <el-checkbox v-model="checked"></el-checkbox>
+                               <el-form-item label="是否显示">
+                                   <el-checkbox @change="getData" v-data="checked" v-model="checked"></el-checkbox>
                                </el-form-item>
                             </el-col>
                         </el-row>
@@ -178,27 +179,89 @@ new_vue.prototype.creat=function(_id,num,type){
     var _obj_=new new_vue();
 
     //拼接vue实例
-    _name=new Vue({
+    new Vue({
         el:_id,
         template:_template,
         data:_obj_.data(type),
-        methods:{
+        mounted() {
+            // 将当前实例添加到全局变量数组
+            _vue.push(this);
+        },
+        methods: {
             //删除
-            remove(){
-                // var _index = this.$el.attributes[0].value;
-                add.items.splice(_index, 1);
+            remove() {
+                console.log(add.items);
+                // var _index = this.$el.attributes.prop.value;
+                // add.items.splice(_index, 1);
             },
             //失去焦点触发
-            getData(val){
-             //   var len=add.items.length;
-
+            getData() {
+                var $cnt = "";
+                for(var i = 0;i < _vue.length;i++) {
+                    var _data = JSON.parse(JSON.stringify(_vue[i].$data));
+                    // 常量
+                    if(_vue[i].$el.attributes.type.value == "1") {
+                        for(var key in _data) {
+                            $cnt += "@{" + _data[key] + "} & ";
+                        }
+                    }
+                    // 变量
+                    if(_vue[i].$el.attributes.type.value == "2") {
+                        var _variable = "";
+                        for(var key in _data) {
+                            if(_data[key] === true) {
+                                _data[key] = 1;
+                            }else if(_data[key] === false) {
+                                _data[key] = 0;
+                            }else if(_data[key] == "") {
+                                _data[key] = "null";
+                            }
+                            _variable += _data[key] + ";";
+                        }
+                        $cnt += "#{" + _variable + "} & ";
+                    }
+                    // 日期
+                    if(_vue[i].$el.attributes.type.value == "3") {
+                        var _date = "";
+                        for(var key in _data) {
+                            if(_data[key] === true) {
+                                _data[key] = 1;
+                            }else if(_data[key] === false) {
+                                _data[key] = 0;
+                            }else if(_data[key] == "") {
+                                _data[key] = "null";
+                            }
+                            _date += _data[key]  + ";";
+                        }
+                        $cnt += "${" + _date + "} & ";
+                    }
+                    // 序号
+                    if(_vue[i].$el.attributes.type.value == "4") {
+                        var _number = "";
+                        for(var key in _data) {
+                            if(_data[key] === true) {
+                                _data[key] = 1;
+                            }else if(_data[key] === false) {
+                                _data[key] = 0;
+                            }else if(_data[key] == "") {
+                                _data[key] = "null";
+                            }
+                            _number += _data[key] + ";";
+                        }
+                        $cnt += "*{" + _number + "} & ";
+                    }
+                }
+                add.formTable.seqContentInput = $cnt;
             },
         }
-    })
+    });
+
+    // 实例生成后将flag置为false 防止生成无效实例
+    flag = false;
 };
 
 var _html=Vue.extend({
-    props:["childIndex"],
+    props:["childNum", "index"],
     data() {
         return {
             name: ""
@@ -206,8 +269,7 @@ var _html=Vue.extend({
     },
     mounted() {
         // 拼接新增HTML的id
-        this.name = "cnt-" + this.childIndex;
-
+        this.name = "cnt-" + this.childNum;
     },
     template: "<div :id='this.name'></div>"
 });
@@ -215,36 +277,38 @@ var _html=Vue.extend({
 
 var add = new Vue({
     el:"#SequenceRuleConfigAdd",
-    data:{
-        num:0,
-        name:"",
-        names:[
-            {name:1,label:'常量'},
-            {name:2,label:'变量'},
-            {name:3,label:'日期'},
-            {name:4,label:'序号'}
-        ],
-        items: [],
-        disabled:false,
-        labelPosition:'right',
-        formTable:{
-            seqCodeInput:'',
-            seqNameInput:'',
-            seqContentInput:'',
-            despInput:'',
-            versionInput:'',
-        },
-        rowId:'',//选中的rowId
-        contentShow:'',
-        rules: {
-            seqCodeInput: [
-                {required: true, message: '请输入代码', trigger: 'blur'},
+    data: function() {
+        return {
+            num:0,
+            name:"",
+            falg: false,
+            names:[
+                {name:1,label:'常量'},
+                {name:2,label:'变量'},
+                {name:3,label:'日期'},
+                {name:4,label:'序号'}
             ],
-            seqNameInput: [
-                {required: true, message: '请输入名称', trigger: 'blur'}
-            ],
-        },
-        childObjoptions: window.parent.config.objoptions,
+            items: [],
+            disabled:false,
+            labelPosition:'right',
+            formTable:{
+                seqCodeInput:'',
+                seqNameInput:'',
+                seqContentInput:'',
+                despInput:'',
+                versionInput:'',
+            },
+            rowId:'',//选中的rowId
+            contentShow: '',
+            rules: {
+                seqCodeInput: [
+                    {required: true, message: '请输入代码', trigger: 'blur'},
+                ],
+                seqNameInput: [
+                    {required: true, message: '请输入名称', trigger: 'blur'}
+                ],
+            }
+        }
     },
     components: {
         '$html': _html
@@ -283,7 +347,9 @@ var add = new Vue({
             //将模板push到对象数组里
             this.items.push({
                 "html":"$html"
-            })
+            });
+            // 点击添加按钮 将flag置为true 否则无法生成实例
+            flag = true;
         },
         //初始化时将组件加载到页面中
         init(){
@@ -348,7 +414,7 @@ var add = new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
-                var data=res.data;
+                var data=res;
                 add.formTable.seqCodeInput=data[0].seqCode;
                 add.formTable.seqNameInput=data[0].seqName;
                 add.formTable.seqContentInput=data[0].seqContent;
@@ -358,20 +424,21 @@ var add = new Vue({
                 add.formTable.versionInput=data[0].version;
             })
         },
-
     },
-    created(){
+    // created(){
     //     if(window.parent.config.operate ==1){
     //         this.init();
     //     }
     //
-        if(window.parent.config.operate == 2){
-            this.bindValue();
-        }
-    },
-    updated(){
+    //     if(window.parent.config.operate == 2){
+    //         this.bindValue();
+    //     }
+    // },
+    updated() {
         //新增创建vue实例
-        var _obj=new new_vue();
-        _obj.creat("#cnt-"+this.num,this.num,this.name);
+        if(flag) {
+            var _obj=new new_vue();
+            _obj.creat("#cnt-"+this.num, this.name);
+        }
     }
 })
