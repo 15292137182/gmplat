@@ -100,8 +100,9 @@ var basLeft = new Vue({
         //编辑业务对象
         editEvent() {
             operate = 2;
+
             var htmlUrl = 'metadata-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '510px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '510px', function(){
                 var data={
                     "url":editObjUrl,
                     "jsonData":{rowId:basLeft.currentVal.rowId},

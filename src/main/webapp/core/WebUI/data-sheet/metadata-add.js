@@ -93,8 +93,7 @@ var em = new Vue({
 
         },
         multipleDatas_1(datas){
-            console.log(datas)
-           this.value_2=JSON.stringify(datas);
+            this.value_2=JSON.stringify(datas);
            console.log(this.value_2);
         },
         //getChildData_2(datas){
