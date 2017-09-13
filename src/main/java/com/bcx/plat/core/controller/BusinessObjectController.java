@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +32,6 @@ public class BusinessObjectController extends BaseController {
 
     @Autowired
     private BusinessObjectService businessObjectService;
-
-
-    protected List<String> blankSelectFields() {
-        return Arrays.asList("objectCode", "objectName");
-    }
 
 
     /**
@@ -191,29 +185,4 @@ public class BusinessObjectController extends BaseController {
             return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
         }
     }
-
-
-//    /**
-//     * @param result 返回值
-//     * @return 返回值
-//     */
-//    @Override
-//    protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
-//        List<String> rowIds = result.stream().map((row) -> {
-//            return (String) row.get("relateTableRowId");
-//        }).collect(Collectors.toList());
-//        List<Map<String, Object>> results = maintDBTablesService
-//                .select(new FieldCondition("rowId", Operator.IN, rowIds)
-//                        , Arrays.asList(new Field("row_id", "rowId")
-//                                , new Field("table_cname", "tableCname")
-//                                , new Field("table_schema", "tableSchema")), null);
-//        HashMap<String, Object> map = new HashMap<>();
-//        for (Map<String, Object> row : results) {
-//            map.put((String) row.get("rowId"), row.get("tableCname"));
-//        }
-//        for (Map<String, Object> row : result) {
-//            row.put("associatTable", map.get(row.get("relateTableRowId")));
-//        }
-//        return result;
-//    }
 }

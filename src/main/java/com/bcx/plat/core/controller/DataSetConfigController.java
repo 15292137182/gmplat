@@ -35,7 +35,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class DataSetConfigController extends BaseController {
 
     @Autowired
-    DataSetConfigService dataSetConfigService;
+    private DataSetConfigService dataSetConfigService;
 
     protected List<String> blankSelectFields() {
         return Arrays.asList("datasetCode", "datasetName", "datasetType");
@@ -55,7 +55,7 @@ public class DataSetConfigController extends BaseController {
         if (insert != -1) {
             return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -96,7 +96,7 @@ public class DataSetConfigController extends BaseController {
             DataSetConfig dataSetConfig = new DataSetConfig();
             del = dataSetConfig.deleteById(rowId);
             if (del != -1) {
-                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
             } else {
                 return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
             }

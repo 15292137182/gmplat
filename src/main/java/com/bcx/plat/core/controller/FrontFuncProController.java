@@ -138,7 +138,8 @@ public class FrontFuncProController extends
                     , orders, pageNum, pageSize);
             PageResult<Map<String, Object>> result = pageResult;
 
-//            result = queryResultProcess(result);
+            List<Map<String, Object>> list = queryResultProcessAction(result.getResult());
+            result.setResult(list);
             return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
         }
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));

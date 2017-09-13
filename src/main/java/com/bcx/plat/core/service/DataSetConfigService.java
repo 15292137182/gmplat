@@ -3,11 +3,15 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.entity.DataSetConfig;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,10 +28,14 @@ import static com.bcx.plat.core.utils.UtilsTool.createBlankQuery;
  */
 @Service
 public class DataSetConfigService extends BaseService<DataSetConfig> {
+    @Autowired
+    private DBTableColumnService dbTableColumnService;
 
     public List<String> blankSelectFields() {
         return Arrays.asList("objectCode", "objectName");
     }
+
+
 
 //    /**
 //     * 数据集查询全部数据并分页显示
@@ -42,8 +50,8 @@ public class DataSetConfigService extends BaseService<DataSetConfig> {
 //        PageResult<Map<String, Object>> result;
 //        result = selectPageMap(createBlankQuery(blankSelectFields(), collectToSet(blankSearch)),
 //                orders, pageNum, pageSize);
-//        if (result.getResult().size() == 0) {
-//            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+//        if (result.get).size() == 0) {
+//            return new Server).setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
 //        } else {
 //            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
 //        }

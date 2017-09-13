@@ -41,8 +41,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * @author Wen TieHu
  * @version 1.0
  *          <pre>Histroy:
- *                                                    2017/8/30  Wen TieHu Create
- *                                              </pre>
+ *  2017/8/30  Wen TieHu Create
+ *          </pre>
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/keySetPro")
 @RestController
@@ -87,6 +87,7 @@ public class KeySetProController extends BaseController {
         int update;
         if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
             KeySetPro keySetPro = new KeySetPro();
+            //TODO MoreBatis
             KeySetPro modify = keySetPro.fromMap(param).buildModifyInfo();
             update = moreBatis.update(KeySetPro.class, param).where(new FieldCondition("rowId", Operator.EQUAL, param.get("rowId"))).execute();
 //            update = modify.updateById();

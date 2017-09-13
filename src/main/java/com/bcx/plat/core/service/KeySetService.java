@@ -3,17 +3,13 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.KeySet;
 import com.bcx.plat.core.entity.KeySetPro;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
-import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
-import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
@@ -30,14 +26,8 @@ import java.util.*;
 @Service
 public class KeySetService extends BaseService<KeySet> {
 
-    private final MoreBatis moreBatis;
-    private final KeySetProService keySetProService;
-
     @Autowired
-    public KeySetService(MoreBatis moreBatis, KeySetProService keySetProService) {
-        this.moreBatis = moreBatis;
-        this.keySetProService = keySetProService;
-    }
+    private KeySetProService keySetProService;
 
 
     /**
@@ -53,8 +43,6 @@ public class KeySetService extends BaseService<KeySet> {
             lists.add(li);
             Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", lists).endAnd().buildDone();
             List<Map<String, Object>> leftAssociationQuery = leftAssociationQuery(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", condition);
-//            QueryAction joinTableTest = moreBatis.select(KeySet.class, KeySetPro.class, "rowId", "relateKeysetRowId", JoinType.LEFT_JOIN)
-//                    .where(new FieldCondition(moreBatis.getColumnByAlias(KeySet.class, "keysetCode"), Operator.EQUAL, lists));
             List<Map<String, Object>> list1 = UtilsTool.underlineKeyMapListToCamel(leftAssociationQuery);
             maps.put(li, list1);
             if (maps.size() == 0) {
@@ -71,20 +59,18 @@ public class KeySetService extends BaseService<KeySet> {
      * @return ServerResult
      */
     public ServerResult queryKeyCode(String keyCode) {
-        List<Map<String, Object>> result = moreBatis.select(KeySet.class)
-                .where(new FieldCondition("keysetCode", Operator.EQUAL, keyCode))
-                .execute();
-        List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
-        List relateKeysetRowId = null;
-        for (Map<String, Object> results : list) {
-            String rowId = (String) results.get("rowId");
-            relateKeysetRowId = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+        Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keyCode).endAnd().buildDone();
+        List<Map<String, Object>> result = singleSelect(KeySet.class, condition);
+        String rowId = (String) result.get(0).get("rowId");
+        List<Map> relateKeysetRowId = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+        for (Map relate : relateKeysetRowId) {
+            relate.put("value", relate.get("confKey"));
+            relate.put("label", relate.get("confValue"));
         }
-        List<Map<String, Object>> relateKeysetRowIds = UtilsTool.underlineKeyMapListToCamel(relateKeysetRowId);
         if (result.size() == 0) {
             return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
         }
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowIds);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowId);
     }
 
 
@@ -95,8 +81,7 @@ public class KeySetService extends BaseService<KeySet> {
      * @return ServerResult
      */
     public ServerResult<List<Map>> queryPro(String rowId) {
-        List<Map> rowId1 =
-                keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+        List<Map> rowId1 = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, rowId1);
     }
 
@@ -138,14 +123,20 @@ public class KeySetService extends BaseService<KeySet> {
      * @param rowId 唯一标示
      * @return ServerResult
      */
-    public ServerResult delete(String rowId) {
+    public ServerResult deletePro(String rowId) {
+        ServerResult serverResult = new ServerResult();
         List<Map> rkrd = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
-        for (Map<String, Object> rk : rkrd) {
+        for (Map rk : rkrd) {
             String _rowId = rk.get("rowId").toString();
             new KeySetPro().deleteById(_rowId);
         }
-        new KeySet().deleteById(rowId);
-        return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+        int del = new KeySet().deleteById(rowId);
+        if (del != -1) {
+            return serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+        } else {
+            return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+        }
+
 
     }
 

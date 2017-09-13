@@ -119,7 +119,7 @@
             <el-col :xs="14" :sm="14" :md="14">
                 <div>
                     <el-input placeholder="请输入内容" v-model="input" size="small">
-                        <el-button slot="append" icon="search" @click.native="searchRightTable"></el-button>
+                        <el-button slot="append" icon="search" @click.native="searchRight"></el-button>
                     </el-input>
                 </div>
             </el-col>
@@ -146,15 +146,15 @@
                             </template>
                         </el-table-column>
 
-                        <el-table-column prop="cname" label="属性中文名称" sortable="custom"
+                        <el-table-column prop="cname" label="属性中文名称" sortable="custom" width="150"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="ename" label="属性英文名称" sortable="custom"
+                        <el-table-column prop="ename" label="属性英文名称" sortable="custom" width="150"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="valueType" label="值类型"  width="100"
+                        <el-table-column prop="valueType" label="值类型"  width="120"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="defaultValue" label="默认值"  width="160"
+                        <el-table-column prop="defaultValue" label="默认值"  width="120"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="" label="操作" width="100">
+                        <el-table-column prop="" label="操作" width="110">
                             <template scope="scope">
                                 <el-button @click.native="editProp" type="text" size="small" icon="edit"
                                            :disabled=scope.row.testDemo></el-button>

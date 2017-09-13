@@ -77,7 +77,7 @@ public class SequenceRuleConfigController extends BaseController {
         if (insert != -1) {
             return super.result(new ServerResult().setStateMessage(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(new ServerResult().setStateMessage(STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
     }
 

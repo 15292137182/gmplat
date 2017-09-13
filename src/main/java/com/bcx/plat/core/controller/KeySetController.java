@@ -133,15 +133,9 @@ public class KeySetController extends BaseController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public PlatResult delete(String rowId) {
         ServerResult result = new ServerResult();
-        int del;
         if (!rowId.isEmpty()) {
-            KeySet keySet = new KeySet();
-            del = keySet.deleteById(rowId);
-            if (del != -1) {
-                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
-            } else {
-                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
-            }
+            ServerResult serverResult = keySetService.deletePro(rowId);
+            return result(serverResult);
         } else {
             return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }

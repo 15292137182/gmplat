@@ -53,6 +53,28 @@ public class FrontFuncController extends BaseController {
         return Arrays.asList("funcCode", "funcName");
     }
 
+
+    /**
+     * 查询前端功能块数据
+     *
+     * @param search   按照空格查询
+     * @param pageNum  当前第几页
+     * @param pageSize 一页显示多少条
+     * @return PlatResult
+     */
+    @RequestMapping("/queryPage")
+    public PlatResult queryPage(String search,
+                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                String order) {
+        LinkedList<Order> orders = UtilsTool.dataSort(order);
+        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        PageResult<Map<String, Object>> result = frontFuncService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+        List<Map<String, Object>> list = queryResultProcessAction(result.getResult());
+        result.setResult(list);
+        return result(new ServerResult<>(result));
+    }
+
     /**
      * queryResultProcessAction
      *
@@ -90,16 +112,22 @@ public class FrontFuncController extends BaseController {
             if (UtilsTool.isValid(funcRowId)) {
                 List<String> rowIds = funcRowId.stream().map((row) -> row.getRowId()).collect(Collectors.toList());
                 List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
+                if (frontFuncPros.size() > 0) {
+                    for (FrontFuncPro front: frontFuncPros){
+
+                    }
+                    new FrontFuncPro().buildDeleteInfo().deleteById();
+                }
             }
             FrontFunc frontFunc = new FrontFunc();
             int del = frontFunc.buildDeleteInfo().deleteById(rowId);
             if (del != -1) {
-                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
             } else {
                 return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }
         } else {
-            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
     }
 
@@ -136,7 +164,7 @@ public class FrontFuncController extends BaseController {
         if (insert != -1) {
             return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
-            return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
     }
 
@@ -161,26 +189,6 @@ public class FrontFuncController extends BaseController {
             }
         }
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-    }
-
-
-    /**
-     * 查询前端功能块数据
-     *
-     * @param search   按照空格查询
-     * @param pageNum  当前第几页
-     * @param pageSize 一页显示多少条
-     * @return PlatResult
-     */
-    @RequestMapping("/queryPage")
-    public PlatResult queryPage(String search,
-                                @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                String order) {
-        LinkedList<Order> orders = UtilsTool.dataSort(order);
-        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-        PageResult<Map<String, Object>> result = frontFuncService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-        return result(new ServerResult<>(result));
     }
 
 

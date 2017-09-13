@@ -139,7 +139,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     }
 
     /**
-     * 暂时先放这里 以后再重构
      *
      * @param result 返回值
      * @return 返回值

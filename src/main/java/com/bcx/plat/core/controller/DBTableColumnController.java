@@ -36,8 +36,6 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class DBTableColumnController extends BaseController {
     @Autowired
     private DBTableColumnService dbTableColumnService;
-    @Autowired
-    private BusinessObjectProService businessObjectProService;
 
 
     protected List<String> blankSelectFields() {
@@ -93,21 +91,8 @@ public class DBTableColumnController extends BaseController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
-        ServerResult result = new ServerResult();
-        String columnEname = String.valueOf(param.get("columnEname"));
-        Condition condition = new ConditionBuilder(DBTableColumn.class).and().equal("columnEname", columnEname).endAnd().buildDone();
-        List<DBTableColumn> select = dbTableColumnService.select(condition);
-        if (select.size() == 0) {
-            DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
-            int insert = dbTableColumn.insert();
-            if (insert != -1) {
-                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
-            } else {
-                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
-            }
-        } else {
-            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
-        }
+        ServerResult serverResult = dbTableColumnService.addTableColumn(param);
+        return result(serverResult);
     }
 
 
@@ -130,7 +115,6 @@ public class DBTableColumnController extends BaseController {
             }
         } else {
             return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-
         }
     }
 
@@ -145,18 +129,8 @@ public class DBTableColumnController extends BaseController {
     public Object delete(String rowId) {
         ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
-            List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
-            if (relateTableColumn.size() == 0) {
-                DBTableColumn dbTableColumn = new DBTableColumn().buildDeleteInfo();
-                int del = dbTableColumn.deleteById(rowId);
-                if (del != -1) {
-                    return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
-                } else {
-                    return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
-                }
-            } else {
-                return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
-            }
+            ServerResult delete = dbTableColumnService.delete(rowId);
+            return result(delete);
         } else {
             return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
