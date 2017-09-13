@@ -16,5 +16,7 @@ public interface SqlComponentTranslator {
 
   public LinkedList translateUpdateAction(UpdateAction updateAction, LinkedList linkedList);
 
-  LinkedList translate(TableSource t);
+  LinkedList translateTableSource(TableSource tableSource,LinkedList list);
+
+  LinkedList translateFieldSource(FieldSource fieldSource, LinkedList list);
 }

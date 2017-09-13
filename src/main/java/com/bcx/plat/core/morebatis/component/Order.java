@@ -3,7 +3,7 @@ package com.bcx.plat.core.morebatis.component;
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 
-public class Order implements AliasedColumn{
+public class Order{
   public static final int DESC=0,ASC=1;
 
   private AliasedColumn aliasedColumn;
@@ -38,18 +38,7 @@ public class Order implements AliasedColumn{
     this.order = order;
   }
 
-  @Override
-  public String getColumnSqlFragment(SqlComponentTranslator translator) {
-    return aliasedColumn.getColumnSqlFragment(translator);
-  }
-
-  @Override
   public String getAlias() {
-    return aliasedColumn.getAlias();
-  }
-
-  @Override
-  public String getFieldSource() {
-    return aliasedColumn.getFieldSource();
+    return alias;
   }
 }

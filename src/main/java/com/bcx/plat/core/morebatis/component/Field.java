@@ -68,16 +68,4 @@ public class Field implements AliasedColumn {
   public void setTable(Table table) {
     this.table = table;
   }
-
-  @Override
-  public String getColumnSqlFragment(SqlComponentTranslator translator) {
-    // TODO 另一个translator完成以后应该移除
-    String alias = getAlias();
-    final String fieldSource = getFieldSource();
-    if (alias == null || alias.isEmpty()) {
-      return fieldSource;
-    } else {
-      return fieldSource + " as \"" + getAlias()+"\"";
-    }
-  }
 }

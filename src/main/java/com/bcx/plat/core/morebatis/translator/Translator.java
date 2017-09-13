@@ -138,8 +138,7 @@ public class Translator implements SqlComponentTranslator{
         return linkedList;
     }
 
-    @Override
-    public LinkedList translate(TableSource t) {
+    public LinkedList translateTableSource(TableSource t) {
         return translateTableSource(t,new LinkedList());
     }
 

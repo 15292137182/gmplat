@@ -54,9 +54,4 @@ public class JoinTable implements TableSource<JoinTable> {
     setCondition(condition);
     return this;
   }
-
-  @Override
-  public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-    return translator.translate(this);
-  }
 }

@@ -45,9 +45,4 @@ public class Table implements TableSource<Table> {
   public SqlSegment getSqlSegment() {
     return sqlSegment;
   }
-
-  @Override
-  public LinkedList<Object> getTableSource(SqlComponentTranslator translator) {
-    return translator.translate(this);
-  }
 }
