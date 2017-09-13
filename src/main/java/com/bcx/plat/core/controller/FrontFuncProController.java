@@ -3,15 +3,14 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.entity.TemplateObjectPro;
+import com.bcx.plat.core.entity.*;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
@@ -200,6 +199,29 @@ public class FrontFuncProController extends
     }
 
     /**
+     * 删除功能块属性数据
+     *
+     * @param rowId 业务对象rowId
+     * @return serviceResult
+     */
+    @RequestMapping(value = "/delete", method = POST)
+    public PlatResult delete(String rowId) {
+        ServerResult result = new ServerResult();
+        int del;
+        if (!rowId.isEmpty()) {
+            FrontFuncPro frontFuncPro = new FrontFuncPro();
+            del = frontFuncPro.deleteById(rowId);
+            if (del != -1) {
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+            } else {
+                return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+            }
+        } else {
+            return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        }
+    }
+
+    /**
      * 键值集合根据rowId修改数据
      *
      * @param param 接受一个实体参数
@@ -222,4 +244,21 @@ public class FrontFuncProController extends
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
+    /**
+     * 根据rowId查询数据
+     *
+     * @param rowId 唯一标识
+     * @return PlatResult
+     */
+    @RequestMapping("/queryById")
+    public PlatResult queryById(String rowId) {
+        ServerResult serverResult = new ServerResult();
+        if (!rowId.isEmpty()) {
+            Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
+            List<FrontFuncPro> select = frontFuncProService.select(condition);
+            return result(new ServerResult<>(select));
+        } else {
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        }
+    }
 }

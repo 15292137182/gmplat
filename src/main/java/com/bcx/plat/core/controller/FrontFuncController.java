@@ -6,11 +6,13 @@ import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
@@ -191,5 +193,22 @@ public class FrontFuncController extends BaseController {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
+    /**
+     * 根据rowId查询数据
+     *
+     * @param rowId 唯一标识
+     * @return PlatResult
+     */
+    @RequestMapping("/queryById")
+    public PlatResult queryById(String rowId) {
+        ServerResult serverResult = new ServerResult();
+        if (!rowId.isEmpty()) {
+            Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
+            List<FrontFunc> select = frontFuncService.select(condition);
+            return result(new ServerResult<>(select));
+        } else {
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        }
+    }
 
 }
