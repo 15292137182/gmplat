@@ -6,6 +6,7 @@ import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
 import com.bcx.plat.core.utils.UtilsTool;
 
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,9 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
         while (clz != Object.class) {
             for (java.lang.reflect.Field field : clz.getDeclaredFields()) {
                 // TODO 父类必须遍历反射
-                if (field.getName().startsWith("$")||field.getAnnotation(IgnoredField.class)!=null) continue;
+                if (Modifier.isStatic(field.getModifiers())
+                        ||field.getName().startsWith("$")
+                        ||field.getAnnotation(IgnoredField.class)!=null) continue;
                 String fieldName = field.getName();
                 Field f = new Field(table, UtilsTool.camelToUnderline(fieldName), fieldName);
                 aliasMap.put(fieldName,f);
