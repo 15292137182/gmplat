@@ -38,10 +38,6 @@ public class QueryAction {
     this.order = order;
   }
 
-  public List<Object> getTranslatedCondition(){
-    return translator.translate(where);
-  }
-
   public SqlComponentTranslator getTranslator() {
     return translator;
   }

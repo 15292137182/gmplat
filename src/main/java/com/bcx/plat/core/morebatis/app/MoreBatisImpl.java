@@ -33,7 +33,7 @@ public class MoreBatisImpl implements MoreBatis{
 
   private SuitMapper suitMapper;
   private SqlComponentTranslator translator;
-  private Translator translatorX = new Translator();
+//  private Translator translator = new Translator();
   private Map<Class, Collection<Field>> entityColumns;
   private Map<Class, Collection<Field>> entityPks;
   private Map<Class, Map<String, Field>> aliasMap;
@@ -230,95 +230,6 @@ public class MoreBatisImpl implements MoreBatis{
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
-//
-//  /**
-//   * 根据主键更新一个实体类
-//   * @param entity  要更新的实体类
-//   * @return
-//   */
-//  public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
-//    final Class<? extends BeanInterface> entityClass = entity.getClass();
-//    Collection<Field> pks = entityPks.get(entityClass);
-//    final Map<String, Object> values = entity.toMap();
-//    final Map<String, Object> valuesCopy = new HashMap<>();
-//    for (Map.Entry<String, Object> entry : values.entrySet()) {
-//      final Object value = entry.getValue();
-//      if (value!=excluded) valuesCopy.put(entry.getKey(),entry.getValue());
-//    }
-//    List<Condition> pkConditions = pks.stream()
-//            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlies())))
-//            .collect(Collectors.toList());
-//    return this.update(entityClass, values).where(new And(pkConditions)).execute();
-//  }
-//
-//
-//  /**
-//   * 根据主键更新一个实体类
-//   * @param entity  要更新的实体类
-//   * @return
-//   */
-//  public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
-//    final Class<? extends BeanInterface> entityClass = entity.getClass();
-//    Collection<Field> pks = entityPks.get(entityClass);
-//    final Map<String, Object> values = entity.toMap();
-//    final Map<String, Object> valuesCopy = new HashMap<>();
-//    for (Map.Entry<String, Object> entry : values.entrySet()) {
-//      final Object value = entry.getValue();
-//      if (value!=excluded) valuesCopy.put(entry.getKey(),entry.getValue());
-//    }
-//    List<Condition> pkConditions = pks.stream()
-//            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlies())))
-//            .collect(Collectors.toList());
-//    return this.update(entityClass, values).where(new And(pkConditions)).execute();
-//  }
-//
-//  /**
-//   * 根据主键更新一个实体类
-//   * @param entity  要更新的实体类
-//   * @return
-//   */
-//  public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
-//    final Class<? extends BeanInterface> entityClass = entity.getClass();
-//    Collection<Field> pks = entityPks.get(entityClass);
-//    Map<String, Object> values = entity.toMap();
-////    values.forEach((key,value)->{
-////      if (excluded.contains(value)) values.remove(key);
-////    });
-//    final Map<String, Object> valuesCopy = new HashMap<>();
-//    for (Map.Entry<String, Object> entry : values.entrySet()) {
-//      final Object value = entry.getValue();
-//      if (!excluded.contains(value)) valuesCopy.put(entry.getKey(),entry.getValue());
-//    }
-//    List<Condition> pkConditions = pks.stream()
-//            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlies())))
-//            .collect(Collectors.toList());
-//    return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
-//  }
-//
-//
-//  /**
-//   * 根据主键更新一个实体类
-//   * @param entity  要更新的实体类
-//   * @return
-//   */
-//  public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
-//    final Class<? extends BeanInterface> entityClass = entity.getClass();
-//    Collection<Field> pks = entityPks.get(entityClass);
-//    Map<String, Object> values = entity.toMap();
-////    values.forEach((key,value)->{
-////      if (excluded.contains(value)) values.remove(key);
-////    });
-//    final Map<String, Object> valuesCopy = new HashMap<>();
-//    for (Map.Entry<String, Object> entry : values.entrySet()) {
-//      final Object value = entry.getValue();
-//      if (!excluded.contains(value)) valuesCopy.put(entry.getKey(),entry.getValue());
-//    }
-//    List<Condition> pkConditions = pks.stream()
-//            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
-//            .collect(Collectors.toList());
-//    return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
-//  }
-
 
   /**
    * 根据主键更新一个实体类
@@ -329,9 +240,6 @@ public class MoreBatisImpl implements MoreBatis{
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toMap();
-//    values.forEach((key,value)->{
-//      if (excluded.contains(value)) values.remove(key);
-//    });
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
@@ -486,7 +394,7 @@ public class MoreBatisImpl implements MoreBatis{
   }
 
   public List<Map<String, Object>> execute(QueryAction queryAction) {
-    final LinkedList list = translatorX.translateQueryAction(queryAction, new LinkedList());
+    final LinkedList list = translator.translateQueryAction(queryAction, new LinkedList());
     List<Map<String, Object>> result = suitMapper.plainSelect(list);
     return translateJson(result);
   }
@@ -504,17 +412,17 @@ public class MoreBatisImpl implements MoreBatis{
   }
 
   public int execute(InsertAction insertAction) {
-    LinkedList result = translatorX.translateInsertAction(insertAction, new LinkedList());
+    LinkedList result = translator.translateInsertAction(insertAction, new LinkedList());
     return suitMapper.plainInsert(result);
   }
 
   public int execute(UpdateAction updateAction) {
-    LinkedList result = translatorX.translateUpdateAction(updateAction, new LinkedList());
+    LinkedList result = translator.translateUpdateAction(updateAction, new LinkedList());
     return suitMapper.plainUpdate(result);
   }
 
   public int execute(DeleteAction deleteAction) {
-    LinkedList list = translatorX.translateDeleteAction(deleteAction, new LinkedList());
+    LinkedList list = translator.translateDeleteAction(deleteAction, new LinkedList());
     return suitMapper.plainDelete(list);
   }
 }

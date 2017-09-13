@@ -1,10 +1,20 @@
 package com.bcx.plat.core.morebatis.phantom;
 
+import com.bcx.plat.core.morebatis.command.DeleteAction;
+import com.bcx.plat.core.morebatis.command.InsertAction;
+import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.command.UpdateAction;
+
 import java.util.LinkedList;
 
 public interface SqlComponentTranslator {
-  public LinkedList<Object> translate(Condition condition);
-  public LinkedList<Object> translate(Condition condition,LinkedList<Object> list);
-  public LinkedList<Object> translate(TableSource tableSource);
-  public LinkedList<Object> translate(TableSource tableSource,LinkedList<Object> list);
+  public LinkedList translateQueryAction(QueryAction queryAction, LinkedList linkedList);
+
+  public LinkedList translateInsertAction(InsertAction insertAction, LinkedList linkedList);
+
+  public LinkedList translateDeleteAction(DeleteAction deleteAction, LinkedList linkedList);
+
+  public LinkedList translateUpdateAction(UpdateAction updateAction, LinkedList linkedList);
+
+  LinkedList translate(TableSource t);
 }

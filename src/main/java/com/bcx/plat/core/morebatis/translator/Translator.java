@@ -18,7 +18,7 @@ import com.bcx.plat.core.utils.UtilsTool;
 
 import java.util.*;
 
-public class Translator {
+public class Translator implements SqlComponentTranslator{
     public static final SqlSegment SELECT=new SqlSegment("SELECT");
     public static final SqlSegment DELETE=new SqlSegment("DELETE");
     public static final SqlSegment INSERT_INTO=new SqlSegment("INSERT INTO");
@@ -136,6 +136,11 @@ public class Translator {
         appendSql(WHERE,linkedList);
         translateCondition(updateAction.getWhere(),linkedList);
         return linkedList;
+    }
+
+    @Override
+    public LinkedList translate(TableSource t) {
+        return translateTableSource(t,new LinkedList());
     }
 
     public LinkedList translateInsertAction(InsertAction insertAction,LinkedList linkedList){

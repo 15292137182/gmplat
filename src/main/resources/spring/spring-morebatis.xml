@@ -5,11 +5,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <bean id="conditionTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.PostgreSqlTranslator"/>
+    <bean id="sqlTranslator" class="com.bcx.plat.core.morebatis.translator.Translator"/>
 
     <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatisImpl">
         <constructor-arg name="suitMapper" ref="postgreSuitMapper"/>
-        <constructor-arg name="translator" ref="conditionTranslator"/>
+        <constructor-arg name="translator" ref="sqlTranslator"/>
         <constructor-arg name="entityEntries">
             <list>
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
