@@ -11,7 +11,6 @@ var em = new Vue({
                 nameInput: '',//名称
                 reaTable:'',//关联表
                 reaTableObj:'',//关联模板对象
-                belongModule:'',//所属模块
                 versionInput: '',//版本
                 system:''
             },
@@ -21,7 +20,21 @@ var em = new Vue({
            // value_3:"",
             rules: {
 
+            },
+            //关联表下拉框数据
+            initial_1: {
+                url: conTable,
+                value: "",
+                disabled: "false"
+            },
+
+            //所属模块下拉框
+            belongModule_1:{
+                params: "belongModule",
+                value: "",
+                disabled: "false"
             }
+
         }
     },
     methods: {
@@ -50,9 +63,9 @@ var em = new Vue({
                     var data={
                         "url":addUrl,
                         "jsonData":{objectName:em.ruleForm.nameInput,//名称
-                            relateTableRowId: em.value_1,//关联表
+                            relateTableRowId: em.initial_1.value,//关联表
                             relateTemplateObject: em.value_2,//关联模板对象
-                            belongModule: em.ruleForm.belongModule,//所属模块
+                            belongModule: em.belongModule_1.value,//所属模块
                         },
                         "obj":basTop
                     };
@@ -71,9 +84,9 @@ var em = new Vue({
                         "jsonData":{
                             rowId: basLeft.currentVal.rowId,//ID
                             objectName:em.ruleForm.nameInput,//名称
-                            relateTableRowId: em.value_1,//关联表
+                            relateTableRowId: em.initial_1.value,//关联表
                             relateTemplateObject: em.value_2,//关联模板对象
-                            belongModule: em.ruleForm.belongModule,//所属模块
+                            belongModule: em.belongModule_1.value,//所属模块
                         },
                         "obj":basTop
                     };
@@ -86,8 +99,8 @@ var em = new Vue({
             }
         },
         getChildData_1(datas){
-            this.value_1 = datas.value;
-            this.label_1 = datas.label;
+            this.initial_1.value = datas.value;
+           // this.label_1 = datas.label;
             //console.log( this.label_1);
             console.log( this.value_1);
 
@@ -96,11 +109,13 @@ var em = new Vue({
             this.value_2=JSON.stringify(datas);
            console.log(this.value_2);
         },
-        //getChildData_2(datas){
-        //    this.value_3 = datas.value;
-        //    //console.log( this.value_3)
-        //
-        //},
+        //所属模块change事件
+        belongModule_1(datas){
+            console.log(datas);
+           this.belongModule_1.value = datas.value;
+           console.log( this.belongModule_1.value);
+
+        },
         cancel() {
             ibcpLayer.Close(divIndex);
         }

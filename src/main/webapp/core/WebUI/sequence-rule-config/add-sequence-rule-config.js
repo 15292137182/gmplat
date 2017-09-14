@@ -2,9 +2,6 @@
  * Created by jms on 2017/8/8.
  */
 
-var queryObj=serverPath+"/businObj/query";
-var queryPro=serverPath+"/businObj/queryProPage";
-
 // 页面动态加载vue实例集合
 var _vue = [];
 // 防止页面数更新 创建无效vue实例的标识
@@ -202,7 +199,7 @@ new_vue.prototype.creat = function(_id, type) {
                     // 常量
                     if(_vue[i].$el.attributes.type.value == "1") {
                         for(var key in _data) {
-                            $cnt += "@{" + _data[key] + "} & ";
+                            $cnt += "@{" + _data[key] + "}&&";
                         }
                     }
                     // 变量
@@ -218,7 +215,7 @@ new_vue.prototype.creat = function(_id, type) {
                             }
                             _variable += _data[key] + ";";
                         }
-                        $cnt += "#{" + _variable + "} & ";
+                        $cnt += "#{" + _variable + "}&&";
                     }
                     // 日期
                     if(_vue[i].$el.attributes.type.value == "3") {
@@ -233,7 +230,7 @@ new_vue.prototype.creat = function(_id, type) {
                             }
                             _date += _data[key]  + ";";
                         }
-                        $cnt += "${" + _date + "} & ";
+                        $cnt += "${" + _date + "}&&";
                     }
                     // 序号
                     if(_vue[i].$el.attributes.type.value == "4") {
@@ -248,8 +245,11 @@ new_vue.prototype.creat = function(_id, type) {
                             }
                             _number += _data[key] + ";";
                         }
-                        $cnt += "*{" + _number + "} & ";
+                        $cnt += "*{" + _number + "}&&";
                     }
+                }
+                if($cnt.length>0){
+                    $cnt=$cnt.substr(0,$cnt.length-2);
                 }
                 add.formTable.seqContentInput = $cnt;
             },
@@ -316,28 +316,15 @@ var add = new Vue({
     methods:{
         //点击预览按钮
         show(){
-            /*
-             * 未使用封装的方法
-             */
-            $.ajax({
-                url:window.parent.mock,
-                type:"post",
-                data:{content: add.formTable.seqContentInput},
-                xhrFields: {withCredentials: true},
-                dataType:"json",
-                success:function(res){
-                    if(res.resp.content.state==1){
-                        var reg = /[,，]/g;
-                        var str=res.resp.content.data;
-
-                        str=str.toString().replace(reg,"\r\n");
-                        add.contentShow=str;
-                    }
-                },
-                error:function(res){
-                    console.log(res);
-                    data.obj.$message.error("操作失败");
-                }
+            var data={
+                "url":window.parent.mock,
+                "jsonData":{content: add.formTable.seqContentInput},
+                "obj":this
+            }
+            gmpAjax.showAjax(data,function(res){
+                var data=res;
+                var str=str.toString();
+                add.contentShow=str;
             })
         },
         //新增按钮
@@ -414,7 +401,7 @@ var add = new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
-                var data=res;
+                var data=res.data;
                 add.formTable.seqCodeInput=data[0].seqCode;
                 add.formTable.seqNameInput=data[0].seqName;
                 add.formTable.seqContentInput=data[0].seqContent;
@@ -425,15 +412,15 @@ var add = new Vue({
             })
         },
     },
-    // created(){
-    //     if(window.parent.config.operate ==1){
-    //         this.init();
-    //     }
-    //
-    //     if(window.parent.config.operate == 2){
-    //         this.bindValue();
-    //     }
-    // },
+    created(){
+        // if(window.parent.config.operate ==1){
+        //     this.init();
+        // }
+
+        if(window.parent.config.operate == 2){
+            this.bindValue();
+        }
+    },
     updated() {
         //新增创建vue实例
         if(flag) {

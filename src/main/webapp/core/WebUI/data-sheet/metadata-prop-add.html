@@ -23,30 +23,26 @@
             <el-input placeholder="请输入属性名称" v-model="addProForm.nameProInput" ref="addProForm.nameProInput"></el-input>
         </el-form-item>
         <el-form-item label="属性类型">
-            <single-selection @change-data="getChildData_4"  :initial-value="value_4" >
-                <!---->
-            </single-selection>
+            <single-selection @change-data="getProType_1"  :initial="proType_1" ></single-selection>
         </el-form-item>
         <el-form-item label="关联表字段" prop="" v-show="reaTable">
-            <single-selection @change-data="getChildData_1"  :initial-value="value_1" >
-                <!---->
-            </single-selection>
+            <single-selection @change-data="getTableField_1"  :initial="tableField_1" ></single-selection>
         </el-form-item>
         <el-form-item label="扩展属性名" prop="" v-show="extendPro">
             <el-input placeholder="请输入扩展属性名" v-model="addProForm.extendName" ></el-input>
         </el-form-item>
         <el-form-item label="值类型" prop="typeInput">
-            <single-selection @change-data="getChildData_2"  :initial-value="value_2">
+            <single-selection @change-data="getValueType_1"  :initial="valueType_1">
                 <!---->
             </single-selection>
         </el-form-item>
-        <el-form-item label="值来源类型" prop="typeComValue">
-            <single-selection @change-data="getChildData_3"  :initial-value="value_3">
+        <el-form-item label="值类型来源" prop="typeComValue">
+            <single-selection @change-data="getValueTypeOrigin_1"  :initial="valueTypeOrigin_1">
                 <!---->
             </single-selection>
         </el-form-item>
         <el-form-item label="值来源内容" prop="comContent">
-            <single-selection @change-data="getChildData_5"  :initial-value="value_5" ref="childMethod">
+            <single-selection @change-data="getValueOriginContent_1"  :initial="valueOriginContent_1" ref="childMethod">
                 <!---->
             </single-selection>
         </el-form-item>

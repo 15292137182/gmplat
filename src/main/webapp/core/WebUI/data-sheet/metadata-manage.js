@@ -29,8 +29,8 @@ var conTable=serverPath + "/maintTable/query";
 var conChildTable=serverPath + "/dbTableColumn/queryTabById";
 //查找模板对象属性
 var tempObj=serverPath + "/businObj/queryTemplatePro";
-
-
+//查找模板对象
+var queryTemplateObj=serverPath + "/templateObj/query";
 
 //关联表
 
@@ -96,6 +96,9 @@ var basLeft = new Vue({
     data:  getData.dataObj({
 
     }),
+    created() {
+        em.initial_1.value = "5243fc43-a9c6-42f0-a0c8-fd74e7fb";
+    },
     methods: {
         //编辑业务对象
         editEvent() {
@@ -114,12 +117,13 @@ var basLeft = new Vue({
                     console.log(data);
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
-                    em.value_1 =data.relateTableRowId;//关联表
-                    em.value_2=data.relateTemplateObject//关联模板对象
+                    em.initial_1.value=data.relateTableRowId;//关联表
+                 //   em.initial_2.value=data.relateTemplateObject//关联模板对象
                     em.ruleForm.system=data.system//所属系统
-                    em.ruleForm.belongModule=data.belongModule//所属模块
+                    em.belongModule_1.value=data.belongModule//所属模块
                     em.ruleForm.versionInput =data.version;//版本
                 })
+                console.log(em.initial_1);
             });
         },
         //删除业务对象

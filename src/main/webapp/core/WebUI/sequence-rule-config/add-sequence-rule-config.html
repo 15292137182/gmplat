@@ -31,7 +31,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="10">
+            <el-col :span="12">
                 <el-form-item label="内容">
                     <el-input v-model="formTable.seqContentInput"></el-input>
                 </el-form-item>
@@ -60,6 +60,8 @@
                 </el-form-item>
             </el-col>
         </el-row>
+
+        <div :is="item.html" v-for="(item, index) in items" :index="index" :child-num="num"></div>
 
         <el-row type="flex" class="row-bg">
             <el-col :span="10">
@@ -90,9 +92,6 @@
             </el-col>
         </el-row>
     </el-form>
-
-    <div :is="item.html" v-for="(item, index) in items" :index="index" :child-num="num"></div>
-
     <el-row>
         <el-col :span="11" style="text-align:right">
             <el-button type="primary" @click.native="confirm">保存</el-button>

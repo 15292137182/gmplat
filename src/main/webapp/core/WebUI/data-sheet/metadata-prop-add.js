@@ -16,11 +16,43 @@ var proEm = new Vue({
                     defaultValue:'',//默认值
                     extendName:'' //扩展属性名
                 },
-                value_1:'',//关联表字段
-                value_2:'',//值类型
-                value_3:'',//值来源类型
-                value_4:'',//类型
-                value_5:'',//值来源内容
+
+                //属性类型
+                proType_1:{
+                    params: "proType",
+                    value: "",
+                    disabled: "false"
+                },
+
+                //关联表字段
+                tableField_1:{
+                    url: "",
+                    value: "",
+                    disabled: "false"
+                },
+
+                //值类型
+                valueType_1:{
+                    params:"valueType",
+                    value:"",
+                    disabled:"false"
+                },
+
+                //值类型来源
+                valueTypeOrigin_1:{
+                    params:"valueTypeOrigin",
+                    value:"",
+                    disabled:"false"
+                },
+                //值来源内容
+                valueOriginContent_1:{
+                    url:"",
+                    value:"",
+                    disabled:"false"
+                },
+
+
+
                 reaTable:true,//关联表字段是否显示
                 extendPro:false,//关扩展属性名是否显示
             }

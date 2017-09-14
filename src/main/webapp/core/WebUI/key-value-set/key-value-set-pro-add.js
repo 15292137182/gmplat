@@ -38,9 +38,8 @@ var keyValueSetProAdd = new Vue({
                 "obj":keyValueSetProAdd
             }
             gmpAjax.showAjax(data,function(res){
-                queryData.getDatas(ProUrl,rightKeyValueSet.rightInput,leftKeyValueSet.rowId,rightKeyValueSet);
-                leftKeyValueSet.searchLeftPage();
                 ibcpLayer.Close(topButtonObj.divIndex);
+                queryData.getDatas(queryProUrl,rightKeyValueSet.rightInput,leftKeyValueSet.rowId,rightKeyValueSet,function(res){});
             })
         },
 
@@ -57,9 +56,8 @@ var keyValueSetProAdd = new Vue({
                 "obj":keyValueSetProAdd
             }
             gmpAjax.showAjax(data,function(res){
-                queryData.getDatas(ProUrl,rightKeyValueSet.rightInput,rightKeyValueSet.relateKeysetRowId,rightKeyValueSet);
-                leftKeyValueSet.searchLeftPage();
                 ibcpLayer.Close(rightKeyValueSet.editProDivIndex);
+                queryData.getDatas(queryProUrl,rightKeyValueSet.rightInput,leftKeyValueSet.rowId,rightKeyValueSet,function(res){});
             })
         },
 

@@ -10,6 +10,8 @@ var del=str+"/delete";
 var queryPage=str+"/queryPage";
 var mock=str+"/mock";
 var resetUrl=str+"/reset";
+var queryObj=serverPath+"/businObj/queryPage";
+var queryPro=serverPath+"/businObj/queryProPage";
 
 var config=new Vue({
     el:'#srconfig',
@@ -47,6 +49,18 @@ var config=new Vue({
             this.operate=2;
             var htmlUrl = 'add-sequence-rule-config.html';
             this.divIndex = ibcpLayer.ShowIframe(htmlUrl, '编辑序列号规则配置', '1000px', '500px');
+
+            var data={
+                "url":queryObj,
+                "jsonData":{search:""},
+                "obj":config
+            }
+            gmpAjax.showAjax(data, function(res){
+                var data=res.data;
+
+            })
+
+
         },
         deleteEvent(){
             deleteObj.del(function(){

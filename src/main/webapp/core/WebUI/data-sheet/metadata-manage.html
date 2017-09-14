@@ -73,21 +73,24 @@
                             <template scope="props">
                                 <el-form label-position="left" inline class="demo-table-expand">
                                     <el-row>
-                                        <el-col :span="14">
+                                        <el-col :span="22">
                                             <el-form-item label="代码">
                                                 <span>{{ props.row.objectCode }}</span>
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="10">
-                                            <el-form-item label="版本">
-                                                <span>{{ props.row.version }}</span>
+                                    </el-row>
+
+                                    <el-row>
+                                        <el-col :span="22">
+                                            <el-form-item label="模板对象">
+                                                <span>{{props.row.relateTemplateObject}}</span>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
-                                        <el-col :span="14">
-                                            <el-form-item label="模板对象">
-                                                <span>{{props.row.relateTemplateObject}}</span>
+                                        <el-col :span="10">
+                                            <el-form-item label="版本">
+                                                <span>{{ props.row.version }}</span>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="10">
@@ -95,6 +98,10 @@
                                                 <span>{{props.row.belongModule}}</span>
                                             </el-form-item>
                                         </el-col>
+                                    </el-row>
+                                    <el-row>
+
+
                                         <!--<el-col :span="9">-->
                                         <!--<el-form-item label="所属系统">-->
                                         <!--<span>{{props.row.belongSystem}}</span>-->

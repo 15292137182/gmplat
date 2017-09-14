@@ -43,7 +43,7 @@ var functionBlock = new Vue({
                     "obj":functionBlock
                 }
                 gmpAjax.showAjax(data,function(res){
-                    var data = res;
+                    var data = res.data;
                         em.isEdit = true;
                         em.formTable.codeInput=data[0].funcCode;
                         em.formTable.nameInput=data[0].funcName;

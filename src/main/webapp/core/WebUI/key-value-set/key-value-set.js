@@ -200,9 +200,9 @@ var rightKeyValueSet=new Vue({
             rightKeyValueSet.rightHeight=$(window).height()-190;
         })
     },
-    updated() {
-        this.FindFirstDate(this.tableData[0]);
-    }
+    // updated() {
+    //     this.FindFirstDate(this.tableData[0]);
+    // }
 })
 
 

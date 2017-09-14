@@ -43,7 +43,8 @@ var keyValueSetAdd = new Vue({
                 "obj":keyValueSetAdd
             }
             gmpAjax.showAjax(data,function(res){
-                queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet);
+                queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet,function(res){
+                    leftKeyValueSet.leftCurrentChange(leftKeyValueSet.tableData[0])});
                 ibcpLayer.Close(topButtonObj.divIndex);
             })
         },
