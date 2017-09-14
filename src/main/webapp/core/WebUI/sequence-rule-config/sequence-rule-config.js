@@ -36,11 +36,54 @@ var config=new Vue({
                 "obj":config
             }
             gmpAjax.showAjax(data,function(res){
-                    var data=res;
+                    var data=res.data;
                     config.keyValueContent=data;
                 })
         },
         addEvent(){
+            var data={
+                "url":queryObj,
+                "jsonData":{search:""},
+                "obj":config
+            }
+            gmpAjax.showAjax(data, function(res){
+                var data=res.data.result;
+                var len = data.length;
+                var jsonStr = [];
+                for (var i = 0; i < len; i++) {
+                    var json = {};
+                    var objName = data[i].objectName;
+                    var rowId = data[i].rowId;
+                    json['label'] = objName;
+                    json['value'] = rowId;
+
+                    var data1={
+                        "url":queryPro,
+                        "jsonData":{rowId: rowId, search: ""},
+                        "obj":config
+                    }
+
+                    gmpAjax.showAjax(data1, function(res1){
+                        var data1=res1.data.result;
+                        if (data1 == null) {
+                            return false;
+                        } else {
+                            var child = [];
+                            for (var j = 0; j < data1.length; j++) {
+                                var _child = {};
+                                var _rowid = data1[j].rowId;
+                                var propertyName = data1[j].propertyName;
+                                _child['label'] = propertyName;
+                                _child['value'] = _rowid;
+                                child[j] = _child;
+                            }
+                            json['children'] = child;
+                        }
+                    })
+                    jsonStr[i] = json;
+                }
+                config.objoptions=jsonStr;
+            })
             this.operate = 1;
             var htmlUrl="add-sequence-rule-config.html";
             this.divIndex=ibcpLayer.ShowIframe(htmlUrl, '新增序列号规则配置', '1000px', "500px",true);
@@ -49,18 +92,6 @@ var config=new Vue({
             this.operate=2;
             var htmlUrl = 'add-sequence-rule-config.html';
             this.divIndex = ibcpLayer.ShowIframe(htmlUrl, '编辑序列号规则配置', '1000px', '500px');
-
-            var data={
-                "url":queryObj,
-                "jsonData":{search:""},
-                "obj":config
-            }
-            gmpAjax.showAjax(data, function(res){
-                var data=res.data;
-
-            })
-
-
         },
         deleteEvent(){
             deleteObj.del(function(){
