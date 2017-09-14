@@ -129,6 +129,9 @@ public class Translator implements SqlComponentTranslator{
             if (field==null) continue;
             translateFieldOnlyName(field,linkedList);
             appendSql(EQUAL,linkedList);
+            if (entry.getValue() instanceof Map) {
+                appendSql(mergeMap(field.getFieldSource()),linkedList);
+            }
             appendArgs(entry.getValue(),linkedList);
             appendSql(COMMA,linkedList);
         }
@@ -376,9 +379,12 @@ public class Translator implements SqlComponentTranslator{
     /**
      * 工具方法
      */
-
     private String quoteStr(String str){
         return '"'+str+'"';
+    }
+
+    private SqlSegment mergeMap(String fieldName){
+        return new SqlSegment("(CASE when jsonb_typeof("+fieldName+")='object' THEN "+fieldName+" ELSE '{}'::jsonb END)||");
     }
 
     private String getTableStr(Table table) {
