@@ -75,7 +75,7 @@ Vue.component("single-selection", {
         },
         // 级联下拉框方法
         cascaderEvent(val) {
-            // this.selectValue.values = val;
+            this.value = val;
         }
     },
     mounted() {

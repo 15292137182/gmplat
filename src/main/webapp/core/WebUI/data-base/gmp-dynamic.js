@@ -18,12 +18,12 @@ var GmpFormObj = (function() {
         var postUrl = data.params.postUrl;
         var postParam = data.params.postParam;
         // 获取配置执行方法
-        var build = data.func.build;
+        var done = data.done;
 
-        create(mainId, compId, blockId, postUrl, postParam);
+        create(mainId, compId, blockId, postUrl, postParam,done);
     };
 
-    function create(mainId, compId, blockId, postUrl, postParam) {
+    function create(mainId, compId, blockId, postUrl, postParam,done) {
         // 获取页面component标签属性code
         var components = $(mainId).find("components");
         // 循环遍历code
@@ -37,7 +37,7 @@ var GmpFormObj = (function() {
                 // 判断模板类型
                 if(arr[0].funcType == "form") {
                     var form = new GmpForm1(compId, blockId, arr, mainId, postUrl, postParam);
-                    form.bulidComponent();
+                    done(form);
                 }
                 if(arr[0].funcType == "table") {}
                 if(arr[0].funcType == "search") {}
