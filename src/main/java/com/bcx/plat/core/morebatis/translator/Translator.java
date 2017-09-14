@@ -179,7 +179,7 @@ public class Translator implements SqlComponentTranslator{
 
     public LinkedList translateOrder(Order order, LinkedList linkedList){
         final String alias = order.getAliasedColumn().getAlias();
-        if (alias==null) {
+        if (alias!=null) {
             translateFieldSource(order.getAliasedColumn(),linkedList);
         }else {
             appendSql(order.getAlias(),linkedList);

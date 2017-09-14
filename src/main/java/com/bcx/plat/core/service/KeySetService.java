@@ -98,7 +98,7 @@ public class KeySetService extends BaseService<KeySet> {
      */
     public ServerResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> orders) {
         //查询属性的搜索条件
-        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("confKey", "confValue"), UtilsTool.collectToSet(search));
+        Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("confKey", "confValue"), UtilsTool.collectToSet(search));
         Condition condition;
         if (UtilsTool.isValid(search)) {
             condition = new ConditionBuilder(KeySetPro.class)

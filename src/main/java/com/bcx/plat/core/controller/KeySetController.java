@@ -133,7 +133,7 @@ public class KeySetController extends BaseController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public PlatResult delete(String rowId) {
         ServerResult result = new ServerResult();
-        if (!rowId.isEmpty()) {
+        if (UtilsTool.isValid(rowId)) {
             ServerResult serverResult = keySetService.deletePro(rowId);
             return result(serverResult);
         } else {
@@ -151,10 +151,9 @@ public class KeySetController extends BaseController {
     public PlatResult insert(@RequestParam Map<String, Object> param) {
         ServerResult result = new ServerResult();
         KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
-        int insert = keySet.insert();
-        if (insert != -1) {
+        if (UtilsTool.isValid(keySet.getKeysetName()) && keySet.insert() != -1) { // keysetName不为空才进行新增
             return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
-        } else {
+        }else {
             return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
     }
@@ -169,11 +168,10 @@ public class KeySetController extends BaseController {
     public PlatResult update(@RequestParam Map<String, Object> param) {
         ServerResult result = new ServerResult();
         int update;
-        if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+        if (UtilsTool.isValid(param.get("rowId"))) {
             KeySet keySet = new KeySet();
             KeySet modify = keySet.fromMap(param).buildModifyInfo();
-            update = modify.updateById();
-            if (update != -1) {
+            if (UtilsTool.isValid(modify.getKeysetName()) && modify.updateById() != -1) {
                 return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
             } else {
                 return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
@@ -197,7 +195,7 @@ public class KeySetController extends BaseController {
                                         @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                         String order) {
         LinkedList<Order> orders = dataSort(order);
-        Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         PageResult<Map<String, Object>> keySet = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
         return result(new ServerResult<>(keySet));
     }
@@ -211,7 +209,7 @@ public class KeySetController extends BaseController {
     @RequestMapping("/queryById")
     public PlatResult queryById(String rowId) {
         ServerResult serverResult = new ServerResult();
-        if (!rowId.isEmpty()) {
+        if (UtilsTool.isValid(rowId)) {
             Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rowId).endAnd().buildDone();
             List<KeySet> select = keySetService.select(condition);
             return result(new ServerResult<>(select));

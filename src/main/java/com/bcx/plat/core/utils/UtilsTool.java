@@ -328,8 +328,8 @@ public class UtilsTool {
     if (hashMap != null) {
       String str = String.valueOf(hashMap.get("str"));
       int num = Integer.parseInt(hashMap.get("num").toString());
-      String s = UtilsTool.camelToUnderline(str);
-      orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(s), num));
+//      String s = UtilsTool.camelToUnderline(str);
+      orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(str), num));
     }
     return orders;
   }
