@@ -52,15 +52,24 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
         this.pks = pks;
     }
 
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
     @Override
     public EntityEntry getEntry() {
         final Table table = new Table(schema,tableName);
         final List<Field> fields=new LinkedList<>();
         final HashMap<String,Field> aliasMap=new HashMap<>();
         Class clz=entityClass;
+        //反射父类中的字段
         while (clz != Object.class) {
             for (java.lang.reflect.Field field : clz.getDeclaredFields()) {
-                // TODO 父类必须遍历反射
+                //字段忽略条件
                 if (Modifier.isStatic(field.getModifiers())
                         ||field.getName().startsWith("$")
                         ||field.getAnnotation(IgnoredField.class)!=null) continue;
@@ -78,13 +87,6 @@ public class DefaultEntryBuilder implements EntityEntryBuilder{
             }
             return field;
         }).collect(Collectors.toList());
-//        Arrays.stream(entityClass.getDeclaredFields()).map((field)->{
-//            String fieldName = field.getName();
-//            return new Field(table, UtilsTool.underlineToCamel(fieldName,false),fieldName);
-//        }).collect(Collectors.toList());
-//        pks.stream().map((pk)->{
-//            new Field()
-//        }).collect(Collectors.toList());
         return new EntityEntry(entityClass, table,fields,pkFields);
     }
 }
