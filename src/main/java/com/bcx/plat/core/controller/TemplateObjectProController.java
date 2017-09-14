@@ -27,7 +27,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre> Histroy:
+ * <pre> Histroy:
  *                   2017/8/28  Wen TieHu Create
  *                   </pre>
  */
@@ -35,91 +35,91 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
 public class TemplateObjectProController extends BaseController {
 
-    @Autowired
-    private
-    TemplateObjectProService templateObjectProService;
+  @Autowired
+  private
+  TemplateObjectProService templateObjectProService;
 
-    /**
-     * 模板对象属性方法
-     *
-     * @return 返回操作信息
-     */
-    @RequestMapping("/add")
-    public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
-        ServerResult serverResult = new ServerResult();
-        TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
-        int insert = templateObjectPro.insert();
-        if (insert != -1) {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
-        } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
-        }
+  /**
+   * 模板对象属性方法
+   *
+   * @return 返回操作信息
+   */
+  @RequestMapping("/add")
+  public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
+    ServerResult serverResult = new ServerResult();
+    TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
+    int insert = templateObjectPro.insert();
+    if (insert != -1) {
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+    } else {
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+    }
+  }
+
+
+  /**
+   * 根据rowId查询数据
+   *
+   * @param proRowId 唯一标识
+   * @return PlatResult
+   */
+  @RequestMapping("/queryById")
+  public PlatResult queryById(String proRowId) {
+    ServerResult serverResult = new ServerResult();
+    if (!proRowId.isEmpty()) {
+      Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", proRowId).endAnd().buildDone();
+      List<TemplateObjectPro> select = templateObjectProService.select(condition);
+      return result(new ServerResult<>(select));
+    } else {
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
 
+  }
 
-    /**
-     * 根据rowId查询数据
-     *
-     * @param proRowId 唯一标识
-     * @return PlatResult
-     */
-    @RequestMapping("/queryById")
-    public PlatResult queryById(String proRowId) {
-        ServerResult serverResult = new ServerResult();
-        if (!proRowId.isEmpty()) {
-            Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", proRowId).endAnd().buildDone();
-            List<TemplateObjectPro> select = templateObjectProService.select(condition);
-            return result(new ServerResult<>(select));
-        } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-        }
-
+  /**
+   * 模板对象属性修改方法
+   *
+   * @param param 接受一个实体参数
+   * @return 返回操作信息
+   */
+  @RequestMapping("/modify")
+  public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
+    ServerResult serverResult = new ServerResult();
+    int update;
+    if (UtilsTool.isValid(param.get("proRowId"))) {
+      TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
+      Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", param.get("proRowId")).endAnd().buildDone();
+      update = templateObjectPro.update(condition);
+      if (update != -1) {
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+      } else {
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+      }
+    } else {
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
+  }
 
-    /**
-     * 模板对象属性修改方法
-     *
-     * @param param 接受一个实体参数
-     * @return 返回操作信息
-     */
-    @RequestMapping("/modify")
-    public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
-        ServerResult serverResult = new ServerResult();
-        int update;
-        if (UtilsTool.isValid(param.get("proRowId"))) {
-            TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
-            Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", param.get("proRowId")).endAnd().buildDone();
-            update = templateObjectPro.update(condition);
-            if (update != -1) {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
-            } else {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
-            }
-        } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-        }
+  /**
+   * 通用删除方法
+   *
+   * @param rowId 按照rowId查询
+   * @return 返回操作信息
+   */
+  @RequestMapping("/delete")
+  public Object delete(String rowId) {
+    ServerResult serverResult = new ServerResult();
+    int del;
+    if (!rowId.isEmpty()) {
+      TemplateObjectPro templateObjectPro = new TemplateObjectPro();
+      del = templateObjectPro.deleteById(rowId);
+      if (del != -1) {
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+      } else {
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+      }
+    } else {
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-
-    /**
-     * 通用删除方法
-     *
-     * @param rowId 按照rowId查询
-     * @return 返回操作信息
-     */
-    @RequestMapping("/delete")
-    public Object delete(String rowId) {
-        ServerResult serverResult = new ServerResult();
-        int del;
-        if (!rowId.isEmpty()) {
-            TemplateObjectPro templateObjectPro = new TemplateObjectPro();
-            del = templateObjectPro.deleteById(rowId);
-            if (del != -1) {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
-            } else {
-                return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
-            }
-        } else {
-            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-        }
-    }
+  }
 }
