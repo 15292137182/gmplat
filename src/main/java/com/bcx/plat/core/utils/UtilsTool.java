@@ -44,8 +44,8 @@ public class UtilsTool {
     return null != obj && !"".equals(obj.toString());
   }
 
-  public static boolean isValid(List list) {
-    return null != list && list.size() > 0;
+  public static boolean isValid(Collection list) {
+    return null != list && !list.isEmpty();
   }
 
 
