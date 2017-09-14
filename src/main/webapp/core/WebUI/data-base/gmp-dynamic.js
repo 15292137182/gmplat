@@ -6,6 +6,51 @@
  * @description:创建gmp动态模块
  * @author:liyuanquan
  */
+
+// 表单对象
+var GmpFormObj = (function() {
+    // 用户配置
+    function render(data) {
+        // 获取配置参数
+        var mainId = data.params.main;
+        var compId = data.params.comp;
+        var blockId = data.params.funBlock;
+        var postUrl = data.params.postUrl;
+        var postParam = data.params.postParam;
+        // 获取配置执行方法
+        var build = data.func.build;
+
+        create(mainId, compId, blockId, postUrl, postParam);
+    };
+
+    function create(mainId, compId, blockId, postUrl, postParam) {
+        // 获取页面component标签属性code
+        var components = $(mainId).find("components");
+        // 循环遍历code
+        $.each(components,function (i,comp) {
+            var code = $(comp).attr("code");
+            console.log(code);
+            // 通过code获取HTML模板
+            htmlAjax.keyValue(code, function(res) {
+                var arr = res.resp.content.data;
+                console.log(arr);
+                // 判断模板类型
+                if(arr[0].funcType == "form") {
+                    var form = new GmpForm1(compId, blockId, arr, mainId, postUrl, postParam);
+                    form.bulidComponent();
+                }
+                if(arr[0].funcType == "table") {}
+                if(arr[0].funcType == "search") {}
+            });
+        })
+    };
+
+    // 配置方法函数
+    return {
+        render: render
+    }
+})();
+
 var gmpDynamic = function() {};
 
 /**

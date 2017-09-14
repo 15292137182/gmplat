@@ -28,10 +28,20 @@
     </div>
 
     <script>
-        // 实例化对象
-        var _form = new gmpDynamic();
-        // 创建表单 参数 作用域id
-        _form.creat("#app", "formTable", "codeId", "www.baidu.com", {rowId:"123"});
+        // 配置方法
+        GmpFormObj.render({
+            params: {
+                main: "#app",
+                comp: "formTable",
+                funBlock: "codeId",
+                postUrl: "www.baidu.com",
+                postParam: "{rowId: '123'}"
+            },
+            // 需要执行的方法
+            func: {
+                buld: "bulidComponent"
+            }
+        });
     </script>
 </body>
 </html>

@@ -8,11 +8,6 @@
     <div id="app">
         <el-row>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection :initial="initial">
-                    <!---->
-                </single-selection>
-            </el-col>
-            <el-col :span="6" :offset="9" style="margin-top: 20px;">
                 <single-selection :initial="initial_1">
                     <!---->
                 </single-selection>
@@ -30,11 +25,16 @@
                     // 数据库表查询: 查询接口  默认值  是否禁用
                     initial: {url: serverPath + "/maintTable/query", value: "", disabled: "false"},
                     // 键值集合设置参数: 参数(键值集合)  默认值  是否禁用
-                    initial_1: {params: "functionBlockAlign", value: "center", disabled: "false"}
+                    initial_1: {params: "functionBlockAlign", value: "", disabled: "false"}
                 }
             },
+            created() {
+                this.change();
+            },
             methods: {
-                //
+                change() {
+                    this.initial_1.value = "center";
+                }
             }
         })
     </script>
