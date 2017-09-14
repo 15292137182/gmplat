@@ -28,3 +28,4 @@ src/main/java/com/bcx/plat/core/filter/
 src/main/webapp/META-INF/
 src/test/resources/
 /.idea/
+target/
