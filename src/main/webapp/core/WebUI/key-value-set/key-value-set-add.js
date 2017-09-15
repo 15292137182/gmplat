@@ -25,6 +25,12 @@ var keyValueSetAdd = new Vue({
             keysetNameInput: [
                 {required: true, message: '请输入名称', trigger: 'blur'}
             ],
+        },
+        //所属模块下拉框
+        belongModule_1:{
+            params:'belongModule',
+            value:'',
+            disabled:'false',
         }
     },
     methods: {
@@ -36,7 +42,7 @@ var keyValueSetAdd = new Vue({
                     keysetCode:this.keyForm.keysetCodeInput,
                     keysetName:this.keyForm.keysetNameInput,
 
-                    belongModule:this.keyForm.belongModuleInput,
+                    belongModule:this.belongModule_1.value,
            //         belongSystem:this.keyForm.belongSystemInput,
                     desp:this.keyForm.despInput
                 },
@@ -57,7 +63,7 @@ var keyValueSetAdd = new Vue({
                     rowId:rowId,
                     keysetCode:this.keyForm.keysetCodeInput,
                     keysetName:this.keyForm.keysetNameInput,
-                    belongModule:this.keyForm.belongModuleInput,
+                    belongModule:this.belongModule_1.value,
                //     belongSystem:this.keyForm.belongSystemInput,
                     desp:this.keyForm.despInput,
                     version:"1.0"
@@ -90,6 +96,10 @@ var keyValueSetAdd = new Vue({
         cancel() {
             ibcpLayer.Close(topButtonObj.divIndex);
             ibcpLayer.Close(leftKeyValueSet.editdivIndex);
+        },
+        //模块下拉框
+        getBelongModule_1(datas){
+            this.belongModule_1.value=datas.value;
         }
     }
 })

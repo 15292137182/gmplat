@@ -20,9 +20,11 @@
       <el-input placeholder="请输入名称" v-model="keyForm.keysetNameInput" ref="keysetNameInput"></el-input>
     </el-form-item>
     <el-form-item label="所属模块" prop="belongModuleInput">
-      <el-input placeholder="请输入名称" v-model="keyForm.belongModuleInput" ref="belongModuleInput"></el-input>
+      <single-selection @change-data="getBelongModule_1"  :initial="belongModule_1" ref="belongModule_1">
+        <!---->
+      </single-selection>
     </el-form-item>
-    <!--<el-form-item label="所属类型" prop="belongSystemInput">-->
+    <!--<el-form-item label="所属系统" prop="belongSystemInput">-->
       <!--<el-input placeholder="请输入名称" v-model="keyForm.belongSystemInput" ref="belongSystemInput"></el-input>-->
     <!--</el-form-item>-->
     <el-form-item label="说明" prop="despInput">

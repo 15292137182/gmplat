@@ -307,6 +307,12 @@ var add = new Vue({
                 seqNameInput: [
                     {required: true, message: '请输入名称', trigger: 'blur'}
                 ],
+            },
+            //所属模块下拉框
+            belongModule_1:{
+                params:'belongModule',
+                value:'',
+                disabled:'false',
             }
         }
     },
@@ -377,7 +383,7 @@ var add = new Vue({
                             seqCode:add.formTable.seqCodeInput,
                             seqName:add.formTable.seqNameInput,
                             seqContent:add.formTable.seqContentInput,
-                            belongModule:add.formTable.belongModuleInput,
+                            belongModule:add.belongModule_1.value,
                             belongSystem:add.formTable.belongSystemInput,
                             desp:add.formTable.despInput
                         },
@@ -407,7 +413,7 @@ var add = new Vue({
                 add.formTable.seqCodeInput=data[0].seqCode;
                 add.formTable.seqNameInput=data[0].seqName;
                 add.formTable.seqContentInput=data[0].seqContent;
-                add.formTable.belongModuleInput=data[0].belongModule;
+                add.$refs.belongModule_1.cascaderEvent(data[0].belongModule);
                 add.formTable.belongSystemInput=data[0].belongSystem;
                 add.formTable.despInput=data[0].desp;
                 add.formTable.versionInput=data[0].version;
@@ -437,6 +443,10 @@ var add = new Vue({
                     add.add();
                 }
             });
+        },
+        //模块下拉框
+        getBelongModule_1(datas){
+            this.belongModule_1.value=datas.value;
         }
     },
     created(){

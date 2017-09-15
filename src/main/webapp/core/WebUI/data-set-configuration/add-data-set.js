@@ -6,7 +6,6 @@
  * 修改下拉框 jms
  * @type {Vue}
  */
-//Vue.component('select-dsctype', SelectOptions.setOpt('','','dataSetConfigType',''));
 
 var addDataSet = new Vue({
     el:'#addDataSet',
@@ -26,6 +25,19 @@ var addDataSet = new Vue({
         isEdit:'',//是否编辑
         addUrl:serverPath+'/dataSetConfig/add',//新增
         editUrl:serverPath+'/dataSetConfig/modify',//编辑
+
+        //类型下拉框
+        dataSetType_1:{
+            params:'dataSetType',
+            value:'',
+            disabled:'false',
+        },
+        //所属模块下拉框
+        belongModule_1:{
+            params:'belongModule',
+            value:'',
+            disabled:'false',
+        }
     },
     methods:{
         checkIsNull(){//非空验证
@@ -49,11 +61,11 @@ var addDataSet = new Vue({
                 "url":addDataSet.addUrl,
                 "jsonData":{
                     datasetName:this.formTable.nameInput,
-                    datasetType:this.value_1,
+                    datasetType:this.dataSetType_1.value,
                     datasetContent:this.formTable.content,
                     desp:this.formTable.desp,
-                    belongModule:this.formTable.belongModule,
-                    belongSystem:this.formTable.belongSystem
+                    belongModule:this.belongModule_1.value,
+                  //  belongSystem:this.formTable.belongSystem
                 },
                 "obj":addDataSet
             }
@@ -71,11 +83,11 @@ var addDataSet = new Vue({
                 "jsonData":{
                     rowId:dataSetConfig.rowObjId,
                     datasetName:this.formTable.nameInput,
-                    datasetType:this.value_1,
+                    datasetType:this.dataSetType_1.value,
                     datasetContent:this.formTable.content,
                     desp:this.formTable.desp,
-                    belongModule:this.formTable.belongModule,
-                    belongSystem:this.formTable.belongSystem
+                    belongModule:this.belongModule_1.value,
+                 //   belongSystem:this.formTable.belongSystem
                 },
                 "obj":addDataSet
             }
@@ -103,9 +115,11 @@ var addDataSet = new Vue({
         cancel(){//取消
             ibcpLayer.Close(dataSetConfigButton.divIndex);
         },
-        getChildData_1(datas){
-            console.log(datas);
-            this.value_1=datas.value;
+        getDataSetType_1(datas){
+            this.dataSetType_1.value=datas.value;
+        },
+        getBelongModule_1(datas){
+            this.belongModule_1.value=datas.value;
         }
     }
 })

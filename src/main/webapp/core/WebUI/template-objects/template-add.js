@@ -11,8 +11,13 @@ var addTemp = new Vue({
                     codeInput: '',
                     nameInput: '',
                     comContent: '',
-                    modules:'',
                     system:'',
+                },
+                //所属模块下拉框
+                belongModule_1:{
+                    params:'belongModule',
+                    value:'',
+                    disabled:'false',
                 }
             }
     },
@@ -24,7 +29,7 @@ var addTemp = new Vue({
                 addObj.addOk(function(){
                     var data={
                         "url":addTempObj,
-                        "jsonData":{templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,belongModule:addTemp.addTempObj.modules,
+                        "jsonData":{templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,belongModule:addTemp.belongModule_1.value,
                             belongSystem:addTemp.addTempObj.system},
                         "obj":basLeft
                     };
@@ -42,7 +47,7 @@ var addTemp = new Vue({
                     var data={
                         "url":editTempObj,
                         "jsonData":{templateCode:addTemp.addTempObj.codeInput,rowId:basLeft.currentId,templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,
-                            belongModule:addTemp.addTempObj.modules, belongSystem:addTemp.addTempObj.system},
+                            belongModule:addTemp.belongModule_1.value, belongSystem:addTemp.addTempObj.system},
                         "obj":basLeft
                     };
                     gmpAjax.showAjax(data,function(res){
@@ -58,6 +63,10 @@ var addTemp = new Vue({
         //取消事件
         cancelTemp(){
             ibcpLayer.Close(divIndex);
+        },
+        //模块下拉框
+        getBelongModule_1(datas){
+            this.belongModule_1.value=datas.value;
         }
 
     }
