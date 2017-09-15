@@ -5,9 +5,6 @@
  * Created by andim on 2017/8/11.
  */
 
-Vue.component('select-show', SelectOptions.setOpt('','','showControl',''));
-Vue.component('select-align', SelectOptions.setOpt('','','functionBlockAlign',''));
-
 var em=new Vue({
     el:'#addData',
     data: {
@@ -45,6 +42,25 @@ var em=new Vue({
         SupportSorting:'',//支持排序
         ExactSearch:'',//是否精确查询
         funcRowIds:'',
+
+        objPro_1:{
+            url:"",
+            value:"",
+            disabled:"false"
+        },
+        //显示控件下拉框
+        showControl_1:{
+            params:"showControl",
+            value:"",
+            disabled:"false",
+        },
+
+        //对齐方式下拉框
+        align_1:{
+            params:"functionBlockAlign",
+            value:"",
+            disabled:"false",
+        }
     },
     methods:{
         searchConnectObj(){//查询所有对象属性，弹出对象属性表
@@ -242,6 +258,19 @@ var em=new Vue({
                 var data = res;
                 em.formTable.tableInput = data[0].propertyCode+"("+data[0].propertyName+")"//业务对象属性中文名
             })
+        },
+
+        //点击对象属性
+        getObjPro_1(){
+
+        },
+        //点击显示控件下拉框
+        getShowControl_1(){
+
+        },
+        //点击对齐方式下拉框
+        getAlign_1(){
+
         }
     },
     created(){

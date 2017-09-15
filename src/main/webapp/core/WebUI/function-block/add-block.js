@@ -1,9 +1,8 @@
 /**
  * Created by andim on 2017/8/7.
  */
-var objPath=serverPath + "/businObj/query"
-Vue.component('select-conobj', SelectOptions.setOpt('ObjSelect','connectObj','',objPath));
-Vue.component('select-fbtype', SelectOptions.setOpt('','','functionBlockType',''));
+//业务对象路径
+var objPath=serverPath + "/businObj/queryPage"
 
 var em=new Vue({
     el:'#addBlock',
@@ -18,7 +17,28 @@ var em=new Vue({
         },
         dataId:'',//relateBusiObj关联对象ID
         isEdit:'',
-        rowId:''
+        rowId:'',
+
+        //类型下拉框数据
+        functionBlockType_1:{
+            params:'functionBlockType',
+            value:'',
+            disabled:"false"
+        },
+
+        //关联对象下拉框数据
+        obj_1:{
+            url:objPath,
+            value:'',
+            false:''
+        },
+
+        //所属模块
+        belongModule_1:{
+            params:'belongModule',
+            value:'',
+            disabled:"false"
+        }
     },
     methods:{
         searchConnectObj(){//查询所有关联对象
@@ -95,6 +115,20 @@ var em=new Vue({
                 ibcpLayer.Close(topButtonObj.divIndex);
             }
             ibcpLayer.Close(functionBlock.divIndex);
+        },
+
+        //类型
+        getFunctionBlockType_1(){
+
+        },
+        //关联对象下拉框数据
+        getObj_1(){
+
+        },
+
+        //所属模块
+        getBelongModule_1(){
+
         }
     }
 })

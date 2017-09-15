@@ -96,14 +96,11 @@ var basLeft = new Vue({
     data:  getData.dataObj({
 
     }),
-    created() {
-        em.initial_1.value = "5243fc43-a9c6-42f0-a0c8-fd74e7fb";
-    },
+
     methods: {
         //编辑业务对象
         editEvent() {
             operate = 2;
-
             var htmlUrl = 'metadata-add.html';
             divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑业务对象', '400px', '510px', function(){
                 var data={
@@ -117,7 +114,7 @@ var basLeft = new Vue({
                     console.log(data);
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
-                    em.initial_1.value=data.relateTableRowId;//关联表
+
                  //   em.initial_2.value=data.relateTemplateObject//关联模板对象
                     em.ruleForm.system=data.system//所属系统
                     em.belongModule_1.value=data.belongModule//所属模块
@@ -207,6 +204,10 @@ var basLeft = new Vue({
                 basRight.searchRight();
                 //查找右侧模板对象属性的数据
                 basRightTop.searchRightTopEvent();
+
+                //获取当前的关联表
+                this.associatTable=row.associatTable;
+
             }
         },
         FindLFirstDate(row){  //将选中行变颜色
@@ -218,6 +219,7 @@ var basLeft = new Vue({
     },
     created() {
         this.searchLeftTable();
+
         $(document).ready(function () {
             basLeft.leftHeight = $(window).height() - 194;
         });

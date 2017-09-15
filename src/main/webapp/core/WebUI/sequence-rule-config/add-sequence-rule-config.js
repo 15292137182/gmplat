@@ -322,8 +322,10 @@ var add = new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
-                var data=res;
-                var str=str.toString();
+                var data=res.data;
+                var reg=/[,，]/g;
+
+                var str=data.toString().replace(reg,"\r\n");
                 add.contentShow=str;
             })
         },

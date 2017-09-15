@@ -17,7 +17,7 @@ var em = new Vue({
             disabledBool:true,
             value_1: "",
             value_2: [],
-           // value_3:"",
+
             rules: {
 
             },
@@ -34,7 +34,6 @@ var em = new Vue({
                 value: "",
                 disabled: "false"
             }
-
         }
     },
     methods: {
@@ -119,5 +118,8 @@ var em = new Vue({
         cancel() {
             ibcpLayer.Close(divIndex);
         }
+    },
+    created(){
+        this.initial_1.value = basLeft.relateTableRowId;
     }
 })

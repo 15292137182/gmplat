@@ -51,8 +51,6 @@ var proEm = new Vue({
                     disabled:"false"
                 },
 
-
-
                 reaTable:true,//关联表字段是否显示
                 extendPro:false,//关扩展属性名是否显示
             }
@@ -109,59 +107,81 @@ var proEm = new Vue({
                             });
                         }
             },
-            getChildData_1(datas){
-                this.value_1=datas.value;
+            //属性类型
+            getProType_1(datas){
+                this.proType_1.value=datas.value;
             },
-            getChildData_2(datas){
-                this.value_2=datas.value;
-                //console.log(this.value_2)
-            },
-            getChildData_3(datas){
-                this.value_3 = datas.value;
-                //设置默认值
-                if (datas != "" || datas != undefined) {
-                    this.value_3 = datas.value;
-                    this.label_3 = datas.label;
-                    this.$refs.childMethod.cascaderEvent("Shanghai");
-                }
-                if(JSON.stringify(datas) === "{}") {
-                    this.$refs.childMethod.cascaderEvent("");
-                }
 
-
+            //关联表字段
+            getTableField_1(datas){
+                this.tableField_1.value=datas.value;
             },
-            getChildData_4(datas){
-              this.value_4=datas.value;
-               //console.log(this.value_4);
 
+            //值类型
+            getValueType_1(datas){
+                this.valueType_1.value=datas.value;
             },
-            getChildData_5(datas){
-                this.value_5=datas.value;
-                //console.log(this.value_5);
 
+            //值类型来源
+            getValueTypeOrigin_1(datas){
+                this.valueTypeOrigin_1.value=datas.value;
             },
+            //值来源内容
+            getValueOriginContent_1(datas){
+                this.valueOriginContent_1.value=datas.value;
+            },
+
+            // getChildData_1(datas){
+            //     this.value_1=datas.value;
+            // },
+            // getChildData_2(datas){
+            //     this.value_2=datas.value;
+            //     //console.log(this.value_2)
+            // },
+            // getChildData_3(datas){
+            //     this.value_3 = datas.value;
+            //     //设置默认值
+            //     if (datas != "" || datas != undefined) {
+            //         this.value_3 = datas.value;
+            //         this.label_3 = datas.label;
+            //         this.$refs.childMethod.cascaderEvent("Shanghai");
+            //     }
+            //     if(JSON.stringify(datas) === "{}") {
+            //         this.$refs.childMethod.cascaderEvent("");
+            //     }
+            // },
+            // getChildData_4(datas){
+            //   this.value_4=datas.value;
+            //    //console.log(this.value_4);
+            //
+            // },
+            // getChildData_5(datas){
+            //     this.value_5=datas.value;
+            //     //console.log(this.value_5);
+            //
+            // },
             cancel() {
                 ibcpLayer.Close(divIndex);
             }
         },
         updated() {
             //基本属性
-            if(this.value_4=='1'){
-                proEm.reaTable=true;
-                proEm.extendPro=false;
-
-            }//扩展属性
-            else if(this.value_4=='2'){
-                proEm.reaTable=false;
-                proEm.extendPro=true;
-            }
-            //值类型来源(键值集合 序列规则)
-            if(this.value_3=='5'){
-                //console.log(111)
-                this.value_5='3'
-            }else if(this.value_3=='6'){
-                //console.log(222)
-                this.value_5='4'
-            }
+            // if(this.value_4=='1'){
+            //     proEm.reaTable=true;
+            //     proEm.extendPro=false;
+            //
+            // }//扩展属性
+            // else if(this.value_4=='2'){
+            //     proEm.reaTable=false;
+            //     proEm.extendPro=true;
+            // }
+            // //值类型来源(键值集合 序列规则)
+            // if(this.value_3=='5'){
+            //     //console.log(111)
+            //     this.value_5='3'
+            // }else if(this.value_3=='6'){
+            //     //console.log(222)
+            //     this.value_5='4'
+            // }
         }
     })

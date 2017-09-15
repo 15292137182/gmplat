@@ -10,6 +10,7 @@
         .el-select-dropdown {
             z-index: 900000000 !important;
         }
+
     </style>
 </head>
 <body>
@@ -32,8 +33,7 @@
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="类型">
-                    <!--<el-input placeholder="请输入类型" :disabled="isEdit" v-model="formTable.typeInput" ref="typeInput"></el-input>-->
-                    <select-fbtype ref="fbtype"></select-fbtype>
+                    <single-selection @change-data="getFunctionBlockType_1" :initial="functionBlockType_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -43,14 +43,14 @@
                     <!--<el-input placeholder="请选择关联对象" disabled="" v-model="formTable.tableInput" ref="tableInput">-->
                         <!--<el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>-->
                     <!--</el-input>-->
-                    <select-conobj ref="conObj"></select-conobj>
+                    <single-selection @change-data="getObj_1" :initial="obj_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="所属模块">
-                    <el-input placeholder="请输入所属模块" v-model="formTable.Module" ref="Module"></el-input>
+                    <single-selection @change-data="getBelongModule_1" :initial="belongModule_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -91,4 +91,5 @@
 
 </body>
 <script src="add-block.js"></script>
+
 </html>
