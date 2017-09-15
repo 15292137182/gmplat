@@ -33,7 +33,7 @@
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="类型">
-                    <single-selection @change-data="getFunctionBlockType_1" :initial="functionBlockType_1"></single-selection>
+                    <single-selection @change-data="getFunctionBlockType_1" :initial="functionBlockType_1" ref="functionBlockType_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -43,24 +43,24 @@
                     <!--<el-input placeholder="请选择关联对象" disabled="" v-model="formTable.tableInput" ref="tableInput">-->
                         <!--<el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>-->
                     <!--</el-input>-->
-                    <single-selection @change-data="getObj_1" :initial="obj_1"></single-selection>
+                    <single-selection @change-data="getObj_1" :initial="obj_1" ref="obj_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="所属模块">
-                    <single-selection @change-data="getBelongModule_1" :initial="belongModule_1"></single-selection>
+                    <single-selection @change-data="getBelongModule_1" :initial="belongModule_1" ref="belongModule_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg">
-            <el-col :span="20" :offset="1">
-                <el-form-item label="所属系统">
-                    <el-input placeholder="请输入所属系统" v-model="formTable.System" ref="System"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
+        <!--<el-row type="flex" class="row-bg">-->
+            <!--<el-col :span="20" :offset="1">-->
+                <!--<el-form-item label="所属系统">-->
+                    <!--<el-input placeholder="请输入所属系统" v-model="formTable.System" ref="System"></el-input>-->
+                <!--</el-form-item>-->
+            <!--</el-col>-->
+        <!--</el-row>-->
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
                 <el-form-item label="说明">

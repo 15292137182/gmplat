@@ -44,7 +44,8 @@ var em=new Vue({
         funcRowIds:'',
 
         objPro_1:{
-            url:serverPath + "/businObjPro/queryBusinPro?objRowId="+window.parent.topButtonObj.objId+"&frontRowId="+window.parent.topButtonObj.rowObjId,
+            url:serverPath + "/businObj/queryProPage?rowId="+window.parent.functionBlock.relateBusiObj,
+            key:'{"label":"propertyName","value":"rowId"}',
             value:"",
             disabled:"false"
         },

@@ -2,7 +2,7 @@
  * Created by andim on 2017/8/7.
  */
 //业务对象路径
-var objPath=serverPath + "/businObj/queryPage"
+var businObjPageUrl=serverPath + "/businObj/queryPage"
 
 var em=new Vue({
     el:'#addBlock',
@@ -28,7 +28,8 @@ var em=new Vue({
 
         //关联对象下拉框数据
         obj_1:{
-            url:objPath,
+            url:businObjPageUrl,
+            key:'{"label":"objectName","value":"rowId"}',
             value:'',
             false:''
         },
@@ -54,10 +55,10 @@ var em=new Vue({
                 "jsonData":{
                     "funcCode":em.formTable.codeInput,
                     "funcName":em.formTable.nameInput,
-                    "funcType":em.$refs.fbtype.value,
-                    "relateBusiObj":em.$refs.conObj.connectObj,
-                    "belongModule":em.formTable.Module,
-                    "belongSystem":em.formTable.System,
+                    "funcType":em.functionBlockType_1.value,
+                    "relateBusiObj":em.obj_1.value,
+                    "belongModule":em.belongModule_1.value,
+                  //  "belongSystem":em.formTable.System,
                     "desp":em.formTable.desp
                 },
                 "obj":em
@@ -79,10 +80,10 @@ var em=new Vue({
                     "rowId":this.rowId,
                     "funcCode":this.formTable.codeInput,
                     "funcName":this.formTable.nameInput,
-                    "funcType":this.$refs.fbtype.value,
-                    "relateBusiObj":this.$refs.conObj.connectObj,
-                    "belongModule":this.formTable.Module,
-                    "belongSystem":this.formTable.System,
+                    "funcType":this.functionBlockType_1.value,
+                    "relateBusiObj":this.obj_1.value,
+                    "belongModule":this.belongModule_1.value,
+                  //  "belongSystem":this.formTable.System,
                     "desp":this.formTable.desp
                 },
                 "obj":em
@@ -118,17 +119,17 @@ var em=new Vue({
         },
 
         //类型
-        getFunctionBlockType_1(){
-
+        getFunctionBlockType_1(datas){
+            this.functionBlockType_1.value = datas.value;
         },
         //关联对象下拉框数据
-        getObj_1(){
-
+        getObj_1(datas){
+            this.obj_1.value=datas.value;
         },
 
         //所属模块
-        getBelongModule_1(){
-
+        getBelongModule_1(datas){
+            this.belongModule_1.value=datas.value;
         }
     }
 })

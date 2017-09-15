@@ -22,8 +22,16 @@ var em = new Vue({
 
             },
             //关联表下拉框数据
-            initial_1: {
+            table_1: {
                 url: conTable,
+                key:'{"label":"tableCname","value":"rowId"}',
+                value: "",
+                disabled: "false"
+            },
+
+            templateObj_1:{
+                url: templateObjPageUrl,
+                key:'{"label":"templateName","value":"rowId"}',
                 value: "",
                 disabled: "false"
             },
@@ -62,8 +70,8 @@ var em = new Vue({
                     var data={
                         "url":addUrl,
                         "jsonData":{objectName:em.ruleForm.nameInput,//名称
-                            relateTableRowId: em.initial_1.value,//关联表
-                            relateTemplateObject: em.value_2,//关联模板对象
+                            relateTableRowId: em.table_1.value,//关联表
+                            relateTemplateObject: em.templateObj_1.value,//关联模板对象
                             belongModule: em.belongModule_1.value,//所属模块
                         },
                         "obj":basTop
@@ -83,8 +91,8 @@ var em = new Vue({
                         "jsonData":{
                             rowId: basLeft.currentVal.rowId,//ID
                             objectName:em.ruleForm.nameInput,//名称
-                            relateTableRowId: em.initial_1.value,//关联表
-                            relateTemplateObject: em.value_2,//关联模板对象
+                            relateTableRowId: em.table_1.value,//关联表
+                            relateTemplateObject: em.templateObj_1.value,//关联模板对象
                             belongModule: em.belongModule_1.value,//所属模块
                         },
                         "obj":basTop
@@ -97,29 +105,19 @@ var em = new Vue({
                 })
             }
         },
-        getChildData_1(datas){
-            this.initial_1.value = datas.value;
-           // this.label_1 = datas.label;
-            //console.log( this.label_1);
-            console.log( this.value_1);
-
+        getTable_1(datas){
+            this.table_1.value = datas.value;
         },
-        multipleDatas_1(datas){
-            this.value_2=JSON.stringify(datas);
-           console.log(this.value_2);
+        getTemplateObj_1(datas){
+            this.templateObj_1.value=datas.value
+
         },
         //所属模块change事件
-        belongModule_1(datas){
-            console.log(datas);
+        getBelongModule_1(datas){
            this.belongModule_1.value = datas.value;
-           console.log( this.belongModule_1.value);
-
         },
         cancel() {
             ibcpLayer.Close(divIndex);
         }
     },
-    created(){
-        this.initial_1.value = basLeft.relateTableRowId;
-    }
 })

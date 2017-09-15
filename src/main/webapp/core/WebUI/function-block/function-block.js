@@ -47,11 +47,11 @@ var functionBlock = new Vue({
                     em.isEdit = true;
                     em.formTable.codeInput=data[0].funcCode;
                     em.formTable.nameInput=data[0].funcName;
-                    em.functionBlockType_1.value=data[0].funcType;
-                    em.dataId=data[0].relateBusiObj;
-                    em.obj_1.value=data[0].relateBusiObj;
-                    em.formTable.Module=data[0].belongModule;
-                    em.formTable.System=data[0].belongSystem;
+                    em.$refs.functionBlockType_1.cascaderEvent(data[0].funcType);
+                    em.$refs.obj_1.cascaderEvent(data[0].relateBusiObj);
+
+                    em.$refs.belongModule_1.cascaderEvent(data[0].belongModule);
+                 //   em.formTable.System=data[0].belongSystem;
                     em.formTable.desp=data[0].desp;
                     em.rowId=data[0].rowId;
                 })
@@ -84,6 +84,7 @@ var functionBlock = new Vue({
                 this.rowId = row.rowId;
                 properties.getRight(row.rowId);
                 this.deleteId = row.rowId;
+                this.relateBusiObj=row.relateBusiObj;
                 this.editObj = row;
             }
         },

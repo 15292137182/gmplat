@@ -30,7 +30,17 @@ var conChildTable=serverPath + "/dbTableColumn/queryTabById";
 //查找模板对象属性
 var tempObj=serverPath + "/businObj/queryTemplatePro";
 //查找模板对象
-var queryTemplateObj=serverPath + "/templateObj/query";
+var templateObj=serverPath + "/templateObj/query";
+
+//模板对象全部数据
+var templateObjPageUrl=serverPath + "/templateObj/queryPage";
+//序列规则全部数据(供下拉框使用)
+var sequenceRuleConfigPageUrl=serverPath+"/sequenceRule/queryPage";
+//键值集合全部数据
+var keySetPageUrl=serverPath+'/keySet/queryPage';
+//数据集全部数据
+var datasetConfigPageUrl=serverPath+'/dataSetConfig/queryPage'
+
 
 //关联表
 
@@ -41,7 +51,7 @@ var queryTemplateObj=serverPath + "/templateObj/query";
 //serverPath+"/keySet/queryKeySet",
 
 //关联模板
-var belongModel=serverPath + "/templateObj/query";
+// var belongModel=serverPath + "/templateObj/query";
 
 //上方按钮事件
 var basTop = new Vue({
@@ -114,13 +124,12 @@ var basLeft = new Vue({
                     console.log(data);
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
-
-                 //   em.initial_2.value=data.relateTemplateObject//关联模板对象
-                    em.ruleForm.system=data.system//所属系统
-                    em.belongModule_1.value=data.belongModule//所属模块
+                    em.$refs.table_1.cascaderEvent(data.relateTableRowId);
+                    em.$refs.templateObj_1.cascaderEvent(data.relateTemplateObject);//关联模板对象
+                    em.ruleForm.system=data.system;//所属系统
+                    em.$refs.belongModule_1.cascaderEvent(data.belongModule);//所属模块
                     em.ruleForm.versionInput =data.version;//版本
                 })
-                console.log(em.initial_1);
             });
         },
         //删除业务对象
@@ -201,7 +210,7 @@ var basLeft = new Vue({
                 //左边这一行的数据
                 this.currentId = row.rowId;
                 //查找右侧对象属性的数据
-                basRight.searchRight();
+                basRight.searchRightTable();
                 //查找右侧模板对象属性的数据
                 basRightTop.searchRightTopEvent();
 
@@ -294,11 +303,12 @@ var basRight=new Vue({
                     }else{
                         proEm.addProForm.checked=false;
                     }
-                    proEm.$refs.contablefield.conTableFieldInput=data.relateTableColumn ;  //关联表
+                    proEm.$refs.proType_1.cascaderEvent(data.wetherExpandPro);  //属性类型
+                    proEm.$refs.tableField_1.cascaderEvent(data.relateTableColumn) ;  //关联表
                     //修改值类型和值类型来源下拉框  jms 2017/8/21
-                    proEm.$refs.vtype.value=data.valueType   //值类型
-                    proEm.$refs.vorigin.value=data.valueResourceType;   //值类型来源
-                    proEm.addProForm.comContent=data.valueResourceContent;     //值来源内容
+                    proEm.$refs.valueType_1.cascaderEvent(data.valueType);  //值类型
+                    proEm.$refs.valueTypeOrigin_1.cascaderEvent(data.valueResourceType);   //值类型来源
+                    proEm.$refs.valueOriginContent_1.cascaderEvent(data.valueResourceContent);     //值来源内容
 
                 })
             });
@@ -322,6 +332,10 @@ var basRight=new Vue({
             if (row != undefined) {
                 this.currentVal = row;
                 this.rightVal = row.rowId;
+
+                //为了给下拉框塞值
+                this.wetherExpandPro=row.wetherExpandPro;
+
                 // console.log(this.rightVal)
             }
         },

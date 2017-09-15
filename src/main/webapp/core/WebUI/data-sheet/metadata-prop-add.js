@@ -26,7 +26,8 @@ var proEm = new Vue({
 
                 //关联表字段
                 tableField_1:{
-                    url: "",
+                    url: conChildTable+"?rowId="+basLeft.relateTableRowId,
+                    key:'{"label":"columnEname","value":"rowId"}',
                     value: "",
                     disabled: "false"
                 },
@@ -46,7 +47,8 @@ var proEm = new Vue({
                 },
                 //值来源内容
                 valueOriginContent_1:{
-                    url:"",
+                    url:keySetPageUrl,
+                    key:'',
                     value:"",
                     disabled:"false"
                 },
@@ -64,12 +66,12 @@ var proEm = new Vue({
                                     "jsonData":{
                                         objRowId: basLeft.currentId,//左边表的ID
                                         propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
-                                        wetherExpandPro: proEm.value_4,//属性类型
+                                        wetherExpandPro: proEm.proType_1.value,//属性类型
                                         //wetherExpandPro: proEm.value_4,//扩展属性名
-                                        relateTableColumn: proEm.value_1,//关联表字段
-                                        valueType: proEm.value_2,//值类型
-                                        valueResourceType: proEm.value_3,//值来源类型
-                                        extendsEname: proEm.value_4,//值来源内容
+                                        relateTableColumn: proEm.tableField_1.value,//关联表字段
+                                        valueType: proEm.valueType_1.value,//值类型
+                                        valueResourceType: proEm.valueTypeOrigin_1.value,//值来源类型
+                                        extendsEname: proEm.valueOriginContent_1.value,//值来源内容
                                         valueResourceContent: proEm.addProForm.defaultValue,//默认值
                                     },
                                     "obj":basTop
@@ -125,10 +127,22 @@ var proEm = new Vue({
             //值类型来源
             getValueTypeOrigin_1(datas){
                 this.valueTypeOrigin_1.value=datas.value;
+
+                switch (datas.value){
+                    case "keySet":
+                        this.$refs.valueOriginContent_1.cascaderUrl(keySetPageUrl,'{"label":"keysetName","value":"rowId"}');
+                         break;
+                    case "sequenceRule":
+                        this.$refs.valueOriginContent_1.cascaderUrl(sequenceRuleConfigPageUrl,'{"label":"seqName","value":"rowId"}');
+                        break;
+                    case "dataSet":
+                        this.$refs.valueOriginContent_1.cascaderUrl(datasetConfigPageUrl,'{"label":"datasetName","value":"rowId"}');
+                         break;
+                }
             },
             //值来源内容
             getValueOriginContent_1(datas){
-                this.valueOriginContent_1.value=datas.value;
+                 this.valueOriginContent_1.value=datas.value;
             },
 
             // getChildData_1(datas){
@@ -162,6 +176,20 @@ var proEm = new Vue({
             // },
             cancel() {
                 ibcpLayer.Close(divIndex);
+            }
+        },
+        created(){
+            if(operateOPr==1) {
+                this.proType_1.value="";
+                this.tableField_1.value="";
+                this.valueType_1.value="";
+                this.valueTypeOrigin_1.value="";
+            }
+            if(operateOPr==2){
+                this.proType_1.value="";
+                this.tableField_1.value="";
+                this.valueType_1.value="";
+                this.valueTypeOrigin_1.value="";
             }
         },
         updated() {
