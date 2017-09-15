@@ -33,6 +33,7 @@ var leftKeyValueSet=new Vue({
         leftCurrentChange(row, event, column){
             if(row){
                 this.rowId=row.rowId;
+                this.currentRowId=row.rowId;
                 rightKeyValueSet.getRightData(row.rowId);
             }
         },
@@ -83,11 +84,11 @@ var leftKeyValueSet=new Vue({
         },
         handleSizeChange(val){//每页显示多少条
             this.pageSize=val;
-            this.searchPage();
+            this.searchLeftPage();
         },
         handleCurrentChange(val){//点击第几页
             this.pageNum=val;
-            this.searchPage();
+            this.searchLeftPage();
         },
 
         headSort(column){//列头排序
@@ -114,30 +115,30 @@ var rightKeyValueSet=new Vue({
     el:"#right",
     data: getData.dataObj({
         rightHeight:'',
-        rightInput:'',
+     //   rightInput:'',
+
         editProDivIndex:'',
         rowId:''
     }),
     methods: {
         searchPage(){
-            pagingObj.Examples(ProUrl,leftKeyValueSet.rowId,this.rightInput, this.pageSize,this.pageNum,this,function(){
+            pagingObj.Examples(queryProUrl,leftKeyValueSet.currentRowId,this.input, this.pageSize,this.pageNum,this,function(){
                 rightKeyValueSet.rightCurrentChange(rightKeyValueSet.tableData[0]);
             });
         },
-        rightSearch(){
-            this.searchPage();
+
+        //右边table查询
+        getRightData(id){
+            pagingObj.Examples(queryProUrl,id,this.input,this.pageSize,this.pageNum,this,function(){
+                rightKeyValueSet.rightCurrentChange(rightKeyValueSet.tableData[0]);
+            });
         },
+
         //点击某行
         rightCurrentChange(row, event, column){
             if(row){
                 this.rowId=row.rowId;
             }
-        },
-        //右边table查询
-        getRightData(id){
-            pagingObj.Examples(queryProUrl,id,this.rightInput,this.pageSize,this.pageNum,this,function(){
-                rightKeyValueSet.rightCurrentChange(rightKeyValueSet.tableData[0]);
-            });
         },
         //右边表格编辑
         editRightEvent(){
@@ -171,7 +172,7 @@ var rightKeyValueSet=new Vue({
                     "obj": rightKeyValueSet
                 }
                 gmpAjax.showAjax(data, function (res) {
-                    queryData.getData(ProUrl, rightKeyValueSet.rightInput, leftKeyValueSet.rowId,this);
+                    queryData.getData(queryProUrl, rightKeyValueSet.input, leftKeyValueSet.rowId,this);
                     leftKeyValueSet.searchLeftPage();
                 })
             })
@@ -189,7 +190,7 @@ var rightKeyValueSet=new Vue({
         },
 
         headSort(column){//列头排序
-            pagingObj.headSort(ProUrl,this.rightInput,this.pageSize,this.pageNum,column,this);
+            pagingObj.headSort(queryProUrl,this.input,this.pageSize,this.pageNum,column,this);
         }
     },
     created(){
@@ -227,7 +228,7 @@ var topButtonObj = new Vue({
             var htmlUrl = 'key-value-set-pro-add.html';
             this.divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增明细', '400px', '300px',function(){
                 topButtonObj.isEdit=false;
-                rightKeyValueSet.rightInput='';
+                rightKeyValueSet.input='';
             });
         }
     }

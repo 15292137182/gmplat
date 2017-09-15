@@ -25,7 +25,9 @@ var config=new Vue({
             this.searchPage();
         },
         searchPage(){
-            pagingObj.Example(queryPage,this.input, this.pageSize,this.pageNum,this);
+             pagingObj.Example(queryPage,this.input, this.pageSize,this.pageNum,this,function(){
+                config.onClick(leftKeyValueSet.tableData[0]);
+            });
         },
         onClick(row, event, column){
             this.currentVal=row;
