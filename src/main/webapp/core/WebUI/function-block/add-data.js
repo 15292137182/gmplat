@@ -44,7 +44,7 @@ var em=new Vue({
         funcRowIds:'',
 
         objPro_1:{
-            url:"",
+            url:serverPath + "/businObjPro/queryBusinPro?objRowId="+window.parent.topButtonObj.objId+"&frontRowId="+window.parent.topButtonObj.rowObjId,
             value:"",
             disabled:"false"
         },
@@ -65,7 +65,7 @@ var em=new Vue({
     methods:{
         searchConnectObj(){//查询所有对象属性，弹出对象属性表
             var htmlUrl = 'choose-object-properties.html';
-            this.funcRowIds = window.parent.topButtonObj.rowObjId;
+            // this.funcRowIds = window.parent.topButtonObj.rowObjId;
             littledivIndex = ibcpLayer.ShowIframe(htmlUrl, '关联对象属性', '450px', '500px',false);
         },
         isChecked(){//判断是否显示，选中
@@ -276,6 +276,7 @@ var em=new Vue({
     created(){
         this.relateBusiObjId = window.parent.topButtonObj.objId;//业务对象Id
         this.rightRowId = window.parent.properties.rowId;
+        this.funcRowIds = window.parent.topButtonObj.rowObjId;
 
         if(window.parent.topButtonObj.isEdit){//编辑
             var args={"Block":{funcType:"functionBlockType"},"blockAttribute":{displayWidget:"showControl"}};
