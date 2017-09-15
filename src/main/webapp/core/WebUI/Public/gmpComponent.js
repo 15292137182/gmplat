@@ -78,6 +78,53 @@ Vue.component("single-selection", {
         // 级联下拉框方法
         cascaderEvent(val) {
             this.value = val;
+        },
+        // 级联改变url
+        cascaderUrl(url) {
+            // 获取更新url
+            this.url = url;
+            // 更新options
+            this.getOptions();
+        },
+        getOptions() {
+            // 保存this指针
+            var that = this;
+            // 获取配置value-label
+            var key_set;
+            this.initial.key == undefined ? key_set = "" : key_set = JSON.parse(this.initial.key);
+            // 调用接口获取options
+            if(this.url != "") {
+                $.ajax({
+                    url:this.url,
+                    type:"get",
+                    data: this.params,
+                    dataType:"json",
+                    success:function(res){
+                        if(res.resp.respCode == "000"){
+                            if(res.resp.content.state == "1"){
+                                var _jsonObj = res.resp.content.data;
+                                // 键值集合-有条件数据库表查询 数据结构判断
+                                _jsonObj.data != undefined ? _jsonObj = _jsonObj.data : _jsonObj = _jsonObj;
+                                // 无条件数据库表查询 数据结构判断
+                                _jsonObj.result != undefined ? _jsonObj = _jsonObj.result : _jsonObj = _jsonObj;
+                                // 循环配置value-label
+                                if(key_set != "") {
+                                    for(var i = 0;i < _jsonObj.length;i++) {
+                                        _jsonObj[i].value = _jsonObj[i][key_set.value];
+                                        _jsonObj[i].label = _jsonObj[i][key_set.label];
+                                    }
+                                }
+                                // 赋值options
+                                that.options = _jsonObj;
+                                // console.log(that.options);
+                            }
+                        }
+                    },
+                    error:function(){
+                        alert("错误");
+                    }
+                });
+            }
         }
     },
     mounted() {
@@ -111,38 +158,7 @@ Vue.component("single-selection", {
             };
         }
         // 保存this指针
-        var that = this;
-        // 获取配置value-label
-        var key_set;
-        this.initial.key == undefined ? key_set = "" : key_set = JSON.parse(this.initial.key);
-        // 调用接口获取options
-        $.ajax({
-            url:this.url,
-            type:"get",
-            data: this.params,
-            dataType:"json",
-            success:function(res){
-                if(res.resp.respCode == "000"){
-                    if(res.resp.content.state == "1"){
-                        var _jsonObj = res.resp.content.data;
-                        _jsonObj.data != undefined ? _jsonObj = _jsonObj.data : _jsonObj = _jsonObj;
-                        // 循环添加value-label
-                        if(key_set != "") {
-                            for(var i = 0;i < _jsonObj.length;i++) {
-                                _jsonObj[i].value = _jsonObj[i][key_set.value];
-                                _jsonObj[i].label = _jsonObj[i][key_set.label];
-                            }
-                        }
-                        // 赋值options
-                        that.options = _jsonObj;
-                        // console.log(that.options);
-                    }
-                }
-            },
-            error:function(){
-                alert("错误");
-            }
-        });
+        this.getOptions();
     },
     updated: function () {
         //

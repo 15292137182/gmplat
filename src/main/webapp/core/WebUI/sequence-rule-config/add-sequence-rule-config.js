@@ -411,8 +411,33 @@ var add = new Vue({
                 add.formTable.belongSystemInput=data[0].belongSystem;
                 add.formTable.despInput=data[0].desp;
                 add.formTable.versionInput=data[0].version;
+
+                // add.loadTemplate(data[0].seqContent);
             })
         },
+        loadTemplate(data) {
+            var _arr = data.split("&&");
+            // 编辑状态回填动态实例
+            $.each(_arr, function(index, item) {
+                var _first = item.substr(0, 1);
+                if(_first == "@") {
+                    add.name = "1";
+                    add.add();
+                }
+                if(_first == "$") {
+                    add.name = "2";
+                    add.add();
+                }
+                if(_first == "#") {
+                    add.name = "3";
+                    add.add();
+                }
+                if(_first == "*") {
+                    add.name = "4";
+                    add.add();
+                }
+            });
+        }
     },
     created(){
         // if(window.parent.config.operate ==1){

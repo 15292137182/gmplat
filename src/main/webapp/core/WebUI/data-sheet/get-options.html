@@ -13,12 +13,15 @@
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection :initial="initial_2" ref="cascader">
-                    <!---->
-                </single-selection>
+                <single-selection :initial="initial" ref="cascader"></single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection :initial="initial"></single-selection>
+                <single-selection :initial="initial_3"></single-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <single-selection :initial="initial_2">
+                    <!---->
+                </single-selection>
             </el-col>
         </el-row>
     </div>
@@ -32,8 +35,14 @@
                 return {
                     // 数据库表查询: 查询接口  默认值  是否禁用
                     initial: {
-                        url: serverPath + "/dbTableColumn/queryTabById"+"?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb",
+                        url: "",
                         key: '{"label":"columnEname","value":"rowId"}',
+                        value: [],
+                        disabled: "false"
+                    },
+                    initial_3: {
+                        url: serverPath + '/keySet/queryPage',
+                        key: '{"label":"keysetName","value":"rowId"}',
                         value: [],
                         disabled: "false"
                     },
@@ -51,8 +60,9 @@
                 },
                 getData(data) {
                     // 级联选择方法
-                    if (data != "" || data != undefined) {
-                        this.$refs.cascader.cascaderEvent("search");
+                    if (data.value == "center") {
+//                        this.$refs.cascader.cascaderEvent("search");
+                        this.$refs.cascader.cascaderUrl(serverPath + '/dbTableColumn/queryTabById?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb');
                     }
                     if(JSON.stringify(data) === "{}") {
                         this.$refs.cascader.cascaderEvent("");
