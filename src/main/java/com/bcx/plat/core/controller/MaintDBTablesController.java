@@ -65,11 +65,8 @@ public class MaintDBTablesController extends BaseController {
         Or blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
         List<Map<String, Object>> list = maintDBTablesService.singleSelect(MaintDBTables.class, blankQuery);
         if (list.size() > 0) {
-            for (Map<String, Object> li : list) {
-                li.put("value", li.get("rowId"));
-                li.put("label", li.get("tableCname"));
-            }
             return result(new ServerResult<>(list));
+
         }
         return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
