@@ -17,35 +17,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.io.UnsupportedEncodingException;
 
 /**
- * 键值集合测试类
+ * 键值集合管理Controller测试类
+ * <p>
  * Created by YoungerOu on 2017/9/14.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:spring/spring-*.xml"})
-@WebAppConfiguration // 可调用WEB特性
-public class KeySetControllerTest {
-
-  private static final String URL_TEMPLATE = "/gmp/sys/core/keySet/";
-  @Autowired
-  private KeySetController keySetController;
-  private MockMvc mockMvc;
-
-  @Before
-  public void setup() {
-    mockMvc = MockMvcBuilders.standaloneSetup(keySetController).build();
-  }
-
-  /**
-   * 显示测试结果
-   *
-   * @param resultActions
-   */
-  private void showResult(ResultActions resultActions) throws UnsupportedEncodingException {
-    MvcResult mvcResult = resultActions.andReturn();
-    String result = mvcResult.getResponse().getContentAsString();
-    System.out.println("测试结果：");
-    System.out.println("=====客户端获得返回数据:" + result);
-  }
+public class KeySetControllerTest extends BaseControllerTest<KeySetController> {
 
   @Test
   public void testQueryKeySet() throws Exception {
@@ -53,7 +29,7 @@ public class KeySetControllerTest {
     String search = "[\"showControl\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "queryKeySet")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/queryKeySet")
             .accept(MediaType.APPLICATION_JSON).param("search", search)
     );
     //显示结果
@@ -62,9 +38,9 @@ public class KeySetControllerTest {
 
   @Test
   public void testQueryKeyCode() throws Exception {
-    String keyCode = "test1";
+    String keyCode = "test";
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "queryKeyCode")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/queryKeyCode")
             .accept(MediaType.APPLICATION_JSON).param("keyCode", keyCode)
     );
     showResult(resultActions);
@@ -74,7 +50,7 @@ public class KeySetControllerTest {
   public void testQueryPro() throws Exception {
     String rowId = "6e17656d-2519-4ed0-b6ee-482316d3";
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "queryPro")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/queryPro")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
@@ -87,7 +63,7 @@ public class KeySetControllerTest {
     String search = "grid,form"; // 空格查询条件，confKey和confValue
     String order = "{\"str\":\"rowId\",\"num\":1}";
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "queryProPage")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/queryProPage")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
             .param("search", search)
@@ -101,7 +77,7 @@ public class KeySetControllerTest {
     // 准备参数
     String rowId = "50ab96de-8428-4ddf-9a8d-a4ab2dc3";
     ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders
-        .post(URL_TEMPLATE + "delete").accept(MediaType.APPLICATION_JSON)
+        .post(URL_TEMPLATE + "keySet/delete").accept(MediaType.APPLICATION_JSON)
         .param("rowId", rowId)
     );
     showResult(resultActions);
@@ -116,7 +92,7 @@ public class KeySetControllerTest {
     String desp = "测试2";
     //String belongSystem = "GMP";
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "add")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/add")
             .accept(MediaType.APPLICATION_JSON)
             .param("keysetCode", keysetCode)
             .param("keysetName", keysetName)
@@ -137,7 +113,7 @@ public class KeySetControllerTest {
     String belongModule = "类型";
     String belongSystem = "";
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "modify")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/modify")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
             .param("keysetCode", keysetCode)
@@ -154,10 +130,9 @@ public class KeySetControllerTest {
     String search = "test"; // 空格查询条件 keysetCode,keysetName
     String pageNum = "1";
     String pageSize = "10";
-    //测试未通过，order参数提取rowId，未成功拼接入sql语句
     String order = "{\"str\":\"rowId\",\"num\":1}";
     ResultActions resultActions=this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE+"queryPage")
+        MockMvcRequestBuilders.post(URL_TEMPLATE+"keySet/queryPage")
             .accept(MediaType.APPLICATION_JSON)
             .param("search",search)
             .param("pageNum",pageNum)
@@ -171,7 +146,7 @@ public class KeySetControllerTest {
   public void testQueryById() throws Exception{
     String rowId = "b50d7dae-ba9a-4f3c-a39b-781316a9";
     ResultActions resultActions=this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE+"queryById")
+        MockMvcRequestBuilders.post(URL_TEMPLATE+"keySet/queryById")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId",rowId)
     );

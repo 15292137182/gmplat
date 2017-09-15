@@ -167,7 +167,6 @@ public class KeySetController extends BaseController {
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public PlatResult update(@RequestParam Map<String, Object> param) {
         ServerResult result = new ServerResult();
-        int update;
         if (UtilsTool.isValid(param.get("rowId"))) {
             KeySet keySet = new KeySet();
             KeySet modify = keySet.fromMap(param).buildModifyInfo();
