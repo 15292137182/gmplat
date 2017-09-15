@@ -54,13 +54,10 @@ Vue.component("single-selection", {
     data() {
         return {
             value: "",  // 下拉框选中绑定值
-            label: "",
             isDisabled: false,  // 下拉框是否禁用
             options: [],    // 下拉框option
             url: "",    // 获取option接口
-            params: {},  // 调用接口参数
-            _value: "",
-            _label: ""
+            params: {}  // 调用接口参数
         };
     },
     methods: {
@@ -80,11 +77,125 @@ Vue.component("single-selection", {
             this.value = val;
         },
         // 级联改变url
-        cascaderUrl(url) {
+        cascaderUrl(url, keys) {
             // 获取更新url
             this.url = url;
+            // 获取更新key-value
+            this.key = keys;
             // 更新options
             this.getOptions();
+        },
+        getOptions() {
+            // 保存this指针
+            var that = this;
+            // 获取配置value-label
+            var key_set;
+            this.key == "" ? key_set = "" : key_set = JSON.parse(this.key);
+            // 调用接口获取options
+            if(this.url != "") {
+                $.ajax({
+                    url:this.url,
+                    type:"get",
+                    data: this.params,
+                    dataType:"json",
+                    success:function(res){
+                        if(res.resp.respCode == "000"){
+                            if(res.resp.content.state == "1"){
+                                var _jsonObj = res.resp.content.data;
+                                // 键值集合-有条件数据库表查询 数据结构判断
+                                _jsonObj.data != undefined ? _jsonObj = _jsonObj.data : _jsonObj = _jsonObj;
+                                // 无条件数据库表查询 数据结构判断
+                                _jsonObj.result != undefined ? _jsonObj = _jsonObj.result : _jsonObj = _jsonObj;
+                                // 循环配置value-label
+                                if(key_set != "") {
+                                    for(var i = 0;i < _jsonObj.length;i++) {
+                                        _jsonObj[i].value = _jsonObj[i][key_set.value];
+                                        _jsonObj[i].label = _jsonObj[i][key_set.label];
+                                    }
+                                }
+                                // 赋值options
+                                that.options = _jsonObj;
+                                // console.log(that.options);
+                            }
+                        }
+                    },
+                    error:function(){
+                        alert("错误");
+                    }
+                });
+            }
+        }
+    },
+    mounted() {
+        // 获取初始默认值
+        if(this.initial.value == "" || this.initial.value == undefined) {
+            this.value = ""
+        }else {
+            this.value = this.initial.value;
+        }
+
+        // 获取禁用标记
+        if(this.initial.disabled == "false" || this.initial.disabled == "" || this.initial.disabled == undefined) {
+            this.isDisabled = false;
+        }else {
+            this.isDisabled = true;
+        }
+
+        // 获取options的url
+        if(this.initial.url) {
+            this.url = this.initial.url;
+            this.params = {
+                search:"",
+                pageSize:"",
+                pageNum:""
+            }
+        }else if(this.initial.params) {
+            // 键值集合
+            this.url = serverPath + "/keySet/queryKeyCode";
+            this.params = {
+                keyCode: this.initial.params
+            };
+        }
+
+        // 获取配置label-value
+        this.key = this.initial.key;
+
+        // 获取下拉框options
+        this.getOptions();
+    },
+    updated: function () {
+        //
+    },
+    template: `<el-select @change="changeSelect" v-model="value" :disabled="isDisabled" clearable="true" placeholder="请选择">
+					<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+					</el-option>
+				</el-select>`
+});
+
+/**
+ * @description:多选下拉框组件
+ * @author:liyuanquan
+ */
+Vue.component("multiple-selection", {
+    // 设置参数
+    props: ["initial"],
+    data() {
+        return {
+            value: [],  // 下拉框选中绑定值
+            isDisabled: false,  // 下拉框是否禁用
+            options: [],    // 下拉框option
+            url: "",    // 获取option接口
+            params: {}  // 调用接口参数
+        };
+    },
+    methods: {
+        changeSelect() {
+            // 子组件向父组件传递的方法和参数
+            this.$emit("change-datas", this.value);
         },
         getOptions() {
             // 保存this指针
@@ -152,98 +263,14 @@ Vue.component("single-selection", {
             }
         }else if(this.initial.params) {
             // 键值集合
-            this.url = serverPath + "/keySet/queryKeyCode";
-            this.params = {
-                keyCode: this.initial.params
-            };
-        }
-        // 保存this指针
-        this.getOptions();
-    },
-    updated: function () {
-        //
-    },
-    template: `<el-select @change="changeSelect" v-model="value" :disabled="isDisabled" clearable="true" placeholder="请选择">
-					<el-option
-						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value">
-					</el-option>
-				</el-select>`
-});
-
-/**
- * @description:多选下拉框组件
- * @author:liyuanquan
- */
-Vue.component("multiple-selection", {
-    // 设置参数
-    props: ["initial"],
-    data() {
-        return {
-            value: [],  // 下拉框选中绑定值
-            label: "",
-            isDisabled: false,  // 下拉框是否禁用
-            options: [],    // 下拉框option
-            url: "",    // 获取option接口
-            params: {}  // 调用接口参数
-        };
-    },
-    methods: {
-        changeSelect() {
-            // 子组件向父组件传递的方法和参数
-            this.$emit("change-datas", this.value);
-        }
-    },
-    mounted() {
-        // 获取初始默认值
-        if(this.initial.value == "" || this.initial.value == undefined) {
-            this.value = ""
-        }else {
-            this.value = this.initial.value;
-        }
-
-        // 获取禁用标记
-        if(this.initial.disabled == "false" || this.initial.disabled == "" || this.initial.disabled == undefined) {
-            this.isDisabled = false;
-        }else {
-            this.isDisabled = true;
-        }
-
-        // 获取options的url
-        if(this.initial.url) {
-            this.url = this.initial.url;
-            this.params = {
-                search:"",
-                pageSize:"",
-                pageNum:""
-            }
-        }else if(this.initial.params) {
-            // 键值集合
             this.url = serverPath + "";
             this.params = this.initial.params;
         }
+
         // 调用接口获取options
-        var that = this;
-        $.ajax({
-            url:this.url,
-            type:"get",
-            data: this.params,
-            dataType:"json",
-            success:function(res){
-                if(res.resp.respCode == "000"){
-                    if(res.resp.content.state == "1"){
-                        that.options = res.resp.content.data;
-                    }
-                }
-            },
-            error:function(){
-                alert("错误");
-            }
-        });
+        this.getOptions();
     },
-    template: `<el-select @change="changeSelect" v-model="value" :disabled="isDisabled" multiple placeholder="请选择">
+    template: `<el-select @change="changeSelect" v-model="value" multiple :disabled="isDisabled" placeholder="请选择">
 					<el-option
 						v-for="item in options"
 						:key="item.value"

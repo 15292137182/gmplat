@@ -23,6 +23,9 @@
                     <!---->
                 </single-selection>
             </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <multiple-selection :initial="initial_3"></multiple-selection>
+            </el-col>
         </el-row>
     </div>
 
@@ -36,7 +39,7 @@
                     // 数据库表查询: 查询接口  默认值  是否禁用
                     initial: {
                         url: "",
-                        key: '{"label":"columnEname","value":"rowId"}',
+                        key: '',
                         value: [],
                         disabled: "false"
                     },
@@ -62,7 +65,7 @@
                     // 级联选择方法
                     if (data.value == "center") {
 //                        this.$refs.cascader.cascaderEvent("search");
-                        this.$refs.cascader.cascaderUrl(serverPath + '/dbTableColumn/queryTabById?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb');
+                        this.$refs.cascader.cascaderUrl(serverPath + '/dbTableColumn/queryTabById?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb', '{"label":"columnEname","value":"rowId"}');
                     }
                     if(JSON.stringify(data) === "{}") {
                         this.$refs.cascader.cascaderEvent("");
