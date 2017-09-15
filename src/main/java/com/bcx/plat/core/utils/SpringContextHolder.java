@@ -1,12 +1,9 @@
 package com.bcx.plat.core.utils;
 
-import javax.servlet.ServletContext;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Spring 工具类 Created by HCL on 2017/7/28.
@@ -42,15 +39,6 @@ public class SpringContextHolder implements ApplicationContextAware {
   public static ApplicationContext getApplicationContext() {
     checkApplicationContext();
     return applicationContext;
-  }
-
-  /**
-   * 该方法用于获取 spring-web 中的 webApplication
-   *
-   * @return 返回 WebApplicationContext
-   */
-  public static WebApplicationContext getWebApplicationContext() {
-    return WebApplicationContextUtils.getWebApplicationContext(getBean(ServletContext.class));
   }
 
   /**

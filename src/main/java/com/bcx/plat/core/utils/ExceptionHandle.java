@@ -1,22 +1,13 @@
 package com.bcx.plat.core.utils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.bcx.plat.core.base.BaseConstants;
-import com.bcx.plat.core.constants.Message;
 import org.postgresql.util.PSQLException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 本框架任何一处抛出异常时，若该异常没有被程序内部主动捕捉，都将调用该异常处理器 前提是该异常由 servlet 触发 Created by HCL on 2017/7/14.
@@ -39,11 +30,9 @@ public class ExceptionHandle implements HandlerExceptionResolver {
       PrintWriter writer = response.getWriter();
       if ((ex).getCause() instanceof PSQLException) {
         writer.write("dataError");
-
       }
       writer.flush();
       writer.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
