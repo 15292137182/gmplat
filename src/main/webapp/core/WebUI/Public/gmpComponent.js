@@ -58,7 +58,9 @@ Vue.component("single-selection", {
             isDisabled: false,  // 下拉框是否禁用
             options: [],    // 下拉框option
             url: "",    // 获取option接口
-            params: {}  // 调用接口参数
+            params: {},  // 调用接口参数
+            _value: "",
+            _label: ""
         };
     },
     methods: {
@@ -108,8 +110,11 @@ Vue.component("single-selection", {
                 keyCode: this.initial.params
             };
         }
-        // 调用接口获取options
+        // 保存this指针
         var that = this;
+        // 获取配置value-label
+        var key_set = JSON.parse(this.initial.key);
+        // 调用接口获取options
         $.ajax({
             url:this.url,
             type:"get",
@@ -118,7 +123,14 @@ Vue.component("single-selection", {
             success:function(res){
                 if(res.resp.respCode == "000"){
                     if(res.resp.content.state == "1"){
-                        that.options = res.resp.content.data;
+                        var _jsonObj = res.resp.content.data;
+                        // 循环添加value-label
+                        for(var i = 0;i < _jsonObj.length;i++) {
+                            _jsonObj[i].value = _jsonObj[i][key_set.value];
+                            _jsonObj[i].label = _jsonObj[i][key_set.label];
+                        }
+                        // 赋值options
+                        that.options = _jsonObj;
                     }
                 }
             },
@@ -149,7 +161,7 @@ Vue.component("multiple-selection", {
     props: ["initial"],
     data() {
         return {
-            value: "",  // 下拉框选中绑定值
+            value: [],  // 下拉框选中绑定值
             label: "",
             isDisabled: false,  // 下拉框是否禁用
             options: [],    // 下拉框option

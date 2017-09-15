@@ -24,6 +24,7 @@ document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/Se
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcp.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/cookie_util.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpLayer.js" charset="UTF-8"></script>');
+document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/gmpLayer.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAjax.js" charset="UTF-8"></script>');
 // document.write('<script type="text/javascript" src="' + path +  '/WebUI/Public/ibcpSign.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpSignature.js" charset="UTF-8"></script>');

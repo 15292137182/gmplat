@@ -40,7 +40,6 @@
         </el-col>
     </div>
 
-    <script type="text/javascript" src="gmp-dynamic.js"></script>
 </body>
 <script>
     var vm = new Vue({
@@ -52,7 +51,7 @@
         },
         methods:{
             addBlock(){
-                this.divIndex = ibcpLayer.ShowDiv('demo2.html','新增表单测试','400px', '500px',function(){
+                this.divIndex = gmpPopup.dynamicDiv('demo2.html','新增表单测试','400px', '500px',function(){
                     vm.edit = false;
                 })
             },

@@ -19,30 +19,12 @@
     <div>
         <el-row id="app">
             <el-col :span="24">
-                <components data="first1" :is="gmpForm" code="obj102017-09-01000002" :child-form-table="formTable"></components>
+                <components :is="gmpForm" data='{"main":"#app","code":"obj102017-09-01000002"}' :child-form-table="formTable"></components>
             </el-col>
             <el-col :span="10" offset="8">
                 <el-button type="info" @click="demo">获取json对象</el-button>
             </el-col>
         </el-row>
     </div>
-
-    <script>
-        // 配置方法
-        GmpFormObj.render({
-            params: {
-                main: "#app",
-                comp: "formTable",
-                funBlock: "codeId",
-                postUrl: "www.baidu.com",
-                postParam: "{rowId: '123'}"
-            },
-            // 需要执行的方法
-            done: function (_obj) {
-                // any methods
-                // _obj.
-            }
-        });
-    </script>
 </body>
 </html>

@@ -17,6 +17,9 @@
                     <!---->
                 </single-selection>
             </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <multiple-selection :initial="initial"></multiple-selection>
+            </el-col>
         </el-row>
     </div>
 
@@ -28,10 +31,10 @@
             data() {
                 return {
                     // 数据库表查询: 查询接口  默认值  是否禁用
-                    initial: {url: serverPath + "/maintTable/query", value: "", disabled: "false"},
-                    // 键值集合设置参数: 参数(键值集合)  默认值  是否禁用
-                    initial_1: {params: "functionBlockAlign", value: "", disabled: "false"},
-                    initial_2: {params: "functionBlockType", value: "", disabled: "false"}
+                    initial: {url: serverPath + "/maintTable/query", value: [], disabled: "false"},
+                    // 键值集合设置参数: 参数(键值集合)  key-set配置  默认值  是否禁用
+                    initial_1: {params: "functionBlockAlign", key: '{"value": "confKey", "label": "confValue"}', value: "", disabled: "false"},
+                    initial_2: {params: "functionBlockType", key: '{"value": "confKey", "label": "confValue"}', value: "", disabled: "false"}
                 }
             },
             created() {
