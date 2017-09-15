@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 
 
 /**
@@ -118,15 +119,10 @@ public class DataSetConfigController extends BaseController {
                               @RequestParam(value = "pageNum", required = false) Integer pageNum,
                               @RequestParam(value = "pageSize", required = false) Integer pageSize,
                               String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
-    Or blankQuery = UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> result;
-    if (UtilsTool.isValid(pageSize)) {
-      result = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-    } else {
-      result = new PageResult(dataSetConfigService.selectMap(blankQuery, orders));
-    }
-    return result(new ServerResult<>(result));
+    LinkedList<Order> orders = dataSort(order);
+    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    PageResult<Map<String, Object>> pageResult = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    return result(new ServerResult<>(pageResult));
   }
 
   /**
