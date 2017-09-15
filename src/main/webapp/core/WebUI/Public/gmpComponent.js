@@ -113,7 +113,8 @@ Vue.component("single-selection", {
         // 保存this指针
         var that = this;
         // 获取配置value-label
-        var key_set = JSON.parse(this.initial.key);
+        var key_set;
+        this.initial.key == undefined ? key_set = "" : key_set = JSON.parse(this.initial.key);
         // 调用接口获取options
         $.ajax({
             url:this.url,
@@ -124,13 +125,17 @@ Vue.component("single-selection", {
                 if(res.resp.respCode == "000"){
                     if(res.resp.content.state == "1"){
                         var _jsonObj = res.resp.content.data;
+                        _jsonObj.data != undefined ? _jsonObj = _jsonObj.data : _jsonObj = _jsonObj;
                         // 循环添加value-label
-                        for(var i = 0;i < _jsonObj.length;i++) {
-                            _jsonObj[i].value = _jsonObj[i][key_set.value];
-                            _jsonObj[i].label = _jsonObj[i][key_set.label];
+                        if(key_set != "") {
+                            for(var i = 0;i < _jsonObj.length;i++) {
+                                _jsonObj[i].value = _jsonObj[i][key_set.value];
+                                _jsonObj[i].label = _jsonObj[i][key_set.label];
+                            }
                         }
                         // 赋值options
                         that.options = _jsonObj;
+                        // console.log(that.options);
                     }
                 }
             },

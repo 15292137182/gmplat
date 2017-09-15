@@ -55,7 +55,7 @@ var gmpPopup = (function() {
                             _json = item.attributes["data"].value;
                             param = item.attributes[":child-form-table"].value;
 
-                            GmpFormObj.render(_json, param);
+                            GmpForm.render(_json, param);
                         }
 
                         if (callback) {
@@ -74,13 +74,16 @@ var gmpPopup = (function() {
     }
 })();
 
+// 全局变量
+var gmpFormObj = {};
+
 /**
  * @description:创建gmp动态模块
  * @author:liyuanquan
  */
 
 // 表单对象
-var GmpFormObj = (function() {
+var GmpForm = (function() {
     // 用户配置
     function render(data, param) {
         // 获取配置参数
@@ -97,7 +100,8 @@ var GmpFormObj = (function() {
                 var form = new GmpForm1(compId, code, arr, mainId, "", "");
                 // 创建vue实例
                 form.bulidComponent();
-                done(form);
+                // 缓存实例化对象
+                gmpFormObj[compId] = form;
             }
             if(arr[0].funcType == "table") {}
             if(arr[0].funcType == "search") {}
