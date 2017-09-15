@@ -129,8 +129,8 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                      @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                      @RequestParam(value = "pageNum") int pageNum,
+                                      @RequestParam(value = "pageSize") int pageSize,
                                       String order) {
     LinkedList<Order> orders = dataSort(order);
     Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
