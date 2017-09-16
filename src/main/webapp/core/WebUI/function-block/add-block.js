@@ -31,7 +31,7 @@ var em=new Vue({
             url:businObjPageUrl,
             key:'{"label":"objectName","value":"rowId"}',
             value:'',
-            false:''
+            disabled:"false"
         },
 
         //所属模块

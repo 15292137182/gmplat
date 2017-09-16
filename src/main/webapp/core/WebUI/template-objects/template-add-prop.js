@@ -15,6 +15,11 @@ var addTempProp = new Vue({
                     comContent:''
                 },
                 value_1:'',
+                valueType_1:{
+                    params:"valueType",
+                    value:"",
+                    disabled:"false"
+                }
             }
         },
     methods: {
@@ -68,8 +73,9 @@ var addTempProp = new Vue({
         cancelTempProp(){
             ibcpLayer.Close(divIndex);
         },
-        getChildData_1(datas){
-            this.value_1 = datas.value;
+        //值类型下拉框事件
+        getValueType_1(datas){
+            this.valueType_1.value = datas.value;
         }
 
     }

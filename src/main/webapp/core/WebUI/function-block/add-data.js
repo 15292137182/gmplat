@@ -10,7 +10,7 @@ var em=new Vue({
     data: {
         labelPosition:'right',
         formTable:{
-            tableInput:'',//关联对象属性
+           // tableInput:'',//关联对象属性
             nameTitle:'',//显示标题
             // nameInput:'',//显示控件
             lengthSection:'',//长度区间
@@ -43,6 +43,7 @@ var em=new Vue({
         ExactSearch:'',//是否精确查询
         funcRowIds:'',
 
+        //对象属性下拉框
         objPro_1:{
             url:serverPath + "/businObj/queryProPage?rowId="+window.parent.functionBlock.relateBusiObj,
             key:'{"label":"propertyName","value":"rowId"}',
@@ -78,7 +79,7 @@ var em=new Vue({
         },
         conformEvent(){
             var data = [
-                this.$refs.tableInput,
+                //this.$refs.tableInput,
                 this.$refs.nameTitle,
                 // this.$refs.lengthSection,
                 // this.$refs.testFunction,
@@ -91,10 +92,10 @@ var em=new Vue({
                     return;
                 }
             }
-            if(!this.checkType && this.$refs.nameInput==''){
-                ibcpLayer.ShowMsg(this.$refs.nameInput.placeholder);
-                return;
-            }
+            // if(!this.checkType && this.$refs.nameInput==''){
+            //     ibcpLayer.ShowMsg(this.$refs.nameInput.placeholder);
+            //     return;
+            // }
             //this.sortArrFun(this.sortNumber);//排序
             this.funcRowId = window.parent.topButtonObj.rowObjId;
             this.addObjectProperties();//新增
@@ -108,11 +109,11 @@ var em=new Vue({
                 "url":em.url,
                 "jsonData":{
                     funcRowId:em.funcRowId,//功能块ID
-                    relateBusiPro:em.dataId,//业务对象属性ID
+                    relateBusiPro:em.objPro_1.value,//业务对象属性ID
                     attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.formTable.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
-                    displayWidget:em.$refs.show.value,//显示控件
+                    displayWidget:em.showControl_1.value,//显示控件
                     wetherReadonly:em.checkedReady,//只读
                     allowEmpty:em.checkedNull,//允许为空
                     lengthInterval:em.formTable.lengthSection,//长度区间
@@ -120,14 +121,14 @@ var em=new Vue({
                     displayFunc:em.formTable.displayFunction,//显示函数
                     sort:em.formTable.sortNumber,//排序
                     widthSetting:em.formTable.Twidth,//宽度
-                    align:em.$refs.align.value,//对齐方式
+                    align:em.align_1.value,//对齐方式
                     exactQuery:em.ExactSearch,//是否精确查询
                     supportSort:em.SupportSorting,//支持排序
                     keywordOne:em.formTable.Keyword1,//关键字1
                     keywordTwo:em.formTable.Keyword2,//关键字2
                     keywordThree:em.formTable.Keyword3,//关键字3
                 },
-                "obj":window.parent.functionBlock
+                "obj":em
             }
             gmpAjax.showAjax(data,function(res){
                     //showMsg.MsgOk(window.parent.functionBlock,res);
@@ -145,11 +146,11 @@ var em=new Vue({
                 "jsonData":{
                     rowId:em.rowId,//新增属性的ID
                     funcRowId:em.funcRowId,//功能块ID
-                    relateBusiPro:em.dataId,//业务对象属性ID
+                    relateBusiPro:em.objPro_1.value,//业务对象属性ID
                     attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
-                    displayWidget:em.$refs.show.value,//显示控件
+                    displayWidget:em.showControl_1.value,//显示控件
                     wetherReadonly:em.checkedReady,//只读
                     allowEmpty:em.checkedNull,//允许为空
                     lengthInterval:em.lengthSection,//长度区间
@@ -157,7 +158,7 @@ var em=new Vue({
                     displayFunc:em.displayFunction,//显示函数
                     sort:em.sortNumber,//排序
                     widthSetting:em.formTable.Twidth,//宽度
-                    align:em.$refs.align.value,//对齐方式
+                    align:em.align_1.value,//对齐方式
                     exactQuery:em.ExactSearch,//是否精确查询
                     supportSort:em.SupportSorting,//支持排序
                     keywordOne:em.formTable.Keyword1,//关键字1
@@ -213,7 +214,7 @@ var em=new Vue({
                 var data = res;
                 em.rowId=data[0].rowId;//新增成功后返回的ID
                 em.funcRowId=data[0].funcRowId;//功能块ID
-                em.dataId=data[0].relateBusiPro;//业务对象属性ID
+                em.$refs.objPro_1.cascaderEvent(data[0].relateBusiPro);//业务对象属性ID
                 em.formTable.nameTitle=data[0].displayTitle;//显示标题
                 if(data[0].wetherDisplay =="true"){
                     em.checked=true;//是否显示
@@ -232,13 +233,12 @@ var em=new Vue({
                 if(data[0].supportSort =="true"){
                     em.SupportSorting=true;//支持排序
                 }
-                em.$refs.show.value=data[0].displayWidget;
-                em.formTable.nameInput=data[0].displayWidget;//显示控件
+                em.$refs.showControl_1.cascaderEvent(data[0].displayWidget);
                 em.formTable.lengthSection=data[0].lengthInterval;//长度区间
                 em.formTable.testFunction=data[0].validateFunc;//验证函数
                 em.formTable.displayFunction=data[0].displayFunc;//显示函数
                 em.formTable.sortNumber=data[0].sort;//排序
-                em.$refs.align.value=data[0].align//下拉框
+                em.$refs.align_1.cascaderEvent(data[0].align);//下拉框
                 em.formTable.Twidth=data[0].widthSetting//宽度
                 em.formTable.Keyword1=data[0].keywordOne//关键字1
                 em.formTable.Keyword2=data[0].keywordTwo//关键字2
@@ -262,16 +262,16 @@ var em=new Vue({
         },
 
         //点击对象属性
-        getObjPro_1(){
-
+        getObjPro_1(datas){
+            em.objPro_1.value=datas.value;
         },
         //点击显示控件下拉框
-        getShowControl_1(){
-
+        getShowControl_1(datas){
+            em.showControl_1.value=datas.value;
         },
         //点击对齐方式下拉框
-        getAlign_1(){
-
+        getAlign_1(datas){
+            em.align_1.value=datas.value;
         }
     },
     created(){

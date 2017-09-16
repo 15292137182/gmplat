@@ -75,7 +75,7 @@ public class FrontFuncProController extends
         String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));
         List<FrontFuncPro> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
         int insert = -1;
-        if (UtilsTool.isValid(rowId)) {
+        if (!UtilsTool.isValid(rowId)) {
             FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
             insert = frontFuncPro.insert();
             if (insert == -1) {
