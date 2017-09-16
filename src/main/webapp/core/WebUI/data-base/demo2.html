@@ -19,12 +19,28 @@
     <div>
         <el-row id="app">
             <el-col :span="24">
-                <components :is="gmpForm" data='{"main":"#app","code":"obj102017-09-01000002"}' :child-form-table="formTable"></components>
+                <components :is="gmpForm" data='{"main":"#app","code":"obj102017-09-16000001"}' :child-form-table="formTable"></components>
             </el-col>
+        </el-row>
+        <el-row id="app1">
             <el-col :span="10" offset="8">
                 <el-button type="info" @click="demo">获取json对象</el-button>
             </el-col>
         </el-row>
     </div>
 </body>
+<script>
+    var de = new Vue({
+        el:"#app1",
+        data:{},
+        mounted() {
+            console.log(GmpForm.formTable);
+        },
+        methods:{
+            demo() {
+                console.log(GmpForm.formTable.getData());
+            }
+        }
+    })
+</script>
 </html>

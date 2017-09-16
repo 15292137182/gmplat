@@ -168,7 +168,6 @@ Vue.component("single-selection", {
 
         // 获取配置label-value
         this.initial.key == undefined ? this.key = '{"value": "confKey", "label": "confValue"}' : this.key = this.initial.key;
-        console.log(this.key);
 
         // 获取下拉框options
         this.getOptions();

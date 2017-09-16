@@ -3,7 +3,7 @@
  */
 
 /**
- * @description:
+ * @description:gmp弹出框方法定义
  * @author:liyuanquan
  */
 var gmpPopup = (function() {
@@ -55,7 +55,7 @@ var gmpPopup = (function() {
                             _json = item.attributes["data"].value;
                             param = item.attributes[":child-form-table"].value;
 
-                            GmpForm.render(_json, param);
+                            dynamicObj.render(_json, param);
                         }
 
                         if (callback) {
@@ -67,15 +67,35 @@ var gmpPopup = (function() {
         });
 
         return divIndex;
-    }
+    };
+
+    var throwMsg = function (msg) {
+        gmpPopIndex = gmpPopIndex + 10;
+        layer.open({
+            type: 0,
+            skin: 'layui-layer-lan',
+            anim: 5,
+            title: '提示',
+            fix: false,
+            maxmin: false,
+            content: msg,
+            resize: false,
+            scrollbar: false,
+            zIndex: gmpPopIndex,
+            end: function () {}
+        });
+    };
 
     return {
-        dynamicDiv: dynamicDiv
+        dynamicDiv: dynamicDiv,
+        throwMsg: throwMsg
     }
 })();
 
 // 全局变量
-var gmpFormObj = {};
+var GmpForm = {};
+var GmpTable = {};
+var GmpSearch = {};
 
 /**
  * @description:创建gmp动态模块
@@ -83,7 +103,7 @@ var gmpFormObj = {};
  */
 
 // 表单对象
-var GmpForm = (function() {
+var dynamicObj = (function() {
     // 用户配置
     function render(data, param) {
         // 获取配置参数
@@ -95,16 +115,28 @@ var GmpForm = (function() {
     function create(mainId, code, compId) {
         htmlAjax.keyValue(code, function(res) {
             var arr = res.resp.content.data;
-            // 判断模板类型
-            if(arr[0].funcType == "form") {
-                var form = new GmpForm1(compId, code, arr, mainId, "", "");
-                // 创建vue实例
-                form.bulidComponent();
-                // 缓存实例化对象
-                gmpFormObj[compId] = form;
+            if(arr != "") {
+                // 判断模板类型
+                if(arr[0].funcType == "form") {
+                    var form = new gmpFormObj(compId, code, arr, mainId, "", "");
+                    // 创建vue实例
+                    form.bulidComponent(form.getData);
+                    // 缓存实例化对象
+                    GmpForm[compId] = form;
+
+                    var _json = {
+                        test: "zxc",
+                        test00: "2017-09-17"
+                    }
+                    form.loadData(_json);
+                }
+                if(arr[0].funcType == "table") {}
+                if(arr[0].funcType == "search") {}
+            }else {
+                // 提示错误信息
+                var _error = res.resp.content.msg;
+                gmpPopup.throwMsg(_error);
             }
-            if(arr[0].funcType == "table") {}
-            if(arr[0].funcType == "search") {}
         });
     };
 
@@ -120,7 +152,7 @@ var GmpForm = (function() {
  */
 
 // 动态表单对象
-function GmpForm1(compId, blockId, formBlockItems, vueEl, postUrl, postParam, formUrl) {
+function gmpFormObj(compId, blockId, formBlockItems, vueEl, postUrl, postParam, formUrl) {
     this.compId = compId; //父组件名字
     this.blockId = blockId; //功能块标识
     this.formBlockItems = formBlockItems; //表单块key值集合
@@ -137,12 +169,12 @@ function GmpForm1(compId, blockId, formBlockItems, vueEl, postUrl, postParam, fo
 };
 
 // 获取vue实例对象
-GmpForm1.prototype.getVueObj = function() {
+gmpFormObj.prototype.getVueObj = function() {
     return this.vueObj;
 };
 
 // 父组件数据
-GmpForm1.prototype.searchSelect = function() {
+gmpFormObj.prototype.searchSelect = function() {
     var compId = this.compId;
     var arr = this.formBlockItems;
     for (var j = 0; j < arr.length; j++) {
@@ -159,7 +191,7 @@ GmpForm1.prototype.searchSelect = function() {
 };
 
 // 构建表单组件
-GmpForm1.prototype.bulidComponent = function(exeFunction) {
+gmpFormObj.prototype.bulidComponent = function(exeFunction) {
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
     var that = this;
     var id = that.vueEl;
@@ -187,7 +219,7 @@ GmpForm1.prototype.bulidComponent = function(exeFunction) {
 };
 
 // 获取表单数据
-GmpForm1.prototype.getData = function() {
+gmpFormObj.prototype.getData = function() {
     var arr = this.formBlockItems;
     var formObj = this.formObj;
     var data = {};
@@ -217,7 +249,7 @@ GmpForm1.prototype.getData = function() {
 };
 
 // 数据直接加载表单域
-GmpForm1.prototype.loadData = function(json) {
+gmpFormObj.prototype.loadData = function(json) {
     var formObj = this.formObj;
     for (var key in json) {
         formObj[key] = json[key];
@@ -225,24 +257,24 @@ GmpForm1.prototype.loadData = function(json) {
 };
 
 // 获取表单域中控件的值
-GmpForm1.prototype.getItemValue = function(key) {
+gmpFormObj.prototype.getItemValue = function(key) {
     return this.formObj[key];
 };
 
 // 设置表单域中控制的值
-GmpForm1.prototype.setItemValue = function(key, value) {
+gmpFormObj.prototype.setItemValue = function(key, value) {
     this.formObj[key] = value;
 };
 
 // 获取表单域中控件的对象
-GmpForm1.prototype.getItem = function(key) {
+gmpFormObj.prototype.getItem = function(key) {
     var selectDom = "[data=" + key + "]";
     var dom = $(selectDom).children();
     return dom;
 };
 
 // 获取 表单配置参数
-GmpForm1.prototype.getOptions = function() {
+gmpFormObj.prototype.getOptions = function() {
     var data = {};
     data.compId = this.compId; //父组件名字
     data.blockId = this.blockId; //功能块标识
@@ -259,13 +291,13 @@ GmpForm1.prototype.getOptions = function() {
 };
 
 // 设置 表单ajax参数
-GmpForm1.prototype.setOptions = function(json) {
+gmpFormObj.prototype.setOptions = function(json) {
     this.postUrl = json.postUrl; //获取后端数据接口
     this.postParam = json.postParam; //请求参数参数json
 };
 
 // 获取表单域数据
-GmpForm1.prototype.request = function(callback) {
+gmpFormObj.prototype.request = function(callback) {
     var data = this.postParam;
     console.log(this.postParam);
     var url = this.postUrl;
@@ -282,7 +314,7 @@ GmpForm1.prototype.request = function(callback) {
 };
 
 // 禁用 表单域控件
-GmpForm1.prototype.lock = function(keyArr) {
+gmpFormObj.prototype.lock = function(keyArr) {
     for (var j = 0; j < keyArr.length; j++) {
         var disabled = keyArr[j] + "Disabled";
         this.formObj.disabled[disabled] = true;
@@ -290,14 +322,14 @@ GmpForm1.prototype.lock = function(keyArr) {
 };
 
 // 启用 表单域控件
-GmpForm1.prototype.unlock = function(keyArr) {
+gmpFormObj.prototype.unlock = function(keyArr) {
     for (var j = 0; j < keyArr.length; j++) {
         var disabled = keyArr[j] + "Disabled";
         this.formObj[disabled] = false;
     }
 }
 //清空表单域数据
-GmpForm1.prototype.clear = function() {
+gmpFormObj.prototype.clear = function() {
     var formObj = this.formObj;
     for (var key in formObj) {
         if (key != "disabled") {
@@ -307,7 +339,7 @@ GmpForm1.prototype.clear = function() {
 };
 
 // 提交表单
-GmpForm1.prototype.submit = function(json, callback) {
+gmpFormObj.prototype.submit = function(json, callback) {
     var that = this;
     if (json["formUrl"] == 'undefined') {
         if (that.formUrl == '') {

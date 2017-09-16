@@ -16,7 +16,10 @@ new_vue.prototype.data=function (type) {
     if(type=='1'){
         return function(){
             return {
-                constantValue:""
+                render: {
+                    show: true,
+                    constantValue:""
+                }
             }
         }
     }
@@ -24,10 +27,13 @@ new_vue.prototype.data=function (type) {
     if(type=='2'){
         return function(){
             return {
-                keyInput:'',
-                valueInput:'',
-                checked:true,
-                childObjoptions: window.parent.config.objoptions,
+                render: {
+                    show: true,
+                    keyInput:'',
+                    valueInput:'',
+                    checked:true,
+                    childObjoptions: window.parent.config.objoptions,
+                }
             }
         }
     }
@@ -35,8 +41,11 @@ new_vue.prototype.data=function (type) {
     if(type=='3'){
         return function(){
             return {
-                dateValue:'',
-                checked:true,
+                render: {
+                    show: true,
+                    dateValue:'',
+                    checked:true
+                }
             }
         }
     }
@@ -44,12 +53,15 @@ new_vue.prototype.data=function (type) {
     if(type=='4'){
         return function(){
             return{
-                numKey:'',
-                numLen:'',
-                dateCircle:'',
-                relatedConstantKey:'',
-                checked: false,
-                dates: ''
+                render: {
+                    show: true,
+                    numKey:'',
+                    numLen:'',
+                    dateCircle:'',
+                    relatedConstantKey:'',
+                    checked: false,
+                    dates: ''
+                }
             }
         }
     }
@@ -62,7 +74,7 @@ new_vue.prototype.creat = function(_id, type) {
 
     //常量模板
     if(type=='1'){
-        _template=`<el-form :prop="index" type="1">
+        _template=`<el-form type="1" v-show="render.show">
                         <el-row>
                             <el-col :span="1">
                                 <el-form-item>
@@ -71,14 +83,14 @@ new_vue.prototype.creat = function(_id, type) {
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="常量" label-width="40px">
-                                    <el-input @blur="getData" v-data="constantValue" v-model="constantValue" placeholder="请输入值"></el-input>
+                                    <el-input @blur="getData" v-model="render.constantValue" placeholder="请输入值"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>`;
     }
     if(type=='2'){
-        _template=`<el-form :prop="index" type="2">
+        _template=`<el-form type="2" v-show="render.show">
                         <el-row>
                             <el-col :span="1">
                                 <el-form-item>
@@ -92,24 +104,24 @@ new_vue.prototype.creat = function(_id, type) {
                             </el-col>
                             <el-col :span="4">
                                 <el-form-item label="或" label-width="20px">
-                                    <el-input @blur="getData" v-data="keyInput" v-model="keyInput" placeholder="请输入键"/>
+                                    <el-input @blur="getData" v-model="render.keyInput" placeholder="请输入键"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="默认值" label-width="80px">
-                                    <el-input @blur="getData" v-data="valueInput" v-model="valueInput" placeholder="请输入默认值"/>
+                                    <el-input @blur="getData" v-model="render.valueInput" placeholder="请输入默认值"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="是否显示">
-                                    <el-checkbox @blur="getData" v-data="checked" v-model="checked"></el-checkbox>
+                                    <el-checkbox @blur="getData" v-model="render.checked"></el-checkbox>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>`;
     }
     if(type=='3'){
-        _template=`<el-form :prop="index" type="3">
+        _template=`<el-form type="3" v-show="render.show">
                         <el-row>
                                 <el-col :span="1">
                                     <el-form-item>
@@ -118,7 +130,7 @@ new_vue.prototype.creat = function(_id, type) {
                                 </el-col>
                                 <el-col :span="5">
                                     <el-form-item label="日期" label-width="40px">
-                                        <el-input placeholder="请输入日期格式" @blur="getData" v-data="dateValue" v-model="dateValue"></el-input>
+                                        <el-input placeholder="请输入日期格式" @blur="getData" v-model="render.dateValue"></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="4">
@@ -127,14 +139,14 @@ new_vue.prototype.creat = function(_id, type) {
                     
                                 <el-col :span="5">
                                     <el-form-item label="是否显示">
-                                        <el-checkbox @change="getData" v-data="checked" v-model="checked"></el-checkbox>
+                                        <el-checkbox @change="getData" v-model="render.checked"></el-checkbox>
                                     </el-form-item>
                                 </el-col>
                         </el-row>
                     </el-form>`;
     }
     if(type=='4'){
-        _template=`<el-form :prop="index" type="4">
+        _template=`<el-form type="4" v-show="render.show">
                         <el-row>
                             <el-col :span="1">
                                <el-form-item>
@@ -143,29 +155,29 @@ new_vue.prototype.creat = function(_id, type) {
                             </el-col>
                             <el-col :span="5">
                                 <el-form-item label="序号" label-width="40px">
-                                    <el-input placeholder="请输入键" @blur="getData" v-data="numKey" v-model="numKey"></el-input>
+                                    <el-input placeholder="请输入键" @blur="getData" v-model="render.numKey"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
                                <el-form-item label="长度" label-width="70px">
-                                   <el-input placeholder="请输入" @blur="getData" v-data="numLen" v-model="numLen"></el-input>
+                                   <el-input placeholder="请输入" @blur="getData" v-model="render.numLen"></el-input>
                                </el-form-item>
                             </el-col>
                             <el-col :span="4">
                                <el-form-item label="循环" label-width="70px">
-                                   <el-select placeholder="请选择" @change="getData" v-data="dateCircle" v-model="dateCircle" style="width: 100px">
-                                       <el-option v-for="item in dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>
+                                   <el-select placeholder="请选择" @change="getData" v-model="render.dateCircle" style="width: 100px">
+                                       <el-option v-for="item in render.dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>
                                    </el-select>
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
                                <el-form-item label="关联变量键" label-width="120px">
-                                   <el-input placeholder="请输入" @blur="getData" v-data="relatedConstantKey" v-model="relatedConstantKey"></el-input>
+                                   <el-input placeholder="请输入" @blur="getData" v-model="render.relatedConstantKey"></el-input>
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
                                <el-form-item label="是否显示">
-                                   <el-checkbox @change="getData" v-data="checked" v-model="checked"></el-checkbox>
+                                   <el-checkbox @change="getData" v-model="render.checked"></el-checkbox>
                                </el-form-item>
                             </el-col>
                         </el-row>
@@ -187,63 +199,91 @@ new_vue.prototype.creat = function(_id, type) {
         methods: {
             //删除
             remove() {
-                console.log(add.items);
-                // var _index = this.$el.attributes.prop.value;
-                // add.items.splice(_index, 1);
+                // // 将当前实例隐藏
+                // this.render.show = false;
+                // // 删除实例属性值
+                // var _data = this.$data.render;
+                // for(var key in _data) {
+                //     if(key != "show") {
+                //         Vue.delete(this.$data.render, key);
+                //     }
+                // }
+                // console.log(_data);
+                // 销毁实例
+                // this.$destroy();
             },
             //失去焦点触发
             getData() {
                 var $cnt = "";
                 for(var i = 0;i < _vue.length;i++) {
-                    var _data = JSON.parse(JSON.stringify(_vue[i].$data));
+                    var _data = JSON.parse(JSON.stringify(_vue[i].$data.render));
                     // 常量
                     if(_vue[i].$el.attributes.type.value == "1") {
+                        // 循环遍历取出实例中data
                         for(var key in _data) {
-                            $cnt += "@{" + _data[key] + "}&&";
+                            // 过滤data中的show属性
+                            if(key != "show") {
+                                $cnt += "@{" + _data[key] + "}&&";
+                            }
                         }
                     }
                     // 变量
                     if(_vue[i].$el.attributes.type.value == "2") {
                         var _variable = "";
+                        // 循环遍历取出实例中data
                         for(var key in _data) {
-                            if(_data[key] === true) {
-                                _data[key] = 1;
-                            }else if(_data[key] === false) {
-                                _data[key] = 0;
-                            }else if(_data[key] == "") {
-                                _data[key] = "null";
+                            // 过滤data中的show属性
+                            if(key != "show") {
+                                // 将Boolean值转化为二进制数值
+                                if(_data[key] === true) {
+                                    _data[key] = 1;
+                                }else if(_data[key] === false) {
+                                    _data[key] = 0;
+                                }else if(_data[key] == "") {
+                                    _data[key] = "null";
+                                }
+                                _variable += _data[key] + ";";
                             }
-                            _variable += _data[key] + ";";
                         }
                         $cnt += "#{" + _variable + "}&&";
                     }
                     // 日期
                     if(_vue[i].$el.attributes.type.value == "3") {
                         var _date = "";
+                        // 循环遍历取出实例中data
                         for(var key in _data) {
-                            if(_data[key] === true) {
-                                _data[key] = 1;
-                            }else if(_data[key] === false) {
-                                _data[key] = 0;
-                            }else if(_data[key] == "") {
-                                _data[key] = "null";
+                            // 过滤data中的show属性
+                            if(key != "show") {
+                                // 将Boolean值转化为二进制数值
+                                if(_data[key] === true) {
+                                    _data[key] = 1;
+                                }else if(_data[key] === false) {
+                                    _data[key] = 0;
+                                }else if(_data[key] == "") {
+                                    _data[key] = "null";
+                                }
+                                _date += _data[key]  + ";";
                             }
-                            _date += _data[key]  + ";";
                         }
                         $cnt += "${" + _date + "}&&";
                     }
                     // 序号
                     if(_vue[i].$el.attributes.type.value == "4") {
                         var _number = "";
+                        // 循环遍历取出实例中data
                         for(var key in _data) {
-                            if(_data[key] === true) {
-                                _data[key] = 1;
-                            }else if(_data[key] === false) {
-                                _data[key] = 0;
-                            }else if(_data[key] == "") {
-                                _data[key] = "null";
+                            // 过滤data中的show属性
+                            if(key != "show") {
+                                // 将Boolean值转化为二进制数值
+                                if(_data[key] === true) {
+                                    _data[key] = 1;
+                                }else if(_data[key] === false) {
+                                    _data[key] = 0;
+                                }else if(_data[key] == "") {
+                                    _data[key] = "null";
+                                }
+                                _number += _data[key] + ";";
                             }
-                            _number += _data[key] + ";";
                         }
                         $cnt += "*{" + _number + "}&&";
                     }
@@ -251,6 +291,7 @@ new_vue.prototype.creat = function(_id, type) {
                 if($cnt.length>0){
                     $cnt=$cnt.substr(0,$cnt.length-2);
                 }
+                // 将拼接字符串赋值给内容输入框
                 add.formTable.seqContentInput = $cnt;
             },
         }
