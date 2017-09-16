@@ -13,10 +13,14 @@
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection :initial="initial" ref="cascader"></single-selection>
+                <single-selection :initial="initial" ref="cascader">
+                    <!---->
+                </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection :initial="initial_3"></single-selection>
+                <single-selection :initial="initial_3">
+                    <!---->
+                </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
                 <single-selection :initial="initial_2">
@@ -24,7 +28,7 @@
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <multiple-selection :initial="initial_3"></multiple-selection>
+                <single-selection :initial="initial_4"></single-selection>
             </el-col>
         </el-row>
     </div>
@@ -43,15 +47,31 @@
                         value: [],
                         disabled: "false"
                     },
+                    // 键值集合设置参数: 参数(键值集合)  key-set配置  默认值  是否禁用
+                    initial_1: {
+                        params: "functionBlockAlign",
+                        value: "",
+                        disabled: "false"
+                    },
+                    initial_2: {
+                        params: "functionBlockType",
+                        value: "",
+                        disabled: "false"
+                    },
+                    // 查询数据库表
                     initial_3: {
                         url: serverPath + '/keySet/queryPage',
                         key: '{"label":"keysetName","value":"rowId"}',
                         value: [],
                         disabled: "false"
                     },
-                    // 键值集合设置参数: 参数(键值集合)  key-set配置  默认值  是否禁用
-                    initial_1: {params: "functionBlockAlign", key: '{"value": "confKey", "label": "confValue"}', value: "", disabled: "false"},
-                    initial_2: {params: "functionBlockType", key: '{"value": "confKey", "label": "confValue"}', value: "", disabled: "false"}
+                    initial_4: {
+                        url: serverPath + '/keySet/queryPage',
+                        key: '{"label":"keysetName","value":"rowId"}',
+                        value: [],
+                        disabled: "false",
+                        multiple: "true"
+                    }
                 }
             },
             created() {

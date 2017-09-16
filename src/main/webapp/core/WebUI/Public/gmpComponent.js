@@ -53,11 +53,12 @@ Vue.component("single-selection", {
     props: ["initial"],
     data() {
         return {
-            value: "",  // 下拉框选中绑定值
+            value: [],  // 下拉框选中绑定值
             isDisabled: false,  // 下拉框是否禁用
             options: [],    // 下拉框option
             url: "",    // 获取option接口
-            params: {}  // 调用接口参数
+            params: {},  // 调用接口参数
+            isMultiple: false
         };
     },
     methods: {
@@ -104,6 +105,7 @@ Vue.component("single-selection", {
                                 var _jsonObj = res.resp.content.data;
                                 // 键值集合-有条件数据库表查询 数据结构判断
                                 _jsonObj.data != undefined ? _jsonObj = _jsonObj.data : _jsonObj = _jsonObj;
+                                // 键值集合查询固定value-label
                                 // 无条件数据库表查询 数据结构判断
                                 _jsonObj.result != undefined ? _jsonObj = _jsonObj.result : _jsonObj = _jsonObj;
                                 // 循环配置value-label
@@ -129,7 +131,7 @@ Vue.component("single-selection", {
     mounted() {
         // 获取初始默认值
         if(this.initial.value == "" || this.initial.value == undefined) {
-            this.value = ""
+            this.value = []
         }else {
             this.value = this.initial.value;
         }
@@ -139,6 +141,13 @@ Vue.component("single-selection", {
             this.isDisabled = false;
         }else {
             this.isDisabled = true;
+        }
+
+        // 获取多选配置
+        if(this.initial.multiple == "false" || this.initial.multiple == "" || this.initial.multiple == undefined) {
+            this.isMultiple = false;
+        }else {
+            this.isMultiple = true;
         }
 
         // 获取options的url
@@ -158,7 +167,8 @@ Vue.component("single-selection", {
         }
 
         // 获取配置label-value
-        this.key = this.initial.key;
+        this.initial.key == undefined ? this.key = '{"value": "confKey", "label": "confValue"}' : this.key = this.initial.key;
+        console.log(this.key);
 
         // 获取下拉框options
         this.getOptions();
@@ -166,7 +176,7 @@ Vue.component("single-selection", {
     updated: function () {
         //
     },
-    template: `<el-select @change="changeSelect" v-model="value" :disabled="isDisabled" clearable="true" placeholder="请选择">
+    template: `<el-select @change="changeSelect" v-model="value" :multiple="isMultiple" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
 						v-for="item in options"
 						:key="item.value"
@@ -241,7 +251,7 @@ Vue.component("multiple-selection", {
     mounted() {
         // 获取初始默认值
         if(this.initial.value == "" || this.initial.value == undefined) {
-            this.value = ""
+            this.value = []
         }else {
             this.value = this.initial.value;
         }
