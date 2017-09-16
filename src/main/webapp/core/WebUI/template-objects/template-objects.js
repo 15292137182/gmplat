@@ -110,14 +110,19 @@ var basLeft = new Vue({
                 //左边这一行的数据的ID
                 this.currentId = row.rowId;
                 //查找右边表的数据
-                queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
-                    //console.log(res)
-                    //选中右边第一行
-                    var data=res.resp.content.data.result;
-                    if(data!=null){
-                        basRight.currentRChange(basRight.tableData[0]);
-                    }
-                })
+                pagingObj.Examples(queryObjTemp,basLeft.currentId,basRight.input,this.pageSize,this.pageNum,basRight,function(){
+                    basRight.currentRChange(basRight.tableData[0]);
+                });
+                // queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
+                //     console.log(res)
+                //     //选中右边第一行
+                //
+                //     var data=res.resp.content;
+                //
+                //     if(data!=null){
+                //         basRight.currentRChange(basRight.tableData[0]);
+                //     }
+                // })
             }
         },
         //将选中行变颜色

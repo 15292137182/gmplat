@@ -13,7 +13,7 @@ var keyValueSetAdd = new Vue({
         keyForm:{
             keysetCodeInput: '',
             keysetNameInput: '',
-            belongModuleInput:'',
+          //  belongModuleInput:'',
          //   belongSystemInput:'',
             despInput: '',
             versionInput: '',
