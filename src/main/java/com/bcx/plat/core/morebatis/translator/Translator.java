@@ -207,6 +207,10 @@ public class Translator implements SqlComponentTranslator{
     public LinkedList translateFieldSource(FieldSource fieldSource, LinkedList linkedList){
         if (fieldSource instanceof Field) {
             translateFieldSource((Field) fieldSource, linkedList);
+        }else if(fieldSource instanceof SubAttribute){
+            translateFieldSource(((SubAttribute)fieldSource).getField(),linkedList);
+            appendSql("::jsonb->>",linkedList);
+            appendArgs(((SubAttribute) fieldSource).getKey(),linkedList);
         }
         return linkedList;
     }

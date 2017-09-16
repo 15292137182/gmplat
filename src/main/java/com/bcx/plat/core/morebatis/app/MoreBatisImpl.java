@@ -1,6 +1,7 @@
 package com.bcx.plat.core.morebatis.app;
 
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
@@ -40,7 +41,8 @@ public class MoreBatisImpl implements MoreBatis{
   private Map<Class, TableSource> entityTables;
 
   public MoreBatisImpl(SuitMapper suitMapper, SqlComponentTranslator translator,
-                       Collection entityEntries) {
+                       Collection entityEntries,String defaultMapColumnAlias) {
+//    if (defaultMapColumnAlias==null)
     this.suitMapper = suitMapper;
     this.translator = translator;
     entityColumns = new HashMap<>();
@@ -72,6 +74,7 @@ public class MoreBatisImpl implements MoreBatis{
       entityTables.put(entryClass, entityEntryTable);
       entityPks.put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getPks())));
     }
+    ConditionBuilder.setDefaultMapPield("etc");
   }
 
   /**

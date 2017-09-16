@@ -14,14 +14,20 @@ public class ConditionBuilderContext {
   private TableSource tableSource;
   private Class<? extends BeanInterface> clz;
   private static final MoreBatis moreBatis=SpringContextHolder.getBean("moreBatis");
+  private String defaultMapField;
 
-  public ConditionBuilderContext(Class<? extends BeanInterface> clz) {
+  public ConditionBuilderContext(Class<? extends BeanInterface> clz,String defaultMapField) {
     this.clz = clz;
     tableSource = moreBatis.getTable(clz);
-//    columns = new HashMap<>();
-//    for (AliasedColumn aliasedColumn : (Collection<AliasedColumn>)moreBatis.getColumns(clz)) {
-//      columns.put(aliasedColumn.getAlias(), aliasedColumn);
-//    }
+    this.defaultMapField=defaultMapField;
+  }
+
+  public String getDefaultMapField() {
+    return defaultMapField;
+  }
+
+  public void setDefaultMapField(String defaultMapField) {
+    this.defaultMapField = defaultMapField;
   }
 
   public TableSource getTableSource() {

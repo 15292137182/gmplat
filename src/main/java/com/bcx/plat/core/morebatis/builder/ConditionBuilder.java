@@ -5,13 +5,23 @@ import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 
-public class ConditionBuilder implements ConditionContainer {
+public class ConditionBuilder implements ConditionSequence {
 
   private Condition condition;
   private ConditionBuilderContext conditionBuilderContext;
 
+  private static String defaultMapColumnAlias="etc";
+
+  public static void setDefaultMapPield(String defaultMapColumnAlias){
+    ConditionBuilder.defaultMapColumnAlias=defaultMapColumnAlias;
+  }
+
+  public ConditionBuilder(Class<? extends BeanInterface> entityClass,String defaultMapColumnAlias) {
+    conditionBuilderContext = new ConditionBuilderContext(entityClass,defaultMapColumnAlias);
+  }
+
   public ConditionBuilder(Class<? extends BeanInterface> entityClass) {
-    conditionBuilderContext = new ConditionBuilderContext(entityClass);
+    conditionBuilderContext = new ConditionBuilderContext(entityClass,defaultMapColumnAlias);
   }
 
   public static void main(String[] args) throws IllegalAccessException {
@@ -22,8 +32,16 @@ public class ConditionBuilder implements ConditionContainer {
     testCondition.hashCode();
   }
 
+  public String getDefaultMapField() {
+    return defaultMapColumnAlias;
+  }
+
+  public void setDefaultMapField(String defaultMapColumnAlias) {
+    ConditionBuilder.defaultMapColumnAlias = defaultMapColumnAlias;
+  }
+
   @Override
-  public void fill(Condition condition) {
+  public void append(Condition condition) {
     this.condition = condition;
   }
 

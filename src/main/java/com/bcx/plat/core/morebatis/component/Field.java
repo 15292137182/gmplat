@@ -40,7 +40,6 @@ public class Field implements AliasedColumn {
     this.alias = alias;
   }
 
-
   public String getFieldName() {
     return fieldName;
   }
