@@ -297,14 +297,8 @@ var basRight=new Vue({
                     var data = res.data[0];
                     proEm.addProForm.codeProInput=data.propertyCode;   //代码
                     proEm.addProForm.nameProInput=data.propertyName;   //名称
-                    if(data.wetherExpandPro=='true'){
-                        proEm.addProForm.checked=true;
-                        console.log(proEm.addProForm.checked)
-                    }else{
-                        proEm.addProForm.checked=false;
-                    }
                     proEm.$refs.proType_1.cascaderEvent(data.wetherExpandPro);  //属性类型
-                    proEm.$refs.tableField_1.cascaderEvent(data.relateTableColumn) ;  //关联表
+                    proEm.$refs.tableField_1.cascaderEvent(data.relateTableColumn) ;  //关联表字段
                     //修改值类型和值类型来源下拉框  jms 2017/8/21
                     proEm.$refs.valueType_1.cascaderEvent(data.valueType);  //值类型
                     proEm.$refs.valueTypeOrigin_1.cascaderEvent(data.valueResourceType);   //值类型来源
@@ -322,7 +316,7 @@ var basRight=new Vue({
                 };
                 gmpAjax.showAjax(data,function(res){
                     //分页查询
-                    basRight.searchRight();
+                    basRight.searchRightTable();
                 })
             });
         },
