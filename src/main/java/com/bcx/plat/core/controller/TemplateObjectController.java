@@ -129,12 +129,19 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) int pageNum,
-                                      @RequestParam(value = "pageSize", required = false) int pageSize,
+                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       String order) {
     LinkedList<Order> orders = dataSort(order);
     Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    PageResult<Map<String, Object>> pageResult = null;
+
+    if (UtilsTool.isValid(pageSize)) { // 分页查询
+      pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    } else { // 查询所有
+      pageResult = new PageResult(templateObjectService.selectMap(blankQuery, orders));
+    }
+
     return result(new ServerResult<>(pageResult));
   }
 

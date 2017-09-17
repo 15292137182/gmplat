@@ -30,7 +30,7 @@ var em = new Vue({
             },
 
             templateObj_1:{
-                url: templateObjPageUrl,
+                url: serverPath + "/templateObj/queryPage",
                 key:'{"label":"templateName","value":"rowId"}',
                 value: "",
                 disabled: "false"
