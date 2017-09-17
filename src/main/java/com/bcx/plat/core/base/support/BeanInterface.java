@@ -18,8 +18,10 @@ import static com.bcx.plat.core.utils.UtilsTool.objToJson;
  */
 public interface BeanInterface<T extends BeanInterface> extends Serializable {
 
+  @JsonIgnore
   List<BeanInterface> getJoinTemplates();
 
+  @JsonIgnore
   default Serializable getPk() {
     return null;
   }
