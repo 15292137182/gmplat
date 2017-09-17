@@ -106,7 +106,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     Map map = this.toMap();
     if (null != map) {
       if (!allColumns) {
-        Set keys = map.keySet();
+        Set keys = new HashSet(map.keySet());
         keys.forEach(key -> {
           if (null == map.get(key)) {
             map.remove(key);
