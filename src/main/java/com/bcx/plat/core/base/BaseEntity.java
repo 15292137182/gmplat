@@ -21,6 +21,7 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
 public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInterface<T> {
 
   @IgnoredField
+  @JsonIgnore
   private BaseTemplateBean templateBean = new BaseTemplateBean();
   protected Map etc;
   protected String rowId;
