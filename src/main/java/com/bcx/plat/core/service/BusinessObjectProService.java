@@ -54,7 +54,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
       map.put("columnCname", dbTableColumns.get(0).getColumnCname());
       row.setEtc(map);
     }*/
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, businessObjectProMap);
+    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, new Object[]{businessObjectProMap});
   }
 
   /**
