@@ -247,7 +247,7 @@ var em=new Vue({
                 em.formTable.Keyword2=data[0].keywordTwo//关键字2
                 em.formTable.Keyword3=data[0].keywordThree//关键字3
                 em.isDisabled=true;
-                em.queryObjectProperties();
+                //em.queryObjectProperties();
             })
         },
         queryObjectProperties(){
