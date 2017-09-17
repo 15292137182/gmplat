@@ -180,20 +180,7 @@ var proEm = new Vue({
                 ibcpLayer.Close(divIndex);
             }
         },
-        created(){
-            if(operateOPr==1) {
-                this.proType_1.value="";
-                this.tableField_1.value="";
-                this.valueType_1.value="";
-                this.valueTypeOrigin_1.value="";
-            }
-            if(operateOPr==2){
-                this.proType_1.value="";
-                this.tableField_1.value="";
-                this.valueType_1.value="";
-                this.valueTypeOrigin_1.value="";
-            }
-        },
+
         updated() {
             //基本属性
             // if(this.value_4=='1'){

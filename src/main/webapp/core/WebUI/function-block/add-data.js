@@ -235,13 +235,13 @@ var em=new Vue({
                     em.SupportSorting=true;//支持排序
                 }
                 em.$refs.showControl_1.setValue(data[0].displayWidget);
-                em.$refs.showControl_1.setDisable(true);
+                em.$refs.showControl_1.setDisabled(true);
                 em.formTable.lengthSection=data[0].lengthInterval;//长度区间
                 em.formTable.testFunction=data[0].validateFunc;//验证函数
                 em.formTable.displayFunction=data[0].displayFunc;//显示函数
                 em.formTable.sortNumber=data[0].sort;//排序
                 em.$refs.align_1.setValue(data[0].align);//下拉框
-                em.$refs.align_1.setDisable(true);
+                em.$refs.align_1.setDisabled(true);
                 em.formTable.Twidth=data[0].widthSetting//宽度
                 em.formTable.Keyword1=data[0].keywordOne//关键字1
                 em.formTable.Keyword2=data[0].keywordTwo//关键字2

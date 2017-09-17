@@ -33,7 +33,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="12">
+            <el-col :span="11">
                 <el-form-item label="内容">
                     <el-input v-model="formTable.seqContentInput"></el-input>
                 </el-form-item>
@@ -49,9 +49,8 @@
                     <el-button type="primary" slot="reference" >预览</el-button>
                 </el-popover>
             </el-col>
-
-            <el-col :span="5" style="margin-left: 10px">
-                <el-form-item>
+            <el-col :span="10">
+                <el-form-item >
                     <el-select placeholder="请选择" v-model="name" style="width: 150px">
                         <el-option v-for="item in names"
                                    :key="item.name"
@@ -61,12 +60,13 @@
                     <el-button icon="plus" type="primary" @click="add"></el-button>
                 </el-form-item>
             </el-col>
+
         </el-row>
 
         <div :is="item.html" v-for="(item, index) in items" :index="index" :child-num="num"></div>
 
         <el-row type="flex" class="row-bg">
-            <el-col :span="10">
+            <el-col :span="10" >
                 <el-form-item label="所属模块" prop="belongModuleInput">
                     <single-selection @change-data="getBelongModule_1"  :initial="belongModule_1" ref="belongModule_1">
                         <!---->

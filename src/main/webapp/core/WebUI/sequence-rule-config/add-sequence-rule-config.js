@@ -1,6 +1,8 @@
 /**
  * Created by jms on 2017/8/8.
  */
+var busObjUrl=serverPath+"/businObj/queryPage";
+var busObjProUrl=serverPath+"/businObj/queryProPage";
 
 // 页面动态加载vue实例集合
 var _vue = [];
@@ -32,8 +34,20 @@ new_vue.prototype.data=function (type) {
                     keyInput:'',
                     valueInput:'',
                     checked:true,
-                    childObjoptions: window.parent.config.objoptions,
-                }
+                 //   childObjoptions: window.parent.config.objoptions,
+                },
+                busObj_1:{
+                    url: busObjUrl,
+                    key:'{"label":"objectName","value":"rowId"}',
+                    value: "",
+                    disabled: "false"
+                },
+                busObjPro_1:{
+                    url:"",
+                    key:"",
+                    value: "",
+                    disabled: "false"
+                },
             }
         }
     }
@@ -97,9 +111,11 @@ new_vue.prototype.creat = function(_id, type) {
                                     <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="6">
+                            <el-col :span="8">
                                 <el-form-item label="变量" label-width="40px">
-                                    <el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>
+                                    <!--<el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>-->
+                                    <single-selection @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 100px"></single-selection>
+                                    <single-selection @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 100px"></single-selection>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
@@ -197,6 +213,15 @@ new_vue.prototype.creat = function(_id, type) {
             _vue.push(this);
         },
         methods: {
+            getBusObj_1(datas){
+                this.$data.busObj_1.value=datas.value;
+                this.$refs.busObjPro_1.setUrl({url:busObjProUrl+"?rowId="+datas.value,key:'{"label":"propertyName","value":"rowId"}'});
+            },
+            getBusObjPro_1(datas){
+                this.$data.busObjPro_1.value=datas.value;
+            },
+
+
             //删除
             remove() {
                 // 将当前区块和挂载实例隐藏
@@ -406,8 +431,8 @@ var add = new Vue({
                             seqCode:add.formTable.seqCodeInput,
                             seqName:add.formTable.seqNameInput,
                             seqContent:add.formTable.seqContentInput,
-                            belongModule:add.formTable.belongModuleInput,
-                            belongSystem:add.formTable.belongSystemInput,
+                            belongModule:add.belongModule_1.value,
+                        //    belongSystem:add.formTable.belongSystemInput,
                             desp:add.formTable.despInput
                         },
                         "obj":add
