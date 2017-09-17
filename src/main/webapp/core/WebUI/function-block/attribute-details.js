@@ -26,6 +26,12 @@ var attributeDetails = new Vue({
         input:'',
         url:serverPath+'/fronFuncPro/queryById',//查询功能块属性接口
         attributeData:[],//属性数组
+        //对象
+        align_1:{
+            params:"functionBlockAlign",
+            value:"",
+            disabled:"true",
+        }
     },
     methods:{
         getAttribute(){
@@ -40,11 +46,11 @@ var attributeDetails = new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res) {
-                var data = res;
+                var data = res.data;
                 attributeDetails.formTable.lengthSection = data[0].lengthInterval//长度区间
                 attributeDetails.formTable.validateFunc = data[0].validateFunc//验证函数
                 attributeDetails.formTable.displayFunc = data[0].displayFunc//显示函数
-                attributeDetails.$refs.align.value = data[0].align//对齐方式
+                attributeDetails.$refs.align_1.cascaderEvent(data[0].align)//对齐方式
                 attributeDetails.formTable.exactQuery = data[0].exactQuery//精确查询
                 attributeDetails.formTable.supportSort = data[0].supportSort//支持排序
                 attributeDetails.formTable.Twidth = data[0].widthSetting//宽度
