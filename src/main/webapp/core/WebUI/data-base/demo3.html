@@ -14,6 +14,9 @@
             <el-col :span="3">
                 <el-button type="info" @click="editBlock">编辑表单测试</el-button>
             </el-col>
+            <el-col :span="3">
+                <el-button type="info" @click="testTable">新增表格测试</el-button>
+            </el-col>
         </el-row>
     </div>
     <div>
@@ -65,6 +68,40 @@
                     }
                     GmpForm.formTable.loadData(_json);
                 })
+            },
+            testTable() {
+                this.divIndex = gmpPopup.dynamicDiv("table.html", "表格测试", "1000px", "400px", function() {
+                    var tableData = [{
+                        代码: "test001",
+                        内容: "数据1",
+                        名称: "测试001",
+                        所属模块: "测试模块1",
+                        类型: "测试",
+                        说明: "加载数据取出数据"
+                    }, {
+                        代码: "test002",
+                        内容: "数据2",
+                        名称: "测试002",
+                        所属模块: "测试模块2",
+                        类型: "测试",
+                        说明: "加载数据取出数据"
+                    }, {
+                        代码: "test003",
+                        内容: "数据3",
+                        名称: "测试003",
+                        所属模块: "测试模块3",
+                        类型: "测试",
+                        说明: "加载数据取出数据"
+                    }, {
+                        代码: "test004",
+                        内容: "数据4",
+                        名称: "测试004",
+                        所属模块: "测试模块4",
+                        类型: "测试",
+                        说明: "加载数据取出数据"
+                    }];
+                    GmpTable.tables.loadRecord(tableData);
+                });
             }
         }
     })

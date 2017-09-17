@@ -224,6 +224,9 @@ new_vue.prototype.creat = function(_id, type) {
                         for(var key in _data) {
                             // 过滤data中的show属性
                             if(key != "show") {
+                                if(_data[key] == "") {
+                                    _data[key] = null;
+                                }
                                 $cnt += "@{" + _data[key] + "}&&";
                             }
                         }

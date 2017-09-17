@@ -49,20 +49,22 @@ var gmpPopup = (function() {
                     var components = $(this).find("components");
 
                     $.each(components, function(index, item) {
-                        var _json,
+                        var _json = item.attributes["data"].value,
                             param;
                         if(item.attributes[":is"].value == "gmpForm") {
-                            _json = item.attributes["data"].value;
                             param = item.attributes[":child-form-table"].value;
-
+                            // 渲染动态模板
                             dynamicObj.render(_json, param);
                         }
+                        if(item.attributes[":is"].value == "gmpTable") {
+                            param = item.attributes[":table-data"].value;
+                            // 渲染动态模板
+                            dynamicObj.render(_json, param);
+                        }
+                        if(item.attributes[":is"].value == "search") {}
 
                         if (callback) {
                             callback();
-                            // setTimeout(function() {
-                            //     callback();
-                            // }, 200);
                         }
                     });
                 });
@@ -127,7 +129,32 @@ var dynamicObj = (function() {
                     // 缓存实例化对象
                     GmpForm[compId] = form;
                 }
-                if(arr[0].funcType == "table") {}
+                if(arr[0].funcType == "grid") {
+                    var _table = new gmpTableObj(compId, code, arr, mainId, "", "", "", {
+                        onClickRow:function (row){
+                            console.log("click row data: " + JSON.stringify(row));
+                        },
+                        onEditRow:function() {
+                            console.log("edit row");
+                        },
+                        onDeleteRow:function() {
+                            console.log("delete row");
+                        },
+                        onCellClick: function(row) {
+                            console.log("cell click data: " + JSON.stringify(row));
+                        },
+                        onDbClick: function(row) {
+                            console.log("double click data: " + JSON.stringify(row));
+                        },
+                        onDbCellClick: function(row) {
+                            console.log("double click cell data: " + JSON.stringify(row));
+                        },
+                    });
+                    // 创建vue实例
+                    _table.bulidComponent();
+                    // 缓存实例化对象
+                    GmpTable[compId] = _table;
+                }
                 if(arr[0].funcType == "search") {}
             }else {
                 // 提示错误信息
@@ -324,7 +351,8 @@ gmpFormObj.prototype.unlock = function(keyArr) {
         var disabled = keyArr[j] + "Disabled";
         this.formObj[disabled] = false;
     }
-}
+};
+
 //清空表单域数据
 gmpFormObj.prototype.clear = function() {
     var formObj = this.formObj;
@@ -363,3 +391,295 @@ gmpFormObj.prototype.submit = function(json, callback) {
         }
     })
 };
+
+/**
+ *
+ * @description:表格对象
+ * @author:liyuanquan
+ */
+
+//动态表格对象
+function gmpTableObj(compId,blockId,formBlockItems,vueEl,postUrl,queryParam,submitUrl,jsonFunction){
+    this.compId = compId;//父组件名字
+    this.blockId = blockId; //功能块标识
+    this.formBlockItems = formBlockItems;//表格块key值集合
+
+    this.vueEl = vueEl;     //vue el
+    this.vueObj = null;    //vue对象实例
+    this.tableObjArr = [];//表格数组对象数据
+    this.searchId = [];	//表格关联的查询块
+    this.queryUrl = ''//表格查询接口
+    this.postUrl = postUrl //获取后端数据接口
+    this.queryParam = queryParam //表格查询参数json
+    this.submitUrl = submitUrl //表格提交接口
+    this.isCheckData = true;  //是否为提交表格选中的数据，默认为true
+    this.records = [] 	//表格初始数据
+    this.height = ''//表格高度，默认自适应
+    this.pagination = true;	//表格是否分页， 默认分页true
+    this.columns = []	//表格初始列信息
+    this.custom = []	//表格自定义列信息 ignore
+    this.singleSelect = false 	//表格单选/多选 默认单选
+    this.pageSize = ''//每页显示多少条数据，当表格需要分页时有效
+    this.pageNo = '';//当前第多少页，当表格需要分页时有效
+    this.total = '';//共多少条数据，当表格需要分页时有效
+
+    this.rows = [];//选中行数据
+
+    if(jsonFunction) {
+        this.onClickRow = jsonFunction.onClickRow;//单击行事件
+        this.onEditRow = jsonFunction.onEditRow;//编辑行事件
+        this.onDeleteRow = jsonFunction.onDeleteRow;//删除行事件
+        this.onDbClick = jsonFunction.onDbClick;//双击行事件
+        this.onCellClick = jsonFunction.onCellClick;//单元格点击事件
+        this.onDbCellClick = jsonFunction.onDbCellClick;//单元格双击事件
+        this.onCheck = jsonFunction.onCheck;//表格选中事件
+        this.onUnCheck = jsonFunction.onUnCheck;//表格取消选中事件
+        this.onCheckAll = jsonFunction.onCheckAll;//表格全选事件
+        this.onUnCheckAll = jsonFunction.onUnCheckAll;//表格移除全选事件
+    }
+}
+//父组件数据
+gmpTableObj.prototype.searchSelect = function(){
+    var that = this;
+    var compId = this.compId;
+    var clickRowTime = null;
+    var cellClickTime = null;
+    //单击行事件
+    this.tableObjArr["clickRow"] = function(row){
+        clearTimeout(clickRowTime);
+        clickRowTime = setTimeout(function(){
+            that.onClickRow(row);
+        },300);
+    }
+    //双击行事件
+    this.tableObjArr["dblclick"] = function(row,event){
+        clearTimeout(clickRowTime);
+        that.onDbClick(row);
+    }
+    //单元格单击事件
+    this.tableObjArr["cellClick"] = function(row, column, cell){
+        clearTimeout(cellClickTime);
+        cellClickTime = setTimeout(function(){
+            that.onCellClick(row,null,null,row[column.property]);
+        },300);
+    }
+    //单元格双击事件
+    this.tableObjArr["DbClickCell"] = function(row, column, cell){
+        clearTimeout(cellClickTime);
+        that.onDbCellClick(row,null,null,row[column.property])
+    }
+    //获取选中记录
+    this.tableObjArr["getCheckedRows"] = function(val){
+        that.rows = val;
+    }
+    this.tableObjArr["editRow"] = function(){
+        that.onEditRow();
+    }
+    //删除按钮事件
+    this.tableObjArr["deleteRow"] = function(){
+        that.onDeleteRow();
+    }
+    var obj = {
+        props:[],
+    }
+    obj[compId] = this.tableObjArr;
+    return obj;
+}
+//构建表格组件
+gmpTableObj.prototype.bulidComponent = function(){
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
+    var that = this;
+    var id = that.vueEl;
+    var vue = new Vue({
+        el: id,
+        data:that.searchSelect(),//获取父组件数据
+        computed:{//表单组件定义
+            gmpTable(){//表格组件
+                var template= strHtml.html;
+                var props = ["tableData"];//子组件参数名
+                return {
+                    template,
+                    props,
+                }
+            }
+        },
+        methods: {
+
+        }
+    });
+    this.vueObj = vue;
+}
+//表格数据加载事件
+gmpTableObj.prototype.reload = function(){
+    var arr = this.formBlockItems;
+    var arrObj ={};
+    //循环赋值
+    for(var j=0;j<arr.length;j++){
+        arrObj[arr[j]["ename"]] = '1';
+    }
+    this.tableObjArr.push(arrObj);
+    var parentComponentName = this.compId;
+    this.vueObj[parentComponentName] = this.tableObjArr;
+    console.log(this.tableObjArr);
+}
+//表格由给定数据加载
+gmpTableObj.prototype.loadRecord = function(data){
+    for(var j=0;j<data.length;j++){
+        this.tableObjArr.push(data[j]);
+    }
+    var parentComponentName = this.compId;
+    this.vueObj[parentComponentName] = this.tableObjArr;
+};
+//获取选中行数据
+gmpTableObj.prototype.getCheckedRows = function(){
+    return this.rows;
+}
+//获取选中记录总数
+gmpTableObj.prototype.getCheckedRowsCount = function(){
+    return this.rows.length;
+}
+//设置表格参数
+gmpTableObj.prototype.setOptions = function(json){
+    if(json.searchId){
+        this.searchId =json.searchId;	//表格关联的查询块
+    }
+    if(json.queryUrl){
+        this.queryUrl = json.queryUrl//表格查询接口
+    }
+    if(json.postUrl){
+        this.postUrl = json.postUrl //获取后端数据接口
+    }
+    if(json.queryParam){
+        this.queryParam = json.queryParam//表格查询参数json
+    }
+    if(json.submitUrl){
+        this.submitUrl = json.submitUrl//表格提交接口
+    }
+    if(json.isCheckData){
+        this.isCheckData = json.isCheckData;  //是否为提交表格选中的数据，默认为true
+    }
+    if(json.records){
+        this.records = json.records	//表格初始数据
+    }
+    if(json.height){
+        this.height = json.height//表格高度，默认自适应
+    }
+    if(json.pagination){
+        this.pagination = json.pagination;	//表格是否分页， 默认分页true
+    }
+    if(json.columns){
+        this.columns = json.columns//表格初始列信息
+    }
+    if(json.custom){
+        this.custom = json.custom//表格自定义列信息 ignore
+    }
+    if(json.singleSelect){
+        this.singleSelect = json.singleSelect	//表格单选/多选 默认单选
+    }
+    if(json.pageSize){
+        this.pageSize = json.pageSize//每页显示多少条数据，当表格需要分页时有效
+    }
+    if(json.pageNo){
+        this.pageNo = json.pageNo;//当前第多少页，当表格需要分页时有效
+    }
+    if(json.total){
+        this.total = json.total;//共多少条数据，当表格需要分页时有效
+    }
+};
+//获取表格参数
+gmpTableObj.prototype.getOptions = function(){
+    var json = {};
+    json.compId = this.compId;//父组件名字
+    json.blockId = this.blockId; //功能块标识
+    json.formBlockItems = this.formBlockItems;//表格块key值集合
+
+    json.vueEl = this.vueEl;     //vue el
+    json.vueObj = this.vueObj;    //vue对象实例
+    json.tableObjArr = this.tableObjArr;//表格数组对象数据
+    json.searchId = this.searchId;	//表格关联的查询块
+    json.queryUrl = this.queryUrl//表格查询接口
+    json.postUrl = this.postUrl //获取后端数据接口
+    json.queryParam = this.queryParam//表格查询参数json
+    json.submitUrl = this.submitUrl//表格提交接口
+    json.isCheckData = this.isCheckData;  //是否为提交表格选中的数据，默认为true
+    json.records = this.records	//表格初始数据
+    json.height = this.height//表格高度，默认自适应
+    json.pagination = this.pagination;	//表格是否分页， 默认分页true
+    json.columns = this.columns//表格初始列信息
+    json.custom = this.custom//表格自定义列信息 ignore
+    json.singleSelect = this.singleSelect	//表格单选/多选 默认单选
+    json.pageSize = this.pageSize//每页显示多少条数据，当表格需要分页时有效
+    json.pageNo = this.pageNo;//当前第多少页，当表格需要分页时有效
+    json.total = this.total;//共多少条数据，当表格需要分页时有效
+
+    json.rows = this.rows;//选中行数据
+    return json;
+};
+//提交表格数据
+gmpTableObj.prototype.submit = function(json){
+    var that = this;
+    $.ajax({
+        url:that.submitUrl,
+        type:"post",
+        dataType:'json',
+        data:json.data,
+        success:function(res){
+            json.callback(res);
+        }
+    })
+}
+//获取表格所有数据
+gmpTableObj.prototype.getAllData = function(){
+    var arr = [];
+    for(var j=0;j<this.tableObjArr.length;j++){
+        if(typeof this.tableObjArr[j] =='object'){
+            arr.push(this.tableObjArr[j]);
+        }
+    }
+    return arr;
+}
+//获取表格所有数据总数
+gmpTableObj.prototype.getAllDataCount = function(){
+    var arr = [];
+    for(var j=0;j<this.tableObjArr.length;j++){
+        if(typeof this.tableObjArr[j] =='object'){
+            arr.push(this.tableObjArr[j]);
+        }
+    }
+    return arr.length;
+}
+//添加表格数据(集合数组)
+gmpTableObj.prototype.addRows =function(rowArr){
+    for(var j=0;j<rowArr.length;j++){
+        this.tableObjArr.push(rowArr[j]);
+    }
+}
+//添加表格数据,指定位置添加一条
+gmpTableObj.prototype.addRow =function(json,index){
+    this.tableObjArr.splice(index,0,json);
+}
+//删除表格指定索引数据
+gmpTableObj.prototype.removeRowByIndex = function(index){
+    this.tableObjArr.splice(index,1);
+}
+//删除指定列的指定值数据
+gmpTableObj.prototype.removeRow = function(column,value){
+    var arr = [];
+    for(var j=0;j<this.tableObjArr.length;j++){
+        if(typeof this.tableObjArr[j] =="object"){
+            arr.push(this.tableObjArr[j]);
+        }
+    }
+    for(var j=0;j<arr.length;j++){
+        if(arr[j][column] ==value[j]){
+            var index = arr[j];
+            this.tableObjArr.splice(index,1);
+        }
+    }
+}
+//清除表格数据
+gmpTableObj.prototype.clear = function(){
+    this.tableObjArr = [];//清空缓存数据
+    var parentComponentName = this.compId;
+    this.vueObj[parentComponentName] = [];
+}

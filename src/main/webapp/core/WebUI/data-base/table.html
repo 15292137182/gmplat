@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态生成表格</title>
+</head>
+<body>
+    <el-row id="app" style="margin-top: 15px;padding: 0 10px;">
+        <el-col :span="24">
+            <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable"}' :table-data="tables"></components>
+        </el-col>
+    </el-row>
+    <el-row id="btn" style="margin-top: 20px;">
+        <el-col :span="3" :offset="10">
+            <el-button type="primary" icon="search" @click="get"></el-button>
+        </el-col>
+        <el-col :span="3">
+            <el-button type="primary" icon="delete2" @click="clear"></el-button>
+        </el-col>
+    </el-row>
+
+    <script>
+        var vm = new Vue({
+            el: "#btn",
+            data() {},
+            methods: {
+                get() {},
+                clear() {
+                    GmpTable.tables.clear();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
