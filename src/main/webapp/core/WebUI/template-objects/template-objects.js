@@ -186,7 +186,7 @@ var basRight = new Vue({
         //右边点击事件
         currentRChange(row){
             if(row !=undefined){
-                // this.currentId=row.rowId;
+                 this.currentId=row.rowId;
                 this.currentProId=row.proRowId;
             }
         },
@@ -223,7 +223,8 @@ var basRight = new Vue({
                 };
                 gmpAjax.showAjax(data,function(res){
                     //分页查询
-                    queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){})
+                    queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,this);
+                    basLeft.searchLeft();
                 })
             })
         },
