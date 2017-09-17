@@ -85,10 +85,14 @@
                     // 级联选择方法
                     if (data.value == "center") {
 //                        this.$refs.cascader.cascaderEvent("search");
-                        this.$refs.cascader.cascaderUrl(serverPath + '/dbTableColumn/queryTabById?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb', '{"label":"columnEname","value":"rowId"}');
+                        this.$refs.cascader.setUrl({
+                            url: serverPath + '/dbTableColumn/queryTabById?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb',
+                            key: '{"label":"columnEname","value":"rowId"}'
+                        });
+                        this.$refs.cascader.setDisabled("true");
                     }
                     if(JSON.stringify(data) === "{}") {
-                        this.$refs.cascader.cascaderEvent("");
+                        this.$refs.cascader.setValue("");
                     }
                 }
             }

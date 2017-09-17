@@ -74,18 +74,27 @@ Vue.component("single-selection", {
             this.$emit("change-data", _obj);
         },
         // 级联下拉框方法
-        cascaderEvent(val) {
+        setValue(val) {
             this.value = val;
         },
         // 级联改变url
-        cascaderUrl(url, keys) {
+        setUrl(_json) {
             // 获取更新url
-            this.url = url;
+            this.url = _json.url;
             // 获取更新key-value
-            this.key = keys;
+            this.key = _json.key;
             // 更新options
             this.getOptions();
         },
+        // 禁用
+        setDisabled(bool) {
+            this.isDisabled = bool;
+        },
+        // 级联改变键值集合查询参数
+        setParam(param) {
+            this.params = param;
+        },
+        // 获取options
         getOptions() {
             // 保存this指针
             var that = this;
