@@ -108,7 +108,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     private int update(Condition condition, boolean allColumns) {
         Map map = this.toMap();
         if (null != map) {
-            if (allColumns) {
+            if (!allColumns) {
                 map.forEach((key, value) -> {
                     if (null == value) {
                         map.remove(key);
