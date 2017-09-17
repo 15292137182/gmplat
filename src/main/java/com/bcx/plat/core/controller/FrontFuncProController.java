@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -119,7 +118,7 @@ public class FrontFuncProController extends
 
 
   /**
-   * 根据功能块rowId查找当前对象下的所有属性并分页显示
+   * 根据功能块 rowId 查找当前对象下的所有属性并分页显示
    *
    * @param search   按照空格查询
    * @param pageNum  当前第几页
@@ -135,8 +134,7 @@ public class FrontFuncProController extends
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {
       PageResult<Map<String, Object>> pageResult = frontFuncProService.selectPageMap(
-              new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                      UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
+              new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId), UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
               , orders, pageNum, pageSize);
       List<Map<String, Object>> list = queryResultProcessAction(pageResult.getResult());
       pageResult.setResult(list);
@@ -145,7 +143,6 @@ public class FrontFuncProController extends
     return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
   }
 
-
   /**
    * 暂时先放这里 以后再重构
    *
@@ -153,45 +150,46 @@ public class FrontFuncProController extends
    * @return list
    */
   private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
-    List<String> rowIds = result.stream().map((row) ->
+/*    List<String> rowIds = result.stream().map((row) ->
             (String) row.get("relateBusiPro")).collect(Collectors.toList());
+        businessPlatResultProService.selectMap(new FieldCondition("rowId", Operator.IN, rowIds)
+                , Arrays.asList(new Field("row_id", "rowId")
+                        , new Field("property_name", "propertyName"),null));
 
-//        businessPlatResultProService.selectMap(new FieldCondition("rowId", Operator.IN, rowIds)
-//                , Arrays.asList(new Field("row_id", "rowId")
-//                        , new Field("property_name", "propertyName"),null));
-
-                /*.selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
+                .selectColumns(new FieldCondition("rowId", Operator.IN, rowIds)
                         , Arrays.asList(new Field("row_id", "rowId")
                                 , new Field("property_name", "propertyName")), null);*/
-    HashMap<String, Object> map = new HashMap<>();
+
+//    HashMap<String, Object> map = new HashMap<>();
     //遍历获取业务对象基本属性
 //        for (Map<String, Object> row : results) {
 //            map.put((String) row.get("rowId"), row.get("propertyName"));
 //        }
     //拿到业务对象基本属性给功能块赋值
-    for (Map<String, Object> row : result) {
+    /*for (Map<String, Object> row : result) {
       row.put("propertyName", map.get(row.get("relateBusiPro")));
-    }
+    }*/
+    // TODO 此处代码需要文铁虎修正 2017-09-17
     //遍历模板对象
     for (Map<String, Object> res : result) {
       String attrSource = res.get("attrSource").toString();
       if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_MODULE)) {
         String relateBusiPro = res.get("relateBusiPro").toString();
-        List<TemplateObjectPro> proRowId = templateObjectProService.select(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
+        List<TemplateObjectPro> proRowId = templateObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
         //拿到模板对象属性给功能块属性赋值
         for (TemplateObjectPro pro : proRowId) {
-
           res.put("propertyName", pro.getCname());
           res.put("ename", pro.getEname());
         }
       } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE)) {
         String relateBusiPro = res.get("relateBusiPro").toString();
-        List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, relateBusiPro));
+        List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
         for (BusinessObjectPro relate : relateTableColumn) {
           String relateTableRowId = relate.getRelateTableColumn();
           List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
           for (DBTableColumn row : rowId) {
             res.put("ename", row.getColumnEname());
+            res.put("propertyName", row.getColumnCname());
           }
         }
       }

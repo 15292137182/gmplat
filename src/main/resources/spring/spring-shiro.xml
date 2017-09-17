@@ -18,7 +18,6 @@
         <property name="sessionValidationSchedulerEnabled" value="true"/>
         <property name="sessionIdCookie" ref="sessionIdCookie"/>
         <property name="sessionIdCookieEnabled" value="true"/>
-        <property name="sessionIdUrlRewritingEnabled" value="false"/>
     </bean>
 
     <!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
