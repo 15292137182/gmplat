@@ -35,7 +35,7 @@
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="名称">
-                    <el-input :disabled="isDisabled" placeholder="请输入名称" v-model="formTable.nameTitle" ref="nameTitle"></el-input>
+                    <el-input placeholder="请输入名称" v-model="formTable.nameTitle" ref="nameTitle"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -101,28 +101,28 @@
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="宽度设置">
-                    <el-input placeholder="请输入排序宽度" v-model="formTable.Twidth" ref="Twidth"></el-input>
+                    <el-input :disabled="isDisabled" placeholder="请输入排序宽度" v-model="formTable.Twidth" ref="Twidth"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="关键字1">
-                    <el-input placeholder="请输入关键字1" v-model="formTable.Keyword1" ref="Keyword1"></el-input>
+                    <el-input :disabled="isDisabled" placeholder="请输入关键字1" v-model="formTable.Keyword1" ref="Keyword1"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="关键字2">
-                    <el-input placeholder="请输入关键字2" v-model="formTable.Keyword2" ref="Keyword2"></el-input>
+                    <el-input :disabled="isDisabled" placeholder="请输入关键字2" v-model="formTable.Keyword2" ref="Keyword2"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg" style="margin-top:-10px;">
             <el-col :span="20" :offset="1">
                 <el-form-item label="关键字3">
-                    <el-input placeholder="请输入关键字3" v-model="formTable.Keyword3" ref="Keyword3"></el-input>
+                    <el-input :disabled="isDisabled" placeholder="请输入关键字3" v-model="formTable.Keyword3" ref="Keyword3"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

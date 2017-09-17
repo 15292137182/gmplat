@@ -96,12 +96,12 @@ var dataSetConfigButton = new Vue({
                     addDataSet.formTable.nameInput =data.datasetName;
                         //类型下拉框赋值修改  jms  2017/8/21
                     //addDataSet.$refs.dsctype.value = data.datasetType;
-                    addDataSet.$refs.dataSetType_1.cascaderEvent(data.datasetType);
+                    addDataSet.$refs.dataSetType_1.setValue(data.datasetType);
 
                     addDataSet.formTable.content = data.datasetContent;
                     addDataSet.formTable.desp = data.desp;
                     addDataSet.formTable.version =data.version;
-                    addDataSet.$refs.belongModule_1.cascaderEvent(data.belongModule);
+                    addDataSet.$refs.belongModule_1.setValue(data.belongModule);
                     addDataSet.formTable.belongSystem =data.belongSystem;
 
                 })

@@ -124,10 +124,10 @@ var basLeft = new Vue({
                     console.log(data);
                     em.ruleForm.codeInput = data.objectCode;  //对象代码
                     em.ruleForm.nameInput =data.objectName;//对象名称
-                    em.$refs.table_1.cascaderEvent(data.relateTableRowId);
-                    em.$refs.templateObj_1.cascaderEvent(data.relateTemplateObject);//关联模板对象
+                    em.$refs.table_1.setValue(data.relateTableRowId);
+                    em.$refs.templateObj_1.setValue(data.relateTemplateObject);//关联模板对象
                     em.ruleForm.system=data.system;//所属系统
-                    em.$refs.belongModule_1.cascaderEvent(data.belongModule);//所属模块
+                    em.$refs.belongModule_1.setValue(data.belongModule);//所属模块
                     em.ruleForm.versionInput =data.version;//版本
                 })
             });
@@ -297,12 +297,12 @@ var basRight=new Vue({
                     var data = res.data[0];
                     proEm.addProForm.codeProInput=data.propertyCode;   //代码
                     proEm.addProForm.nameProInput=data.propertyName;   //名称
-                    proEm.$refs.proType_1.cascaderEvent(data.wetherExpandPro);  //属性类型
-                    proEm.$refs.tableField_1.cascaderEvent(data.relateTableColumn) ;  //关联表字段
+                    proEm.$refs.proType_1.setValue(data.wetherExpandPro);  //属性类型
+                    proEm.$refs.tableField_1.setValue(data.relateTableColumn) ;  //关联表字段
                     //修改值类型和值类型来源下拉框  jms 2017/8/21
-                    proEm.$refs.valueType_1.cascaderEvent(data.valueType);  //值类型
-                    proEm.$refs.valueTypeOrigin_1.cascaderEvent(data.valueResourceType);   //值类型来源
-                    proEm.$refs.valueOriginContent_1.cascaderEvent(data.valueResourceContent);     //值来源内容
+                    proEm.$refs.valueType_1.setValue(data.valueType);  //值类型
+                    proEm.$refs.valueTypeOrigin_1.setValue(data.valueResourceType);   //值类型来源
+                    proEm.$refs.valueOriginContent_1.setValue(data.valueResourceContent);     //值来源内容
 
                 })
             });

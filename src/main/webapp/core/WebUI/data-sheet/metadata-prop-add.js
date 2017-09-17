@@ -71,8 +71,9 @@ var proEm = new Vue({
                                         relateTableColumn: proEm.tableField_1.value,//关联表字段
                                         valueType: proEm.valueType_1.value,//值类型
                                         valueResourceType: proEm.valueTypeOrigin_1.value,//值来源类型
-                                        extendsEname: proEm.valueOriginContent_1.value,//值来源内容
-                                        valueResourceContent: proEm.addProForm.defaultValue,//默认值
+                                        valueResourceContent:proEm.valueOriginContent_1.value,//值来源内容
+                                        extendsEname: proEm.addProForm.extendName, //拓展英文名
+                                        defaultValue: proEm.addProForm.defaultValue,//默认值
                                     },
                                     "obj":basTop
                                 };
@@ -91,12 +92,13 @@ var proEm = new Vue({
                                         rowId: basRight.currentVal.rowId,//本生的ID
                                         objRowId: basLeft.currentId,//左边表的ID
                                         propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
-                                        wetherExpandPro: proEm.value_4,//是否为扩展属性
-                                        relateTableColumn: proEm.value_1,//关联表字段
-                                        valueType: proEm.value_2,//值类型
-                                        valueResourceType: proEm.value_3,//值来源类型
-                                        valueResourceContent: proEm.value_4,//值来源内容
-                                        //valueResourceContent: proEm.value_4,//默认值
+                                        wetherExpandPro: proEm.proType_1.value,//属性类型,//是否为扩展属性
+                                        relateTableColumn: proEm.tableField_1.value,//关联表字段
+                                        valueType: proEm.valueType_1.value,//值类型
+                                        valueResourceType: proEm.valueTypeOrigin_1.value,//值来源类型
+                                        valueResourceContent: proEm.valueOriginContent_1.value,//值来源内容
+                                        defaultValue: proEm.addProForm.defaultValue,//默认值
+
                                     },
                                     "obj":basTop
                                 };
@@ -130,13 +132,13 @@ var proEm = new Vue({
 
                 switch (datas.value){
                     case "keySet":
-                        this.$refs.valueOriginContent_1.cascaderUrl(keySetPageUrl,'{"label":"keysetName","value":"rowId"}');
+                        this.$refs.valueOriginContent_1.setUrl({url:keySetPageUrl,key:'{"label":"keysetName","value":"rowId"}'});
                          break;
                     case "sequenceRule":
-                        this.$refs.valueOriginContent_1.cascaderUrl(sequenceRuleConfigPageUrl,'{"label":"seqName","value":"rowId"}');
+                        this.$refs.valueOriginContent_1.setUrl({url:sequenceRuleConfigPageUrl,key:'{"label":"seqName","value":"rowId"}'});
                         break;
                     case "dataSet":
-                        this.$refs.valueOriginContent_1.cascaderUrl(datasetConfigPageUrl,'{"label":"datasetName","value":"rowId"}');
+                        this.$refs.valueOriginContent_1.setUrl({url:datasetConfigPageUrl,key:'{"label":"datasetName","value":"rowId"}'});
                          break;
                 }
             },
@@ -158,10 +160,10 @@ var proEm = new Vue({
             //     if (datas != "" || datas != undefined) {
             //         this.value_3 = datas.value;
             //         this.label_3 = datas.label;
-            //         this.$refs.childMethod.cascaderEvent("Shanghai");
+            //         this.$refs.childMethod.setValue("Shanghai");
             //     }
             //     if(JSON.stringify(datas) === "{}") {
-            //         this.$refs.childMethod.cascaderEvent("");
+            //         this.$refs.childMethod.setValue("");
             //     }
             // },
             // getChildData_4(datas){

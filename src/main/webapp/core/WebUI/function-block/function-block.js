@@ -47,10 +47,10 @@ var functionBlock = new Vue({
                     em.isEdit = true;
                     em.formTable.codeInput=data[0].funcCode;
                     em.formTable.nameInput=data[0].funcName;
-                    em.$refs.functionBlockType_1.cascaderEvent(data[0].funcType);
-                    em.$refs.obj_1.cascaderEvent(data[0].relateBusiObj);
+                    em.$refs.functionBlockType_1.setValue(data[0].funcType);
+                    em.$refs.obj_1.setValue(data[0].relateBusiObj);
 
-                    em.$refs.belongModule_1.cascaderEvent(data[0].belongModule);
+                    em.$refs.belongModule_1.setValue(data[0].belongModule);
                  //   em.formTable.System=data[0].belongSystem;
                     em.formTable.desp=data[0].desp;
                     em.rowId=data[0].rowId;
