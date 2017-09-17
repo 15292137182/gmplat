@@ -3,6 +3,36 @@
  */
 
 /**
+ * @description:页面加载执行函数
+ * @author:liyuanquan
+ */
+$(function() {
+    var _components = $("body").find("components");
+    // 若当前页面存在components
+    if(_components.length > 0) {
+        // 循环遍历当前页面components
+        $.each(_components, function(index, item) {
+            var _json = item.attributes["data"].value,
+                param;
+            // 表单模块
+            if(item.attributes[":is"].value == "gmpForm") {
+                param = item.attributes[":child-form-table"].value;
+                // 渲染动态模板
+                dynamicObj.render(_json, param);
+            }
+            // 表格模块
+            if(item.attributes[":is"].value == "gmpTable") {
+                param = item.attributes[":table-data"].value;
+                // 渲染动态模板
+                dynamicObj.render(_json, param);
+            }
+            // 查询模块
+            if(item.attributes[":is"].value == "search") {}
+        });
+    }
+});
+
+/**
  * @description:gmp弹出框方法定义
  * @author:liyuanquan
  */
@@ -51,16 +81,19 @@ var gmpPopup = (function() {
                     $.each(components, function(index, item) {
                         var _json = item.attributes["data"].value,
                             param;
+                        // 表单模块
                         if(item.attributes[":is"].value == "gmpForm") {
                             param = item.attributes[":child-form-table"].value;
                             // 渲染动态模板
                             dynamicObj.render(_json, param);
                         }
+                        // 表格模块
                         if(item.attributes[":is"].value == "gmpTable") {
                             param = item.attributes[":table-data"].value;
                             // 渲染动态模板
                             dynamicObj.render(_json, param);
                         }
+                        // 查询模块
                         if(item.attributes[":is"].value == "search") {}
 
                         if (callback) {
@@ -139,6 +172,7 @@ var dynamicObj = (function() {
                         },
                         onDeleteRow:function() {
                             console.log("delete row");
+                            this.removeRow("代码", "test001");
                         },
                         onCellClick: function(row) {
                             console.log("cell click data: " + JSON.stringify(row));
@@ -437,7 +471,8 @@ function gmpTableObj(compId,blockId,formBlockItems,vueEl,postUrl,queryParam,subm
         this.onCheckAll = jsonFunction.onCheckAll;//表格全选事件
         this.onUnCheckAll = jsonFunction.onUnCheckAll;//表格移除全选事件
     }
-}
+};
+
 //父组件数据
 gmpTableObj.prototype.searchSelect = function(){
     var that = this;
@@ -484,7 +519,8 @@ gmpTableObj.prototype.searchSelect = function(){
     }
     obj[compId] = this.tableObjArr;
     return obj;
-}
+};
+
 //构建表格组件
 gmpTableObj.prototype.bulidComponent = function(){
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
@@ -508,7 +544,8 @@ gmpTableObj.prototype.bulidComponent = function(){
         }
     });
     this.vueObj = vue;
-}
+};
+
 //表格数据加载事件
 gmpTableObj.prototype.reload = function(){
     var arr = this.formBlockItems;
@@ -521,7 +558,8 @@ gmpTableObj.prototype.reload = function(){
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = this.tableObjArr;
     console.log(this.tableObjArr);
-}
+};
+
 //表格由给定数据加载
 gmpTableObj.prototype.loadRecord = function(data){
     for(var j=0;j<data.length;j++){
@@ -530,14 +568,17 @@ gmpTableObj.prototype.loadRecord = function(data){
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = this.tableObjArr;
 };
+
 //获取选中行数据
 gmpTableObj.prototype.getCheckedRows = function(){
     return this.rows;
-}
+};
+
 //获取选中记录总数
 gmpTableObj.prototype.getCheckedRowsCount = function(){
     return this.rows.length;
-}
+};
+
 //设置表格参数
 gmpTableObj.prototype.setOptions = function(json){
     if(json.searchId){
@@ -586,6 +627,7 @@ gmpTableObj.prototype.setOptions = function(json){
         this.total = json.total;//共多少条数据，当表格需要分页时有效
     }
 };
+
 //获取表格参数
 gmpTableObj.prototype.getOptions = function(){
     var json = {};
@@ -615,6 +657,7 @@ gmpTableObj.prototype.getOptions = function(){
     json.rows = this.rows;//选中行数据
     return json;
 };
+
 //提交表格数据
 gmpTableObj.prototype.submit = function(json){
     var that = this;
@@ -627,7 +670,8 @@ gmpTableObj.prototype.submit = function(json){
             json.callback(res);
         }
     })
-}
+};
+
 //获取表格所有数据
 gmpTableObj.prototype.getAllData = function(){
     var arr = [];
@@ -637,7 +681,8 @@ gmpTableObj.prototype.getAllData = function(){
         }
     }
     return arr;
-}
+};
+
 //获取表格所有数据总数
 gmpTableObj.prototype.getAllDataCount = function(){
     var arr = [];
@@ -647,23 +692,29 @@ gmpTableObj.prototype.getAllDataCount = function(){
         }
     }
     return arr.length;
-}
+};
+
 //添加表格数据(集合数组)
 gmpTableObj.prototype.addRows =function(rowArr){
     for(var j=0;j<rowArr.length;j++){
         this.tableObjArr.push(rowArr[j]);
     }
-}
+};
+
 //添加表格数据,指定位置添加一条
 gmpTableObj.prototype.addRow =function(json,index){
     this.tableObjArr.splice(index,0,json);
-}
+};
+
 //删除表格指定索引数据
 gmpTableObj.prototype.removeRowByIndex = function(index){
     this.tableObjArr.splice(index,1);
-}
+};
+
 //删除指定列的指定值数据
 gmpTableObj.prototype.removeRow = function(column,value){
+    console.log(column);
+    console.log(value);
     var arr = [];
     for(var j=0;j<this.tableObjArr.length;j++){
         if(typeof this.tableObjArr[j] =="object"){
@@ -673,13 +724,15 @@ gmpTableObj.prototype.removeRow = function(column,value){
     for(var j=0;j<arr.length;j++){
         if(arr[j][column] ==value[j]){
             var index = arr[j];
+            console.log(index);
             this.tableObjArr.splice(index,1);
         }
     }
-}
+};
+
 //清除表格数据
 gmpTableObj.prototype.clear = function(){
     this.tableObjArr = [];//清空缓存数据
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = [];
-}
+};
