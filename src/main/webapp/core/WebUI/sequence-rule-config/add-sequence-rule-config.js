@@ -114,8 +114,8 @@ new_vue.prototype.creat = function(_id, type) {
                             <el-col :span="8">
                                 <el-form-item label="变量" label-width="40px">
                                     <!--<el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>-->
-                                    <single-selection @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 100px"></single-selection>
-                                    <single-selection @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 100px"></single-selection>
+                                    <single-selection @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 120px"></single-selection>
+                                    <single-selection @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 120px"></single-selection>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
@@ -215,7 +215,11 @@ new_vue.prototype.creat = function(_id, type) {
         methods: {
             getBusObj_1(datas){
                 this.$data.busObj_1.value=datas.value;
-                this.$refs.busObjPro_1.setUrl({url:busObjProUrl+"?rowId="+datas.value,key:'{"label":"propertyName","value":"rowId"}'});
+                var rowId=datas.value;
+                if(typeof(rowId) == "undefined"){
+                    rowId="";
+                }
+                this.$refs.busObjPro_1.setUrl({url:busObjProUrl+"?rowId="+rowId+"&pageSize=9999&search=&pageNum=",key:'{"label":"propertyName","value":"rowId"}'});
             },
             getBusObjPro_1(datas){
                 this.$data.busObjPro_1.value=datas.value;
