@@ -62,10 +62,12 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
     this.rowId = rowId;
   }
 
+  @JsonIgnore
   public BaseTemplateBean getBaseTemplateBean() {
     return templateBean;
   }
 
+  @JsonIgnore
   public void setBaseTemplateBean(BaseTemplateBean templateBean) {
     this.templateBean = templateBean;
   }
