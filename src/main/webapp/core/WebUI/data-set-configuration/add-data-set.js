@@ -28,7 +28,7 @@ var addDataSet = new Vue({
 
         //类型下拉框
         dataSetType_1:{
-            params:'dataSetType',
+            params:'dataSetConfigType',
             value:'',
             disabled:'false',
         },
