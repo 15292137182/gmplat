@@ -74,6 +74,7 @@ public interface MoreBatis {
    * @param entity 要插入的实体类
    * @return 返回插入的结果标识
    */
+  @Deprecated
   public <T extends BeanInterface<T>> int insertEntity(T entity);
 
   /**
@@ -81,6 +82,7 @@ public interface MoreBatis {
    * @param entity  要更新的实体类
    * @return
    */
+  @Deprecated
   public <T extends BeanInterface<T>> int deleteEntity(T entity);
 
   /**
@@ -88,6 +90,7 @@ public interface MoreBatis {
    * @param entity  要更新的实体类
    * @return
    */
+  @Deprecated
   public <T extends BeanInterface<T>> int updateEntity(T entity);
 
   /**
@@ -95,6 +98,7 @@ public interface MoreBatis {
    * @param entity  要更新的实体类
    * @return
    */
+  @Deprecated
   public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded);
 
 
@@ -103,6 +107,7 @@ public interface MoreBatis {
    * @param entity  要更新的实体类
    * @return
    */
+  @Deprecated
   public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded);
 
   /**
@@ -110,6 +115,7 @@ public interface MoreBatis {
    * @param entity 入数据
    * @return
    */
+  @Deprecated
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity);
 
   /**

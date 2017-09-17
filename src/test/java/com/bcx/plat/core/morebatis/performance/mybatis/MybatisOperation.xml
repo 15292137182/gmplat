@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcx.plat.core.morebatis.performance.mybatis.MybatisOperation">
+
+    <select id="select" resultType="hashmap">
+-- from mybatis
+    SELECT "t_business_object"."object_code" AS "objectCode" ,
+ "t_business_object"."object_name" AS "objectName" ,
+ "t_business_object"."relate_table_row_id" AS "relateTableRowId" ,
+ "t_business_object"."change_operat" AS "changeOperat" ,
+ "t_business_object"."belong_module" AS "belongModule" ,
+ "t_business_object"."belong_system" AS "belongSystem" ,
+ "t_business_object"."relate_template_object" AS "relateTemplateObject" ,
+ "t_business_object"."etc" AS "etc" ,
+ "t_business_object"."row_id" AS "rowId" FROM "t_business_object"
+  WHERE
+  ( "t_business_object"."etc" ::jsonb->> 'a' = #{a} )
+  </select>
+
+</mapper>
