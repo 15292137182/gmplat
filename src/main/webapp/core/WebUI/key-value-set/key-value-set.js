@@ -54,7 +54,7 @@ var leftKeyValueSet=new Vue({
                     topButtonObj.isEdit=true;
                     keyValueSetAdd.keyForm.keysetCodeInput =data[0].keysetCode;
                     keyValueSetAdd.keyForm.keysetNameInput = data[0].keysetName;
-                    keyValueSetAdd.$refs.belongModule_1.cascaderEvent(data[0].belongModule);
+                    keyValueSetAdd.$refs.belongModule_1.setValue(data[0].belongModule);
              //       keyValueSetAdd.keyForm.belongSystemInput = data[0].belongSystem;
                     keyValueSetAdd.keyForm.despInput = data[0].desp;
                     keyValueSetAdd.keyForm.versionInput = data[0].version;

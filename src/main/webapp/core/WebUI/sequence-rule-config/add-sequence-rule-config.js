@@ -455,7 +455,7 @@ var add = new Vue({
                 add.formTable.seqCodeInput=data[0].seqCode;
                 add.formTable.seqNameInput=data[0].seqName;
                 add.formTable.seqContentInput=data[0].seqContent;
-                add.$refs.belongModule_1.cascaderEvent(data[0].belongModule);
+                add.$refs.belongModule_1.setValue(data[0].belongModule);
                 add.formTable.belongSystemInput=data[0].belongSystem;
                 add.formTable.despInput=data[0].desp;
                 add.formTable.versionInput=data[0].version;

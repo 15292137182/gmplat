@@ -83,7 +83,7 @@ var basLeft = new Vue({
                     addTemp.addTempObj.codeInput=data.templateCode;
                     addTemp.addTempObj.nameInput=data.templateName;
                     addTemp.addTempObj.comContent=data.desp;
-                    addTemp.$refs.belongModule_1.cascaderEvent(data.belongModule);
+                    addTemp.$refs.belongModule_1.setValue(data.belongModule);
                     addTemp.addTempObj.system=data.belongSystem;
                 })
             });
@@ -207,7 +207,7 @@ var basRight = new Vue({
                     addTempProp.addTempPropObj.codeInput=data.code;
                     addTempProp.addTempPropObj.engNameInput=data.ename;
                     addTempProp.addTempPropObj.chnNameInput=data.cname;
-                    addTempProp.$refs.valueType_1.cascaderEvent(data.valueType);
+                    addTempProp.$refs.valueType_1.setValue(data.valueType);
                     addTempProp.addTempPropObj.default=data.defaultValue;
                     addTempProp.addTempPropObj.comContent=data.desp;
                 })
