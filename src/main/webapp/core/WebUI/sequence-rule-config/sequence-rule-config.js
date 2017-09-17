@@ -111,19 +111,6 @@ var config=new Vue({
                      })
                 })
             })
-
-            deleteObj.del(function(){
-
-                config.$http.jsonp(del,{
-                    rowId:config.currentVal.rowId
-                }, {
-                    jsonp: 'callback'
-                }).then(function (res) {
-                    ibcpLayer.ShowOK(res.data.message);
-                    config.searchPage();
-                });
-
-            })
         },
         handleSizeChange(val){//每页显示多少条
             this.pageSize=val;

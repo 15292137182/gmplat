@@ -32,7 +32,7 @@ var addTempProp = new Vue({
                         "jsonData":{templateObjRowId:basLeft.currentId,
                             ename:addTempProp.addTempPropObj.engNameInput,
                             cname:addTempProp.addTempPropObj.chnNameInput,
-                            valueType:addTempProp.value_1,
+                            valueType:addTempProp.valueType_1.value,
                             defaultValue:addTempProp.addTempPropObj.default,
                             desp:addTempProp.addTempPropObj.comContent
                         },
@@ -53,7 +53,7 @@ var addTempProp = new Vue({
                             proRowId:basRight.currentProId,
                             ename:addTempProp.addTempPropObj.engNameInput,
                             cname:addTempProp.addTempPropObj.chnNameInput,
-                            valueType:addTempProp.value_1,
+                            valueType:addTempProp.valueType_1.value,
                             defaultValue:addTempProp.addTempPropObj.default,
                             desp:addTempProp.addTempPropObj.comContent
                         },
