@@ -18,7 +18,7 @@ var addDataSet = new Vue({
             content:'',
             desp:'',
             version:'',
-            belongModule:'',//模块
+          //  belongModule:'',//模块
             belongSystem:'',//系统
         },
         value_1:'',
@@ -82,6 +82,7 @@ var addDataSet = new Vue({
                 "url":addDataSet.editUrl,
                 "jsonData":{
                     rowId:dataSetConfig.rowObjId,
+                    datasetCode:this.formTable.datasetCode,
                     datasetName:this.formTable.nameInput,
                     datasetType:this.dataSetType_1.value,
                     datasetContent:this.formTable.content,
@@ -115,8 +116,8 @@ var addDataSet = new Vue({
         cancel(){//取消
             ibcpLayer.Close(dataSetConfigButton.divIndex);
         },
-        getDataSetType_1(datas){
-            this.dataSetType_1.value=datas.value;
+        getDataSetType_1(data){
+            this.dataSetType_1.value=data.value;
         },
         getBelongModule_1(datas){
             this.belongModule_1.value=datas.value;
