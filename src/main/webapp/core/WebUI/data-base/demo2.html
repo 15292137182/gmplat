@@ -19,7 +19,7 @@
     <div>
         <el-row id="app">
             <el-col :span="24">
-                <components :is="gmpForm" data='{"main":"#app","code":"obj102017-09-16000001"}' :child-form-table="formTable"></components>
+                <components :is="gmpForm" data='{"main":"#app","code":"dataSetConfigForm"}' :child-form-table="formTable"></components>
             </el-col>
         </el-row>
         <el-row id="app1">
@@ -34,7 +34,7 @@
         el:"#app1",
         data:{},
         mounted() {
-            console.log(GmpForm.formTable);
+            //
         },
         methods:{
             demo() {

@@ -60,6 +60,9 @@ var gmpPopup = (function() {
 
                         if (callback) {
                             callback();
+                            // setTimeout(function() {
+                            //     callback();
+                            // }, 200);
                         }
                     });
                 });
@@ -113,7 +116,7 @@ var dynamicObj = (function() {
     };
 
     function create(mainId, code, compId) {
-        htmlAjax.keyValue(code, function(res) {
+        htmlAjax.keyValue(code, false, function(res) {
             var arr = res.resp.content.data;
             if(arr != "") {
                 // 判断模板类型
@@ -123,12 +126,6 @@ var dynamicObj = (function() {
                     form.bulidComponent(form.getData);
                     // 缓存实例化对象
                     GmpForm[compId] = form;
-
-                    var _json = {
-                        test: "zxc",
-                        test00: "2017-09-17"
-                    }
-                    form.loadData(_json);
                 }
                 if(arr[0].funcType == "table") {}
                 if(arr[0].funcType == "search") {}

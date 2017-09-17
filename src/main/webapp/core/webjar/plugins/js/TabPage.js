@@ -901,12 +901,13 @@ var DynamicStitching = (function(){
 
 //获取html内容
 var htmlAjax = (function(){
-    var keyValue = function(code,callback){
+    var keyValue = function(code,async,callback){
         var codes = '['+'"'+code+'"'+']';
         $.ajax({
             url:serverPath+'/fronc/queryFuncCode',
             type:"get",
             dataType:"json",
+            async: async,   // 同步加载
             data:{funcCode:codes},
             success:function(res){
                 if(callback){

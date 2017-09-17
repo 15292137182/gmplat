@@ -58,6 +58,14 @@
             editBlock(){
                 this.divIndex1 = gmpPopup.dynamicDiv('demo2.html','编辑表单测试','400px', '500px',function(){
                     vm.edit = true;
+                    // 加载数据
+                    var _json = {
+                        代码: "zxc",
+                        名称: "asdd",
+                        内容: "qwer",
+                        说明: "fghj"
+                    }
+                    GmpForm.formTable.loadData(_json);
                 })
             }
         }

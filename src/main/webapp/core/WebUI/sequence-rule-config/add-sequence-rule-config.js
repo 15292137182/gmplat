@@ -60,7 +60,7 @@ new_vue.prototype.data=function (type) {
                     dateCircle:'',
                     relatedConstantKey:'',
                     checked: false,
-                    dates: ''
+                    dates: []
                 }
             }
         }
@@ -199,18 +199,19 @@ new_vue.prototype.creat = function(_id, type) {
         methods: {
             //删除
             remove() {
-                // // 将当前实例隐藏
-                // this.render.show = false;
-                // // 删除实例属性值
-                // var _data = this.$data.render;
-                // for(var key in _data) {
-                //     if(key != "show") {
-                //         Vue.delete(this.$data.render, key);
-                //     }
-                // }
-                // console.log(_data);
-                // 销毁实例
-                // this.$destroy();
+                // 将当前区块和挂载实例隐藏
+                this.render.show = false;
+                // 删除实例属性值
+                var _data = this.$data.render;
+                for(var key in _data) {
+                    if(key != "show") {
+                        Vue.delete(this.$data.render, key);
+                    }
+                }
+                // 将当前挂载实例类型转为0 类型判断就回过滤调当前实例
+                this.$el.attributes.type.value = 0;
+                // 更新内容模块绑定数据
+                this.getData();
             },
             //失去焦点触发
             getData() {
@@ -272,8 +273,8 @@ new_vue.prototype.creat = function(_id, type) {
                         var _number = "";
                         // 循环遍历取出实例中data
                         for(var key in _data) {
-                            // 过滤data中的show属性
-                            if(key != "show") {
+                            // 过滤data中的show属性 dates属性
+                            if(key != "show" && key != "dates") {
                                 // 将Boolean值转化为二进制数值
                                 if(_data[key] === true) {
                                     _data[key] = 1;
