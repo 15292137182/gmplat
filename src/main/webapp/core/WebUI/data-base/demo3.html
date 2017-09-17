@@ -16,7 +16,7 @@
             </el-col>
         </el-row>
     </div>
-    <div id="dataSetConfig">
+    <div>
         <el-col :span="24" >
             <div class="allBorder">
                 <el-row>
@@ -24,16 +24,14 @@
                         <div class="bg-color"><span>动态表格</span></div>
                     </el-col>
                 </el-row>
-                <el-row class="inputStyle">
+                <el-row class="inputStyle" id="searchDemo">
                     <el-col :xs="10" :sm="10" :md="10">
                         <div>
-                            <!--<el-input placeholder="请输入内容" v-model="input" size="small">-->
-                            <!--<el-button slot="append" icon="search" @click.native="searchResTable"></el-button>-->
-                            <!--</el-input>-->
+                            <components :is="searchBlock" :search-input="searchs"></components>
                         </div>
                     </el-col>
                 </el-row>
-                <el-row style="padding:0 10px 10px 10px">
+                <el-row id="dataSetConfig" style="padding:0 10px 10px 10px">
                     <components :is="gmpTable" :table-data="tables"></components>
                 </el-row>
             </div>
@@ -70,6 +68,9 @@
             }
         }
     })
+    var arr=[{widthSetting:'',funcType:'search',ename:'search'}];
+    var sObj = new GmpSearchBlock("searchs","codeId",arr,"#searchDemo");
+    sObj.bulidComponent();
     var arrs = [
         {displayTitle:'代码',funcType:'grid',displayWidget:'tableCell',ename:'code'},
         {displayTitle:'名称',funcType:'grid',displayWidget:'tableCell',ename:'name'},
@@ -93,6 +94,8 @@
     });
     tObj.bulidComponent();
 //    tObj.reload();
+    tObj.loadRecord([{code:"1"},{code:"2"}]);//给数据加载表格数据
+    tObj.clear();//清空
     tObj.loadRecord([{code:"1"}]);//给数据加载表格数据
 </script>
 </html>

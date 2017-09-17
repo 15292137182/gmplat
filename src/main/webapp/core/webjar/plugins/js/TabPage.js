@@ -60,7 +60,7 @@ var pagingObj = (function(){
                         obj.pageNum = 1;//当前页
                         return;
                     }
-                    //dataConversion.conversion(obj,res.resp.content.data.result);
+                    dataConversion.conversion(obj,res.resp.content.data.result);
                     obj.tableData = res.resp.content.data.result;//数据源
                     obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                     obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
@@ -936,7 +936,7 @@ var DynamicStitchings = (function(){
         var keywordTwo = "关键字2";
         var keywordThree = "关键字3";
         var model = "searchInput." + obj.ename;//绑定v-model数据
-        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.select" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label='+keywordTwo+' value="2"></el-option><el-option label='+keywordThree+' value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.sel" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label='+keywordTwo+' value="2"></el-option><el-option label='+keywordThree+' value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
         return str;
     }
     //表单块
@@ -1549,4 +1549,65 @@ GmpTableBlock.prototype.clear = function(){
     this.tableObjArr = [];//清空缓存数据
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = [];
+}
+
+//动态查询块对象
+function GmpSearchBlock(compId,blockId,searchBlockItems,vueEl,filter,custom,filterData,grids,selUrl,postParam,formUrl){
+    this.compId = compId;//父组件名字
+    this.blockId = blockId; //功能块标识
+    this.searchBlockItems = searchBlockItems;//查询块key值集合
+    this.vueEl = vueEl;     //vue el
+    this.vueObj = null;    //vue对象实例
+    this.searchObj = {        //表单数据Key : value
+        sel:'',
+    };
+    this.filter = filter;//配置的过滤字段
+    this.custom = custom	//自定义的过滤字段
+    this.filterData = filterData	//过滤的数据
+    this.grids = grids 	//查询返回的响应数据加载的GmpGrid.id
+    this.selUrl = selUrl //获取后端数据接口
+    this.postParam = postParam //请求参数参数json
+    this.formUrl = formUrl //提交接口
+}
+//父组件数据
+GmpSearchBlock.prototype.searchSelect = function(){
+    var compId = this.compId;
+    var arr = this.searchBlockItems;
+    for(var j=0;j<arr.length;j++){
+        var objs =arr[j].ename;
+        this.searchObj[objs] = '';
+    }
+    this.searchObj["click"] = function(){
+        alert("in");
+    }
+    var obj = {
+        props:[]
+    }
+    obj[compId] = this.searchObj;
+    console.log(obj);
+    return obj;
+}
+//构建查询块组件
+GmpSearchBlock.prototype.bulidComponent = function(){
+    var strHtml = DynamicStitchings.Concatenation(this.searchBlockItems);
+    var that = this;
+    var id = that.vueEl;
+    var vue = new Vue({
+        el: id,
+        data:that.searchSelect(),//获取父组件数据
+        computed:{//表单组件定义
+            searchBlock(){//查询块输入框组件
+                var template= strHtml.html;
+                var props = ["searchInput"];//子组件参数名
+                return {
+                    template,
+                    props
+                }
+            }
+        },
+        methods: {
+
+        }
+    });
+    this.vueObj = vue;
 }
