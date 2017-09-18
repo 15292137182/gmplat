@@ -40,6 +40,7 @@ public class EntityTest extends BaseTest {
     etc.put("b", "b");
     businessObject.setEtc(etc);
     businessObject.buildCreateInfo().insert();
+    String createTime = businessObject.getBaseTemplateBean().getCreateTime();
 
     final String rowId = businessObject.getRowId();
     BusinessObject businessObject1 = new BusinessObject();
@@ -49,6 +50,7 @@ public class EntityTest extends BaseTest {
     Assert.assertEquals("插入失败", businessObject1.getObjectName(),"testObject");
     Assert.assertEquals("map没有被插入到数据库", businessObject1.getEtc().get("a"),100);
     Assert.assertEquals("map没有被插入到数据库", businessObject1.getEtc().get("b"),"b");
+    Assert.assertEquals("templateBean同步失败了", businessObject1.getBaseTemplateBean().getCreateTime(),createTime);
 
     businessObject1.setObjectName("secondName");
     businessObject1.getEtc().put("a", "update");

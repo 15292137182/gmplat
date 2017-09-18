@@ -7,6 +7,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.performance.mybatis.MybatisOperation;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.translator.Translator;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class PerformanceTest extends BaseTest{
     MybatisOperation mybatisOperation;
@@ -25,6 +27,8 @@ public class PerformanceTest extends BaseTest{
 
     @Autowired
     MoreBatis moreBatis;
+
+    Translator translator=new Translator();
 
     public void setSqlSessionTemplate(SqlSessionTemplate sqlSessionTemplate) {
         this.sqlSessionTemplate = sqlSessionTemplate;
@@ -55,15 +59,19 @@ public class PerformanceTest extends BaseTest{
         HashMap<String, String> args = new HashMap<String, String>();
         args.put("a","it works");
         Timer timer=new Timer();
-        for (int i=1000;i>0;i--) mybatisOperation.select(args);
+//        for (int i=1000;i>0;i--) mybatisOperation.select(args);
         Long mybatis=timer.finished();
         Condition condition=new ConditionBuilder(BusinessObject.class).and().equal("a","b").endAnd().buildDone();
         QueryAction statement = moreBatis.select(BusinessObject.class).where(condition);
         timer=new Timer();
-        for (int i=1000;i>0;i--) statement.execute();
+//        for (int i=1000;i>0;i--) statement.execute();
         Long moreBatis=timer.finished();
+        timer=new Timer();
+        for (int i=1000;i>0;i--) translator.translateQueryAction(statement,new LinkedList());
+        Long translate=timer.finished();
         System.out.println("moreBatis:"+moreBatis);
         System.out.println("myBatis:"+mybatis);
+        System.out.println("translator:"+translate);
     }
 
     class Timer{
