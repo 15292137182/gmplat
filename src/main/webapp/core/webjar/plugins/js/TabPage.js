@@ -1188,6 +1188,10 @@ GmpForm1.prototype.request = function(callback){
     var data = this.postParam;
     console.log(this.postParam);
     var url = this.postUrl;
+    if(url==undefined){
+        alert("未定义接口地址");
+        return ;
+    }
     $.ajax({
         url:url,
         type:"get",
@@ -1262,7 +1266,7 @@ function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,queryParam,su
     this.vueObj = null;    //vue对象实例
     this.tableObjArr = [];//表格数组对象数据
     this.searchId = [];	//表格关联的查询块
-    this.queryUrl = ''//表格查询接口
+    this.queryUrl = null;//表格查询接口
     this.postUrl = postUrl //获取后端数据接口
     this.queryParam = queryParam //表格查询参数json
     this.submitUrl = submitUrl //表格提交接口
@@ -1376,7 +1380,27 @@ GmpTableBlock.prototype.bulidComponent = function(){
     });
     this.vueObj = vue;
 }
-//表格数据加载事件
+//表格数据直接加载方法
+GmpTableBlock.prototype.loadData = function(){
+    var that = this;
+    if(this.queryUrl == null){
+        alert("未定义表格查询接口");
+        return ;
+    }
+    $.ajax({
+        url:that.queryUrl,
+        type:"get",
+        dataType:"json",
+        data:that.queryParam,
+        success:function(res){
+            console.log(res);
+        },
+        error:function(){
+            alert("表格查询数据失败！")
+        }
+    })
+}
+//表格数据重新加载事件
 GmpTableBlock.prototype.reload = function(){
     var arr = this.formBlockItems;
     var arrObj ={};
@@ -1412,9 +1436,6 @@ GmpTableBlock.prototype.setOptions = function(json){
     }
     if(json.queryUrl){
         this.queryUrl = json.queryUrl//表格查询接口
-    }
-    if(json.postUrl){
-        this.postUrl = json.postUrl //获取后端数据接口
     }
     if(json.queryParam){
         this.queryParam = json.queryParam//表格查询参数json
