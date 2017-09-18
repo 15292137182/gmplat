@@ -74,7 +74,7 @@ var basTop = new Vue({
         addProp(){
             operateOPr=1;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '500px', function () {});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {});
         },
         //生效
         affectProp(){
@@ -290,7 +290,7 @@ var basRight=new Vue({
         editProp(){
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '800px', '500px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '800px', '400px', function () {
                 var data={
                     "url":editQurProUrl,
                     "jsonData":{rowId: basRight.currentVal.rowId},
