@@ -1189,6 +1189,7 @@ GmpForm1.prototype.setOptions = function(json){
 }
 //获取表单域数据
 GmpForm1.prototype.request = function(callback){
+    var that = this;
     var data = this.postParam;
     console.log(this.postParam);
     var url = this.postUrl;
@@ -1198,9 +1199,17 @@ GmpForm1.prototype.request = function(callback){
     }
     $.ajax({
         url:url,
-        type:"get",
-        data:{data},
+        type:"post",
+        data:data,
+        dataType:"json",
         success:function(res){
+            var arr = res.resp.content.data;
+            for(var j=0;j<arr.length;j++){
+                var obj = arr[j];
+                for(var k in obj){
+                    that.formObj[k] = obj[k];
+                }
+            }
             if(callback){
                 callback(res);
             }
