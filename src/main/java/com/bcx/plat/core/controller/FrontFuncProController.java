@@ -83,9 +83,9 @@ public class FrontFuncProController extends
       //从模板对象属性表中查询是否存在此属性，如果存在，则attrSource="module"，否则attrSource="base"
       List<TemplateObjectPro> templateObjectPros = templateObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
       if (UtilsTool.isValid(templateObjectPros)) {
-        paramEntity.put("attrSource", "module");
+        paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_MODULE);
       } else {
-        paramEntity.put("attrSource", "base");
+        paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_BASE);
       }
       // 进行新增
       FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
