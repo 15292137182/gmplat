@@ -120,8 +120,14 @@ public class DataSetConfigController extends BaseController {
                               @RequestParam(value = "pageSize", required = false) Integer pageSize,
                               String order) {
     LinkedList<Order> orders = dataSort(order);
-    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> pageResult = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    PageResult<Map<String, Object>> pageResult;
+    if(UtilsTool.isValid(pageNum)){
+      pageResult = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    }else{
+      pageResult=new PageResult(dataSetConfigService.selectMap(blankQuery,orders));
+    }
+
     return result(new ServerResult<>(pageResult));
   }
 
