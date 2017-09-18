@@ -16,10 +16,11 @@ var queryPro=serverPath+"/businObj/queryProPage";
 var config=new Vue({
     el:'#srconfig',
     data:getData.dataObj({
+        tableId:'ruleConfig',
         rowId:'',//重置选中的rowId
         divIndex:'',
         operate:'',
-        tableId:'configTable'
+
     }),
     methods:{
         search(){
@@ -145,8 +146,9 @@ var config=new Vue({
         }
     },
     created(){
-        this.searchPage();
-        var args={"configTable":{belongModule:"belongModule"}};
+        var args={"ruleConfig":{belongModule:"belongModule"}};
         TableKeyValueSet.init(args);
+        this.searchPage();
+
     }
 })
