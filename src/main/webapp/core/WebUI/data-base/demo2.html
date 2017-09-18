@@ -33,15 +33,23 @@
     </div>
 </body>
 <script>
-    var de = new Vue({
+    var vm = new Vue({
         el:"#app1",
-        data:{},
+        data:{
+            rowId: ""
+        },
         mounted() {
             //
         },
         methods:{
             demo() {
-                console.log(GmpForm.formTable.getData());
+                var _json = {
+                    formUrl: serverPath + "/dataSetConfig/modify",
+                    data: GmpForm.formTable.getData().data
+                };
+                console.log(GmpForm.formTable.vueObj.formTable.rowId);
+                _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
+                GmpForm.formTable.submit(_json, function() {});
             }
         }
     })
