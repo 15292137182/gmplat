@@ -17,14 +17,17 @@
 </head>
 <body>
     <div>
-        <el-row id="app" style="margin-top: 15px;">
+        <el-row id="app_2" style="margin-top: 15px;">
             <el-col :span="24">
-                <components :is="gmpForm" data='{"main":"#app","code":"dataSetConfigForm"}' :child-form-table="formTable"></components>
+                <components :is="gmpForm" data='{"main":"#app_2","code":"dataSetConfigForm"}' :child-form-table="formTable"></components>
             </el-col>
         </el-row>
         <el-row id="app1">
-            <el-col :span="10" offset="8">
-                <el-button type="info" @click="demo">获取json对象</el-button>
+            <el-col :span="4" offset="8">
+                <el-button type="info" @click="demo">保存</el-button>
+            </el-col>
+            <el-col :span="4">
+                <el-button type="info">取消</el-button>
             </el-col>
         </el-row>
     </div>

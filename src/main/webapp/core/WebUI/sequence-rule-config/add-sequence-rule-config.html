@@ -63,7 +63,7 @@
 
         </el-row>
 
-        <div :is="item.html" v-for="(item, index) in items" :index="index" :child-num="num"></div>
+        <div :is="item.html" v-for="item in items" :child-num="num"></div>
 
         <el-row type="flex" class="row-bg">
             <el-col :span="10" >

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态渲染页面交互</title>
+</head>
+<body>
+    <el-row id="app" style="margin-top: 20px;">
+        <el-col :span="24">
+            <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable"}' :table-data="tables"></components>
+        </el-col>
+    </el-row>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        $(function() {
+            // 设置表格
+            GmpTable.tables.setOptions({
+                queryUrl: serverPath+'/dataSetConfig/queryPage',
+                queryParam: {
+                    search:"",
+                    pageSize:"10",
+                    pageNum:"1"
+                }
+            });
+
+            // 加载数据
+            GmpTable.tables.loadData();
+
+            // 编辑
+            GmpTable.tables.onEditRow = function () {
+                var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '430px', function() {});
+            }
+
+        });
+    </script>
+</body>
+</html>

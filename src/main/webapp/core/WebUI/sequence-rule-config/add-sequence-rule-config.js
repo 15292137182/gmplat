@@ -210,6 +210,8 @@ new_vue.prototype.creat = function(_id, type) {
     var _obj_=new new_vue();
 
     //拼接vue实例
+    // console.log(_id);
+    // console.log(type);
     new Vue({
         el:_id,
         template:_template,
@@ -362,7 +364,7 @@ new_vue.prototype.creat = function(_id, type) {
 };
 
 var _html=Vue.extend({
-    props:["childNum", "index"],
+    props:["childNum"],
     data() {
         return {
             name: ""
@@ -439,7 +441,7 @@ var add = new Vue({
         //新增按钮
         add() {
             //新增一次标识
-            this.num +=1;
+            this.num += 1;
             //将模板push到对象数组里
             this.items.push({
                 "html":"$html"
@@ -528,20 +530,20 @@ var add = new Vue({
             $.each(_arr, function(index, item) {
                 var _first = item.substr(0, 1);
                 if(_first == "@") {
-                    add.name = "1";
                     add.add();
+                    add.name = 1;
                 }
                 if(_first == "$") {
-                    add.name = "2";
                     add.add();
+                    add.name = 2;
                 }
                 if(_first == "#") {
-                    add.name = "3";
                     add.add();
+                    add.name = 3;
                 }
                 if(_first == "*") {
-                    add.name = "4";
                     add.add();
+                    add.name = 4;
                 }
             });
         },
@@ -563,6 +565,8 @@ var add = new Vue({
         //新增创建vue实例
         if(flag) {
             var _obj=new new_vue();
+            // console.log(this.num);
+            // console.log(this.name);
             _obj.creat("#cnt-"+this.num, this.name);
         }
     }

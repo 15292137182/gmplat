@@ -151,6 +151,7 @@ var dynamicObj = (function() {
     };
 
     function create(mainId, code, compId) {
+        var demoData = null;
         htmlAjax.keyValue(code, false, function(res) {
             var arr = res.resp.content.data;
             if(arr != "") {
@@ -158,21 +159,20 @@ var dynamicObj = (function() {
                 if(arr[0].funcType == "form") {
                     var form = new gmpFormObj(compId, code, arr, mainId, "", "");
                     // 创建vue实例
-                    form.bulidComponent(form.getData);
+                    form.bulidComponent();
                     // 缓存实例化对象
                     GmpForm[compId] = form;
                 }
                 if(arr[0].funcType == "grid") {
+                    var divIndex = -1;
                     var _table = new gmpTableObj(compId, code, arr, mainId, "", "", "", {
-                        onClickRow:function (row){
+                        onClickRow: function (row){
                             console.log("click row data: " + JSON.stringify(row));
                         },
-                        onEditRow:function() {
-                            console.log("edit row");
-                        },
-                        onDeleteRow:function() {
+                        onEditRow: function() {},
+                        onDeleteRow: function() {
                             console.log("delete row");
-                            this.removeRow("代码", "test001");
+                            // this.removeRow("dataset_code", "test001");
                         },
                         onCellClick: function(row) {
                             console.log("cell click data: " + JSON.stringify(row));
@@ -557,7 +557,6 @@ gmpTableObj.prototype.reload = function(){
     this.tableObjArr.push(arrObj);
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = this.tableObjArr;
-    console.log(this.tableObjArr);
 };
 
 //表格由给定数据加载
@@ -628,6 +627,29 @@ gmpTableObj.prototype.setOptions = function(json){
     }
 };
 
+gmpTableObj.prototype.loadData = function(){
+    var that = this;
+    if(this.queryUrl == null){
+        gmpPopup.throwMsg("未定义表格查询接口");
+        return ;
+    }
+    $.ajax({
+        url:that.queryUrl,
+        type:"get",
+        dataType:"json",
+        data:that.queryParam,
+        success:function(res){
+            var data = res.resp.content.data.result;
+            if(data.length > 0) {
+                GmpTable.tables.loadRecord(data);
+            }
+        },
+        error:function(){
+            gmpPopup.throwMsg("表格查询数据失败！");
+        }
+    })
+};
+
 //获取表格参数
 gmpTableObj.prototype.getOptions = function(){
     var json = {};
@@ -673,7 +695,7 @@ gmpTableObj.prototype.submit = function(json){
 };
 
 //获取表格所有数据
-gmpTableObj.prototype.getAllData = function(){
+gmpTableObj.prototype.getAllData = function() {
     var arr = [];
     for(var j=0;j<this.tableObjArr.length;j++){
         if(typeof this.tableObjArr[j] =='object'){
@@ -684,7 +706,7 @@ gmpTableObj.prototype.getAllData = function(){
 };
 
 //获取表格所有数据总数
-gmpTableObj.prototype.getAllDataCount = function(){
+gmpTableObj.prototype.getAllDataCount = function() {
     var arr = [];
     for(var j=0;j<this.tableObjArr.length;j++){
         if(typeof this.tableObjArr[j] =='object'){
@@ -695,24 +717,24 @@ gmpTableObj.prototype.getAllDataCount = function(){
 };
 
 //添加表格数据(集合数组)
-gmpTableObj.prototype.addRows =function(rowArr){
+gmpTableObj.prototype.addRows =function(rowArr) {
     for(var j=0;j<rowArr.length;j++){
         this.tableObjArr.push(rowArr[j]);
     }
 };
 
 //添加表格数据,指定位置添加一条
-gmpTableObj.prototype.addRow =function(json,index){
+gmpTableObj.prototype.addRow =function(json,index) {
     this.tableObjArr.splice(index,0,json);
 };
 
 //删除表格指定索引数据
-gmpTableObj.prototype.removeRowByIndex = function(index){
+gmpTableObj.prototype.removeRowByIndex = function(index) {
     this.tableObjArr.splice(index,1);
 };
 
 //删除指定列的指定值数据
-gmpTableObj.prototype.removeRow = function(column,value){
+gmpTableObj.prototype.removeRow = function(column,value) {
     console.log(column);
     console.log(value);
     var arr = [];
@@ -722,7 +744,7 @@ gmpTableObj.prototype.removeRow = function(column,value){
         }
     }
     for(var j=0;j<arr.length;j++){
-        if(arr[j][column] ==value[j]){
+        if(arr[j][column] ==value){
             var index = arr[j];
             console.log(index);
             this.tableObjArr.splice(index,1);
@@ -731,8 +753,11 @@ gmpTableObj.prototype.removeRow = function(column,value){
 };
 
 //清除表格数据
-gmpTableObj.prototype.clear = function(){
+gmpTableObj.prototype.clear = function() {
     this.tableObjArr = [];//清空缓存数据
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = [];
 };
+
+
+var tableOption = {};
