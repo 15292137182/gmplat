@@ -1393,7 +1393,7 @@ GmpTableBlock.prototype.loadData = function(){
         dataType:"json",
         data:that.queryParam,
         success:function(res){
-            console.log(res);
+            that.loadRecord(res.resp.content.data.result);
         },
         error:function(){
             alert("表格查询数据失败！")
