@@ -31,6 +31,9 @@ var config=new Vue({
                 config.onClick(config.tableData[0]);
             });
         },
+        searchRes(){
+            pagingObj.Example(queryPage,this.input, this.pageSize,this.pageNum,this);
+        },
         onClick(row, event, column){
             this.currentVal=row;
             config.rowId=config.currentVal.rowId;
@@ -148,7 +151,7 @@ var config=new Vue({
     created(){
         var args={"ruleConfig":{belongModule:"belongModule"}};
         TableKeyValueSet.init(args);
-        this.searchPage();
+        this.searchRes();
 
     }
 })
