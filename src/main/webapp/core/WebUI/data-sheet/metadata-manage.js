@@ -40,7 +40,7 @@ var sequenceRuleConfigPageUrl=serverPath+"/sequenceRule/queryPage";
 var keySetPageUrl=serverPath+'/keySet/queryPage';
 //数据集全部数据
 var datasetConfigPageUrl=serverPath+'/dataSetConfig/queryPage'
-var templateObjProPageUro=serverPath+"/templateObj/queryProPage"
+
 
 //关联表
 
@@ -209,8 +209,7 @@ var basLeft = new Vue({
                 this.relateTableRowId = row.relateTableRowId;
                 //左边这一行的数据
                 this.currentId = row.rowId;
-                //关联模板对象rowId
-                this.relateTemplateObject=row.relateTemplateObject;
+
                 //查找右侧对象属性的数据
                 basRight.searchRightTable();
                 //查找右侧模板对象属性的数据
@@ -380,7 +379,7 @@ var basRightTop = new Vue({
     methods:{
         //不分页查询
         searchRightTopEvent(){
-            pagingObj.Examples(templateObjProPageUro,basLeft.relateTemplateObject,'','','',this,function(res){
+            pagingObj.Examples(tempObj,basLeft.currentId,'','','',this,function(res){
                 //console.log(res);
                 //有数据选中第一行
                 //var data=res.resp.content.data;

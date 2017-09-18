@@ -110,7 +110,7 @@ var em=new Vue({
                 "jsonData":{
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.objPro_1.value,//业务对象属性ID
-                    attrSource:em.attrSource,//业务对象属性所属模块
+                  //  attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.formTable.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
                     displayWidget:em.showControl_1.value,//显示控件
@@ -147,7 +147,7 @@ var em=new Vue({
                     rowId:em.rowId,//新增属性的ID
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.objPro_1.value,//业务对象属性ID
-                    attrSource:em.attrSource,//业务对象属性所属模块
+                 //   attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
                     displayWidget:em.showControl_1.value,//显示控件
@@ -267,6 +267,7 @@ var em=new Vue({
         //点击对象属性
         getObjPro_1(datas){
             em.objPro_1.value=datas.value;
+
         },
         //点击显示控件下拉框
         getShowControl_1(datas){
