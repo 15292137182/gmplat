@@ -211,7 +211,7 @@ public class UtilsTool {
     StringBuilder sb = new StringBuilder(underline);
     while (sb.indexOf("_") != -1) {
       sb.replace(sb.indexOf("_"), sb.indexOf("_") + 2,
-              (sb.charAt(sb.indexOf("_") + 1) + "").toUpperCase());
+          (sb.charAt(sb.indexOf("_") + 1) + "").toUpperCase());
     }
     if (bigCamel) {
       sb.replace(0, 1, (sb.charAt(0) + "").toUpperCase());
@@ -321,14 +321,13 @@ public class UtilsTool {
    */
   public static LinkedList<Order> dataSort(String order) {
     LinkedList<Order> orders = new LinkedList<>();
-    if (order == null) {
-      return orders;
+    if (order == null) { // 默认按照修改时间排序
+      order = "{\"str\":\"modifyTime\", \"num\":1}";
     }
     HashMap hashMap = UtilsTool.jsonToObj(order, HashMap.class);
     if (hashMap != null) {
       String str = String.valueOf(hashMap.get("str"));
       int num = Integer.parseInt(hashMap.get("num").toString());
-//      String s = UtilsTool.camelToUnderline(str);
       orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(str), num));
     }
     return orders;
