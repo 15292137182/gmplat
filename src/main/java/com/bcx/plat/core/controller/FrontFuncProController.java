@@ -191,15 +191,20 @@ public class FrontFuncProController extends
           res.put("propertyName", pro.getCname());
           res.put("ename", pro.getEname());
         }
-      } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE)) {
+      } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE) || attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_EXTEND)) {
         String relateBusiPro = res.get("relateBusiPro").toString();
         List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
         for (BusinessObjectPro relate : relateTableColumn) {
-          String relateTableRowId = relate.getRelateTableColumn();
-          List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-          for (DBTableColumn row : rowId) {
-            res.put("ename", row.getColumnEname());
-            res.put("propertyName", row.getColumnCname());
+          if (UtilsTool.isValid(relate.getFieldAlias())) {
+            res.put("ename", relate.getFieldAlias());
+            res.put("propertyName", relate.getPropertyName());
+          } else {
+            String relateTableRowId = relate.getRelateTableColumn();
+            List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+            for (DBTableColumn row : rowId) {
+              res.put("ename", row.getColumnEname());
+              res.put("propertyName", row.getColumnCname());
+            }
           }
         }
       }
