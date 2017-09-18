@@ -491,15 +491,19 @@ var gmpAjax = (function(){
             dataType:"json",
             success:function(res){
                 console.log(res);
-                if(res.resp.content.state==1){
-                    if (typeof callback == "function") {
-                        console.log(res);
+                if(res.resp.respCode=='000'){
+                    if(res.resp.content.state==1){
+                        if (typeof callback == "function") {
+                            console.log(res);
+                            callback(res.resp.content);
+                            showMsg.MsgOk(data.obj,res.resp.content.msg);
+                        }
+                    }else{
                         callback(res.resp.content);
                         showMsg.MsgOk(data.obj,res.resp.content.msg);
                     }
                 }else{
-                    callback(res.resp.content);
-                    showMsg.MsgOk(data.obj,res.resp.content.msg);
+                    data.obj.$message.error(res.resp.respMsg);
                 }
             },
             error:function(res){
@@ -1384,7 +1388,13 @@ GmpTableBlock.prototype.bulidComponent = function(){
     this.vueObj = vue;
 }
 //表格数据直接加载方法
-GmpTableBlock.prototype.loadData = function(){
+GmpTableBlock.prototype.reload = function(json){
+    if(json.queryUrl){
+        this.queryUrl = json.queryUrl;
+    }
+    if(json.queryParam){
+        this.queryParam = json.queryParam;
+    }
     var that = this;
     if(this.queryUrl == null){
         alert("未定义表格查询接口");
@@ -1402,19 +1412,6 @@ GmpTableBlock.prototype.loadData = function(){
             alert("表格查询数据失败！")
         }
     })
-}
-//表格数据重新加载事件
-GmpTableBlock.prototype.reload = function(){
-    var arr = this.formBlockItems;
-    var arrObj ={};
-    //循环赋值
-    for(var j=0;j<arr.length;j++){
-        arrObj[arr[j]["ename"]] = '1';
-    }
-    this.tableObjArr.push(arrObj);
-    var parentComponentName = this.compId;
-    this.vueObj[parentComponentName] = this.tableObjArr;
-    console.log(this.tableObjArr);
 }
 //表格由给定数据加载
 GmpTableBlock.prototype.loadRecord = function(data){
