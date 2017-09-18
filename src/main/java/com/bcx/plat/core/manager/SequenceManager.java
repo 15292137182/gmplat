@@ -1,5 +1,6 @@
 package com.bcx.plat.core.manager;
 
+import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -24,11 +25,9 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * 流水号模块定义：
  * <p>
  * BCX-TEST-SN BCX-20170810-000002
- * <p>
+ * ----------------------------------常量类型-------------------------------------
  * \@{BCX-}&&${d:yyyy-mm-dd:true}&&@{-}&&*{a:6}
- * <p>
  * \@{c} 常量，不具有任何属性
- * <p>
  * #{b;defaultValue;true}变量，从参数中取出;可设置为null时的默认值;是否显示
  * -----------------------------------日期类型------------------------------------
  * 【已废弃】${d;format;true}日期类型模块 可以指定格式化样式，例如;yyyy-MM-dd 是否显示
@@ -48,7 +47,7 @@ public class SequenceManager {
   /**
    * 定义循环类型
    */
-  private static final String LOOP_NONE = "none"; // 不循环
+  private static final String LOOP_NONE = "null"; // 不循环
   private static final String LOOP_DAY = "day"; // 按天
   private static final String LOOP_WEEK = "week"; // 按周
   private static final String LOOP_YEAR = "year"; // 按年
@@ -77,7 +76,6 @@ public class SequenceManager {
 
 
   private static class SequenceManagerHolder {
-
     private static final SequenceManager instance = new SequenceManager();
   }
 
@@ -103,7 +101,7 @@ public class SequenceManager {
    * @return 返回信息
    */
   public String buildSequenceNo(String sequenceCode, Map<String, Object> args, String... objSigns) {
-    List<String> strings = produceSequenceNo(sequenceCode, args, 1, false, objSigns);
+    List<String> strings = produceSequenceNo(sequenceCode, args, null, 1, false, objSigns);
     if (strings.size() == 1) {
       return strings.get(0);
     }
@@ -258,7 +256,7 @@ public class SequenceManager {
     if (isValid(content)) {
       isMock = true;
       this.content = content;
-      return produceSequenceNo(null, args, num, true);
+      return produceSequenceNo(null, args, null, num, true);
     }
     return result;
   }
@@ -272,7 +270,7 @@ public class SequenceManager {
    * @param test         是否为测试？测试生成的流水号不会走动，不会对流水号本身造成影响
    * @return 返回生成的序列号模块
    */
-  public List<String> produceSequenceNo(String sequenceCode, Map<String, Object> args, int num,
+  public List<String> produceSequenceNo(String sequenceCode, Map<String, Object> args, BeanInterface entity, int num,
                                         boolean test, String... objSigns) {
     List<String> result = new ArrayList<>();
     if (init()) {
@@ -282,63 +280,59 @@ public class SequenceManager {
         if (null != objSigns && objSigns.length != 0) {
           this.objectSigns = objSigns;
         }
-
         String[] modules = ruleConfig.getSeqContent().split("&&");
-        // 解析之后存储数据
-        Map<String, Object> rm = new HashMap<>();
+        // 解析之后存储数据,保存模块对应的值
+        Map<String, Object> moduleValue = new HashMap<>();
+        // 序列号存储
         Map<String, Object> serialMap = new HashMap<>();
-        for (String modular : modules) {
-          // @{c} 如果是常量，直接解析之后存储
-          if (modular.matches("^@[{].*[}]$")) {
-            rm.put(modular, modular.substring(2, modular.length() - 1));
-            // #{b:defaultValue:true} 如果是变量，直接解析
-          } else if (modular.matches("^#[{].*[}]$")) {
-            String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
+        Map<String, Object> beanMap = (entity == null ? new HashMap<>() : entity.toMap());
+        for (String module : modules) {
+          //------------@{c} 如果是常量，直接解析之后存储------------
+          if (module.matches("^@[{].*[}]$")) {
+            moduleValue.put(module, module.substring(2, module.length() - 1));
+            //------------#{b:defaultValue:true} 如果是变量，直接解析------------
+          } else if (module.matches("^#[{].*[}]$")) {
+            String[] a = module.substring(2, module.length() - 1).split(CONTENT_SEPARATOR_, 3);
             String key = a[0];
             String value;
             String defaultValue = a.length >= 2 ? a[1] : DEFAULT_ARG_VALUE;
             if (isValid(key)) {
-              value = null == args || args.isEmpty() ? defaultValue :
-                      isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
+              // 判断的标准是变量名中是否含有.，如果含有.，则认为该变量的值取自传入的javaBean，其他的不变，就是取值的地方不同而已
+              if (key.contains(".")) {
+                String _key = key.substring(key.indexOf("."));
+                value = beanMap.containsKey(_key) && isValid(beanMap.get(_key)) ?
+                        beanMap.get(_key).toString() : defaultValue;
+              } else {
+                value = null == args || args.isEmpty() ? defaultValue :
+                        isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
+              }
             } else {
-              value = DEFAULT_ARG_VALUE;
+              value = defaultValue;
             }
             String visible = a.length >= 3 ? a[2] : "";
             if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible
                     .equalsIgnoreCase("true")) {
-              rm.put(modular, value);
+              moduleValue.put(module, value);
             }
-          } else if (modular.matches("^[$][{].*[}]$")) {
-            // ${format}日期类型模块仅指定日期格式 [2017-09-01 modify by hcl]
-            // String[] a = modular.substring(2, modular.length() - 1).split(CONTENT_SEPARATOR_, 3);
-            // String key = a[0];
-            // String format = a.length >= 2 ? a[1] : "yyyy-MM-dd";
-            String format = modular.substring(2, modular.length() - 1);
+          } else if (module.matches("^[$][{].*[}]$")) {
+            String format = module.substring(2, module.length() - 1);
             String value = "";
             if (isValid(format)) {
               value = getDateTimeNow(format);
             }
-            // String visible = a.length >= 3 ? a[2] : "";
-            // if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible.equalsIgnoreCase("true")) {
-            rm.put(modular, value);
-            //  }
-            // 日期不再是变量
-            /*if (isValid(key)) {
-              variable.put(key, value);
-            }*/
-            // *{a:6-none-b&d} 序列号
-          } else if (modular.matches("^[*][{].*[}]$")) {
-            serialMap.put(modular, "");
+            moduleValue.put(module, value);
+          } else if (module.matches("^[*][{].*[}]$")) {
+            serialMap.put(module, "");
           }
         }
         while (num-- != 0) {
           // 解析流水号
           // 增加对象序列支持
-          analysisSerialNo(ruleConfig, serialMap, rm);
+          analysisSerialNo(ruleConfig, serialMap, moduleValue);
           StringBuilder sb = new StringBuilder();
           for (String modular : modules) {
-            if (rm.containsKey(modular)) {
-              sb.append(rm.get(modular));
+            if (moduleValue.containsKey(modular)) {
+              sb.append(moduleValue.get(modular));
             }
           }
           logger.info("新的流水号已生成：" + sb.toString());
