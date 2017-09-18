@@ -51,6 +51,7 @@ var basTop = new Vue({
 var basLeft = new Vue({
     "el": "#basLeft",
     data: getData.dataObj({
+        tableId:'templateObj',
     }),
     methods: {
         //不分页查询
@@ -148,6 +149,8 @@ var basLeft = new Vue({
     },
     //表格高度
     created(){
+        var args={"templateObj":{belongModule:"belongModule"},"objTempProp":{valueType:"valueType"}};
+        TableKeyValueSet.init(args);
         this.searchLeft();
         $(document).ready(function () {
             basLeft.leftHeight = $(window).height() - 194;
@@ -257,8 +260,8 @@ var basRight = new Vue({
         $(window).resize(function () {
             basRight.leftHeight = $(window).height() - 194;
         });
-        var args={"objTempProp":{valueType:"valueType"}};
-        TableKeyValueSet.init(args);
+        // var args={"objTempProp":{valueType:"valueType"}};
+        // TableKeyValueSet.init(args);
     },
     //页面一进入第一行高亮显示
     //updated() {

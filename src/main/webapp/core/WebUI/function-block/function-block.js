@@ -110,7 +110,7 @@ var functionBlock = new Vue({
         }
     },
     created(){
-        var args={"Block":{funcType:"functionBlockType"},"blockAttribute":{displayWidget:"showControl"}};
+        var args={"Block":{funcType:"functionBlockType",belongModule:"belongModule"},"blockAttribute":{displayWidget:"showControl"}};
         TableKeyValueSet.init(args);
         this.get();
         $(document).ready(function(){
