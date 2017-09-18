@@ -1034,7 +1034,7 @@ var DynamicStitchings = (function(){
                 html ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
             }
             if(obj.funcType =="grid"){
-                html='<el-table :data="tableData" @row-click="tableData.clickRow" @row-dblclick="tableData.dblclick" @cell-click="tableData.cellClick" @cell-dblclick="tableData.DbClickCell" @select="tableData.select" @select-all="tableData.selectAll" @selection-change="tableData.getCheckedRows" border style="width: 100%">'+selection+tableColumn+OperationColumn+'</el-table>';
+                html='<el-table :data="tableData" @row-click="tableData.clickRow" @cell-click="tableData.cellClick" @select="tableData.select" @select-all="tableData.selectAll" @selection-change="tableData.getCheckedRows" border style="width: 100%">'+selection+tableColumn+OperationColumn+'</el-table>';
             }
         }
         htmlObj.html = html;
@@ -1316,7 +1316,7 @@ GmpTableBlock.prototype.searchSelect = function(){
     this.tableObjArr["cellClick"] = function(row, column, cell){
         clearTimeout(cellClickTime);
         cellClickTime = setTimeout(function(){
-            that.onCellClick(row,null,null,row[column.property]);
+            //that.onCellClick(row,null,null,row[column.property]);
         },300);
     }
     //单元格双击事件
@@ -1344,7 +1344,10 @@ GmpTableBlock.prototype.searchSelect = function(){
         that.rows = val;
     }
     this.tableObjArr["editRow"] = function(){
-        that.onEditRow();
+        clearTimeout(clickRowTime1);
+        var clickRowTime1 = setTimeout(function(){
+            that.onEditRow();
+        },500);
     }
     //删除按钮事件
     this.tableObjArr["deleteRow"] = function(){
