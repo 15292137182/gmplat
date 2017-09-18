@@ -58,7 +58,7 @@ new_vue.prototype.data=function (type) {
                 render: {
                     show: true,
                     dateValue:'',
-                    checked:true
+             //       checked:true
                 }
             }
         }
@@ -153,11 +153,11 @@ new_vue.prototype.creat = function(_id, type) {
                                         <el-form-item > （如：yyyy-MM-dd）</el-form-item>
                                 </el-col>
                     
-                                <el-col :span="5">
-                                    <el-form-item label="是否显示">
-                                        <el-checkbox @change="getData" v-model="render.checked"></el-checkbox>
-                                    </el-form-item>
-                                </el-col>
+                                <!--<el-col :span="5">-->
+                                    <!--<el-form-item label="是否显示">-->
+                                        <!--<el-checkbox @change="getData" v-model="render.checked"></el-checkbox>-->
+                                    <!--</el-form-item>-->
+                                <!--</el-col>-->
                         </el-row>
                     </el-form>`;
     }
@@ -282,23 +282,34 @@ new_vue.prototype.creat = function(_id, type) {
                     }
                     // 日期
                     if(_vue[i].$el.attributes.type.value == "3") {
-                        var _date = "";
+                        //var _date = "";
                         // 循环遍历取出实例中data
+                        // for(var key in _data) {
+                        //     // 过滤data中的show属性
+                        //     if(key != "show") {
+                        //         // 将Boolean值转化为二进制数值
+                        //         if(_data[key] === true) {
+                        //             _data[key] = 1;
+                        //         }else if(_data[key] === false) {
+                        //             _data[key] = 0;
+                        //         }else if(_data[key] == "") {
+                        //             _data[key] = "null";
+                        //         }
+                        //         _date += _data[key]  + ";";
+                        //     }
+                        // }
+                        // $cnt += "${" + _date + "}&&";
+
+                        //去除是否显示
                         for(var key in _data) {
                             // 过滤data中的show属性
                             if(key != "show") {
-                                // 将Boolean值转化为二进制数值
-                                if(_data[key] === true) {
-                                    _data[key] = 1;
-                                }else if(_data[key] === false) {
-                                    _data[key] = 0;
-                                }else if(_data[key] == "") {
-                                    _data[key] = "null";
+                                if(_data[key] == "") {
+                                    _data[key] = null;
                                 }
-                                _date += _data[key]  + ";";
+                                $cnt += "${" + _data[key] + "}&&";
                             }
                         }
-                        $cnt += "${" + _date + "}&&";
                     }
                     // 序号
                     if(_vue[i].$el.attributes.type.value == "4") {

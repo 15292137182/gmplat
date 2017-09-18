@@ -334,13 +334,13 @@ var basRight=new Vue({
                 // console.log(this.rightVal)
             }
         },
-        extendOnly(row){
-            if(row.wetherExpandPro =="true"){
-                return "是"
-            }else{
-                return "否"
-            }
-        },
+        // extendOnly(row){
+        //     if(row.wetherExpandPro =="true"){
+        //         return "是"
+        //     }else{
+        //         return "否"
+        //     }
+        // },
         FindRFirstDate(row){
             // console.log(row)
             this.$refs.tableData.setCurrentRow(row);
