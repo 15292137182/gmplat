@@ -108,7 +108,6 @@
     var arr=[{widthSetting:'',funcType:'search',ename:'search'}];
     var sObj = new GmpSearchBlock("searchs","codeId",arr,"#searchDemo");
     sObj.bulidComponent();
-    var a = null;
     var arrs = [
         {displayTitle:'代码',funcType:'grid',displayWidget:'tableCell',ename:'code'},
         {displayTitle:'名称',funcType:'grid',displayWidget:'tableCell',ename:'name'},
@@ -122,18 +121,19 @@
     var tObj = new GmpTableBlock("tables","codeId",arrs,"#dataSetConfig","www.baidu.com",{rowId:"123"},"www.baidu.com",{"onClickRow":function(row){
         console.log("执行单击行-----------------");
         console.log(row);
-        a = row;
     },
-        onEditRow:function(){
+        onEditRow:function(index,row){
             console.log("执行编辑行----------------");
-            console.log(a);
+            console.log(row);
         },
-        onDeleteRow:function(){
+        onDeleteRow:function(index,row){
             console.log("执行删除-------------");
+            console.log("下标："+index);
+            console.log(row);
         }
     });
     tObj.bulidComponent();
-    tObj.reload();
+    tObj.loadRecord([{code:"1"},{code:"2"}]);
 //    tObj.loadRecord([{code:"1"},{code:"2"}]);//给数据加载表格数据
 //    tObj.clear();//清空
 //    tObj.loadRecord([{code:"1"}]);//给数据加载表格数据

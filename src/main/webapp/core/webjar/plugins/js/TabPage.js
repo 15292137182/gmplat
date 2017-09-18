@@ -998,7 +998,7 @@ var DynamicStitchings = (function(){
         var html = '';
         var str = '';
         var tableColumn='';//table列
-        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow"></el-button></template></el-table-column>';
+        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
         var selection = '<el-table-column data="checkTable" type="selection" width="55"></el-table-column>'
         var i;
         for(i=0;i<arr.length;i++){
@@ -1306,26 +1306,18 @@ GmpTableBlock.prototype.searchSelect = function(){
     var cellClickTime = null;
     //单击行事件
     this.tableObjArr["clickRow"] = function(row){
-        clearTimeout(clickRowTime);
-        clickRowTime = setTimeout(function(){
-            that.onClickRow(row);
-        },300);
+        that.onClickRow(row);
     }
     //双击行事件
     this.tableObjArr["dblclick"] = function(row,event){
-        clearTimeout(clickRowTime);
         that.onDbClick(row);
     }
     //单元格单击事件
     this.tableObjArr["cellClick"] = function(row, column, cell){
-        clearTimeout(cellClickTime);
-        cellClickTime = setTimeout(function(){
-            //that.onCellClick(row,null,null,row[column.property]);
-        },300);
+        //that.onCellClick(row,null,null,row[column.property]);
     }
     //单元格双击事件
     this.tableObjArr["DbClickCell"] = function(row, column, cell){
-        clearTimeout(cellClickTime);
         that.onDbCellClick(row,null,null,row[column.property])
     }
     // //行选中事件
@@ -1347,15 +1339,12 @@ GmpTableBlock.prototype.searchSelect = function(){
     this.tableObjArr["getCheckedRows"] = function(val){
         that.rows = val;
     }
-    this.tableObjArr["editRow"] = function(){
-        clearTimeout(clickRowTime1);
-        var clickRowTime1 = setTimeout(function(){
-            that.onEditRow();
-        },500);
+    this.tableObjArr["editRow"] = function(index,row){
+        that.onEditRow(index,row);
     }
     //删除按钮事件
-    this.tableObjArr["deleteRow"] = function(){
-        that.onDeleteRow();
+    this.tableObjArr["deleteRow"] = function(index,row){
+        that.onDeleteRow(index,row);
     }
     var obj = {
         props:[],
@@ -1419,6 +1408,7 @@ GmpTableBlock.prototype.loadRecord = function(data){
         this.tableObjArr.push(data[j]);
     }
     var parentComponentName = this.compId;
+    console.log(this.tableObjArr);
     this.vueObj[parentComponentName] = this.tableObjArr;
 };
 //获取选中行数据
