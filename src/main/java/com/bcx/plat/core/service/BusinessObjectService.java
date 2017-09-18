@@ -167,9 +167,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param order    排序
    * @return ServerResult
    */
-  public ServerResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> order) {
+  public ServerResult queryProPage(String search, String rowId, Integer pageNum, Integer pageSize, List<Order> order) {
     //查询属性的搜索条件
-    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), UtilsTool.collectToSet(search));
+    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), UtilsTool.collectToSet(search));
     Condition condition;
     if (UtilsTool.isValid(search)) {
       condition = new ConditionBuilder(BusinessObjectPro.class)
@@ -179,7 +179,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     } else {
       condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", rowId).endAnd().buildDone();
     }
-    PageResult<Map<String, Object>> result = businessObjectProService.selectPageMap(condition, order, pageNum, pageSize);
+    PageResult<Map<String, Object>> result;
+    if (UtilsTool.isValid(pageNum)) { // 有分页参数进行分页查询
+      result = businessObjectProService.selectPageMap(condition, order, pageNum, pageSize);
+    } else { // 没有分页参数则查询全部
+      result = new PageResult(businessObjectProService.selectMap(condition, order));
+    }
     if (result.getResult().size() == 0) {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     } else {

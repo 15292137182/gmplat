@@ -98,8 +98,8 @@ public class BusinessObjectController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search,
-                                 @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                 @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                 @RequestParam(value = "pageNum",required = false) Integer pageNum,
+                                 @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                  String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     ServerResult result = new ServerResult();
