@@ -1,8 +1,6 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.base.BaseService;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

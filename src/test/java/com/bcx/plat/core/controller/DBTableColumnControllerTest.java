@@ -23,8 +23,8 @@ public class DBTableColumnControllerTest extends BaseControllerTest<DBTableColum
     ResultActions resultActions = mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "dbTableColumn/queryPageById")
             .accept(MediaType.APPLICATION_JSON)
+            .param("rowId", rowId)//如果不进行分页查询，去掉后面的分页查询参数
             .param("search", search)
-            .param("rowId", rowId)
             .param("pageNum", pageNum)
             .param("pageSize", pageSize)
             .param("order", order)
