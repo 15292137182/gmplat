@@ -171,9 +171,8 @@ var rightKeyValueSet=new Vue({
                     },
                     "obj": rightKeyValueSet
                 }
-                gmpAjax.showAjax(data, function (res) {
-                    queryData.getData(queryProUrl, rightKeyValueSet.input, leftKeyValueSet.rowId,this);
-                    leftKeyValueSet.searchLeftPage();
+                gmpAjax.showAjax(data,function(res){
+                     queryData.getDatas(queryProUrl,rightKeyValueSet.input,leftKeyValueSet.rowId,rightKeyValueSet,function(res){});
                 })
             })
         },

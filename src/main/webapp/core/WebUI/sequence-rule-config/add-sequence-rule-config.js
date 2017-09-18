@@ -71,11 +71,15 @@ new_vue.prototype.data=function (type) {
                     show: true,
                     numKey:'',
                     numLen:'',
-                    dateCircle:'',
                     relatedConstantKey:'',
-                    checked: false,
+                    checked: true,
                     dates: []
-                }
+                },
+                loop_1:{
+                    params:"loop",
+                    value: "",
+                    disabled: "false"
+                },
             }
         }
     }
@@ -114,8 +118,8 @@ new_vue.prototype.creat = function(_id, type) {
                             <el-col :span="8">
                                 <el-form-item label="变量" label-width="40px">
                                     <!--<el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>-->
-                                    <single-selection @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 120px"></single-selection>
-                                    <single-selection @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 120px"></single-selection>
+                                    <single-selection @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 120px" placeholder="请选择业务对象"></single-selection>
+                                    <single-selection @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 120px" placeholder="请选择业务对象属性"></single-selection>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
@@ -129,7 +133,7 @@ new_vue.prototype.creat = function(_id, type) {
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
-                                <el-form-item label="是否显示">
+                                <el-form-item label="是否显示" label-width="100px">
                                     <el-checkbox @blur="getData" v-model="render.checked"></el-checkbox>
                                 </el-form-item>
                             </el-col>
@@ -181,9 +185,11 @@ new_vue.prototype.creat = function(_id, type) {
                             </el-col>
                             <el-col :span="4">
                                <el-form-item label="循环" label-width="70px">
-                                   <el-select placeholder="请选择" @change="getData" v-model="render.dateCircle" style="width: 100px">
-                                       <el-option v-for="item in render.dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>
-                                   </el-select>
+                                      <single-selection @change-data="getLoop_1"  :initial="loop_1" ref="loop_1" style="width: 100px"></single-selection>
+
+                                   <!--<el-select placeholder="请选择" @change="getData" v-model="render.dateCircle" style="width: 100px">-->
+                                       <!--<el-option v-for="item in render.dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>-->
+                                   <!--</el-select>-->
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
@@ -192,7 +198,7 @@ new_vue.prototype.creat = function(_id, type) {
                                </el-form-item>
                             </el-col>
                             <el-col :span="5">
-                               <el-form-item label="是否显示">
+                               <el-form-item label="是否显示" label-width="100px">
                                    <el-checkbox @change="getData" v-model="render.checked"></el-checkbox>
                                </el-form-item>
                             </el-col>
@@ -219,12 +225,15 @@ new_vue.prototype.creat = function(_id, type) {
                 if(typeof(rowId) == "undefined"){
                     rowId="";
                 }
-                this.$refs.busObjPro_1.setUrl({url:busObjProUrl+"?rowId="+rowId+"&pageSize=9999&search=&pageNum=",key:'{"label":"propertyName","value":"rowId"}'});
+                this.$refs.busObjPro_1.setUrl({url:busObjProUrl+"?rowId="+rowId,key:'{"label":"propertyName","value":"rowId"}'});
             },
             getBusObjPro_1(datas){
                 this.$data.busObjPro_1.value=datas.value;
             },
-
+            getLoop_1(datas){
+                this.$data.loop_1.value=datas.value;
+                this.getData();
+            },
 
             //删除
             remove() {
@@ -314,10 +323,14 @@ new_vue.prototype.creat = function(_id, type) {
                     // 序号
                     if(_vue[i].$el.attributes.type.value == "4") {
                         var _number = "";
+                        var loopValue=_vue[i].$data.loop_1.value;
+                        if(typeof (loopValue) =="undefined")
+                            loopValue="";
+
                         // 循环遍历取出实例中data
                         for(var key in _data) {
                             // 过滤data中的show属性 dates属性
-                            if(key != "show" && key != "dates") {
+                            if(key != "show" && key != "dates" && key !="relatedConstantKey") {
                                 // 将Boolean值转化为二进制数值
                                 if(_data[key] === true) {
                                     _data[key] = 1;
@@ -325,6 +338,9 @@ new_vue.prototype.creat = function(_id, type) {
                                     _data[key] = 0;
                                 }else if(_data[key] == "") {
                                     _data[key] = "null";
+                                }
+                                if(key =="numLen"){
+                                    _data[key]= _data[key]+"-"+loopValue+"-"+_data["relatedConstantKey"]
                                 }
                                 _number += _data[key] + ";";
                             }
