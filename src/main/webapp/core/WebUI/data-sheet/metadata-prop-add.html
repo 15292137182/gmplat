@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <title>Event_Add</title>
     <style>
-        #addProEvent .el-row {
-            margin-top: 20px;
-        }
+
         .el-select-dropdown {
             z-index: 900000000 !important;
+        }
+
+        input {
+            -webkit-user-select: auto !important;
         }
     </style>
 </head>
@@ -16,39 +18,72 @@
 <div id="addProEvent" style="margin-top:20px">
     <el-form :label-position="labelPosition" label-width="120px":model="addProForm" ref='addProForm'
              style="padding:0 20px" class="demo-ruleForm">
-        <el-form-item label="属性代码" prop="codeProInput">
-            <el-input placeholder="请输入属性代码" v-model="addProForm.codeProInput" ref="addProForm.codeProInput" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="属性名称" prop="nameProInput">
-            <el-input placeholder="请输入属性名称" v-model="addProForm.nameProInput" ref="addProForm.nameProInput"></el-input>
-        </el-form-item>
-        <el-form-item label="属性类型">
-            <single-selection @change-data="getProType_1"  :initial="proType_1" ref="proType_1"></single-selection>
-        </el-form-item>
-        <el-form-item label="关联表字段" prop="" v-show="reaTable">
-            <single-selection @change-data="getTableField_1"  :initial="tableField_1" ref="tableField_1"></single-selection>
-        </el-form-item>
-        <el-form-item label="扩展属性名" prop="" v-show="extendPro">
-            <el-input placeholder="请输入扩展属性名" v-model="addProForm.extendName" ></el-input>
-        </el-form-item>
-        <el-form-item label="值类型" prop="typeInput">
-            <single-selection @change-data="getValueType_1"  :initial="valueType_1" ref="valueType_1">
-                <!---->
-            </single-selection>
-        </el-form-item>
-        <el-form-item label="值类型来源" prop="typeComValue">
-            <single-selection @change-data="getValueTypeOrigin_1" :initial="valueTypeOrigin_1" ref="valueTypeOrigin_1">
-                <!---->
-            </single-selection>
-        </el-form-item>
-        <el-form-item label="值来源内容" prop="comContent">
-            <single-selection @change-data="getValueOriginContent_1"  :initial="valueOriginContent_1" ref="valueOriginContent_1">
-                <!---->
-            </single-selection>
-        </el-form-item>
-        <el-form-item label="默认值" prop="defaultValue">
-            <el-input placeholder="请输入属性名称" v-model="addProForm.defaultValue" ref="addProForm.defaultValue"></el-input>
-        </el-form-item>
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="属性代码" prop="codeProInput">
+                    <el-input placeholder="请输入属性代码" v-model="addProForm.codeProInput" ref="addProForm.codeProInput" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="属性名称" prop="nameProInput">
+                    <el-input placeholder="请输入属性名称" v-model="addProForm.nameProInput" ref="addProForm.nameProInput"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="属性类型">
+                    <single-selection @change-data="getProType_1"  :initial="proType_1" ref="proType_1"></single-selection>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="关联表字段" prop="" v-show="reaTable">
+                    <single-selection @change-data="getTableField_1"  :initial="tableField_1" ref="tableField_1"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="字段别名" prop="" prop="fieldAliasInput">
+                    <el-input placeholder="请输入字段别名" v-model="addProForm.fieldAliasInput" ref="addProForm.fieldAliasInput"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="值类型" prop="typeInput">
+                    <single-selection @change-data="getValueType_1"  :initial="valueType_1" ref="valueType_1">
+                        <!---->
+                    </single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="值类型来源" prop="typeComValue">
+                    <single-selection @change-data="getValueTypeOrigin_1" :initial="valueTypeOrigin_1" ref="valueTypeOrigin_1">
+                        <!---->
+                    </single-selection>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="值来源内容" prop="comContent">
+                    <single-selection @change-data="getValueOriginContent_1"  :initial="valueOriginContent_1" ref="valueOriginContent_1">
+                        <!---->
+                    </single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="默认值" prop="defaultValue">
+                    <el-input placeholder="请输入属性名称" v-model="addProForm.defaultValue" ref="addProForm.defaultValue"></el-input>
+                </el-form-item>
+            </el-col>
+
+        </el-row>
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">

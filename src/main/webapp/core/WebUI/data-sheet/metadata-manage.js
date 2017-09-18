@@ -74,7 +74,7 @@ var basTop = new Vue({
         addProp(){
             operateOPr=1;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '400px', '580px', function () {});
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '500px', function () {});
         },
         //生效
         affectProp(){
@@ -104,6 +104,7 @@ var basTop = new Vue({
 var basLeft = new Vue({
     "el": "#basLeft",
     data:  getData.dataObj({
+        tableId:'obj',
 
     }),
 
@@ -228,6 +229,8 @@ var basLeft = new Vue({
         }
     },
     created() {
+        var args={"obj":{belongModule:"belongModule"},"objProp":{valueType:"valueType",wetherExpandPro:"proType"}};
+        TableKeyValueSet.init(args);
         this.searchLeftTable();
 
         $(document).ready(function () {
@@ -236,6 +239,7 @@ var basLeft = new Vue({
         $(window).resize(function () {
             basLeft.leftHeight = $(window).height() - 194;
         })
+
 
     },
     updated() {
@@ -250,7 +254,7 @@ var basLeft = new Vue({
 var basRight=new Vue({
     "el": "#basRight",
     data: getData.dataObj({
-        activeName:'second',
+         activeName:'first',
         tableId:'objProp',
     }),
     methods: {
@@ -286,7 +290,7 @@ var basRight=new Vue({
         editProp(){
             operateOPr = 2;
             var htmlUrl = 'metadata-prop-add.html';
-            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '400px', '580px', function () {
+            divIndex = ibcpLayer.ShowDiv(htmlUrl, '编辑对象属性', '800px', '500px', function () {
                 var data={
                     "url":editQurProUrl,
                     "jsonData":{rowId: basRight.currentVal.rowId},
@@ -304,7 +308,7 @@ var basRight=new Vue({
                     proEm.$refs.valueType_1.setValue(data.valueType);  //值类型
                     proEm.$refs.valueTypeOrigin_1.setValue(data.valueResourceType);   //值类型来源
                     proEm.$refs.valueOriginContent_1.setValue(data.valueResourceContent);     //值来源内容
-
+                    proEm.addProForm.fieldAliasInput=data.fieldAlias; //字段别名
                 })
             });
         },
@@ -366,8 +370,7 @@ var basRight=new Vue({
         $(window).resize(function () {
             basRight.leftHeight = $(window).height() -260;
         });
-        var args={"objProp":{valueType:"valueType",valueResourceType:"valueTypeOrigin"}};
-        TableKeyValueSet.init(args);
+
     },
 })
 //模板的属性

@@ -14,7 +14,7 @@ var proEm = new Vue({
                     checkEvent: false,
                     reaTabEvent:false,
                     defaultValue:'',//默认值
-                    extendName:'' //扩展属性名
+                    fieldAliasInput:'' //扩展属性名
                 },
 
                 //属性类型
@@ -54,11 +54,14 @@ var proEm = new Vue({
                 },
 
                 reaTable:true,//关联表字段是否显示
-                extendPro:false,//关扩展属性名是否显示
             }
         },
         methods: {
             conformEvent() {
+                if(this.proType_1.value=='extend'&&this.addProForm.fieldAliasInput==""){
+                    ibcpLayer.ShowMsg("扩展属性未指定字段别名");
+                    return false;
+                }
                         if(operateOPr==1){
                             addObj.addOk(function(){
                                 var data={
@@ -72,7 +75,7 @@ var proEm = new Vue({
                                         valueType: proEm.valueType_1.value,//值类型
                                         valueResourceType: proEm.valueTypeOrigin_1.value,//值来源类型
                                         valueResourceContent:proEm.valueOriginContent_1.value,//值来源内容
-                                        extendsEname: proEm.addProForm.extendName, //拓展英文名
+                                        fieldAlias: proEm.addProForm.fieldAliasInput, //拓展英文名
                                         defaultValue: proEm.addProForm.defaultValue,//默认值
                                     },
                                     "obj":basTop
@@ -97,6 +100,7 @@ var proEm = new Vue({
                                         valueType: proEm.valueType_1.value,//值类型
                                         valueResourceType: proEm.valueTypeOrigin_1.value,//值来源类型
                                         valueResourceContent: proEm.valueOriginContent_1.value,//值来源内容
+                                        fieldAlias: proEm.addProForm.fieldAliasInput, //拓展英文名
                                         defaultValue: proEm.addProForm.defaultValue,//默认值
 
                                     },
@@ -146,36 +150,6 @@ var proEm = new Vue({
             getValueOriginContent_1(datas){
                  this.valueOriginContent_1.value=datas.value;
             },
-
-            // getChildData_1(datas){
-            //     this.value_1=datas.value;
-            // },
-            // getChildData_2(datas){
-            //     this.value_2=datas.value;
-            //     //console.log(this.value_2)
-            // },
-            // getChildData_3(datas){
-            //     this.value_3 = datas.value;
-            //     //设置默认值
-            //     if (datas != "" || datas != undefined) {
-            //         this.value_3 = datas.value;
-            //         this.label_3 = datas.label;
-            //         this.$refs.childMethod.setValue("Shanghai");
-            //     }
-            //     if(JSON.stringify(datas) === "{}") {
-            //         this.$refs.childMethod.setValue("");
-            //     }
-            // },
-            // getChildData_4(datas){
-            //   this.value_4=datas.value;
-            //    //console.log(this.value_4);
-            //
-            // },
-            // getChildData_5(datas){
-            //     this.value_5=datas.value;
-            //     //console.log(this.value_5);
-            //
-            // },
             cancel() {
                 ibcpLayer.Close(divIndex);
             }

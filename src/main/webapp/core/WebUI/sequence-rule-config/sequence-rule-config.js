@@ -19,6 +19,7 @@ var config=new Vue({
         rowId:'',//重置选中的rowId
         divIndex:'',
         operate:'',
+        tableId:'configTable'
     }),
     methods:{
         search(){
@@ -145,5 +146,7 @@ var config=new Vue({
     },
     created(){
         this.searchPage();
+        var args={"configTable":{belongModule:"belongModule"}};
+        TableKeyValueSet.init(args);
     }
 })
