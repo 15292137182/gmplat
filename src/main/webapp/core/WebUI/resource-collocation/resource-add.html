@@ -14,8 +14,7 @@
     <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="colForm" ref='colForm'
              style="padding:0 20px" class="demo-ruleForm">
         <el-form-item label="请输入键" prop="codeInput">
-            <el-input placeholder="请输入键" v-model="colForm.codeInput" ref="codeInput"
-                      v-bind:disabled="colForm.disabled"></el-input>
+            <el-input placeholder="请输入键" v-model="colForm.codeInput" ref="codeInput"></el-input>
         </el-form-item>
         <el-form-item label="请输入值" prop="nameInput">
             <el-input placeholder="请输入值" v-model="colForm.nameInput" ref="nameInput"></el-input>
