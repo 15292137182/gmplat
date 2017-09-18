@@ -40,7 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
 public class FrontFuncProController extends
-        BaseController {
+    BaseController {
 
   private final TemplateObjectProService templateObjectProService;
   private final BusinessObjectProService businessObjectProService;
@@ -74,10 +74,20 @@ public class FrontFuncProController extends
   @RequestMapping(value = "/add", method = POST)
   public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
     ServerResult result = new ServerResult();
-    String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));
+    String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));//关联对象属性
     List<FrontFuncPro> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+
     int insert = -1;
-    if (!UtilsTool.isValid(rowId)) {
+    if (!UtilsTool.isValid(rowId)) { // 如果没有关联对象属性，进行新增
+      //判断关联对象属性是属于基本属性还是模板属性
+      //从模板对象属性表中查询是否存在此属性，如果存在，则attrSource="module"，否则attrSource="base"
+      List<TemplateObjectPro> templateObjectPros = templateObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+      if (UtilsTool.isValid(templateObjectPros)) {
+        paramEntity.put("attrSource", "module");
+      } else {
+        paramEntity.put("attrSource", "base");
+      }
+      // 进行新增
       FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
       insert = frontFuncPro.insert();
       if (insert == -1) {
@@ -85,7 +95,7 @@ public class FrontFuncProController extends
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
       }
-    } else {
+    } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
       return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
     }
   }
@@ -102,8 +112,8 @@ public class FrontFuncProController extends
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       List<FrontFuncPro> frontFuncPros = frontFuncProService
-              .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-                      UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
+          .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+              UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
 //            frontFuncPros = queryResultProcess(frontFuncPros);
       if (frontFuncPros.size() == 0) {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
@@ -134,8 +144,8 @@ public class FrontFuncProController extends
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {
       PageResult<Map<String, Object>> pageResult = frontFuncProService.selectPageMap(
-              new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId), UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
-              , orders, pageNum, pageSize);
+          new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId), UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
+          , orders, pageNum, pageSize);
       List<Map<String, Object>> list = queryResultProcessAction(pageResult.getResult());
       pageResult.setResult(list);
       return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult));
