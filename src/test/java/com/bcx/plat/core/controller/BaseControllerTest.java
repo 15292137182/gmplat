@@ -1,5 +1,8 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.BaseService;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:spring/spring-*.xml"})
 @WebAppConfiguration // 可调用WEB特性
-public abstract class BaseControllerTest<T> {
+public abstract class BaseControllerTest<T extends BaseController> {
 
   protected static final String URL_TEMPLATE = "/gmp/sys/core/";
   @Autowired

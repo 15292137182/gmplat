@@ -1,20 +1,9 @@
 package com.bcx.plat.core.controller;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * 键值集合管理Controller测试类
@@ -67,7 +56,7 @@ public class KeySetControllerTest extends BaseControllerTest<KeySetController> {
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
             .param("search", search)
-            .param("order",order)
+            .param("order", order)
     );
     showResult(resultActions);
   }
@@ -86,10 +75,10 @@ public class KeySetControllerTest extends BaseControllerTest<KeySetController> {
   @Test
   public void testInsert() throws Exception {
     // 准备参数
-    String keysetCode = "test2";
-    String keysetName = "测试2";
+    String keysetCode = "test5";
+    String keysetName = "测试5";
     String belongModule = "类型";
-    String desp = "测试2";
+    String desp = "测试5";
     //String belongSystem = "GMP";
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/add")
@@ -128,27 +117,27 @@ public class KeySetControllerTest extends BaseControllerTest<KeySetController> {
   @Test
   public void testQueryPage() throws Exception {
     String search = "test"; // 空格查询条件 keysetCode,keysetName
-    String pageNum = "1";
-    String pageSize = "10";
+//    String pageNum = "1";
+//    String pageSize = "10";
     String order = "{\"str\":\"rowId\",\"num\":1}";
-    ResultActions resultActions=this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE+"keySet/queryPage")
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/queryPage")
             .accept(MediaType.APPLICATION_JSON)
-            .param("search",search)
-            .param("pageNum",pageNum)
-            .param("pageSize",pageSize)
-            .param("order",order)
+            .param("search", search)
+//            .param("pageNum",pageNum)
+//            .param("pageSize",pageSize)
+            .param("order", order)
     );
     showResult(resultActions);
   }
 
   @Test
-  public void testQueryById() throws Exception{
+  public void testQueryById() throws Exception {
     String rowId = "b50d7dae-ba9a-4f3c-a39b-781316a9";
-    ResultActions resultActions=this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE+"keySet/queryById")
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "keySet/queryById")
             .accept(MediaType.APPLICATION_JSON)
-            .param("rowId",rowId)
+            .param("rowId", rowId)
     );
     showResult(resultActions);
   }
