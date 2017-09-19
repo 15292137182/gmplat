@@ -321,8 +321,9 @@ public class UtilsTool {
    */
   public static LinkedList<Order> dataSort(String order) {
     LinkedList<Order> orders = new LinkedList<>();
-    if (order == null) { // 默认按照修改时间排序
-      order = "{\"str\":\"modifyTime\", \"num\":1}";
+    if (order == null) {
+//      order = "{\"str\":\"modifyTime\", \"num\":1}"; // 默认按照修改时间排序
+      return orders;
     }
     HashMap hashMap = UtilsTool.jsonToObj(order, HashMap.class);
     if (hashMap != null) {
