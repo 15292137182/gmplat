@@ -908,7 +908,8 @@ var DynamicStitchings = (function(){
                 break;
             case "select-base"://下拉框
                 var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select :disabled="'+disab+'" placeholder="请选择"><el-option></el-option></el-select></el-form-item></el-col></el-row>';
+                var options = "item in childFormTable.options";
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="childFormTable.key" :disabled="'+disab+'" placeholder="请选择"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value" ></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
@@ -1001,7 +1002,9 @@ function GmpForm1(compId, blockId, formBlockItems, vueEl,postUrl,postParam,formU
     this.vueEl = vueEl;     //vue el
     this.vueObj = null;    //vue对象实例
     this.formObj = {
-        disabled:{}
+        disabled:{},
+        options:[{value:'',label:''}],
+        key:'',
     }; //表单数据Key : value
 
     this.postUrl = postUrl //获取后端数据接口
