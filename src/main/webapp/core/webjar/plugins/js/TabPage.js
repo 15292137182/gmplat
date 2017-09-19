@@ -257,7 +257,6 @@ var dataConversion = (function(){
         var data = TableKeyValueSet.getOptions();
         //var data = {"Tid":{"Fun":"code","Fun1":"code1"}};
         //   data.tableId = {"Key":"Value","key":"value"}
-        var datas = data.tableKeySet[oId];   //通过表格ID获取数据
         if(data !=''){
             if(data.hasOwnProperty("tableKeySet")){
                 if(data.tableKeySet.hasOwnProperty(oId)){
