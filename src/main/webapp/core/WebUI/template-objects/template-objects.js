@@ -149,9 +149,11 @@ var basLeft = new Vue({
     },
     //表格高度
     created(){
+        var that = this;
         var args={"templateObj":{belongModule:"belongModule"},"objTempProp":{valueType:"valueType"}};
-        TableKeyValueSet.init(args);
-        this.searchLeft();
+        // TableKeyValueSet.init(args);
+        deferred.done({fun:TableKeyValueSet.init(args),callback:that.searchLeft});
+        // this.searchLeft();
         $(document).ready(function () {
             basLeft.leftHeight = $(window).height() - 194;
         });
