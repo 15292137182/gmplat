@@ -471,7 +471,7 @@ var add = new Vue({
                         "obj":add
                     }
                     gmpAjax.showAjax(data,function(res){
-                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config);
+                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
                         parent.layer.close(window.parent.config.divIndex);
                     })
                 })
@@ -493,7 +493,7 @@ var add = new Vue({
                         "obj":add
                     }
                     gmpAjax.showAjax(data,function(res){
-                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config);
+                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
                         parent.layer.close(window.parent.config.divIndex);
                     })
                 })
