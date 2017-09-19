@@ -242,7 +242,7 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
               Set<String> keys = toMap().keySet();
               Map etc = new HashMap();
               // 将数据读入 javaBean
-              if (null != getJoinTemplates()) {
+              if (etcMap!=null&&null != getJoinTemplates()) {
                 for (BeanInterface bean : getJoinTemplates()) {
                   if (null != bean) {
                     bean.fromMap(etcMap);

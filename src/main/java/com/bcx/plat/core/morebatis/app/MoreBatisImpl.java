@@ -401,6 +401,45 @@ public class MoreBatisImpl implements MoreBatis{
   public List<Map<String, Object>> execute(QueryAction queryAction) {
     final LinkedList list = translator.translateQueryAction(queryAction, new LinkedList());
     List<Map<String, Object>> result = suitMapper.plainSelect(list);
+    return translateJsonWithUnwrapEtc(result);
+  }
+
+  private List<Map<String, Object>> translateJsonWithUnwrapEtc(List<Map<String, Object>> result) {
+    return result.stream().map((row) -> {
+      Map<String, Object> newRow;
+      PGobject etcObj = (PGobject) row.remove("etc");
+      if (etcObj!=null) {
+        newRow=UtilsTool.jsonToObj(etcObj.toString(), HashMap.class);
+      }else {
+        newRow=new HashMap();
+      }
+      for (Map.Entry<String, Object> col : row.entrySet()) {
+        Object value = col.getValue();
+        if (value instanceof PGobject && ((PGobject) value).getType().startsWith("json")) {
+          newRow.put(col.getKey(), UtilsTool.jsonToObj(value.toString(), HashMap.class));
+        }else{
+          newRow.put(col.getKey(),value);
+        }
+      }
+      if (etcObj!=null) {
+        newRow.put("etc",UtilsTool.jsonToObj(etcObj.toString(), HashMap.class));
+      }
+      return newRow;
+    }).collect(Collectors.toList());
+//    for (Map<String, Object> row : result) {
+//      for (Map.Entry<String, Object> col : row.entrySet()) {
+//        Object value = col.getValue();
+//        if (value instanceof PGobject && ((PGobject) value).getType().startsWith("json")) {
+//          row.put(col.getKey(), UtilsTool.jsonToObj(value.toString(), HashMap.class));
+//        }
+//      }
+//    }
+//    return null;
+  }
+
+  public List<Map<String, Object>> executeOrigin(QueryAction queryAction) {
+    final LinkedList list = translator.translateQueryAction(queryAction, new LinkedList());
+    List<Map<String, Object>> result = suitMapper.plainSelect(list);
     return translateJson(result);
   }
 
