@@ -9,6 +9,11 @@ var queryProByIdUrl=serverPath+'/keySetPro/queryById'
 var delUrl=serverPath+'/keySet/delete';
 var delProUrl=serverPath+'/keySetPro/delete'
 
+function GlobalParameter(){
+    var args={"tableKeySet":{"keyValue":{belongModule:"belongModule"}}};
+    return args;
+}
+
 /*
  * 左边table
  */
@@ -19,6 +24,7 @@ gmp_onload=function(){
     leftKeyValueSet=new Vue({
         el:"#left",
         data: getData.dataObj({
+            tableId:'keyValue',
             divIndex:'',
             editdivIndex:'',
         }),
