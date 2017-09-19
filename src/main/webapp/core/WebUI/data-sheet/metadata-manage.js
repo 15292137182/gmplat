@@ -219,6 +219,8 @@ var basLeft = new Vue({
 
                 //获取当前的关联表
                 this.associatTable=row.associatTable;
+                //获取当前业务对象中文名
+                this.relateTemplate=row.relateTemplate;
             }
         },
         FindLFirstDate(row){  //将选中行变颜色
