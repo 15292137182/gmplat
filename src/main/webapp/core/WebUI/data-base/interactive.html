@@ -5,7 +5,12 @@
     <title>动态渲染页面交互</title>
 </head>
 <body>
-    <el-row id="app" style="margin-top: 20px;">
+    <el-row id="add" style="margin-top: 10px;">
+        <el-col :span="4">
+            <el-button type="info" icon="plus" @click="click"></el-button>
+        </el-col>
+    </el-row>
+    <el-row id="app" style="margin-top: 10px;">
         <el-col :span="24">
             <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable"}' :table-data="tables"></components>
         </el-col>
@@ -13,6 +18,24 @@
 
     <script type="text/javascript" src="../Public/publicjs.js"></script>
     <script>
+        gmp_onload = function () {
+            alert('gmp_onload')
+        };
+
+        var add = new Vue({
+            el: "#add",
+            data: function() {
+                return {}
+            },
+            methods: {
+                click(){
+//                    var divIndex = gmpPopup.dynamicDiv('demo2.html', '新增', '400px', '470px', function() {
+//
+//                    })
+                }
+            }
+        });
+
         $(function() {
             // 设置表格
 //            GmpTable.tables.setOptions({
@@ -25,35 +48,33 @@
 //            });
 
             // 加载数据
-            GmpTable.tables.reload({
-                queryUrl: serverPath+'/dataSetConfig/queryPage',
-                queryParam: {
-                    search:"",
-                    pageSize:"10",
-                    pageNum:"1"
-                }
-            });
+//            GmpTable.tables.reload({
+//                queryUrl: serverPath+'/dataSetConfig/queryPage',
+//                queryParam: {
+//                    search:"",
+//                    pageSize:"10",
+//                    pageNum:"1"
+//                }
+//            });
 
             // 编辑
-            GmpTable.tables.onEditRow = function (index, row) {
-                var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '430px', function() {
-//                    console.log(row);
-//                    console.log(index);
-                    var _rowId = row.rowId;
-
-                    GmpForm.formTable.setOptions({
-                        postUrl: serverPath + "/dataSetConfig/queryById",
-                        postParam: {
-                            rowId: _rowId
-                        }
-                    });
-
-                    // 加载编辑页面数据
-                    GmpForm.formTable.request(function(data) {});
-
-
-                });
-            }
+//            GmpTable.tables.onEditRow = function (index, row) {
+//                var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {
+////                    console.log(row);
+////                    console.log(index);
+//                    var _rowId = row.rowId;
+//
+//                    GmpForm.formTable.setOptions({
+//                        postUrl: serverPath + "/dataSetConfig/queryById",
+//                        postParam: {
+//                            rowId: _rowId
+//                        }
+//                    });
+//
+//                    // 加载编辑页面数据
+//                    GmpForm.formTable.request(function(data) {});
+//                });
+//            }
 
         });
     </script>

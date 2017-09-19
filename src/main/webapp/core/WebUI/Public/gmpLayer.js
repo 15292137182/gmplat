@@ -40,6 +40,8 @@ var gmpPopup = (function() {
     // 自定义索引
     var gmpPopIndex = 29891014;
 
+    var _index;
+
     // 弹出div
     var dynamicDiv = function(divHtmlUrl, title, width, height, callback) {
         gmpPopIndex = gmpPopIndex + 10;
@@ -104,6 +106,7 @@ var gmpPopup = (function() {
             }
         });
 
+        _index = divIndex;
         return divIndex;
     };
 
@@ -125,8 +128,8 @@ var gmpPopup = (function() {
     };
 
     // 关闭弹层
-    var Close = function (index) {
-        layer.close(index);
+    var Close = function () {
+        layer.close(_index);
     };
 
     return {
@@ -432,7 +435,6 @@ gmpFormObj.prototype.submit = function(json, callback) {
         type: "post",
         data: json["data"],
         success: function(res) {
-            console.log(res);
             if (callback) {
                 callback(res);
             }
@@ -579,7 +581,6 @@ gmpTableObj.prototype.reload = function(json) {
         dataType: "json",
         data: that.queryParam,
         success: function(res) {
-            console.log(res.resp.content.data.result);
             that.loadRecord(res.resp.content.data.result);
         },
         error: function() {
@@ -590,6 +591,10 @@ gmpTableObj.prototype.reload = function(json) {
 
 // 表格由给定数据加载
 gmpTableObj.prototype.loadRecord = function(data) {
+    // 清空数据
+    this.tableObjArr = [];
+    // 重新注入方法
+    this.searchSelect();
     for (var j = 0; j < data.length; j++) {
         this.tableObjArr.push(data[j]);
     }
@@ -788,5 +793,31 @@ gmpTableObj.prototype.clear = function() {
     this.vueObj[parentComponentName] = [];
 };
 
+$.when(fun1, fun2)
+    .done(function(){
+        if(typeof gmp_onload == "function"){
+            gmp_onload();
+        }
+    })
+    .fail(function(){
+        alert("页面加载失败");
+    });
 
-var tableOption = {};
+
+var fun1 = function(){
+    var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+
+    //TO-DO
+    dtd.resolve(); // 在最终返回处，改变Deferred对象的执行状态
+
+    return dtd.promise(); // 返回promise对象
+}
+
+var fun2 = function(){
+    var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+
+    //TO-DO
+    dtd.resolve(); // 在最终返回处，改变Deferred对象的执行状态
+
+    return dtd.promise(); // 返回promise对象
+}

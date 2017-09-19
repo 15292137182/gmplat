@@ -22,12 +22,12 @@
                 <components :is="gmpForm" data='{"main":"#app_2","code":"dataSetConfigForm"}' :child-form-table="formTable"></components>
             </el-col>
         </el-row>
-        <el-row id="app1">
+        <el-row id="app1" style="margin-bottom: 10px;">
             <el-col :span="4" offset="8">
                 <el-button type="info" @click="demo">保存</el-button>
             </el-col>
             <el-col :span="4">
-                <el-button type="info">取消</el-button>
+                <el-button type="info" @click="cancel">取消</el-button>
             </el-col>
         </el-row>
     </div>
@@ -43,13 +43,27 @@
         },
         methods:{
             demo() {
-                var _json = {
-                    formUrl: serverPath + "/dataSetConfig/modify",
-                    data: GmpForm.formTable.getData().data
-                };
-                console.log(GmpForm.formTable.vueObj.formTable.rowId);
-                _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
-                GmpForm.formTable.submit(_json, function() {});
+//                var _json = {
+//                    formUrl: serverPath + "/dataSetConfig/modify",
+//                    data: GmpForm.formTable.getData().data
+//                };
+//                _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
+//                GmpForm.formTable.submit(_json, function() {
+//                    GmpTable.tables.reload({
+//                        queryUrl: serverPath+'/dataSetConfig/queryPage',
+//                        queryParam: {
+//                            search:"",
+//                            pageSize:"10",
+//                            pageNum:"1"
+//                        }
+//                    });
+//                    // 关闭弹层
+//                    vm.cancel();
+//                });
+                console.log(GmpForm.formTable.getData().data);//新增
+            },
+            cancel() {
+                gmpPopup.close();
             }
         }
     })
