@@ -90,23 +90,16 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
   public Map<String, Object> toMap() {
     Map map = jsonToObj(objToJson(this), HashMap.class);
     assert map != null;
-    if (etc != null) {
+    if (this.etc != null) {
       map.putAll(etc);
     }
-    List<BeanInterface> joinTemplates = getJoinTemplates();
-    if (joinTemplates != null) {
-      if (!joinTemplates.isEmpty()) {
-        if (etc==null) etc=new HashMap();
-      }
-      for (BeanInterface bean : joinTemplates) {
+    if (getJoinTemplates() != null) {
+      for (BeanInterface bean : getJoinTemplates()) {
         if (null != bean) {
-          Map beanMap = bean.toMap();
-          map.putAll(beanMap);
-          etc.putAll(beanMap);
+          map.putAll(bean.toMap());
         }
       }
     }
-    map.put("etc",etc);
     return map;
   }
 
@@ -123,14 +116,6 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
   @SuppressWarnings("unchecked")
   public T fromMap(Map map) {
     Class current = getClass();
-    //与数据库中的etc合并
-    Map etcMap = (Map) map.get("etc");
-//    if (etcMap!=null) {
-//      Object etcTemp = map.remove("etc");
-//      etcMap.putAll(map);
-//      map=etcMap;
-//      map.put("etc",etcTemp);
-//    }
     while (current != Object.class) {
       Method[] methods = current.getDeclaredMethods();
       for (Method method : methods) {
@@ -152,7 +137,7 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
               if (null != getJoinTemplates()) {
                 for (BeanInterface bean : getJoinTemplates()) {
                   if (null != bean) {
-                    bean.fromMap(etcMap);
+                    bean.fromMap(map);
                   }
                 }
               }
