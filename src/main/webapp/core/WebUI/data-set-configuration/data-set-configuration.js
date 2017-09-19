@@ -1,130 +1,136 @@
 /**
  * Created by andim on 2017/8/9.
  */
-//表格
-var dataSetConfig = new Vue({
-    el:'#dataSetConfig',
-    data:getData.dataObj({
-        /**
-         * tsj 07/8/28 替换vue data
-         **/
-        tableId:'dataSetConfig',
-        rowObjId:'',//行内容ID
-        rowObj:'',//行内容
-        selUrl:serverPath+'/dataSetConfig/queryPage',//分页查询接口
-    }),
-    methods:{
-        searchResTable(){//分页查询
-            pagingObj.Example(this.selUrl,this.input,this.pageSize,this.pageNum,this);
+
+function GlobalParameter(){
+    var args={"tableKeySet":{"dataSetConfig":{datasetType:"dataSetConfigType",belongModule:"belongModule"}}};
+    return args;
+}
+
+var dataSetConfig;
+var dataSetConfigButton;
+gmp_onload=function(){
+    //表格
+    dataSetConfig = new Vue({
+        el:'#dataSetConfig',
+        data:getData.dataObj({
+            /**
+             * tsj 07/8/28 替换vue data
+             **/
+            tableId:'dataSetConfig',
+            rowObjId:'',//行内容ID
+            rowObj:'',//行内容
+            selUrl:serverPath+'/dataSetConfig/queryPage',//分页查询接口
+        }),
+        methods:{
+            searchResTable(){//分页查询
+                pagingObj.Example(this.selUrl,this.input,this.pageSize,this.pageNum,this);
+            },
+            clickTable(row){//表格点击事件
+                console.log(row)
+                this.rowObjId = row.rowId;
+                this.rowObj = row;
+                dataSetConfigButton.dis = false;
+            },
+            FindOk(row){
+                this.$refs.dataSetConfigTable.setCurrentRow(row);
+            },
+            editDataSetConfig(){
+                dataSetConfigButton.editDataSetConfig();
+            },
+            deleteDataSetConfig(){
+                dataSetConfigButton.deleteDataSetConfig();
+            },
+            handleSizeChange(val){
+                this.pageSize=val;
+                this.searchResTable();
+            },
+            handleCurrentChange(val){
+                this.pageNum=val;
+                this.searchResTable();
+            },
+            headSort(column){
+                pagingObj.headSort(this.selUrl,this.input,this.pageSize,this.pageNum,column,this);
+            }
         },
-        clickTable(row){//表格点击事件
-            console.log(row)
-            this.rowObjId = row.rowId;
-            this.rowObj = row;
-            dataSetConfigButton.dis = false;
-        },
-        FindOk(row){
-            this.$refs.dataSetConfigTable.setCurrentRow(row);
-        },
-        editDataSetConfig(){
-            dataSetConfigButton.editDataSetConfig();
-        },
-        deleteDataSetConfig(){
-            dataSetConfigButton.deleteDataSetConfig();
-        },
-        handleSizeChange(val){
-            this.pageSize=val;
+        created(){
             this.searchResTable();
+            $(document).ready(function(){
+                dataSetConfig.Height=$(window).height()-190;
+            });
+            $(window).resize(function(){
+                dataSetConfig.Height=$(window).height()-190;
+            })
         },
-        handleCurrentChange(val){
-            this.pageNum=val;
-            this.searchResTable();
-        },
-        headSort(column){
-            pagingObj.headSort(this.selUrl,this.input,this.pageSize,this.pageNum,column,this);
+        updated(){
+            if(this.tableData.length>0){
+                this.FindOk(this.tableData[0]);
+            }
         }
-    },
-    created(){
-        var that = this;
-        var args={"dataSetConfig":{datasetType:"dataSetConfigType",belongModule:"belongModule"}};
-        // TableKeyValueSet.init(args);
-        deferred.done({fun:TableKeyValueSet.init(args),callback:that.searchResTable});
-        // this.searchResTable();
-        // $(document).ready(function(){
-        //     dataSetConfig.Height=$(window).height()-190;
-        // });
-        // $(window).resize(function(){
-        //     dataSetConfig.Height=$(window).height()-190;
-        // })
-    },
-    updated(){
-        if(this.tableData.length>0){
-            this.FindOk(this.tableData[0]);
-        }
-    }
-})
+    })
 
 //按钮
-var dataSetConfigButton = new Vue({
-    el:'#dataSetConfigButton',
-    data:{
-        divIndex:'',
-        dis:true,//是否禁用
-        delUrl:serverPath+'/dataSetConfig/delete'//删除
-    },
-    methods:{
-        addDataSetConfig(){//新增
-            this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','新增数据集配置','400px', '530px',function(){
-                addDataSet.isEdit = false;
-            });
+    dataSetConfigButton = new Vue({
+        el:'#dataSetConfigButton',
+        data:{
+            divIndex:'',
+            dis:true,//是否禁用
+            delUrl:serverPath+'/dataSetConfig/delete'//删除
         },
-        editDataSetConfig(){//编辑
-            /**
-             * tsj 07/8/28 替换ajax方法，修改赋值
-             **/
-            this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '530px',function(){
-                var data = {
-                    "url":serverPath+'/dataSetConfig/queryById',
-                    "jsonData":{
-                        rowId: dataSetConfig.rowObjId
-                    },
-                    "obj":dataSetConfigButton
-                }
-                gmpAjax.showAjax(data,function(res){
-                    var data =res.data[0];
-                    console.log(res);
-                    addDataSet.isEdit = true;
-                    addDataSet.formTable.datasetCode = data.datasetCode;
-                    addDataSet.formTable.nameInput =data.datasetName;
-                        //类型下拉框赋值修改  jms  2017/8/21
-                    //addDataSet.$refs.dsctype.value = data.datasetType;
-                    addDataSet.$refs.dataSetType_1.setValue(data.datasetType);
-
-                    addDataSet.formTable.content = data.datasetContent;
-                    addDataSet.formTable.desp = data.desp;
-                    addDataSet.formTable.version =data.version;
-                    addDataSet.$refs.belongModule_1.setValue(data.belongModule);
-                    addDataSet.formTable.belongSystem =data.belongSystem;
-
-                })
-            });
-        },
-        deleteDataSetConfig(){//删除
-            deleteObj.del(function(){
+        methods:{
+            addDataSetConfig(){//新增
+                this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','新增数据集配置','400px', '530px',function(){
+                    addDataSet.isEdit = false;
+                });
+            },
+            editDataSetConfig(){//编辑
                 /**
-                 * tsj 07/8/30 ajax方法重构
-                * */
-                var data = {
-                    "url":dataSetConfigButton.delUrl,
-                    "jsonData":{
-                        rowId:dataSetConfig.rowObjId
-                    },
-                    "obj":dataSetConfigButton
-                }
-                gmpAjax.showAjax(data,function(res){
-                    queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
+                 * tsj 07/8/28 替换ajax方法，修改赋值
+                 **/
+                this.divIndex = ibcpLayer.ShowDiv('add-data-set.html','编辑数据集配置','400px', '530px',function(){
+                    var data = {
+                        "url":serverPath+'/dataSetConfig/queryById',
+                        "jsonData":{
+                            rowId: dataSetConfig.rowObjId
+                        },
+                        "obj":dataSetConfigButton
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        var data =res.data[0];
+                        console.log(res);
+                        addDataSet.isEdit = true;
+                        addDataSet.formTable.datasetCode = data.datasetCode;
+                        addDataSet.formTable.nameInput =data.datasetName;
+                        //类型下拉框赋值修改  jms  2017/8/21
+                        //addDataSet.$refs.dsctype.value = data.datasetType;
+                        addDataSet.$refs.dataSetType_1.setValue(data.datasetType);
+
+                        addDataSet.formTable.content = data.datasetContent;
+                        addDataSet.formTable.desp = data.desp;
+                        addDataSet.formTable.version =data.version;
+                        addDataSet.$refs.belongModule_1.setValue(data.belongModule);
+                        addDataSet.formTable.belongSystem =data.belongSystem;
+
+                    })
+                });
+            },
+            deleteDataSetConfig(){//删除
+                deleteObj.del(function(){
+                    /**
+                     * tsj 07/8/30 ajax方法重构
+                     * */
+                    var data = {
+                        "url":dataSetConfigButton.delUrl,
+                        "jsonData":{
+                            rowId:dataSetConfig.rowObjId
+                        },
+                        "obj":dataSetConfigButton
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
+                    })
                 })
-            })
+            }
         }
-    }
-})
+    })
+}

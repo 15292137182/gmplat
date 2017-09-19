@@ -549,7 +549,10 @@ var add = new Vue({
         },
         //模块下拉框
         getBelongModule_1(datas){
-            this.belongModule_1.value=datas.value;
+            if(datas)
+                this.belongModule_1.value="";
+            else
+                this.belongModule_1.value=datas.value;
         }
     },
     created(){

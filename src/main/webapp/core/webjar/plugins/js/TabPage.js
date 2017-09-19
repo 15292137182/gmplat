@@ -258,8 +258,14 @@ var dataConversion = (function(){
         //var data = {"Tid":{"Fun":"code","Fun1":"code1"}};
         //   data.tableId = {"Key":"Value","key":"value"}
         var datas = data.tableKeySet[oId];   //通过表格ID获取数据
-        // var datas = data["tableKeySet"][oId];   //通过表格ID获取数据
-        return datas;
+        if(data !=''){
+            if(data.hasOwnProperty("tableKeySet")){
+                if(data.tableKeySet.hasOwnProperty(oId)){
+                    return data.tableKeySet[oId];   //通过表格ID获取数据
+                }
+            }
+        }
+        return [];
     }
     //获取相同key
     var getKey = function(datas,arr){

@@ -61,7 +61,7 @@ var fun2 = function(dtd){
 
 var TableKeyValueSet = (function(){
     var tableKeyValueSetIn='';
-    var tableKeyValueSetOut='';
+    var tableKeyValueSetOut={};
 
     var init = function(dtd){
         var parameterStr='';
@@ -115,8 +115,11 @@ var TableKeyValueSet = (function(){
             }else{
                 alert("未传入参数");
             }
-            return init;
-        };
+
+        }else{
+            dtd.resolve();
+        }
+        return init;
     }
 
     var getOptions=function () {
