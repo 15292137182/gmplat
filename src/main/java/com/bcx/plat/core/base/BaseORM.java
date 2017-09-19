@@ -377,9 +377,4 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
     return execute;
   }
-
-  public abstract Map<String, Object> toDbMap();
-
-  public abstract T fromDbMap(Map map);
-
 }

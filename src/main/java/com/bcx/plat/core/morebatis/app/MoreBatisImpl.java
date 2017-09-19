@@ -181,7 +181,7 @@ public class MoreBatisImpl implements MoreBatis{
    */
   public <T extends BeanInterface<T>> int insertEntity(T entity) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
-    Map<String, Object> values = ((BaseORM)entity).toDbMap();
+    Map<String, Object> values = entity.toDbMap();
     return insert(entityClass, values).execute();
   }
 
@@ -193,7 +193,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int deleteEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
-    Map<String, Object> values = ((BaseORM)entity).toDbMap();
+    Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
             .collect(Collectors.toList());
@@ -208,7 +208,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int updateEntity(T entity) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
-    Map<String, Object> values = ((BaseORM)entity).toDbMap();
+    Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
             .collect(Collectors.toList());
@@ -223,7 +223,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
-    final Map<String, Object> values = ((BaseORM)entity).toDbMap();
+    final Map<String, Object> values = entity.toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
@@ -244,7 +244,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
-    Map<String, Object> values = ((BaseORM)entity).toDbMap();
+    Map<String, Object> values = entity.toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
@@ -264,7 +264,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
-    Map<String, Object> values = ((BaseORM)entity).toDbMap();
+    Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
             .collect(Collectors.toList());
@@ -273,7 +273,7 @@ public class MoreBatisImpl implements MoreBatis{
     if (result.size() == 1) {
       HashMap<String, Object> _obj = new HashMap<>();
       result.get(0).forEach((key, value) -> _obj.put(underlineToCamel(key, false), value));
-      return entity.fromMap(_obj);
+      return entity.fromDbMap(_obj);
     } else {
       return null;
     }
