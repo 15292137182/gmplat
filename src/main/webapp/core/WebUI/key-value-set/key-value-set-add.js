@@ -4,6 +4,8 @@
 //定义各方法接口
 var addUrl=serverPath+'/keySet/add';
 var modifyUrl=serverPath+'/keySet/modify';
+var checkCodeUrl=serverPath+'keySet/checkCode';
+
 
 var keyValueSetAdd = new Vue({
     el: '#keyValueSetAdd',
@@ -74,6 +76,16 @@ var keyValueSetAdd = new Vue({
                 queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet);
                 ibcpLayer.Close(leftKeyValueSet.editdivIndex);
             })
+        },
+
+        //判断代码是否重复
+        changeKeySetCode(){
+            var data={
+                "url":checkCodeUrl,
+                "jsonData":{
+
+                }
+            }
         },
 
         confirm(formName) {

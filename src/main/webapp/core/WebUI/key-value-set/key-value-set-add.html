@@ -17,7 +17,7 @@
   <el-form :label-position="labelPosition" label-width="100px" :rules="rules" :model="keyForm" ref='keyForm'
            style="padding:0 20px 0 5px" class="demo-ruleForm">
     <el-form-item label="代码" prop="keysetCodeInput">
-      <el-input placeholder="请输入代码" v-model="keyForm.keysetCodeInput" ref="keysetCodeInput"></el-input>
+      <el-input placeholder="请输入代码" v-model="keyForm.keysetCodeInput" ref="keysetCodeInput" :@blur="changeKeySetCode"></el-input>
     </el-form-item>
     <el-form-item label="名称" prop="keysetNameInput">
       <el-input placeholder="请输入名称" v-model="keyForm.keysetNameInput" ref="keysetNameInput"></el-input>

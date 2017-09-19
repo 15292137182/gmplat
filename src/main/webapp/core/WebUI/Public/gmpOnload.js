@@ -51,11 +51,88 @@ var fun1 = function(dtd) {
 };
 
 var fun2 = function(dtd){
-    //TO-DO
-    console.log("第二次回调");
+    TableKeyValueSet.init(dtd);
+
+
 
     return dtd.promise(); // 返回promise对象
+
 };
+
+var TableKeyValueSet = (function(){
+    var tableKeyValueSetIn='';
+    var tableKeyValueSetOut='';
+
+    var init = function(dtd){
+        var parameterStr='';
+        if(typeof GlobalParameter =="function"){
+            parameterStr=GlobalParameter();
+            if("" !=parameterStr || undefined !=parameterStr || null!=parameterStr ){
+                tableKeyValueSetIn=parameterStr;
+                var arr=new Array();
+                for(var i in parameterStr){
+                    for (var j in parameterStr[i]){
+                        for(var m in parameterStr[i][j]){
+                            var str='"'+parameterStr[i][j][m]+'"';
+                            arr.push(str);
+                        }
+                    }
+                }
+                arr="["+arr+"]";
+                $.ajax({
+                    url:serverPath+"/keySet/queryKeySet",
+                    type:"get",
+                    data:{
+                        search:arr
+                    },
+                    dataType:"json",
+                    xhrFields: {withCredentials: true},
+                    success:function(res){
+                        var param={};
+                        // var jsonStr=JSON.parse(res.data);res.resp.content.data.result
+                        /*tsj 17/08/28 修改后端返回结构*/
+                        /**
+                         * tsj 07/8/30 修改后端返回数据结构
+                         **/
+
+                        var jsonStr=JSON.parse(res.resp.content.data);
+                        for(k in jsonStr){
+                            var _param={};
+                            for(m in jsonStr[k]){
+                                var aa=jsonStr[k][m];
+                                _param[aa.confKey]=aa.confValue;
+                            }
+                            param[k]=_param;
+                        }
+                        tableKeyValueSetOut=param;
+                        dtd.resolve();
+                    },
+                    error:function(){
+                        alert("未能获取键值集合")
+                    }
+                })
+
+            }else{
+                alert("未传入参数");
+            }
+            return init;
+        };
+    }
+
+    var getOptions=function () {
+        return tableKeyValueSetIn;
+    };
+
+    var getData=function(){
+        return tableKeyValueSetOut;
+    };
+
+    return {
+        init:init,
+        getOptions:getOptions,
+        getData:getData
+    }
+})()
 
 var getHtml = (function() {
     var ajax_html = function(dtd, mainId, code, compId) {

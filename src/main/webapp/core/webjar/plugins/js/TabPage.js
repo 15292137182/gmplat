@@ -257,7 +257,7 @@ var dataConversion = (function(){
         var data = TableKeyValueSet.getOptions();
         //var data = {"Tid":{"Fun":"code","Fun1":"code1"}};
         //   data.tableId = {"Key":"Value","key":"value"}
-        var datas = data[oId];   //通过表格ID获取数据
+        var datas = data.tableKeySet[oId];   //通过表格ID获取数据
         return datas;
     }
     //获取相同key
@@ -632,78 +632,7 @@ var SelectOptions = (function(){
 //var tabSelectShow={"dataSetConfig":
 //                                  {"datasetType":"dataSetConfigType"}};
 
-var TableKeyValueSet = (function(){
-    var tableKeyValueSetIn='';
-    var tableKeyValueSetOut='';
 
-    var init = function(parameterStr){
-         var dtd = $.Deferred();
-        if("" !=parameterStr || undefined !=parameterStr || null!=parameterStr ){
-            tableKeyValueSetIn=parameterStr;
-            var arr=new Array();
-            for(var i in parameterStr){
-                for (var j in parameterStr[i]){
-                    for(var m in parameterStr[i][j]){
-                        var str='"'+parameterStr[i][j][m]+'"';
-                        arr.push(str);
-                    }
-
-                }
-            }
-            arr="["+arr+"]";
-            $.ajax({
-                url:serverPath+"/keySet/queryKeySet",
-                type:"get",
-                data:{
-                    search:arr
-                },
-                dataType:"json",
-                xhrFields: {withCredentials: true},
-                success:function(res){
-                    var param={};
-                    // var jsonStr=JSON.parse(res.data);res.resp.content.data.result
-                    /*tsj 17/08/28 修改后端返回结构*/
-                    /**
-                     * tsj 07/8/30 修改后端返回数据结构
-                     **/
-                        console.log(res);
-                    var jsonStr=JSON.parse(res.resp.content.data);
-                    for(k in jsonStr){
-                        var _param={};
-                        for(m in jsonStr[k]){
-                            var aa=jsonStr[k][m];
-                            _param[aa.confKey]=aa.confValue;
-                        }
-                        param[k]=_param;
-                    }
-                    tableKeyValueSetOut=param;
-                    dtd.resolve(); // 在最终返回处，改变Deferred对象的执行状态
-                },
-                error:function(){
-                    alert("未能获取键值集合")
-                }
-            })
-            return dtd.promise(); // 返回promise对象
-        }else{
-            alert("未传入参数");
-        }
-        return init;
-    };
-
-    var getOptions=function () {
-        return tableKeyValueSetIn;
-    };
-
-    var getData=function(){
-        return tableKeyValueSetOut;
-    };
-
-    return {
-        init:init,
-        getOptions:getOptions,
-        getData:getData
-    }
-})()
 
 //测试代码
 var index = 0;
@@ -1647,22 +1576,7 @@ GmpSearchBlock.prototype.bulidComponent = function(){
     this.vueObj = vue;
 }
 
-var parameterStr='';
-$(function () {
-    if(typeof GlobalParameter =="function"){
-        parameterStr=GlobalParameter();
-    }
-    $.when(TableKeyValueSet.init(parameterStr))
-        .done(function(){
-            if(typeof gmp_onload == "function"){
-                gmp_onload();
-            }
-        })
-        .fail(function(){
-            alert("页面加载失败");
-        });
 
-})
 
 var deferred = (function(){
     var done = function(json){
