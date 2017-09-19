@@ -1413,6 +1413,8 @@ GmpTableBlock.prototype.reload = function(json){
 }
 //表格由给定数据加载
 GmpTableBlock.prototype.loadRecord = function(data){
+    this.tableObjArr = [];
+    this.searchSelect();
     for(var j=0;j<data.length;j++){
         this.tableObjArr.push(data[j]);
     }
