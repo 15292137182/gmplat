@@ -35,17 +35,33 @@
 <!--<script type="text/javascript" src="../Public/publicjs.js"></script>-->
 <script>
     gmp_onload = function() {
-        var _rowId = select_row.rowId;
-        // 设置取值url param
-        GmpForm.formTable.setOptions({
-            postUrl: serverPath + "/dataSetConfig/queryById",
-            postParam: {
-                rowId: _rowId
-            }
-        });
+        // 若为空则为新增状态
+        if(select_row != "") {
+            var _rowId = select_row.rowId;
+            console.log(GmpForm.formTable);
+            // 设置取值url param
+            GmpForm.formTable.setOptions({
+                postUrl: serverPath + "/dataSetConfig/queryById",
+                postParam: {
+                    rowId: _rowId
+                }
+            });
 
-        // 加载编辑页面数据
-        GmpForm.formTable.request(function(data) {});
+            // 加载编辑页面数据
+            GmpForm.formTable.request(function(data) {});
+
+            GmpForm.formTable.formObj.belongModuleSelect.splice(0, 1);
+            GmpForm.formTable.formObj.belongModuleSelect.push({
+                value: "beijing",
+                label: "北京"
+            });
+
+            GmpForm.formTable.formObj.datasetTypeSelect.splice(0, 1);
+            GmpForm.formTable.formObj.datasetTypeSelect.push({
+                value: "shanghai",
+                label: "上海"
+            });
+        }
     };
 
     var vm = new Vue({
@@ -58,9 +74,25 @@
         },
         methods:{
             demo() {
-                console.log(add.flag);
                 if(add.flag == "add") {
-                    //
+                    // 获取页面数据
+                    var _json = {
+                        formUrl: serverPath + "/dataSetConfig/add",
+                        data: GmpForm.formTable.getData().data
+                    };
+                    GmpForm.formTable.submit(_json, function() {
+                        // 成功回调
+                        GmpTable.tables.reload({
+                            queryUrl: serverPath+'/dataSetConfig/queryPage',
+                            queryParam: {
+                                search:"",
+                                pageSize:"10",
+                                pageNum:"1"
+                            }
+                        });
+                        // 关闭弹层
+                        vm.cancel();
+                    });
                 }else {
                     // 获取页面数据
                     var _json = {
@@ -83,7 +115,6 @@
                         vm.cancel();
                     });
                 }
-//                console.log(GmpForm.formTable.getData().data);//新增
             },
             cancel() {
                 gmpPopup.close();

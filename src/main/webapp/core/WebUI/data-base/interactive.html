@@ -5,6 +5,11 @@
     <title>动态渲染页面交互</title>
 </head>
 <body>
+    <!--<el-row id="search" style="margin-top: 10px;">-->
+        <!--<el-col :span="7">-->
+            <!--<components :is="searchBlock" data='{"main":"#search","code":"dateSetConfigsearch"}' :search-input="searchs"></components>-->
+        <!--</el-col>-->
+    <!--</el-row>-->
     <el-row id="add" style="margin-top: 10px;">
         <el-col :span="4">
             <el-button type="info" icon="plus" @click="click"></el-button>
@@ -22,7 +27,7 @@
         gmp_onload = function () {
             // 加载数据
             GmpTable.tables.reload({
-                queryUrl: serverPath+'/dataSetConfig/queryPage',
+                queryUrl: serverPath + '/dataSetConfig/queryPage',
                 queryParam: {
                     search:"",
                     pageSize:"10",
@@ -46,6 +51,7 @@
             },
             methods: {
                 click() {
+                    select_row = [];
                     // 该表标识
                     add.flag = "add";
                     // 弹出
