@@ -113,7 +113,7 @@ public class KeySetProController extends BaseController {
       KeySetPro keySetPro = new KeySetPro();
       del = keySetPro.deleteById(rowId);
       if (del != -1) {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+        return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }

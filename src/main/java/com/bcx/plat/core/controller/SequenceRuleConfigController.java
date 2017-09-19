@@ -121,9 +121,9 @@ public class SequenceRuleConfigController extends BaseController {
       SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
       del = sequenceRuleConfig.deleteById(rowId);
       if (del != -1) {
-        return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.DELETE_SUCCESS));
+        return result(new ServerResult().setStateMessage(STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
-        return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.DELETE_SUCCESS));
+        return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
       }
     } else {
       return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));

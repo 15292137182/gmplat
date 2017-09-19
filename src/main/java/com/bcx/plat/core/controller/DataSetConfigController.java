@@ -99,7 +99,7 @@ public class DataSetConfigController extends BaseController {
       if (del != -1) {
         return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));

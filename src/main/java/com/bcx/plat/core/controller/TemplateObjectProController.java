@@ -114,7 +114,7 @@ public class TemplateObjectProController extends BaseController {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro();
       del = templateObjectPro.deleteById(rowId);
       if (del != -1) {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }

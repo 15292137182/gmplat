@@ -4,11 +4,17 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.TemplateObject;
+import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectService;
+import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -34,6 +40,8 @@ public class BusinessObjectController extends BaseController {
 
   @Autowired
   private BusinessObjectService businessObjectService;
+  @Autowired
+  private TemplateObjectService templateObjectService;
 
   public List<String> blankSelectFields() {
     return Arrays.asList("objectCode", "objectName");
@@ -62,7 +70,7 @@ public class BusinessObjectController extends BaseController {
   public PlatResult queryById(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-      ServerResult serverResult = businessObjectService.queryById(rowId);
+        ServerResult serverResult = businessObjectService.queryById(rowId);
       return result(serverResult);
     }
     return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
@@ -84,6 +92,13 @@ public class BusinessObjectController extends BaseController {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     ServerResult serverResult = businessObjectService.queryPage(blankQuery, pageNum, pageSize, orders);
+    List<Map<String,Object>> result = ((PageResult) serverResult.getData()).getResult();
+    for (Map<String,Object> results : result){
+      String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
+      Condition condition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
+      List<TemplateObject> templateObjects = templateObjectService.select(condition);
+      results.put("relateTemplate",templateObjects.get(0).getTemplateName());
+    }
     return super.result(serverResult);
   }
 

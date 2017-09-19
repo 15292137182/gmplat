@@ -113,7 +113,7 @@ public class SysConfigController extends BaseController {
             SysConfig sysConfig = new SysConfig();
             del = sysConfig.deleteById(rowId);
             if (del != -1) {
-                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_SUCCESS));
+                return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
             } else {
                 return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }

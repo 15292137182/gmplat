@@ -110,7 +110,7 @@ public class KeySetService extends BaseService<KeySet> {
         }
         PageResult<Map<String, Object>> result = keySetProService.selectPageMap(condition, orders, pageNum, pageSize);
         if (result.getResult().size() == 0) {
-            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_FAIL);
         } else {
             return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
         }
