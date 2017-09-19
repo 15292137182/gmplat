@@ -18,7 +18,7 @@
 
     <script type="text/javascript" src="../Public/publicjs.js"></script>
     <script>
-        
+        var select_row;
         gmp_onload = function () {
             // 加载数据
             GmpTable.tables.reload({
@@ -32,6 +32,7 @@
 
             // 编辑
             GmpTable.tables.onEditRow = function (index, row) {
+                select_row = row;
                 var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {});
             }
         };
@@ -39,10 +40,17 @@
         var add = new Vue({
             el: "#add",
             data: function() {
-                return {}
+                return {
+                    flag: "edit"
+                }
             },
             methods: {
-                click(){}
+                click() {
+                    // 该表标识
+                    add.flag = "add";
+                    // 弹出
+                    var divIndex = gmpPopup.dynamicDiv('demo2.html', '新增', '400px', '470px', function() {});
+                }
             }
         });
     </script>

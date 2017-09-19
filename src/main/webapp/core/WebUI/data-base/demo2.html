@@ -35,12 +35,12 @@
 <!--<script type="text/javascript" src="../Public/publicjs.js"></script>-->
 <script>
     gmp_onload = function() {
-//        var _rowId = row.rowId;
+        var _rowId = select_row.rowId;
         // 设置取值url param
         GmpForm.formTable.setOptions({
             postUrl: serverPath + "/dataSetConfig/queryById",
             postParam: {
-                rowId: "17f3dd90-d361-4df7-b300-57473ed5"
+                rowId: _rowId
             }
         });
 
@@ -58,24 +58,32 @@
         },
         methods:{
             demo() {
-//                var _json = {
-//                    formUrl: serverPath + "/dataSetConfig/modify",
-//                    data: GmpForm.formTable.getData().data
-//                };
-//                _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
-//                GmpForm.formTable.submit(_json, function() {
-//                    GmpTable.tables.reload({
-//                        queryUrl: serverPath+'/dataSetConfig/queryPage',
-//                        queryParam: {
-//                            search:"",
-//                            pageSize:"10",
-//                            pageNum:"1"
-//                        }
-//                    });
-//                    // 关闭弹层
-//                    vm.cancel();
-//                });
-                console.log(GmpForm.formTable.getData().data);//新增
+                console.log(add.flag);
+                if(add.flag == "add") {
+                    //
+                }else {
+                    // 获取页面数据
+                    var _json = {
+                        formUrl: serverPath + "/dataSetConfig/modify",
+                        data: GmpForm.formTable.getData().data
+                    };
+                    // 获取当前行rowId
+                    _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
+                    GmpForm.formTable.submit(_json, function() {
+                        // 成功回调
+                        GmpTable.tables.reload({
+                            queryUrl: serverPath+'/dataSetConfig/queryPage',
+                            queryParam: {
+                                search:"",
+                                pageSize:"10",
+                                pageNum:"1"
+                            }
+                        });
+                        // 关闭弹层
+                        vm.cancel();
+                    });
+                }
+//                console.log(GmpForm.formTable.getData().data);//新增
             },
             cancel() {
                 gmpPopup.close();

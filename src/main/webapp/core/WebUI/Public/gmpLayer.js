@@ -53,6 +53,43 @@ var gmpPopup = (function() {
                     aaa.focus(); //先设置弹出页的焦点
                     aaa.blur(); //再取消焦点
 
+                    var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+                    var components = $(this).find("components");
+
+                    var _render = function(dtd) {
+                        $.each(components, function(index, item) {
+                            var _json = item.attributes["data"].value,
+                                param;
+                            // 表单模块
+                            if (item.attributes[":is"].value == "gmpForm") {
+                                param = item.attributes[":child-form-table"].value;
+                                // 渲染动态模板
+                                dynamicObj.render(dtd, _json, param);
+                            }
+                            // 表格模块
+                            if (item.attributes[":is"].value == "gmpTable") {
+                                param = item.attributes[":table-data"].value;
+                                // 渲染动态模板
+                                dynamicObj.render(dtd, _json, param);
+                            }
+                            // 查询模块
+                            if (item.attributes[":is"].value == "search") {}
+                        });
+
+                        return dtd.promise(); // 返回promise对象
+                    };
+
+                    $.when(_render(dtd))
+                        .done(function() {
+                            // alert(gmp_onload);
+                            if(typeof gmp_onload == "function") {
+                                gmp_onload();
+                            }
+                        })
+                        .fail(function() {
+                            alert("页面加载失败");
+                        });
+
                     if (callback) {
                         callback();
                     }
@@ -289,8 +326,6 @@ gmpFormObj.prototype.request = function(callback) {
     var that = this;
     var data = this.postParam;
     var url = this.postUrl;
-    console.log(data);
-    console.log(url);
     $.ajax({
         url: url,
         type: "post",
@@ -305,7 +340,6 @@ gmpFormObj.prototype.request = function(callback) {
             }
             if (callback) {
                 callback(res.resp.content.data);
-                console.log(res.resp.content.data);
             }
         }
     })
