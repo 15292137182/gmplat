@@ -258,6 +258,7 @@ var dataConversion = (function(){
         //var data = {"Tid":{"Fun":"code","Fun1":"code1"}};
         //   data.tableId = {"Key":"Value","key":"value"}
         var datas = data.tableKeySet[oId];   //通过表格ID获取数据
+        // var datas = data["tableKeySet"][oId];   //通过表格ID获取数据
         return datas;
     }
     //获取相同key
@@ -881,8 +882,9 @@ var DynamicStitchings = (function(){
         var keywordOne = "关键字1";
         var keywordTwo = "关键字2";
         var keywordThree = "关键字3";
-        var model = "searchInput." + obj.ename;//绑定v-model数据
-        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.sel" slot="prepend" placeholder="请选择" style="width:100px"><el-option label='+keywordOne+' value="1"></el-option><el-option label='+keywordTwo+' value="2"></el-option><el-option label='+keywordThree+' value="3"></el-option></el-select><el-button slot="append" @click="searchInput.click" icon="search"></el-button></el-input></el-col>'
+        var model = "searchInput.sel" //绑定v-model数据
+        var options = "item in searchInput.options";
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.key" slot="prepend" placeholder="请选择" style="width:100px"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select><el-button slot="append" @click="searchInput.clickSearch" icon="search"></el-button></el-input></el-col>'
         return str;
     }
     //表单块
@@ -1232,9 +1234,9 @@ function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,queryParam,su
     this.columns = []	//表格初始列信息
     this.custom = []	//表格自定义列信息 ignore
     this.singleSelect = false 	//表格单选/多选 默认单选
-    this.pageSize = ''//每页显示多少条数据，当表格需要分页时有效
-    this.pageNo = '';//当前第多少页，当表格需要分页时有效
-    this.total = '';//共多少条数据，当表格需要分页时有效
+    this.pageSize = 10//每页显示多少条数据，当表格需要分页时有效
+    this.pageNo = 1;//当前第多少页，当表格需要分页时有效
+    this.total = 0;//共多少条数据，当表格需要分页时有效
 
     this.rows = [];//选中行数据
 
@@ -1361,7 +1363,6 @@ GmpTableBlock.prototype.loadRecord = function(data){
         this.tableObjArr.push(data[j]);
     }
     var parentComponentName = this.compId;
-    console.log(this.tableObjArr);
     this.vueObj[parentComponentName] = this.tableObjArr;
 };
 //获取选中行数据
@@ -1514,9 +1515,23 @@ GmpTableBlock.prototype.clear = function(){
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = [];
 }
+//获取分页信息
+GmpTableBlock.prototype.getPageInfo = function(){
+    var json = {};
+    json.pageSize = this.pageSize;
+    json.pageNo = this.pageNo;
+    json.total = this.total;
+    return json
+}
+//设置分页信息
+GmpTableBlock.prototype.setPageInfo = function(json){
+    this.pageSize = json.pageSize;
+    this.pageNo = json.pageNo;
+    this.total = json.total;
+}
 
 //动态查询块对象
-function GmpSearchBlock(compId,blockId,searchBlockItems,vueEl,filter,custom,filterData,grids,selUrl,postParam,formUrl){
+function GmpSearchBlock(compId,blockId,searchBlockItems,vueEl,grids,custom,filterData,selUrl,postParam,formUrl){
     this.compId = compId;//父组件名字
     this.blockId = blockId; //功能块标识
     this.searchBlockItems = searchBlockItems;//查询块key值集合
@@ -1524,8 +1539,10 @@ function GmpSearchBlock(compId,blockId,searchBlockItems,vueEl,filter,custom,filt
     this.vueObj = null;    //vue对象实例
     this.searchObj = {        //表单数据Key : value
         sel:'',
+        options:[],
+        key:''
     };
-    this.filter = filter;//配置的过滤字段
+    this.filter = searchBlockItems;//配置的过滤字段
     this.custom = custom	//自定义的过滤字段
     this.filterData = filterData	//过滤的数据
     this.grids = grids 	//查询返回的响应数据加载的GmpGrid.id
@@ -1535,20 +1552,22 @@ function GmpSearchBlock(compId,blockId,searchBlockItems,vueEl,filter,custom,filt
 }
 //父组件数据
 GmpSearchBlock.prototype.searchSelect = function(){
+    var that = this;
     var compId = this.compId;
     var arr = this.searchBlockItems;
     for(var j=0;j<arr.length;j++){
         var objs =arr[j].ename;
-        this.searchObj[objs] = '';
+        var label = arr[j].displayTitle;
+        var arrObj = {value:objs,label:label};
+        this.searchObj.options.push(arrObj);
     }
-    this.searchObj["click"] = function(){
-        alert("in");
+    this.searchObj["clickSearch"] = function(){
+        that.search();
     }
     var obj = {
         props:[]
     }
     obj[compId] = this.searchObj;
-    console.log(obj);
     return obj;
 }
 //构建查询块组件
@@ -1575,23 +1594,103 @@ GmpSearchBlock.prototype.bulidComponent = function(){
     });
     this.vueObj = vue;
 }
-
-
-
-var deferred = (function(){
-    var done = function(json){
-        $.when(json.fun)
-            .done(function(){
-                if(typeof json.callback == "function"){
-                    json.callback();
-                }
-            })
-            .fail(function(){
-                alert("页面加载失败");
-            });
+//获取配置项信息
+GmpSearchBlock.prototype.getOptions = function(){
+    var json = {};
+    json.compId = this.compId//父组件名字
+    json.blockId = this.blockId; //功能块标识
+    json.searchBlockItems = this.searchBlockItems;//查询块key值集合
+    json.vueEl = this.vueEl;     //vue el
+    json.vueObj = this.vueObj;    //vue对象实例
+    json.searchObj = this.searchObj;       //表单数据Key : value;
+    json.filter = this.filter;//配置的过滤字段
+    json.custom = this.custom//自定义的过滤字段
+    json.filterData = this.filterData	//过滤的数据
+    json.grids = this.grids	//查询返回的响应数据加载的GmpGrid.id
+    json.selUrl = this.selUrl//获取后端数据接口
+    json.postParam = this.postParam //请求参数参数json
+    json.formUrl = this.formUrl//提交接口
+    return json;
+}
+//设置配置项信息
+GmpSearchBlock.prototype.getOptions = function(json){
+    this.filter = json.filter;//配置的过滤字段
+    this.custom = json.custom//自定义的过滤字段
+    this.filterData = json.filterData	//过滤的数据
+    this.grids = json.grids	//查询返回的响应数据加载的GmpGrid.id
+    this.selUrl = json.selUrl //获取后端数据接口
+    this.postParam = json.postParam  //请求参数参数json
+    this.formUrl = json.formUrl//提交接口
+}
+//获取过滤数据
+GmpSearchBlock.prototype.getFilterData = function(){
+    return this.filterData	//过滤的数据
+}
+//设置过滤数据
+GmpSearchBlock.prototype.setFilterData = function(data){
+    this.filterData = data;
+}
+//执行搜索操作
+GmpSearchBlock.prototype.search = function(json,callback){
+    var that = this;
+    var url = that.selUrl;
+    var dataJson = null;
+    var pageConfig = that.grids[0].getPageInfo();
+    var search = that.searchObj.sel;
+    if(that.searchObj.key == ""){
+        dataJson = {
+            parameter:{},
+            search:search,
+            pageSize:pageConfig.pageSize,
+            pageNum:pageConfig.pageNo
+        }
+    }else{
+        var parameter = {};
+        parameter[that.searchObj.key] = that.searchObj.sel;
+        dataJson = {
+            parameter:parameter,
+            search:search,
+            pageSize:pageConfig.pageSize,
+            pageNum:pageConfig.pageNo
+        }
     }
-    return {
-        done:done
+    if(json.url){
+        url = json.url;
     }
-})()
+    if(json.data){
+        dataJson = json.data;
+    }
+    $.ajax({
+        url:url,
+        type:"get",
+        dataType:"json",
+        data:dataJson,
+        success:function(res){
+            console.log(res);
+            alert("ok");
+            callback(res);
+        },
+        error:function(){
+            alert("查询块请求失败！");
+        }
+    })
+}
+
+// var deferred = (function(){
+//     var done = function(json){
+//         $.when(json.fun)
+//             .done(function(){
+//                 if(typeof json.callback == "function"){
+//                     json.callback();
+//                     // gmp_onload();
+//                 }
+//             })
+//             .fail(function(){
+//                 alert("页面加载失败");
+//             });
+//     }
+//     return {
+//         done:done
+//     }
+// })()
 

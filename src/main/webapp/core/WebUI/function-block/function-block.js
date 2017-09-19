@@ -1,6 +1,17 @@
 /**
  * Created by andim on 2017/8/2.
  */
+// function GlobalParameter(){
+//     var args={"tableKeySet":{
+//             "Block":{funcType:"functionBlockType",belongModule:"belongModule"},
+//             "blockAttribute":{displayWidget:"showControl"}
+//         }
+//     };
+//     return args
+// }
+// gmp_onload = function(){
+//     alert("ok");
+// };
 //左边table
 var functionBlock = new Vue({
     el:"#app",
@@ -120,7 +131,7 @@ var functionBlock = new Vue({
         //     .fail(function(){
         //         alert("页面加载失败");
         //     });
-        deferred.done({fun:TableKeyValueSet.init(args),callback:that.get})
+        // deferred.done({fun:TableKeyValueSet.init(args),callback:that.get})
         // this.get();
         $(document).ready(function(){
             functionBlock.leftHeight=$(window).height()-190;
