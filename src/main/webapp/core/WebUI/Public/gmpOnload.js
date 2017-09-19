@@ -9,33 +9,43 @@ var GmpForm = {};
 var GmpTable = {};
 var GmpSearch = {};
 
+$(function() {
+    $.when(fun1(dtd), fun2(dtd))
+        .done(function() {
+            if(typeof gmp_onload == "function") {
+                gmp_onload();
+            }
+        })
+        .fail(function() {
+            alert("页面加载失败");
+        });
+});
+
 var fun1 = function(dtd) {
     //TO-DO
-    $(function() {
-        var _components = $("body").find("components");
-        // 若当前页面存在components
-        if (_components.length > 0) {
-            // 循环遍历当前页面components
-            $.each(_components, function(index, item) {
-                var _json = item.attributes["data"].value,
-                    param;
-                // 表单模块
-                if (item.attributes[":is"].value == "gmpForm") {
-                    param = item.attributes[":child-form-table"].value;
-                    // 渲染动态模板
-                    dynamicObj.render(dtd, _json, param);
-                }
-                // 表格模块
-                if (item.attributes[":is"].value == "gmpTable") {
-                    param = item.attributes[":table-data"].value;
-                    // 渲染动态模板
-                    dynamicObj.render(dtd, _json, param);
-                }
-                // 查询模块
-                if (item.attributes[":is"].value == "search") {}
-            });
-        }
-    });
+    var _components = $("body").find("components");
+    // 若当前页面存在components
+    if (_components.length > 0) {
+        // 循环遍历当前页面components
+        $.each(_components, function(index, item) {
+            var _json = item.attributes["data"].value,
+                param;
+            // 表单模块
+            if (item.attributes[":is"].value == "gmpForm") {
+                param = item.attributes[":child-form-table"].value;
+                // 渲染动态模板
+                dynamicObj.render(dtd, _json, param);
+            }
+            // 表格模块
+            if (item.attributes[":is"].value == "gmpTable") {
+                param = item.attributes[":table-data"].value;
+                // 渲染动态模板
+                dynamicObj.render(dtd, _json, param);
+            }
+            // 查询模块
+            if (item.attributes[":is"].value == "search") {}
+        });
+    }
 
     return dtd.promise(); // 返回promise对象
 };
@@ -46,16 +56,6 @@ var fun2 = function(dtd){
 
     return dtd.promise(); // 返回promise对象
 };
-
-$.when(fun1(dtd), fun2(dtd))
-    .done(function() {
-        if(typeof gmp_onload == "function") {
-            gmp_onload();
-        }
-    })
-    .fail(function() {
-        alert("页面加载失败");
-    });
 
 var getHtml = (function() {
     var ajax_html = function(dtd, mainId, code, compId) {
