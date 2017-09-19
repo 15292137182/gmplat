@@ -5,10 +5,14 @@ import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.manager.SpApplicationManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
+import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
+import static com.bcx.plat.core.utils.UtilsTool.objToJson;
 
 /**
  * 基础公共字段，定义了平台一些基础的字段和基本方法
@@ -74,6 +78,19 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
     this.deleteUser = SpApplicationManager.getInstance().getLoginUserId();
     this.deleteUserName = SpApplicationManager.getInstance().getLoginUserName();
     return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Map<String, Object> toDbMap() {
+    final Map map = jsonToObj(objToJson(this), HashMap.class);
+    final Map result=new HashMap<>();
+    map.forEach((k,v)->{
+      if (v!=null) {
+        result.put(k,v);
+      }
+    });
+    return result;
   }
 
   public String getStatus() {

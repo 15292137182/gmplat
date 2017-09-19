@@ -187,26 +187,27 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
    */
   @SuppressWarnings("unchecked")
   public Map<String, Object> toDbMap() {
-    Map map = jsonToObj(objToJson(this), HashMap.class);
+    final Map map = jsonToObj(objToJson(this), HashMap.class);
     assert map != null;
-    if (etc != null) {
-      map.putAll(etc);
-    }
     List<BeanInterface> joinTemplates = getJoinTemplates();
-    if (joinTemplates != null) {
-      if (!joinTemplates.isEmpty()) {
+    if (joinTemplates != null&&!joinTemplates.isEmpty()) {
         if (etc==null) etc=new HashMap();
-      }
-      for (BeanInterface bean : joinTemplates) {
-        if (null != bean) {
-          Map beanMap = bean.toMap();
-          map.putAll(beanMap);
-          etc.putAll(beanMap);
+        for (BeanInterface bean : joinTemplates) {
+          if (null != bean) {
+            Map beanMap = bean.toDbMap();
+  //          map.putAll(beanMap);
+            etc.putAll(beanMap);
+          }
         }
-      }
+      map.put("etc",etc);
     }
-    map.put("etc",etc);
-    return map;
+    final Map result=new HashMap<>();
+    map.forEach((k,v)->{
+      if (v!=null) {
+        result.put(k,v);
+      }
+    });
+    return result;
   }
 
 
