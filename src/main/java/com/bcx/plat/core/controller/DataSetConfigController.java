@@ -7,8 +7,8 @@ import com.bcx.plat.core.entity.DataSetConfig;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.DataSetConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -118,17 +118,24 @@ public class DataSetConfigController extends BaseController {
   public PlatResult queryPage(String search,
                               @RequestParam(value = "pageNum", required = false) Integer pageNum,
                               @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                              String param,
                               String order) {
     LinkedList<Order> orders = dataSort(order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> pageResult;
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      condition = UtilsTool.convertMapToAndCondition(DataSetConfig.class, map);
+    } else { // 如果没有param参数，则进行空格查询
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+    PageResult<Map<String, Object>> result;
     if (UtilsTool.isValid(pageNum)) {
-      pageResult = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+      result = dataSetConfigService.selectPageMap(condition, orders, pageNum, pageSize);
     } else {
-      pageResult = new PageResult(dataSetConfigService.selectMap(blankQuery, orders));
+      result = new PageResult(dataSetConfigService.selectMap(condition, orders));
     }
 
-    return result(new ServerResult<>(pageResult));
+    return result(new ServerResult<>(result));
   }
 
   /**

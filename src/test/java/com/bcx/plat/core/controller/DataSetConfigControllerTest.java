@@ -12,12 +12,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
  */
 public class DataSetConfigControllerTest extends BaseControllerTest<DataSetConfigController> {
   @Test
-  public void test() throws Exception {
-    String rowId = "49a3a1ad-f755-4625-9aee-af79b2ca";
+  public void testQuery() throws Exception {
+    String param = "{\"datasetName\":\"新增测试\"}";
     ResultActions resultActions = mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "dataSetConfig/queryPage")
             .accept(MediaType.APPLICATION_JSON)
-            .param("rowId", rowId)
+            .param("param", param)
     );
     showResult(resultActions);
   }
