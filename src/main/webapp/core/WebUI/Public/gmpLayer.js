@@ -6,31 +6,6 @@
  * @description:页面加载执行函数
  * @author:liyuanquan
  */
-$(function() {
-    var _components = $("body").find("components");
-    // 若当前页面存在components
-    if (_components.length > 0) {
-        // 循环遍历当前页面components
-        $.each(_components, function(index, item) {
-            var _json = item.attributes["data"].value,
-                param;
-            // 表单模块
-            if (item.attributes[":is"].value == "gmpForm") {
-                param = item.attributes[":child-form-table"].value;
-                // 渲染动态模板
-                dynamicObj.render(_json, param);
-            }
-            // 表格模块
-            if (item.attributes[":is"].value == "gmpTable") {
-                param = item.attributes[":table-data"].value;
-                // 渲染动态模板
-                dynamicObj.render(_json, param);
-            }
-            // 查询模块
-            if (item.attributes[":is"].value == "search") {}
-        });
-    }
-});
 
 /**
  * @description:gmp弹出框方法定义
@@ -78,32 +53,45 @@ var gmpPopup = (function() {
                     aaa.focus(); //先设置弹出页的焦点
                     aaa.blur(); //再取消焦点
 
-                    var components = $(this).find("components");
-
-                    $.each(components, function(index, item) {
-                        var _json = item.attributes["data"].value,
-                            param;
-                        // 表单模块
-                        if (item.attributes[":is"].value == "gmpForm") {
-                            param = item.attributes[":child-form-table"].value;
-                            // 渲染动态模板
-                            dynamicObj.render(_json, param);
-                        }
-                        // 表格模块
-                        if (item.attributes[":is"].value == "gmpTable") {
-                            param = item.attributes[":table-data"].value;
-                            // 渲染动态模板
-                            dynamicObj.render(_json, param);
-                        }
-                        // 查询模块
-                        if (item.attributes[":is"].value == "search") {}
-
-                        if (callback) {
-                            callback();
-                        }
-                    });
+                    if (callback) {
+                        callback();
+                    }
                 });
             }
+        });
+
+        _index = divIndex;
+        return divIndex;
+    };
+
+    // iframe
+    var dynamicFrame = function (iframeUrl, title, width, height, hasMinMax, cancelFunction) {
+        gmpPopIndex = gmpPopIndex + 10;
+        var divIndex = layer.open({
+            //layer提供了5种层类型。可传入的值有：0（信息框，默认）；1（页面层）；2（iframe层）；3（加载层）；4（tips层）。
+            // 若你采用layer.open({type: 1})方式调用，则type为必填项（信息框除外）
+            type: 2,
+            //动画
+            anim: 5,
+            //title: false 不显示标题栏
+            title: [title, 'font-size:18px;font-weight:bold;'],
+            //是否固定弹出
+            fix: false,
+            //最大小化按钮
+            maxmin: hasMinMax,
+            //控制点击弹层外区域关闭
+            shadeClose: false,
+            //窗口大小 area: ['400px', '500px'] or auto 自适应大小
+            area: [width, height],
+            //iframe层的url
+            content: iframeUrl,
+            //是否允许拉伸
+            resize: false,
+            //浏览器滚动条
+            scrollbar: false,
+            zIndex: gmpPopIndex, //重点1
+            cancel: cancelFunction,
+            end: function () {}
         });
 
         _index = divIndex;
@@ -134,84 +122,17 @@ var gmpPopup = (function() {
 
     return {
         dynamicDiv: dynamicDiv,
+        dynamicFrame: dynamicFrame,
         throwMsg: throwMsg,
         close: Close
     }
 })();
-
-// 全局变量
-var GmpForm = {};
-var GmpTable = {};
-var GmpSearch = {};
 
 /**
  * @description:创建gmp动态模块
  * @author:liyuanquan
  */
 
-// 表单对象
-var dynamicObj = (function() {
-    // 用户配置
-    function render(data, param) {
-        // 获取配置参数
-        var params = JSON.parse(data);
-        // 创建对象
-        create(params.main, params.code, param);
-    };
-
-    function create(mainId, code, compId) {
-        var demoData = null;
-        htmlAjax.keyValue(code, false, function(res) {
-            var arr = res.resp.content.data;
-            if (arr != "") {
-                // 判断模板类型
-                if (arr[0].funcType == "form") {
-                    var form = new gmpFormObj(compId, code, arr, mainId, "", "");
-                    // 创建vue实例
-                    form.bulidComponent();
-                    // 缓存实例化对象
-                    GmpForm[compId] = form;
-                }
-                if (arr[0].funcType == "grid") {
-                    var divIndex = -1;
-                    var _table = new gmpTableObj(compId, code, arr, mainId, "", "", "", {
-                        onClickRow: function(row) {
-                            // console.log("click row data: " + JSON.stringify(row));
-                        },
-                        onEditRow: function() {},
-                        onDeleteRow: function() {
-                            // console.log("delete row");
-                            // this.removeRow("dataset_code", "test001");
-                        },
-                        onCellClick: function(row) {
-                            // console.log("cell click data: " + JSON.stringify(row));
-                        },
-                        onDbClick: function(row) {
-                            // console.log("double click data: " + JSON.stringify(row));
-                        },
-                        onDbCellClick: function(row) {
-                            // console.log("double click cell data: " + JSON.stringify(row));
-                        },
-                    });
-                    // 创建vue实例
-                    _table.bulidComponent();
-                    // 缓存实例化对象
-                    GmpTable[compId] = _table;
-                }
-                if (arr[0].funcType == "search") {}
-            } else {
-                // 提示错误信息
-                var _error = res.resp.content.msg;
-                gmpPopup.throwMsg(_error);
-            }
-        });
-    };
-
-    // 配置方法函数
-    return {
-        render: render
-    }
-})();
 
 /**
  * @description:
@@ -368,6 +289,8 @@ gmpFormObj.prototype.request = function(callback) {
     var that = this;
     var data = this.postParam;
     var url = this.postUrl;
+    console.log(data);
+    console.log(url);
     $.ajax({
         url: url,
         type: "post",
@@ -382,6 +305,7 @@ gmpFormObj.prototype.request = function(callback) {
             }
             if (callback) {
                 callback(res.resp.content.data);
+                console.log(res.resp.content.data);
             }
         }
     })

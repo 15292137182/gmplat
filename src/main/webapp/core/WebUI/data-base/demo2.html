@@ -32,7 +32,22 @@
         </el-row>
     </div>
 </body>
+<!--<script type="text/javascript" src="../Public/publicjs.js"></script>-->
 <script>
+    gmp_onload = function() {
+//        var _rowId = row.rowId;
+        // 设置取值url param
+        GmpForm.formTable.setOptions({
+            postUrl: serverPath + "/dataSetConfig/queryById",
+            postParam: {
+                rowId: "17f3dd90-d361-4df7-b300-57473ed5"
+            }
+        });
+
+        // 加载编辑页面数据
+        GmpForm.formTable.request(function(data) {});
+    };
+
     var vm = new Vue({
         el:"#app1",
         data:{

@@ -18,8 +18,22 @@
 
     <script type="text/javascript" src="../Public/publicjs.js"></script>
     <script>
+        
         gmp_onload = function () {
-            alert('gmp_onload')
+            // 加载数据
+            GmpTable.tables.reload({
+                queryUrl: serverPath+'/dataSetConfig/queryPage',
+                queryParam: {
+                    search:"",
+                    pageSize:"10",
+                    pageNum:"1"
+                }
+            });
+
+            // 编辑
+            GmpTable.tables.onEditRow = function (index, row) {
+                var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {});
+            }
         };
 
         var add = new Vue({
@@ -28,54 +42,8 @@
                 return {}
             },
             methods: {
-                click(){
-//                    var divIndex = gmpPopup.dynamicDiv('demo2.html', '新增', '400px', '470px', function() {
-//
-//                    })
-                }
+                click(){}
             }
-        });
-
-        $(function() {
-            // 设置表格
-//            GmpTable.tables.setOptions({
-//                queryUrl: serverPath+'/dataSetConfig/queryPage',
-//                queryParam: {
-//                    search:"",
-//                    pageSize:"10",
-//                    pageNum:"1"
-//                }
-//            });
-
-            // 加载数据
-//            GmpTable.tables.reload({
-//                queryUrl: serverPath+'/dataSetConfig/queryPage',
-//                queryParam: {
-//                    search:"",
-//                    pageSize:"10",
-//                    pageNum:"1"
-//                }
-//            });
-
-            // 编辑
-//            GmpTable.tables.onEditRow = function (index, row) {
-//                var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {
-////                    console.log(row);
-////                    console.log(index);
-//                    var _rowId = row.rowId;
-//
-//                    GmpForm.formTable.setOptions({
-//                        postUrl: serverPath + "/dataSetConfig/queryById",
-//                        postParam: {
-//                            rowId: _rowId
-//                        }
-//                    });
-//
-//                    // 加载编辑页面数据
-//                    GmpForm.formTable.request(function(data) {});
-//                });
-//            }
-
         });
     </script>
 </body>
