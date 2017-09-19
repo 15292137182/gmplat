@@ -89,10 +89,8 @@ public class TemplateObjectController extends BaseController {
     }
     List<Order> orders = dataSort(order);
     PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
-    if (result.getResult().size() == 0) {
-      return result(serverResult.setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
-    }
-    return result(new ServerResult<>(result));
+    // serverResult.setData(result);
+    return result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS,result));
   }
 
   /**
