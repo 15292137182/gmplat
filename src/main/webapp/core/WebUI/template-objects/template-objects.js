@@ -226,8 +226,11 @@ var basRight = new Vue({
                 };
                 gmpAjax.showAjax(data,function(res){
                     //分页查询
-                    queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,this);
-                    basLeft.searchLeft();
+                    queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,function(res){
+
+                    })
+                    //queryData.getDatas(queryObjTemp,basRight.input,basLeft.currentId,basRight,this);
+                    // basLeft.searchLeft();
                 })
             })
         },
