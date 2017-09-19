@@ -111,14 +111,6 @@ public interface MoreBatis {
   public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded);
 
   /**
-   * 根据主键查找对象
-   * @param entity 入数据
-   * @return
-   */
-  @Deprecated
-  public <T extends BeanInterface<T>> T selectEntityByPks(T entity);
-
-  /**
    * 单表查询
    * @param entity  要查询的实体类class
    * @return

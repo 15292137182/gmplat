@@ -114,7 +114,7 @@ public class QueryAction {
   }
 
   public PageResult<Map<String, Object>> selectPage(int pageNum,int pageSize){
-    Page<Map<String,Object>> pageTask = PageHelper.startPage(pageNum, pageSize);
+    PageHelper.startPage(pageNum, pageSize);
     List<Map<String, Object>> result = execute();
     PageInfo pageInfo = new PageInfo(result);
     PageResult<Map<String, Object>> pageResult = new PageResult<>(result);

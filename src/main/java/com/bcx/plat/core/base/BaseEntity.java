@@ -180,6 +180,113 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
     return (T) this;
   }
 
+  /**
+   * 将 entity 实体类转换为 map
+   *
+   * @return map
+   */
+  @SuppressWarnings("unchecked")
+  public Map<String, Object> toDbMap() {
+    Map map = jsonToObj(objToJson(this), HashMap.class);
+    assert map != null;
+    if (etc != null) {
+      map.putAll(etc);
+    }
+    List<BeanInterface> joinTemplates = getJoinTemplates();
+    if (joinTemplates != null) {
+      if (!joinTemplates.isEmpty()) {
+        if (etc==null) etc=new HashMap();
+      }
+      for (BeanInterface bean : joinTemplates) {
+        if (null != bean) {
+          Map beanMap = bean.toMap();
+          map.putAll(beanMap);
+          etc.putAll(beanMap);
+        }
+      }
+    }
+    map.put("etc",etc);
+    return map;
+  }
+
+
+  /**
+   * 尝试从 map 中读取 entity 类
+   * <p>
+   * 为了满足需求，我决定造一个轮子
+   *
+   * @param map map数据
+   * @return 返回实体类
+   */
+  @SuppressWarnings("unchecked")
+  public T fromDbMap(Map map) {
+    Class current = getClass();
+    //与数据库中的etc合并
+    Map etcMap = (Map) map.get("etc");
+    while (current != Object.class) {
+      Method[] methods = current.getDeclaredMethods();
+      for (Method method : methods) {
+        if (method.getName().startsWith("set")
+                && method.getAnnotationsByType(JsonIgnore.class).length == 0
+                && method.getParameterCount() == 1) {
+          String _fieldName = method.getName().substring(3, method.getName().length());
+          String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
+          Object value = map.get(fieldName);
+          try {
+            if (Arrays.asList(method.getParameterTypes()[0].getInterfaces()).contains(BeanInterface.class)) {
+              Class clazz = method.getParameterTypes()[0];
+              BeanInterface bean = (BeanInterface) clazz.newInstance();
+              value = bean.fromMap(map);
+            } else if (fieldName.equalsIgnoreCase("etc")) {
+              Set<String> keys = toMap().keySet();
+              Map etc = new HashMap();
+              // 将数据读入 javaBean
+              if (null != getJoinTemplates()) {
+                for (BeanInterface bean : getJoinTemplates()) {
+                  if (null != bean) {
+                    bean.fromMap(etcMap);
+                  }
+                }
+              }
+              map.forEach((k, v) -> {
+                if ("etc".equalsIgnoreCase(k.toString())) {
+                  // 处理扩属属性字段
+                  Map temp;
+                  if (v instanceof String) {
+                    temp = jsonToObj((String) v, Map.class);
+                  } else if (v instanceof Map) {
+                    temp = (Map) v;
+                  } else {
+                    temp = jsonToObj(objToJson(v), Map.class);
+                  }
+                  if (temp != null) {
+                    etc.putAll(temp);
+                  }
+                } else if (!keys.contains(k)) {
+                  etc.put(k, v);
+                }
+              });
+              value = etc;
+            } else if (value != null) {
+              if (method.getParameterTypes()[0] != value.getClass()) {
+                if (value instanceof String) {
+                  value = jsonToObj((String) value, value.getClass());
+                } else {
+                  value = jsonToObj(objToJson(value), method.getParameterTypes()[0]);
+                }
+              }
+            }
+            if (value != null) method.invoke(this, value);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+      current = current.getSuperclass();
+    }
+    return (T) this;
+  }
+
   private MoreBatis getMoreBatis() {
     return (MoreBatis) SpringContextHolder.getBean("moreBatis");
   }

@@ -1,5 +1,7 @@
 package com.bcx.plat.core.morebatis.app;
 
+import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.base.BaseORM;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
@@ -179,7 +181,7 @@ public class MoreBatisImpl implements MoreBatis{
    */
   public <T extends BeanInterface<T>> int insertEntity(T entity) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
-    Map<String, Object> values = entity.toMap();
+    Map<String, Object> values = ((BaseORM)entity).toDbMap();
     return insert(entityClass, values).execute();
   }
 
@@ -191,7 +193,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int deleteEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
-    Map<String, Object> values = entity.toMap();
+    Map<String, Object> values = ((BaseORM)entity).toDbMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
             .collect(Collectors.toList());
@@ -206,7 +208,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int updateEntity(T entity) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
-    Map<String, Object> values = entity.toMap();
+    Map<String, Object> values = ((BaseORM)entity).toDbMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
             .collect(Collectors.toList());
@@ -221,7 +223,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
-    final Map<String, Object> values = entity.toMap();
+    final Map<String, Object> values = ((BaseORM)entity).toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
@@ -242,7 +244,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
     final Class<? extends BeanInterface> entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
-    Map<String, Object> values = entity.toMap();
+    Map<String, Object> values = ((BaseORM)entity).toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
@@ -262,7 +264,7 @@ public class MoreBatisImpl implements MoreBatis{
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
-    Map<String, Object> values = entity.toMap();
+    Map<String, Object> values = ((BaseORM)entity).toDbMap();
     List<Condition> pkConditions = pks.stream()
             .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
             .collect(Collectors.toList());

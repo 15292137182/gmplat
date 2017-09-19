@@ -103,7 +103,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   @SuppressWarnings("unchecked")
   private int update(Condition condition, boolean allColumns) {
-    Map map = this.toMap();
+    Map map = this.toDbMap();
     if (null != map) {
       if (!allColumns) {
         Set keys = new HashSet(map.keySet());
@@ -222,7 +222,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
       List<T> ts = new ArrayList<>();
       result.forEach(map -> {
         try {
-          ts.add((T) getClass().newInstance().fromMap(map));
+          ts.add((T) getClass().newInstance().fromDbMap(map));
         } catch (InstantiationException | IllegalAccessException e) {
           e.printStackTrace();
         }
@@ -253,7 +253,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     List<T> data = new ArrayList<>();
     result.getResult().forEach(map -> {
       try {
-        data.add((T) getClass().newInstance().fromMap((Map) map));
+        data.add((T) getClass().newInstance().fromDbMap((Map) map));
       } catch (InstantiationException | IllegalAccessException e) {
         e.printStackTrace();
       }
@@ -377,5 +377,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
     return execute;
   }
+
+  public abstract Map<String, Object> toDbMap();
+
+  public abstract T fromDbMap(Map map);
 
 }
