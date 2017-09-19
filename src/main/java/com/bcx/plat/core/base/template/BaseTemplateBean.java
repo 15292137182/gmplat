@@ -34,7 +34,7 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
    * @return 返回加入的模版
    */
   @Override
-  public List<BeanInterface> getJoinTemplates() {
+  public List<BeanInterface> registerTemplates() {
     return null;
   }
 
