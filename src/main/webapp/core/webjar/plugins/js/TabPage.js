@@ -59,11 +59,16 @@ var pagingObj = (function(){
                         obj.allDate = 0;//总共多少条数据
                         obj.pageNum = 1;//当前页
                         return;
+                    }else if(res.resp.content.data==null){
+                        obj.tableData=[];
+
+                    }else{
+                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        obj.tableData = res.resp.content.data.result;//数据源
+                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                        obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
                     }
-                    dataConversion.conversion(obj,res.resp.content.data.result);
-                    obj.tableData = res.resp.content.data.result;//数据源
-                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
-                    obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
+
                 }else{
                     obj.tableData = [];
                 }
