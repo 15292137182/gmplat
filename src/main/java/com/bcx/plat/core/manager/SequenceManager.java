@@ -108,6 +108,22 @@ public class SequenceManager {
     return null;
   }
 
+  /**
+   * 生成流水号
+   *
+   * @param sequenceCode 流水号编码
+   * @param args         参数
+   * @param entity       实体类
+   * @return 返回生成的结果
+   */
+  public String buildSequenceNo(String sequenceCode, Map<String, Object> args, BeanInterface entity) {
+    List<String> strings = produceSequenceNo(sequenceCode, args, entity, 1, false);
+    if (strings.size() == 1) {
+      return strings.get(0);
+    }
+    return null;
+  }
+
   private static Pattern serialNumPattern = Pattern.compile("[*][{].+[}]");
   private static Pattern serialNumWithVariablePattern = Pattern.compile("[*][{].+[;][\\d]+-.+[}]");
 

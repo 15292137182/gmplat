@@ -122,10 +122,10 @@ public class DataSetConfigController extends BaseController {
     LinkedList<Order> orders = dataSort(order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> pageResult;
-    if(UtilsTool.isValid(pageNum)){
+    if (UtilsTool.isValid(pageNum)) {
       pageResult = dataSetConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
-    }else{
-      pageResult=new PageResult(dataSetConfigService.selectMap(blankQuery,orders));
+    } else {
+      pageResult = new PageResult(dataSetConfigService.selectMap(blankQuery, orders));
     }
 
     return result(new ServerResult<>(pageResult));
@@ -134,7 +134,7 @@ public class DataSetConfigController extends BaseController {
   /**
    * 根据功能块rowId查询当前数据
    *
-   * @param rowId 功能块rowId
+   * @param rowId 功能块 rowId
    * @return PlatResult
    */
   @RequestMapping("/queryById")

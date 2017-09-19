@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
 import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 业务对象业务层
@@ -88,8 +89,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
 //        String relateTableRowId =String.valueOf(result.get(0).get("relateTableRowId"));
     String relateTableRowId = result.get(0).getRelateTableRowId();
     List<Map> rowId1 =
-        maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-    if (UtilsTool.isValid(rowId1)) {
+            maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+    if (isValid(rowId1)) {
 //            for (BusinessObject row : result) {
 //                row.put("tableCname", rowId1.get(0).get("tableCname"));
 //            }
@@ -111,7 +112,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   public ServerResult queryPage(Condition condition, Integer pageNum, Integer pageSize, List<Order> order) {
     PageResult<Map<String, Object>> result;
 
-    if (UtilsTool.isValid(pageNum)) { // 有分页参数进行分页查询
+    if (isValid(pageNum)) { // 有分页参数进行分页查询
       result = selectPageMap(condition, order, pageNum, pageSize);
     } else { // 没有分页参数则查询全部
       result = new PageResult(selectMap(condition, order));
@@ -144,7 +145,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
     List<String> rowIds = result.stream().map((row) ->
-        (String) row.get("relateTableRowId")).collect(Collectors.toList());
+            (String) row.get("relateTableRowId")).collect(Collectors.toList());
     Condition condition = new ConditionBuilder(MaintDBTables.class).and().in("rowId", rowIds).endAnd().buildDone();
     List<Map> results = maintDBTablesService.selectMap(condition);
     HashMap<String, Object> map = new HashMap<>();
@@ -169,18 +170,18 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   public ServerResult queryProPage(String search, String rowId, Integer pageNum, Integer pageSize, List<Order> order) {
     //查询属性的搜索条件
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), UtilsTool.collectToSet(search));
+    Or blankQuery = !isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), UtilsTool.collectToSet(search));
     Condition condition;
-    if (UtilsTool.isValid(search)) {
+    if (isValid(search)) {
       condition = new ConditionBuilder(BusinessObjectPro.class)
-          .and().equal("objRowId", rowId)
-          .or().addCondition(blankQuery).endOr()
-          .endAnd().buildDone();
+              .and().equal("objRowId", rowId)
+              .or().addCondition(blankQuery).endOr()
+              .endAnd().buildDone();
     } else {
       condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", rowId).endAnd().buildDone();
     }
     PageResult<Map<String, Object>> result;
-    if (UtilsTool.isValid(pageNum)) { // 有分页参数进行分页查询
+    if (isValid(pageNum)) { // 有分页参数进行分页查询
       result = businessObjectProService.selectPageMap(condition, order, pageNum, pageSize);
     } else { // 没有分页参数则查询全部
       result = new PageResult(businessObjectProService.selectMap(condition, order));
@@ -204,8 +205,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     for (Map<String, Object> rest : result.getResult()) {
       String relateTableColumn = (String) rest.get("relateTableColumn");
       List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new ConditionBuilder(DBTableColumn.class)
-          .and()
-          .equal("rowId", relateTableColumn).endAnd().buildDone());
+              .and()
+              .equal("rowId", relateTableColumn).endAnd().buildDone());
       for (DBTableColumn aMapList : dbTableColumns) {
         map.put(aMapList.getRowId(), aMapList.getColumnCname());
       }
@@ -227,8 +228,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     Map<String, Object> oldRowId = new HashMap<>();
     List<BusinessObject> businessObjects = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
     List<String> row = businessObjects.stream().map((rowIds) ->
-        rowIds.getChangeOperat()).collect(Collectors.toList());
-    if (UtilsTool.isValid(rowId) && row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
+            rowIds.getChangeOperat()).collect(Collectors.toList());
+    if (isValid(rowId) && row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
       List<BusinessObject> businessObjectList = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
       BusinessObject objectMap = businessObjectList.get(0);
       //将Map数据转换为json结构的数据
@@ -284,10 +285,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
     } else if (businObj.size() == 0) {
       List<BusinessObjectPro> list = businessObjectProService
-          .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
-      if (UtilsTool.isValid(list)) {
+              .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
+      if (isValid(list)) {
         List<String> rowIds = list.stream().map((row) ->
-            (String) row.getRowId()).collect(Collectors.toList());
+                (String) row.getRowId()).collect(Collectors.toList());
         businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
 
       } else if (rowId != null && rowId.length() > 0) {
@@ -324,4 +325,38 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
   }
 
+  /**
+   * 根据rowId 查询最新的有效的对象信息
+   *
+   * @param rowId 主键
+   * @return 返回查询的结果
+   * <p>
+   * Create by hcl at 2017--09-19
+   */
+  public BusinessObject getLatestEffectiveObj(String rowId) {
+    // TODO 后续有改变请完善改方法
+    if (isValid(rowId)) {
+      return new BusinessObject().selectOneById(rowId);
+    }
+    return null;
+  }
+
+  /**
+   * 根据业务对象的rowId查询其属性信息
+   *
+   * @param objRowId 对象主键
+   * @return 返回查询结果合集
+   * Create by hcl at 2017--09-19
+   */
+  public List<BusinessObjectPro> getObjProperties(String objRowId) {
+    List<BusinessObjectPro> result = new ArrayList<>();
+    if (isValid(objRowId)) {
+      Condition condition = new ConditionBuilder(BusinessObjectPro.class)
+              .and()
+              .equal("objRowId", objRowId)
+              .endAnd().buildDone();
+      return businessObjectProService.select(condition);
+    }
+    return result;
+  }
 }
