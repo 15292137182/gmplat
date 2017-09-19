@@ -52,6 +52,7 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
     User user = SpApplicationManager.getInstance().getLoginUser();
     this.createUser = user.getId();
     this.createUserName = user.getName();
+    this.buildModifyInfo();
     return this;
   }
 
