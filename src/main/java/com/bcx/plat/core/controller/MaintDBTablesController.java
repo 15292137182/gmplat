@@ -44,11 +44,11 @@ public class MaintDBTablesController extends BaseController {
 
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) int pageNum,
-                                      @RequestParam(value = "pageSize", required = false) int pageSize,
+                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       String order) {
     LinkedList<Order> orders = dataSort(order);
-    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<MaintDBTables> maintDBTablesPageResult = maintDBTablesService.selectPage(blankQuery, orders, pageNum, pageSize);
     ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
     return result(pageResultServerResult);
