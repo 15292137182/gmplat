@@ -631,18 +631,23 @@ var SelectOptions = (function(){
 
 //var tabSelectShow={"dataSetConfig":
 //                                  {"datasetType":"dataSetConfigType"}};
+
 var TableKeyValueSet = (function(){
     var tableKeyValueSetIn='';
     var tableKeyValueSetOut='';
-    var init = function(tableStr){
-        if("" !=tableStr || undefined !=tableStr || null!=tableStr ){
-            var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
-            tableKeyValueSetIn=tableStr;
+
+    var init = function(parameterStr){
+         var dtd = $.Deferred();
+        if("" !=parameterStr || undefined !=parameterStr || null!=parameterStr ){
+            tableKeyValueSetIn=parameterStr;
             var arr=new Array();
-            for(var i in tableStr){
-                for (var j in tableStr[i]){
-                    var str='"'+tableStr[i][j]+'"';
-                    arr.push(str);
+            for(var i in parameterStr){
+                for (var j in parameterStr[i]){
+                    for(var m in parameterStr[i][j]){
+                        var str='"'+parameterStr[i][j][m]+'"';
+                        arr.push(str);
+                    }
+
                 }
             }
             arr="["+arr+"]";
@@ -1642,6 +1647,22 @@ GmpSearchBlock.prototype.bulidComponent = function(){
     this.vueObj = vue;
 }
 
+var parameterStr='';
+$(function () {
+    if(typeof GlobalParameter =="function"){
+        parameterStr=GlobalParameter();
+    }
+    $.when(TableKeyValueSet.init(parameterStr))
+        .done(function(){
+            if(typeof gmp_onload == "function"){
+                gmp_onload();
+            }
+        })
+        .fail(function(){
+            alert("页面加载失败");
+        });
+
+})
 
 var deferred = (function(){
     var done = function(json){
