@@ -1135,7 +1135,6 @@ GmpForm1.prototype.getData = function(){
         }
         data[arr[i].ename] = formObj[arr[i].ename];
         dataConfig[(arr[i].ename)+"Disabled"] = formObj.disabled[(arr[i].ename)+"Disabled"];
-        data["rowId"] = arr[i].rowId;
     }
     return {
         data:data,
