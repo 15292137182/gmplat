@@ -110,9 +110,18 @@ var functionBlock = new Vue({
         }
     },
     created(){
+        var that = this;
         var args={"Block":{funcType:"functionBlockType",belongModule:"belongModule"},"blockAttribute":{displayWidget:"showControl"}};
-        TableKeyValueSet.init(args);
-        this.get();
+        // TableKeyValueSet.init(args);
+        // $.when(TableKeyValueSet.init(args))
+        //     .done(function(){
+        //         that.get();
+        //     })
+        //     .fail(function(){
+        //         alert("页面加载失败");
+        //     });
+        deferred.done({fun:TableKeyValueSet.init(args),callback:that.get})
+        // this.get();
         $(document).ready(function(){
             functionBlock.leftHeight=$(window).height()-190;
         });

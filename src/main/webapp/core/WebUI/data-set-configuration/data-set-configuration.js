@@ -45,9 +45,11 @@ var dataSetConfig = new Vue({
         }
     },
     created(){
+        var that = this;
         var args={"dataSetConfig":{datasetType:"dataSetConfigType",belongModule:"belongModule"}};
-        TableKeyValueSet.init(args);
-        this.searchResTable();
+        // TableKeyValueSet.init(args);
+        deferred.done({fun:TableKeyValueSet.init(args),callback:that.searchResTable});
+        // this.searchResTable();
         // $(document).ready(function(){
         //     dataSetConfig.Height=$(window).height()-190;
         // });

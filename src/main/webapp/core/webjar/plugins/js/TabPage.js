@@ -636,6 +636,7 @@ var TableKeyValueSet = (function(){
     var tableKeyValueSetOut='';
     var init = function(tableStr){
         if("" !=tableStr || undefined !=tableStr || null!=tableStr ){
+            var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
             tableKeyValueSetIn=tableStr;
             var arr=new Array();
             for(var i in tableStr){
@@ -671,11 +672,13 @@ var TableKeyValueSet = (function(){
                         param[k]=_param;
                     }
                     tableKeyValueSetOut=param;
+                    dtd.resolve(); // 在最终返回处，改变Deferred对象的执行状态
                 },
                 error:function(){
                     alert("未能获取键值集合")
                 }
             })
+            return dtd.promise(); // 返回promise对象
         }else{
             alert("未传入参数");
         }
@@ -1638,3 +1641,22 @@ GmpSearchBlock.prototype.bulidComponent = function(){
     });
     this.vueObj = vue;
 }
+
+
+var deferred = (function(){
+    var done = function(json){
+        $.when(json.fun)
+            .done(function(){
+                if(typeof json.callback == "function"){
+                    json.callback();
+                }
+            })
+            .fail(function(){
+                alert("页面加载失败");
+            });
+    }
+    return {
+        done:done
+    }
+})()
+
