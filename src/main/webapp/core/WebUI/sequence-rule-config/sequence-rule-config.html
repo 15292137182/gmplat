@@ -47,19 +47,19 @@
                                       @row-click="onClick"
                                       style="width: 100%;border-radius: 5px"
                                       @sort-change="headSort">
-                                <el-table-column sortable="custom" prop="seqCode" label="代码" width="150">
+                                <el-table-column sortable="custom" prop="seqCode" label="代码" show-overflow-tooltip width="150">
                                 </el-table-column>
-                                <el-table-column sortable="custom" prop="seqName" label="名称" width="200">
+                                <el-table-column sortable="custom" prop="seqName" label="名称" show-overflow-tooltip width="200">
                                 </el-table-column>
-                                <el-table-column prop="seqContent" label="内容" width="400">
+                                <el-table-column prop="seqContent" label="内容" show-overflow-tooltip width="400">
                                 </el-table-column>
                                 <el-table-column show-overflow-tooltip sortable="custom" prop="belongModule" label="所属模块" width="120">
                                 </el-table-column>                             <!--   <el-table-column label="所属类型" prop="belongSystem" width="100"></el-table-column>-->
-                                <el-table-column prop="desp" label="说明" width="100"></el-table-column>
+                                <el-table-column prop="desp" label="说明" show-overflow-tooltip width="100"></el-table-column>
                                 <el-table-column sortable="custom" prop="version" label="版本" width="100">
                                 </el-table-column>
                                 <el-table-column  prop="" fixed="right"
-                                                  label="操作" width="100">
+                                                  label="操作">
                                     <template scope="scope">
                                         <el-button @click.native="editEvent" type="text" size="small" icon="edit"></el-button>
                                         <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"></el-button>

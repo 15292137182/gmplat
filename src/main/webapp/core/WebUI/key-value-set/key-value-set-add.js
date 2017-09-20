@@ -4,7 +4,7 @@
 //定义各方法接口
 var addUrl=serverPath+'/keySet/add';
 var modifyUrl=serverPath+'/keySet/modify';
-var checkCodeUrl=serverPath+'keySet/checkCode';
+var checkCodeUrl=serverPath+'/keySet/checkCode';
 
 
 var keyValueSetAdd = new Vue({
@@ -21,7 +21,7 @@ var keyValueSetAdd = new Vue({
             versionInput: '',
         },
         rules: {
-            numberInput: [
+            keysetCodeInput: [
                 {required: true, message: '请输入编号', trigger: 'blur'},
             ],
             keysetNameInput: [
@@ -80,12 +80,32 @@ var keyValueSetAdd = new Vue({
 
         //判断代码是否重复
         changeKeySetCode(){
-            var data={
-                "url":checkCodeUrl,
-                "jsonData":{
+            console.log(keyValueSetAdd.keyForm.keysetCodeInput);
 
-                }
-            }
+            // $.ajax({
+            //     url: checkCodeUrl,
+            //     type: "get",
+            //     data: {
+            //         keysetCode: keyValueSetAdd.keyForm.keysetCodeInput
+            //     },
+            //     dataType: "json",
+            //     xhrFields: {withCredentials: true},
+            //     success: function (res) {
+            //         console.log(res);
+            //         if(res.resp.respCode=="000"){
+            //             if(res.resp.content.state==1){
+            //                 console.log(res.resp.content.msg);
+            //                 console.log(keyValueSetAdd.rules.keysetCodeInput[0].message);
+            //                  keyValueSetAdd.rules.keysetCodeInput[0].message=res.resp.content.msg;
+            //                 console.log(keyValueSetAdd.rules.keysetCodeInput[0].message);
+            //             }
+            //         }
+            //
+            //     },
+            //     error: function () {
+            //         alert("错误")
+            //     }
+            // })
         },
 
         confirm(formName) {
