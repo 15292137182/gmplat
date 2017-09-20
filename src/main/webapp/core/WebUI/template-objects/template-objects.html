@@ -77,9 +77,9 @@
                                 </el-form>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="templateName" sortable="custom" label="名称" show-overflow-tooltip width="120"></el-table-column>
-                        <el-table-column prop="templateCode" label="代码" show-overflow-tooltipsortable="custom"></el-table-column>
-                        <el-table-column prop="" label="操作" width="100">
+                        <el-table-column prop="templateName" sortable="custom" label="名称" show-overflow-tooltip width="200"></el-table-column>
+                        <el-table-column prop="templateCode" label="代码" show-overflow-tooltipsortable="custom"  width="120"></el-table-column>
+                        <el-table-column prop="" label="操作">
                             <template scope="scope">
                                 <el-button @click.native="editEvent" type="text" size="small" icon="edit"
                                            :disabled=scope.row.testDemo></el-button>
@@ -146,15 +146,15 @@
                             </template>
                         </el-table-column>
 
-                        <el-table-column prop="cname" label="属性中文名称" sortable="custom" width="150"
+                        <el-table-column prop="cname" label="属性中文名称" sortable="custom" width="200"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="ename" label="属性英文名称" sortable="custom" width="150"
+                        <el-table-column prop="ename" label="属性英文名称" sortable="custom" width="200"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="valueType" label="值类型"  width="120"
+                        <el-table-column prop="valueType" label="值类型"  width="150"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="defaultValue" label="默认值"  width="120"
+                        <el-table-column prop="defaultValue" label="默认值"  width="150"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="" label="操作" width="110">
+                        <el-table-column prop="" label="操作">
                             <template scope="scope">
                                 <el-button @click.native="editProp" type="text" size="small" icon="edit"
                                            :disabled=scope.row.testDemo></el-button>
