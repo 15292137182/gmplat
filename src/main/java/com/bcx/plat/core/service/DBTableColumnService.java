@@ -47,9 +47,9 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname"));
     Condition condition = new ConditionBuilder(DBTableColumn.class).and()
-            .equal("columnEname", columnEname)
-            .equal("relateTableRowId", param.get("relateTableRowId"))
-            .endAnd().buildDone();
+        .equal("columnEname", columnEname)
+        .equal("relateTableRowId", param.get("relateTableRowId"))
+        .endAnd().buildDone();
     List<DBTableColumn> select = dbTableColumnService.select(condition);
     if (select.size() == 0) {
       DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
@@ -75,11 +75,27 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    * @param pageSize 一页显示多少条
    * @return ServerResult
    */
-  public ServerResult queryPageById(String search, String rowId, LinkedList<Order> orders, int pageNum, int pageSize) {
-    pageNum = UtilsTool.isValid(search) ? 1 : pageNum;
-    PageResult<Map<String, Object>> relateTableRowId = selectPageMap(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
-                    UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))),
-            orders, pageNum, pageSize);
+  public ServerResult queryPageById(String search, String param, String rowId, LinkedList<Order> orders, Integer pageNum, Integer pageSize) {
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
+      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      map.put("relateTableRowId", rowId);
+      condition = UtilsTool.convertMapToAndCondition(DBTableColumn.class, map);
+    } else {
+      if (UtilsTool.isValid(search)) {
+        condition = new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
+            UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)));
+      } else {
+        condition = new FieldCondition("relateTableRowId", Operator.EQUAL, rowId);
+      }
+    }
+
+    PageResult<Map<String, Object>> relateTableRowId;
+    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+      relateTableRowId = selectPageMap(condition, orders, pageNum, pageSize);
+    } else {
+      relateTableRowId = new PageResult(selectMap(condition, orders));
+    }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateTableRowId);
   }
 
@@ -92,7 +108,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    */
   public ServerResult queryTableById(String rowId, String search) {
     List<DBTableColumn> relateTableRowId = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
-            UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
+        UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
     if (relateTableRowId.size() == 0) {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }

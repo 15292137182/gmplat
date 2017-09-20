@@ -14,8 +14,9 @@ public class DBTableColumnControllerTest extends BaseControllerTest<DBTableColum
   @Test
   public void testQueryPageById() throws Exception {
     //准备参数
-    String search = "test";
-    String rowId = "5243fc43-a9c6-42f0-a0c8-fd74e7fb";
+    String search = "模板";
+    String param = "{\"columnCname\":\"模板名称\"}";
+    String rowId = "f8dfd2cd-af95-468d-9665-b293dc8b";
     String pageNum = "1";
     String pageSize = "10";
     String order = "{\"str\":\"rowId\",\"num\":1}";
@@ -24,6 +25,7 @@ public class DBTableColumnControllerTest extends BaseControllerTest<DBTableColum
         MockMvcRequestBuilders.post(URL_TEMPLATE + "dbTableColumn/queryPageById")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)//如果不进行分页查询，去掉后面的分页查询参数
+//            .param("param",param)
             .param("search", search)
             .param("pageNum", pageNum)
             .param("pageSize", pageSize)
