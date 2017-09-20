@@ -124,16 +124,25 @@ public class FrontFuncProController extends
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryProPage(String rowId, String search,
-                                 @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                 @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                 String order) {
+  public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult serverResult = new ServerResult();
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {
-      PageResult<Map<String, Object>> pageResult = frontFuncProService.selectPageMap(
-          new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId), UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)))
-          , orders, pageNum, pageSize);
+      Condition condition;
+      if (UtilsTool.isValid(param)) { // 判断是否按照字段查询
+        Map map = UtilsTool.jsonToObj(param, Map.class);
+        condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+            UtilsTool.convertMapToAndConditionSeparatedByLike(FrontFuncPro.class, map));
+      } else {
+        condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+            UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)));
+      }
+      PageResult<Map<String, Object>> pageResult;
+      if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+        pageResult = frontFuncProService.selectPageMap(condition, orders, pageNum, pageSize);
+      } else {
+        pageResult = new PageResult(frontFuncProService.selectMap(condition, orders));
+      }
       List<Map<String, Object>> list = frontFuncProService.queryProPage(pageResult.getResult());
       pageResult.setResult(list);
       return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult));
