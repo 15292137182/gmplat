@@ -5,8 +5,10 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.PlatResult;
@@ -94,7 +96,7 @@ public class BusinessObjectProController extends BaseController {
         BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
         int insert = businessObjectPro.insert();
         if (insert != -1) {
-            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+            return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,businessObjectPro));
         } else {
 
             return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
@@ -109,12 +111,12 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/modify")
     public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
-        ServerResult result = new ServerResult();
+        BusinessObjectPro businessObjectPro=null;
         if (UtilsTool.isValid(paramEntity.get("rowId"))) {
-            BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
+            businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
             businessObjectPro.updateById();
         }
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,businessObjectPro));
     }
 
     /**
@@ -125,6 +127,10 @@ public class BusinessObjectProController extends BaseController {
      */
     @RequestMapping("/delete")
     public Object delete(String rowId) {
+        //通过rowId查询数据
+        Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+        List<BusinessObjectPro> businessObjectPros = businessObjectProService.select(condition);
+
         ServerResult result = new ServerResult();
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
         int del;
@@ -132,7 +138,8 @@ public class BusinessObjectProController extends BaseController {
             BusinessObjectPro businessObjectPro = new BusinessObjectPro();
             del = businessObjectPro.deleteById(rowId);
             if (del != -1) {
-                return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+                //接受rowId返回业务对象数据
+                return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,businessObjectPros));
             } else {
                 return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
             }

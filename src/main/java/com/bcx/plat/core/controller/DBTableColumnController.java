@@ -100,7 +100,7 @@ public class DBTableColumnController extends BaseController {
       DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
       int update = dbTableColumn.updateById();
       if (update != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,dbTableColumn));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }

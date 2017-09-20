@@ -79,7 +79,7 @@ public class SequenceRuleConfigController extends BaseController {
     SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig().buildCreateInfo().fromMap(param);
     int insert = sequenceRuleConfig.insert();
     if (insert != -1) {
-      return super.result(new ServerResult().setStateMessage(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+      return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,sequenceRuleConfig));
     } else {
       return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
     }

@@ -73,7 +73,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     if (insert != 1) {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, NEW_ADD_FAIL);
     } else {
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, NEW_ADD_SUCCESS, insert);
+      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, NEW_ADD_SUCCESS, businessObject);
     }
   }
 
@@ -279,8 +279,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @return ServerResult
    */
   public ServerResult delete(String rowId) {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("relateBusiObj", rowId);
+    //返回删除当前数据
+    Condition buildDone = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<BusinessObject> select = select(buildDone);
+
     List<FrontFunc> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
     if (businObj.size() > 0) {
       for (FrontFunc busin : businObj) {
@@ -301,7 +303,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       } else if (rowId != null && rowId.length() > 0) {
         Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
         delete(condition);
-        return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,select);
       }
     }
     return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);

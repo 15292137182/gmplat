@@ -83,13 +83,11 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      String param,
-                                      String order) {
+  public PlatResult singleInputSelect(String search,Integer pageNum, Integer pageSize,
+                                      String param,String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
+    Condition relateCondition=null;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObject.class, map);
@@ -100,9 +98,28 @@ public class BusinessObjectController extends BaseController {
     List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
     for (Map<String, Object> results : result) {
       String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
-      Condition relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
-      List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-      results.put("relateTemplate", templateObjects.get(0).getTemplateName());
+      List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
+      if (null==list) {
+        relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
+        List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
+        if (templateObjects.size()>0) {
+          results.put("relateTemplate", templateObjects.get(0).getTemplateName());
+        }
+      }else{
+        StringBuilder templates=new StringBuilder();
+        for (Object li : list){
+          String valueOf = String.valueOf(li);
+          relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
+          List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
+          if (templateObjects.size()>0) {
+            for (TemplateObject temp :templateObjects){
+              templates.append(temp.getTemplateName()+",");
+            }
+          }
+        }
+        String substring = templates.substring(0, templates.length()-1);
+        results.put("relateTemplate", substring);
+      }
     }
     return super.result(serverResult);
   }
@@ -165,8 +182,8 @@ public class BusinessObjectController extends BaseController {
     ServerResult serverResult = null;
     if (UtilsTool.isValid(rowId)) {
       BusinessObject businessObject = new BusinessObject().fromMap(paramEntity);
-      int update = businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
-      serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, update);
+      businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
+      serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObject);
     }
     return super.result(serverResult);
   }

@@ -39,7 +39,7 @@ public class DataSetConfigController extends BaseController {
   private DataSetConfigService dataSetConfigService;
 
   protected List<String> blankSelectFields() {
-    return Arrays.asList("datasetCode", "datasetName", "datasetType");
+    return Arrays.asList("datasetCode", "datasetName", "datasetType","datasetContent");
   }
 
   /**
