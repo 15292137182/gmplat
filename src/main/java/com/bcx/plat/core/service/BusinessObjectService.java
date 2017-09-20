@@ -175,7 +175,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     if (isValid(param)) {
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       map.put("objRowId", rowId);
-      condition = UtilsTool.convertMapToAndCondition(BusinessObjectPro.class, map);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map);
     } else {
       if (isValid(search)) {
         condition = new ConditionBuilder(BusinessObjectPro.class)

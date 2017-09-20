@@ -92,7 +92,7 @@ public class BusinessObjectController extends BaseController {
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
-      condition = UtilsTool.convertMapToAndCondition(BusinessObject.class, map);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObject.class, map);
     } else {
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
