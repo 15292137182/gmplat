@@ -472,6 +472,7 @@ var add = new Vue({
                     }
                     gmpAjax.showAjax(data,function(res){
                         queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
+                        window.parent.config.searchPage();
                         parent.layer.close(window.parent.config.divIndex);
                     })
                 })
@@ -494,6 +495,7 @@ var add = new Vue({
                     }
                     gmpAjax.showAjax(data,function(res){
                         queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
+                        window.parent.config.searchPage();
                         parent.layer.close(window.parent.config.divIndex);
                     })
                 })
@@ -549,10 +551,7 @@ var add = new Vue({
         },
         //模块下拉框
         getBelongModule_1(datas){
-            if(datas)
-                this.belongModule_1.value="";
-            else
-                this.belongModule_1.value=datas.value;
+            this.belongModule_1.value=datas.value;
         }
     },
     created(){
