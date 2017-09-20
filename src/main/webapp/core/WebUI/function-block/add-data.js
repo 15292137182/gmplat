@@ -161,7 +161,7 @@ var em=new Vue({
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.objPro_1.value,//业务对象属性ID
                     attrSource:em.attrSource,//业务对象属性所属模块
-                    displayTitle:em.nameTitle,//显示标题
+                    displayTitle:em.formTable.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
                     displayWidget:em.showControl_1.value,//显示控件
                     wetherReadonly:em.checkedReady,//只读

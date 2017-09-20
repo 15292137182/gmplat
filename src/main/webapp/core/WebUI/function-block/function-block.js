@@ -198,10 +198,59 @@ gmp_onload = function(){
             },
             //编辑属性
             editData(){
+                var height = "500px";
+                if(functionBlock.editObj.funcType=="表单"){//新增属性为表单
+                    topButtonObj.queryBottom = false;
+                    topButtonObj.sortBottom = false;
+                    topButtonObj.controlBottom = true;
+                    topButtonObj.LengthBottom = true;
+                    topButtonObj.emptyBottom = true;
+                    topButtonObj.readOnlyBottom = true;
+                    topButtonObj.VerificationBottom = true;
+                    topButtonObj.displayBottom = true;
+                    topButtonObj.widthBottom = true;
+                    topButtonObj.KeywordOneBottom = true;
+                    topButtonObj.KeywordTwoBottom = true;
+                    topButtonObj.KeywordThreeBottom = true;
+                    topButtonObj.alignBottom = true;
+                    height = "495px";
+                }
+                if(functionBlock.editObj.funcType=="列表"){//新增属性为表格
+                    topButtonObj.queryBottom = false;
+                    topButtonObj.sortBottom = true;
+                    topButtonObj.controlBottom = false;
+                    topButtonObj.LengthBottom = false;
+                    topButtonObj.emptyBottom = true;
+                    topButtonObj.readOnlyBottom = true;
+                    topButtonObj.VerificationBottom = true;
+                    topButtonObj.displayBottom = true;
+                    topButtonObj.widthBottom = true;
+                    topButtonObj.KeywordOneBottom = true;
+                    topButtonObj.KeywordTwoBottom = true;
+                    topButtonObj.KeywordThreeBottom = true;
+                    topButtonObj.alignBottom = true;
+                    height = "430px";
+                }
+                if(functionBlock.editObj.funcType=="查询"){//新增属性为查询块
+                    topButtonObj.queryBottom = true;
+                    topButtonObj.sortBottom = false;
+                    topButtonObj.controlBottom = false;
+                    topButtonObj.LengthBottom = false;
+                    topButtonObj.emptyBottom = false;
+                    topButtonObj.readOnlyBottom = false;
+                    topButtonObj.VerificationBottom = false;
+                    topButtonObj.displayBottom = false;
+                    topButtonObj.widthBottom = false;
+                    topButtonObj.KeywordOneBottom = false;
+                    topButtonObj.KeywordTwoBottom = false;
+                    topButtonObj.KeywordThreeBottom = false;
+                    topButtonObj.alignBottom = false;
+                    height = "240px";
+                }
                 topButtonObj.rowObjId = functionBlock.editObj.rowId;
                 topButtonObj.objId = functionBlock.editObj.relateBusiObj;
                 topButtonObj.isEdit = true;
-                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','800px', '550px')
+                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','800px', height);
             },
             //删除属性
             delData(){
