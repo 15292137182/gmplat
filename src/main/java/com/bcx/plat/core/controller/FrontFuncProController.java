@@ -3,8 +3,6 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -14,8 +12,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.service.BusinessObjectProService;
-import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.utils.PlatResult;
@@ -129,9 +125,9 @@ public class FrontFuncProController extends
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search,
-                                      @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                      @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                      String order) {
+                                 @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                 @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                 String order) {
     ServerResult serverResult = new ServerResult();
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {
@@ -144,7 +140,6 @@ public class FrontFuncProController extends
     }
     return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
   }
-
 
 
   /**
@@ -183,6 +178,8 @@ public class FrontFuncProController extends
     if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
       FrontFuncPro frontFuncPro = new FrontFuncPro();
       FrontFuncPro modify = frontFuncPro.fromMap(param).buildModifyInfo();
+      modify.setAttrSource(null);
+      modify.setRelateBusiPro(null);
       update = modify.updateById();
       if (update != -1) {
         return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
