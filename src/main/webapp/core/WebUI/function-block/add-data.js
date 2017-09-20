@@ -42,6 +42,19 @@ var em=new Vue({
         SupportSorting:'',//支持排序
         ExactSearch:'',//是否精确查询
         funcRowIds:'',
+        queryBottom:window.parent.topButtonObj.queryBottom,
+        sortBottom:window.parent.topButtonObj.sortBottom,
+        controlBottom:window.parent.topButtonObj.controlBottom,
+        LengthBottom:window.parent.topButtonObj.LengthBottom,
+        emptyBottom:window.parent.topButtonObj.emptyBottom,
+        readOnlyBottom:window.parent.topButtonObj.readOnlyBottom,
+        VerificationBottom:window.parent.topButtonObj.VerificationBottom,
+        displayBottom:window.parent.topButtonObj.displayBottom,
+        widthBottom:window.parent.topButtonObj.widthBottom,
+        KeywordOneBottom:window.parent.topButtonObj.KeywordOneBottom,
+        KeywordTwoBottom:window.parent.topButtonObj.KeywordTwoBottom,
+        KeywordThreeBottom:window.parent.topButtonObj.KeywordThreeBottom,
+        alignBottom:window.parent.topButtonObj.alignBottom,
 
         //对象属性下拉框
         objPro_1:{
@@ -283,8 +296,8 @@ var em=new Vue({
         this.funcRowIds = window.parent.topButtonObj.rowObjId;
 
         if(window.parent.topButtonObj.isEdit){//编辑
-            var args={"Block":{funcType:"functionBlockType"},"blockAttribute":{displayWidget:"showControl"}};
-            TableKeyValueSet.init(args);
+            //var args={"Block":{funcType:"functionBlockType"},"blockAttribute":{displayWidget:"showControl"}};
+            //TableKeyValueSet.init(args);
             this.loadComplete();
         }
     }

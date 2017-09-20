@@ -124,6 +124,7 @@ gmp_onload = function(){
         },
         created(){
             this.get();
+            this.click();
             $(document).ready(function(){
                 functionBlock.leftHeight=$(window).height()-190;
             });
@@ -200,7 +201,7 @@ gmp_onload = function(){
                 topButtonObj.rowObjId = functionBlock.editObj.rowId;
                 topButtonObj.objId = functionBlock.editObj.relateBusiObj;
                 topButtonObj.isEdit = true;
-                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','500px', '550px')
+                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','800px', '550px')
             },
             //删除属性
             delData(){
@@ -266,7 +267,21 @@ gmp_onload = function(){
             rowObjId:'',//功能块ID
             objId:'',//关联业务对象ID
             isEdit:'',//是否编辑
-            delUrl:serverPath+'/fronFuncPro/delete'//删除属性接口
+            delUrl:serverPath+'/fronFuncPro/delete',//删除属性接口
+
+            queryBottom:true, //精确查询
+            sortBottom:true,//是否排序
+            controlBottom:true,//显示控件
+            LengthBottom:true,//长度区间
+            emptyBottom:true,//为空
+            readOnlyBottom:true,//只读
+            VerificationBottom:true,//验证函数
+            displayBottom:true,//显示函数
+            widthBottom:true,//宽度设置
+            KeywordOneBottom:true,//关键字1
+            KeywordTwoBottom:true,//关键字2
+            KeywordThreeBottom:true,//关键字3
+            alignBottom:true,//对齐方式
         },
         methods: {
             //功能块
@@ -277,16 +292,67 @@ gmp_onload = function(){
             },
             //功能块属性
             addData(){
+                console.log(functionBlock.editObj);
+               var height = "500px";
+                if(functionBlock.editObj.funcType=="表单"){//新增属性为表单
+                    topButtonObj.queryBottom = false;
+                    topButtonObj.sortBottom = false;
+                    topButtonObj.controlBottom = true;
+                    topButtonObj.LengthBottom = true;
+                    topButtonObj.emptyBottom = true;
+                    topButtonObj.readOnlyBottom = true;
+                    topButtonObj.VerificationBottom = true;
+                    topButtonObj.displayBottom = true;
+                    topButtonObj.widthBottom = true;
+                    topButtonObj.KeywordOneBottom = true;
+                    topButtonObj.KeywordTwoBottom = true;
+                    topButtonObj.KeywordThreeBottom = true;
+                    topButtonObj.alignBottom = true;
+                    height = "495px";
+                }
+                if(functionBlock.editObj.funcType=="列表"){//新增属性为表格
+                    topButtonObj.queryBottom = false;
+                    topButtonObj.sortBottom = true;
+                    topButtonObj.controlBottom = false;
+                    topButtonObj.LengthBottom = false;
+                    topButtonObj.emptyBottom = true;
+                    topButtonObj.readOnlyBottom = true;
+                    topButtonObj.VerificationBottom = true;
+                    topButtonObj.displayBottom = true;
+                    topButtonObj.widthBottom = true;
+                    topButtonObj.KeywordOneBottom = true;
+                    topButtonObj.KeywordTwoBottom = true;
+                    topButtonObj.KeywordThreeBottom = true;
+                    topButtonObj.alignBottom = true;
+                    height = "430px";
+                }
+                if(functionBlock.editObj.funcType=="查询"){//新增属性为查询块
+                    topButtonObj.queryBottom = true;
+                    topButtonObj.sortBottom = false;
+                    topButtonObj.controlBottom = false;
+                    topButtonObj.LengthBottom = false;
+                    topButtonObj.emptyBottom = false;
+                    topButtonObj.readOnlyBottom = false;
+                    topButtonObj.VerificationBottom = false;
+                    topButtonObj.displayBottom = false;
+                    topButtonObj.widthBottom = false;
+                    topButtonObj.KeywordOneBottom = false;
+                    topButtonObj.KeywordTwoBottom = false;
+                    topButtonObj.KeywordThreeBottom = false;
+                    topButtonObj.alignBottom = false;
+                    height = "240px";
+                }
+
                 topButtonObj.rowObjId = functionBlock.editObj.rowId;
                 topButtonObj.objId = functionBlock.editObj.relateBusiObj;
                 this.isEdit = false;
-                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','新增属性','500px', '550px')
+                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','新增属性','800px', height)
             },
             editData(){
                 topButtonObj.rowObjId = functionBlock.editObj.rowId;
                 topButtonObj.objId = functionBlock.editObj.relateBusiObj;
                 this.isEdit = true;
-                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','500px', '550px')
+                topButtonObj.divIndex = ibcpLayer.ShowIframe('add-data.html','编辑属性','800px', '550px')
             },
             delData(){
                 this.$http.jsonp(this.delUrl,{
