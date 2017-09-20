@@ -5,12 +5,10 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.TemplateObject;
-import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectService;
@@ -70,7 +68,7 @@ public class BusinessObjectController extends BaseController {
   public PlatResult queryById(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-        ServerResult serverResult = businessObjectService.queryById(rowId);
+      ServerResult serverResult = businessObjectService.queryById(rowId);
       return result(serverResult);
     }
     return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
@@ -88,16 +86,23 @@ public class BusinessObjectController extends BaseController {
   public PlatResult singleInputSelect(String search,
                                       @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                       @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                      String param,
                                       String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    ServerResult serverResult = businessObjectService.queryPage(blankQuery, pageNum, pageSize, orders);
-    List<Map<String,Object>> result = ((PageResult) serverResult.getData()).getResult();
-    for (Map<String,Object> results : result){
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      condition = UtilsTool.convertMapToAndCondition(BusinessObject.class, map);
+    } else {
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+    ServerResult serverResult = businessObjectService.queryPage(condition, pageNum, pageSize, orders);
+    List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
+    for (Map<String, Object> results : result) {
       String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
-      Condition condition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
-      List<TemplateObject> templateObjects = templateObjectService.select(condition);
-      results.put("relateTemplate",templateObjects.get(0).getTemplateName());
+      Condition relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
+      List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
+      results.put("relateTemplate", templateObjects.get(0).getTemplateName());
     }
     return super.result(serverResult);
   }
@@ -113,13 +118,14 @@ public class BusinessObjectController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search,
-                                 @RequestParam(value = "pageNum",required = false) Integer pageNum,
+                                 String param,
+                                 @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                  @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                  String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-      ServerResult serverResult = businessObjectService.queryProPage(search, rowId, pageNum, pageSize, orders);
+      ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
       return result(serverResult);
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
