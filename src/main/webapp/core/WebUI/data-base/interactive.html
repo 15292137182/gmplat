@@ -10,6 +10,11 @@
             <el-button type="info" icon="plus" @click="click"></el-button>
         </el-col>
     </el-row>
+    <el-row id="search" style="margin-top: 10px;">
+        <el-col :span="7">
+            <components :is="searchBlock" data='{"main":"#search","code":"dateSetConfigsearch"}' :search-input="searchs"></components>
+        </el-col>
+    </el-row>
     <el-row id="app" style="margin-top: 10px;">
         <el-col :span="24">
             <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable"}' :table-data="tables"></components>
@@ -35,6 +40,8 @@
                 select_row = row;
                 var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {});
             }
+
+            // 搜索
         };
 
         var add = new Vue({
