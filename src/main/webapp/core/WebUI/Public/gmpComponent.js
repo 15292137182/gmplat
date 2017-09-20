@@ -69,6 +69,8 @@ Vue.component("single-selection", {
                 _obj = this.options.find(function(item) {
                     return item.value === val;
                 });
+            }else{
+                _obj["value"]=val;
             }
             // 子组件向父组件传递的方法和参数
             this.$emit("change-data", _obj);
