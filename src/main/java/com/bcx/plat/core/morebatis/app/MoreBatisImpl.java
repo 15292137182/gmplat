@@ -23,6 +23,7 @@ import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.translator.Translator;
 import com.bcx.plat.core.utils.UtilsTool;
+import com.github.pagehelper.Page;
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Component;
 
@@ -404,37 +405,18 @@ public class MoreBatisImpl implements MoreBatis{
     return translateJsonWithUnwrapEtc(result);
   }
 
-  private List<Map<String, Object>> translateJsonWithUnwrapEtc(List<Map<String, Object>> result) {
-    return result.stream().map((row) -> {
-      Map<String, Object> newRow;
+  private List<Map<String, Object>> translateJsonWithUnwrapEtc(List<Map<String, Object>> rows) {
+    rows.stream().forEach((row) -> {
       PGobject etcObj = (PGobject) row.remove("etc");
-      if (etcObj!=null) {
-        newRow=UtilsTool.jsonToObj(etcObj.toString(), HashMap.class);
-      }else {
-        newRow=new HashMap();
+      if (etcObj != null) {
+        HashMap etcMap = UtilsTool.jsonToObj(etcObj.toString(), HashMap.class);
+        row.put("etc",etcMap);
+        etcMap.forEach((k,v)->{
+          row.putIfAbsent((String) k,v);
+        });
       }
-      for (Map.Entry<String, Object> col : row.entrySet()) {
-        Object value = col.getValue();
-        if (value instanceof PGobject && ((PGobject) value).getType().startsWith("json")) {
-          newRow.put(col.getKey(), UtilsTool.jsonToObj(value.toString(), HashMap.class));
-        }else{
-          newRow.put(col.getKey(),value);
-        }
-      }
-      if (etcObj!=null) {
-        newRow.put("etc",UtilsTool.jsonToObj(etcObj.toString(), HashMap.class));
-      }
-      return newRow;
-    }).collect(Collectors.toList());
-//    for (Map<String, Object> row : result) {
-//      for (Map.Entry<String, Object> col : row.entrySet()) {
-//        Object value = col.getValue();
-//        if (value instanceof PGobject && ((PGobject) value).getType().startsWith("json")) {
-//          row.put(col.getKey(), UtilsTool.jsonToObj(value.toString(), HashMap.class));
-//        }
-//      }
-//    }
-//    return null;
+    });
+    return rows;
   }
 
   public List<Map<String, Object>> executeOrigin(QueryAction queryAction) {
