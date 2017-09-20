@@ -5,7 +5,6 @@ import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.entity.MaintDBTables;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -46,6 +45,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
 
   /**
    * 新增表字段信息
+   *
    * @param param 接受map参数
    * @return serverResult
    */
@@ -61,7 +61,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
       int insert = dbTableColumn.insert();
       if (insert != -1) {
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,dbTableColumn);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, dbTableColumn);
       } else {
         return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
       }
@@ -86,7 +86,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       map.put("relateTableRowId", rowId);
-      condition = UtilsTool.convertMapToAndCondition(DBTableColumn.class, map);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(DBTableColumn.class, map);
     } else {
       if (UtilsTool.isValid(search)) {
         condition = new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
@@ -136,7 +136,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       List<DBTableColumn> dbTableColumns = select(condition);
       int del = dbTableColumn.deleteById(rowId);
       if (del != -1) {
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,dbTableColumns);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dbTableColumns);
       } else {
         return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
       }
