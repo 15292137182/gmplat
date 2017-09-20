@@ -123,7 +123,6 @@ var em=new Vue({
                 "jsonData":{
                     funcRowId:em.funcRowId,//功能块ID
                     relateBusiPro:em.objPro_1.value,//业务对象属性ID
-                    attrSource:em.attrSource,//业务对象属性所属模块
                     displayTitle:em.formTable.nameTitle,//显示标题
                     wetherDisplay:em.checked,//是否显示
                     displayWidget:em.showControl_1.value,//显示控件
@@ -159,24 +158,23 @@ var em=new Vue({
                 "jsonData":{
                     rowId:em.rowId,//新增属性的ID
                     funcRowId:em.funcRowId,//功能块ID
-                    relateBusiPro:em.objPro_1.value,//业务对象属性ID
-                    attrSource:em.attrSource,//业务对象属性所属模块
+          //          relateBusiPro:em.objPro_1.value,//业务对象属性ID
                     displayTitle:em.formTable.nameTitle,//显示标题
-                    wetherDisplay:em.checked,//是否显示
-                    displayWidget:em.showControl_1.value,//显示控件
-                    wetherReadonly:em.checkedReady,//只读
-                    allowEmpty:em.checkedNull,//允许为空
-                    lengthInterval:em.lengthSection,//长度区间
-                    validateFunc:em.testFunction,//验证函数
-                    displayFunc:em.displayFunction,//显示函数
-                    sort:em.sortNumber,//排序
-                    widthSetting:em.formTable.Twidth,//宽度
-                    align:em.align_1.value,//对齐方式
-                    exactQuery:em.ExactSearch,//是否精确查询
-                    supportSort:em.SupportSorting,//支持排序
-                    keywordOne:em.formTable.Keyword1,//关键字1
-                    keywordTwo:em.formTable.Keyword2,//关键字2
-                    keywordThree:em.formTable.Keyword3,//关键字3
+           //         wetherDisplay:em.checked,//是否显示
+           //         displayWidget:em.showControl_1.value,//显示控件
+           //         wetherReadonly:em.checkedReady,//只读
+            //        allowEmpty:em.checkedNull,//允许为空
+            //        lengthInterval:em.lengthSection,//长度区间
+            //        validateFunc:em.testFunction,//验证函数
+            //        displayFunc:em.displayFunction,//显示函数
+            //        sort:em.sortNumber,//排序
+            //        widthSetting:em.formTable.Twidth,//宽度
+             //       align:em.align_1.value,//对齐方式
+             //       exactQuery:em.ExactSearch,//是否精确查询
+              //      supportSort:em.SupportSorting,//支持排序
+              //      keywordOne:em.formTable.Keyword1,//关键字1
+             //       keywordTwo:em.formTable.Keyword2,//关键字2
+              //      keywordThree:em.formTable.Keyword3,//关键字3
                 },
                 "obj":window.parent.functionBlock
             }
