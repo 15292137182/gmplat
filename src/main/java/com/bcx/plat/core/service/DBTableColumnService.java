@@ -85,8 +85,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
-      map.put("relateTableRowId", rowId);
-      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(DBTableColumn.class, map);
+      condition = new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId), UtilsTool.convertMapToAndConditionSeparatedByLike(DBTableColumn.class, map));
     } else {
       if (UtilsTool.isValid(search)) {
         condition = new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
