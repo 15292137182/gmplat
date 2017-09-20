@@ -377,4 +377,19 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
     return execute;
   }
+
+  /**
+   * 单表查询添加添加排序
+   * @param entity  接受实体类
+   * @param condition 过滤条件
+   * @param orders  排序
+   * @return  list
+   */
+  public List<Map<String, Object>> singleSelectSort(Class entity, Condition condition,List<Order> orders) {
+    List<Map<String, Object>> execute = null;
+    if (entity != null && condition != null) {
+      execute = MORE_BATIS.select(entity).where(condition).orderBy(orders).execute();
+    }
+    return execute;
+  }
 }

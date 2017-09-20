@@ -326,4 +326,21 @@ public abstract class BaseService<T extends BaseEntity<T>> {
         }
         return list;
     }
+    /**
+     * 单表查询添加添加排序
+     * @param entityClass   接受一个实体
+     * @param condition 过滤条件
+     * @param orders  排序
+     * @return  List
+     */
+    public List<Map<String, Object>> singleSelectSort(Class entityClass, Condition condition,List<Order> orders) {
+        List<Map<String, Object>> list = null;
+        try {
+            list = getTClass().newInstance().singleSelectSort(entityClass, condition,orders);
+
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
