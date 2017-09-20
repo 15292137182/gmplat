@@ -170,7 +170,7 @@ var creat = (function() {
 })();
 
 var getHtml = (function() {
-    var ajax_html = function( mainId, code, compId) {
+    var ajax_html = function(mainId, code, compId, params) {
         var codes = '['+'"'+code+'"'+']';
         var dtd = $.Deferred();
         $.ajax({
@@ -187,12 +187,13 @@ var getHtml = (function() {
                         // 创建vue实例
                         form.bulidComponent();
                         // 获取下拉框options
-                        // var _obj = form.formObj;
+                        // $.each(arr, function(index, item) {
+                        //     if(item.displayWidget == "select-base") {}
+                        // });
+                        var _obj = form.formObj;
+                        // getOptions.option(_obj);
                         // console.log(form);
-                        // for(var key in _obj) {
-                        //     var _suffix = key.substr(-1, 6);
-                        //     console.log(_suffix);
-                        // }
+
                         // 缓存实例化对象
                         GmpForm[compId] = form;
                     }
@@ -213,7 +214,8 @@ var getHtml = (function() {
                     }
                     if (arr[0].funcType == "search") {
                         // alert("search start");
-                        var _search = new gmpsearchObj(compId, code, arr, mainId, [_table]);
+                        // console.log(_table);
+                        var _search = new gmpsearchObj(compId, code, arr, mainId, [params.bind]);
                         // 创建vue实例
                         _search.bulidComponent();
                         // 缓存实例化对象
@@ -242,15 +244,63 @@ var getHtml = (function() {
 
 var dynamicObj = (function() {
     // 用户配置
-    function render( data, param) {
+    function render(data, param) {
         // 获取配置参数
         var params = JSON.parse(data);
         // 创建对象
-        return getHtml.html( params.main, params.code, param);
+        return getHtml.html(params.main, params.code, param, params);
     };
 
     // 配置方法函数
     return {
         render: render
+    }
+})();
+
+var getOptions = (function() {
+    var option = function(data) {
+        for(var key in data) {
+            var _suffix = key.substr(key.length - 6);
+            var _keyName = key.substr(0, key.length - 6);
+            if(_suffix == "Option") {
+                data[key].splice(0, 1);
+
+                var _param = {
+                    keyCode: _keyName
+                }
+
+                $.ajax({
+                    url: serverPath + "/keySet/queryKeyCode",
+                    type: "get",
+                    data:  _param,
+                    dataType: "json",
+                    success:function(res) {
+                        if(res.resp.respCode == "000"){
+                            if(res.resp.content.state == "1"){
+                                var _jsonObj = res.resp.content.data;
+                                // 循环配置value-label
+                                for(var i = 0;i < _jsonObj.length;i++) {
+                                    _jsonObj[i].value = _jsonObj[i].confKey;
+                                    _jsonObj[i].label = _jsonObj[i].confValue;
+                                }
+                                // 赋值options
+                                data[key] = _jsonObj;
+                                console.log(_jsonObj);
+                            }
+                        }
+                    },
+                    error:function() {
+                        console.log(_param);
+                        console.log(serverPath + "/keySet/queryKeyCode");
+                        alert("错误");
+                    }
+                });
+            }
+            // console.log(_suffix);
+        }
+    };
+
+    return {
+        option: option
     }
 })();

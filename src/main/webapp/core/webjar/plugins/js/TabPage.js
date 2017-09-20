@@ -889,7 +889,7 @@ var DynamicStitchings = (function(){
         var keywordThree = "关键字3";
         var model = "searchInput.sel" //绑定v-model数据
         var options = "item in searchInput.options";
-        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.key" slot="prepend" placeholder="请选择" style="width:100px"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select><el-button slot="append" @click="searchInput.clickSearch" icon="search"></el-button></el-input></el-col>'
+        str='<el-col :span='+width+'><el-input placeholder="请输入内容" v-model="'+ model +'"><el-select v-model="searchInput.key" slot="prepend" clearable placeholder="请选择" style="width:100px"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select><el-button slot="append" @click="searchInput.clickSearch" icon="search"></el-button></el-input></el-col>'
         return str;
     }
     //表单块

@@ -419,7 +419,7 @@ gmpFormObj.prototype.submit = function(json, callback) {
  * @author:liyuanquan
  */
 
-//动态表格对象
+// 动态表格对象
 function gmpTableObj(compId, blockId, formBlockItems, vueEl, postUrl, queryParam, submitUrl, jsonFunction) {
     this.compId = compId; //父组件名字
     this.blockId = blockId; //功能块标识
@@ -440,9 +440,9 @@ function gmpTableObj(compId, blockId, formBlockItems, vueEl, postUrl, queryParam
     this.columns = [] //表格初始列信息
     this.custom = [] //表格自定义列信息 ignore
     this.singleSelect = false //表格单选/多选 默认单选
-    this.pageSize = '' //每页显示多少条数据，当表格需要分页时有效
-    this.pageNo = ''; //当前第多少页，当表格需要分页时有效
-    this.total = ''; //共多少条数据，当表格需要分页时有效
+    this.pageSize = 10//每页显示多少条数据，当表格需要分页时有效
+    this.pageNo = 1;//当前第多少页，当表格需要分页时有效
+    this.total = 0;//共多少条数据，当表格需要分页时有效
 
     this.rows = []; //选中行数据
 
@@ -460,7 +460,7 @@ function gmpTableObj(compId, blockId, formBlockItems, vueEl, postUrl, queryParam
     }
 };
 
-//父组件数据
+// 父组件数据
 gmpTableObj.prototype.searchSelect = function() {
     var that = this;
     var compId = this.compId;
@@ -508,7 +508,7 @@ gmpTableObj.prototype.searchSelect = function() {
     return obj;
 };
 
-//构建表格组件
+// 构建表格组件
 gmpTableObj.prototype.bulidComponent = function() {
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
     var that = this;
@@ -533,7 +533,7 @@ gmpTableObj.prototype.bulidComponent = function() {
     this.vueObj = vue;
 };
 
-//表格数据直接加载方法
+// 表格数据直接加载方法
 gmpTableObj.prototype.reload = function(json) {
     if (json.queryUrl) {
         this.queryUrl = json.queryUrl;
@@ -573,12 +573,12 @@ gmpTableObj.prototype.loadRecord = function(data) {
     this.vueObj[parentComponentName] = this.tableObjArr;
 };
 
-//获取选中行数据
+// 获取选中行数据
 gmpTableObj.prototype.getCheckedRows = function() {
     return this.rows;
 };
 
-//获取选中记录总数
+// 获取选中记录总数
 gmpTableObj.prototype.getCheckedRowsCount = function() {
     return this.rows.length;
 };
@@ -740,8 +740,8 @@ gmpTableObj.prototype.removeRowByIndex = function(index) {
 
 // 删除指定列的指定值数据
 gmpTableObj.prototype.removeRow = function(column, value) {
-    console.log(column);
-    console.log(value);
+    // console.log(column);
+    // console.log(value);
     var arr = [];
     for (var j = 0; j < this.tableObjArr.length; j++) {
         if (typeof this.tableObjArr[j] == "object") {
@@ -751,7 +751,7 @@ gmpTableObj.prototype.removeRow = function(column, value) {
     for (var j = 0; j < arr.length; j++) {
         if (arr[j][column] == value) {
             var index = arr[j];
-            console.log(index);
+            // console.log(index);
             this.tableObjArr.splice(index, 1);
         }
     }
@@ -785,7 +785,7 @@ function gmpsearchObj(compId, blockId, searchBlockItems, vueEl, grids, custom, f
     this.filter = searchBlockItems;//配置的过滤字段
     this.custom = custom	//自定义的过滤字段
     this.filterData = filterData	//过滤的数据
-    this.grids = grids 	//查询返回的响应数据加载的GmpGrid.id
+    this.grids = grids;	//查询返回的响应数据加载的GmpGrid.id
     this.selUrl = selUrl //获取后端数据接口
     this.postParam = postParam //请求参数参数json
     this.formUrl = formUrl //提交接口
@@ -857,13 +857,27 @@ gmpsearchObj.prototype.getOptions = function() {
 
 // 设置配置项信息
 gmpsearchObj.prototype.setOptions = function(json) {
-    this.filter = json.filter;//配置的过滤字段
-    this.custom = json.custom//自定义的过滤字段
-    this.filterData = json.filterData	//过滤的数据
-    this.grids = json.grids	//查询返回的响应数据加载的GmpGrid.id
-    this.selUrl = json.selUrl //获取后端数据接口
-    this.postParam = json.postParam  //请求参数参数json
-    this.formUrl = json.formUrl//提交接口
+    if(json.filter){
+        this.filter = json.filter;//配置的过滤字段
+    }
+    if(json.custom){
+        this.custom = json.custom//自定义的过滤字段
+    }
+    if(json.filterData){
+        this.filterData = json.filterData	//过滤的数据
+    }
+    if(json.grids){
+        this.grids = json.grids	//查询返回的响应数据加载的GmpGrid.id
+    }
+    if(json.selUrl){
+        this.selUrl = json.selUrl //获取后端数据接口
+    }
+    if(json.postParam){
+        this.postParam = json.postParam  //请求参数参数json
+    }
+    if(json.formUrl){
+        this.formUrl = json.formUrl//提交接口
+    }
 };
 
 // 获取过滤数据
@@ -881,7 +895,16 @@ gmpsearchObj.prototype.search = function(json,callback) {
     var that = this;
     var url = that.selUrl;
     var dataJson = null;
-    var pageConfig = that.grids[0].getPageInfo();
+    var pageConfig = {};
+    pageConfig.pageSize = 10;
+    pageConfig.pageNo = 1;
+    // if(that.grids != undefined){
+    //     pageConfig = that.grids[0].getPageInfo();
+    // }else{
+    //      pageConfig.pageSize = 10;
+    //      pageConfig.pageNo = 1;
+    //  }
+
     var search = that.searchObj.sel;
     if(that.searchObj.key == ""){
         dataJson = {
@@ -900,11 +923,11 @@ gmpsearchObj.prototype.search = function(json,callback) {
             pageNum:pageConfig.pageNo
         }
     }
-    if(json.url){
-        url = json.url;
-    }
-    if(json.data){
-        dataJson = json.data;
+    if(json){
+        if(json.url != undefined){
+            url = json.url;
+            dataJson = json.data;
+        }
     }
     $.ajax({
         url:url,
@@ -912,9 +935,12 @@ gmpsearchObj.prototype.search = function(json,callback) {
         dataType:"json",
         data:dataJson,
         success:function(res){
-            console.log(res);
-            alert("ok");
-            callback(res);
+            var dataName = that.grids[0];
+            var load = "GmpTable."+dataName+".loadRecord(res.resp.content.data.result)";
+            eval(load);
+            if(callback){
+                callback(res);
+            }
         },
         error:function(){
             alert("查询块请求失败！");
