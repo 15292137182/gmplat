@@ -19,36 +19,50 @@ import com.bcx.plat.core.utils.UtilsTool;
 import java.util.*;
 
 public class Translator implements SqlComponentTranslator{
-    public static final SqlSegment SELECT=new SqlSegment("SELECT");
-    public static final SqlSegment DELETE=new SqlSegment("DELETE");
-    public static final SqlSegment INSERT_INTO=new SqlSegment("INSERT INTO");
-    public static final SqlSegment UPDATE=new SqlSegment("UPDATE");
-    public static final SqlSegment SET=new SqlSegment("SET");
-    public static final SqlSegment AS=new SqlSegment("AS");
-    public static final SqlSegment FROM=new SqlSegment("FROM");
-    public static final SqlSegment ON=new SqlSegment("ON");
-    public static final SqlSegment JOIN=new SqlSegment("JOIN");
-    public static final SqlSegment INNER=new SqlSegment("INNER");
-    public static final SqlSegment LEFT=new SqlSegment("LEFT");
-    public static final SqlSegment RIGHT=new SqlSegment("RIGHT");
-    public static final SqlSegment NATURAL=new SqlSegment("NATURAL");
-    public static final SqlSegment FULL=new SqlSegment("FULL");
-    public static final SqlSegment WHERE=new SqlSegment("WHERE");
-    public static final SqlSegment GROUP_BY=new SqlSegment("GROUP BY");
-    public static final SqlSegment AND=new SqlSegment("AND");
-    public static final SqlSegment OR=new SqlSegment("OR");
-    public static final SqlSegment FALSE=new SqlSegment("FALSE");
-    public static final SqlSegment TRUE=new SqlSegment("TRUE");
-    public static final SqlSegment DOT=new SqlSegment(".");
-    public static final SqlSegment COMMA=new SqlSegment(",");
-    public static final SqlSegment VALUES=new SqlSegment("VALUES");
-    public static final SqlSegment BRACKET_START=new SqlSegment("(");
-    public static final SqlSegment BRACKET_END=new SqlSegment(")");
-    public static final SqlSegment ASC=new SqlSegment("ASC");
-    public static final SqlSegment DESC=new SqlSegment("DESC");
-    public static final SqlSegment ORDER_BY=new SqlSegment("ORDER BY");
-    public static final SqlSegment EQUAL=new SqlSegment("=");
-    public static final SqlSegment NOT_EQUAL=new SqlSegment("!=");
+    private static final SqlSegment SELECT=new SqlSegment("SELECT");
+    private static final SqlSegment DELETE=new SqlSegment("DELETE");
+    private static final SqlSegment INSERT_INTO=new SqlSegment("INSERT INTO");
+    private static final SqlSegment UPDATE=new SqlSegment("UPDATE");
+    private static final SqlSegment SET=new SqlSegment("SET");
+    private static final SqlSegment AS=new SqlSegment("AS");
+    private static final SqlSegment FROM=new SqlSegment("FROM");
+    private static final SqlSegment ON=new SqlSegment("ON");
+    private static final SqlSegment JOIN=new SqlSegment("JOIN");
+    private static final SqlSegment INNER=new SqlSegment("INNER");
+    private static final SqlSegment LEFT=new SqlSegment("LEFT");
+    private static final SqlSegment RIGHT=new SqlSegment("RIGHT");
+    private static final SqlSegment NATURAL=new SqlSegment("NATURAL");
+    private static final SqlSegment FULL=new SqlSegment("FULL");
+    private static final SqlSegment WHERE=new SqlSegment("WHERE");
+    private static final SqlSegment GROUP_BY=new SqlSegment("GROUP BY");
+    private static final SqlSegment AND=new SqlSegment("AND");
+    private static final SqlSegment OR=new SqlSegment("OR");
+    private static final SqlSegment FALSE=new SqlSegment("FALSE");
+    private static final SqlSegment TRUE=new SqlSegment("TRUE");
+    private static final SqlSegment DOT=new SqlSegment(".");
+    private static final SqlSegment COMMA=new SqlSegment(",");
+    private static final SqlSegment VALUES=new SqlSegment("VALUES");
+    private static final SqlSegment BRACKET_START=new SqlSegment("(");
+    private static final SqlSegment BRACKET_END=new SqlSegment(")");
+    private static final SqlSegment ASC=new SqlSegment("ASC");
+    private static final SqlSegment DESC=new SqlSegment("DESC");
+    private static final SqlSegment ORDER_BY=new SqlSegment("ORDER BY");
+    private static final SqlSegment EQUAL=new SqlSegment("=");
+    private static final SqlSegment NOT_EQUAL=new SqlSegment("!=");
+    private static final SqlSegment IN=new SqlSegment("IN");
+    private static final SqlSegment NOT_IN=new SqlSegment("NOT IN");
+    private static final SqlSegment LIKE=new SqlSegment("LIKE");
+    private static final SqlSegment NOT_LIKE=new SqlSegment("NOT LIKE");
+    private static final SqlSegment BETWEEN=new SqlSegment("BETWEEN");
+    private static final SqlSegment NOT_BETWEEN=new SqlSegment("NOT BETWEEN");
+    private static final SqlSegment IS_NULL=new SqlSegment("IS NULL");
+    private static final SqlSegment NOT_NULL=new SqlSegment("IS NOT NULL");
+    private static final SqlSegment LIKE_RIGHT=new SqlSegment(",'%')");
+    private static final SqlSegment LIKE_LEFT=new SqlSegment("concat('%',");    
+    private static final SqlSegment CONCAT=new SqlSegment("concat(");
+    private static final SqlSegment NOT=new SqlSegment("NOT");
+    private static final SqlSegment CAST_JSON=new SqlSegment("::jsonb");
+    private static final SqlSegment JSON_ATTR=new SqlSegment("::jsonb->>");
 
     private MoreBatis moreBatis;
 
@@ -209,7 +223,7 @@ public class Translator implements SqlComponentTranslator{
             translateFieldSource((Field) fieldSource, linkedList);
         }else if(fieldSource instanceof SubAttribute){
             translateFieldSource(((SubAttribute)fieldSource).getField(),linkedList);
-            appendSql("::jsonb->>",linkedList);
+            appendSql(JSON_ATTR,linkedList);
             appendArgs(((SubAttribute) fieldSource).getKey(),linkedList);
         }
         return linkedList;
@@ -292,44 +306,46 @@ public class Translator implements SqlComponentTranslator{
                                 appendSql(FALSE, list);
                             }
                         } else {
-                            appendSql(condition.isNot() ? "not in" : "in", list);
+                            appendSql(condition.isNot() ? NOT_IN : IN, list);
                             appendArgs(value, list);
                         }
-                    } else {
-                        //预留给子表查询
+                    } else if (value instanceof QueryAction){
+                        appendSql(BRACKET_START,list);
+                        translateQueryAction((QueryAction) value,list);
+                        appendSql(BRACKET_END,list);
                     }
                     break;
                 case EQUAL:
-                    appendSql(condition.isNot() ? "!=" : "=", list);
+                    appendSql(condition.isNot() ? NOT_EQUAL : EQUAL, list);
                     appendArgs(value, list);
                     break;
                 case LIKE_FULL:
-                    appendSql(condition.isNot() ? "not like" : "like", list);
-                    appendSql("concat('%',", list);
+                    appendSql(condition.isNot() ? NOT_LIKE : LIKE, list);
+                    appendSql(LIKE_LEFT, list);
                     appendArgs(value, list);
-                    appendSql(",'%')", list);
+                    appendSql(LIKE_RIGHT, list);
                     break;
                 case LIKE_LEFT:
-                    appendSql(condition.isNot() ? "not like" : "like", list);
-                    appendSql("concat('%',", list);
+                    appendSql(condition.isNot() ? NOT_LIKE : LIKE, list);
+                    appendSql(LIKE_LEFT, list);
                     appendArgs(value, list);
-                    appendSql(")", list);
+                    appendSql(BRACKET_END, list);
                     break;
                 case LIKE_RIGHT:
-                    appendSql(condition.isNot() ? "not like" : "like", list);
-                    appendSql("concat(", list);
+                    appendSql(condition.isNot() ? NOT_LIKE : LIKE, list);
+                    appendSql(CONCAT, list);
                     appendArgs(value, list);
-                    appendSql(",'%')", list);
+                    appendSql(LIKE_RIGHT, list);
                     break;
                 case BETWEEN:
-                    appendSql(condition.isNot() ? "not between" : "between", list);
+                    appendSql(condition.isNot() ? NOT_BETWEEN : BETWEEN, list);
                     final Object[] values = (Object[]) value;
                     appendArgs(values[0], list);
                     appendSql(AND, list);
                     appendArgs(values[1], list);
                     break;
                 case IS_NULL:
-                    appendSql(condition.isNot() ? "is not null" : "is null", list);
+                    appendSql(condition.isNot() ? NOT_NULL : IS_NULL, list);
                     break;
             }
         }
@@ -353,9 +369,9 @@ public class Translator implements SqlComponentTranslator{
             return list;
         }
         if (chainCondition.isNot()) {
-            appendSql("not", list);
+            appendSql(NOT, list);
         }
-        appendSql("(", list);
+        appendSql(BRACKET_START, list);
         final List<Condition> conditions = chainCondition.getConditions();
         Iterator<Condition> conditionIterator = conditions.iterator();
         boolean notFirst = false;
@@ -374,7 +390,7 @@ public class Translator implements SqlComponentTranslator{
             }
             translateCondition(condition, list);
         }
-        appendSql(")", list);
+        appendSql(BRACKET_END, list);
         return list;
     }
 
@@ -414,7 +430,7 @@ public class Translator implements SqlComponentTranslator{
             translateFieldSource((FieldSource) args,list);
         }else if (args instanceof Map){
             list.add(UtilsTool.objToJson(args));
-            appendSql("::jsonb",list);
+            appendSql(CAST_JSON,list);
         }else{
             list.add(args);
         }

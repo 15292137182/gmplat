@@ -6,6 +6,7 @@ import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.builder.OrderBuilder;
+import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,6 +35,6 @@ public class TranslatorTest extends BaseTest{
                 .and().equal("rowId","10086").endAnd()
                 .buildDone()).orderBy(new OrderBuilder(BusinessObject.class).asc("objectCode").desc("rowId").done());
         LinkedList result = translator.translateQueryAction(query, new LinkedList());
-        Assert.assertTrue(result.getFirst()==Translator.SELECT);
+        Assert.assertTrue(((SqlSegment)result.getFirst()).getSegment().equals("SELECT"));
     }
 }

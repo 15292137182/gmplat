@@ -87,7 +87,7 @@ public class EntityTest extends BaseTest {
     Assert.assertEquals("扩展字段条件查询失败", result.get(0).get("rowId"),businessObject1.getRowId());
 
     businessObject1.deleteById();
-    //删除测试
+    //删除测试P
     Assert.assertEquals("删除失败", businessObject1.selectOneById(),null);
 //    Assert.assertTrue("删除失败", businessObject1.selectById() == null);
   }

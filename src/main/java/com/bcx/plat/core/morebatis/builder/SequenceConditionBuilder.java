@@ -2,6 +2,7 @@ package com.bcx.plat.core.morebatis.builder;
 
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.SubAttribute;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -42,6 +43,18 @@ public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<
   }
 
   public CURRENT_NODE in(String alias, Collection value) {
+    return in(getColumnByAlias(conditionBuilderContext.getClz(),alias),value);
+  }
+
+  public CURRENT_NODE in(Class<? extends BeanInterface> entityClass,String alias,String attribute, QueryAction value) {
+    return in(getJsonAttributeColumnByAlias(entityClass, alias,attribute), value);
+  }
+
+  public CURRENT_NODE in(Class<? extends BeanInterface> entityClass,String alias, QueryAction value) {
+    return in(getNormalColumnByAlias(entityClass, alias), value);
+  }
+
+  public CURRENT_NODE in(String alias, QueryAction value) {
     return in(getColumnByAlias(conditionBuilderContext.getClz(),alias),value);
   }
 
@@ -139,6 +152,18 @@ public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<
     return notIn(getColumnByAlias(conditionBuilderContext.getClz(),alias),value);
   }
 
+  public CURRENT_NODE notIn(Class<? extends BeanInterface> entityClass,String alias,String attribute, QueryAction value) {
+    return notIn(getJsonAttributeColumnByAlias(entityClass, alias,attribute), value);
+  }
+
+  public CURRENT_NODE notIn(Class<? extends BeanInterface> entityClass,String alias, QueryAction value) {
+    return notIn(getNormalColumnByAlias(entityClass, alias), value);
+  }
+
+  public CURRENT_NODE notIn(String alias, QueryAction value) {
+    return notIn(getColumnByAlias(conditionBuilderContext.getClz(),alias),value);
+  }
+
 
   private CURRENT_NODE equal(FieldSource FieldSource, Object value) {
     return addCondition(
@@ -146,6 +171,11 @@ public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<
   }
 
   private CURRENT_NODE in(FieldSource FieldSource, Collection value) {
+    return addCondition(
+            new FieldCondition(FieldSource, Operator.IN, value));
+  }
+
+  private CURRENT_NODE in(FieldSource FieldSource, QueryAction value) {
     return addCondition(
             new FieldCondition(FieldSource, Operator.IN, value));
   }
@@ -183,6 +213,10 @@ public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<
   }
 
   private CURRENT_NODE notIn(FieldSource FieldSource, Collection value) {
+    return notIn(FieldSource, value);
+  }
+
+  private CURRENT_NODE notIn(FieldSource FieldSource, QueryAction value) {
     return notIn(FieldSource, value);
   }
 
