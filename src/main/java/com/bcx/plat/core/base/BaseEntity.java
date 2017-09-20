@@ -1,6 +1,7 @@
 package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.base.support.EntityFillUtils;
 import com.bcx.plat.core.base.template.BaseTemplateBean;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
@@ -30,6 +31,20 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
   @JsonIgnore
   public Serializable getPk() {
     return this.rowId;
+  }
+
+  /**
+   * 根据模版填充javaBean中定义的序列号类型的字段
+   *
+   * @param objRowId 模版对象的 rowId
+   * @param args     参数,可以为 null
+   * @return 返回
+   * @see EntityFillUtils
+   */
+  @SuppressWarnings("unchecked")
+  public T fillEntitySN(String objRowId, Map args) {
+    EntityFillUtils.fillEntity(this, args, objRowId, true);
+    return (T) this;
   }
 
   /**
@@ -190,21 +205,21 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
     final Map map = jsonToObj(objToJson(this), HashMap.class);
     assert map != null;
     List<BeanInterface> joinTemplates = getJoinTemplates();
-    if (joinTemplates != null&&!joinTemplates.isEmpty()) {
-        if (etc==null) etc=new HashMap();
-        for (BeanInterface bean : joinTemplates) {
-          if (null != bean) {
-            Map beanMap = bean.toDbMap();
-  //          map.putAll(beanMap);
-            etc.putAll(beanMap);
-          }
+    if (joinTemplates != null && !joinTemplates.isEmpty()) {
+      if (etc == null) etc = new HashMap();
+      for (BeanInterface bean : joinTemplates) {
+        if (null != bean) {
+          Map beanMap = bean.toDbMap();
+          //          map.putAll(beanMap);
+          etc.putAll(beanMap);
         }
-      map.put("etc",etc);
+      }
+      map.put("etc", etc);
     }
-    final Map result=new HashMap<>();
-    map.forEach((k,v)->{
-      if (v!=null) {
-        result.put(k,v);
+    final Map result = new HashMap<>();
+    map.forEach((k, v) -> {
+      if (v != null) {
+        result.put(k, v);
       }
     });
     return result;
@@ -242,7 +257,7 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
               Set<String> keys = toMap().keySet();
               Map etc = new HashMap();
               // 将数据读入 javaBean
-              if (etcMap!=null&&null != getJoinTemplates()) {
+              if (etcMap != null && null != getJoinTemplates()) {
                 for (BeanInterface bean : getJoinTemplates()) {
                   if (null != bean) {
                     bean.fromMap(etcMap);
