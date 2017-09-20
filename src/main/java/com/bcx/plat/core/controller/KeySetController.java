@@ -150,11 +150,35 @@ public class KeySetController extends BaseController {
   @RequestMapping(value = "/add", method = RequestMethod.POST)
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
-    if (UtilsTool.isValid(keySet.getKeysetName()) && keySet.insert() != -1) { // keysetName不为空才进行新增
-      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+    //获取代码做重复性判断
+    Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", param.get("keysetCode")).endAnd().buildDone();
+    List<KeySet> keySets = keySetService.select(condition);
+    if (keySets.size() == 0) {
+      KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
+      if (UtilsTool.isValid(keySet.getKeysetName()) && keySet.insert() != -1) { // keysetName不为空才进行新增
+        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+      } else {
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+      }
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_CANNOT_BE_DUPLICATED));
+    }
+  }
+
+  /**
+   * 键值代码重复性校验
+   * @param keysetCode 键值代码
+   * @return  platResult
+   */
+  @RequestMapping("/checkCode")
+  public PlatResult checkCode(String keysetCode){
+    ServerResult result = new ServerResult();
+    Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keysetCode).endAnd().buildDone();
+    List<KeySet> keySets = keySetService.select(condition);
+    if (keySets.size()==0) {
+      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS));
+    }else{
+      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_CANNOT_BE_DUPLICATED));
     }
   }
 
