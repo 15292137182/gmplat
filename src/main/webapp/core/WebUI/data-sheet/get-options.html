@@ -28,7 +28,10 @@
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection :initial="initial_4"></single-selection>
+                <single-selection @change-data="getData_1" :initial="initial_4"></single-selection>
+            </el-col>
+            <el-col :span="6" :offset="9" style="margin-top: 20px;">
+                <el-button type="info" @click="getMultiple">获取</el-button>
             </el-col>
         </el-row>
     </div>
@@ -94,6 +97,13 @@
                     if(JSON.stringify(data) === "{}") {
                         this.$refs.cascader.setValue("");
                     }
+                },
+                getData_1(data) {
+                    console.log(data);
+                    vm.initial_4.value = data;
+                },
+                getMultiple() {
+                    console.log(vm.initial_4.value);
                 }
             }
         })

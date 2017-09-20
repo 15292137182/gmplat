@@ -63,14 +63,19 @@ Vue.component("single-selection", {
     },
     methods: {
         changeSelect(val) {
-            var _obj = {};
-            // 如果下拉框触发改变时 返回值不为空 则将option下与返回值相同的数据项传递给父组件
-            if(val != "") {
-                _obj = this.options.find(function(item) {
-                    return item.value === val;
-                });
-            }else{
-                _obj["value"]=val;
+            console.log(val);
+            if(this.isMultiple) {
+                _obj = val;
+            }else {
+                var _obj = {};
+                // 如果下拉框触发改变时 返回值不为空 则将option下与返回值相同的数据项传递给父组件
+                if(val != "") {
+                    _obj = this.options.find(function(item) {
+                        return item.value === val;
+                    });
+                }else{
+                    _obj["value"]=val;
+                }
             }
             // 子组件向父组件传递的方法和参数
             this.$emit("change-data", _obj);
