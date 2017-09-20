@@ -5,9 +5,11 @@ import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +26,11 @@ import java.util.Map;
 @Service
 public class FrontFuncService extends BaseService<FrontFunc> {
 
-  private final MoreBatis moreBatis;
   private final BusinessObjectProService businessObjectProService;
   private final DBTableColumnService dbTableColumnService;
 
   @Autowired
-  public FrontFuncService(MoreBatis moreBatis, BusinessObjectProService businessObjectProService, DBTableColumnService dbTableColumnService) {
-    this.moreBatis = moreBatis;
+  public FrontFuncService( BusinessObjectProService businessObjectProService, DBTableColumnService dbTableColumnService) {
     this.businessObjectProService = businessObjectProService;
     this.dbTableColumnService = dbTableColumnService;
   }
@@ -48,12 +48,12 @@ public class FrontFuncService extends BaseService<FrontFunc> {
     for (Object key : funcCode) {
       FieldCondition fieldCondition = new FieldCondition("funcCode", Operator.EQUAL, key);
       List<Map<String, Object>> keysetCode = singleSelect(FrontFunc.class, fieldCondition);
-      List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(keysetCode);
       LinkedList<Order> orders = UtilsTool.dataSort("{\"str\":\"displayTitle\", \"num\":1}");//默认按照显示标题排序
-      for (Map<String, Object> keySet : list) {
-        result = moreBatis.select(FrontFuncPro.class)
-            .where(new FieldCondition("funcRowId", Operator.EQUAL, keySet.get("rowId").toString())).orderBy(orders)
-            .execute();
+      for (Map<String, Object> keySet : keysetCode) {
+        //构建查询条件
+        Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("funcRowId", keySet.get("rowId")).endAnd().buildDone();
+        //执行单一查询
+        result = singleSelectSort(FrontFuncPro.class, condition,orders);
         for (Map<String, Object> map : result) {
           map.put("funcType", keySet.get("funcType").toString());
           String relateBusiPro = map.get("relateBusiPro").toString();
@@ -77,10 +77,9 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                 continue;
               }
               for (BusinessObjectPro relate : businessObjectPros) {
-                if (UtilsTool.isValid(relate.getFieldAlias())) {
                   map.put("ename", relate.getFieldAlias());
-                  break;
-                }
+                  map.put("valueResourceType", relate.getValueResourceType());
+                  map.put("valueType", relate.getValueType());
                 String relateTableRowId = relate.getRelateTableColumn();
                 List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
                 if (!UtilsTool.isValid(dbTableColumns)) {

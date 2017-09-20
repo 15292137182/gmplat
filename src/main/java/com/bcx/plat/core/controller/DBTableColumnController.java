@@ -47,11 +47,7 @@ public class DBTableColumnController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPageById")
-  public PlatResult queryPageById(String search, String rowId,
-                                  String param,
-                                  @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                  @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                  String order) {
+  public PlatResult queryPageById(String search, String rowId,String param,Integer pageNum, Integer pageSize,String order) {
     ServerResult result = new ServerResult();
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {

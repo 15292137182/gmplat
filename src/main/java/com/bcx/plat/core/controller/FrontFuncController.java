@@ -146,9 +146,9 @@ public class FrontFuncController extends BaseController {
         if (UtilsTool.isValid(funcCode)) {
             List list = UtilsTool.jsonToObj(funcCode, List.class);
             ServerResult<LinkedList<Map<String, Object>>> linkedListServerResult = frontFuncService.queryFuncCode(list);
-            return super.result(linkedListServerResult);
+            return result(linkedListServerResult);
         }
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
 
 

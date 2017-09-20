@@ -87,7 +87,7 @@ public class MaintDBTablesController extends BaseController {
       MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
       int insert = maintDBTables.insert();
       if (insert != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,maintDBTables));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
       }

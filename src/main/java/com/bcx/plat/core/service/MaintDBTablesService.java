@@ -8,6 +8,7 @@ import com.bcx.plat.core.entity.MaintDBTables;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
     ServerResult serverResult = new ServerResult();
     AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
     if (UtilsTool.isValid(rowId)) {
+      //新增完成后将数据返回
+      Condition buildDone = new ConditionBuilder(MaintDBTables.class).and().equal("rowId", rowId).endAnd().buildDone();
+      List<MaintDBTables> dbTables = select(buildDone);
       map.get().put("relateTableRowId", rowId);
       List<Map> relateTableRowId = businessObjectService.selectMap(new FieldCondition("relateTableRowId"
           , Operator.EQUAL, rowId));
@@ -54,7 +58,7 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         }
         MaintDBTables maintDBTables = new MaintDBTables().buildDeleteInfo();
         maintDBTables.delete(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        return serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dbTables);
       }
     }
     return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
