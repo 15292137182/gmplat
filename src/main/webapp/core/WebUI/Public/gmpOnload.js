@@ -2,7 +2,7 @@
  * Created by liyuanquan on 2017/9/19.
  */
 
-var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+//var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
 
 // 全局变量
 var GmpForm = {};
@@ -10,8 +10,10 @@ var GmpTable = {};
 var GmpSearch = {};
 
 $(function() {
-    $.when(fun1(dtd), fun2(dtd))
+    fun1();
+    $.when.apply($,_function,fun2())
         .done(function() {
+            // alert("done");
             if(typeof gmp_onload == "function") {
                 gmp_onload();
             }
@@ -21,7 +23,9 @@ $(function() {
         });
 });
 
-var fun1 = function(dtd) {
+var _function = [];
+
+var fun1 = function() {
     //TO-DO
     var _components = $("body").find("components");
     // 若当前页面存在components
@@ -34,40 +38,38 @@ var fun1 = function(dtd) {
             if (item.attributes[":is"].value == "gmpForm") {
                 param = item.attributes[":child-form-table"].value;
                 // 渲染动态模板
-                dynamicObj.render(dtd, _json, param);
+                // creat.form(dtd, _json, param);
+                _function.push(creat.form( _json, param));
             }
             // 表格模块
             if (item.attributes[":is"].value == "gmpTable") {
                 param = item.attributes[":table-data"].value;
                 // 渲染动态模板
-                dynamicObj.render(dtd, _json, param);
+                // creat.table(dtd, _json, param);
+                _function.push(creat.table( _json, param));
             }
             // 查询模块
             if (item.attributes[":is"].value == "searchBlock") {
                 param = item.attributes[":search-input"].value;
                 // 渲染动态模板
-                dynamicObj.render(dtd, _json, param);
+                // creat.search(dtd, _json, param);
+                _function.push(creat.search( _json, param));
             }
         });
     }
 
-    return dtd.promise(); // 返回promise对象
+    // return dtd.promise(); // 返回promise对象
 };
 
-var fun2 = function(dtd){
-    TableKeyValueSet.init(dtd);
-
-
-
-    return dtd.promise(); // 返回promise对象
-
+var fun2 = function(){
+    TableKeyValueSet.init();
 };
 
 var TableKeyValueSet = (function(){
     var tableKeyValueSetIn='';
     var tableKeyValueSetOut='';
 
-    var init = function(dtd){
+    var init = function(){
         var parameterStr='';
         if(typeof GlobalParameter =="function"){
             parameterStr=GlobalParameter();
@@ -83,6 +85,7 @@ var TableKeyValueSet = (function(){
                     }
                 }
                 arr="["+arr+"]";
+                var dtd = $.Deferred();
                 $.ajax({
                     url:serverPath+"/keySet/queryKeySet",
                     type:"get",
@@ -116,6 +119,8 @@ var TableKeyValueSet = (function(){
                     }
                 })
 
+                return dtd.promise(); // 返回promise对象
+
             }else{
                 alert("未传入参数");
             }
@@ -138,9 +143,36 @@ var TableKeyValueSet = (function(){
     }
 })()
 
+var creat = (function() {
+    var form = function(data, param) {
+        return dynamicObj.render(data, param);
+
+        // return dtd.promise(); // 返回promise对象
+    }
+
+    var table = function(data, param) {
+        return dynamicObj.render(data, param);
+
+        // return dtd.promise(); // 返回promise对象
+    };
+
+    var search = function(data, param) {
+        return dynamicObj.render(data, param);
+
+        // return dtd.promise(); // 返回promise对象
+    };
+
+    return {
+        form: form,
+        table: table,
+        search: search
+    }
+})();
+
 var getHtml = (function() {
-    var ajax_html = function(dtd, mainId, code, compId) {
+    var ajax_html = function( mainId, code, compId) {
         var codes = '['+'"'+code+'"'+']';
+        var dtd = $.Deferred();
         $.ajax({
             url: serverPath + '/fronc/queryFuncCode',
             type: "get",
@@ -154,44 +186,38 @@ var getHtml = (function() {
                         var form = new gmpFormObj(compId, code, arr, mainId, "", "");
                         // 创建vue实例
                         form.bulidComponent();
+                        // 获取下拉框options
+                        // var _obj = form.formObj;
+                        // console.log(form);
+                        // for(var key in _obj) {
+                        //     var _suffix = key.substr(-1, 6);
+                        //     console.log(_suffix);
+                        // }
                         // 缓存实例化对象
                         GmpForm[compId] = form;
                     }
                     if (arr[0].funcType == "grid") {
                         var _table = new gmpTableObj(compId, code, arr, mainId, "", "", "", {
-                            onClickRow: function (row) {
-                            },
-                            onEditRow: function () {
-                            },
-                            onDeleteRow: function () {
-                            },
-                            onCellClick: function (row) {
-                            },
-                            onDbClick: function (row) {
-                            },
-                            onDbCellClick: function (row) {
-                            },
+                            onClickRow: function (row) {},
+                            onEditRow: function () {},
+                            onDeleteRow: function () {},
+                            onCellClick: function (row) {},
+                            onDbClick: function (row) {},
+                            onDbCellClick: function (row) {},
                         });
                         // 创建vue实例
                         _table.bulidComponent();
-                        // 获取下拉框options
-                        // var _obj = _table.formObj;
-                        // console.log(_table);
-                        // for(var key in _obj) {
-                        //     var _suffix = key.substr(-1, 6);
-                        //     console.log(_suffix);
-                        // }
                         // 缓存实例化对象
                         GmpTable[compId] = _table;
                         // alert("table done");
                     }
                     if (arr[0].funcType == "search") {
                         // alert("search start");
-                        // var _search = new gmpsearchObj(compId, code, arr, mainId, [_table]);
-                        // // 创建vue实例
-                        // _search.bulidComponent();
-                        // // 缓存实例化对象
-                        // GmpSearch[compId] = _search;
+                        var _search = new gmpsearchObj(compId, code, arr, mainId, [_table]);
+                        // 创建vue实例
+                        _search.bulidComponent();
+                        // 缓存实例化对象
+                        GmpSearch[compId] = _search;
                     }
                 }else {
                     // 提示错误信息
@@ -206,6 +232,7 @@ var getHtml = (function() {
                 console.log(res);
             }
         });
+        return dtd.promise();
     };
 
     return {
@@ -215,15 +242,11 @@ var getHtml = (function() {
 
 var dynamicObj = (function() {
     // 用户配置
-    function render(dtd, data, param) {
+    function render( data, param) {
         // 获取配置参数
         var params = JSON.parse(data);
         // 创建对象
-        create(dtd, params.main, params.code, param);
-    };
-
-    function create(dtd, mainId, code, compId) {
-        getHtml.html(dtd, mainId, code, compId);
+        return getHtml.html( params.main, params.code, param);
     };
 
     // 配置方法函数
