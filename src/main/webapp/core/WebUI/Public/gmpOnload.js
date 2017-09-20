@@ -43,7 +43,11 @@ var fun1 = function(dtd) {
                 dynamicObj.render(dtd, _json, param);
             }
             // 查询模块
-            if (item.attributes[":is"].value == "search") {}
+            if (item.attributes[":is"].value == "searchBlock") {
+                param = item.attributes[":search-input"].value;
+                // 渲染动态模板
+                dynamicObj.render(dtd, _json, param);
+            }
         });
     }
 
@@ -61,7 +65,7 @@ var fun2 = function(dtd){
 
 var TableKeyValueSet = (function(){
     var tableKeyValueSetIn='';
-    var tableKeyValueSetOut={};
+    var tableKeyValueSetOut='';
 
     var init = function(dtd){
         var parameterStr='';
@@ -115,11 +119,8 @@ var TableKeyValueSet = (function(){
             }else{
                 alert("未传入参数");
             }
-
-        }else{
-            dtd.resolve();
-        }
-        return init;
+            return init;
+        };
     }
 
     var getOptions=function () {
@@ -173,10 +174,24 @@ var getHtml = (function() {
                         });
                         // 创建vue实例
                         _table.bulidComponent();
+                        // 获取下拉框options
+                        // var _obj = _table.formObj;
+                        // console.log(_table);
+                        // for(var key in _obj) {
+                        //     var _suffix = key.substr(-1, 6);
+                        //     console.log(_suffix);
+                        // }
                         // 缓存实例化对象
                         GmpTable[compId] = _table;
+                        // alert("table done");
                     }
                     if (arr[0].funcType == "search") {
+                        // alert("search start");
+                        // var _search = new gmpsearchObj(compId, code, arr, mainId, [_table]);
+                        // // 创建vue实例
+                        // _search.bulidComponent();
+                        // // 缓存实例化对象
+                        // GmpSearch[compId] = _search;
                     }
                 }else {
                     // 提示错误信息

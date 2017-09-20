@@ -207,6 +207,16 @@ gmpFormObj.prototype.searchSelect = function() {
         var disa = arr[j].ename + "Disabled";
         this.formObj[objs] = '';
         this.formObj.disabled[disa] = false;
+        // 若类型为下拉框
+        if(arr[j].displayWidget == "select-base") {
+            var options = arr[j].ename + "Option";
+            var key = arr[j].ename + "Key";
+            this.formObj[options] = [{
+                value: "",
+                label: ""
+            }];
+            this.formObj[key] = "";
+        }
     }
     var obj = {
         props: []

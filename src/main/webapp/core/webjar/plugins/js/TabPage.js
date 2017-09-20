@@ -913,8 +913,11 @@ var DynamicStitchings = (function(){
                 break;
             case "select-base"://下拉框
                 var disab = "childFormTable." + "disabled." + obj.ename + "Disabled";
-                var options = "item in childFormTable.options";
-                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="childFormTable.key" :disabled="'+disab+'" placeholder="请选择"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value" ></el-option></el-select></el-form-item></el-col></el-row>';
+                var optionName = obj.ename + "Option";
+                var options = "item in childFormTable." + optionName;
+                var keyName = obj.ename + "Key";
+                var key = "childFormTable." + keyName;
+                var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="' + key + '" :disabled="'+disab+'" placeholder="请选择"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value" ></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框
                 var model = "childFormTable." + obj.ename;//绑定v-model数据
@@ -1143,7 +1146,6 @@ GmpForm1.prototype.setOptions = function(json){
 GmpForm1.prototype.request = function(callback){
     var that = this;
     var data = this.postParam;
-    console.log(this.postParam);
     var url = this.postUrl;
     if(url==undefined){
         alert("未定义接口地址");
