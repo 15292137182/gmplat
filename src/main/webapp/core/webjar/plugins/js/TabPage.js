@@ -1624,13 +1624,27 @@ GmpSearchBlock.prototype.getOptions = function(){
 }
 //设置配置项信息
 GmpSearchBlock.prototype.getOptions = function(json){
-    this.filter = json.filter;//配置的过滤字段
-    this.custom = json.custom//自定义的过滤字段
-    this.filterData = json.filterData	//过滤的数据
-    this.grids = json.grids	//查询返回的响应数据加载的GmpGrid.id
-    this.selUrl = json.selUrl //获取后端数据接口
-    this.postParam = json.postParam  //请求参数参数json
-    this.formUrl = json.formUrl//提交接口
+    if(json.filter){
+        this.filter = json.filter;//配置的过滤字段
+    }
+    if(json.custom){
+        this.custom = json.custom//自定义的过滤字段
+    }
+    if(json.filterData){
+        this.filterData = json.filterData	//过滤的数据
+    }
+    if(json.grids){
+        this.grids = json.grids	//查询返回的响应数据加载的GmpGrid.id
+    }
+    if(json.selUrl){
+        this.selUrl = json.selUrl //获取后端数据接口
+    }
+    if(json.postParam){
+        this.postParam = json.postParam  //请求参数参数json
+    }
+    if(json.formUrl){
+        this.formUrl = json.formUrl//提交接口
+    }
 }
 //获取过滤数据
 GmpSearchBlock.prototype.getFilterData = function(){
@@ -1645,7 +1659,13 @@ GmpSearchBlock.prototype.search = function(json,callback){
     var that = this;
     var url = that.selUrl;
     var dataJson = null;
-    var pageConfig = that.grids[0].getPageInfo();
+    var pageConfig = {};
+    if(that.grids != undefined){
+        pageConfig = that.grids[0].getPageInfo();
+    }else{
+        pageConfig.pageSize = 10;
+        pageConfig.pageNo = 1;
+    }
     var search = that.searchObj.sel;
     if(that.searchObj.key == ""){
         dataJson = {
@@ -1664,11 +1684,11 @@ GmpSearchBlock.prototype.search = function(json,callback){
             pageNum:pageConfig.pageNo
         }
     }
-    if(json.url){
-        url = json.url;
-    }
-    if(json.data){
-        dataJson = json.data;
+    if(json){
+        if(json.url){
+            url = json.url;
+            dataJson = json.data;
+        }
     }
     $.ajax({
         url:url,
@@ -1677,8 +1697,12 @@ GmpSearchBlock.prototype.search = function(json,callback){
         data:dataJson,
         success:function(res){
             console.log(res);
-            alert("ok");
-            callback(res);
+            var dataName = that.grids[0];
+            var load = "GmpTable."+dataName+".reload(res.resp.content.data.result)";
+            eval(load);
+            if(callback){
+                callback(res);
+            }
         },
         error:function(){
             alert("查询块请求失败！");

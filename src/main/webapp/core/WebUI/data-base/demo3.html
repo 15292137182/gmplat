@@ -109,9 +109,10 @@
         {displayTitle:'名称',funcType:'search',ename:'name'}];
     var sObj = new GmpSearchBlock("searchs","codeId",arr,"#searchDemo");
     sObj.bulidComponent();
-//    sObj.searchObj.clickSearch = function(){//重写查询按钮事件（不重写默认发起ajax请求查询数据）
-//        console.log(sObj.searchObj);
-//    }
+    sObj.searchObj.clickSearch = function(){//重写查询按钮事件（不重写默认发起ajax请求查询数据）
+        console.log(sObj.searchObj);
+        console.log("111111111111111111")
+    }
 //        sObj.search();//查询
 
     var arrs = [
@@ -139,9 +140,20 @@
         }
     });
     tObj.bulidComponent();
+    console.log(tObj.vueObj);
     tObj.loadRecord([{code:"1"},{code:"2"}]);
 //    tObj.loadRecord([{code:"1"},{code:"2"}]);//给数据加载表格数据
 //    tObj.clear();//清空
 //    tObj.loadRecord([{code:"1"}]);//给数据加载表格数据
+</script>
+<script type="text/javascript">
+
+    eval("x=10;y=20;alert(x*y)")
+
+    console.log(eval("2+2"))
+
+    var x=10
+    console.log(eval(x+17))
+
 </script>
 </html>
