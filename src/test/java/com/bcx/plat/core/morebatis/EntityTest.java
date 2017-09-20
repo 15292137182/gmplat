@@ -4,6 +4,7 @@ import com.bcx.BaseTest;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class EntityTest extends BaseTest {
   @Autowired
   private MoreBatis moreBatis;
+  private String rowId;
 
   public void setMoreBatis(MoreBatis moreBatis) {
     this.moreBatis = moreBatis;
@@ -42,10 +44,12 @@ public class EntityTest extends BaseTest {
     businessObject.buildCreateInfo().insert();
     String createTime = businessObject.getBaseTemplateBean().getCreateTime();
 
-    final String rowId = businessObject.getRowId();
+    rowId = businessObject.getRowId();
     BusinessObject businessObject1 = new BusinessObject();
     businessObject1.setRowId(rowId);
     businessObject1 = businessObject1.selectOneById();
+    //子查询测试
+    subSelectTest();
     //查找与新增测试
     Assert.assertEquals("插入失败", businessObject1.getObjectName(),"testObject");
     Assert.assertEquals("map没有被插入到数据库", businessObject1.getEtc().get("a"),100);
@@ -79,16 +83,23 @@ public class EntityTest extends BaseTest {
     Assert.assertEquals("旧map被替换", businessObject1.getEtc().get("b"),"successed");
     Assert.assertEquals("新map未被更新到数据库", businessObject1.getEtc().get("c"),"c exist");
     Assert.assertEquals("新map未被更新到数据库", businessObject1.getEtc().get("d"),"d exist");
-
     Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("a", "update").endAnd().buildDone();
-
     List<Map<String, Object>> result = moreBatis.select(BusinessObject.class).where(condition).execute();
-
     Assert.assertEquals("扩展字段条件查询失败", result.get(0).get("rowId"),businessObject1.getRowId());
-
     businessObject1.deleteById();
-    //删除测试P
+    //删除测试
     Assert.assertEquals("删除失败", businessObject1.selectOneById(),null);
-//    Assert.assertTrue("删除失败", businessObject1.selectById() == null);
+  }
+
+
+  private void subSelectTest(){
+    QueryAction stmt = moreBatis.selectStatement().select(moreBatis.getColumnByAlias(BusinessObject.class, "rowId"))
+            .from(moreBatis.getTable(BusinessObject.class));
+    Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
+    stmt.where(condition);
+    Condition subSelect = new ConditionBuilder(BusinessObject.class).and().in("rowId", stmt).endAnd().buildDone();
+    List<Map<String, Object>> result = moreBatis.select(BusinessObject.class).where(subSelect).execute();
+    Assert.assertEquals("子查询失败",result.size(),1);
+    Assert.assertEquals("子查询失败",result.get(0).get("rowId"),rowId);
   }
 }

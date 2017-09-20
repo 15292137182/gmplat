@@ -299,6 +299,7 @@ public class Translator implements SqlComponentTranslator{
             translateFieldSource(((FieldCondition) condition).getField(), list);
             switch (operator) {
                 case IN:
+                    appendSql(condition.isNot() ? NOT_IN : IN, list);
                     if (value instanceof Collection) {
                         if (((Collection) value).size() == 0) {
                             //空列表优化
@@ -306,7 +307,6 @@ public class Translator implements SqlComponentTranslator{
                                 appendSql(FALSE, list);
                             }
                         } else {
-                            appendSql(condition.isNot() ? NOT_IN : IN, list);
                             appendArgs(value, list);
                         }
                     } else if (value instanceof QueryAction){

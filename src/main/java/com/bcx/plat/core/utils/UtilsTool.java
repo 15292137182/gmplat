@@ -259,6 +259,12 @@ public class UtilsTool {
     return sb.toString();
   }
 
+  /**
+   * map转换为对应的由=组成的and条件
+   * @param entityClass
+   * @param args
+   * @return
+   */
   public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
     AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
@@ -268,6 +274,21 @@ public class UtilsTool {
       } else {
         conditionBuilder.equal(entry.getKey(), value);
       }
+    }
+    return (And) conditionBuilder.endAnd().buildDone();
+  }
+
+  /**
+   * map转换为对应的由like组成的and条件
+   * @param entityClass
+   * @param args
+   * @return
+   */
+  public static And convertMapToAndConditionSeparatedByLike(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
+    AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+    for (Map.Entry<String, Object> entry : args.entrySet()) {
+      final Object value = entry.getValue();
+        conditionBuilder.like(entry.getKey(), (String) value);
     }
     return (And) conditionBuilder.endAnd().buildDone();
   }

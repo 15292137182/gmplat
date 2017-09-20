@@ -5,6 +5,8 @@ import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 
+import java.util.Map;
+
 public class ConditionBuilder implements ConditionSequence {
 
   private Condition condition;
