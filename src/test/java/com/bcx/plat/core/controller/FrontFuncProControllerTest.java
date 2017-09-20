@@ -6,7 +6,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 /**
- * 前端功能块Controller测试类
+ * 前端功能块属性项Controller测试类
  * <p>
  * Created by YoungerOu on 2017/9/18.
  */
