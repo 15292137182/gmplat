@@ -138,7 +138,7 @@ gmp_onload=function(){
                         em.$refs.templateObj_1.setValue(data.relateTemplateObject);//关联模板对象
                         em.ruleForm.system=data.system;//所属系统
                         em.$refs.belongModule_1.setValue(data.belongModule);//所属模块
-                        em.ruleForm.versionInput =data.version;//版本
+                        em.ruleForm.versionInput =data.etc.version;//版本
                     })
                 });
             },
@@ -167,6 +167,11 @@ gmp_onload=function(){
                     }else{
                         basLeft.currentChange(basLeft.tableData[0]);
                         //basRight.currentRChange(basRightTop.tableData[0]);
+                        $.each(basLeft.tableData, function(index, item) {
+                            if(item.changeOperat=='20') {
+                                item.disableButton = true;
+                            }
+                        });
                     }
 
                 })
@@ -177,6 +182,11 @@ gmp_onload=function(){
                     //console.log(res);
                     //有数据选中第一行
                     basLeft.currentChange(basLeft.tableData[0]);
+                    $.each(basLeft.tableData, function(index, item) {
+                        if(item.changeOperat=='20') {
+                            item.disableButton = true;
+                        }
+                    });
                 });
             },
             //每页 ${val} 条
