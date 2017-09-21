@@ -51,6 +51,7 @@ public abstract class EntityFillUtils {
           }
         });
         entity.fromMap(entityMap);
+        return true;
       }
     }
     return false;
