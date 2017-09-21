@@ -78,6 +78,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
               }
               for (BusinessObjectPro relate : businessObjectPros) {
                   map.put("ename", relate.getFieldAlias());
+                  map.put("valueResourceContent", relate.getValueResourceContent());
                   map.put("valueResourceType", relate.getValueResourceType());
                   map.put("valueType", relate.getValueType());
                 String relateTableRowId = relate.getRelateTableColumn();

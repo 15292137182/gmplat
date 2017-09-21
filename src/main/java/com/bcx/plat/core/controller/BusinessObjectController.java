@@ -87,7 +87,7 @@ public class BusinessObjectController extends BaseController {
                                       String param,String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
-    Condition relateCondition=null;
+    Condition relateCondition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObject.class, map);
@@ -130,17 +130,14 @@ public class BusinessObjectController extends BaseController {
   /**
    * 根据业务对象rowId查找当前对象下的所有属性并分页显示
    *
+   *
    * @param search   按照空格查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryProPage(String rowId, String search,
-                                 String param,
-                                 @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                 @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                 String order) {
+  public PlatResult queryProPage(String rowId, String search,String param, Integer pageNum, Integer pageSize,String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {

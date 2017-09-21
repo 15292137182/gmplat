@@ -220,6 +220,16 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
     }
     for (Map<String, Object> rest : result.getResult()) {
+      String fieldAlias = String.valueOf(rest.get("fieldAlias"));
+      if (fieldAlias.equals("null")) {
+        String relateTableColumn = String.valueOf(rest.get("relateTableColumn"));
+        Condition condition = new ConditionBuilder(DBTableColumn.class).and().equal("rowId", relateTableColumn).endAnd().buildDone();
+        List<Map<String, Object>> singleSelect = singleSelect(DBTableColumn.class, condition);
+        if (null!=singleSelect) {
+          fieldAlias = String.valueOf(singleSelect.get(0).get("columnEname"));
+        }
+      }
+      rest.put("ename",fieldAlias);
       rest.put("disableButton", false);
       rest.put("columnCname", map.get(rest.get("relateTableColumn")));
     }
