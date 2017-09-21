@@ -33,6 +33,10 @@
             "title": "序列规则管理",
             "icon": " fa-navicon",
             "href": "core/WebUI/sequence-rule-config/sequence-rule-config.html"
+        }, {
+            "title": "模板对象维护",
+            "icon": " fa-navicon",
+            "href": "core/WebUI/template-objects/template-objects.html"
         }
     ]
 }, {
