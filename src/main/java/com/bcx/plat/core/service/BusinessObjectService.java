@@ -330,7 +330,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   public ServerResult<List<Map<String, Object>>> queryTemplatePro(String rowId, LinkedList<Order> orders) {
     List<Map<String, Object>> linkedList = new ArrayList<>();
-    List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId));
+    List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId),orders);
     for (BusinessRelateTemplate bri : businessRowId) {
       String templateRowId = bri.getTemplateRowId();
       List<Map<String, Object>> result = singleSelect(TemplateObjectPro.class, new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId));

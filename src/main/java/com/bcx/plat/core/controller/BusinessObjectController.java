@@ -5,6 +5,7 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.BusinessRelateTemplate;
 import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -177,7 +178,7 @@ public class BusinessObjectController extends BaseController {
     String rowId = paramEntity.get("rowId").toString();
     ServerResult serverResult = null;
     if (UtilsTool.isValid(rowId)) {
-      BusinessObject businessObject = new BusinessObject().fromMap(paramEntity);
+      BusinessObject businessObject = new BusinessObject().buildModifyInfo().fromMap(paramEntity);
       businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
       serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObject);
     }
@@ -213,7 +214,7 @@ public class BusinessObjectController extends BaseController {
   public PlatResult queryTemplate(String rowId, String order) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-      LinkedList<Order> orders = UtilsTool.dataSort(order);
+      LinkedList<Order> orders = UtilsTool.dataSort(BusinessRelateTemplate.class, order);
       ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
       if (serverResult != null) {
         return super.result(serverResult);
