@@ -52,7 +52,7 @@ public class SysConfigController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
+    LinkedList<Order> orders = dataSort(SysConfig.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);

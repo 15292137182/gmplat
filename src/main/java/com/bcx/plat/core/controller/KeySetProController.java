@@ -152,7 +152,7 @@ public class KeySetProController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
+    LinkedList<Order> orders = dataSort(KeySetPro.class, order);
     Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> keysetPro = keySetProService.selectPageMap(blankQuery, orders, pageNum, pageSize);
     if (keysetPro.getResult() != null) {

@@ -213,7 +213,7 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
+    LinkedList<Order> orders = dataSort(KeySet.class, order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> keySet; // 后续判断初始化
     //判断是否分页查询

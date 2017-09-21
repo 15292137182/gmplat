@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
@@ -69,11 +68,7 @@ public class TemplateObjectController extends BaseController {
    * @return 返回查询结果
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryPropertiesPage(String rowId,
-                                        String search,
-                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                        @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                        String order) {
+  public PlatResult queryPropertiesPage(String rowId, String search, Integer pageNum, Integer pageSize, String order) {
     ServerResult serverResult = new ServerResult();
 
     //查询属性的搜索条件
@@ -87,7 +82,7 @@ public class TemplateObjectController extends BaseController {
     } else {
       condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();
     }
-    List<Order> orders = dataSort(order);
+    List<Order> orders = dataSort(TemplateObjectPro.class, order);
     PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
     // serverResult.setData(result);
     return result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
@@ -127,7 +122,7 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
+    LinkedList<Order> orders = dataSort(TemplateObject.class, order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> pageResult;
 
