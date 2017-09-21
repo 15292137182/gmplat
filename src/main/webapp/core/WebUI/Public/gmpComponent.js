@@ -63,7 +63,7 @@ Vue.component("single-selection", {
     },
     methods: {
         changeSelect(val) {
-            console.log(val);
+            // console.log(val);
             if(this.isMultiple) {
                 _obj = val;
             }else {

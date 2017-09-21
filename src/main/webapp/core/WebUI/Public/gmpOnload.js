@@ -187,12 +187,18 @@ var getHtml = (function() {
                         // 创建vue实例
                         form.bulidComponent();
                         // 获取下拉框options
-                        // $.each(arr, function(index, item) {
-                        //     if(item.displayWidget == "select-base") {}
-                        // });
-                        var _obj = form.formObj;
-                        // getOptions.option(_obj);
-                        // console.log(form);
+                        console.log(form);
+                        var _target = form.formObj;
+                        var _obj = form.formBlockItems;
+                        // 遍历当前功能块
+                        $.each(_obj, function(index, item) {
+                            // 若当前功能块属于下拉框并且之来源类型是keySet
+                            if(item.displayWidget == "select-base" || item.valueResourceType == "keySet") {
+                                var _key = item.ename;
+                                // 获取option
+                                getOptions.option(_target, _key);
+                            }
+                        });
 
                         // 缓存实例化对象
                         GmpForm[compId] = form;
@@ -258,46 +264,36 @@ var dynamicObj = (function() {
 })();
 
 var getOptions = (function() {
-    var option = function(data) {
-        for(var key in data) {
-            var _suffix = key.substr(key.length - 6);
-            var _keyName = key.substr(0, key.length - 6);
-            if(_suffix == "Option") {
-                data[key].splice(0, 1);
-
-                var _param = {
-                    keyCode: _keyName
-                }
-
-                $.ajax({
-                    url: serverPath + "/keySet/queryKeyCode",
-                    type: "get",
-                    data:  _param,
-                    dataType: "json",
-                    success:function(res) {
-                        if(res.resp.respCode == "000"){
-                            if(res.resp.content.state == "1"){
-                                var _jsonObj = res.resp.content.data;
-                                // 循环配置value-label
-                                for(var i = 0;i < _jsonObj.length;i++) {
-                                    _jsonObj[i].value = _jsonObj[i].confKey;
-                                    _jsonObj[i].label = _jsonObj[i].confValue;
-                                }
-                                // 赋值options
-                                data[key] = _jsonObj;
-                                console.log(_jsonObj);
-                            }
-                        }
-                    },
-                    error:function() {
-                        console.log(_param);
-                        console.log(serverPath + "/keySet/queryKeyCode");
-                        alert("错误");
-                    }
-                });
-            }
-            // console.log(_suffix);
+    var option = function(target, key) {
+        // 调用接口传参
+        var _param = {
+            keyCode: key
         }
+        // 调用接口
+        $.ajax({
+            url: serverPath + "/keySet/queryKeyCode",
+            type: "get",
+            data:  _param,
+            dataType: "json",
+            success:function(res) {
+                if(res.resp.respCode == "000"){
+                    if(res.resp.content.state == "1"){
+                        var _jsonObj = res.resp.content.data;
+                        // 循环配置value-label
+                        for(var i = 0;i < _jsonObj.length;i++) {
+                            _jsonObj[i].value = _jsonObj[i].confKey;
+                            _jsonObj[i].label = _jsonObj[i].confValue;
+                        }
+                        // 赋值options
+                        var _optionName = key + "Option";
+                        target[_optionName] = _jsonObj;
+                    }
+                }
+            },
+            error:function() {
+                console.log("查询数据失败");
+            }
+        });
     };
 
     return {
