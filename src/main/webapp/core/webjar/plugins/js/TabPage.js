@@ -1673,7 +1673,7 @@ GmpSearchBlock.prototype.search = function(json,callback){
     var search = that.searchObj.sel;
     if(that.searchObj.key == ""){
         dataJson = {
-            parameter:{},
+            param:{},
             search:search,
             pageSize:pageConfig.pageSize,
             pageNum:pageConfig.pageNo
@@ -1681,9 +1681,10 @@ GmpSearchBlock.prototype.search = function(json,callback){
     }else{
         var parameter = {};
         parameter[that.searchObj.key] = that.searchObj.sel;
+        var parameters = JSON.stringify(parameter);
         dataJson = {
-            parameter:parameter,
-            search:search,
+            param:parameters,
+            search:'',
             pageSize:pageConfig.pageSize,
             pageNum:pageConfig.pageNo
         }
