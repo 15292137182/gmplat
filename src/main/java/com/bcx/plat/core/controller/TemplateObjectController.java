@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
@@ -68,9 +69,10 @@ public class TemplateObjectController extends BaseController {
    * @return 返回查询结果
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryPropertiesPage(String rowId, String search, Integer pageNum, Integer pageSize, String order) {
-    ServerResult serverResult = new ServerResult();
-
+  public PlatResult queryPropertiesPage(String rowId, String search,
+                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
+                                        String order) {
     //查询属性的搜索条件
     Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("code", "cname", "ename", "valueType"), UtilsTool.collectToSet(search));
     Condition condition;
