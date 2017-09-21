@@ -1,7 +1,7 @@
 /**
  * Created by admin on 2017/8/30.
  */
-
+var count=true;
 var em = new Vue({
     el: '#addEvent',
     data: function () {
@@ -19,7 +19,12 @@ var em = new Vue({
             value_2: [],
 
             rules: {
-
+                nameInput: [
+                    { required: true, message: '请输入对象名称'},
+                ],
+                reaTable: [
+                    { required: true,trigger: 'blur',message: '请选择关联表'}
+                ],
             },
             //关联表下拉框数据
             table_1: {
@@ -45,68 +50,71 @@ var em = new Vue({
         }
     },
     methods: {
-        conformEvent() {
-            //this.$refs.ruleForm.validate((valid) => {
-            //    if (valid) {
-            //        this.$message({
-            //            message: "创建成功",
-            //            showClose: true,
-            //            duration: 5000,
-            //            type: "success"
-            //        })
-            //    }
-            //    else {
-            //        this.$message({
-            //            message: "请输入正确项目",
-            //            showClose: true,
-            //            duration: 5000,
-            //            type: "warning"
-            //        })
-            //        return false;
-            //    }
-            //});
-            if (operate == 1) {    //新增业务对象
-                addObj.addOk(function(){
-                    var data={
-                        "url":addUrl,
-                        "jsonData":{objectName:em.ruleForm.nameInput,//名称
-                            relateTableRowId: em.table_1.value,//关联表
-                            relateTemplateObject: em.templateObj_1.value,//关联模板对象
-                            belongModule: em.belongModule_1.value,//所属模块
-                        },
-                        "obj":basTop
-                    };
-                    gmpAjax.showAjax(data,function(res){
-                        console.log(res);
-                        //分页跳回到第一页
-                        basLeft.searchLeft();
-                        ibcpLayer.Close(divIndex);
-                    })
-                })
-            }
-            if (operate == 2) {  //新增业务对象
-                editObj.editOk(function(){
-                    var data={
-                        "url":editUrl,
-                        "jsonData":{
-                            rowId: basLeft.currentVal.rowId,//ID
-                            objectName:em.ruleForm.nameInput,//名称
-                            relateTableRowId: em.table_1.value,//关联表
-                            relateTemplateObject: em.templateObj_1.value,//关联模板对象
-                            belongModule: em.belongModule_1.value,//所属模块
-                        },
-                        "obj":basTop
-                    };
-                    gmpAjax.showAjax(data,function(res){
-                        //分页跳回到第一页
-                         basLeft.searchLeft();
-                        ibcpLayer.Close(divIndex);
-                    })
-                })
-            }
+        conformEvent(formName) {
+            this.$refs.ruleForm.validate((valid) => {
+                if (valid) {
+                    if (operate == 1) {    //新增业务对象
+                        addObj.addOk(function(){
+                            var data={
+                                "url":addUrl,
+                                "jsonData":{objectName:em.ruleForm.nameInput,//名称
+                                    relateTableRowId: em.table_1.value,//关联表
+                                    relateTemplateObject: em.templateObj_1.value,//关联模板对象
+                                    belongModule: em.belongModule_1.value,//所属模块
+                                },
+                                "obj":basTop
+                            };
+                            gmpAjax.showAjax(data,function(res){
+                                console.log(res);
+                                //分页跳回到第一页
+                                basLeft.searchLeft();
+                                ibcpLayer.Close(divIndex);
+                            })
+                        })
+                    }
+                    if (operate == 2) {  //新增业务对象
+                        editObj.editOk(function(){
+                            var data={
+                                "url":editUrl,
+                                "jsonData":{
+                                    rowId: basLeft.currentVal.rowId,//ID
+                                    objectName:em.ruleForm.nameInput,//名称
+                                    relateTableRowId: em.table_1.value,//关联表
+                                    relateTemplateObject: em.templateObj_1.value,//关联模板对象
+                                    belongModule: em.belongModule_1.value,//所属模块
+                                },
+                                "obj":basTop
+                            };
+                            gmpAjax.showAjax(data,function(res){
+                                //分页跳回到第一页
+                                basLeft.searchLeft();
+                                ibcpLayer.Close(divIndex);
+                            })
+                        })
+                    }
+                }
+                else {
+                    $('.el-form-item__error').css("display", "block");
+                    em.judgeMent();
+                    return false;
+                }
+            });
+
         },
         getTable_1(datas){
             this.table_1.value = datas.value;
+            this.ruleForm.reaTable = datas.value;
+
+            var a=this.$refs.table_1.$children[0].$children[0].$el;
+            var b=$(a).children('input');
+            if(this.ruleForm.reaTable.length==0) {
+                if(count!=true){
+                    $(b).css('borderColor', '#ff4949');
+                 }
+                count=false;
+            }else{
+                $(b).css('borderColor','#bfcbd9');
+            }
         },
         getTemplateObj_1(datas){
             this.templateObj_1.value=datas.value
@@ -118,6 +126,11 @@ var em = new Vue({
         },
         cancel() {
             ibcpLayer.Close(divIndex);
-        }
+        },
+        judgeMent(){
+            setTimeout(function(){
+                $('.el-form-item__error').css("display", "none");
+            },1500)
+        },
     },
 })

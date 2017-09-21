@@ -63,7 +63,7 @@ var basRight;
 var basRightTop;
 gmp_onload=function(){
     //上方按钮事件
-    var basTop = new Vue({
+    basTop = new Vue({
         el: '#basTop',
         data: {
             addOpe: false,
