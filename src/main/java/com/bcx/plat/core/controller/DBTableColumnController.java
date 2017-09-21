@@ -47,7 +47,7 @@ public class DBTableColumnController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPageById")
-  public PlatResult queryPageById(String search, String rowId,String param,Integer pageNum, Integer pageSize,String order) {
+  public PlatResult queryPageById(String search, String rowId, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult result = new ServerResult();
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     if (UtilsTool.isValid(rowId)) {
@@ -100,7 +100,7 @@ public class DBTableColumnController extends BaseController {
       DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
       int update = dbTableColumn.updateById();
       if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,dbTableColumn));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, dbTableColumn));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }

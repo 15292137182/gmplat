@@ -81,16 +81,16 @@ public class TemplateObjectController extends BaseController {
     Condition condition;
     if (UtilsTool.isValid(search)) {
       condition = new ConditionBuilder(TemplateObjectPro.class)
-              .and().equal("templateObjRowId", rowId)
-              .or().addCondition(blankQuery).endOr()
-              .endAnd().buildDone();
+          .and().equal("templateObjRowId", rowId)
+          .or().addCondition(blankQuery).endOr()
+          .endAnd().buildDone();
     } else {
       condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();
     }
     List<Order> orders = dataSort(order);
     PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
     // serverResult.setData(result);
-    return result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS,result));
+    return result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
   }
 
   /**
@@ -126,13 +126,10 @@ public class TemplateObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      String order) {
+  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(order);
-    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> pageResult = null;
+    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    PageResult<Map<String, Object>> pageResult;
 
     if (UtilsTool.isValid(pageSize)) { // 分页查询
       pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);

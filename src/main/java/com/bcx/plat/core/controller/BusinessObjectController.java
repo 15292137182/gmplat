@@ -83,8 +83,7 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,Integer pageNum, Integer pageSize,
-                                      String param,String order) {
+  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     Condition relateCondition;
@@ -99,27 +98,27 @@ public class BusinessObjectController extends BaseController {
     for (Map<String, Object> results : result) {
       String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
       List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
-      if (null==list) {
+      if (null == list) {
         relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
         List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-        if (templateObjects.size()>0) {
+        if (templateObjects.size() > 0) {
           results.put("relateTemplate", templateObjects.get(0).getTemplateName());
         }
-      }else{
-        StringBuilder templates=new StringBuilder();
-        for (Object li : list){
+      } else {
+        StringBuilder templates = new StringBuilder();
+        for (Object li : list) {
           String valueOf = String.valueOf(li);
           relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
           List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-          if (templateObjects.size()>0) {
-            for (TemplateObject temp :templateObjects){
+          if (templateObjects.size() > 0) {
+            for (TemplateObject temp : templateObjects) {
               templates.append(temp.getTemplateName()).append(",");
             }
           }
         }
-        if (templates.lastIndexOf(",")!=-1) {
-        String substring = templates.substring(0, templates.length()-1);
-        results.put("relateTemplate", substring);
+        if (templates.lastIndexOf(",") != -1) {
+          String substring = templates.substring(0, templates.length() - 1);
+          results.put("relateTemplate", substring);
         }
       }
     }

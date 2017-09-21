@@ -51,11 +51,7 @@ public class SysConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      String param,
-                                      String order) {
+  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
@@ -85,7 +81,7 @@ public class SysConfigController extends BaseController {
     SysConfig sysConfig = new SysConfig().buildCreateInfo().fromMap(param);
     int insert = sysConfig.insert();
     if (insert != -1) {
-      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,sysConfig));
+      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sysConfig));
     } else {
       return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
     }
@@ -105,7 +101,7 @@ public class SysConfigController extends BaseController {
       SysConfig modify = sysConfig.fromMap(param).buildModifyInfo();
       update = modify.updateById();
       if (update != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,modify));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
       } else {
         return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
@@ -127,7 +123,7 @@ public class SysConfigController extends BaseController {
       SysConfig sysConfig = new SysConfig();
       int del = sysConfig.deleteById(rowId);
       if (del != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,sysConfigs));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, sysConfigs));
       } else {
         return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }

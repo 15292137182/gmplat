@@ -43,10 +43,7 @@ public class MaintDBTablesController extends BaseController {
   }
 
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      String order) {
+  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<MaintDBTables> maintDBTablesPageResult = maintDBTablesService.selectPage(blankQuery, orders, pageNum, pageSize);
@@ -87,7 +84,7 @@ public class MaintDBTablesController extends BaseController {
       MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
       int insert = maintDBTables.insert();
       if (insert != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,maintDBTables));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
       }

@@ -53,10 +53,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult selectWithPage(String search,
-                                   @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                   String order) {
+  public PlatResult selectWithPage(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> result;
@@ -79,7 +76,7 @@ public class SequenceRuleConfigController extends BaseController {
     SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig().buildCreateInfo().fromMap(param);
     int insert = sequenceRuleConfig.insert();
     if (insert != -1) {
-      return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,sequenceRuleConfig));
+      return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sequenceRuleConfig));
     } else {
       return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
     }

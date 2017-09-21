@@ -28,8 +28,8 @@ import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 
 
 /**
- * 数据集controller层
- * Created by Wen Tiehu on 2017/8/8.
+ * 动态模板维护controller层
+ * Created by YoungerOu on 2017/9/20.
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/dynamicTemplate")
@@ -115,11 +115,7 @@ public class DynamicTemplateController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search,
-                              @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                              String param,
-                              String order) {
+  public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询

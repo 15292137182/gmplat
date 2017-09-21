@@ -40,7 +40,7 @@ public class DataSetConfigController extends BaseController {
   private DataSetConfigService dataSetConfigService;
 
   protected List<String> blankSelectFields() {
-    return Arrays.asList("datasetCode", "datasetName", "datasetType","datasetContent");
+    return Arrays.asList("datasetCode", "datasetName", "datasetType", "datasetContent");
   }
 
   /**
@@ -55,7 +55,7 @@ public class DataSetConfigController extends BaseController {
     DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
     int insert = dataSetConfig.insert();
     if (insert != -1) {
-      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,dataSetConfig));
+      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, dataSetConfig));
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
     }
@@ -75,7 +75,7 @@ public class DataSetConfigController extends BaseController {
       DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
       update = dataSetConfig.updateById();
       if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,dataSetConfig));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, dataSetConfig));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
@@ -99,7 +99,7 @@ public class DataSetConfigController extends BaseController {
       DataSetConfig dataSetConfig = new DataSetConfig();
       int del = dataSetConfig.deleteById(rowId);
       if (del != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,dataSetConfigs));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dataSetConfigs));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
@@ -117,8 +117,7 @@ public class DataSetConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search, Integer pageNum, Integer pageSize,
-                              String param,String order) {
+  public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询

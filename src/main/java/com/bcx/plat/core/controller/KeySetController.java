@@ -167,17 +167,18 @@ public class KeySetController extends BaseController {
 
   /**
    * 键值代码重复性校验
+   *
    * @param keysetCode 键值代码
-   * @return  platResult
+   * @return platResult
    */
   @RequestMapping("/checkCode")
-  public PlatResult checkCode(String keysetCode){
+  public PlatResult checkCode(String keysetCode) {
     ServerResult result = new ServerResult();
     Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keysetCode).endAnd().buildDone();
     List<KeySet> keySets = keySetService.select(condition);
-    if (keySets.size()==0) {
+    if (keySets.size() == 0) {
       return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS));
-    }else{
+    } else {
       return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_CANNOT_BE_DUPLICATED));
     }
   }
@@ -213,10 +214,7 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,
-                                      @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      String order) {
+  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> keySet; // 后续判断初始化

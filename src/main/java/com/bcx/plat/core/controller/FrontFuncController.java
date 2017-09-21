@@ -64,11 +64,7 @@ public class FrontFuncController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search,
-                              String param,
-                              @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                              String order) {
+  public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
@@ -139,7 +135,7 @@ public class FrontFuncController extends BaseController {
       FrontFunc frontFunc = new FrontFunc();
       int del = frontFunc.buildDeleteInfo().deleteById(rowId);
       if (del != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,frontFuncs));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, frontFuncs));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
@@ -179,7 +175,7 @@ public class FrontFuncController extends BaseController {
     FrontFunc frontFunc = new FrontFunc().buildCreateInfo().fromMap(param);
     int insert = frontFunc.insert();
     if (insert != -1) {
-      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,frontFunc));
+      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFunc));
     } else {
       return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
     }
@@ -200,7 +196,7 @@ public class FrontFuncController extends BaseController {
       FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
       update = modify.updateById();
       if (update != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,modify));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
