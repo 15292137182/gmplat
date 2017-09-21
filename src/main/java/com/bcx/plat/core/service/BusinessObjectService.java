@@ -8,6 +8,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -174,8 +175,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     Condition condition;
     if (isValid(param)) {
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
-      map.put("objRowId", rowId);
-      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map);
+      condition = new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
+          UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map));
     } else {
       if (isValid(search)) {
         condition = new ConditionBuilder(BusinessObjectPro.class)
@@ -303,7 +304,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       } else if (rowId != null && rowId.length() > 0) {
         Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
         delete(condition);
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,select);
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, select);
       }
     }
     return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
