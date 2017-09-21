@@ -1311,6 +1311,7 @@ GmpTableBlock.prototype.searchSelect = function(){
     }
     var obj = {
         props:[],
+        tableId:"dataSetConfig"
     }
     obj[compId] = this.tableObjArr;
     return obj;
@@ -1367,8 +1368,10 @@ GmpTableBlock.prototype.reload = function(json){
 }
 //表格由给定数据加载
 GmpTableBlock.prototype.loadRecord = function(data){
+    var that = this;
     this.tableObjArr = [];
     this.searchSelect();
+    dataConversion.conversion(that.vueObj,data);
     for(var j=0;j<data.length;j++){
         this.tableObjArr.push(data[j]);
     }

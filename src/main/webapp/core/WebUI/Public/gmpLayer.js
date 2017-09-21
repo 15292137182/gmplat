@@ -503,6 +503,7 @@ gmpTableObj.prototype.searchSelect = function() {
     }
     var obj = {
         props: [],
+        tableId:"dataSetConfig"
     }
     obj[compId] = this.tableObjArr;
     return obj;
@@ -562,10 +563,12 @@ gmpTableObj.prototype.reload = function(json) {
 
 // 表格由给定数据加载
 gmpTableObj.prototype.loadRecord = function(data) {
+    var that = this;
     // 清空数据
     this.tableObjArr = [];
     // 重新注入方法
     this.searchSelect();
+    dataConversion.conversion(that.vueObj,data);
     for (var j = 0; j < data.length; j++) {
         this.tableObjArr.push(data[j]);
     }
