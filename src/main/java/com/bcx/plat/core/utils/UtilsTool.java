@@ -1,7 +1,7 @@
 package com.bcx.plat.core.utils;
 
 import com.bcx.plat.core.base.support.BeanInterface;
-import com.bcx.plat.core.morebatis.builder.AndConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.AndConditionSequenceBuilder;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -266,7 +266,7 @@ public class UtilsTool {
    * @return
    */
   public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
-    AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+    AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       final Object value = entry.getValue();
       if (value instanceof Collection) {
@@ -285,7 +285,7 @@ public class UtilsTool {
    * @return
    */
   public static And convertMapToAndConditionSeparatedByLike(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
-    AndConditionBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+    AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       final Object value = entry.getValue();
         conditionBuilder.like(entry.getKey(), (String) value);

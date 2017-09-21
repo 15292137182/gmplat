@@ -4,10 +4,10 @@ import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import java.util.List;
 
-public class OrConditionBuilder<PARENT_NODE extends ConditionSequence> extends SequenceConditionBuilder<Or, PARENT_NODE,OrConditionBuilder<PARENT_NODE>> {
+public class OrConditionSequenceBuilder<PARENT_NODE extends ConditionSequence> extends ConditionSequenceBuilder<Or, PARENT_NODE,OrConditionSequenceBuilder<PARENT_NODE>> {
   private Or or=new Or();
 
-  public OrConditionBuilder(boolean isNot,PARENT_NODE parentNode,ConditionBuilderContext conditionBuilderContext) {
+  public OrConditionSequenceBuilder(boolean isNot, PARENT_NODE parentNode, ConditionBuilderContext conditionBuilderContext) {
     super.parent=parentNode;
     super.conditionBuilderContext=conditionBuilderContext;
     or.setNot(isNot);

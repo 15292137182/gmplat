@@ -139,8 +139,12 @@ public class Translator implements SqlComponentTranslator{
         Iterator<Map.Entry<String, Object>> entryIterator = updateAction.getValues().entrySet().iterator();
         while (entryIterator.hasNext()){
             final Map.Entry<String, Object> entry = entryIterator.next();
-            Field field = getMoreBatis().getColumnByAliasWithoutCheck(entityClass, entry.getKey());
-            if (field==null) continue;
+            Field field;
+            try{
+                field = getMoreBatis().getColumnByAlias(entityClass, entry.getKey());
+            }catch (NullPointerException e){
+                continue;
+            }
             translateFieldOnlyName(field,linkedList);
             appendSql(EQUAL,linkedList);
             if (entry.getValue() instanceof Map) {
@@ -192,11 +196,11 @@ public class Translator implements SqlComponentTranslator{
     }
 
     public LinkedList translateOrder(Order order, LinkedList linkedList){
-        final String alias = order.getAliasedColumn().getAlias();
-        if (alias!=null) {
-            translateFieldSource(order.getAliasedColumn(),linkedList);
-        }else {
-            appendSql(order.getAlias(),linkedList);
+        final Object source = order.getSource();
+        if (source instanceof FieldSource) {
+            translateFieldSource((FieldSource) source,linkedList);
+        }else if(source instanceof String){
+            appendSql((SqlSegment) source,linkedList);
         }
         if (order.getOrder()== Order.DESC) {
             appendSql(DESC,linkedList);

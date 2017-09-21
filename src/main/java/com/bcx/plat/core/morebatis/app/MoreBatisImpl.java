@@ -8,19 +8,14 @@ import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
-import com.bcx.plat.core.morebatis.component.Field;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.JoinTable;
-import com.bcx.plat.core.morebatis.component.Table;
+import com.bcx.plat.core.morebatis.component.*;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.configuration.builder.EntityEntryBuilder;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
-import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
-import com.bcx.plat.core.morebatis.phantom.TableSource;
+import com.bcx.plat.core.morebatis.phantom.*;
 import com.bcx.plat.core.morebatis.translator.Translator;
 import com.bcx.plat.core.utils.UtilsTool;
 import com.github.pagehelper.Page;
@@ -42,7 +37,7 @@ public class MoreBatisImpl implements MoreBatis{
   private Map<Class, Collection<Field>> entityPks;
   private Map<Class, Map<String, Field>> aliasMap;
   private Map<Class, TableSource> entityTables;
-
+  private String defaultMapColumnAlias = "etc";
   public MoreBatisImpl(SuitMapper suitMapper, SqlComponentTranslator translator,
                        Collection entityEntries,String defaultMapColumnAlias) {
 //    if (defaultMapColumnAlias==null)
@@ -62,7 +57,7 @@ public class MoreBatisImpl implements MoreBatis{
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
 
       }
-      final Class<? extends BeanInterface> entryClass = entityEntry.getEntityClass();
+      final Class entryClass = entityEntry.getEntityClass();
       final TableSource entityEntryTable = entityEntry.getTable();
       Map<String, Field> aliasMap = this.aliasMap.get(entryClass);
       LinkedList<Field> fieldInTables = new LinkedList<>();
@@ -77,7 +72,6 @@ public class MoreBatisImpl implements MoreBatis{
       entityTables.put(entryClass, entityEntryTable);
       entityPks.put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getPks())));
     }
-    ConditionBuilder.setDefaultMapPield("etc");
   }
 
   /**
@@ -85,7 +79,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param entityClass 实体类class
    * @return
    */
-  public <T extends BeanInterface<T>> Collection<Field> getPks(Class<T> entityClass) {
+  public Collection<Field> getPks(Class entityClass) {
     return entityPks.get(entityClass);
   }
 
@@ -94,7 +88,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param entityClass 实体类class
    * @return
    */
-  public <T extends BeanInterface<T>> Collection<Field> getColumns(Class<T> entityClass) {
+  public Collection<Field> getColumns(Class entityClass) {
     return entityColumns.get(entityClass);
   }
 
@@ -103,11 +97,11 @@ public class MoreBatisImpl implements MoreBatis{
    * @param entityClass 实体类class
    * @return
    */
-  public <T extends BeanInterface<T>> TableSource getTable(Class<T> entityClass) {
+  public TableSource getTable(Class entityClass) {
     return entityTables.get(entityClass);
   }
 
-  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alias) {
+  public Field getColumnByAlias(Class entityClass, String alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
       return entityColumn.get(alias);
@@ -126,10 +120,14 @@ public class MoreBatisImpl implements MoreBatis{
    * @param alias       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alias) {
+  public FieldSource getColumnOrEtcByAlias(Class entityClass, String alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
-      return entityColumn.get(alias);
+      FieldSource result = entityColumn.get(alias);
+      if (result==null) {
+        result = new SubAttribute(getColumnByAlias(entityClass,getDefaultMapColumnAlias()),alias);
+      }
+      return result;
     } catch (NullPointerException e) {
       throw new NullPointerException("实体类没有注册:" + entityClass.getName());
     }
@@ -141,7 +139,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param alias       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alias) {
+  public List<Field> getColumnByAlias(Class entityClass, Collection<String> alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     final LinkedList<Field> result = new LinkedList<>();
     try {
@@ -170,9 +168,6 @@ public class MoreBatisImpl implements MoreBatis{
       field.setTable(table);
     }
     return fields;
-//    return Fields.stream().map((column) -> {
-//      return new FieldInTable((Field) column,table);
-//    }).collect(Collectors.toList());
   }
 
   /**
@@ -181,7 +176,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @return 返回插入的结果标识
    */
   public <T extends BeanInterface<T>> int insertEntity(T entity) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
+    final Class entityClass = entity.getClass();
     Map<String, Object> values = entity.toDbMap();
     return insert(entityClass, values).execute();
   }
@@ -207,7 +202,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @return
    */
   public <T extends BeanInterface<T>> int updateEntity(T entity) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
+    final Class entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
@@ -222,7 +217,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @return
    */
   public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
+    final Class entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     final Map<String, Object> values = entity.toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
@@ -243,7 +238,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @return
    */
   public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
-    final Class<? extends BeanInterface> entityClass = entity.getClass();
+    final Class entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
@@ -285,7 +280,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param entity  要查询的实体类class
    * @return
    */
-  public QueryAction select(Class<? extends BeanInterface> entity) {
+  public QueryAction select(Class entity) {
     final Collection columns = entityColumns.get(entity);
     return selectStatement().select(columns)
             .from(entityTables.get(entity));
@@ -299,8 +294,8 @@ public class MoreBatisImpl implements MoreBatis{
    * @param relationSecondary 从表中与主表关联的字段
    * @return 未设置条件的查询语句对象
    */
-  public QueryAction select(Class<? extends BeanInterface> primary,
-                            Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary) {
+  public QueryAction select(Class primary,
+                            Class secondary, String relationPrimary, String relationSecondary) {
     return select(primary, secondary, relationPrimary, relationSecondary, JoinType.INNER_JOIN);
   }
 
@@ -314,8 +309,8 @@ public class MoreBatisImpl implements MoreBatis{
    * @param joinType          join类型
    * @return 未设置条件的查询语句对象
    */
-  public QueryAction select(Class<? extends BeanInterface> primary,
-                            Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
+  public QueryAction select(Class primary,
+                            Class secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
     HashMap<String, Field> columns = new HashMap<>();
     for (Field Field : entityColumns.get(primary)) {
       columns.put(Field.getAlias(), Field);
@@ -331,7 +326,7 @@ public class MoreBatisImpl implements MoreBatis{
                     .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 
-  private QueryAction select(Class<? extends BeanInterface> entity, List<String> columns) {
+  private QueryAction select(Class entity, List<String> columns) {
     Map<String, Field> columnMap = aliasMap.get(entity);
     return selectStatement().select(columns.stream().map(columnMap::get)
             .collect(Collectors.toList()))
@@ -348,7 +343,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param value  要更新的值(支持null)
    * @return
    */
-  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> value) {
+  public UpdateAction update(Class entity, Map<String, Object> value) {
     UpdateAction update = updateStatement().from(entityTables.get(entity)).set(value);
     update.setEntityClass(entity);
     return update;
@@ -360,7 +355,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param values 插入数据库的多行数据
    * @return
    */
-  public InsertAction insert(Class<? extends BeanInterface> entity, List<Map<String, Object>> values) {
+  public InsertAction insert(Class entity, List<Map<String, Object>> values) {
     InsertAction insertAction = insertStatement().values(values);
     insertAction.setEntityClass(entity);
     return insertAction;
@@ -372,7 +367,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param value  插入数据库的单行数据
    * @return 未执行的插入语句对象
    */
-  public InsertAction insert(Class<? extends BeanInterface> entity, Map<String, Object> value) {
+  public InsertAction insert(Class entity, Map<String, Object> value) {
     InsertAction insertAction = insertStatement().into(entityTables.get(entity)).values(value);
     insertAction.setEntityClass(entity);
     return insertAction;
@@ -383,7 +378,7 @@ public class MoreBatisImpl implements MoreBatis{
    * @param entity 实体类的class
    * @return 未设置条件的删除语句对象
    */
-  public DeleteAction delete(Class<? extends BeanInterface> entity){
+  public DeleteAction delete(Class entity){
     return deleteStatement().from(getTable(entity));
   }
 
@@ -450,5 +445,9 @@ public class MoreBatisImpl implements MoreBatis{
   public int execute(DeleteAction deleteAction) {
     LinkedList list = translator.translateDeleteAction(deleteAction, new LinkedList());
     return suitMapper.plainDelete(list);
+  }
+
+  public String getDefaultMapColumnAlias() {
+    return defaultMapColumnAlias;
   }
 }

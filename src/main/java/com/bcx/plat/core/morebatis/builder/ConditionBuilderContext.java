@@ -14,20 +14,10 @@ public class ConditionBuilderContext {
   private TableSource tableSource;
   private Class<? extends BeanInterface> clz;
   private static final MoreBatis moreBatis=SpringContextHolder.getBean("moreBatis");
-  private String defaultMapField;
 
-  public ConditionBuilderContext(Class<? extends BeanInterface> clz,String defaultMapField) {
+  public ConditionBuilderContext(Class<? extends BeanInterface> clz) {
     this.clz = clz;
     tableSource = moreBatis.getTable(clz);
-    this.defaultMapField=defaultMapField;
-  }
-
-  public String getDefaultMapField() {
-    return defaultMapField;
-  }
-
-  public void setDefaultMapField(String defaultMapField) {
-    this.defaultMapField = defaultMapField;
   }
 
   public TableSource getTableSource() {

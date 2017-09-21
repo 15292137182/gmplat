@@ -13,7 +13,7 @@ import com.bcx.plat.core.utils.SpringContextHolder;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<CONDITION>, PARENT_NODE extends ConditionSequence, CURRENT_NODE extends ConditionSequence> implements
+public abstract class ConditionSequenceBuilder<CONDITION extends ChainCondition<CONDITION>, PARENT_NODE extends ConditionSequence, CURRENT_NODE extends ConditionSequence> implements
         ConditionSequence {
 
   protected ConditionBuilderContext conditionBuilderContext;
@@ -301,23 +301,23 @@ public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<
     return notNull(getColumnByAlias(conditionBuilderContext.getClz(),alias));
   }
 
-  public AndConditionBuilder<CURRENT_NODE> and() {
-    return new AndConditionBuilder<>(false, (CURRENT_NODE) this,
+  public AndConditionSequenceBuilder<CURRENT_NODE> and() {
+    return new AndConditionSequenceBuilder<>(false, (CURRENT_NODE) this,
             conditionBuilderContext);
   }
 
-  public AndConditionBuilder<CURRENT_NODE> andNot() {
-    return new AndConditionBuilder<>(true, (CURRENT_NODE) this,
+  public AndConditionSequenceBuilder<CURRENT_NODE> andNot() {
+    return new AndConditionSequenceBuilder<>(true, (CURRENT_NODE) this,
             conditionBuilderContext);
   }
 
-  public OrConditionBuilder<CURRENT_NODE> or() {
-    return new OrConditionBuilder<>(false, (CURRENT_NODE) this,
+  public OrConditionSequenceBuilder<CURRENT_NODE> or() {
+    return new OrConditionSequenceBuilder<>(false, (CURRENT_NODE) this,
             conditionBuilderContext);
   }
 
-  public OrConditionBuilder<CURRENT_NODE> orNot() {
-    return new OrConditionBuilder<>(true, (CURRENT_NODE) this, conditionBuilderContext);
+  public OrConditionSequenceBuilder<CURRENT_NODE> orNot() {
+    return new OrConditionSequenceBuilder<>(true, (CURRENT_NODE) this, conditionBuilderContext);
   }
 
   public CURRENT_NODE addCondition(Condition condition) {
@@ -339,11 +339,7 @@ public abstract class SequenceConditionBuilder<CONDITION extends ChainCondition<
   }
 
   private FieldSource getColumnByAlias(Class<? extends BeanInterface> entityClass, String alias) {
-    FieldSource result=getNormalColumnByAlias(entityClass,alias);
-    if (result==null) {
-      result=getJsonAttributeColumnByAlias(entityClass,conditionBuilderContext.getDefaultMapField(),alias);
-    }
-    return result;
+    return moreBatis.getColumnOrEtcByAlias(entityClass,alias);
   }
 
   @Override

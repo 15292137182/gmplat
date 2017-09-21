@@ -1,33 +1,34 @@
 package com.bcx.plat.core.morebatis.component;
 
-import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
-import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import com.bcx.plat.core.morebatis.phantom.FieldSource;
 
 public class Order{
   public static final int DESC=0,ASC=1;
 
-  private AliasedColumn aliasedColumn;
-
-  private String alias;
+  private Object source;
 
   private int order=DESC;
 
-  public Order(AliasedColumn aliasedColumn, int order) {
-    this.aliasedColumn = aliasedColumn;
+  public Order(FieldSource fieldSource, int order) {
+    this.source=fieldSource;
     this.order = order;
   }
 
   public Order(String alias, int order) {
-    this.alias = alias;
+    this.source = alias;
     this.order = order;
   }
 
-  public AliasedColumn getAliasedColumn() {
-    return aliasedColumn;
+  public void setSource(FieldSource fieldSource) {
+    this.source = fieldSource;
   }
 
-  public void setAliasedColumn(AliasedColumn aliasedColumn) {
-    this.aliasedColumn = aliasedColumn;
+  public void setSource(String alias) {
+    this.source = alias;
+  }
+
+  public Object getSource() {
+    return source;
   }
 
   public int getOrder() {
@@ -36,9 +37,5 @@ public class Order{
 
   public void setOrder(int order) {
     this.order = order;
-  }
-
-  public String getAlias() {
-    return alias;
   }
 }

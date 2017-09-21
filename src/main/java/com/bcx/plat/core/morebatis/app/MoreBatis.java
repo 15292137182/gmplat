@@ -16,6 +16,7 @@ import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.configuration.builder.EntityEntryBuilder;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.morebatis.translator.Translator;
@@ -35,23 +36,32 @@ public interface MoreBatis {
    * @param entityClass 实体类class
    * @return
    */
-  public <T extends BeanInterface<T>> Collection<Field> getPks(Class<T> entityClass);
+  public Collection<Field> getPks(Class entityClass);
 
   /**
    * 获取实体类全部字段
    * @param entityClass 实体类class
    * @return
    */
-  public <T extends BeanInterface<T>> Collection<Field> getColumns(Class<T> entityClass);
+  public Collection<Field> getColumns(Class entityClass);
 
   /**
    * 获取实体类对应表
    * @param entityClass 实体类class
    * @return
    */
-  public <T extends BeanInterface<T>> TableSource getTable(Class<T> entityClass);
+  public TableSource getTable(Class entityClass);
 
-  public <T extends BeanInterface<T>> Field getColumnByAlias(Class<T> entityClass, String alias);
+  public Field getColumnByAlias(Class entityClass, String alias);
+
+  /**
+   * 根据实体类的class对象与实体类属性名称获取对应字段对象
+   * 如果没有对应的字段就返回扩展属性
+   * @param entityClass 实体类
+   * @param alias       实体类属性名称
+   * @return
+   */
+  public FieldSource getColumnOrEtcByAlias(Class entityClass, String alias);
 
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
@@ -59,15 +69,7 @@ public interface MoreBatis {
    * @param alias       实体类属性名称
    * @return
    */
-  public <T extends BeanInterface<T>> Field getColumnByAliasWithoutCheck(Class<T> entityClass, String alias);
-
-  /**
-   * 根据实体类的class对象与实体类属性名称获取对应字段对象
-   * @param entityClass 实体类
-   * @param alias       实体类属性名称
-   * @return
-   */
-  public <T extends BeanInterface<T>> List<Field> getColumnByAlias(Class<T> entityClass, Collection<String> alias);
+  public Collection<Field> getColumnByAlias(Class entityClass, Collection<String> alias);
 
   /**
    * 插入一个实体类
@@ -115,7 +117,7 @@ public interface MoreBatis {
    * @param entity  要查询的实体类class
    * @return
    */
-  public QueryAction select(Class<? extends BeanInterface> entity);
+  public QueryAction select(Class entity);
 
   /**
    * 两个表的inner join查询
@@ -125,8 +127,8 @@ public interface MoreBatis {
    * @param relationSecondary 从表中与主表关联的字段
    * @return 未设置条件的查询语句对象
    */
-  public QueryAction select(Class<? extends BeanInterface> primary,
-                            Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary);
+  public QueryAction select(Class primary,
+                            Class secondary, String relationPrimary, String relationSecondary);
 
 
   /**
@@ -138,8 +140,8 @@ public interface MoreBatis {
    * @param joinType          join类型
    * @return 未设置条件的查询语句对象
    */
-  public QueryAction select(Class<? extends BeanInterface> primary,
-                            Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, JoinType joinType);
+  public QueryAction select(Class primary,
+                            Class secondary, String relationPrimary, String relationSecondary, JoinType joinType);
 
   public QueryAction selectStatement();
 
@@ -149,7 +151,7 @@ public interface MoreBatis {
    * @param value  要更新的值(支持null)
    * @return
    */
-  public UpdateAction update(Class<? extends BeanInterface> entity, Map<String, Object> value);
+  public UpdateAction update(Class entity, Map<String, Object> value);
 
   /**
    * 多行插入
@@ -157,7 +159,7 @@ public interface MoreBatis {
    * @param values 插入数据库的多行数据
    * @return
    */
-  public InsertAction insert(Class<? extends BeanInterface> entity, List<Map<String, Object>> values);
+  public InsertAction insert(Class entity, List<Map<String, Object>> values);
 
   /**
    * 单行插入
@@ -165,14 +167,14 @@ public interface MoreBatis {
    * @param value  插入数据库的单行数据
    * @return 未执行的插入语句对象
    */
-  public InsertAction insert(Class<? extends BeanInterface> entity, Map<String, Object> value);
+  public InsertAction insert(Class entity, Map<String, Object> value);
 
   /**
    * 删除(未设置条件)
    * @param entity 实体类的class
    * @return 未设置条件的删除语句对象
    */
-  public DeleteAction delete(Class<? extends BeanInterface> entity);
+  public DeleteAction delete(Class entity);
 
   public InsertAction insertStatement();
 
@@ -185,4 +187,6 @@ public interface MoreBatis {
   public int execute(UpdateAction updateAction);
 
   public int execute(DeleteAction deleteAction);
+
+  String getDefaultMapColumnAlias();
 }
