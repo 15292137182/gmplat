@@ -49,6 +49,32 @@
                 var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {});
             }
 
+            //删除
+            GmpTable.table.onDeleteRow = function (index, row) {
+                select_row = row;
+                console.log(select_row);
+                console.log(GmpTable.table.vueObj);
+                deleteObj.del(function(){
+                    var data = {
+                        "url":serverPath+'/dataSetConfig/delete',//删除
+                        "jsonData":{
+                            rowId:select_row.rowId
+                        },
+                        "obj":GmpTable.table.vueObj
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        GmpTable.table.reload({
+                            queryUrl: serverPath + '/dataSetConfig/queryPage',
+                            queryParam: {
+                                search:"",
+                                pageSize:"10",
+                                pageNum:"1"
+                            }
+                        });
+                    })
+                })
+            }
+
             // 搜索
             GmpSearch.searchs.setOptions({
                 selUrl: serverPath + '/dataSetConfig/queryPage'

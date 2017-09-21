@@ -345,13 +345,20 @@ gmpFormObj.prototype.request = function(callback) {
         data: data,
         success: function(res) {
             var arr = res.resp.content.data;
+            console.log(arr);
             for (var j = 0; j < arr.length; j++) {
                 var obj = arr[j];
                 for (var k in obj) {
                     that.formObj[k] = obj[k];
+                    // if(k=="etc"){//扩展属性
+                    //     var etc = obj[k]
+                    //     for(var x in etc){
+                    //         that.formObj[x] = etc[x];//赋值
+                    //     }
+                    // }
                 }
             }
-            // console.log(that.formObj);
+             console.log(that.formObj);
             if (callback) {
                 callback(res.resp.content.data);
             }
