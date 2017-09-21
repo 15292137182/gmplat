@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.KeySetProService;
@@ -151,10 +150,22 @@ public class KeySetProController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(KeySetPro.class, order);
-    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> keysetPro = keySetProService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(KeySetPro.class, UtilsTool.jsonToObj(param, Map.class));
+    } else {  // 根据空格查询
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+
+    PageResult<Map<String, Object>> keysetPro;
+    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+      keysetPro = keySetProService.selectPageMap(condition, orders, pageNum, pageSize);
+    } else {
+      keysetPro = new PageResult(keySetProService.selectMap(condition, orders));
+    }
+
     if (keysetPro.getResult() != null) {
       return result(new ServerResult<>(keysetPro));
     }
