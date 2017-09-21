@@ -19,7 +19,7 @@
             </el-row>
             <el-row id="app" style="margin-top: 10px;">
                 <el-col :span="24">
-                    <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable"}' :table-data="table"></components>
+                    <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable","id":"grid"}' :table-data="table"></components>
                 </el-col>
             </el-row>
         </div>
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="../Public/publicjs.js"></script>
     <script>
         var select_row;
-        function GlobalParameter(){
-            var args={"tableKeySet":{"dataSetConfig":{datasetType:"dataSetConfigType",belongModule:"belongModule"}}};
+        function GlobalParameter() {
+            var args={"tableKeySet":{"grid":{datasetType:"dataSetConfigType",belongModule:"belongModule"}}};
             return args;
-        }
+        };
         gmp_onload = function () {
             // 加载数据
             GmpTable.table.reload({

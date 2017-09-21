@@ -195,8 +195,11 @@ var getHtml = (function() {
                             // 若当前功能块属于下拉框并且之来源类型是keySet
                             if(item.displayWidget == "select-base" || item.valueResourceType == "keySet") {
                                 var _key = item.ename;
-                                // 获取option
-                                getOptions.option(_target, _key);
+                                var _rowId = item.valueResourceContent
+                                if(_rowId != "") {
+                                    // 获取option
+                                    getOptions.option(_target, _key, _rowId);
+                                }
                             }
                         });
 
@@ -204,7 +207,7 @@ var getHtml = (function() {
                         GmpForm[compId] = form;
                     }
                     if (arr[0].funcType == "grid") {
-                        var _table = new gmpTableObj(compId, code, arr, mainId, "", "", "", {
+                        var _table = new gmpTableObj(compId, code, arr, mainId, params.id, "", "", "", {
                             onClickRow: function (row) {},
                             onEditRow: function () {},
                             onDeleteRow: function () {},
@@ -264,10 +267,11 @@ var dynamicObj = (function() {
 })();
 
 var getOptions = (function() {
-    var option = function(target, key) {
+    var option = function(target, key, _rowId) {
+        // console.log(_rowId);
         // 调用接口传参
         var _param = {
-            keyCode: key
+            rowId: _rowId
         }
         // 调用接口
         $.ajax({
@@ -287,6 +291,7 @@ var getOptions = (function() {
                         // 赋值options
                         var _optionName = key + "Option";
                         target[_optionName] = _jsonObj;
+                        // console.log(_jsonObj);
                     }
                 }
             },

@@ -22,33 +22,33 @@ document.write('<script type="text/javascript" src="' + path + '/webjar/layer/la
 document.write('<script type="text/javascript" src="' + path + '/webjar/plugins/layui/layui.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/sha256.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ServerPath.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcp.js" charset="UTF-8"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcp.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/cookie_util.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpLayer.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/gmpLayer.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/gmpOnload.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAjax.js" charset="UTF-8"></script>');
 // document.write('<script type="text/javascript" src="' + path +  '/WebUI/Public/ibcpSign.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpSignature.js" charset="UTF-8"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpSignature.js" charset="UTF-8"></script>');
 //document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpPlugin.js" charset="UTF-8"></script>');
 //document.write('<script type="text/javascript" src="' + path + '/WebUI/Version/ibcpVS.js" charset="UTF-8"></script>');
 //document.write('<script type="text/javascript" src="' + path + '/WebUI/Uom/UomChose.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/DateFormat.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpValidate.js"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/NumberKeyBoard.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/DateFormat.js" charset="UTF-8"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpValidate.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/NumberKeyBoard.js"></script>');
 // document.write('<script type="text/javascript" src="' + path + '/WebUI/PV/Chart/highcharts.js" charset="UTF-8"></script>');
 // document.write('<script type="text/javascript" src="' + path + '/WebUI/PV/Chart/exporting.js" charset="UTF-8"></script>');
 // document.write('<script type="text/javascript" src="' + path + '/WebUI/PV/Chart/highcharts-zh_CN.js" charset="UTF-8"></script>')
 //document.write('<script type="text/javascript" src="' + path + '/WebUI/PV/RevisePV.js" charset="UTF-8"></script>');
 //document.write('<script type="text/javascript" src="' + path + '/WebUI/PV/PV_Edit/PV_DateTime_Edit.js" charset="UTF-8"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAreaResize.js"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAuthority.js"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpDate.js"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpSelect.js"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpCheck.js"></script>');
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAfter.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAreaResize.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAuthority.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpDate.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpSelect.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpCheck.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAfter.js"></script>');
 
-document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpKeyboard.js"></script>');
+// document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpKeyboard.js"></script>');
 
 var _selectHtml = [];
 _selectHtml.push('<template id="tid">');
