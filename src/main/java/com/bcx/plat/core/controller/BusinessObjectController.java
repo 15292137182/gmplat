@@ -18,13 +18,12 @@ import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -83,7 +82,7 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult singleInputSelect(String search,Integer pageNum, Integer pageSize,String param,String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     Condition relateCondition;
@@ -98,27 +97,27 @@ public class BusinessObjectController extends BaseController {
     for (Map<String, Object> results : result) {
       String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
       List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
-      if (null == list) {
+      if (null==list) {
         relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
         List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-        if (templateObjects.size() > 0) {
+        if (templateObjects.size()>0) {
           results.put("relateTemplate", templateObjects.get(0).getTemplateName());
         }
-      } else {
-        StringBuilder templates = new StringBuilder();
-        for (Object li : list) {
+      }else{
+        StringBuilder templates=new StringBuilder();
+        for (Object li : list){
           String valueOf = String.valueOf(li);
           relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
           List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-          if (templateObjects.size() > 0) {
-            for (TemplateObject temp : templateObjects) {
+          if (templateObjects.size()>0) {
+            for (TemplateObject temp :templateObjects){
               templates.append(temp.getTemplateName()).append(",");
             }
           }
         }
-        if (templates.lastIndexOf(",") != -1) {
-          String substring = templates.substring(0, templates.length() - 1);
-          results.put("relateTemplate", substring);
+        if (templates.lastIndexOf(",")!=-1) {
+        String substring = templates.substring(0, templates.length()-1);
+        results.put("relateTemplate", substring);
         }
       }
     }
@@ -154,7 +153,7 @@ public class BusinessObjectController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping("/changeOperat")
+  @RequestMapping(value = "/changeOperat",method = RequestMethod.POST)
   public PlatResult changeOperation(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
@@ -174,7 +173,7 @@ public class BusinessObjectController extends BaseController {
    * @param paramEntity 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping("/modify")
+  @RequestMapping(value = "/modify" ,method = RequestMethod.POST)
   public PlatResult update(@RequestParam Map<String, Object> paramEntity) {
     String rowId = paramEntity.get("rowId").toString();
     ServerResult serverResult = null;
@@ -193,7 +192,7 @@ public class BusinessObjectController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping("/delete")
+  @RequestMapping(value = "/delete",method =  RequestMethod.POST)
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
@@ -226,5 +225,25 @@ public class BusinessObjectController extends BaseController {
       logger.error("查询出业务关联模板属性失败");
       return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
+  }
+
+
+
+  /**
+   * 通用状态生效方法
+   *
+   * @param rowId   接受的唯一标示
+   * @return
+   */
+  @RequestMapping("/takeEffect")
+  public Object updateTakeEffect(String rowId) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("rowId", rowId);
+    map.put("status", BaseConstants.TAKE_EFFECT);
+    map.put("modifyTime", UtilsTool.getDateTimeNow());
+    BusinessObject businessObject = new BusinessObject();
+//    businessObject.setBaseTemplateBean();
+//    businessObjectService.update()
+    return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS,Message.UPDATE_SUCCESS,map));
   }
 }

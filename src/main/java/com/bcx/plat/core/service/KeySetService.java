@@ -58,19 +58,41 @@ public class KeySetService extends BaseService<KeySet> {
      * @param keyCode 键值代码
      * @return ServerResult
      */
-    public ServerResult queryKeyCode(String keyCode) {
-        Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keyCode).endAnd().buildDone();
-        List<Map<String, Object>> result = singleSelect(KeySet.class, condition);
-        String rowId = (String) result.get(0).get("rowId");
-        List<Map> relateKeysetRowId = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
-        for (Map relate : relateKeysetRowId) {
-            relate.put("value", relate.get("confKey"));
-            relate.put("label", relate.get("confValue"));
+    public ServerResult queryKeyCode(String keyCode,String rowIds) {
+        String row = String.valueOf(rowIds);
+        if (row.isEmpty()||"null"==row) {
+            Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keyCode).endAnd().buildDone();
+            List<Map<String, Object>> result = singleSelect(KeySet.class, condition);
+            String rowId = (String) result.get(0).get("rowId");
+            List<Map> relateKeysetRowId = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+            for (Map relate : relateKeysetRowId) {
+                relate.put("value", relate.get("confKey"));
+                relate.put("label", relate.get("confValue"));
+            }
+            if (result.size() == 0) {
+                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            }
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowId);
+        }else{
+            Condition buildDone = new ConditionBuilder(KeySet.class).and().equal("rowId", rowIds).endAnd().buildDone();
+            List<Map> mapList = selectMap(buildDone);
+
+            Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keyCode).endAnd().buildDone();
+            List<Map<String, Object>> result = singleSelect(KeySet.class, condition);
+            String rowId = (String) result.get(0).get("rowId");
+            List<Map> relateKeysetRowId = keySetProService.selectMap(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId));
+            for (Map relate : relateKeysetRowId) {
+                relate.put("value", relate.get("confKey"));
+                relate.put("label", relate.get("confValue"));
+                for (Map map : mapList){
+                    relate.putAll(map);
+                }
+            }
+            if (result.size() == 0) {
+                return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+            }
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowId);
         }
-        if (result.size() == 0) {
-            return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-        }
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateKeysetRowId);
     }
 
 

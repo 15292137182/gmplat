@@ -72,10 +72,10 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryKeyCode")
-  public PlatResult queryKeyCode(String keyCode) {
+  public PlatResult queryKeyCode(String keyCode,String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(keyCode)) {
-      ServerResult serverResult = keySetService.queryKeyCode(keyCode);
+      ServerResult serverResult = keySetService.queryKeyCode(keyCode,rowId);
       return result(serverResult);
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));

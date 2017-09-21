@@ -28,11 +28,13 @@ public class FrontFuncService extends BaseService<FrontFunc> {
 
   private final BusinessObjectProService businessObjectProService;
   private final DBTableColumnService dbTableColumnService;
+  private final KeySetService keySetService;
 
   @Autowired
-  public FrontFuncService( BusinessObjectProService businessObjectProService, DBTableColumnService dbTableColumnService) {
+  public FrontFuncService(BusinessObjectProService businessObjectProService, KeySetService keySetService, DBTableColumnService dbTableColumnService) {
     this.businessObjectProService = businessObjectProService;
     this.dbTableColumnService = dbTableColumnService;
+    this.keySetService = keySetService;
   }
 
 
@@ -47,15 +49,15 @@ public class FrontFuncService extends BaseService<FrontFunc> {
     List<Map<String, Object>> result = null;
     for (Object key : funcCode) {
       FieldCondition fieldCondition = new FieldCondition("funcCode", Operator.EQUAL, key);
-      List<Map<String, Object>> keysetCode = singleSelect(FrontFunc.class, fieldCondition);
+      List<Map<String, Object>> frontFunc = singleSelect(FrontFunc.class, fieldCondition);
       LinkedList<Order> orders = UtilsTool.dataSort("{\"str\":\"displayTitle\", \"num\":1}");//默认按照显示标题排序
-      for (Map<String, Object> keySet : keysetCode) {
+      for (Map<String, Object> fronc : frontFunc) {
         //构建查询条件
-        Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("funcRowId", keySet.get("rowId")).endAnd().buildDone();
+        Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("funcRowId", fronc.get("rowId")).endAnd().buildDone();
         //执行单一查询
-        result = singleSelectSort(FrontFuncPro.class, condition,orders);
+        result = singleSelectSort(FrontFuncPro.class, condition, orders);
         for (Map<String, Object> map : result) {
-          map.put("funcType", keySet.get("funcType").toString());
+          map.put("funcType", fronc.get("funcType").toString());
           String relateBusiPro = map.get("relateBusiPro").toString();
           String attrSource = map.get("attrSource").toString();
           switch (attrSource) {
@@ -77,10 +79,17 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                 continue;
               }
               for (BusinessObjectPro relate : businessObjectPros) {
-                  map.put("ename", relate.getFieldAlias());
-                  map.put("valueResourceContent", relate.getValueResourceContent());
-                  map.put("valueResourceType", relate.getValueResourceType());
-                  map.put("valueType", relate.getValueType());
+                String keysetCode = "";
+                Condition buildDone = new ConditionBuilder(KeySet.class).and().equal("rowId", relate.getValueResourceContent()).endAnd().buildDone();
+                List<KeySet> keySets = keySetService.select(buildDone);
+                if (keySets.size()!=0) {
+                  keysetCode = keySets.get(0).getKeysetCode();
+                }
+                map.put("ename", relate.getFieldAlias());
+                map.put("keysetCode", keysetCode);
+                map.put("valueResourceContent", relate.getValueResourceContent());
+                map.put("valueResourceType", relate.getValueResourceType());
+                map.put("valueType", relate.getValueType());
                 String relateTableRowId = relate.getRelateTableColumn();
                 List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
                 if (!UtilsTool.isValid(dbTableColumns)) {
