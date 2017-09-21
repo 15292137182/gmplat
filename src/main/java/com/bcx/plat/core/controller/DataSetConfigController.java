@@ -118,7 +118,7 @@ public class DataSetConfigController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
+    LinkedList<Order> orders = dataSort(DataSetConfig.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
@@ -127,7 +127,7 @@ public class DataSetConfigController extends BaseController {
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     PageResult result;
-    if (UtilsTool.isValid(pageNum)) {
+    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
       result = dataSetConfigService.selectPageMap(condition, orders, pageNum, pageSize);
     } else {
       result = new PageResult<>(dataSetConfigService.selectMap(condition, orders));

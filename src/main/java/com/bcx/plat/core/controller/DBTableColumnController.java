@@ -49,7 +49,7 @@ public class DBTableColumnController extends BaseController {
   @RequestMapping("/queryPageById")
   public PlatResult queryPageById(String search, String rowId, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult result = new ServerResult();
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(DBTableColumn.class, order);
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = dbTableColumnService.queryPageById(search, param, rowId, orders, pageNum, pageSize);
       return result(serverResult);

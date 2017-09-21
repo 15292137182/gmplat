@@ -44,7 +44,7 @@ public class MaintDBTablesController extends BaseController {
 
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
+    LinkedList<Order> orders = dataSort(MaintDBTables.class,order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<MaintDBTables> maintDBTablesPageResult = maintDBTablesService.selectPage(blankQuery, orders, pageNum, pageSize);
     ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);

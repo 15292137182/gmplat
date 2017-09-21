@@ -54,7 +54,7 @@ public class SequenceRuleConfigController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult selectWithPage(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(SequenceRuleConfig.class, order);
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     PageResult<Map<String, Object>> result;
     if (UtilsTool.isValid(pageSize)) { // 如果有分页参数进行分页查询

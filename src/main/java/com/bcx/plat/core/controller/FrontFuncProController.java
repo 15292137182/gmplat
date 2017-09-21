@@ -81,7 +81,7 @@ public class FrontFuncProController extends
       if (insert == -1) {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
       } else {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,frontFuncPro));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFuncPro));
       }
     } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
       return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
@@ -126,7 +126,7 @@ public class FrontFuncProController extends
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult serverResult = new ServerResult();
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(FrontFuncPro.class, order);
     if (UtilsTool.isValid(rowId)) {
       Condition condition;
       if (UtilsTool.isValid(param)) { // 判断是否按照字段查询
@@ -167,7 +167,7 @@ public class FrontFuncProController extends
       FrontFuncPro frontFuncPro = new FrontFuncPro();
       del = frontFuncPro.deleteById(rowId);
       if (del != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,frontFuncPros));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, frontFuncPros));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
@@ -193,7 +193,7 @@ public class FrontFuncProController extends
       modify.setRelateBusiPro(null);
       update = modify.updateById();
       if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,modify));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }

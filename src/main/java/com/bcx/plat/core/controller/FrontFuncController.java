@@ -65,7 +65,7 @@ public class FrontFuncController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(FrontFunc.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
       Map map = UtilsTool.jsonToObj(param, Map.class);

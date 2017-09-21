@@ -3,6 +3,7 @@ package com.bcx.plat.core.utils;
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.builder.AndConditionSequenceBuilder;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.OrderBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -76,7 +77,7 @@ public class UtilsTool {
   }
 
   /**
-   * 获取当前事件日期
+   * 获取当前时间日期
    *
    * @return 返回时间日期
    */
@@ -88,7 +89,7 @@ public class UtilsTool {
   /**
    * 根据指定时间格式来格式化日期
    *
-   * @param pattern 事件格式
+   * @param pattern 时间格式
    * @return 返回时间格式的字符串
    */
   public static String getDateTimeNow(String pattern) {
@@ -261,6 +262,7 @@ public class UtilsTool {
 
   /**
    * map转换为对应的由=组成的and条件
+   *
    * @param entityClass
    * @param args
    * @return
@@ -280,6 +282,7 @@ public class UtilsTool {
 
   /**
    * map转换为对应的由like组成的and条件
+   *
    * @param entityClass
    * @param args
    * @return
@@ -288,7 +291,7 @@ public class UtilsTool {
     AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       final Object value = entry.getValue();
-        conditionBuilder.like(entry.getKey(), (String) value);
+      conditionBuilder.like(entry.getKey(), (String) value);
     }
     return (And) conditionBuilder.endAnd().buildDone();
   }
@@ -343,7 +346,6 @@ public class UtilsTool {
   public static LinkedList<Order> dataSort(String order) {
     LinkedList<Order> orders = new LinkedList<>();
     if (order == null) {
-//      order = "{\"str\":\"modifyTime\", \"num\":1}"; // 默认按照修改时间排序
       return orders;
     }
     HashMap hashMap = UtilsTool.jsonToObj(order, HashMap.class);
@@ -351,6 +353,24 @@ public class UtilsTool {
       String str = String.valueOf(hashMap.get("str"));
       int num = Integer.parseInt(hashMap.get("num").toString());
       orders.add(new Order(new com.bcx.plat.core.morebatis.component.Field(str), num));
+    }
+    return orders;
+  }
+
+  public static LinkedList<Order> dataSort(Class<? extends BeanInterface> entityClass, String order) {
+    LinkedList<Order> orders = new LinkedList<>();
+    if (order == null) {
+      order = "{\"str\":\"modifyTime\", \"num\":0}"; // 默认按照修改时间排序
+    }
+    HashMap hashMap = UtilsTool.jsonToObj(order, HashMap.class);
+    if (hashMap != null) {
+      String str = String.valueOf(hashMap.get("str"));
+      int num = Integer.parseInt(hashMap.get("num").toString());
+      if (num == 0) {
+        orders = new OrderBuilder(entityClass).desc(str).done();
+      } else {
+        orders = new OrderBuilder(entityClass).asc(str).done();
+      }
     }
     return orders;
   }
