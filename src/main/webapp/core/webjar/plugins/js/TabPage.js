@@ -1225,9 +1225,10 @@ GmpForm1.prototype.submit = function(json,callback){
 
 
 //动态表格对象
-function GmpTableBlock(compId,blockId,formBlockItems,vueEl,postUrl,queryParam,submitUrl,jsonFunction){
+function GmpTableBlock(compId,blockId,formBlockItems,vueEl,tableId,postUrl,queryParam,submitUrl,jsonFunction){
     this.compId = compId;//父组件名字
     this.blockId = blockId; //功能块标识
+    this.tableId = tableId;//需要替换下拉框值的表格标识
     this.formBlockItems = formBlockItems;//表格块key值集合
 
     this.vueEl = vueEl;     //vue el
@@ -1312,7 +1313,7 @@ GmpTableBlock.prototype.searchSelect = function(){
     }
     var obj = {
         props:[],
-        tableId:"dataSetConfig"
+        tableId:that.tableId
     }
     obj[compId] = this.tableObjArr;
     return obj;
