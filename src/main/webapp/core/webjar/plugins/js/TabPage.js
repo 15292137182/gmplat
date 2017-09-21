@@ -916,7 +916,8 @@ var DynamicStitchings = (function(){
                 var optionName = obj.ename + "Option";
                 var options = "item in childFormTable." + optionName;
                 var keyName = obj.ename + "Key";
-                var key = "childFormTable." + keyName;
+                // var key = "childFormTable." + keyName;
+                var key = "childFormTable." + obj.ename;
                 var str = '<el-row><el-col :span="20"><el-form-item label='+laberName+'><el-select v-model="' + key + '" :disabled="'+disab+'" placeholder="请选择"><el-option v-for="'+options+'" :key="item.value" :label="item.label" :value="item.value" ></el-option></el-select></el-form-item></el-col></el-row>';
                 break;
             case "checkbox"://复选框

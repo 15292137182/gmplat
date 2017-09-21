@@ -81,7 +81,7 @@
                     };
                     GmpForm.formTable.submit(_json, function() {
                         // 成功回调
-                        GmpTable.tables.reload({
+                        GmpTable.table.reload({
                             queryUrl: serverPath+'/dataSetConfig/queryPage',
                             queryParam: {
                                 search:"",
@@ -102,7 +102,7 @@
                     _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
                     GmpForm.formTable.submit(_json, function() {
                         // 成功回调
-                        GmpTable.tables.reload({
+                        GmpTable.table.reload({
                             queryUrl: serverPath+'/dataSetConfig/queryPage',
                             queryParam: {
                                 search:"",

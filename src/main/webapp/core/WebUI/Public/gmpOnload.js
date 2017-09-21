@@ -187,7 +187,7 @@ var getHtml = (function() {
                         // 创建vue实例
                         form.bulidComponent();
                         // 获取下拉框options
-                        console.log(form);
+                        // console.log(form);
                         var _target = form.formObj;
                         var _obj = form.formBlockItems;
                         // 遍历当前功能块

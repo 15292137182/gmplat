@@ -213,12 +213,12 @@ gmpFormObj.prototype.searchSelect = function() {
         // 若类型为下拉框
         if(arr[j].displayWidget == "select-base") {
             var options = arr[j].ename + "Option";
-            var key = arr[j].ename + "Key";
+            // var key = arr[j].ename + "Key";
             this.formObj[options] = [{
                 value: "",
                 label: ""
             }];
-            this.formObj[key] = "";
+            this.formObj[arr[j].ename] = "";
         }
     }
     var obj = {
@@ -351,6 +351,7 @@ gmpFormObj.prototype.request = function(callback) {
                     that.formObj[k] = obj[k];
                 }
             }
+            // console.log(that.formObj);
             if (callback) {
                 callback(res.resp.content.data);
             }
