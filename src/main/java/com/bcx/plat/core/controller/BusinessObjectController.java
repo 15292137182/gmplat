@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -82,8 +82,8 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search,Integer pageNum, Integer pageSize,String param,String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String param, String order) {
+    LinkedList<Order> orders = UtilsTool.dataSort(BusinessObject.class, order);
     Condition condition;
     Condition relateCondition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
@@ -97,27 +97,27 @@ public class BusinessObjectController extends BaseController {
     for (Map<String, Object> results : result) {
       String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
       List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
-      if (null==list) {
+      if (null == list) {
         relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
         List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-        if (templateObjects.size()>0) {
+        if (templateObjects.size() > 0) {
           results.put("relateTemplate", templateObjects.get(0).getTemplateName());
         }
-      }else{
-        StringBuilder templates=new StringBuilder();
-        for (Object li : list){
+      } else {
+        StringBuilder templates = new StringBuilder();
+        for (Object li : list) {
           String valueOf = String.valueOf(li);
           relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
           List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
-          if (templateObjects.size()>0) {
-            for (TemplateObject temp :templateObjects){
+          if (templateObjects.size() > 0) {
+            for (TemplateObject temp : templateObjects) {
               templates.append(temp.getTemplateName()).append(",");
             }
           }
         }
-        if (templates.lastIndexOf(",")!=-1) {
-        String substring = templates.substring(0, templates.length()-1);
-        results.put("relateTemplate", substring);
+        if (templates.lastIndexOf(",") != -1) {
+          String substring = templates.substring(0, templates.length() - 1);
+          results.put("relateTemplate", substring);
         }
       }
     }
@@ -128,15 +128,14 @@ public class BusinessObjectController extends BaseController {
   /**
    * 根据业务对象rowId查找当前对象下的所有属性并分页显示
    *
-   *
    * @param search   按照空格查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryProPage(String rowId, String search,String param, Integer pageNum, Integer pageSize,String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+  public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = UtilsTool.dataSort(BusinessObjectPro.class, order);
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
@@ -153,7 +152,7 @@ public class BusinessObjectController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping(value = "/changeOperat",method = RequestMethod.POST)
+  @RequestMapping(value = "/changeOperat", method = RequestMethod.POST)
   public PlatResult changeOperation(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
@@ -173,7 +172,7 @@ public class BusinessObjectController extends BaseController {
    * @param paramEntity 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/modify" ,method = RequestMethod.POST)
+  @RequestMapping(value = "/modify", method = RequestMethod.POST)
   public PlatResult update(@RequestParam Map<String, Object> paramEntity) {
     String rowId = paramEntity.get("rowId").toString();
     ServerResult serverResult = null;
@@ -192,7 +191,7 @@ public class BusinessObjectController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping(value = "/delete",method =  RequestMethod.POST)
+  @RequestMapping(value = "/delete", method = RequestMethod.POST)
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
@@ -228,11 +227,10 @@ public class BusinessObjectController extends BaseController {
   }
 
 
-
   /**
    * 通用状态生效方法
    *
-   * @param rowId   接受的唯一标示
+   * @param rowId 接受的唯一标示
    * @return
    */
   @RequestMapping("/takeEffect")
@@ -244,6 +242,6 @@ public class BusinessObjectController extends BaseController {
     BusinessObject businessObject = new BusinessObject();
 //    businessObject.setBaseTemplateBean();
 //    businessObjectService.update()
-    return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS,Message.UPDATE_SUCCESS,map));
+    return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, map));
   }
 }
