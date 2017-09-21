@@ -86,10 +86,10 @@
                                 </el-table-column>
                                 <el-table-column prop="keysetCode" sortable="custom" label="代码" width="150" show-overflow-tooltip>
                                 </el-table-column>
-                                <el-table-column prop="keysetName" sortable="custom" label="名称" width="150" show-overflow-tooltip>
+                                <el-table-column prop="keysetName" sortable="custom" label="名称" width="" show-overflow-tooltip>
                                 </el-table-column>
                                 <el-table-column  prop=""
-                                                  label="操作">
+                                                  label="操作" width="100">
                                     <template scope="scope">
                                         <el-button @click.native="editLeftEvent" type="text" size="small" icon="edit"></el-button>
                                         <el-button @click.native="deleteLeftEvent" type="text" size="small" icon="delete"></el-button>
@@ -146,14 +146,14 @@
                                       @sort-change="headSort"
                                       @row-click="rightCurrentChange"
                                       style="width: 100%;border-radius: 5px">
-                                <el-table-column prop="confKey" sortable="custom" label="键" width="" show-overflow-tooltip>
+                                <el-table-column prop="confKey" sortable="custom" label="键" width="200" show-overflow-tooltip>
                                 </el-table-column>
-                                <el-table-column prop="confValue" sortable="custom" label="值" width="" show-overflow-tooltip>
+                                <el-table-column prop="confValue" sortable="custom" label="值" width="200" show-overflow-tooltip>
                                 </el-table-column>
-                                <el-table-column prop="desp" label="说明" width="150" show-overflow-tooltip>
+                                <el-table-column prop="desp" label="说明" show-overflow-tooltip>
                                 </el-table-column>
                                 <el-table-column  prop=""
-                                                  label="操作" >
+                                                  label="操作" width="100">
                                     <template scope="scope">
                                         <el-button @click.native="editRightEvent" type="text" size="small" icon="edit"></el-button>
                                         <el-button @click.native="deleteRigthEvent" type="text" size="small" icon="delete"></el-button>
