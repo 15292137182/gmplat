@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.SysConfig;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -84,7 +85,7 @@ public class SysConfigController extends BaseController {
     SysConfig sysConfig = new SysConfig().buildCreateInfo().fromMap(param);
     int insert = sysConfig.insert();
     if (insert != -1) {
-      return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,sysConfig));
     } else {
       return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
     }
@@ -104,7 +105,7 @@ public class SysConfigController extends BaseController {
       SysConfig modify = sysConfig.fromMap(param).buildModifyInfo();
       update = modify.updateById();
       if (update != -1) {
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,modify));
       } else {
         return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
@@ -120,12 +121,13 @@ public class SysConfigController extends BaseController {
    */
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
-    int del;
+    Condition condition = new ConditionBuilder(SysConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<SysConfig> sysConfigs = sysConfigService.select(condition);
     if (!rowId.isEmpty()) {
       SysConfig sysConfig = new SysConfig();
-      del = sysConfig.deleteById(rowId);
+      int del = sysConfig.deleteById(rowId);
       if (del != -1) {
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,sysConfigs));
       } else {
         return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }

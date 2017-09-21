@@ -44,17 +44,12 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     }
     BusinessObjectPro businessObjectPro = businessObjectPros.get(0);
     String relateTableColumn = businessObjectPro.getRelateTableColumn();
-    Map businessObjectProMap = businessObjectPro.toMap();
+    Map<String,Object> businessObjectProMap = businessObjectPro.toMap();
     List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
     if (null != dbTableColumns && !dbTableColumns.isEmpty()) {
       businessObjectProMap.put("columnCname", dbTableColumns.get(0).getColumnCname());
     }
-    /*for (DBTableColumn row : dbTableColumns) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("columnCname", dbTableColumns.get(0).getColumnCname());
-      row.setEtc(map);
-    }*/
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, new Object[]{businessObjectProMap});
+    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, new Object[]{businessObjectProMap});
   }
 
   /**

@@ -81,7 +81,7 @@ public class FrontFuncProController extends
       if (insert == -1) {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
       } else {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,frontFuncPro));
       }
     } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
       return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert));
@@ -159,13 +159,15 @@ public class FrontFuncProController extends
    */
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
+    Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<FrontFuncPro> frontFuncPros = frontFuncProService.select(condition);
     ServerResult result = new ServerResult();
     int del;
     if (!rowId.isEmpty()) {
       FrontFuncPro frontFuncPro = new FrontFuncPro();
       del = frontFuncPro.deleteById(rowId);
       if (del != -1) {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,frontFuncPros));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
@@ -191,7 +193,7 @@ public class FrontFuncProController extends
       modify.setRelateBusiPro(null);
       update = modify.updateById();
       if (update != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,modify));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }

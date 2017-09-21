@@ -113,12 +113,14 @@ public class BusinessObjectController extends BaseController {
           List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
           if (templateObjects.size()>0) {
             for (TemplateObject temp :templateObjects){
-              templates.append(temp.getTemplateName()+",");
+              templates.append(temp.getTemplateName()).append(",");
             }
           }
         }
+        if (templates.lastIndexOf(",")!=-1) {
         String substring = templates.substring(0, templates.length()-1);
         results.put("relateTemplate", substring);
+        }
       }
     }
     return super.result(serverResult);

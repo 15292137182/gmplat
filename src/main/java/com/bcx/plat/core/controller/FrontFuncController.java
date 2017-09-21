@@ -118,6 +118,10 @@ public class FrontFuncController extends BaseController {
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
+    //根据传入的rowId查询当前数据
+    Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<FrontFunc> frontFuncs = frontFuncService.select(condition);
+
     if (UtilsTool.isValid(rowId)) {
       List<FrontFuncPro> funcRowId = frontFuncProService
           .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
@@ -135,7 +139,7 @@ public class FrontFuncController extends BaseController {
       FrontFunc frontFunc = new FrontFunc();
       int del = frontFunc.buildDeleteInfo().deleteById(rowId);
       if (del != -1) {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,frontFuncs));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
@@ -175,7 +179,7 @@ public class FrontFuncController extends BaseController {
     FrontFunc frontFunc = new FrontFunc().buildCreateInfo().fromMap(param);
     int insert = frontFunc.insert();
     if (insert != -1) {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,frontFunc));
     } else {
       return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
     }
@@ -196,7 +200,7 @@ public class FrontFuncController extends BaseController {
       FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
       update = modify.updateById();
       if (update != -1) {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,modify));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }

@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DataSetConfig;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -54,7 +55,7 @@ public class DataSetConfigController extends BaseController {
     DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
     int insert = dataSetConfig.insert();
     if (insert != -1) {
-      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,dataSetConfig));
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
     }
@@ -74,7 +75,7 @@ public class DataSetConfigController extends BaseController {
       DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
       update = dataSetConfig.updateById();
       if (update != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,dataSetConfig));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
@@ -91,13 +92,14 @@ public class DataSetConfigController extends BaseController {
    */
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
+    Condition condition = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<DataSetConfig> dataSetConfigs = dataSetConfigService.select(condition);
     ServerResult result = new ServerResult();
-    int del;
     if (!rowId.isEmpty()) {
       DataSetConfig dataSetConfig = new DataSetConfig();
-      del = dataSetConfig.deleteById(rowId);
+      int del = dataSetConfig.deleteById(rowId);
       if (del != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,dataSetConfigs));
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
@@ -115,11 +117,8 @@ public class DataSetConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search,
-                              @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                              String param,
-                              String order) {
+  public PlatResult queryPage(String search, Integer pageNum, Integer pageSize,
+                              String param,String order) {
     LinkedList<Order> orders = dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
@@ -128,11 +127,11 @@ public class DataSetConfigController extends BaseController {
     } else { // 如果没有param参数，则进行空格查询
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
-    PageResult<Map<String, Object>> result;
+    PageResult result;
     if (UtilsTool.isValid(pageNum)) {
       result = dataSetConfigService.selectPageMap(condition, orders, pageNum, pageSize);
     } else {
-      result = new PageResult(dataSetConfigService.selectMap(condition, orders));
+      result = new PageResult<>(dataSetConfigService.selectMap(condition, orders));
     }
 
     return result(new ServerResult<>(result));

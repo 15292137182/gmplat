@@ -54,7 +54,7 @@ public class BusinessObjectProController extends BaseController {
      * @param rowId 唯一标识
      * @return PlatResult
      */
-    @RequestMapping("/queryById")
+        @RequestMapping("/queryById")
     public PlatResult queryById(String rowId) {
         ServerResult result = new ServerResult();
         if (UtilsTool.isValid(rowId)) {
