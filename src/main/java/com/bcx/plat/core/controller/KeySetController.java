@@ -8,7 +8,6 @@ import com.bcx.plat.core.entity.KeySetPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.PlatResult;
@@ -110,11 +109,11 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryProPage(String rowId, String search, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult result = new ServerResult();
     LinkedList<Order> orders = UtilsTool.dataSort(KeySetPro.class, order);
     if (UtilsTool.isValid(rowId)) {
-      ServerResult serverResult = keySetService.queryProPage(search, rowId, pageNum, pageSize, orders);
+      ServerResult serverResult = keySetService.queryProPage(search, rowId, param, pageNum, pageSize, orders);
       return result(serverResult);
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
@@ -212,15 +211,21 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(KeySet.class, order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
+      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(KeySet.class, map);
+    } else {
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
     PageResult<Map<String, Object>> keySet; // 后续判断初始化
     //判断是否分页查询
     if (UtilsTool.isValid(pageSize)) { // 分页查询
-      keySet = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+      keySet = keySetService.selectPageMap(condition, orders, pageNum, pageSize);
     } else { // 查询所有
-      keySet = new PageResult(keySetService.selectMap(blankQuery, orders));
+      keySet = new PageResult(keySetService.selectMap(condition, orders));
     }
     return result(new ServerResult<>(keySet));
   }
