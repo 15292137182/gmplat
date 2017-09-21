@@ -345,7 +345,7 @@ gmpFormObj.prototype.request = function(callback) {
         data: data,
         success: function(res) {
             var arr = res.resp.content.data;
-            console.log(arr);
+            // console.log(arr);
             for (var j = 0; j < arr.length; j++) {
                 var obj = arr[j];
                 for (var k in obj) {
@@ -358,7 +358,7 @@ gmpFormObj.prototype.request = function(callback) {
                     // }
                 }
             }
-             console.log(that.formObj);
+             // console.log(that.formObj);
             if (callback) {
                 callback(res.resp.content.data);
             }

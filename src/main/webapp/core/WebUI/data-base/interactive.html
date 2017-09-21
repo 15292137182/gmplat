@@ -52,8 +52,8 @@
             //删除
             GmpTable.table.onDeleteRow = function (index, row) {
                 select_row = row;
-                console.log(select_row);
-                console.log(GmpTable.table.vueObj);
+//                console.log(select_row);
+//                console.log(GmpTable.table.vueObj);
                 deleteObj.del(function(){
                     var data = {
                         "url":serverPath+'/dataSetConfig/delete',//删除
