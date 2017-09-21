@@ -9,13 +9,12 @@ import com.bcx.plat.core.manager.TXManager;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.SequenceGenerateService;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,14 +52,19 @@ public class SequenceRuleConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult selectWithPage(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(SequenceRuleConfig.class, order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+  public PlatResult selectWithPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(SequenceRuleConfig.class, order);
+    Condition condition;
+    if (isValid(param)) { // 判断是否根据指定字段查询
+      condition = convertMapToAndConditionSeparatedByLike(SequenceRuleConfig.class, jsonToObj(param, Map.class));
+    } else {
+      condition = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));
+    }
     PageResult<Map<String, Object>> result;
-    if (UtilsTool.isValid(pageSize)) { // 如果有分页参数进行分页查询
-      result = sequenceRuleConfigService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+    if (isValid(pageNum)) { // 如果有分页参数进行分页查询
+      result = sequenceRuleConfigService.selectPageMap(condition, orders, pageNum, pageSize);
     } else { // 如果没有分页参数，查询全部
-      result = new PageResult(sequenceRuleConfigService.selectMap(blankQuery, orders));
+      result = new PageResult(sequenceRuleConfigService.selectMap(condition, orders));
     }
     return result(new ServerResult<>(result));
   }

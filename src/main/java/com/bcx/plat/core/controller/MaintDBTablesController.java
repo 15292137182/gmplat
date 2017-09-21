@@ -43,10 +43,22 @@ public class MaintDBTablesController extends BaseController {
   }
 
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(MaintDBTables.class,order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<MaintDBTables> maintDBTablesPageResult = maintDBTablesService.selectPage(blankQuery, orders, pageNum, pageSize);
+  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(MaintDBTables.class, order);
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(MaintDBTables.class, UtilsTool.jsonToObj(param, Map.class));
+    } else { // 根据空格查询
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+
+    PageResult<MaintDBTables> maintDBTablesPageResult;
+    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+      maintDBTablesPageResult = maintDBTablesService.selectPage(condition, orders, pageNum, pageSize);
+    } else {
+      maintDBTablesPageResult = new PageResult(maintDBTablesService.select(condition, orders));
+    }
+
     ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
     return result(pageResultServerResult);
   }

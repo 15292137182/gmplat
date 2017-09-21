@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
@@ -9,6 +8,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -16,7 +16,6 @@ import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,23 +68,29 @@ public class TemplateObjectController extends BaseController {
    * @return 返回查询结果
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryPropertiesPage(String rowId, String search,
-                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                        @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                        String order) {
-    //查询属性的搜索条件
-    Or blankQuery = search.isEmpty() ? null : UtilsTool.createBlankQuery(Arrays.asList("code", "cname", "ename", "valueType"), UtilsTool.collectToSet(search));
-    Condition condition;
-    if (UtilsTool.isValid(search)) {
-      condition = new ConditionBuilder(TemplateObjectPro.class)
-          .and().equal("templateObjRowId", rowId)
-          .or().addCondition(blankQuery).endOr()
-          .endAnd().buildDone();
-    } else {
-      condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();
-    }
+  public PlatResult queryPropertiesPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     List<Order> orders = dataSort(TemplateObjectPro.class, order);
-    PageResult<Map<String, Object>> result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
+    Condition condition;
+    if (isValid(param)) { // 判断是否根据指定字段查询
+      condition = new And(new FieldCondition("templateObjRowId", Operator.EQUAL, rowId),
+          convertMapToAndConditionSeparatedByLike(TemplateObjectPro.class, jsonToObj(param, Map.class)));
+    } else { // 根据空格查询
+      if (isValid(search)) {
+        condition = new ConditionBuilder(TemplateObjectPro.class)
+            .and().equal("templateObjRowId", rowId)
+            .or().addCondition(createBlankQuery(Arrays.asList("code", "cname", "ename", "valueType"), collectToSet(search))).endOr()
+            .endAnd().buildDone();
+      } else {
+        condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();
+      }
+    }
+
+    PageResult<Map<String, Object>> result;
+    if (isValid(pageNum)) { // 判断是否分页查询
+      result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
+    } else {
+      result = new PageResult(templateObjectProService.selectMap(condition, orders));
+    }
     // serverResult.setData(result);
     return result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
   }
@@ -125,10 +130,10 @@ public class TemplateObjectController extends BaseController {
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(TemplateObject.class, order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    Or blankQuery = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));
     PageResult<Map<String, Object>> pageResult;
 
-    if (UtilsTool.isValid(pageSize)) { // 分页查询
+    if (isValid(pageSize)) { // 分页查询
       pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);
     } else { // 查询所有
       pageResult = new PageResult(templateObjectService.selectMap(blankQuery, orders));
