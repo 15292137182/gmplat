@@ -36,8 +36,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class TemplateObjectProController extends BaseController {
 
   @Autowired
-  private
-  TemplateObjectProService templateObjectProService;
+  private TemplateObjectProService templateObjectProService;
 
   /**
    * 模板对象属性方法
@@ -68,8 +67,8 @@ public class TemplateObjectProController extends BaseController {
     ServerResult serverResult = new ServerResult();
     if (!proRowId.isEmpty()) {
       Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", proRowId).endAnd().buildDone();
-      List<TemplateObjectPro> select = templateObjectProService.select(condition);
-      return result(new ServerResult<>(select));
+      List<Map> maps = templateObjectProService.selectMap(condition);
+      return result(new ServerResult<>(maps));
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }

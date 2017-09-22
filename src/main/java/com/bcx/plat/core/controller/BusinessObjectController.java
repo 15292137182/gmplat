@@ -98,19 +98,19 @@ public class BusinessObjectController extends BaseController {
       List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
       if (null == list) {
         relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
-        List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
+        List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
         if (templateObjects.size() > 0) {
-          results.put("relateTemplate", templateObjects.get(0).getTemplateName());
+          results.put("relateTemplate", templateObjects.get(0).get("templateName"));
         }
       } else {
         StringBuilder templates = new StringBuilder();
         for (Object li : list) {
           String valueOf = String.valueOf(li);
           relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
-          List<TemplateObject> templateObjects = templateObjectService.select(relateCondition);
+          List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
           if (templateObjects.size() > 0) {
-            for (TemplateObject temp : templateObjects) {
-              templates.append(temp.getTemplateName()).append(",");
+            for (Map temp : templateObjects) {
+              templates.append(temp.get("templateName")).append(",");
             }
           }
         }

@@ -217,12 +217,12 @@ public class SequenceRuleConfigController extends BaseController {
   public Object queryById(String rowId) {
     if (isValid(rowId)) {
       List<Map> mapLists = sequenceRuleConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
-      List<SequenceGenerate> generates = sequenceGenerateService.select(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
-      if (generates.size() > 0) {
-        SequenceGenerate generate = generates.get(0);
+      List<Map> seqRowId = sequenceGenerateService.selectMap(new FieldCondition("seqRowId", Operator.EQUAL, rowId));
+      if (seqRowId.size() > 0) {
+        Map map = seqRowId.get(0);
         for (Map<String, Object> mapList : mapLists) {
-          mapList.put("currentValue", generate.getCurrentValue());
-          mapList.put("variableKey", generate.getVariableKey());
+          mapList.put("currentValue", map.get("currentValue"));
+          mapList.put("variableKey", map.get("variableKey"));
         }
         if (mapLists.size() == 0) {
           return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));

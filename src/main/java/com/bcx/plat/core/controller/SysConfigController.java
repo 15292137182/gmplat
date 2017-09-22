@@ -118,12 +118,12 @@ public class SysConfigController extends BaseController {
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(SysConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
-    List<SysConfig> sysConfigs = sysConfigService.select(condition);
+    List<Map> maps = sysConfigService.selectMap(condition);
     if (!rowId.isEmpty()) {
       SysConfig sysConfig = new SysConfig();
       int del = sysConfig.deleteById(rowId);
       if (del != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, sysConfigs));
+        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
       } else {
         return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }

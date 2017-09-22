@@ -63,13 +63,13 @@ public class FrontFuncProController extends
   public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
     ServerResult result = new ServerResult();
     String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));//关联对象属性
-    List<FrontFuncPro> rowId = frontFuncProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+    List<Map> rowId = frontFuncProService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
 
     int insert = -1;
     if (!UtilsTool.isValid(rowId)) { // 如果没有关联对象属性，进行新增
       //判断关联对象属性是属于基本属性还是模板属性
       //从模板对象属性表中查询是否存在此属性，如果存在，则attrSource="module"，否则attrSource="base"
-      List<TemplateObjectPro> templateObjectPros = templateObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+      List<Map> templateObjectPros = templateObjectProService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
       if (UtilsTool.isValid(templateObjectPros)) {
         paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_MODULE);
       } else {
@@ -99,8 +99,8 @@ public class FrontFuncProController extends
   public PlatResult singleQuery(String search, String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-      List<FrontFuncPro> frontFuncPros = frontFuncProService
-          .select(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+      List<Map> frontFuncPros = frontFuncProService
+          .selectMap(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
               UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
 //            frontFuncPros = queryResultProcess(frontFuncPros);
       if (frontFuncPros.size() == 0) {
@@ -160,7 +160,7 @@ public class FrontFuncProController extends
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
-    List<FrontFuncPro> frontFuncPros = frontFuncProService.select(condition);
+    List<Map> frontFuncPros = frontFuncProService.selectMap(condition);
     ServerResult result = new ServerResult();
     int del;
     if (!rowId.isEmpty()) {
@@ -212,7 +212,7 @@ public class FrontFuncProController extends
     ServerResult serverResult = new ServerResult();
     if (!rowId.isEmpty()) {
       Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
-      List<FrontFuncPro> select = frontFuncProService.select(condition);
+      List<Map> select = frontFuncProService.selectMap(condition);
       return result(new ServerResult<>(select));
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));

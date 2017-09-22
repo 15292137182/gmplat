@@ -56,7 +56,7 @@ public class MaintDBTablesController extends BaseController {
     if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
       maintDBTablesPageResult = maintDBTablesService.selectPage(condition, orders, pageNum, pageSize);
     } else {
-      maintDBTablesPageResult = new PageResult(maintDBTablesService.select(condition, orders));
+      maintDBTablesPageResult = new PageResult(maintDBTablesService.selectMap(condition, orders));
     }
 
     ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
@@ -91,7 +91,7 @@ public class MaintDBTablesController extends BaseController {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname"));
     Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).endAnd().buildDone();
-    List<MaintDBTables> select = maintDBTablesService.select(condition);
+    List<Map> select = maintDBTablesService.selectMap(condition);
     if (select.size() == 0) {
       MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
       int insert = maintDBTables.insert();

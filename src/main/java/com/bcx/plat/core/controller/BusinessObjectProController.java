@@ -129,10 +129,10 @@ public class BusinessObjectProController extends BaseController {
   public Object delete(String rowId) {
     //通过rowId查询数据
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
-    List<BusinessObjectPro> businessObjectPros = businessObjectProService.select(condition);
+    List<Map> businessObjectPros = businessObjectProService.selectMap(condition);
 
     ServerResult result = new ServerResult();
-    List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
+    List<Map> frontFuncPros = frontFuncProService.selectMap(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
     int del;
     if (frontFuncPros.size() == 0) {
       BusinessObjectPro businessObjectPro = new BusinessObjectPro();

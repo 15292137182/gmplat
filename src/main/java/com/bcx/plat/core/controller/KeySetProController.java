@@ -133,7 +133,7 @@ public class KeySetProController extends BaseController {
     ServerResult serverResult = new ServerResult();
     if (!rowId.isEmpty()) {
       Condition condition = new ConditionBuilder(KeySetPro.class).and().equal("rowId", rowId).endAnd().buildDone();
-      List<KeySetPro> select = keySetProService.select(condition);
+      List<Map> select = keySetProService.selectMap(condition);
       return result(new ServerResult<>(select));
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));

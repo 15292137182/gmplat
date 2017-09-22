@@ -145,7 +145,7 @@ public class DataSetConfigController extends BaseController {
   @RequestMapping("/queryById")
   public Object queryById(String rowId) {
     ServerResult serverResult = new ServerResult();
-    List result = dataSetConfigService.select(new FieldCondition("rowId", Operator.EQUAL, rowId));
+    List result = dataSetConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
     if (result.size() == 0) {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
