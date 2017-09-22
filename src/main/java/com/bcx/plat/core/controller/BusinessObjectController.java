@@ -4,8 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.BusinessRelateTemplate;
 import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -84,7 +82,7 @@ public class BusinessObjectController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String param, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(BusinessObject.class, order);
+    LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     Condition relateCondition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
@@ -136,7 +134,7 @@ public class BusinessObjectController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(BusinessObjectPro.class, order);
+    LinkedList<Order> orders = UtilsTool.dataSort(order);
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
@@ -178,7 +176,7 @@ public class BusinessObjectController extends BaseController {
     String rowId = paramEntity.get("rowId").toString();
     ServerResult serverResult = null;
     if (UtilsTool.isValid(rowId)) {
-      BusinessObject businessObject = new BusinessObject().buildModifyInfo().fromMap(paramEntity);
+      BusinessObject businessObject = new BusinessObject().fromMap(paramEntity);
       businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
       serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObject);
     }
@@ -214,7 +212,7 @@ public class BusinessObjectController extends BaseController {
   public PlatResult queryTemplate(String rowId, String order) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-      LinkedList<Order> orders = UtilsTool.dataSort(BusinessRelateTemplate.class, order);
+      LinkedList<Order> orders = UtilsTool.dataSort(order);
       ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
       if (serverResult != null) {
         return super.result(serverResult);
@@ -232,17 +230,19 @@ public class BusinessObjectController extends BaseController {
    * 通用状态生效方法
    *
    * @param rowId 接受的唯一标示
-   * @return
+   * @return PlatResult
    */
   @RequestMapping("/takeEffect")
-  public Object updateTakeEffect(String rowId) {
+  public PlatResult updateTakeEffect(String rowId) {
     HashMap<String, Object> map = new HashMap<>();
-    map.put("rowId", rowId);
     map.put("status", BaseConstants.TAKE_EFFECT);
-    map.put("modifyTime", UtilsTool.getDateTimeNow());
     BusinessObject businessObject = new BusinessObject();
-//    businessObject.setBaseTemplateBean();
-//    businessObjectService.update()
-    return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, map));
+    businessObject.setEtc(map);
+    Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
+    int update = businessObject.update(condition);
+    if (-1 != update) {
+      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, map));
+    }
+    return result(new ServerResult<>(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL, map));
   }
 }

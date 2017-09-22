@@ -269,13 +269,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       String objectCode = businessObjectList.get(0).getObjectCode();
       businessObject.setObjectCode(objectCode);
       businessObject.insert();
-//            insert(businessObject.toMap());
-
-      oldRowId.put("rowId", rowId);
       oldRowId.put("status", BaseConstants.INVALID);
-      oldRowId.put("changeOperat", BaseConstants.CHANGE_OPERAT_SUCCESS);
-
-//            update(oldRowId);
+      Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
+      businessObjects.get(0).setEtc(oldRowId);
+      businessObjects.get(0).setRowId(rowId);
+      businessObjects.get(0).setChangeOperat(BaseConstants.CHANGE_OPERAT_SUCCESS);
+      int update = businessObjects.get(0).update(condition);
       return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
     } else {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
