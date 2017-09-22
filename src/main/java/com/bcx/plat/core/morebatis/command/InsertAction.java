@@ -20,9 +20,9 @@ public class InsertAction {
   private SqlComponentTranslator translator;
   private MoreBatis app;
 
-  public InsertAction(MoreBatis app,SqlComponentTranslator translator) {
-    this.app=app;
-    this.translator=translator;
+  public InsertAction(MoreBatis app, SqlComponentTranslator translator) {
+    this.app = app;
+    this.translator = translator;
   }
 
   public SqlComponentTranslator getTranslator() {
@@ -93,12 +93,12 @@ public class InsertAction {
     return this;
   }
 
-  public InsertAction values(Map<String, Object> ... row) {
+  public InsertAction values(Map<String, Object>... row) {
     setRows(Arrays.asList(row));
     return this;
   }
 
-  public int execute(){
+  public int execute() {
     return app.execute(this);
   }
 }

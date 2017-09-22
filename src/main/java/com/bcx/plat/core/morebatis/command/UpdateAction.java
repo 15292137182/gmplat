@@ -2,12 +2,9 @@ package com.bcx.plat.core.morebatis.command;
 
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
-import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-
-import java.util.Collection;
 import java.util.Map;
 
 public class UpdateAction {
@@ -19,7 +16,7 @@ public class UpdateAction {
   private MoreBatis app;
   private SqlComponentTranslator translator;
 
-  public UpdateAction(MoreBatis app,SqlComponentTranslator translator) {
+  public UpdateAction(MoreBatis app, SqlComponentTranslator translator) {
     this.app = app;
     this.translator = translator;
   }
@@ -75,7 +72,7 @@ public class UpdateAction {
     return this;
   }
 
-  public int execute(){
+  public int execute() {
     return app.execute(this);
   }
 }

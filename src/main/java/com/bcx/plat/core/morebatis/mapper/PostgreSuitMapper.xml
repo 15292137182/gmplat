@@ -9,14 +9,16 @@
     <where>
       <foreach collection="translator.translate(where)" item="i">
         <choose>
-          <when test="i instanceof com.bcx.plat.core.morebatis.cctv1.SqlSegment">${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.segment)}</when>
+          <when test="i instanceof com.bcx.plat.core.morebatis.cctv1.SqlSegment">
+            ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.segment)}
+          </when>
           <when test="i instanceof java.util.Collection">
             <foreach collection="i" separator="," item="item" open="(" close=")">
               #{item}
             </foreach>
           </when>
           <when test="i instanceof com.bcx.plat.core.morebatis.phantom.AliasedColumn">
-          <!--这个地方以后要把column解析搬走-->
+            <!--这个地方以后要把column解析搬走-->
             ${@com.bcx.plat.core.utils.UtilsTool@camelToUnderline(i.fieldSource)}
           </when>
           <otherwise>#{i}</otherwise>

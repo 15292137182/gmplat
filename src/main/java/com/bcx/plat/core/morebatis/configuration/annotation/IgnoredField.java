@@ -11,5 +11,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IgnoredField {
-    boolean value() default true;
+
+  boolean value() default true;
 }

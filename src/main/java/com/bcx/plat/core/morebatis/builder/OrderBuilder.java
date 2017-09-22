@@ -6,10 +6,10 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.SubAttribute;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.utils.SpringContextHolder;
-
 import java.util.LinkedList;
 
 public class OrderBuilder {
+
   private Class entityClass;
 
   private static final MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");

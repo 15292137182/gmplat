@@ -144,7 +144,8 @@ public class SqlHelper {
   /**
    * 根据类型替换参数 仅作为数字和字符串两种类型进行处理，需要特殊处理的可以继续完善这里
    */
-  private static String replaceParameter(String sql, Object value, JdbcType jdbcType,Class javaType) {
+  private static String replaceParameter(String sql, Object value, JdbcType jdbcType,
+      Class javaType) {
     String strValue = String.valueOf(value);
     if (jdbcType != null) {
       switch (jdbcType) {

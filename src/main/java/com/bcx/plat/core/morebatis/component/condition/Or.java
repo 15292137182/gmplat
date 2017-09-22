@@ -9,7 +9,7 @@ import java.util.List;
 public class Or implements ChainCondition<Or> {
 
   List<Condition> conditions;
-  boolean not=false;
+  boolean not = false;
 
   @Override
   public boolean isNot() {
@@ -28,8 +28,8 @@ public class Or implements ChainCondition<Or> {
     this.conditions = conditions;
   }
 
-  public Or(Condition ... conditions) {
-    LinkedList<Condition> list=new LinkedList<>();
+  public Or(Condition... conditions) {
+    LinkedList<Condition> list = new LinkedList<>();
     list.addAll(Arrays.asList(conditions));
     this.conditions = list;
   }

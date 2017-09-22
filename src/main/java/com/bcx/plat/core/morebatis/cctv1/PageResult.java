@@ -3,6 +3,7 @@ package com.bcx.plat.core.morebatis.cctv1;
 import java.util.List;
 
 public class PageResult<T> {
+
   long total;
   int pageNum;
   int pageSize;

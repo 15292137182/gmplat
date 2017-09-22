@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface SuitMapper {
 
-  List<Map<String,Object>> plainSelect(List list);
+  List<Map<String, Object>> plainSelect(List list);
 
   int plainDelete(List list);
 
@@ -23,7 +23,7 @@ public interface SuitMapper {
    * @param queryActionLite 查询参数
    * @return 查询结果
    */
-  List<Map<String,Object>> select(QueryAction queryActionLite);
+  List<Map<String, Object>> select(QueryAction queryActionLite);
 
 
   int insert(InsertAction insertAction);

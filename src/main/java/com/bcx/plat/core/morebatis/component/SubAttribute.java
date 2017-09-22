@@ -2,28 +2,29 @@ package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 
-public class SubAttribute implements FieldSource<SubAttribute>{
-    FieldSource field;
-    String key;
+public class SubAttribute implements FieldSource<SubAttribute> {
 
-    public SubAttribute(FieldSource field, String key) {
-        this.field = field;
-        this.key = key;
-    }
+  FieldSource field;
+  String key;
 
-    public FieldSource getField() {
-        return field;
-    }
+  public SubAttribute(FieldSource field, String key) {
+    this.field = field;
+    this.key = key;
+  }
 
-    public void setField(FieldSource field) {
-        this.field = field;
-    }
+  public FieldSource getField() {
+    return field;
+  }
 
-    public String getKey() {
-        return key;
-    }
+  public void setField(FieldSource field) {
+    this.field = field;
+  }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+  public String getKey() {
+    return key;
+  }
+
+  public void setKey(String key) {
+    this.key = key;
+  }
 }

@@ -1,9 +1,7 @@
 package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
-import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import java.util.LinkedList;
 
 public class Table implements TableSource<Table> {
 
@@ -13,16 +11,17 @@ public class Table implements TableSource<Table> {
 
   private SqlSegment sqlSegment;
 
-  public Table(){}
+  public Table() {
+  }
 
   public Table(String tableName) {
     this.tableName = tableName;
-    sqlSegment=new SqlSegment(getTableName());
+    sqlSegment = new SqlSegment(getTableName());
   }
 
-  public Table(String schema,String tableName) {
+  public Table(String schema, String tableName) {
     this.tableName = tableName;
-    this.schema=schema;
+    this.schema = schema;
   }
 
   public String getTableName() {
@@ -31,7 +30,7 @@ public class Table implements TableSource<Table> {
 
   public void setTableName(String tableName) {
     this.tableName = tableName;
-    sqlSegment=new SqlSegment(getTableName());
+    sqlSegment = new SqlSegment(getTableName());
   }
 
   public String getSchema() {

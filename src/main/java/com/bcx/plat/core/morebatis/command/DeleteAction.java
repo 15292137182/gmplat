@@ -12,7 +12,7 @@ public class DeleteAction {
   private MoreBatis app;
   private SqlComponentTranslator translator;
 
-  public DeleteAction(MoreBatis app,SqlComponentTranslator translator) {
+  public DeleteAction(MoreBatis app, SqlComponentTranslator translator) {
     this.app = app;
     this.translator = translator;
   }
@@ -47,7 +47,7 @@ public class DeleteAction {
     return this;
   }
 
-  public int execute(){
+  public int execute() {
     return app.execute(this);
   }
 }

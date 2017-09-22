@@ -13,9 +13,10 @@ public class ConditionBuilder implements ConditionSequence {
 
   private ConditionBuilderContext conditionBuilderContext;
 
-  private static final MoreBatis moreBatis= SpringContextHolder.getBean("moreBatis");
+  private static final MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
 
-  public ConditionBuilder(Class<? extends BeanInterface> entityClass,String defaultMapColumnAlias) {
+  public ConditionBuilder(Class<? extends BeanInterface> entityClass,
+      String defaultMapColumnAlias) {
     conditionBuilderContext = new ConditionBuilderContext(entityClass);
   }
 
@@ -26,7 +27,8 @@ public class ConditionBuilder implements ConditionSequence {
   public static void main(String[] args) throws IllegalAccessException {
     Condition testCondition = new ConditionBuilder(BusinessObject.class).and()
         .equal("changeOperat", 10).notNull("changeOperat").or()
-        .or().isNull("deleteFlag").endOr().equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG).endOr()
+        .or().isNull("deleteFlag").endOr().equal("deleteFlag", BaseConstants.NOT_DELETE_FLAG)
+        .endOr()
         .endAnd().buildDone();
     testCondition.hashCode();
   }

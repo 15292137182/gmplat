@@ -10,7 +10,7 @@ public class And implements ChainCondition<And> {
 
   List<Condition> conditions;
 
-  boolean not=false;
+  boolean not = false;
 
   @Override
   public boolean isNot() {
@@ -29,8 +29,8 @@ public class And implements ChainCondition<And> {
     this.conditions = conditions;
   }
 
-  public And(Condition ... conditions) {
-    LinkedList<Condition> list=new LinkedList<>();
+  public And(Condition... conditions) {
+    LinkedList<Condition> list = new LinkedList<>();
     list.addAll(Arrays.asList(conditions));
     setConditions(list);
   }

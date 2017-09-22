@@ -1,45 +1,51 @@
 package com.bcx.plat.core.morebatis.app;
 
-import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.base.BaseORM;
+import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
+
 import com.bcx.plat.core.base.support.BeanInterface;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
-import com.bcx.plat.core.morebatis.component.*;
+import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.JoinTable;
+import com.bcx.plat.core.morebatis.component.SubAttribute;
+import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.configuration.builder.EntityEntryBuilder;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
-import com.bcx.plat.core.morebatis.phantom.*;
-import com.bcx.plat.core.morebatis.translator.Translator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.FieldSource;
+import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.UtilsTool;
-import com.github.pagehelper.Page;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
-
 @Component
-public class MoreBatisImpl implements MoreBatis{
+public class MoreBatisImpl implements MoreBatis {
 
   private SuitMapper suitMapper;
   private SqlComponentTranslator translator;
-//  private Translator translator = new Translator();
+  //  private Translator translator = new Translator();
   private Map<Class, Collection<Field>> entityColumns;
   private Map<Class, Collection<Field>> entityPks;
   private Map<Class, Map<String, Field>> aliasMap;
   private Map<Class, TableSource> entityTables;
   private String defaultMapColumnAlias = "etc";
+
   public MoreBatisImpl(SuitMapper suitMapper, SqlComponentTranslator translator,
-                       Collection entityEntries,String defaultMapColumnAlias) {
+      Collection entityEntries, String defaultMapColumnAlias) {
 //    if (defaultMapColumnAlias==null)
     this.suitMapper = suitMapper;
     this.translator = translator;
@@ -50,10 +56,10 @@ public class MoreBatisImpl implements MoreBatis{
     for (Object entry : entityEntries) {
       EntityEntry entityEntry;
       if (entry instanceof EntityEntry) {
-        entityEntry= (EntityEntry) entry;
-      }else if(entry instanceof EntityEntryBuilder){
-        entityEntry= ((EntityEntryBuilder) entry).getEntry();
-      }else{
+        entityEntry = (EntityEntry) entry;
+      } else if (entry instanceof EntityEntryBuilder) {
+        entityEntry = ((EntityEntryBuilder) entry).getEntry();
+      } else {
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
 
       }
@@ -68,16 +74,18 @@ public class MoreBatisImpl implements MoreBatis{
       for (Field Field : entityEntry.getFields()) {
         aliasMap.put(Field.getAlias(), Field);
       }
-      entityColumns.put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getFields())));
+      entityColumns.put(entryClass,
+          immute(bindWithTable((Table) entityEntryTable, entityEntry.getFields())));
       entityTables.put(entryClass, entityEntryTable);
-      entityPks.put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getPks())));
+      entityPks
+          .put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getPks())));
     }
   }
 
   /**
    * 获取实体类全部主键字段
+   *
    * @param entityClass 实体类class
-   * @return
    */
   public Collection<Field> getPks(Class entityClass) {
     return entityPks.get(entityClass);
@@ -85,8 +93,8 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 获取实体类全部字段
+   *
    * @param entityClass 实体类class
-   * @return
    */
   public Collection<Field> getColumns(Class entityClass) {
     return entityColumns.get(entityClass);
@@ -94,8 +102,8 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 获取实体类对应表
+   *
    * @param entityClass 实体类class
-   * @return
    */
   public TableSource getTable(Class entityClass) {
     return entityTables.get(entityClass);
@@ -116,16 +124,16 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
+   *
    * @param entityClass 实体类
-   * @param alias       实体类属性名称
-   * @return
+   * @param alias 实体类属性名称
    */
   public FieldSource getColumnOrEtcByAlias(Class entityClass, String alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
     try {
       FieldSource result = entityColumn.get(alias);
-      if (result==null) {
-        result = new SubAttribute(getColumnByAlias(entityClass,getDefaultMapColumnAlias()),alias);
+      if (result == null) {
+        result = new SubAttribute(getColumnByAlias(entityClass, getDefaultMapColumnAlias()), alias);
       }
       return result;
     } catch (NullPointerException e) {
@@ -135,9 +143,9 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
+   *
    * @param entityClass 实体类
-   * @param alias       实体类属性名称
-   * @return
+   * @param alias 实体类属性名称
    */
   public List<Field> getColumnByAlias(Class entityClass, Collection<String> alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
@@ -172,6 +180,7 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 插入一个实体类
+   *
    * @param entity 要插入的实体类
    * @return 返回插入的结果标识
    */
@@ -183,89 +192,93 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 根据主键删除一个实体类
-   * @param entity  要更新的实体类
-   * @return
+   *
+   * @param entity 要更新的实体类
    */
   public <T extends BeanInterface<T>> int deleteEntity(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
-            .collect(Collectors.toList());
+        .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
+        .collect(Collectors.toList());
     return this.deleteStatement().from(table).where(new And(pkConditions)).execute();
   }
 
   /**
    * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
+   *
+   * @param entity 要更新的实体类
    */
   public <T extends BeanInterface<T>> int updateEntity(T entity) {
     final Class entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
-            .collect(Collectors.toList());
+        .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
+        .collect(Collectors.toList());
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
   /**
    * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
+   *
+   * @param entity 要更新的实体类
    */
-  public <T extends BeanInterface<T>> int updateEntity(T entity,Object excluded) {
+  public <T extends BeanInterface<T>> int updateEntity(T entity, Object excluded) {
     final Class entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     final Map<String, Object> values = entity.toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
-      if (value!=excluded) valuesCopy.put(entry.getKey(),entry.getValue());
+      if (value != excluded) {
+        valuesCopy.put(entry.getKey(), entry.getValue());
+      }
     }
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
-            .collect(Collectors.toList());
+        .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
+        .collect(Collectors.toList());
     return this.update(entityClass, values).where(new And(pkConditions)).execute();
   }
 
 
   /**
    * 根据主键更新一个实体类
-   * @param entity  要更新的实体类
-   * @return
+   *
+   * @param entity 要更新的实体类
    */
-  public <T extends BeanInterface<T>> int updateEntity(T entity,Collection excluded) {
+  public <T extends BeanInterface<T>> int updateEntity(T entity, Collection excluded) {
     final Class entityClass = entity.getClass();
     Collection<Field> pks = entityPks.get(entityClass);
     Map<String, Object> values = entity.toDbMap();
     final Map<String, Object> valuesCopy = new HashMap<>();
     for (Map.Entry<String, Object> entry : values.entrySet()) {
       final Object value = entry.getValue();
-      if (!excluded.contains(value)) valuesCopy.put(entry.getKey(),entry.getValue());
+      if (!excluded.contains(value)) {
+        valuesCopy.put(entry.getKey(), entry.getValue());
+      }
     }
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
-            .collect(Collectors.toList());
+        .map((pk) -> new FieldCondition(pk, Operator.EQUAL, valuesCopy.get(pk.getAlias())))
+        .collect(Collectors.toList());
     return this.update(entityClass, valuesCopy).where(new And(pkConditions)).execute();
   }
 
   /**
    * 根据主键查找对象
+   *
    * @param entity 入数据
-   * @return
    */
   public <T extends BeanInterface<T>> T selectEntityByPks(T entity) {
     Collection<Field> pks = entityPks.get(entity.getClass());
     TableSource table = entityTables.get(entity.getClass());
     Map<String, Object> values = entity.toDbMap();
     List<Condition> pkConditions = pks.stream()
-            .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
-            .collect(Collectors.toList());
+        .map((pk) -> new FieldCondition(pk, Operator.EQUAL, values.get(pk.getAlias())))
+        .collect(Collectors.toList());
     List<Map<String, Object>> result = this.select(entity.getClass())
-            .where(new And(pkConditions)).execute();
+        .where(new And(pkConditions)).execute();
     if (result.size() == 1) {
       HashMap<String, Object> _obj = new HashMap<>();
       result.get(0).forEach((key, value) -> _obj.put(underlineToCamel(key, false), value));
@@ -277,40 +290,42 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 单表查询
-   * @param entity  要查询的实体类class
-   * @return
+   *
+   * @param entity 要查询的实体类class
    */
   public QueryAction select(Class entity) {
     final Collection columns = entityColumns.get(entity);
     return selectStatement().select(columns)
-            .from(entityTables.get(entity));
+        .from(entityTables.get(entity));
   }
 
   /**
    * 两个表的inner join查询
-   * @param primary           主表class对象
-   * @param secondary         从表class对象
-   * @param relationPrimary   主表中与从表关联的字段
+   *
+   * @param primary 主表class对象
+   * @param secondary 从表class对象
+   * @param relationPrimary 主表中与从表关联的字段
    * @param relationSecondary 从表中与主表关联的字段
    * @return 未设置条件的查询语句对象
    */
   public QueryAction select(Class primary,
-                            Class secondary, String relationPrimary, String relationSecondary) {
+      Class secondary, String relationPrimary, String relationSecondary) {
     return select(primary, secondary, relationPrimary, relationSecondary, JoinType.INNER_JOIN);
   }
 
 
   /**
    * 两个表join查询
-   * @param primary           主表class对象
-   * @param secondary         从表class对象
-   * @param relationPrimary   主表中与从表关联的字段
+   *
+   * @param primary 主表class对象
+   * @param secondary 从表class对象
+   * @param relationPrimary 主表中与从表关联的字段
    * @param relationSecondary 从表中与主表关联的字段
-   * @param joinType          join类型
+   * @param joinType join类型
    * @return 未设置条件的查询语句对象
    */
   public QueryAction select(Class primary,
-                            Class secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
+      Class secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
     HashMap<String, Field> columns = new HashMap<>();
     for (Field Field : entityColumns.get(primary)) {
       columns.put(Field.getAlias(), Field);
@@ -322,15 +337,15 @@ public class MoreBatisImpl implements MoreBatis{
     Field secondaryField = getColumnByAlias(secondary, relationSecondary);
     final Collection values = columns.values();
     return selectStatement().select(values).from(
-            new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
-                    .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
+        new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
+            .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
 
   private QueryAction select(Class entity, List<String> columns) {
     Map<String, Field> columnMap = aliasMap.get(entity);
     return selectStatement().select(columns.stream().map(columnMap::get)
-            .collect(Collectors.toList()))
-            .from(entityTables.get(entity));
+        .collect(Collectors.toList()))
+        .from(entityTables.get(entity));
   }
 
   public QueryAction selectStatement() {
@@ -339,9 +354,9 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 更新操作（未设置条件）
+   *
    * @param entity 实体类的对象
-   * @param value  要更新的值(支持null)
-   * @return
+   * @param value 要更新的值(支持null)
    */
   public UpdateAction update(Class entity, Map<String, Object> value) {
     UpdateAction update = updateStatement().from(entityTables.get(entity)).set(value);
@@ -351,9 +366,9 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 多行插入
+   *
    * @param entity 实体类的class
    * @param values 插入数据库的多行数据
-   * @return
    */
   public InsertAction insert(Class entity, List<Map<String, Object>> values) {
     InsertAction insertAction = insertStatement().values(values);
@@ -363,8 +378,9 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 单行插入
+   *
    * @param entity 实体类的class
-   * @param value  插入数据库的单行数据
+   * @param value 插入数据库的单行数据
    * @return 未执行的插入语句对象
    */
   public InsertAction insert(Class entity, Map<String, Object> value) {
@@ -375,10 +391,11 @@ public class MoreBatisImpl implements MoreBatis{
 
   /**
    * 删除(未设置条件)
+   *
    * @param entity 实体类的class
    * @return 未设置条件的删除语句对象
    */
-  public DeleteAction delete(Class entity){
+  public DeleteAction delete(Class entity) {
     return deleteStatement().from(getTable(entity));
   }
 
@@ -405,9 +422,9 @@ public class MoreBatisImpl implements MoreBatis{
       PGobject etcObj = (PGobject) row.remove("etc");
       if (etcObj != null) {
         HashMap etcMap = UtilsTool.jsonToObj(etcObj.toString(), HashMap.class);
-        row.put("etc",etcMap);
-        etcMap.forEach((k,v)->{
-          row.putIfAbsent((String) k,v);
+        row.put("etc", etcMap);
+        etcMap.forEach((k, v) -> {
+          row.putIfAbsent((String) k, v);
         });
       }
     });

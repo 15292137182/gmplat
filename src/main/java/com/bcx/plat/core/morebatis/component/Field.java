@@ -1,13 +1,13 @@
 package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
-import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * 普通字段
  */
 public class Field implements AliasedColumn {
+
   /**
    * 所在表
    */
@@ -22,7 +22,8 @@ public class Field implements AliasedColumn {
    */
   private String alias;
 
-  public Field(){}
+  public Field() {
+  }
 
   public Field(String alias) {
     this.fieldName = UtilsTool.camelToUnderline(alias);
@@ -34,8 +35,8 @@ public class Field implements AliasedColumn {
     this.alias = alias;
   }
 
-  public Field(Table table,String fieldName, String alias) {
-    this.table=table;
+  public Field(Table table, String fieldName, String alias) {
+    this.table = table;
     this.fieldName = fieldName;
     this.alias = alias;
   }

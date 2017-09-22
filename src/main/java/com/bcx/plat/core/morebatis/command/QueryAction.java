@@ -8,7 +8,6 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import java.util.Arrays;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryAction {
+
   private Collection<AliasedColumn> aliasedColumns;
   private TableSource tableSource;
   private Condition where;
@@ -25,7 +25,7 @@ public class QueryAction {
   private SqlComponentTranslator translator;
   private MoreBatis app;
 
-  public QueryAction( MoreBatis app,SqlComponentTranslator translator) {
+  public QueryAction(MoreBatis app, SqlComponentTranslator translator) {
     this.app = app;
     this.translator = translator;
   }
@@ -77,7 +77,7 @@ public class QueryAction {
     return this;
   }
 
-  public QueryAction orderBy(Order ... order) {
+  public QueryAction orderBy(Order... order) {
     setOrder(Arrays.asList(order));
     return this;
   }
@@ -87,7 +87,7 @@ public class QueryAction {
     return this;
   }
 
-  public QueryAction groupBy(FieldSource ... fieldSources) {
+  public QueryAction groupBy(FieldSource... fieldSources) {
     setGroup(Arrays.asList(fieldSources));
     return this;
   }
@@ -113,7 +113,7 @@ public class QueryAction {
     this.tableSource = tableSource;
   }
 
-  public PageResult<Map<String, Object>> selectPage(int pageNum,int pageSize){
+  public PageResult<Map<String, Object>> selectPage(int pageNum, int pageSize) {
     PageHelper.startPage(pageNum, pageSize);
     List<Map<String, Object>> result = execute();
     PageInfo pageInfo = new PageInfo(result);
@@ -124,7 +124,7 @@ public class QueryAction {
     return pageResult;
   }
 
-  public List<Map<String, Object>> execute(){
+  public List<Map<String, Object>> execute() {
     return app.execute(this);
   }
 }

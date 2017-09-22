@@ -2,15 +2,16 @@ package com.bcx.plat.core.morebatis.component;
 
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 
-public class Order{
-  public static final int DESC=0,ASC=1;
+public class Order {
+
+  public static final int DESC = 0, ASC = 1;
 
   private Object source;
 
-  private int order=DESC;
+  private int order = DESC;
 
   public Order(FieldSource fieldSource, int order) {
-    this.source=fieldSource;
+    this.source = fieldSource;
     this.order = order;
   }
 
