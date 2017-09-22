@@ -82,7 +82,12 @@ Vue.component("single-selection", {
         },
         // 级联下拉框方法
         setValue(val) {
-            this.value = val;
+            // console.log(val);
+            if(this.isMultiple) {
+                console.log(val);
+            }else {
+                this.value = val;
+            }
         },
         // 级联改变url
         setUrl(_json) {

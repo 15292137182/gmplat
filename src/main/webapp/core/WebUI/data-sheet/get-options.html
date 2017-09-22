@@ -28,7 +28,7 @@
                 </single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
-                <single-selection @change-data="getData_1" :initial="initial_4"></single-selection>
+                <single-selection @change-data="getData_1" ref="multiple" :initial="initial_4"></single-selection>
             </el-col>
             <el-col :span="6" :offset="9" style="margin-top: 20px;">
                 <el-button type="info" @click="getMultiple">获取</el-button>
@@ -78,7 +78,7 @@
                 }
             },
             created() {
-                this.change();
+//                this.change();
             },
             methods: {
                 change() {
@@ -101,7 +101,8 @@
                 },
                 getData_1(data) {
                     console.log(data);
-                    vm.initial_4.value = data;
+//                    vm.initial_4.value = data;
+                    this.$refs.multiple.setValue('["23ae8e2c-fbef-477e-8d9a-6d46d5b1", "f2c376f2-7097-42b3-ad65-0ec197ad"]')
                 },
                 getMultiple() {
                     console.log(vm.initial_4.value);
