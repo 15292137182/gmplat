@@ -35,7 +35,7 @@
         gmp_onload = function () {
             // 加载数据
             GmpTable.table.reload({
-                queryUrl: serverPath + '/dataSetConfig/queryPage',
+                queryUrl: serverPath + '/dynamicTemplate/queryPage',
                 queryParam: {
                     search:"",
                     pageSize:"10",
@@ -56,7 +56,7 @@
 //                console.log(GmpTable.table.vueObj);
                 deleteObj.del(function(){
                     var data = {
-                        "url":serverPath+'/dataSetConfig/delete',//删除
+                        "url":serverPath+'/dynamicTemplate/delete',//删除
                         "jsonData":{
                             rowId:select_row.rowId
                         },
@@ -64,7 +64,7 @@
                     }
                     gmpAjax.showAjax(data,function(res){
                         GmpTable.table.reload({
-                            queryUrl: serverPath + '/dataSetConfig/queryPage',
+                            queryUrl: serverPath + '/dynamicTemplate/queryPage',
                             queryParam: {
                                 search:"",
                                 pageSize:"10",
@@ -77,7 +77,7 @@
 
             // 搜索
             GmpSearch.searchs.setOptions({
-                selUrl: serverPath + '/dataSetConfig/queryPage'
+                selUrl: serverPath + '/dynamicTemplate/queryPage'
             });
         };
 

@@ -40,7 +40,7 @@
             var _rowId = select_row.rowId;
             // 设置取值url param
             GmpForm.formTable.setOptions({
-                postUrl: serverPath + "/dataSetConfig/queryById",
+                postUrl: serverPath + "/dynamicTemplate/queryById",
                 postParam: {
                     rowId: _rowId
                 }
@@ -76,13 +76,13 @@
                 if(add.flag == "add") {
                     // 获取页面数据
                     var _json = {
-                        formUrl: serverPath + "/dataSetConfig/add",
+                        formUrl: serverPath + "/dynamicTemplate/add",
                         data: GmpForm.formTable.getData().data
                     };
                     GmpForm.formTable.submit(_json, function() {
                         // 成功回调
                         GmpTable.table.reload({
-                            queryUrl: serverPath+'/dataSetConfig/queryPage',
+                            queryUrl: serverPath+'/dynamicTemplate/queryPage',
                             queryParam: {
                                 search:"",
                                 pageSize:"10",
@@ -95,7 +95,7 @@
                 }else {
                     // 获取页面数据
                     var _json = {
-                        formUrl: serverPath + "/dataSetConfig/modify",
+                        formUrl: serverPath + "/dynamicTemplate/modify",
                         data: GmpForm.formTable.getData().data
                     };
                     // 获取当前行rowId
@@ -103,7 +103,7 @@
                     GmpForm.formTable.submit(_json, function() {
                         // 成功回调
                         GmpTable.table.reload({
-                            queryUrl: serverPath+'/dataSetConfig/queryPage',
+                            queryUrl: serverPath+'/dynamicTemplate/queryPage',
                             queryParam: {
                                 search:"",
                                 pageSize:"10",

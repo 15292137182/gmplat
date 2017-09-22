@@ -13,7 +13,7 @@ var pagingObj = (function(){
             dataType:"json",
             xhrFields: {withCredentials: true},
             success:function(res){
-                console.log(res);
+                // console.log(res);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.state==-1){
@@ -357,7 +357,7 @@ var queryData = (function(){
             dataType:"json",
             xhrFields: {withCredentials: true},
             success:function(res){
-                console.log(res);
+                // console.log(res);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.data!=null){
@@ -501,11 +501,11 @@ var gmpAjax = (function(){
             xhrFields: {withCredentials: true},
             dataType:"json",
             success:function(res){
-                console.log(res);
+                // console.log(res);
                 if(res.resp.respCode=='000'){
                     if(res.resp.content.state==1){
                         if (typeof callback == "function") {
-                            console.log(res);
+                            // console.log(res);
                             callback(res.resp.content);
                             if(data.showMsg){
                                 showMsg.MsgOk(data.obj,res.resp.content.msg);
@@ -521,8 +521,8 @@ var gmpAjax = (function(){
                 }
             },
             error:function(res){
-                console.log(res);
-                    data.obj.$message.error("操作失败");
+                // console.log(res);
+                data.obj.$message.error("操作失败");
             }
         })
     }
@@ -681,9 +681,9 @@ var DynamicStitching = (function(){
         select:'',
         click:function(){//父组件查询块按钮事件
             var obj = dataHtmlObj;
-            console.log(obj.ruleForm1.select);
+            // console.log(obj.ruleForm1.select);
             for(var j=0;j<searchBlockArr.length;j++){
-                console.log(obj.ruleForm1[searchBlockArr[j]]);
+                // console.log(obj.ruleForm1[searchBlockArr[j]]);
             }
         }
     }
@@ -1706,7 +1706,7 @@ GmpSearchBlock.prototype.search = function(json,callback){
         dataType:"json",
         data:dataJson,
         success:function(res){
-            console.log(res);
+            // console.log(res);
             var dataName = that.grids[0];
             var load = "GmpTable."+dataName+".reload(res.resp.content.data.result)";
             eval(load);

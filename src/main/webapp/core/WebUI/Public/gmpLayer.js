@@ -44,8 +44,9 @@ var gmpPopup = (function() {
             success: function(layero, index) {
                 // 找出当前layer弹出层的div对象 作为 容器
                 var div = layero.find(".layui-layer-content");
+                // console.log(div.get(0).offsetHeight);
                 div.attr("layerIndex", index);
-                div.css("overflow", 'hidden');
+                div.css("overflow-y", 'auto');
                 div.load(divHtmlUrl, function() {
                     // 取消父页面的焦点
                     var aaa = layero.find(
