@@ -200,7 +200,7 @@ gmp_onload=function(){
             },
 
             headSort(column){//列头排序
-                pagingObj.headSort(queryProUrl,this.input,this.pageSize,this.pageNum,column,this);
+                pagingObj.headSorts(queryProUrl,leftKeyValueSet.currentRowId,this.input,column,this);
             }
         },
         created(){
