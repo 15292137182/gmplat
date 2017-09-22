@@ -113,12 +113,17 @@ public class KeySetController extends BaseController {
                                  @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                  String order) {
     ServerResult result = new ServerResult();
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
-    if (UtilsTool.isValid(rowId)) {
-      ServerResult serverResult = keySetService.queryProPage(search, rowId, pageNum, pageSize, orders);
-      return result(serverResult);
-    } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    if (null!=rowId) {
+      LinkedList<Order> orders = UtilsTool.dataSort(order);
+      if (UtilsTool.isValid(rowId)) {
+        ServerResult serverResult = keySetService.queryProPage(search, rowId, pageNum, pageSize, orders);
+        return result(serverResult);
+      } else {
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      }
+    }else{
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+
     }
   }
 

@@ -140,7 +140,7 @@ public class BusinessObjectController extends BaseController {
       ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
 
