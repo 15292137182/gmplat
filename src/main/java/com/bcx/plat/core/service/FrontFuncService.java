@@ -50,7 +50,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
     for (Object key : funcCode) {
       FieldCondition fieldCondition = new FieldCondition("funcCode", Operator.EQUAL, key);
       List<Map<String, Object>> frontFunc = singleSelect(FrontFunc.class, fieldCondition);
-      LinkedList<Order> orders = UtilsTool.dataSort("{\"str\":\"displayTitle\", \"num\":1}");//默认按照显示标题排序
+      LinkedList<Order> orders = UtilsTool.dataSort("{\"str\":\"sort\", \"num\":0}");//默认按照显示标题排序
       for (Map<String, Object> fronc : frontFunc) {
         //构建查询条件
         Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("funcRowId", fronc.get("rowId")).endAnd().buildDone();
