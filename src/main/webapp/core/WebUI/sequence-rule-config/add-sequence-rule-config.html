@@ -84,7 +84,7 @@
             </el-col>
         </el-row>
 
-        <div :is="item.html" v-for="item in items" :child-num="num"></div>
+        <div :is="item.html" v-for="item in items" :child-num="item.num"></div>
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">

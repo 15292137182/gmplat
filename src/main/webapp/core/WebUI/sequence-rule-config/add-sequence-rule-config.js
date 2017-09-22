@@ -9,6 +9,10 @@ var _vue = [];
 // 防止页面数更新 创建无效vue实例的标识
 var flag = false;
 
+var $num = 0;
+
+var editArr = [];
+
 //构造函数
 function  new_vue(){};
 
@@ -367,6 +371,18 @@ var _html=Vue.extend({
     template: "<div :id='this.name'></div>"
 });
 
+var _edit = Vue.extend({
+    props: [],
+    data() {
+        return {
+            name: ""
+        }
+    },
+    methods() {
+        this.name = "cnt-" + $num;
+    },
+    template: "<div :id='this.name'></div>"
+});
 
 var add = new Vue({
     el:"#SequenceRuleConfigAdd",
@@ -410,7 +426,8 @@ var add = new Vue({
         }
     },
     components: {
-        '$html': _html
+        '$html': _html,
+        '$edit': _edit
     },
     methods:{
         //点击预览按钮
@@ -434,7 +451,8 @@ var add = new Vue({
             this.num += 1;
             //将模板push到对象数组里
             this.items.push({
-                "html":"$html"
+                "html":"$html",
+                "num": this.num
             });
             // 点击添加按钮 将flag置为true 否则无法生成实例
             flag = true;
@@ -513,35 +531,102 @@ var add = new Vue({
                 add.formTable.despInput=data[0].desp;
                 add.formTable.versionInput=data[0].version;
 
-                // add.loadTemplate(data[0].seqContent);
+                add.loadTemplate(data[0].seqContent);
             })
         },
         loadTemplate(data) {
             var _arr = data.split("&&");
+            for(var i = 0;i < _arr.length;i++) {
+                var _flag = _arr[i].substr(0, 1);
+                if(_flag == "@") {
+                    //新增一次标识
+                    add.num = i + 1;
+                    //将模板push到对象数组里
+                    this.items.push({
+                        "html":"$html",
+                        "num": i + 1
+                    });
+
+                    this.name = 1;
+                    // 点击添加按钮 将flag置为true 否则无法生成实例
+                    flag = true;
+                }
+                if(_flag == "$") {
+                    //新增一次标识
+                    add.num = i + 1;
+                    //将模板push到对象数组里
+                    this.items.push({
+                        "html":"$html",
+                        "num": i + 1
+                    });
+
+                    this.name = 2;
+                    // 点击添加按钮 将flag置为true 否则无法生成实例
+                    flag = true;
+                }
+                if(_flag == "#") {
+                    //新增一次标识
+                    add.num = i + 1;
+                    //将模板push到对象数组里
+                    this.items.push({
+                        "html":"$html",
+                        "num": i + 1
+                    });
+
+                    this.name = 3;
+                    // 点击添加按钮 将flag置为true 否则无法生成实例
+                    flag = true;
+                }
+                if(_flag == "*") {
+                    //新增一次标识
+                    add.num = i + 1;
+                    //将模板push到对象数组里
+                    this.items.push({
+                        "html":"$html",
+                        "num": i + 1
+                    });
+
+                    this.name = 4;
+                    // 点击添加按钮 将flag置为true 否则无法生成实例
+                    flag = true;
+                }
+
+                editArr.push({
+                    name: this.name,
+                    num: i + 1
+                });
+            }
             // 编辑状态回填动态实例
-            $.each(_arr, function(index, item) {
-                var _first = item.substr(0, 1);
-                if(_first == "@") {
-                    add.add();
-                    add.name = 1;
-                }
-                if(_first == "$") {
-                    add.add();
-                    add.name = 2;
-                }
-                if(_first == "#") {
-                    add.add();
-                    add.name = 3;
-                }
-                if(_first == "*") {
-                    add.add();
-                    add.name = 4;
-                }
-            });
+            // $.each(_arr, function(index, item) {
+            //     var _first = item.substr(0, 1);
+            //     if(_first == "@") {
+            //         add.add();
+            //         add.name = 1;
+            //     }
+            //     if(_first == "$") {
+            //         add.add();
+            //         add.name = 2;
+            //     }
+            //     if(_first == "#") {
+            //         add.add();
+            //         add.name = 3;
+            //     }
+            //     if(_first == "*") {
+            //         add.add();
+            //         add.name = 4;
+            //     }
+            // });
         },
         //模块下拉框
         getBelongModule_1(datas){
-            this.belongModule_1.value=datas.value;
+            // this.belongModule_1.value=datas.value;
+        },
+        buildVue(num, name) {
+            // console.log(flag);
+            if(flag) {
+                var _obj=new new_vue();
+                _obj.creat("#cnt-" + num, name);
+            }
         }
     },
     created(){
@@ -555,11 +640,6 @@ var add = new Vue({
     },
     updated() {
         //新增创建vue实例
-        if(flag) {
-            var _obj=new new_vue();
-            // console.log(this.num);
-            // console.log(this.name);
-            _obj.creat("#cnt-"+this.num, this.name);
-        }
+        add.buildVue(this.num, this.name);
     }
 })

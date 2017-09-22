@@ -44,7 +44,7 @@ function optimizationPath(path) {
 }
 
 //服務地址--头部--调试
-//  var serverHead = 'http://192.168.100.50';
+// var serverHead = 'http://192.168.100.46';
 
 // 服務地址--头部--部署
 var serverHead = getBPBasePath();
@@ -60,5 +60,6 @@ function getRootPath() {
 
 //完整路径
 var serverPath = getRootPath() + "/gmp/sys/core";
+
 //测试路径
 // var serverPath = serverHead + "/gmplat/gmp/sys/core";
