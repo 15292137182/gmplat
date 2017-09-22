@@ -140,7 +140,8 @@ var em=new Vue({
                     keywordTwo:em.formTable.Keyword2,//关键字2
                     keywordThree:em.formTable.Keyword3,//关键字3
                 },
-                "obj":em
+                "obj":window.parent.functionBlock,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                     //showMsg.MsgOk(window.parent.functionBlock,res);

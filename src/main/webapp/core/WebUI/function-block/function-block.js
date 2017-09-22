@@ -53,7 +53,8 @@ gmp_onload = function(){
                         "jsonData":{
                             rowId:functionBlock.rowId
                         },
-                        "obj":functionBlock
+                        "obj":functionBlock,
+                        "showMsg":false
                     }
                     gmpAjax.showAjax(data,function(res){
                         var data = res.data;
@@ -80,7 +81,8 @@ gmp_onload = function(){
                     "jsonData":{
                         rowId:functionBlock.deleteId
                     },
-                    "obj":functionBlock
+                    "obj":functionBlock,
+                    "showMsg":true,
                 }
                 deleteObj.del(function(){
                     gmpAjax.showAjax(data,function(res){
@@ -263,7 +265,8 @@ gmp_onload = function(){
                         "jsonData":{
                             rowId:properties.rowId
                         },
-                        "obj":topButtonObj
+                        "obj":topButtonObj,
+                        "showMsg":true,
                     }
                     gmpAjax.showAjax(data,function(res){
                         queryData.getDatas(properties.findRightDataUrl,properties.rightInput,properties.funcId,properties);

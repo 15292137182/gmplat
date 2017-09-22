@@ -61,7 +61,8 @@ var em=new Vue({
                   //  "belongSystem":em.formTable.System,
                     "desp":em.formTable.desp
                 },
-                "obj":em
+                "obj":em,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(topButtonObj.divIndex);
@@ -86,7 +87,8 @@ var em=new Vue({
                   //  "belongSystem":this.formTable.System,
                     "desp":this.formTable.desp
                 },
-                "obj":em
+                "obj":em,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(functionBlock.divIndex);
