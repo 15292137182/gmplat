@@ -62,9 +62,6 @@ public class OrderTest extends BaseTest {
         List<Map<String, Object>> resultAsc = moreBatis.select(BusinessObject.class).where(condition).orderBy(orderAsc).execute();
         List<Map<String, Object>> resultDesc = moreBatis.select(BusinessObject.class).where(condition).orderBy(orderDesc).execute();
         Assert.assertNotEquals("升序和降序结果不能相同",resultAsc.get(0).get("relateTableRowId"),"it works!");
-        if(!"it works!".equals(resultDesc.get(0).get("relateTableRowId"))){
-            System.out.println("why it didn't");
-        }
         Assert.assertEquals("排序失败",resultDesc.get(0).get("relateTableRowId"),"it works!");
     }
 }
