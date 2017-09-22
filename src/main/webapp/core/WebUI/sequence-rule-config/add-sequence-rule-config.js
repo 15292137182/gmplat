@@ -94,12 +94,12 @@ new_vue.prototype.creat = function(_id, type) {
     if(type=='1'){
         _template=`<el-form type="1" v-show="render.show">
                         <el-row>
-                            <el-col :span="1">
+                            <el-col :span="1" style="width: 40px">
                                 <el-form-item>
                                     <el-button type="text" size="small" @click="remove" icon="delete"></el-button>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="5">
+                            <el-col :span="7">
                                 <el-form-item label="常量" label-width="40px">
                                     <el-input @blur="getData" v-model="render.constantValue" placeholder="请输入值"></el-input>
                                 </el-form-item>
@@ -110,26 +110,26 @@ new_vue.prototype.creat = function(_id, type) {
     if(type=='2'){
         _template=`<el-form type="2" v-show="render.show">
                         <el-row>
-                            <el-col :span="1">
+                            <el-col :span="1" style="width: 40px">
                                 <el-form-item>
                                     <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="8">
+                            <el-col :span="7">
                                 <el-form-item label="变量" label-width="40px">
                                     <!--<el-cascader filterable placeholder="请选择对象属性" :options="childObjoptions" style="width: 160px"></el-cascader>-->
-                                    <single-selection @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 120px" placeholder="请选择业务对象"></single-selection>
-                                    <single-selection @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 120px" placeholder="请选择业务对象属性"></single-selection>
+                                    <single-selection @blur="getData" @change-data="getBusObj_1"  :initial="busObj_1" ref="busObj_1" style="width: 118px" placeholder="请选择业务对象"></single-selection>
+                                    <single-selection @blur="getData" @change-data="getBusObjPro_1"  :initial="busObjPro_1" ref="busObjPro_1" style="width: 118px" placeholder="请选择业务对象属性"></single-selection>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
-                                <el-form-item label="或" label-width="20px">
+                                <el-form-item label="或" label-width="60px">
                                     <el-input @blur="getData" v-model="render.keyInput" placeholder="请输入键"/>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="5">
-                                <el-form-item label="默认值" label-width="80px">
-                                    <el-input @blur="getData" v-model="render.valueInput" placeholder="请输入默认值"/>
+                            <el-col :span="4">
+                                <el-form-item label="默认值" label-width="70px">
+                                    <el-input @blur="getData" v-model="render.valueInput" placeholder="请输入"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="5">
@@ -143,62 +143,52 @@ new_vue.prototype.creat = function(_id, type) {
     if(type=='3'){
         _template=`<el-form type="3" v-show="render.show">
                         <el-row>
-                                <el-col :span="1">
+                                <el-col :span="1" style="width: 40px">
                                     <el-form-item>
                                         <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="5">
+                                <el-col :span="7">
                                     <el-form-item label="日期" label-width="40px">
                                         <el-input placeholder="请输入日期格式" @blur="getData" v-model="render.dateValue"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="4">
-                                        <el-form-item > （如：yyyy-MM-dd）</el-form-item>
+                                <el-col :span="5">
+                                        <el-form-item label-width="10px"> （如：yyyy-MM-dd）</el-form-item>
                                 </el-col>
-                    
-                                <!--<el-col :span="5">-->
-                                    <!--<el-form-item label="是否显示">-->
-                                        <!--<el-checkbox @change="getData" v-model="render.checked"></el-checkbox>-->
-                                    <!--</el-form-item>-->
-                                <!--</el-col>-->
-                        </el-row>
+                         </el-row>
                     </el-form>`;
     }
     if(type=='4'){
         _template=`<el-form type="4" v-show="render.show">
                         <el-row>
-                            <el-col :span="1">
+                            <el-col :span="1" style="width: 40px">
                                <el-form-item>
                                    <el-button @click="remove" type="text" size="small" icon="delete"></el-button>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="5">
+                            <el-col :span="7">
                                 <el-form-item label="序号" label-width="40px">
                                     <el-input placeholder="请输入键" @blur="getData" v-model="render.numKey"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
-                               <el-form-item label="长度" label-width="70px">
+                               <el-form-item label="长度" label-width="60px">
                                    <el-input placeholder="请输入" @blur="getData" v-model="render.numLen"></el-input>
                                </el-form-item>
                             </el-col>
                             <el-col :span="4">
                                <el-form-item label="循环" label-width="70px">
                                       <single-selection @change-data="getLoop_1"  :initial="loop_1" ref="loop_1" style="width: 100px"></single-selection>
-
-                                   <!--<el-select placeholder="请选择" @change="getData" v-model="render.dateCircle" style="width: 100px">-->
-                                       <!--<el-option v-for="item in render.dates" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择"></el-option>-->
-                                   <!--</el-select>-->
-                               </el-form-item>
+                                </el-form-item>
                             </el-col>
-                            <el-col :span="5">
-                               <el-form-item label="关联变量键" label-width="120px">
+                            <el-col :span="4">
+                               <el-form-item label="关联变量键" label-width="100px">
                                    <el-input placeholder="请输入" @blur="getData" v-model="render.relatedConstantKey"></el-input>
                                </el-form-item>
                             </el-col>
-                            <el-col :span="5">
-                               <el-form-item label="是否显示" label-width="100px">
+                            <el-col :span="4">
+                               <el-form-item label="是否显示" label-width="100px"> 
                                    <el-checkbox @change="getData" v-model="render.checked"></el-checkbox>
                                </el-form-item>
                             </el-col>
