@@ -507,7 +507,10 @@ var gmpAjax = (function(){
                         if (typeof callback == "function") {
                             console.log(res);
                             callback(res.resp.content);
-                            showMsg.MsgOk(data.obj,res.resp.content.msg);
+                            if(data.showMsg){
+                                showMsg.MsgOk(data.obj,res.resp.content.msg);
+                            }
+                            // showMsg.MsgOk(data.obj,res.resp.content.msg);
                         }
                     }else{
                         callback(res.resp.content);
