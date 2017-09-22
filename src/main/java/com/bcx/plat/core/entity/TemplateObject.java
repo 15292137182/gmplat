@@ -1,6 +1,8 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.CodeMessage;
+import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
@@ -28,7 +30,7 @@ public class TemplateObject extends BaseEntity<TemplateObject> {
    */
   @Override
   public TemplateObject buildCreateInfo() {
-    this.templateCode = UtilsTool.lengthUUID(5).toUpperCase();
+    this.templateCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.TEMPLATE, null);
     return super.buildCreateInfo();
   }
 

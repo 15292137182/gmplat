@@ -1,6 +1,8 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
+import com.bcx.plat.core.constants.CodeMessage;
+import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.utils.UtilsTool;
 
 /**
@@ -33,7 +35,7 @@ public class TemplateObjectPro extends BaseEntity<TemplateObjectPro>{
     @Override
     public TemplateObjectPro buildCreateInfo() {
         this.proRowId = UtilsTool.lengthUUID(32);
-        this.code = UtilsTool.lengthUUID(5).toUpperCase();
+        this.code = SequenceManager.getInstance().buildSequenceNo(CodeMessage.TEMPLATE_PROPERTY, null);
         return super.buildCreateInfo();
     }
 
