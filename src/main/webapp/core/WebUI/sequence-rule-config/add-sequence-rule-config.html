@@ -18,14 +18,14 @@
 <body>
 <div id="SequenceRuleConfigAdd" style="margin-top:10px">
     <el-form :label-position="labelPosition" label-width="80px" :model="formTable">
-        <el-row class="row-bg">
-            <el-col :span="10">
+        <el-row>
+            <el-col :span="12">
                 <el-form-item label="代码">
                     <el-input placeholder="请输入代码" :disabled="disabled" v-model="formTable.seqCodeInput"
                               ref="seqCodeInput"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="12">
                 <el-form-item label="名称">
                     <el-input placeholder="请输入名称" v-model="formTable.seqNameInput" ref="seqNameInput"></el-input>
                 </el-form-item>
@@ -33,40 +33,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="11">
-                <el-form-item label="内容">
-                    <el-input v-model="formTable.seqContentInput" :disabled="true"></el-input>
-                </el-form-item>
-            </el-col>
-
-            <el-col :span="2" style="margin-left: 10px">
-                <el-popover
-                        placement="bottom"
-                        title="模拟流水号生成"
-                        width="120"
-                        @show="show">
-                    <el-input v-model="contentShow" type="textarea" :rows="5" readonly></el-input>
-                    <el-button type="primary" slot="reference" >预览</el-button>
-                </el-popover>
-            </el-col>
-            <el-col :span="10">
-                <el-form-item >
-                    <el-select placeholder="请选择" v-model="name" style="width: 150px">
-                        <el-option v-for="item in names"
-                                   :key="item.name"
-                                   :label="item.label"
-                                   :value="item.name" placeholder="请选择"></el-option>
-                    </el-select>
-                    <el-button icon="plus" type="primary" @click="add"></el-button>
-                </el-form-item>
-            </el-col>
-
-        </el-row>
-
-        <div :is="item.html" v-for="item in items" :child-num="num"></div>
-
-        <el-row type="flex" class="row-bg">
-            <el-col :span="10" >
+            <el-col :span="12" >
                 <el-form-item label="所属模块" prop="belongModuleInput">
                     <single-selection @change-data="getBelongModule_1"  :initial="belongModule_1" ref="belongModule_1">
                         <!---->
@@ -75,25 +42,49 @@
             </el-col>
 
             <!--<el-col :span="10">-->
-                <!--<el-form-item label="所属类型" prop="belongSystemInput">-->
-                    <!--<el-input placeholder="请输入名称" v-model="formTable.belongSystemInput" ref="belongSystemInput"></el-input>-->
-                <!--</el-form-item>-->
+            <!--<el-form-item label="所属类型" prop="belongSystemInput">-->
+            <!--<el-input placeholder="请输入名称" v-model="formTable.belongSystemInput" ref="belongSystemInput"></el-input>-->
+            <!--</el-form-item>-->
             <!--</el-col>-->
-            <el-col :span="10">
+            <el-col :span="12">
                 <el-form-item label="说明">
                     <el-input placeholder="请输入说明" v-model="formTable.despInput" ref="despInput"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
 
-        <el-row type="flex" class="row-bg">
-            <el-col :span="10">
-                <el-form-item label="版本">
-                    <el-input placeholder="系统自动生成版本" disabled="" v-model="formTable.versionInput"
-                              ref="versionInput"></el-input>
+        <el-row>
+            <el-col :span="24">
+                <el-form-item label="内容">
+                    <el-input v-model="formTable.seqContentInput" :disabled="true"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
+
+        <el-row>
+
+            <el-col :span="24" style="text-align: center">
+                <el-form-item >
+                    <el-select placeholder="请选择" v-model="name" style="width: 150px">
+                        <el-option v-for="item in names"
+                                   :key="item.name"
+                                   :label="item.label"
+                                   :value="item.name" placeholder="请选择"></el-option>
+                    </el-select>
+                    <el-button icon="plus" type="primary" @click="add"></el-button>
+                    <el-popover
+                            placement="bottom"
+                            title="模拟流水号生成"
+                            width="120"
+                            @show="show">
+                        <el-input v-model="contentShow" type="textarea" :rows="5" readonly></el-input>
+                        <el-button type="primary" slot="reference" >预览</el-button>
+                    </el-popover>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <div :is="item.html" v-for="item in items" :child-num="num"></div>
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">

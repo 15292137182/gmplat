@@ -101,12 +101,12 @@ gmp_onload = function () {
                 // })
                 this.operate = 1;
                 var htmlUrl="add-sequence-rule-config.html";
-                this.divIndex=ibcpLayer.ShowIframe(htmlUrl, '新增序列号规则配置', '1000px', "500px",true);
+                this.divIndex=ibcpLayer.ShowIframe(htmlUrl, '新增序列号规则配置', '1000px', "550px",true);
             },
             editEvent(){
                 this.operate=2;
                 var htmlUrl = 'add-sequence-rule-config.html';
-                this.divIndex = ibcpLayer.ShowIframe(htmlUrl, '编辑序列号规则配置', '1000px', '500px');
+                this.divIndex = ibcpLayer.ShowIframe(htmlUrl, '编辑序列号规则配置', '1000px', '550px');
             },
             deleteEvent(){
                 deleteObj.del(function () {
