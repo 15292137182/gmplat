@@ -41,8 +41,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="10" :offset="1">
-                <el-form-item label="名称">
-                    <el-input placeholder="请输入名称" v-model="formTable.nameTitle" ref="nameTitle"></el-input>
+                <el-form-item label="标题">
+                    <el-input placeholder="请输入标题" v-model="formTable.nameTitle" ref="nameTitle"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -64,7 +64,7 @@
             <el-col :span="4">
                 <el-form-item label="" v-if="emptyBottom">
                     <template>
-                        <el-checkbox :disabled="isDisabled" v-model="checkedNull">是否为空</el-checkbox>
+                        <el-checkbox :disabled="isDisabled" v-model="checkedNull">允许为空</el-checkbox>
                     </template>
                 </el-form-item>
             </el-col>
