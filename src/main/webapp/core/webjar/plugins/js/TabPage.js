@@ -942,7 +942,8 @@ var DynamicStitchings = (function(){
     var tableBlock = function(obj){
         var title = obj.displayTitle;
         var data = obj.ename;
-        var column ='<el-table-column prop="'+data+'" label='+title+'></el-table-column>'
+        var width = obj.widthSetting;
+        var column ='<el-table-column prop="'+data+'" label='+title+' width="'+width+'"></el-table-column>'
         return column;
     }
     var Concatenation = function(arr){//判断是什么功能块，并获取html片段
