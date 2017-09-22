@@ -67,7 +67,8 @@ var addDataSet = new Vue({
                     belongModule:this.belongModule_1.value,
                   //  belongSystem:this.formTable.belongSystem
                 },
-                "obj":addDataSet
+                "obj":addDataSet,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(dataSetConfigButton.divIndex);
@@ -90,7 +91,8 @@ var addDataSet = new Vue({
                     belongModule:this.belongModule_1.value,
                  //   belongSystem:this.formTable.belongSystem
                 },
-                "obj":addDataSet
+                "obj":addDataSet,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                 //showMsg.MsgOk(dataSetConfig,res);

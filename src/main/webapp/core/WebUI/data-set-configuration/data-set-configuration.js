@@ -124,7 +124,8 @@ gmp_onload=function(){
                         "jsonData":{
                             rowId:dataSetConfig.rowObjId
                         },
-                        "obj":dataSetConfigButton
+                        "obj":dataSetConfigButton,
+                        "showMsg":true
                     }
                     gmpAjax.showAjax(data,function(res){
                         queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
