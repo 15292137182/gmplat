@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="addEvent" style="margin-top:20px">
-    <el-form :label-position="labelPosition" label-width="100px"  :model="addTempObj" ref='addTempObj'
+    <el-form :label-position="labelPosition" label-width="100px"  :model="addTempObj" ref='addTempObj' :rules="rules"
              style="padding:0 20px" class="demo-ruleForm">
         <el-form-item label="模板代码" prop="codeInput">
             <el-input placeholder="模板代码" v-model="addTempObj.codeInput" disabled></el-input>
@@ -36,7 +36,7 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" size="small" @click.native="saveTemp">保存</el-button>
+            <el-button type="primary" size="small" @click.native="saveTemp('addTempObj')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" size="small" @click.native="cancelTemp">取消</el-button>
