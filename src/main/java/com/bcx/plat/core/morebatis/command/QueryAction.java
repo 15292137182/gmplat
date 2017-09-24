@@ -62,7 +62,7 @@ public class QueryAction {
     return select(Arrays.asList(aliasedColumn));
   }
 
-  public QueryAction select(Collection<AliasedColumn> aliasedColumn) {
+  public QueryAction select(Collection aliasedColumn) {
     setAliasedColumns(aliasedColumn);
     return this;
   }

@@ -6,6 +6,7 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.plugin.relation.entity.Relation;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -130,7 +131,7 @@ public class MoreBatisRelation {
         .endAnd()
         .buildDone();
     List<Map<String, Object>> rows = moreBatis.select(Relation.class)
-        .select(moreBatis.getColumnByAlias(Relation.class, "value"))
+        .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value","name")))
         .where(condition)
         .orderBy(new Order(moreBatis.getColumnByAlias(Relation.class, "sort"), Order.ASC))
         .execute();
@@ -151,10 +152,10 @@ public class MoreBatisRelation {
         .endAnd()
         .buildDone();
     List<Map<String, Object>> rows = moreBatis.select(Relation.class)
-        .select(moreBatis.getColumnByAlias(Relation.class, "value"))
+        .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value","name","primaryRowId")))
         .where(condition)
         .orderBy(
-            new Order(moreBatis.getColumnByAlias(Relation.class, "rowId"), Order.DESC),
+            new Order(moreBatis.getColumnByAlias(Relation.class, "primaryRowId"), Order.DESC),
             new Order(moreBatis.getColumnByAlias(Relation.class, "sort"), Order.ASC)
         )
         .execute();
