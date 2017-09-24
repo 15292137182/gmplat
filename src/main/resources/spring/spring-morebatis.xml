@@ -1,77 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <bean id="sqlTranslator" class="com.bcx.plat.core.morebatis.translator.Translator"/>
+  <bean id="sqlTranslator" class="com.bcx.plat.core.morebatis.translator.Translator"/>
 
-    <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatisImpl">
-        <constructor-arg name="suitMapper" ref="postgreSuitMapper"/>
-        <constructor-arg name="translator" ref="sqlTranslator"/>
-        <constructor-arg name="entityEntries">
-            <list>
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.BusinessObject" p:tableName="t_business_object"
-                      p:pks="#{'rowId'}"/>
+  <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatisImpl">
+    <constructor-arg name="suitMapper" ref="postgreSuitMapper"/>
+    <constructor-arg name="translator" ref="sqlTranslator"/>
+    <constructor-arg name="entityEntries">
+      <list>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.BusinessObject" p:tableName="t_business_object"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.BusinessObjectPro" p:tableName="t_business_object_pro"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.BusinessObjectPro"
+          p:tableName="t_business_object_pro"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.DataSetConfig" p:tableName="t_dataset_config"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.DataSetConfig" p:tableName="t_dataset_config"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.DBTableColumn" p:tableName="t_db_table_column"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.DBTableColumn" p:tableName="t_db_table_column"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.FrontFunc" p:tableName="t_front_func" p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.FrontFunc" p:tableName="t_front_func"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.FrontFuncPro" p:tableName="t_front_func_pro"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.FrontFuncPro" p:tableName="t_front_func_pro"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.KeySet" p:tableName="t_keyset" p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.KeySet" p:tableName="t_keyset"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.KeySetPro" p:tableName="t_keyset_pro" p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.KeySetPro" p:tableName="t_keyset_pro"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.MaintDBTables" p:tableName="t_db_tables"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.MaintDBTables" p:tableName="t_db_tables"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.SequenceGenerate" p:tableName="t_sequence_generate"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.SequenceGenerate"
+          p:tableName="t_sequence_generate"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.SequenceRuleConfig" p:tableName="t_sequence_rule_config"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.SequenceRuleConfig"
+          p:tableName="t_sequence_rule_config"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.SysConfig" p:tableName="t_sys_config" p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.SysConfig" p:tableName="t_sys_config"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.TemplateObject" p:tableName="t_template_object"
-                      p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.TemplateObject" p:tableName="t_template_object"
+          p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.TemplateObjectPro" p:tableName="t_template_object_pro"
-                      p:pks="#{'proRowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.TemplateObjectPro"
+          p:tableName="t_template_object_pro"
+          p:pks="#{'proRowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
-                      p:tableName="t_business_relate_template" p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
+          p:tableName="t_business_relate_template" p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.User" p:tableName="t_user" p:pks="#{'rowId'}"/>
-            </list>
-        </constructor-arg>
-    </bean>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.User" p:tableName="t_user" p:pks="#{'rowId'}"/>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.morebatis.plugin.relation.entity.Relation"
+          p:tableName="t_relation" p:pks="#{'rowId'}"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean class="com.bcx.plat.core.morebatis.plugin.relation.MoreBatisRelation" id="moreBatisRelation">
+    <constructor-arg ref="moreBatis"/>
+  </bean>
 
 </beans>
