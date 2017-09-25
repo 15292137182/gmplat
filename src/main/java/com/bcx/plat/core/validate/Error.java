@@ -25,4 +25,5 @@ public class Error {
   public void setErrorMessage(String errorMessage) {
     this.errorMessage = errorMessage;
   }
+
 }
