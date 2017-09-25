@@ -6,6 +6,7 @@ import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.manager.TXManager;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -77,13 +78,18 @@ public class SequenceRuleConfigController extends BaseController {
    */
   @RequestMapping("/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
-    SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig().buildCreateInfo().fromMap(param);
-    int insert = sequenceRuleConfig.insert();
-    if (insert != -1) {
-      return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sequenceRuleConfig));
-    } else {
-      return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
+    Condition condition = new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", param.get("seqCode")).endAnd().buildDone();
+    List<SequenceRuleConfig> select = sequenceRuleConfigService.select(condition);
+    if (select.size()==0) {
+      SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig().buildCreateInfo().fromMap(param);
+      int insert = sequenceRuleConfig.insert();
+      if (insert != -1) {
+        return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sequenceRuleConfig));
+      } else {
+        return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
+      }
     }
+    return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
   }
 
 

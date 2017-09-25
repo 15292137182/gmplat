@@ -90,7 +90,8 @@ public class MaintDBTablesController extends BaseController {
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname"));
-    Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).endAnd().buildDone();
+    String tableSchema = String.valueOf(param.get("tableSchema"));
+    Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema",tableSchema).endAnd().buildDone();
     List<Map> select = maintDBTablesService.selectMap(condition);
     if (select.size() == 0) {
       MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);

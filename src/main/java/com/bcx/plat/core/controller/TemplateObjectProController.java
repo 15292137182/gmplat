@@ -46,13 +46,19 @@ public class TemplateObjectProController extends BaseController {
   @RequestMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
-    TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
-    int insert = templateObjectPro.insert();
-    if (insert != -1) {
-      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,templateObjectPro));
-    } else {
-      return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+    Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("ename", String.valueOf(param.get("ename"))).endAnd().buildDone();
+    List<TemplateObjectPro> select = templateObjectProService.select(condition);
+    if (select.size()==0) {
+      TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
+      int insert = templateObjectPro.insert();
+      if (insert != -1) {
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,templateObjectPro));
+      } else {
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+      }
     }
+    return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+
   }
 
 
