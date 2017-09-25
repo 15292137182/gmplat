@@ -11,17 +11,17 @@
 </head>
 <body>
 <div id="addInlayerData" style="margin-top:20px">
-    <el-form :label-position="labelPosition" label-width="100px" :model="Inlayer">
+    <el-form :label-position="labelPosition" ref="formTable" :rules="rules" label-width="100px" :model="Inlayer">
         <el-row type="flex" class="row-bg">
             <el-col :span="21" :offset="1">
-                <el-form-item label="字段中文名">
+                <el-form-item label="字段中文名" prop="Cname">
                     <el-input placeholder="请输入字段中文名" v-model="Inlayer.Cname" ref="inlayerCname"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg" >
             <el-col :span="21" :offset="1">
-                <el-form-item label="字段英文名">
+                <el-form-item label="字段英文名" prop="Ename">
                     <el-input placeholder="请输入字段英文名" v-model="Inlayer.Ename" ref="inlayerEname"></el-input>
                 </el-form-item>
             </el-col>
@@ -36,7 +36,7 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" @click="conformEvent">保存</el-button>
+            <el-button type="primary" @click="conformEvent('formTable')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" @click="cancel">取消</el-button>

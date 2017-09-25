@@ -54,7 +54,8 @@ var DatabaseDetails = new Vue({
                 var data = {
                     "url":DatabaseDetails.delUrl,
                     "jsonData":{rowId:DatabaseDetails.rowObj.rowId},
-                    "obj":DatabaseDetails
+                    "obj":DatabaseDetails,
+                    "showMsg":true
                 }
                 gmpAjax.showAjax(data,function(res){
                     queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);

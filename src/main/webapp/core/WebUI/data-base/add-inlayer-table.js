@@ -10,6 +10,10 @@ var addInlayerData = new Vue({
             Ename:'',
             desp:''
         },
+        rules:{
+            Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' }],
+            Ename:[{ required: true, message: '请输入表英文名', trigger: 'blur' }]
+        },
         addUrl:serverPath+'/dbTableColumn/add',//新增表字段
         editUrl:serverPath+'/dbTableColumn/modify'//编辑表字段
     },
@@ -23,7 +27,8 @@ var addInlayerData = new Vue({
                     columnEname:addInlayerData.Inlayer.Ename,
                     desp:addInlayerData.Inlayer.desp,
                 },
-                "obj":addInlayerData
+                "obj":myInlayerButton,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                 queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
@@ -40,7 +45,8 @@ var addInlayerData = new Vue({
                     columnEname:this.Inlayer.Ename,
                     desp:this.Inlayer.desp,
                 },
-                "obj":addInlayerData
+                "obj":myInlayerButton,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                 queryData.getDatas(DatabaseDetails.selUrl,DatabaseDetails.input,DatabaseDetails.Robj.rowId,DatabaseDetails);
@@ -61,19 +67,37 @@ var addInlayerData = new Vue({
             }
             return true;
         },
-        conformEvent(){//确定按钮
+        conformEvent(formName){//确定按钮
             if(myInlayerButton.isEdit == true){//编辑
-                if(this.isNull()){
-                    editObj.editOk(function(){
-                        addInlayerData.editTable();
-                    })
-                }
+                // if(this.isNull()){
+                //     editObj.editOk(function(){
+                //         addInlayerData.editTable();
+                //     })
+                // }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        editObj.editOk(function(){
+                            addInlayerData.editTable();
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }else{//新增
-                if(this.isNull()){
-                    addObj.addOk(function(){
-                        addInlayerData.addTable();
-                    })
-                }
+                // if(this.isNull()){
+                //     addObj.addOk(function(){
+                //         addInlayerData.addTable();
+                //     })
+                // }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        addObj.addOk(function(){
+                            addInlayerData.addTable();
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
         cancel(){//取消按钮
