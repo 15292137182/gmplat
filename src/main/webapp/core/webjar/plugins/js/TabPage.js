@@ -946,7 +946,7 @@ var DynamicStitchings = (function(){
         var title = obj.displayTitle;
         var data = obj.ename;
         var width = obj.widthSetting;
-        var column ='<el-table-column prop="'+data+'" label='+title+' width="'+width+'"></el-table-column>'
+        var column ='<el-table-column show-overflow-tooltip prop="'+data+'" label='+title+' width="'+width+'"></el-table-column>'
         return column;
     }
     var Concatenation = function(arr,jsonDataConfig){//判断是什么功能块，并获取html片段
