@@ -11,7 +11,9 @@ var GmpSearch = {};
 var jsonDataConfig = null;
 $(function() {
     fun1();
-    jsonDataConfig = LoadingConfig();
+    if(typeof LoadingConfig =="function"){
+        jsonDataConfig = LoadingConfig();
+    }
     console.log(jsonDataConfig);
     _function.push(fun2())
     $.when.apply($,_function)
