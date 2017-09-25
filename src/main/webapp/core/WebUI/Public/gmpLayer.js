@@ -230,8 +230,8 @@ gmpFormObj.prototype.searchSelect = function() {
 };
 
 // 构建表单组件
-gmpFormObj.prototype.bulidComponent = function(exeFunction) {
-    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
+gmpFormObj.prototype.bulidComponent = function(jsonDataConfig) {
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,jsonDataConfig);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({
@@ -251,7 +251,7 @@ gmpFormObj.prototype.bulidComponent = function(exeFunction) {
             // demo(){
             //     console.log(that.getData());
             // }
-            demo: exeFunction
+            // demo: exeFunction
         }
     });
     this.vueObj = vue;
@@ -519,8 +519,8 @@ gmpTableObj.prototype.searchSelect = function() {
 };
 
 // 构建表格组件
-gmpTableObj.prototype.bulidComponent = function() {
-    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems);
+gmpTableObj.prototype.bulidComponent = function(jsonDataConfig) {
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,jsonDataConfig);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({
@@ -825,8 +825,8 @@ gmpsearchObj.prototype.searchSelect = function() {
 };
 
 // 构建查询块组件
-gmpsearchObj.prototype.bulidComponent = function() {
-    var strHtml = DynamicStitchings.Concatenation(this.searchBlockItems);
+gmpsearchObj.prototype.bulidComponent = function(jsonDataConfig) {
+    var strHtml = DynamicStitchings.Concatenation(this.searchBlockItems,jsonDataConfig);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({

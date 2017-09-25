@@ -8,9 +8,11 @@
 var GmpForm = {};
 var GmpTable = {};
 var GmpSearch = {};
-
+var jsonDataConfig = null;
 $(function() {
     fun1();
+    jsonDataConfig = LoadingConfig();
+    console.log(jsonDataConfig);
     _function.push(fun2())
     $.when.apply($,_function)
         .done(function() {
@@ -188,7 +190,7 @@ var getHtml = (function() {
                     if (arr[0].funcType == "form") {
                         var form = new gmpFormObj(compId, code, arr, mainId, "", "");
                         // 创建vue实例
-                        form.bulidComponent();
+                        form.bulidComponent(jsonDataConfig);
                         // 获取下拉框options
                         // console.log(form);
                         var _target = form.formObj;
@@ -218,8 +220,9 @@ var getHtml = (function() {
                             onDbClick: function (row) {},
                             onDbCellClick: function (row) {},
                         });
+                        console.log(jsonDataConfig);
                         // 创建vue实例
-                        _table.bulidComponent();
+                        _table.bulidComponent(jsonDataConfig);
                         // 缓存实例化对象
                         GmpTable[compId] = _table;
                         // alert("table done");
@@ -229,7 +232,7 @@ var getHtml = (function() {
                         // console.log(_table);
                         var _search = new gmpsearchObj(compId, code, arr, mainId, [params.bind]);
                         // 创建vue实例
-                        _search.bulidComponent();
+                        _search.bulidComponent(jsonDataConfig);
                         // 缓存实例化对象
                         GmpSearch[compId] = _search;
                     }

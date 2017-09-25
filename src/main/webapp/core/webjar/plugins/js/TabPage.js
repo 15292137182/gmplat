@@ -949,7 +949,7 @@ var DynamicStitchings = (function(){
         var column ='<el-table-column prop="'+data+'" label='+title+' width="'+width+'"></el-table-column>'
         return column;
     }
-    var Concatenation = function(arr){//判断是什么功能块，并获取html片段
+    var Concatenation = function(arr,jsonDataConfig){//判断是什么功能块，并获取html片段
         var htmlObj = {
             item : arr
         };
@@ -957,7 +957,12 @@ var DynamicStitchings = (function(){
         var str = '';
         var tableColumn='';//table列
         var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
-        var selection = '<el-table-column data="checkTable" type="selection" width="55"></el-table-column>'
+        console.log(jsonDataConfig);
+        if(jsonDataConfig.checkbox==true){
+            var selection = '<el-table-column data="checkTable" type="selection" width="55"></el-table-column>'
+        }else{
+            var selection = '';
+        }
         var i;
         for(i=0;i<arr.length;i++){
             var obj = arr[i];
@@ -1719,6 +1724,18 @@ GmpSearchBlock.prototype.search = function(json,callback){
         }
     })
 }
+
+var jsonDataConfigObj = (function(){
+    var configData = function(){
+        var json = {
+            checkbox:false//表格是否需要选择框
+        };
+        return json
+    }
+    return {
+        configData:configData
+    }
+})()
 
 // var deferred = (function(){
 //     var done = function(json){

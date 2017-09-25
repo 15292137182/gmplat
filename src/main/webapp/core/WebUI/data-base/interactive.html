@@ -32,6 +32,11 @@
             var args={"tableKeySet":{"grid":{datasetType:"dataSetConfigType",belongModule:"belongModule"}}};
             return args;
         };
+        function LoadingConfig(){
+            var json = jsonDataConfigObj.configData();
+            json.checkbox = true;
+            return json;
+        }
         gmp_onload = function () {
             // 加载数据
             GmpTable.table.reload({
