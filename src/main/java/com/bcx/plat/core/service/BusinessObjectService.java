@@ -14,7 +14,6 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.ServletUtils;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
 import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 业务对象业务层
@@ -45,6 +44,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   private FrontFuncProService frontFuncProService;
   @Autowired
   private BusinessRelateTemplateService businessRelateTemplateService;
+  @Autowired
+  private TemplateObjectService templateObjectService;
 
 
   /**
@@ -58,11 +59,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     BusinessObject businessObject = new BusinessObject().fromMap(param).buildCreateInfo();
     //实例化业务对象关联模板对象
     BusinessRelateTemplate brt = new BusinessRelateTemplate();
-    Map<String, Object> map = businessObject.toMap();
     int insert = businessObject.insert();
     String rowId = businessObject.getRowId();
     String relateTemplateObject = businessObject.getRelateTemplateObject();
-    List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
+    List list = jsonToObj(relateTemplateObject, List.class);
     if (null != list) {
       for (Object li : list) {
         brt.setBusinessRowId(rowId);
@@ -86,20 +86,52 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @return ServerResult
    */
   public ServerResult queryById(String rowId) {
-    List<BusinessObject> result = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-//        String relateTableRowId =String.valueOf(result.get(0).get("relateTableRowId"));
-    String relateTableRowId = result.get(0).getRelateTableRowId();
-    List<Map> rowId1 =
-        maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+    StringBuilder templates = new StringBuilder();
+    List<Map> templateObjects = null;
+    //根据业务对象rowId 查询当前数据
+    List<Map> result = selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
+    Map map = result.get(0);
+    if (isValid(result)) {
+      //获取关联模板对象的rowId
+      String templateObject = String.valueOf(map.get("relateTemplateObject"));
+      //转换为List集合
+      List list = jsonToObj(templateObject, List.class);
+      if (isValid(list)) {
+        //遍历List集合
+        for (Object li : list) {
+          //通过遍历取出来的rowId,来作为关联模板对象的rowId
+          Condition condition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", li).endAnd().buildDone();
+          //查询当前rowId对应的当前数据,存入List集合
+          templateObjects = templateObjectService.selectMap(condition);
+        }
+        if (isValid(templateObjects) && templateObjects.size() > 0) {
+          for (Map temp : templateObjects) {
+            //遍历取出关联模板对象的模板对象的名称
+            templates.append(temp.get("templateName")).append(",");
+          }
+        }
+        if (templates.lastIndexOf(",") != -1) {
+          String substring = templates.substring(0, templates.length() - 1);
+          map.put("relateTemplate", substring);
+        }
+      }
+    }
+    String relateTableRowId = String.valueOf(map.get("relateTableRowId"));
+    List<Map> rowId1 = maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
     if (isValid(rowId1)) {
-//            for (BusinessObject row : result) {
-//                row.put("tableCname", rowId1.get(0).get("tableCname"));
-//            }
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, ServletUtils.getMessage(Message.QUERY_SUCCESS), result);
+      String relateTemplateObject = String.valueOf(map.get("relateTemplateObject"));
+      List list = jsonToObj(relateTemplateObject, List.class);
+      String relateTemplate = String.valueOf(map.get("relateTemplateObject"));
+      if (isValid(relateTemplate)) {
+        result.remove("relateTemplateObject");
+      }
+      map.put("relateTemplateObject",list);
+      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, ServletUtils.getMessage(Message.QUERY_SUCCESS), map);
     } else {
-      return null;//  ServerResult.Msg(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return null;
     }
   }
+
 
   /**
    * 分页显示查询
@@ -171,12 +203,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   public ServerResult queryProPage(String search, String param, String rowId, Integer pageNum, Integer pageSize, List<Order> order) {
     //查询属性的搜索条件
-    Or blankQuery = !isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), UtilsTool.collectToSet(search));
+    Or blankQuery = !isValid(search) ? null : createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), collectToSet(search));
     Condition condition;
     if (isValid(param)) {
-      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      Map<String, Object> map = jsonToObj(param, Map.class);
       condition = new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
-          UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map));
+          convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map));
     } else {
       if (isValid(search)) {
         condition = new ConditionBuilder(BusinessObjectPro.class)
@@ -225,11 +257,11 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         String relateTableColumn = String.valueOf(rest.get("relateTableColumn"));
         Condition condition = new ConditionBuilder(DBTableColumn.class).and().equal("rowId", relateTableColumn).endAnd().buildDone();
         List<Map<String, Object>> singleSelect = singleSelect(DBTableColumn.class, condition);
-        if (null!=singleSelect) {
+        if (null != singleSelect) {
           fieldAlias = String.valueOf(singleSelect.get(0).get("columnEname"));
         }
       }
-      rest.put("ename",fieldAlias);
+      rest.put("ename", fieldAlias);
       rest.put("disableButton", false);
       rest.put("columnCname", map.get(rest.get("relateTableColumn")));
     }
@@ -251,9 +283,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       List<BusinessObject> businessObjectList = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
       BusinessObject objectMap = businessObjectList.get(0);
       //将Map数据转换为json结构的数据
-      String toJson = UtilsTool.objToJson(objectMap);
+      String toJson = objToJson(objectMap);
       //将json数据转换为实体类
-      BusinessObject businessObject = UtilsTool.jsonToObj(toJson, BusinessObject.class);
+      BusinessObject businessObject = jsonToObj(toJson, BusinessObject.class);
       //复制一份数据出来
       assert businessObject != null;
       businessObject.setChangeOperat(BaseConstants.CHANGE_OPERAT_FAIL);
@@ -329,12 +361,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   public ServerResult<List<Map<String, Object>>> queryTemplatePro(String rowId, LinkedList<Order> orders) {
     List<Map<String, Object>> linkedList = new ArrayList<>();
-    List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId),orders);
+    List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId), orders);
     for (BusinessRelateTemplate bri : businessRowId) {
       String templateRowId = bri.getTemplateRowId();
       List<Map<String, Object>> result = singleSelect(TemplateObjectPro.class, new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId));
 
-      List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(result);
+      List<Map<String, Object>> list = underlineKeyMapListToCamel(result);
       for (Map<String, Object> li : list) {
         if (result.size() != 0) {
           linkedList.add(li);

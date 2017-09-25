@@ -49,7 +49,7 @@ public class TemplateObjectProController extends BaseController {
     TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
     int insert = templateObjectPro.insert();
     if (insert != -1) {
-      return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,templateObjectPro));
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
     }
@@ -90,7 +90,7 @@ public class TemplateObjectProController extends BaseController {
       Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", param.get("proRowId")).endAnd().buildDone();
       update = templateObjectPro.update(condition);
       if (update != -1) {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,templateObjectPro));
       } else {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
@@ -108,12 +108,14 @@ public class TemplateObjectProController extends BaseController {
   @RequestMapping("/delete")
   public Object delete(String rowId) {
     ServerResult serverResult = new ServerResult();
+    Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<Map> maps = templateObjectProService.selectMap(condition);
     int del;
     if (!rowId.isEmpty()) {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro();
       del = templateObjectPro.deleteById(rowId);
       if (del != -1) {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,maps));
       } else {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }

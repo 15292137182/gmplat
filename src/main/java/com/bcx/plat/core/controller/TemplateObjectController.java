@@ -91,8 +91,7 @@ public class TemplateObjectController extends BaseController {
     } else {
       result = new PageResult(templateObjectProService.selectMap(condition, orders));
     }
-    // serverResult.setData(result);
-    return result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
   }
 
   /**
@@ -150,11 +149,12 @@ public class TemplateObjectController extends BaseController {
   @RequestMapping("/add")
   public PlatResult insert(@RequestParam Map map) {
     ServerResult serverResult = new ServerResult();
-    int status = new TemplateObject().fromMap(map).buildCreateInfo().insert();
-    if (-1 == status) {
+    TemplateObject templateObject = new TemplateObject().fromMap(map).buildCreateInfo();
+    int insert = templateObject.insert();
+    if (-1 == insert) {
       return result(serverResult.setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
     }
-    return result(serverResult.setStateMessage(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,templateObject));
   }
 
   /**
@@ -166,11 +166,12 @@ public class TemplateObjectController extends BaseController {
   @RequestMapping("/modify")
   public PlatResult update(@RequestParam Map map) {
     ServerResult serverResult = new ServerResult();
-    int status = new TemplateObject().fromMap(map).buildModifyInfo().updateById();
-    if (-1 == status) {
+    TemplateObject templateObject = new TemplateObject().fromMap(map).buildModifyInfo();
+    int updateById = templateObject.updateById();
+    if (-1 == updateById) {
       return result(serverResult.setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
     }
-    return result(serverResult.setStateMessage(STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.UPDATE_SUCCESS,templateObject));
   }
 
   /**
@@ -181,11 +182,13 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
+    Condition condition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<Map> maps = templateObjectService.selectMap(condition);
     ServerResult serverResult = new ServerResult();
     int status = new TemplateObject().buildDeleteInfo().deleteById(rowId);
     if (-1 == status) {
       return result(serverResult.setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
     }
-    return result(serverResult.setStateMessage(STATUS_SUCCESS, Message.DELETE_SUCCESS));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS,maps));
   }
 }

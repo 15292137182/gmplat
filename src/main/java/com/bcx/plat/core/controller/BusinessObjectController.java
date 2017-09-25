@@ -72,6 +72,8 @@ public class BusinessObjectController extends BaseController {
     return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
   }
 
+
+
   /**
    * 查询业务对象全部数据并分页显示
    *
