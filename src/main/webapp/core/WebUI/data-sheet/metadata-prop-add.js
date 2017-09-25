@@ -4,6 +4,7 @@
 var count=true;
 var count1=true;
 var count2=true;
+var change=1;
 var proEm = new Vue({
         el: '#addProEvent',
         data: function () {
@@ -58,9 +59,6 @@ var proEm = new Vue({
                     nameProInput: [
                         { required: true, message: '请输入属性名称'},
                     ],
-                    proType: [
-                        { required: true,trigger: 'blur',message: '请选择属性类型'}
-                    ],
                     fieldAliasInput: [
                         { required: true,trigger: 'blur',message: '请输入字段别名'}
                     ],
@@ -72,84 +70,6 @@ var proEm = new Vue({
             }
         },
         methods: {
-            //属性类型
-            getProType_1(datas){
-                this.proType_1.value=datas.value;
-
-                this.addProForm.proType = datas.value;
-                var a=this.$refs.proType_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.proType.length==0) {
-                    if(count!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
-
-
-            },
-            //关联表字段
-            getTableField_1(datas){
-                this.tableField_1.value=datas.value;
-
-                this.addProForm.reaTable = datas.value;
-                var a=this.$refs.tableField_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.reaTable.length==0) {
-                    if(count1!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count1=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
-            },
-            //值类型
-            getValueType_1(datas){
-                this.valueType_1.value=datas.value;
-
-                this.addProForm.typeInput = datas.value;
-                var a=this.$refs.valueType_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.typeInput.length==0) {
-                    if(count2!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count2=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
-            },
-            //值类型来源
-            getValueTypeOrigin_1(datas){
-                this.valueTypeOrigin_1.value=datas.value;
-                console.log( this.valueTypeOrigin_1.value);
-                //判断是输入框还是下拉框
-                if( proEm.valueTypeOrigin_1.value==''){
-                    proEm.apparent=true;
-                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
-                }else{
-                    proEm.apparent=false;
-                }
-
-                switch (datas.value){
-                    case "keySet":
-                        this.$refs.valueOriginContent_1.setUrl({url:keySetPageUrl,key:'{"label":"keysetName","value":"rowId"}'});
-                        break;
-                    case "sequenceRule":
-                        this.$refs.valueOriginContent_1.setUrl({url:sequenceRuleConfigPageUrl,key:'{"label":"seqName","value":"rowId"}'});
-                        break;
-                    case "dataSet":
-                        this.$refs.valueOriginContent_1.setUrl({url:datasetConfigPageUrl,key:'{"label":"datasetName","value":"rowId"}'});
-                        break;
-                }
-            },
-            //值来源内容
-            getValueOriginContent_1(datas){
-                this.valueOriginContent_1.value=datas.value;
-            },
             conformEvent(formName) {
                 this.$refs.addProForm.validate((valid) => {
                     if (valid) {
@@ -215,6 +135,76 @@ var proEm = new Vue({
                 //    ibcpLayer.ShowMsg("扩展属性未指定字段别名");
                 //    return false;
                 //}
+            },
+            //属性类型
+            getProType_1(datas){
+                this.proType_1.value=datas.value;
+
+                if(this.proType_1.value=='extend'){
+                    proEm.$refs.tableField_1.setDisabled(true);
+                }else{
+                    proEm.$refs.tableField_1.setDisabled(false);
+                }
+
+            },
+            //关联表字段
+            getTableField_1(datas){
+                this.tableField_1.value=datas.value;
+
+                this.addProForm.reaTable = datas.value;
+                var a=this.$refs.tableField_1.$children[0].$children[0].$el;
+                var b=$(a).children('input');
+                if(this.addProForm.reaTable.length==0) {
+                    if(count1!=true){
+                        $(b).css('borderColor', '#ff4949');
+                    }
+                    count1=false;
+                }else{
+                    $(b).css('borderColor','#bfcbd9');
+                }
+            },
+            //值类型
+            getValueType_1(datas){
+                this.valueType_1.value=datas.value;
+
+                this.addProForm.typeInput = datas.value;
+                var a=this.$refs.valueType_1.$children[0].$children[0].$el;
+                var b=$(a).children('input');
+                if(this.addProForm.typeInput.length==0) {
+                    if(count2!=true){
+                        $(b).css('borderColor', '#ff4949');
+                    }
+                    count2=false;
+                }else{
+                    $(b).css('borderColor','#bfcbd9');
+                }
+            },
+            //值类型来源
+            getValueTypeOrigin_1(datas){
+                this.valueTypeOrigin_1.value=datas.value;
+                //判断是输入框还是下拉框
+                if( proEm.valueTypeOrigin_1.value==''){
+                    proEm.apparent=true;
+                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
+                }else{
+                    proEm.apparent=false;
+                }
+
+                switch (datas.value){
+                    case "keySet":
+                        this.$refs.valueOriginContent_1.setUrl({url:keySetPageUrl,key:'{"label":"keysetName","value":"rowId"}'});
+                        break;
+                    case "sequenceRule":
+                        this.$refs.valueOriginContent_1.setUrl({url:sequenceRuleConfigPageUrl,key:'{"label":"seqName","value":"rowId"}'});
+                        break;
+                    case "dataSet":
+                        this.$refs.valueOriginContent_1.setUrl({url:datasetConfigPageUrl,key:'{"label":"datasetName","value":"rowId"}'});
+                        break;
+                }
+            },
+            //值来源内容
+            getValueOriginContent_1(datas){
+                this.valueOriginContent_1.value=datas.value;
             },
             cancel() {
                 ibcpLayer.Close(divIndex);

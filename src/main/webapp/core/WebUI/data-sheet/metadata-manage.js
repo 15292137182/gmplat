@@ -86,6 +86,8 @@ gmp_onload=function(){
                 var htmlUrl = 'metadata-prop-add.html';
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {
                     proEm.$refs.proType_1.setValue("base");  //属性类型
+                    proEm.proType_1.value='base';//不点击的时候直接把属性传过去
+
                 });
             },
             //生效
