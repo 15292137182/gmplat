@@ -38,7 +38,8 @@ var em = new Vue({
                 url: serverPath + "/templateObj/queryPage",
                 key:'{"label":"templateName","value":"rowId"}',
                 value: "",
-                disabled: "false"
+                disabled: "false",
+                multiple: "true"
             },
 
             //所属模块下拉框
@@ -74,6 +75,7 @@ var em = new Vue({
                     }
                     if (operate == 2) {  //新增业务对象
                         editObj.editOk(function(){
+                            console.log(em.templateObj_1.value)
                             var data={
                                 "url":editUrl,
                                 "jsonData":{
@@ -117,7 +119,15 @@ var em = new Vue({
             }
         },
         getTemplateObj_1(datas){
-            this.templateObj_1.value=datas.value
+            if(datas.length==0){
+                this.templateObj_1.value='';
+            }else{
+                this.templateObj_1.value=JSON.stringify(datas);
+                //this.templateObj_1.value=datas;
+
+                console.log(this.templateObj_1.value);
+            }
+
 
         },
         //所属模块change事件

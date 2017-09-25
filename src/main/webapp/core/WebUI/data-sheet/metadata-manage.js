@@ -130,12 +130,14 @@ gmp_onload=function(){
                     };
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
-                        var data=res.data[0];
+                        console.log(res)
+                        var data=res.data;
                         console.log(data);
                         em.ruleForm.codeInput = data.objectCode;  //对象代码
                         em.ruleForm.nameInput =data.objectName;//对象名称
                         em.$refs.table_1.setValue(data.relateTableRowId);
                         em.$refs.templateObj_1.setValue(data.relateTemplateObject);//关联模板对象
+                        //em.$refs.templateObj_1.setValue(data.relateTemplate);//关联模板对象
                         em.ruleForm.system=data.system;//所属系统
                         em.$refs.belongModule_1.setValue(data.belongModule);//所属模块
                         em.ruleForm.versionInput =data.etc.version;//版本
@@ -315,9 +317,9 @@ gmp_onload=function(){
                         "obj":basRight
                     };
                     gmpAjax.showAjax(data, function (res) {
-                        console.log(res);
                         ///编辑拿到的数据
-                        var data = res.data[0];
+                        var data = res.data;
+                        console.log(data);
                         proEm.addProForm.codeProInput=data.propertyCode;   //代码
                         proEm.addProForm.nameProInput=data.propertyName;   //名称
                         proEm.$refs.proType_1.setValue(data.wetherExpandPro);  //属性类型
@@ -327,6 +329,7 @@ gmp_onload=function(){
                         proEm.$refs.valueTypeOrigin_1.setValue(data.valueResourceType);   //值类型来源
                         proEm.$refs.valueOriginContent_1.setValue(data.valueResourceContent);     //值来源内容
                         proEm.addProForm.fieldAliasInput=data.fieldAlias; //字段别名
+                        proEm.addProForm.defaultValue=data.defaultValue; //默认值
                     })
                 });
             },
