@@ -77,13 +77,17 @@
                     }
                 }
             },
-            created() {
-//                this.change();
+            mounted() {
+                this.change();
             },
             methods: {
                 change() {
-                    this.initial_3.value = "23ae8e2c-fbef-477e-8d9a-6d46d5b1";
-                    this.initial_4.value = ["23ae8e2c-fbef-477e-8d9a-6d46d5b1", "f2c376f2-7097-42b3-ad65-0ec197ad"];
+                    var _arr = [];
+                    _arr.push("23ae8e2c-fbef-477e-8d9a-6d46d5b1");
+                    _arr.push("f2c376f2-7097-42b3-ad65-0ec197ad");
+//                    this.initial_3.value = "23ae8e2c-fbef-477e-8d9a-6d46d5b1";
+//                    this.initial_4.value = ["23ae8e2c-fbef-477e-8d9a-6d46d5b1", "f2c376f2-7097-42b3-ad65-0ec197ad"];
+                    this.$refs.multiple.setValue(_arr);
                 },
                 getData(data) {
                     // 级联选择方法
@@ -93,16 +97,15 @@
                             url: serverPath + '/dbTableColumn/queryTabById?rowId=5243fc43-a9c6-42f0-a0c8-fd74e7fb',
                             key: '{"label":"columnEname","value":"rowId"}'
                         });
-                        this.$refs.cascader.setDisabled(true);
+                        this.$refs.cascader.setDisabled(false);
                     }
                     if(JSON.stringify(data) === "{}") {
                         this.$refs.cascader.setValue("");
                     }
                 },
                 getData_1(data) {
-                    console.log(data);
+//                    console.log(data);
 //                    vm.initial_4.value = data;
-                    this.$refs.multiple.setValue('["23ae8e2c-fbef-477e-8d9a-6d46d5b1", "f2c376f2-7097-42b3-ad65-0ec197ad"]')
                 },
                 getMultiple() {
                     console.log(vm.initial_4.value);

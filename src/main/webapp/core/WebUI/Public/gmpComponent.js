@@ -84,7 +84,10 @@ Vue.component("single-selection", {
         setValue(val) {
             // console.log(val);
             if(this.isMultiple) {
-                console.log(val);
+                // console.log(val);
+                // console.log(typeof val);
+                // var setVal = val.split(",");
+                this.value = val;
             }else {
                 this.value = val;
             }
@@ -126,7 +129,6 @@ Vue.component("single-selection", {
                                 var _jsonObj = res.resp.content.data;
                                 // 键值集合-有条件数据库表查询 数据结构判断
                                 _jsonObj.data != undefined ? _jsonObj = _jsonObj.data : _jsonObj = _jsonObj;
-                                // 键值集合查询固定value-label
                                 // 无条件数据库表查询 数据结构判断
                                 _jsonObj.result != undefined ? _jsonObj = _jsonObj.result : _jsonObj = _jsonObj;
                                 // 循环配置value-label
