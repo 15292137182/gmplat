@@ -14,12 +14,17 @@ var addDataSet = new Vue({
         formTable:{
             datasetCode:'',
             nameInput:'',
-          //  typeInput:'',    修改下拉框 jms 2017/8/21
+           typeInput:'',    //修改下拉框 jms 2017/8/21
             content:'',
             desp:'',
             version:'',
-          //  belongModule:'',//模块
+            belongModule:'',//模块
             belongSystem:'',//系统
+        },
+        rules:{
+            nameInput:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+            typeInput:[{ required: true, message: '请选择类型', trigger: 'blur' }],
+            belongModule:[{ required: true, message: '请选择所属模块', trigger: 'blur' }],
         },
         value_1:'',
         isEdit:'',//是否编辑
@@ -100,19 +105,37 @@ var addDataSet = new Vue({
                 queryData.getData(dataSetConfig.selUrl,dataSetConfig.input,dataSetConfig);
             })
         },
-        conformEvent(){//确定
+        conformEvent(formName){//确定
             if(!this.isEdit){//新增
-                if(this.checkIsNull()){
-                    addObj.addOk(function(){
-                        addDataSet.addSet();
-                    })
-                }
+                // if(this.checkIsNull()){
+                //     addObj.addOk(function(){
+                //         addDataSet.addSet();
+                //     })
+                // }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        addObj.addOk(function(){
+                            addDataSet.addSet();
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }else{//编辑
-                if(this.checkIsNull()){
-                    editObj.editOk(function(){
-                        addDataSet.editSet();
-                    })
-                }
+                // if(this.checkIsNull()){
+                //     editObj.editOk(function(){
+                //         addDataSet.editSet();
+                //     })
+                // }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        editObj.editOk(function(){
+                            addDataSet.editSet();
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
         cancel(){//取消
@@ -120,9 +143,11 @@ var addDataSet = new Vue({
         },
         getDataSetType_1(data){
             this.dataSetType_1.value=data.value;
+            this.formTable.typeInput = data.value;
         },
         getBelongModule_1(datas){
             this.belongModule_1.value=datas.value;
+            this.formTable.belongModule = datas.value;
         }
     }
 })
