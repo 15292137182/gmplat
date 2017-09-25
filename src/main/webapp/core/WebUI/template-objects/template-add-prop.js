@@ -23,19 +23,22 @@ var addTempProp = new Vue({
                 //验证
                 rules: {
                     engNameInput: [
-                        { required: true,message: '请输入英文名'}
+                        { required: true,message: '请输入英文名'},
+                        { max:64, message: '长度最大为64字节', trigger: 'blur' }
                     ],
                     chnNameInput: [
                         { required: true, message: '请输入中文名'},
+                        { max:128, message: '长度最大为128字节', trigger: 'blur' }
                     ],
-                    default: [
-                        { required: true,message: '请输入默认值'}
-                    ],
+                    //default: [
+                    //    { required: true,message: '请输入默认值'}
+                    //],
                     typeValue: [
                         { required: true,trigger: 'blur', message: '请选择值类型'},
                     ],
                     comContent: [
-                        { required: true,message: '请输入说明'}
+                        { required: true,message: '请输入说明'},
+                        { max:512, message: '长度最大为512字节', trigger: 'blur' }
                     ]
                 },
             }

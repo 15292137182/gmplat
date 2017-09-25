@@ -22,13 +22,15 @@ var addTemp = new Vue({
                 //验证
                 rules: {
                     nameInput: [
-                        { required: true,message: '请输入名称'}
+                        { required: true,message: '请输入名称'},
+                        { max:128, message: '长度最大为128字节', trigger: 'blur' }
                     ],
                     modules: [
-                        { required: true,trigger: 'blur', message: '请选择模块'},
+                        { required: true,trigger: 'blur', message: '请选择所属模块'},
                     ],
                     comContent: [
-                        { required: true,message: '请输入说明'}
+                        { required: true,message: '请输入说明'},
+                        { max:512, message: '长度最大为512字节', trigger: 'blur' }
                     ]
                 },
             }
