@@ -341,9 +341,11 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   public List<Map<String, Object>> associationQuery(Class<? extends BeanInterface> primary,
                                                     Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, Condition condition) {
-    List<Map<String, Object>> execute = null;
+    List<Map<String, Object>> execute;
     if (condition != null) {
       execute = MORE_BATIS.select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).execute();
+    } else {
+      execute = MORE_BATIS.select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).execute();
     }
     return execute;
   }
