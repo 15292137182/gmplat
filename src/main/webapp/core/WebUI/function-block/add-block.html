@@ -21,31 +21,31 @@
 </head>
 <body>
 <div id="addBlock" style="margin-top:20px">
-    <el-form :label-position="labelPosition" label-width="70px" :model="formTable">
+    <el-form :label-position="labelPosition" ref="formTable" :rules="rules" label-width="100px" :model="formTable">
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="代码">
+                <el-form-item label="代码" prop="codeInput">
                     <el-input placeholder="请输入代码" v-model="formTable.codeInput"  ref="codeInput"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="名称">
+                <el-form-item label="名称" prop="nameInput">
                     <el-input placeholder="请输入名称" v-model="formTable.nameInput" ref="nameInput"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="类型">
+                <el-form-item label="类型" prop="typeInput">
                     <single-selection @change-data="getFunctionBlockType_1" :initial="functionBlockType_1" ref="functionBlockType_1"></single-selection>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="关联对象">
+                <el-form-item label="关联对象" prop="objData">
                     <!--<el-input placeholder="请选择关联对象" disabled="" v-model="formTable.tableInput" ref="tableInput">-->
                         <!--<el-button slot="append" :disabled="isEdit" icon="search" @click="searchConnectObj"></el-button>-->
                     <!--</el-input>-->
@@ -55,7 +55,7 @@
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="所属模块">
+                <el-form-item label="所属模块" prop="Module">
                     <single-selection @change-data="getBelongModule_1" :initial="belongModule_1" ref="belongModule_1"></single-selection>
                 </el-form-item>
             </el-col>
@@ -77,7 +77,7 @@
     </el-form>
     <el-row >
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" @click.native="conformEvent">保存</el-button>
+            <el-button type="primary" @click.native="conformEvent('formTable')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" @click.native="cancel">取消</el-button>

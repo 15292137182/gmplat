@@ -29,10 +29,10 @@
 </head>
 <body>
 <div id="addData" style="margin-top:10px">
-    <el-form :label-position="labelPosition" label-width="100px" :model="formTable">
+    <el-form :label-position="labelPosition" ref="formTable" :rules="rules" label-width="110px" :model="formTable">
         <el-row type="flex" class="row-bg">
             <el-col :span="10" :offset="1">
-                <el-form-item label="关联对象属性">
+                <el-form-item label="关联对象属性" prop="tableInput">
                     <!--<el-input placeholder="请选择关联对象属性" v-model="formTable.tableInput" disabled="" ref="tableInput">-->
                         <!--<el-button slot="append" type="primary" @click="searchConnectObj" icon="search"></el-button>-->
                     <!--</el-input>-->
@@ -41,7 +41,7 @@
                 </el-form-item>
             </el-col>
             <el-col :span="10" :offset="1">
-                <el-form-item label="标题">
+                <el-form-item label="标题" prop="nameTitle">
                     <el-input placeholder="请输入标题" v-model="formTable.nameTitle" ref="nameTitle"></el-input>
                 </el-form-item>
             </el-col>
@@ -53,7 +53,7 @@
                 <!--</el-form-item>-->
             <!--</el-col>-->
         </el-row>
-        <el-row type="flex" class="row-bg" style="margin-top:-10px; text-align: right">
+        <el-row type="flex" class="row-bg" style="text-align: right">
             <el-col :span="4">
                 <el-form-item label="">
                     <template>
@@ -92,7 +92,7 @@
         </el-row>
         <el-row type="flex" class="row-bg" style="margin-top:-20px;">
             <el-col :span="10" :offset="1" v-if="controlBottom">
-                <el-form-item label="显示控件">
+                <el-form-item label="显示控件" prop="nameInput">
                     <!--<el-input :disabled="checkType" placeholder="请输入显示控件名称" v-model="formTable.nameInput" ref="nameInput"></el-input>-->
                     <single-selection @change-data="getShowControl_1" :initial="showControl_1" ref="showControl_1"></single-selection>
                 </el-form-item>
@@ -131,7 +131,7 @@
         </el-row>
         <el-row type="flex" class="row-bg" style="margin-top:10px;">
             <el-col :span="10" :offset="1">
-                <el-form-item label="排序序号">
+                <el-form-item label="排序序号" prop="sortNumber">
                     <el-input :disabled="isDisabled" placeholder="请输入排序顺序" v-model="formTable.sortNumber" ref="sortNumber"></el-input>
                 </el-form-item>
             </el-col>
@@ -207,7 +207,7 @@
     </el-form>
     <el-row style="margin-bottom:20px">
         <el-col :span="11" style="text-align:right;">
-            <el-button type="primary" @click.native="conformEvent">保存</el-button>
+            <el-button type="primary" @click.native="conformEvent('formTable')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" @click.native="cancel">取消</el-button>

@@ -13,7 +13,16 @@ var em=new Vue({
             nameInput:'',//funcName功能名称
             Module:'',//所属模块
             System:'',//所属系统
+            typeInput:'',//类型
+            objData:'',//关联对象
             desp:'',
+        },
+        rules:{
+            codeInput:[{ required: true, message: '请输入代码', trigger: 'blur' }],
+            nameInput:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+            typeInput:[{ required: true, message: '请选择类型', trigger: 'blur' }],
+            objData:[{ required: true, message: '请选择关联对象', trigger: 'blur' }],
+            Module:[{ required: true, message: '请选择所属模板', trigger: 'blur' }],
         },
         dataId:'',//relateBusiObj关联对象ID
         isEdit:'',
@@ -95,21 +104,39 @@ var em=new Vue({
                 queryData.getData(functionBlock.Selurl,functionBlock.input,functionBlock);
             })
         },
-        conformEvent(){
-            var datas=[this.$refs.nameInput];
-            for(var i=0;i<datas.length;i++){
-                if(datas[i].value==''){
-                    ibcpLayer.ShowMsg(datas[i].placeholder);
-                    return;
-                }
-            }
+        conformEvent(formName){
+            // var datas=[this.$refs.nameInput];
+            // for(var i=0;i<datas.length;i++){
+            //     if(datas[i].value==''){
+            //         ibcpLayer.ShowMsg(datas[i].placeholder);
+            //         return;
+            //     }
+            // }
             if(em.isEdit){//编辑
-                editObj.editOk(function(){
-                    em.editBlock();
+                // editObj.editOk(function(){
+                //     em.editBlock();
+                // })
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        editObj.editOk(function(){
+                            em.editBlock();
+                        })
+                    } else {
+                        return false;
+                    }
                 })
             }else{//新增
-                addObj.addOk(function(){
-                    em.addBlock();
+                // addObj.addOk(function(){
+                //     em.addBlock();
+                // })
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        addObj.addOk(function(){
+                            em.addBlock();
+                        })
+                    } else {
+                        return false;
+                    }
                 })
             }
         },
@@ -123,15 +150,18 @@ var em=new Vue({
         //类型
         getFunctionBlockType_1(datas){
             this.functionBlockType_1.value = datas.value;
+            this.formTable.typeInput = datas.value;
         },
         //关联对象下拉框数据
         getObj_1(datas){
             this.obj_1.value=datas.value;
+            this.formTable.objData = datas.value;
         },
 
         //所属模块
         getBelongModule_1(datas){
             this.belongModule_1.value=datas.value;
+            this.formTable.Module=datas.value;
         }
     }
 })

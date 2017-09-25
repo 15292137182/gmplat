@@ -10,9 +10,9 @@ var em=new Vue({
     data: {
         labelPosition:'right',
         formTable:{
-           // tableInput:'',//关联对象属性
+           tableInput:'',//关联对象属性
             nameTitle:'',//显示标题
-            // nameInput:'',//显示控件
+            nameInput:'',//显示控件
             lengthSection:'',//长度区间
             testFunction:'',//验证函数
             displayFunction:'',//显示函数
@@ -21,6 +21,12 @@ var em=new Vue({
             Keyword1:'',//关键字1
             Keyword2:'',//关键字2
             Keyword3:'',//关键字3
+        },
+        rules:{
+            tableInput:[{ required: true, message: '请选择关联对象属性', trigger: 'blur' }],
+            nameTitle:[{ required: true, message: '请输入标题', trigger: 'blur' }],
+            nameInput:[{ required: true, message: '请选择显示控件', trigger: 'blur' }],
+            sortNumber:[{ required: true, message: '请输入排序序号', trigger: 'blur' }],
         },
         funcRowId:'',//功能块ID
         dataId:'',//关联对象属性ID
@@ -90,28 +96,28 @@ var em=new Vue({
                 this.checkType=true;
             }
         },
-        conformEvent(){
-            var data = [
-                //this.$refs.tableInput,
-                this.$refs.nameTitle,
-                // this.$refs.lengthSection,
-                // this.$refs.testFunction,
-                // this.$refs.displayFunction,
-                // this.$refs.sortNumber
-            ];
-            for(var i=0;i<data.length;i++){
-                if(data[i].value==''){
-                    ibcpLayer.ShowMsg(data[i].placeholder);
-                    return;
-                }
-            }
+        conformEvent(formName){
+            // var data = [
+            //     //this.$refs.tableInput,
+            //     this.$refs.nameTitle,
+            //     // this.$refs.lengthSection,
+            //     // this.$refs.testFunction,
+            //     // this.$refs.displayFunction,
+            //     // this.$refs.sortNumber
+            // ];
+            // for(var i=0;i<data.length;i++){
+            //     if(data[i].value==''){
+            //         ibcpLayer.ShowMsg(data[i].placeholder);
+            //         return;
+            //     }
+            // }
             // if(!this.checkType && this.$refs.nameInput==''){
             //     ibcpLayer.ShowMsg(this.$refs.nameInput.placeholder);
             //     return;
             // }
             //this.sortArrFun(this.sortNumber);//排序
             this.funcRowId = window.parent.topButtonObj.rowObjId;
-            this.addObjectProperties();//新增
+            this.addObjectProperties(formName);//新增
         },
         newAttribute(){//新增属性
             console.log(em.attrSource);
@@ -177,7 +183,8 @@ var em=new Vue({
              //       keywordTwo:em.formTable.Keyword2,//关键字2
               //      keywordThree:em.formTable.Keyword3,//关键字3
                 },
-                "obj":window.parent.functionBlock
+                "obj":window.parent.functionBlock,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                     //showMsg.MsgOk(window.parent.functionBlock,res);
@@ -195,15 +202,33 @@ var em=new Vue({
                 this.sortArr.push(arr[i]);
             }
         },
-        addObjectProperties(){
+        addObjectProperties(formName){
             if(!window.parent.topButtonObj.isEdit){//新增
-                addObj.addOk(function(){
-                    em.newAttribute();
-                })
+                // addObj.addOk(function(){
+                //     em.newAttribute();
+                // })
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        addObj.addOk(function(){
+                            em.newAttribute();
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }else{//编辑
-                editObj.editOk(function(){
-                    em.editAttribute();
-                })
+                // editObj.editOk(function(){
+                //     em.editAttribute();
+                // })
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        editObj.editOk(function(){
+                            em.editAttribute();
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
         loadComplete(){
@@ -227,8 +252,18 @@ var em=new Vue({
                 em.rowId=data[0].rowId;//新增成功后返回的ID
                 em.funcRowId=data[0].funcRowId;//功能块ID
                 em.$refs.objPro_1.setValue(data[0].relateBusiPro);//业务对象属性ID
-                em.$refs.objPro_1.setDisabled(true);
+                em.formTable.tableInput = data[0].relateBusiPro
                 em.formTable.nameTitle=data[0].displayTitle;//显示标题
+                em.formTable.lengthSection=data[0].lengthInterval;//长度区间
+                em.formTable.testFunction=data[0].validateFunc;//验证函数
+                em.formTable.displayFunction=data[0].displayFunc;//显示函数
+                em.formTable.sortNumber=data[0].sort;//排序
+                em.formTable.Twidth=data[0].widthSetting//宽度
+                em.formTable.Keyword1=data[0].keywordOne//关键字1
+                em.formTable.Keyword2=data[0].keywordTwo//关键字2
+                em.formTable.Keyword3=data[0].keywordThree//关键字3
+                em.isDisabled=true;
+                em.$refs.objPro_1.setDisabled(true);
                 if(data[0].wetherDisplay =="true"){
                     em.checked=true;//是否显示
                 }else{
@@ -247,18 +282,19 @@ var em=new Vue({
                     em.SupportSorting=true;//支持排序
                 }
                 em.$refs.showControl_1.setValue(data[0].displayWidget);
+                em.formTable.nameInput = data[0].displayWidget;
                 em.$refs.showControl_1.setDisabled(true);
-                em.formTable.lengthSection=data[0].lengthInterval;//长度区间
-                em.formTable.testFunction=data[0].validateFunc;//验证函数
-                em.formTable.displayFunction=data[0].displayFunc;//显示函数
-                em.formTable.sortNumber=data[0].sort;//排序
+                // em.formTable.lengthSection=data[0].lengthInterval;//长度区间
+                // em.formTable.testFunction=data[0].validateFunc;//验证函数
+                // em.formTable.displayFunction=data[0].displayFunc;//显示函数
+                // em.formTable.sortNumber=data[0].sort;//排序
                 em.$refs.align_1.setValue(data[0].align);//下拉框
                 em.$refs.align_1.setDisabled(true);
-                em.formTable.Twidth=data[0].widthSetting//宽度
-                em.formTable.Keyword1=data[0].keywordOne//关键字1
-                em.formTable.Keyword2=data[0].keywordTwo//关键字2
-                em.formTable.Keyword3=data[0].keywordThree//关键字3
-                em.isDisabled=true;
+                // em.formTable.Twidth=data[0].widthSetting//宽度
+                // em.formTable.Keyword1=data[0].keywordOne//关键字1
+                // em.formTable.Keyword2=data[0].keywordTwo//关键字2
+                // em.formTable.Keyword3=data[0].keywordThree//关键字3
+                // em.isDisabled=true;
                 //em.queryObjectProperties();
             })
         },
@@ -279,10 +315,14 @@ var em=new Vue({
         //点击对象属性
         getObjPro_1(datas){
             em.objPro_1.value=datas.value;
+            em.formTable.tableInput=datas.value;
+            console.log(datas);
+            console.log(em.formTable);
         },
         //点击显示控件下拉框
         getShowControl_1(datas){
             em.showControl_1.value=datas.value;
+            em.formTable.nameInput = datas.value;
         },
         //点击对齐方式下拉框
         getAlign_1(datas){
