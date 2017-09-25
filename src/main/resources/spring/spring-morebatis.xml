@@ -24,6 +24,9 @@
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.DataSetConfig" p:tableName="t_dataset_config"
           p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.DynamicTemplate" p:tableName="t_dataset_config"
+              p:pks="#{'rowId'}"/>
 
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.DBTableColumn" p:tableName="t_db_table_column"

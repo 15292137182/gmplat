@@ -22,7 +22,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 public abstract class EntityFillUtils {
 
-  private static final String SERIAL_TYPE = "serialNo";
+//  private static final String SERIAL_TYPE = "serialNo";
+  private static final String SERIAL_TYPE = "sequenceRule";
 
   /**
    * 填充实体中的特殊字段

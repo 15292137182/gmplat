@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DataSetConfig;
+import com.bcx.plat.core.entity.DynamicTemplate;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -51,8 +52,10 @@ public class DynamicTemplateController extends BaseController {
   @RequestMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
-    int insert = dataSetConfig.insert();
+    param.remove("datasetCode");
+//    DynamicTemplate dynamicTemplate = new DynamicTemplate().buildCreateInfo().fillEntitySN("8898bf31-b7ca-4af2-b1b3-2a285841",null).fromMap(param);
+    DynamicTemplate dynamicTemplate = new DynamicTemplate().buildCreateInfo().fromMap(param);
+    int insert = dynamicTemplate.insert();
     if (insert != -1) {
       return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
     } else {
