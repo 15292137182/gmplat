@@ -50,7 +50,8 @@ gmp_onload=function(){
                     var data = {
                         "url":dataBase.delUrl,
                         "jsonData":{rowId:dataBase.rowObj.rowId},
-                        "obj":dataBase
+                        "obj":dataBase,
+                        "showMsg":true
                     }
                     gmpAjax.showAjax(data,function(res){
                         queryData.getData(dataBase.url,dataBase.input,dataBase)

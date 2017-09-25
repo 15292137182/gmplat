@@ -11,24 +11,24 @@
 </head>
 <body>
 <div id="addDataSet" style="margin-top:20px">
-    <el-form :label-position="labelPosition" label-width="80px" :model="formTable">
+    <el-form :label-position="labelPosition" ref="formTable" :rules="rules" label-width="100px" :model="formTable">
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="表schema">
+                <el-form-item label="表schema" prop="name">
                     <el-input placeholder="请输入表schema" v-model="formTable.name" ref="name"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="表英文名">
+                <el-form-item label="表英文名" prop="Ename">
                     <el-input placeholder="请输入表英文名" v-model="formTable.Ename" ref="Ename"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="20" :offset="1">
-                <el-form-item label="表中文名">
+                <el-form-item label="表中文名" prop="Cname">
                     <el-input placeholder="请输入表中文名" v-model="formTable.Cname" ref="Came"></el-input>
                 </el-form-item>
             </el-col>
@@ -43,7 +43,7 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" @click="conformEvent">保存</el-button>
+            <el-button type="primary" @click="conformEvent('formTable')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" @click="cancel">取消</el-button>

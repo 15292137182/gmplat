@@ -11,6 +11,11 @@ var tableBase = new Vue({
             Cname:'',
             desp:''
         },
+        rules:{
+            name:[{ required: true, message: '请输入表schema', trigger: 'blur' }],
+            Ename:[{ required: true, message: '请输入表英文名', trigger: 'blur' }],
+            Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' }]
+        },
         url:serverPath+'/maintTable/add',
         editUrl:serverPath+'/maintTable/modify',
         rowObj:''
@@ -23,7 +28,9 @@ var tableBase = new Vue({
                     tableEname:this.formTable.Ename,
                     tableCname:this.formTable.Cname,
                     desp:this.formTable.desp
-                },"obj":tableBase
+                },
+                "obj":tableBase,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                 //showMsg.MsgOk(dataBase,msg);
@@ -40,7 +47,9 @@ var tableBase = new Vue({
                     tableEname:this.formTable.Ename,
                     tableCname:this.formTable.Cname,
                     desp:this.formTable.desp
-                },"obj":tableBase
+                },
+                "obj":tableBase,
+                "showMsg":true
             }
             gmpAjax.showAjax(data,function(res){
                 //showMsg.MsgOk(dataBase,msg);
@@ -62,19 +71,37 @@ var tableBase = new Vue({
             }
             return true;
         },
-        conformEvent(){//确定按钮
+        conformEvent(formName){//确定按钮
             if(topButtonObj.isEdit == true){//编辑
-                if(this.isNull()){
-                    editObj.editOk(function(){
-                        tableBase.editTbleBase(tableBase.rowObj.rowId);
-                    })
-                }
+                // if(this.isNull()){
+                //     editObj.editOk(function(){
+                //         tableBase.editTbleBase(tableBase.rowObj.rowId);
+                //     })
+                // }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        editObj.editOk(function(){
+                            tableBase.editTbleBase(tableBase.rowObj.rowId);
+                        })
+                    } else {
+                        return false;
+                    }
+                })
             }else{//新增
-                if(this.isNull()){
-                    addObj.addOk(function(){
-                        tableBase.addTableBase();
-                    })
-                }
+                // if(this.isNull()){
+                //     addObj.addOk(function(){
+                //         tableBase.addTableBase();
+                //     })
+                // }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        addObj.addOk(function(){
+                                    tableBase.addTableBase();
+                                })
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
         cancel(){//取消按钮
