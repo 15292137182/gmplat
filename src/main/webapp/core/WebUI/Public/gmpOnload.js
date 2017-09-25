@@ -11,7 +11,8 @@ var GmpSearch = {};
 
 $(function() {
     fun1();
-    $.when.apply($,_function,fun2())
+    _function.push(fun2())
+    $.when.apply($,_function)
         .done(function() {
             // alert("done");
             if(typeof gmp_onload == "function") {
@@ -62,7 +63,8 @@ var fun1 = function() {
 };
 
 var fun2 = function(){
-    TableKeyValueSet.init();
+    var dtdObj = TableKeyValueSet.init();
+    return dtdObj;
 };
 
 var TableKeyValueSet = (function(){
@@ -101,7 +103,7 @@ var TableKeyValueSet = (function(){
                         /**
                          * tsj 07/8/30 修改后端返回数据结构
                          **/
-
+                        console.log(4)
                         var jsonStr=JSON.parse(res.resp.content.data);
                         for(k in jsonStr){
                             var _param={};
@@ -112,6 +114,7 @@ var TableKeyValueSet = (function(){
                             param[k]=_param;
                         }
                         tableKeyValueSetOut=param;
+                        console.log("返回键值集合key value");
                         dtd.resolve();
                     },
                     error:function(){
