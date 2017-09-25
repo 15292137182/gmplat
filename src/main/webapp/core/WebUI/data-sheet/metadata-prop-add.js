@@ -9,22 +9,6 @@ var proEm = new Vue({
         data: function () {
             return {
                 labelPosition: 'right',
-                addProForm: {
-                    codeProInput: '',//代码
-                    nameProInput: '',//名称
-                    proType:'',//属性类型
-                    reaTable:'',//关联表字段
-                    fieldAliasInput:'',//字段别名
-                    typeInput:'',//值类型
-                    typeComValue:'',//值类型来源
-                    comContent: '',//值来源内容 输入框的值
-                    defaultValue:'',//默认值
-                    //iconEvent: false,
-                    //checkEvent: false,
-                    //reaTabEvent:false,
-
-                },
-                apparent:true,//显示输入框还是下拉框
                 //属性类型
                 proType_1:{
                     params: "proType",
@@ -38,14 +22,12 @@ var proEm = new Vue({
                     value: "",
                     disabled: "false"
                 },
-
                 //值类型
                 valueType_1:{
                     params:"valueType",
                     value:"",
                     disabled:"false"
                 },
-
                 //值类型来源
                 valueTypeOrigin_1:{
                     params:"valueTypeOrigin",
@@ -59,15 +41,25 @@ var proEm = new Vue({
                     value:"",
                     disabled:"false"
                 },
+                addProForm: {
+                    codeProInput: '',//代码
+                    nameProInput: '',//名称
+                    proType:'',//属性类型
+                    reaTable:'',//关联表字段
+                    fieldAliasInput:'',//字段别名
+                    typeInput:'',//值类型
+                    typeComValue:'',//值类型来源
+                    comContent: '',//值来源内容 输入框的值
+                    defaultValue:'',//默认值
+
+                },
+                apparent:true,//显示输入框还是下拉框
                 rules:{
                     nameProInput: [
                         { required: true, message: '请输入属性名称'},
                     ],
                     proType: [
                         { required: true,trigger: 'blur',message: '请选择属性类型'}
-                    ],
-                    reaTable: [
-                        { required: true,trigger: 'blur',message: '请选择关联表字段'}
                     ],
                     fieldAliasInput: [
                         { required: true,trigger: 'blur',message: '请输入字段别名'}
@@ -80,6 +72,84 @@ var proEm = new Vue({
             }
         },
         methods: {
+            //属性类型
+            getProType_1(datas){
+                this.proType_1.value=datas.value;
+
+                this.addProForm.proType = datas.value;
+                var a=this.$refs.proType_1.$children[0].$children[0].$el;
+                var b=$(a).children('input');
+                if(this.addProForm.proType.length==0) {
+                    if(count!=true){
+                        $(b).css('borderColor', '#ff4949');
+                    }
+                    count=false;
+                }else{
+                    $(b).css('borderColor','#bfcbd9');
+                }
+
+
+            },
+            //关联表字段
+            getTableField_1(datas){
+                this.tableField_1.value=datas.value;
+
+                this.addProForm.reaTable = datas.value;
+                var a=this.$refs.tableField_1.$children[0].$children[0].$el;
+                var b=$(a).children('input');
+                if(this.addProForm.reaTable.length==0) {
+                    if(count1!=true){
+                        $(b).css('borderColor', '#ff4949');
+                    }
+                    count1=false;
+                }else{
+                    $(b).css('borderColor','#bfcbd9');
+                }
+            },
+            //值类型
+            getValueType_1(datas){
+                this.valueType_1.value=datas.value;
+
+                this.addProForm.typeInput = datas.value;
+                var a=this.$refs.valueType_1.$children[0].$children[0].$el;
+                var b=$(a).children('input');
+                if(this.addProForm.typeInput.length==0) {
+                    if(count2!=true){
+                        $(b).css('borderColor', '#ff4949');
+                    }
+                    count2=false;
+                }else{
+                    $(b).css('borderColor','#bfcbd9');
+                }
+            },
+            //值类型来源
+            getValueTypeOrigin_1(datas){
+                this.valueTypeOrigin_1.value=datas.value;
+                console.log( this.valueTypeOrigin_1.value);
+                //判断是输入框还是下拉框
+                if( proEm.valueTypeOrigin_1.value==''){
+                    proEm.apparent=true;
+                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
+                }else{
+                    proEm.apparent=false;
+                }
+
+                switch (datas.value){
+                    case "keySet":
+                        this.$refs.valueOriginContent_1.setUrl({url:keySetPageUrl,key:'{"label":"keysetName","value":"rowId"}'});
+                        break;
+                    case "sequenceRule":
+                        this.$refs.valueOriginContent_1.setUrl({url:sequenceRuleConfigPageUrl,key:'{"label":"seqName","value":"rowId"}'});
+                        break;
+                    case "dataSet":
+                        this.$refs.valueOriginContent_1.setUrl({url:datasetConfigPageUrl,key:'{"label":"datasetName","value":"rowId"}'});
+                        break;
+                }
+            },
+            //值来源内容
+            getValueOriginContent_1(datas){
+                this.valueOriginContent_1.value=datas.value;
+            },
             conformEvent(formName) {
                 this.$refs.addProForm.validate((valid) => {
                     if (valid) {
@@ -116,7 +186,7 @@ var proEm = new Vue({
                                         rowId: basRight.currentVal.rowId,//本生的ID
                                         objRowId: basLeft.currentId,//左边表的ID
                                         propertyName: proEm.addProForm.nameProInput,//业务对象属性名称
-                                        wetherExpandPro: proEm.proType_1.value,//属性类型,//是否为扩展属性
+                                        wetherExpandPro: proEm.proType_1.value,//属性类型,
                                         relateTableColumn: proEm.tableField_1.value,//关联表字段
                                         valueType: proEm.valueType_1.value,//值类型
                                         valueResourceType: proEm.valueTypeOrigin_1.value,//值来源类型
@@ -145,87 +215,6 @@ var proEm = new Vue({
                 //    ibcpLayer.ShowMsg("扩展属性未指定字段别名");
                 //    return false;
                 //}
-            },
-            //属性类型
-            getProType_1(datas){
-                this.proType_1.value=datas.value;
-
-                this.addProForm.proType = datas.value;
-                var a=this.$refs.proType_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.proType.length==0) {
-                    if(count!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
-
-
-            },
-
-            //关联表字段
-            getTableField_1(datas){
-                this.tableField_1.value=datas.value;
-
-                this.addProForm.reaTable = datas.value;
-                var a=this.$refs.tableField_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.reaTable.length==0) {
-                    if(count1!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count1=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
-            },
-
-            //值类型
-            getValueType_1(datas){
-                this.valueType_1.value=datas.value;
-
-                this.addProForm.typeInput = datas.value;
-                var a=this.$refs.valueType_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.typeInput.length==0) {
-                    if(count2!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count2=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
-            },
-
-            //值类型来源
-            getValueTypeOrigin_1(datas){
-                this.valueTypeOrigin_1.value=datas.value;
-                console.log( this.valueTypeOrigin_1.value);
-                //判断是输入框还是下拉框
-                if( proEm.valueTypeOrigin_1.value==''){
-                    proEm.apparent=true;
-                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
-                }else{
-                    proEm.apparent=false;
-                }
-
-                switch (datas.value){
-                    case "keySet":
-                        this.$refs.valueOriginContent_1.setUrl({url:keySetPageUrl,key:'{"label":"keysetName","value":"rowId"}'});
-                         break;
-                    case "sequenceRule":
-                        this.$refs.valueOriginContent_1.setUrl({url:sequenceRuleConfigPageUrl,key:'{"label":"seqName","value":"rowId"}'});
-                        break;
-                    case "dataSet":
-                        this.$refs.valueOriginContent_1.setUrl({url:datasetConfigPageUrl,key:'{"label":"datasetName","value":"rowId"}'});
-                         break;
-                }
-            },
-            //值来源内容
-            getValueOriginContent_1(datas){
-                 this.valueOriginContent_1.value=datas.value;
             },
             cancel() {
                 ibcpLayer.Close(divIndex);

@@ -77,13 +77,16 @@ gmp_onload=function(){
                 operate = 1;
                 var htmlUrl = 'metadata-add.html';
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增业务对象', '400px', '510px',function(){
+
                 });
             },
             //新增业务对象属性
             addProp(){
                 operateOPr=1;
                 var htmlUrl = 'metadata-prop-add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {});
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {
+                    proEm.$refs.proType_1.setValue("base");  //属性类型
+                });
             },
             //生效
             affectProp(){
@@ -317,6 +320,7 @@ gmp_onload=function(){
                         "obj":basRight
                     };
                     gmpAjax.showAjax(data, function (res) {
+                        console.log(proEm.apparent);
                         ///编辑拿到的数据
                         var data = res.data;
                         console.log(data);
@@ -324,11 +328,15 @@ gmp_onload=function(){
                         proEm.addProForm.nameProInput=data.propertyName;   //名称
                         proEm.$refs.proType_1.setValue(data.wetherExpandPro);  //属性类型
                         proEm.$refs.tableField_1.setValue(data.relateTableColumn) ;  //关联表字段
+                        proEm.addProForm.fieldAliasInput=data.fieldAlias; //字段别名
                         //修改值类型和值类型来源下拉框  jms 2017/8/21
                         proEm.$refs.valueType_1.setValue(data.valueType);  //值类型
                         proEm.$refs.valueTypeOrigin_1.setValue(data.valueResourceType);   //值类型来源
-                        proEm.$refs.valueOriginContent_1.setValue(data.valueResourceContent);     //值来源内容
-                        proEm.addProForm.fieldAliasInput=data.fieldAlias; //字段别名
+                        if(proEm.apparent==true){
+                            proEm.$refs.valueOriginContent_1.setValue(data.valueResourceContent);//值来源内容
+                        }else{
+                            proEm.addProForm.comContent=data.valueResourceContent; //默认值
+                        }
                         proEm.addProForm.defaultValue=data.defaultValue; //默认值
                     })
                 });
