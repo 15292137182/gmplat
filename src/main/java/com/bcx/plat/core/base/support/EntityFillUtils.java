@@ -2,8 +2,10 @@ package com.bcx.plat.core.base.support;
 
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.service.BusinessObjectService;
+import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.SpringContextHolder;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 public abstract class EntityFillUtils {
 
-//  private static final String SERIAL_TYPE = "serialNo";
+  // 序列号类型
   private static final String SERIAL_TYPE = "sequenceRule";
 
   /**
@@ -46,8 +48,11 @@ public abstract class EntityFillUtils {
           if (SERIAL_TYPE.equals(businessObjectPro.getValueResourceType())) {
             Object value = entityMap.get(businessObjectPro.getPropertyCode());
             if (!isValid(value) || forceFill) {
-              value = SequenceManager.getInstance().buildSequenceNo(businessObjectPro.getValueResourceContent(), args, entity);
-              entityMap.put(businessObjectPro.getPropertyCode(), value);
+              String sequenceCode = getSerialCodeByRowId(businessObjectPro.getValueResourceContent());
+              if (null != sequenceCode) {
+                value = SequenceManager.getInstance().buildSequenceNo(sequenceCode, args, entity);
+                entityMap.put(businessObjectPro.getPropertyCode(), value);
+              }
             }
           }
         });
@@ -56,6 +61,21 @@ public abstract class EntityFillUtils {
       }
     }
     return false;
+  }
+
+  /**
+   * 根据序列号规则的 rowId 查询序列号规则的代码
+   *
+   * @param rowId 主键
+   * @return 返回
+   */
+  private static String getSerialCodeByRowId(String rowId) {
+    SequenceRuleConfigService service = SpringContextHolder.getBean(SequenceRuleConfigService.class);
+    SequenceRuleConfig config = service.selectOneById(rowId);
+    if (null != config) {
+      return config.getRowId();
+    }
+    return null;
   }
 
   /**
@@ -68,6 +88,7 @@ public abstract class EntityFillUtils {
     List<BusinessObjectPro> pros = new ArrayList<>();
     if (isValid(businessObjRI)) {
       BusinessObjectService service = SpringContextHolder.getBean(BusinessObjectService.class);
+      // 由于版本的存在，该rowId对应的模版对象可能不是最新的
       BusinessObject object = service.getLatestEffectiveObj(businessObjRI);
       if (null != object) {
         return service.getObjProperties(object.getRowId());
