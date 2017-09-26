@@ -75,6 +75,10 @@ var proEm = new Vue({
                     if (valid) {
                         if(operateOPr==1){
                             addObj.addOk(function(){
+                                //如果为输入框 值内容来源为输入框的值
+                                if( proEm.valueTypeOrigin_1.value==''){
+                                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
+                                }
                                 var data={
                                     "url":serverPath + "/businObjPro/add",
                                     "jsonData":{
@@ -92,6 +96,7 @@ var proEm = new Vue({
                                     "obj":basTop
                                 };
                                 gmpAjax.showAjax(data,function(res){
+                                    console.log(proEm.valueOriginContent_1.value)
                                     //分页跳回到第一页
                                     basRight.searchRight();
                                     ibcpLayer.Close(divIndex);
@@ -100,6 +105,9 @@ var proEm = new Vue({
                         }
                         else if(operateOPr==2){
                             editObj.editOk(function(){
+                                if( proEm.valueTypeOrigin_1.value==''){
+                                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
+                                }
                                 var data={
                                     "url":serverPath + "/businObjPro/modify",
                                     "jsonData":{
@@ -182,10 +190,10 @@ var proEm = new Vue({
             //值类型来源
             getValueTypeOrigin_1(datas){
                 this.valueTypeOrigin_1.value=datas.value;
+                console.log(datas.value);
                 //判断是输入框还是下拉框
                 if( proEm.valueTypeOrigin_1.value==''){
                     proEm.apparent=true;
-                    proEm.valueOriginContent_1.value=proEm.addProForm.comContent
                 }else{
                     proEm.apparent=false;
                 }
@@ -204,6 +212,7 @@ var proEm = new Vue({
             },
             //值来源内容
             getValueOriginContent_1(datas){
+                console.log(datas);
                 this.valueOriginContent_1.value=datas.value;
             },
             cancel() {

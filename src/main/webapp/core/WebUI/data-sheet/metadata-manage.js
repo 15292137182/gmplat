@@ -53,7 +53,9 @@ var templateObjProPageUro=serverPath+"/templateObj/queryProPage"
 //关联模板
 // var belongModel=serverPath + "/templateObj/query";
 function GlobalParameter(){
-    var args={"tableKeySet":{"obj":{belongModule:"belongModule"},"objProp":{valueType:"valueType",wetherExpandPro:"proType"}}};
+    var args={"tableKeySet":{
+        "obj":{belongModule:"belongModule"},
+        "objProp":{valueType:"valueType",wetherExpandPro:"proType",valueResourceType:'valueTypeOrigin'}}};
     return args;
 }
 
@@ -322,10 +324,14 @@ gmp_onload=function(){
                         "obj":basRight
                     };
                     gmpAjax.showAjax(data, function (res) {
-                        console.log(proEm.apparent);
                         ///编辑拿到的数据
                         var data = res.data;
                         console.log(data);
+                        if(data.valueResourceType==''){
+                            proEm.apparent=true;
+                        }else{
+                            proEm.apparent=false;
+                        }
                         proEm.addProForm.codeProInput=data.propertyCode;   //代码
                         proEm.addProForm.nameProInput=data.propertyName;   //名称
                         proEm.$refs.proType_1.setValue(data.wetherExpandPro);  //属性类型
@@ -334,7 +340,7 @@ gmp_onload=function(){
                         //修改值类型和值类型来源下拉框  jms 2017/8/21
                         proEm.$refs.valueType_1.setValue(data.valueType);  //值类型
                         proEm.$refs.valueTypeOrigin_1.setValue(data.valueResourceType);   //值类型来源
-                        if(proEm.apparent==true){
+                        if(proEm.apparent==false){
                             proEm.$refs.valueOriginContent_1.setValue(data.valueResourceContent);//值来源内容
                         }else{
                             proEm.addProForm.comContent=data.valueResourceContent; //默认值
