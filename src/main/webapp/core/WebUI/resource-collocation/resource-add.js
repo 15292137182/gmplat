@@ -22,7 +22,6 @@ var resAdd = new Vue({
                     { max:64, message: '长度最大为64字节'}
                 ],
                 tableInput: [
-                    { required: true,message: '请输入说明'},
                     { max:512, message: '长度最大为512字节'}
                 ]
             }
@@ -42,7 +41,8 @@ var resAdd = new Vue({
                                     confValue: resAdd.colForm.nameInput,
                                     desp: resAdd.colForm.tableInput
                                 },
-                                "obj": resTop
+                                "obj": resTop,
+                                "showMsg":true
                             };
                             gmpAjax.showAjax(data, function (res) {
                                 resCol.searchTable();
@@ -60,7 +60,8 @@ var resAdd = new Vue({
                                     confValue: resAdd.colForm.nameInput,
                                     desp: resAdd.colForm.tableInput
                                 },
-                                "obj": resTop
+                                "obj": resTop,
+                                "showMsg":true
                             };
                             gmpAjax.showAjax(data, function (res) {
                                 resCol.searchTable();

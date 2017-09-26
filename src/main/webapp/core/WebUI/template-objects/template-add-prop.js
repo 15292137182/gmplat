@@ -37,7 +37,7 @@ var addTempProp = new Vue({
                         { required: true,trigger: 'blur', message: '请选择值类型'},
                     ],
                     comContent: [
-                        { required: true,message: '请输入说明'},
+                        //{ required: true,message: '请输入说明'},
                         { max:512, message: '长度最大为512字节', trigger: 'blur' }
                     ]
                 },
@@ -59,7 +59,8 @@ var addTempProp = new Vue({
                                     defaultValue:addTempProp.addTempPropObj.default,
                                     desp:addTempProp.addTempPropObj.comContent
                                 },
-                                "obj":basRight
+                                "obj":basRight,
+                                'showMsg':true
                             };
                             gmpAjax.showAjax(data,function(res){
                                 //关闭弹层
@@ -80,7 +81,8 @@ var addTempProp = new Vue({
                                     defaultValue:addTempProp.addTempPropObj.default,
                                     desp:addTempProp.addTempPropObj.comContent
                                 },
-                                "obj":basRight
+                                "obj":basRight,
+                                'showMsg':true
                             };
                             gmpAjax.showAjax(data,function(res){
                                 //关闭弹层

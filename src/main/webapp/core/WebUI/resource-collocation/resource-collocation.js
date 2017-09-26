@@ -61,7 +61,8 @@ gmp_onload=function(){
                         "jsonData": {
                             rowId: deleteId
                         },
-                        "obj": resTop
+                        "obj": resTop,
+                        "showMsg":true
                     };
                     gmpAjax.showAjax(data, function (res) {
                         resCol.searchTable();

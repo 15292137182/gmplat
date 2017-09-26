@@ -25,7 +25,11 @@
     var deleteObjTemp=serverPath + "/templateObjPro/delete";
 
 function GlobalParameter(){
-    var args={"tableKeySet":{"templateObj":{belongModule:"belongModule"},"objTempProp":{valueType:"valueType"}}};
+    var args={"tableKeySet": {
+                    "templateObj":{belongModule:"belongModule"},
+                    "objTempProp":{valueType:"valueType"}
+                    }
+              };
     return args;
 }
 
@@ -83,7 +87,8 @@ gmp_onload=function(){
                     var data={
                         "url":addTempObjQuery,
                         "jsonData":{rowId:basLeft.currentId},
-                        "obj":basLeft
+                        "obj":basLeft,
+                        'showMsg':true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
@@ -103,7 +108,8 @@ gmp_onload=function(){
                     var data={
                         "url":deleteTempObj,
                         "jsonData":{rowId:basLeft.currentId},
-                        "obj":basLeft
+                        "obj":basLeft,
+                        'showMsg':true
                     };
                     gmpAjax.showAjax(data,function(res){
                         queryData.getData(queryTemp,basLeft.input,basLeft,function(res){
@@ -207,7 +213,8 @@ gmp_onload=function(){
                     var data={
                         "url":editQueryObjTemp,
                         "jsonData":{proRowId:basRight.currentProId},
-                        "obj":basRight
+                        "obj":basRight,
+                        'showMsg':true
                     };
                     gmpAjax.showAjax(data, function (res) {
                         console.log(res);
@@ -228,7 +235,8 @@ gmp_onload=function(){
                     var data={
                         "url":deleteObjTemp,
                         "jsonData":{rowId: basRight.currentId},
-                        "obj":basRight
+                        "obj":basRight,
+                        'showMsg':true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页查询

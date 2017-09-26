@@ -6,18 +6,18 @@ var addTemp = new Vue({
     "el": "#addEvent",
     data: function () {
             return {
+                //所属模块下拉框
+                belongModule_1:{
+                    params:'belongModule',
+                    value:'',
+                    disabled:'false',
+                },
                 labelPosition: 'right',
                 addTempObj: {
                     codeInput: '',//代码
                     nameInput: '',//名称
                     modules:'',//模块
                     comContent: '',//说明
-                },
-                //所属模块下拉框
-                belongModule_1:{
-                    params:'belongModule',
-                    value:'',
-                    disabled:'false',
                 },
                 //验证
                 rules: {
@@ -29,13 +29,29 @@ var addTemp = new Vue({
                         { required: true,trigger: 'blur', message: '请选择所属模块'},
                     ],
                     comContent: [
-                        { required: true,message: '请输入说明'},
+                        //{ required: true,message: '请输入说明'},
                         { max:512, message: '长度最大为512字节', trigger: 'blur' }
                     ]
                 },
             }
     },
     methods: {
+        //模块下拉框
+        getBelongModule_1(datas){
+            this.belongModule_1.value=datas.value;
+
+            this.addTempObj.modules = datas.value;
+            var a=this.$refs.belongModule_1.$children[0].$children[0].$el;
+            var b=$(a).children('input');
+            if(this.addTempObj.modules.length==0) {
+                if(count!=true){
+                    $(b).css('borderColor', '#ff4949');
+                }
+                count=false;
+            }else{
+                $(b).css('borderColor','#bfcbd9');
+            }
+        },
         //保存事件
         saveTemp(formName){
             this.$refs.addTempObj.validate((valid) => {
@@ -47,7 +63,8 @@ var addTemp = new Vue({
                                 "url":addTempObj,
                                 "jsonData":{templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,belongModule:addTemp.belongModule_1.value,
                                     belongSystem:addTemp.addTempObj.system},
-                                "obj":basLeft
+                                "obj":basLeft,
+                                'showMsg':true
                             };
                             gmpAjax.showAjax(data,function(res){
                                 //关闭弹层
@@ -64,7 +81,8 @@ var addTemp = new Vue({
                                 "url":editTempObj,
                                 "jsonData":{templateCode:addTemp.addTempObj.codeInput,rowId:basLeft.currentId,templateName:addTemp.addTempObj.nameInput,desp:addTemp.addTempObj.comContent,
                                     belongModule:addTemp.belongModule_1.value, belongSystem:addTemp.addTempObj.system},
-                                "obj":basLeft
+                                "obj":basLeft,
+                                'showMsg':true
                             };
                             gmpAjax.showAjax(data,function(res){
                                 console.log(res)
@@ -86,22 +104,6 @@ var addTemp = new Vue({
         //取消事件
         cancelTemp(){
             ibcpLayer.Close(divIndex);
-        },
-        //模块下拉框
-        getBelongModule_1(datas){
-            this.belongModule_1.value=datas.value;
-
-            this.addTempObj.modules = datas.value;
-            var a=this.$refs.belongModule_1.$children[0].$children[0].$el;
-            var b=$(a).children('input');
-            if(this.addTempObj.modules.length==0) {
-                if(count!=true){
-                    $(b).css('borderColor', '#ff4949');
-                }
-                count=false;
-            }else{
-                $(b).css('borderColor','#bfcbd9');
-            }
         },
         judgeMent(){
             setTimeout(function(){
