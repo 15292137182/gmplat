@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
@@ -16,15 +17,13 @@ import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
@@ -37,9 +36,9 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  * Copyright: Shanghai BatchSight GMP Information of management platform, Inc. Copyright(c) 2017
  *
  * @author Wen TieHu
- * <pre>History:
- *                                         2017/8/28  Wen TieHu Create
- *                                         </pre>
+ *         <pre>History:
+ *                   2017/8/28  Wen TieHu Create
+ *                 </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
@@ -69,30 +68,17 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryPropertiesPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    List<Order> orders = dataSort(TemplateObjectPro.class, order);
-    Condition condition;
-    if (isValid(param)) { // 判断是否根据指定字段查询
-      condition = new And(new FieldCondition("templateObjRowId", Operator.EQUAL, rowId),
-          convertMapToAndConditionSeparatedByLike(TemplateObjectPro.class, jsonToObj(param, Map.class)));
-    } else { // 根据空格查询
-      if (isValid(search)) {
-        condition = new ConditionBuilder(TemplateObjectPro.class)
-            .and().equal("templateObjRowId", rowId)
-            .or().addCondition(createBlankQuery(Arrays.asList("code", "cname", "ename", "valueType"), collectToSet(search))).endOr()
-            .endAnd().buildDone();
-      } else {
-        condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();
-      }
+    if (UtilsTool.isValid(rowId)) {
+      ServerResult serverResult = templateObjectService.queryTemplateProPage(rowId, search, param, pageNum, pageSize, order);
+      return result(serverResult);
     }
-
-    PageResult<Map<String, Object>> result;
-    if (isValid(pageNum)) { // 判断是否分页查询
-      result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
-    } else {
-      result = new PageResult(templateObjectProService.selectMap(condition, orders));
-    }
-    return result(new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, result));
+    return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
+
+
+
+
+
 
   /**
    * 查询信息
@@ -114,8 +100,11 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
-    List<Map> maps = templateObjectService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
-    return result(new ServerResult<>(maps));
+    if (UtilsTool.isValid(rowId)) {
+      List<Map> maps = templateObjectService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
+      return result(new ServerResult<>(maps));
+    }
+    return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL,Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 
   /**
@@ -154,7 +143,7 @@ public class TemplateObjectController extends BaseController {
     if (-1 == insert) {
       return result(serverResult.setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
     }
-    return result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,templateObject));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, templateObject));
   }
 
   /**
@@ -171,7 +160,7 @@ public class TemplateObjectController extends BaseController {
     if (-1 == updateById) {
       return result(serverResult.setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
     }
-    return result(new ServerResult<>(STATUS_SUCCESS, Message.UPDATE_SUCCESS,templateObject));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.UPDATE_SUCCESS, templateObject));
   }
 
   /**
@@ -189,6 +178,6 @@ public class TemplateObjectController extends BaseController {
     if (-1 == status) {
       return result(serverResult.setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
     }
-    return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS,maps));
+    return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
   }
 }

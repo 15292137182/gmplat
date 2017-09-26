@@ -28,8 +28,8 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  * @author Wen TieHu
  * @version 1.0
  * <pre> Histroy:
- *                   2017/8/28  Wen TieHu Create
- *                   </pre>
+ *     2017/8/28  Wen TieHu Create
+ *  </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
