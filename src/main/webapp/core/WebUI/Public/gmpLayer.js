@@ -230,8 +230,8 @@ gmpFormObj.prototype.searchSelect = function() {
 };
 
 // 构建表单组件
-gmpFormObj.prototype.bulidComponent = function(jsonDataConfig) {
-    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,jsonDataConfig);
+gmpFormObj.prototype.bulidComponent = function(thisObj) {
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({
@@ -429,7 +429,13 @@ gmpFormObj.prototype.submit = function(json, callback) {
  */
 
 // 动态表格对象
-function gmpTableObj(compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
+function gmpTableObj(jsonDataConfig,compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
+    this.jsonDataConfig = jsonDataConfig;//配置信息
+    if(this.jsonDataConfig.checkbox){
+        this.checkbox = this.jsonDataConfig.checkbox;//表格右侧选择框
+    }else{
+        this.checkbox = false;//表格右侧选择框
+    }
     this.compId = compId; //父组件名字
     this.blockId = blockId; //功能块标识
     this.formBlockItems = formBlockItems; //表格块key值集合
@@ -519,8 +525,8 @@ gmpTableObj.prototype.searchSelect = function() {
 };
 
 // 构建表格组件
-gmpTableObj.prototype.bulidComponent = function(jsonDataConfig) {
-    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,jsonDataConfig);
+gmpTableObj.prototype.bulidComponent = function(thisObj) {
+    var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({
@@ -825,8 +831,8 @@ gmpsearchObj.prototype.searchSelect = function() {
 };
 
 // 构建查询块组件
-gmpsearchObj.prototype.bulidComponent = function(jsonDataConfig) {
-    var strHtml = DynamicStitchings.Concatenation(this.searchBlockItems,jsonDataConfig);
+gmpsearchObj.prototype.bulidComponent = function(thisObj) {
+    var strHtml = DynamicStitchings.Concatenation(this.searchBlockItems,thisObj);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({

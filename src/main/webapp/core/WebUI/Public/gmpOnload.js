@@ -214,7 +214,7 @@ var getHtml = (function() {
                         GmpForm[compId] = form;
                     }
                     if (arr[0].funcType == "grid") {
-                        var _table = new gmpTableObj(compId, code, arr, mainId, params.id, "", "", "", {
+                        var _table = new gmpTableObj(jsonDataConfig,compId, code, arr, mainId, params.id, "", "", "", {
                             onClickRow: function (row) {},
                             onEditRow: function () {},
                             onDeleteRow: function () {},
@@ -224,7 +224,7 @@ var getHtml = (function() {
                         });
                         console.log(jsonDataConfig);
                         // 创建vue实例
-                        _table.bulidComponent(jsonDataConfig);
+                        _table.bulidComponent(_table);
                         // 缓存实例化对象
                         GmpTable[compId] = _table;
                         // alert("table done");

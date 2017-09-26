@@ -33,8 +33,9 @@
             return args;
         };
         function LoadingConfig(){
-            var json = jsonDataConfigObj.configData();
-//            json.checkbox = true;
+//            var json = jsonDataConfigObj.configData();
+            var json = {};
+            json.checkbox = false;
             return json;
         }
         gmp_onload = function () {
