@@ -6,8 +6,10 @@ import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.entity.TemplateObjectPro;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,5 +69,24 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
       }
     }
     return result;
+  }
+
+  /**
+   * 根据功能块属性rowId查询到业务对象属性下对应的中文名
+   * @param rowId 功能块属性rowId
+   * @return  业务对象属性rowId
+   */
+  public String queryBusinessProName(String rowId){
+    Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<FrontFuncPro> frontFuncPros = select(condition);
+    if (frontFuncPros.size()>0) {
+      String relateBusiPro = frontFuncPros.get(0).getRelateBusiPro();
+      Condition buildDone = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", relateBusiPro).endAnd().buildDone();
+      List<BusinessObjectPro> businessObjectPros = businessObjectProService.select(buildDone);
+      if (businessObjectPros.size()>0) {
+        return  businessObjectPros.get(0).getPropertyName();
+      }
+    }
+    return null;
   }
 }
