@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.text.MessageFormat;
+import java.util.*;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
@@ -78,13 +76,22 @@ public class SysConfigController extends BaseController {
    */
   @RequestMapping(value = "/add", method = POST)
   public PlatResult insert(@RequestParam Map<String, Object> param) {
-    SysConfig sysConfig = new SysConfig().buildCreateInfo().fromMap(param);
-    int insert = sysConfig.insert();
-    if (insert != -1) {
-      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sysConfig));
-    } else {
-      return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+    ServerResult serverResult = new ServerResult();
+    if (!("".equals(String.valueOf(param.get("confKey"))))) {
+      Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", param.get("confKey")).endAnd().buildDone();
+      List<SysConfig> select = sysConfigService.select(condition);
+      if (select.size() == 0) {
+        SysConfig sysConfig = new SysConfig().buildCreateInfo().fromMap(param);
+        int insert = sysConfig.insert();
+        if (insert != -1) {
+          return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sysConfig));
+        } else {
+          return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+        }
+      }
+      return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
     }
+    return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
 
   /**

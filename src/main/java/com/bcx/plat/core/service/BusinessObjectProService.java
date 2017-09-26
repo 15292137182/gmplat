@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.condition.And;
@@ -29,6 +30,8 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
 
   @Autowired
   private DBTableColumnService dbTableColumnService;
+  @Autowired
+  private SequenceRuleConfigService sequenceRuleConfigService;
 
   /**
    * 根据业务对象属性rowId查询当前数据
@@ -143,6 +146,45 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));
+  }
+
+
+
+
+  /**
+   *  获取来源值类型来源为序列,
+   * @param objRowId 接受业务对象rowId
+   * @return
+   */
+  public Map obtainSequenceCode(String objRowId){
+    Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", objRowId).endAnd().buildDone();
+    List<BusinessObjectPro> maps = select(condition);
+    Map<String,Object> map = new HashMap<>();
+    for (BusinessObjectPro m :maps){
+      String valueResourceType = String.valueOf(m.getValueResourceType());
+      if ("sequenceRule".equals(valueResourceType)) {
+        String valueResourceContent = String.valueOf(m.getValueResourceContent());
+        Condition done = new ConditionBuilder(SequenceRuleConfig.class).and().equal("rowId", valueResourceContent).endAnd().buildDone();
+        List<SequenceRuleConfig> select = sequenceRuleConfigService.select(done);
+        if (select.size()>0) {
+          SequenceRuleConfig sequenceRuleConfig = select.get(0);
+          String seqCode = sequenceRuleConfig.getSeqCode();
+          String seqContent = sequenceRuleConfig.getSeqContent();
+          map.put("seqCode",seqCode);
+          map.put("seqContent",seqContent);
+        }
+        String relateTable = String.valueOf(m.getRelateTableColumn());
+        Condition buildDone = new ConditionBuilder(DBTableColumn.class).and().equal("rowId", relateTable).endAnd().buildDone();
+        List<DBTableColumn> dbTableColumns = dbTableColumnService.select(buildDone);
+        if (dbTableColumns.size()>0) {
+          DBTableColumn dbTableColumn = dbTableColumns.get(0);
+          String columnEname = dbTableColumn.getColumnEname();
+          String toCamel = UtilsTool.underlineToCamel(columnEname, false);
+          map.put("columnEname",toCamel);
+        }
+      }
+    }
+    return map;
   }
 
 

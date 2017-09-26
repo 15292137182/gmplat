@@ -94,35 +94,39 @@ public class BusinessObjectController extends BaseController {
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     ServerResult serverResult = businessObjectService.queryPage(condition, pageNum, pageSize, orders);
-    List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
-    for (Map<String, Object> results : result) {
-      String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
-      List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
-      if (null == list) {
-        relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
-        List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
-        if (templateObjects.size() > 0) {
-          results.put("relateTemplate", templateObjects.get(0).get("templateName"));
-        }
-      } else {
-        StringBuilder templates = new StringBuilder();
-        for (Object li : list) {
-          String valueOf = String.valueOf(li);
-          relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
+    if (null!=serverResult.getData()) {
+      List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
+      for (Map<String, Object> results : result) {
+        String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
+        List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
+        if (null == list) {
+          relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
           List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
           if (templateObjects.size() > 0) {
-            for (Map temp : templateObjects) {
-              templates.append(temp.get("templateName")).append(",");
+            results.put("relateTemplate", templateObjects.get(0).get("templateName"));
+          }
+        } else {
+          StringBuilder templates = new StringBuilder();
+          for (Object li : list) {
+            String valueOf = String.valueOf(li);
+            relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
+            List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
+            if (templateObjects.size() > 0) {
+              for (Map temp : templateObjects) {
+                templates.append(temp.get("templateName")).append(",");
+              }
             }
           }
-        }
-        if (templates.lastIndexOf(",") != -1) {
-          String substring = templates.substring(0, templates.length() - 1);
-          results.put("relateTemplate", substring);
+          if (templates.lastIndexOf(",") != -1) {
+            String substring = templates.substring(0, templates.length() - 1);
+            results.put("relateTemplate", substring);
+          }
         }
       }
+      return super.result(serverResult);
+    }else{
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS,Message.QUERY_FAIL));
     }
-    return super.result(serverResult);
   }
 
 

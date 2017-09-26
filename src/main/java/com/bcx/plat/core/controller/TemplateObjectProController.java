@@ -46,7 +46,10 @@ public class TemplateObjectProController extends BaseController {
   @RequestMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
-    Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("ename", String.valueOf(param.get("ename"))).endAnd().buildDone();
+    Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
+        .equal("ename", String.valueOf(param.get("ename")))
+        .equal("templateObjRowId",String.valueOf(param.get("templateObjRowId")))
+        .endAnd().buildDone();
     List<TemplateObjectPro> select = templateObjectProService.select(condition);
     if (select.size()==0) {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);

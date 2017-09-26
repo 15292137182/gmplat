@@ -126,7 +126,7 @@ public class BusinessObjectProController extends BaseController {
    * @return serviceResult
    */
   @RequestMapping("/delete")
-  public Object delete(String rowId) {
+  public PlatResult delete(String rowId) {
     //通过rowId查询数据
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> businessObjectPros = businessObjectProService.selectMap(condition);
