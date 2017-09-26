@@ -127,9 +127,10 @@ public class FrontFuncController extends BaseController {
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
         if (frontFuncPros.size() > 0) {
           for (FrontFuncPro front : frontFuncPros) {
-
+            String frontRowId = front.getRowId();
+            Condition buildDone = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", frontRowId).endAnd().buildDone();
+            front.delete(buildDone);
           }
-          new FrontFuncPro().buildDeleteInfo().deleteById();
         }
       }
       FrontFunc frontFunc = new FrontFunc();
