@@ -18,9 +18,14 @@ var keyValueSetProAdd = new Vue({
         rules: {
             confKeyInput: [
                 {required: true, message: '请输入键', trigger: 'blur'},
+                { max:64, message: '长度最大为64字节'}
             ],
             confValueInput: [
-                {required: true, message: '请输入值', trigger: 'blur'}
+                {required: true, message: '请输入值', trigger: 'blur'},
+                { max:64, message: '长度最大为64字节'}
+            ],
+            despInput:[
+                { max:512, message: '长度最大为512字节'}
             ],
         }
     },
@@ -68,12 +73,20 @@ var keyValueSetProAdd = new Vue({
                         editObj.editOk(function(){
                             keyValueSetProAdd.editKeyValue(rightKeyValueSet.rowId);
                         })
+                    }else{
+                        $('.el-form-item__error').css("display", "block");
+                        keyValueSetProAdd.judgeMent();
+                        return false;
                     }
                 }else{//新增
                     if(valid){
                         addObj.addOk(function(){
                             keyValueSetProAdd.addKeyValue();
                         })
+                    }else{
+                        $('.el-form-item__error').css("display", "block");
+                        keyValueSetProAdd.judgeMent();
+                        return false;
                     }
                 }
             })
@@ -81,6 +94,11 @@ var keyValueSetProAdd = new Vue({
         cancel() {
             ibcpLayer.Close(topButtonObj.divIndex);
             ibcpLayer.Close(rightKeyValueSet.editProDivIndex);
-        }
+        },
+        judgeMent(){
+            setTimeout(function(){
+                $('.el-form-item__error').css("display", "none");
+            },1500)
+        },
     }
 })

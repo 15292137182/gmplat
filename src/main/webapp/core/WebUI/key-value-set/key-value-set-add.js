@@ -22,11 +22,16 @@ var keyValueSetAdd = new Vue({
         },
         rules: {
             keysetCodeInput: [
-                {required: true, message: '请输入编号', trigger: 'blur'},
+                {required: true, message: '请输入编号'},
+                { max:128, message: '长度最大为128字节', trigger: 'blur' }
             ],
             keysetNameInput: [
-                {required: true, message: '请输入名称', trigger: 'blur'}
+                {required: true, message: '请输入名称'},
+                { max:128, message: '长度最大为128字节', trigger: 'blur' }
             ],
+            despInput:[
+                { max:512, message: '长度最大为512字节'}
+            ]
         },
         //所属模块下拉框
         belongModule_1:{
@@ -115,12 +120,20 @@ var keyValueSetAdd = new Vue({
                         editObj.editOk(function(){
                             keyValueSetAdd.editKeySet(leftKeyValueSet.rowId);
                         })
+                    }else{
+                        $('.el-form-item__error').css("display", "block");
+                        keyValueSetAdd.judgeMent();
+                        return false;
                     }
                 }else{//新增
                     if(valid){
                         addObj.addOk(function(){
                             keyValueSetAdd.addKeySet();
                         })
+                    }else{
+                        $('.el-form-item__error').css("display", "block");
+                        keyValueSetAdd.judgeMent();
+                        return false;
                     }
                 }
             })
@@ -132,6 +145,11 @@ var keyValueSetAdd = new Vue({
         //模块下拉框
         getBelongModule_1(datas){
             this.belongModule_1.value=datas.value;
-        }
+        },
+        judgeMent(){
+            setTimeout(function(){
+                $('.el-form-item__error').css("display", "none");
+            },1500)
+        },
     }
 })
