@@ -12,9 +12,13 @@ var tableBase = new Vue({
             desp:''
         },
         rules:{
-            name:[{ required: true, message: '请输入表schema', trigger: 'blur' }],
-            Ename:[{ required: true, message: '请输入表英文名', trigger: 'blur' }],
-            Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' }]
+            name:[{ required: true, message: '请输入表schema', trigger: 'blur' },
+                { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }],
+            Ename:[{ required: true, message: '请输入表英文名', trigger: 'blur' },
+                { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }],
+            Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' },
+                { min: 1, max: 128, message: '长度在 1 到 64 个汉字', trigger: 'blur' }],
+            desp:[{max: 1024, message: '长度在 0 到 512 个汉字', trigger: 'blur' }]
         },
         url:serverPath+'/maintTable/add',
         editUrl:serverPath+'/maintTable/modify',

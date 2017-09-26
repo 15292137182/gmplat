@@ -11,8 +11,11 @@ var addInlayerData = new Vue({
             desp:''
         },
         rules:{
-            Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' }],
-            Ename:[{ required: true, message: '请输入表英文名', trigger: 'blur' }]
+            Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' },
+                { min: 1, max: 128, message: '长度在 1 到 64 个汉字', trigger: 'blur' }],
+            Ename:[{ required: true, message: '请输入表英文名', trigger: 'blur' },
+                { min: 1, max: 32, message: '长度在 1 到 32个字符', trigger: 'blur' }],
+            desp:[{max: 1024, message: '长度在 1 到 512个汉字', trigger: 'blur' }]
         },
         addUrl:serverPath+'/dbTableColumn/add',//新增表字段
         editUrl:serverPath+'/dbTableColumn/modify'//编辑表字段
