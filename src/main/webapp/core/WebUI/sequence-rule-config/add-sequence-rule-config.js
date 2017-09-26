@@ -411,10 +411,15 @@ var add = new Vue({
             contentShow: '',
             rules: {
                 seqCodeInput: [
-                    {required: true, message: '请输入代码', trigger: 'blur'},
+                    {required: true, message: '请输入代码'},
+                    { max:128, message: '长度最大为128字节', trigger: 'blur' }
                 ],
                 seqNameInput: [
-                    {required: true, message: '请输入名称', trigger: 'blur'}
+                    {required: true, message: '请输入名称'},
+                    { max:128, message: '长度最大为128字节', trigger: 'blur' }
+                ],
+                despInput:[
+                    { max:512, message: '长度最大为512字节', trigger: 'blur' }
                 ],
             },
             //所属模块下拉框
@@ -462,56 +467,70 @@ var add = new Vue({
 
         },
         //确定按钮
-        confirm(){
-            //新增
-            if (window.parent.config.operate == 1) {
-                addObj.addOk(function(){
-                    var data={
-                        "url":window.parent.insertUrl,
-                        "jsonData":{
-                            seqCode:add.formTable.seqCodeInput,
-                            seqName:add.formTable.seqNameInput,
-                            seqContent:add.formTable.seqContentInput,
-                            belongModule:add.belongModule_1.value,
-                        //    belongSystem:add.formTable.belongSystemInput,
-                            desp:add.formTable.despInput
-                        },
-                        "obj":add
+        confirm(formName){
+            this.$refs.formTable.validate((valid) => {
+                if(valid){
+                    //新增
+                    if (window.parent.config.operate == 1) {
+                        addObj.addOk(function(){
+                            var data={
+                                "url":window.parent.insertUrl,
+                                "jsonData":{
+                                    seqCode:add.formTable.seqCodeInput,
+                                    seqName:add.formTable.seqNameInput,
+                                    seqContent:add.formTable.seqContentInput,
+                                    belongModule:add.belongModule_1.value,
+                                    //    belongSystem:add.formTable.belongSystemInput,
+                                    desp:add.formTable.despInput
+                                },
+                                "obj":add
+                            }
+                            gmpAjax.showAjax(data,function(res){
+                                queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
+                                window.parent.config.searchPage();
+                                parent.layer.close(window.parent.config.divIndex);
+                            })
+                        })
                     }
-                    gmpAjax.showAjax(data,function(res){
-                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
-                        window.parent.config.searchPage();
-                        parent.layer.close(window.parent.config.divIndex);
-                    })
-                })
-            }
-            //编辑
-            if(window.parent.config.operate ==2){
-                editObj.editOk(function(){
-                    var data={
-                        "url":window.parent.modifyUrl,
-                        "jsonData":{
-                            rowId:window.parent.config.rowId,
-                            seqCode:add.formTable.seqCodeInput,
-                            seqName:add.formTable.seqNameInput,
-                            seqContent:add.formTable.seqContentInput,
-                            belongModule:add.belongModule_1.value,
-                            belongSystem:add.formTable.belongSystemInput,
-                            desp:add.formTable.despInput
-                        },
-                        "obj":add
+                    //编辑
+                    if(window.parent.config.operate ==2){
+                        editObj.editOk(function(){
+                            var data={
+                                "url":window.parent.modifyUrl,
+                                "jsonData":{
+                                    rowId:window.parent.config.rowId,
+                                    seqCode:add.formTable.seqCodeInput,
+                                    seqName:add.formTable.seqNameInput,
+                                    seqContent:add.formTable.seqContentInput,
+                                    belongModule:add.belongModule_1.value,
+                                    belongSystem:add.formTable.belongSystemInput,
+                                    desp:add.formTable.despInput
+                                },
+                                "obj":add
+                            }
+                            gmpAjax.showAjax(data,function(res){
+                                queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
+                                window.parent.config.searchPage();
+                                parent.layer.close(window.parent.config.divIndex);
+                            })
+                        })
                     }
-                    gmpAjax.showAjax(data,function(res){
-                        queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
-                        window.parent.config.searchPage();
-                        parent.layer.close(window.parent.config.divIndex);
-                    })
-                })
-            }
+                }else {
+                    $('.el-form-item__error').css("display", "block");
+                    add.judgeMent();
+                    return false;
+                }
+            })
+
         },
         //取消按钮
         cancel() {
             parent.layer.close(window.parent.config.divIndex);
+        },
+        judgeMent(){
+            setTimeout(function(){
+                $('.el-form-item__error').css("display", "none");
+            },1500)
         },
         //编辑时将数据绑定在控件中
         bindValue(){

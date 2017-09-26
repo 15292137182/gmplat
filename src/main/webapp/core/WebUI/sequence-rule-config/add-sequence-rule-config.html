@@ -17,16 +17,16 @@
 </head>
 <body>
 <div id="SequenceRuleConfigAdd" style="margin-top:10px">
-    <el-form :label-position="labelPosition" label-width="80px" :model="formTable">
+    <el-form :label-position="labelPosition" label-width="80px" :model="formTable" ref='formTable' :rules="rules">
         <el-row>
             <el-col :span="12">
-                <el-form-item label="代码">
+                <el-form-item label="代码" prop="seqCodeInput">
                     <el-input placeholder="请输入代码" :disabled="disabled" v-model="formTable.seqCodeInput"
                               ref="seqCodeInput"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="12">
-                <el-form-item label="名称">
+                <el-form-item label="名称" prop="seqNameInput">
                     <el-input placeholder="请输入名称" v-model="formTable.seqNameInput" ref="seqNameInput"></el-input>
                 </el-form-item>
             </el-col>
@@ -47,7 +47,7 @@
             <!--</el-form-item>-->
             <!--</el-col>-->
             <el-col :span="12">
-                <el-form-item label="说明">
+                <el-form-item label="说明"  prop="despInput">
                     <el-input placeholder="请输入说明" v-model="formTable.despInput" ref="despInput"></el-input>
                 </el-form-item>
             </el-col>
@@ -88,7 +88,7 @@
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
-            <el-button type="primary" @click.native="confirm">保存</el-button>
+            <el-button type="primary" @click.native="confirm('formTable')">保存</el-button>
         </el-col>
         <el-col :span="11" style="text-align: left" :offset="2">
             <el-button type="primary" @click.native="cancel">取消</el-button>
