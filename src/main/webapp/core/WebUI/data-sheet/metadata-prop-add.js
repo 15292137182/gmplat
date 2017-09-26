@@ -59,8 +59,11 @@ var proEm = new Vue({
                     nameProInput: [
                         { required: true, message: '请输入属性名称'},
                     ],
+                    proType: [
+                        { required: true,trigger: 'blur',message: '请选择属性类型'}
+                    ],
                     fieldAliasInput: [
-                        { required: true,trigger: 'blur',message: '请输入字段别名'}
+                        { required: true,message: '请输入字段别名'}
                     ],
                     typeInput: [
                         { required: true,trigger: 'blur',message: '请选择值类型'}
@@ -150,8 +153,19 @@ var proEm = new Vue({
 
                 if(this.proType_1.value=='extend'){
                     proEm.$refs.tableField_1.setDisabled(true);
+
                 }else{
                     proEm.$refs.tableField_1.setDisabled(false);
+                }
+
+                this.addProForm.proType = datas.value;
+
+                var a=this.$refs.proType_1.$children[0].$children[0].$el;
+                var b=$(a).children('input');
+                if(this.addProForm.proType.length==0) {
+                    $(b).css('borderColor', '#ff4949');
+                }else{
+                    $(b).css('borderColor','#bfcbd9');
                 }
 
             },
@@ -159,17 +173,17 @@ var proEm = new Vue({
             getTableField_1(datas){
                 this.tableField_1.value=datas.value;
 
-                this.addProForm.reaTable = datas.value;
-                var a=this.$refs.tableField_1.$children[0].$children[0].$el;
-                var b=$(a).children('input');
-                if(this.addProForm.reaTable.length==0) {
-                    if(count1!=true){
-                        $(b).css('borderColor', '#ff4949');
-                    }
-                    count1=false;
-                }else{
-                    $(b).css('borderColor','#bfcbd9');
-                }
+                //this.addProForm.reaTable = datas.value;
+                //var a=this.$refs.tableField_1.$children[0].$children[0].$el;
+                //var b=$(a).children('input');
+                //if(this.addProForm.reaTable.length==0) {
+                //    if(count1!=true){
+                //        $(b).css('borderColor', '#ff4949');
+                //    }
+                //    count1=false;
+                //}else{
+                //    $(b).css('borderColor','#bfcbd9');
+                //}
             },
             //值类型
             getValueType_1(datas){
@@ -221,7 +235,6 @@ var proEm = new Vue({
             },
             //值来源内容
             getValueOriginContent_1(datas){
-                console.log(datas);
                 this.valueOriginContent_1.value=datas.value;
             },
             cancel() {

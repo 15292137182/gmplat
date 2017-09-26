@@ -89,6 +89,7 @@ gmp_onload=function(){
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {
                     proEm.$refs.proType_1.setValue("base");  //属性类型
                     proEm.proType_1.value='base';//不点击的时候直接把属性传过去
+                    proEm.addProForm.proType='base';//只是为了验证的时候判断是否为空
 
                 });
             },
