@@ -1,12 +1,14 @@
 package com.bcx.plat.core.validate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 校验结果
  * Create By HCL at 2017/9/21
  */
-public class CheckResult {
+public class CheckResult implements Serializable {
 
   private List<Error> errors = new ArrayList<>();
 
