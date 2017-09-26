@@ -955,6 +955,7 @@ var DynamicStitchings = (function(){
         };
         var html = '';
         var str = '';
+        var pageConfig = '<el-row type="flex" justify="end" style="padding-top:10px" class="block"><el-pagination :current-page="1" :page-sizes="[5,10,20]" :page-size="10" :total="0" layout="total, sizes, prev, pager, next, jumper"></el-pagination></el-row>';
         var tableColumn='';//table列
         var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
         console.log(thisObj);
@@ -1001,7 +1002,7 @@ var DynamicStitchings = (function(){
                 html ='<el-form label-width="100px" :model="childFormTable">'+str+'</el-form>';
             }
             if(obj.funcType =="grid"){
-                html='<el-table :data="tableData" @row-click="tableData.clickRow" @cell-click="tableData.cellClick" @select="tableData.select" @select-all="tableData.selectAll" @selection-change="tableData.getCheckedRows" border style="width: 100%">'+selection+tableColumn+OperationColumn+'</el-table>';
+                html='<div><el-table :data="tableData" @row-click="tableData.clickRow" @cell-click="tableData.cellClick" @select="tableData.select" @select-all="tableData.selectAll" @selection-change="tableData.getCheckedRows" border style="width: 100%">'+selection+tableColumn+OperationColumn+'</el-table>'+pageConfig+'</div>';
             }
         }
         htmlObj.html = html;

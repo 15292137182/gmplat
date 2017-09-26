@@ -527,6 +527,7 @@ gmpTableObj.prototype.searchSelect = function() {
 // 构建表格组件
 gmpTableObj.prototype.bulidComponent = function(thisObj) {
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
+    // console.log(strHtml.html);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({
