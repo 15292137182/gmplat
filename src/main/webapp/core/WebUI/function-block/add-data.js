@@ -24,9 +24,11 @@ var em=new Vue({
         },
         rules:{
             tableInput:[{ required: true, message: '请选择关联对象属性', trigger: 'blur' }],
-            nameTitle:[{ required: true, message: '请输入标题', trigger: 'blur' }],
+            nameTitle:[{ required: true, message: '请输入标题', trigger: 'blur' },
+                {max: 128, message: '长度在 1 到 64 个汉字', trigger: 'blur' }],
             nameInput:[{ required: true, message: '请选择显示控件', trigger: 'blur' }],
-            sortNumber:[{ required: true, message: '请输入排序序号', trigger: 'blur' }],
+            sortNumber:[{ required: true, message: '请输入排序序号', trigger: 'blur' },
+                {max: 32, message: '长度在 1 到 32 位数字', trigger: 'blur' }],
         },
         funcRowId:'',//功能块ID
         dataId:'',//关联对象属性ID

@@ -18,11 +18,14 @@ var em=new Vue({
             desp:'',
         },
         rules:{
-            codeInput:[{ required: true, message: '请输入代码', trigger: 'blur' }],
-            nameInput:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+            codeInput:[{ required: true, message: '请输入代码', trigger: 'blur' },
+                {max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }],
+            nameInput:[{ required: true, message: '请输入名称', trigger: 'blur' },
+                {max: 128, message: '长度在 1 到 64 个汉字', trigger: 'blur' }],
             typeInput:[{ required: true, message: '请选择类型', trigger: 'blur' }],
             objData:[{ required: true, message: '请选择关联对象', trigger: 'blur' }],
             Module:[{ required: true, message: '请选择所属模板', trigger: 'blur' }],
+            desp:[{max: 1024, message: '长度在 1 到 512 个汉字', trigger: 'blur' }],
         },
         dataId:'',//relateBusiObj关联对象ID
         isEdit:'',
