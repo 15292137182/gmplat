@@ -22,9 +22,12 @@ var addDataSet = new Vue({
             belongSystem:'',//系统
         },
         rules:{
-            nameInput:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+            nameInput:[{ required: true, message: '请输入名称', trigger: 'blur' },
+                { min: 1, max: 128, message: '长度在 1 到 64 个汉字', trigger: 'blur' }],
             typeInput:[{ required: true, message: '请选择类型', trigger: 'blur' }],
+            content:[{max: 1024, message: '长度在 1 到 512 个汉字', trigger: 'blur' }],
             belongModule:[{ required: true, message: '请选择所属模块', trigger: 'blur' }],
+            desp:[{max: 1024, message: '长度在 1 到 512 个汉字', trigger: 'blur' }],
         },
         value_1:'',
         isEdit:'',//是否编辑

@@ -50,12 +50,12 @@
         </el-row>
         <el-row type="flex" class="row-bg" style="">
             <el-col :span="20" :offset="1">
-                <el-form-item label="内容">
+                <el-form-item label="内容" prop="content">
                     <el-input type="textarea" placeholder="请输入内容" v-model="formTable.content"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+        <el-row type="flex" class="row-bg" style="">
             <el-col :span="20" :offset="1">
                 <el-form-item label="所属模块" prop="belongModule">
                     <single-selection @change-data="getBelongModule_1"  :initial="belongModule_1" ref="belongModule_1">
@@ -71,14 +71,14 @@
                 </el-form-item>
             </el-col>
         </el-row>-->
-        <el-row type="flex" class="row-bg" style="">
+        <el-row type="flex" class="row-bg" style="" prop="desp">
             <el-col :span="20" :offset="1">
                 <el-form-item label="说明">
                     <el-input type="textarea" placeholder="请输入说明" v-model="formTable.desp"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg" style="margin-top:-10px;">
+        <el-row type="flex" class="row-bg" style="">
             <el-col :span="20" :offset="1">
                 <el-form-item label="版本">
                     <el-input placeholder="系统自动生成版本" v-model="formTable.version" disabled=""></el-input>
