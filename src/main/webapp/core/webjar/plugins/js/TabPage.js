@@ -35,7 +35,7 @@ var pagingObj = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误")
+                // alert("错误")
             }
         })
     }
@@ -78,7 +78,7 @@ var pagingObj = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误")
+                // alert("错误")
             }
         })
     }
@@ -130,7 +130,7 @@ var pagingObj = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误111")
+                // alert("错误111")
             }
         })
     }
@@ -182,7 +182,7 @@ var pagingObj = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误")
+                // alert("错误")
             }
         })
     }
@@ -235,7 +235,7 @@ var pagingObj = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误")
+                // alert("错误")
             }
         })
     }
@@ -339,7 +339,7 @@ var queryData = (function(){
                 },
                 error:function(){
                     obj.loading=false;
-                    alert("错误")
+                    // alert("错误")
                 }
             })
     }
@@ -376,7 +376,7 @@ var queryData = (function(){
             },
             error:function(){
                 obj.loading=false;
-                alert("错误")
+                // alert("错误")
             }
         })
     }
