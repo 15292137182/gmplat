@@ -387,10 +387,25 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @param orders  排序
    * @return  list
    */
-  public List<Map<String, Object>> singleSelectSort(Class entity, Condition condition,List<Order> orders) {
+  List<Map<String, Object>> singleSelectSort(Class entity, Condition condition,List<Order> orders) {
     List<Map<String, Object>> execute = null;
     if (entity != null && condition != null) {
       execute = MORE_BATIS.select(entity).where(condition).orderBy(orders).execute();
+    }
+    return execute;
+  }
+
+  /**
+   * 单个实体修改数据
+   * @param entityClass 接受实体类
+   * @param param 要修改的参数
+   * @param condition 过滤条件
+   * @return int
+   */
+  int singleUpdate(Class entityClass,Map<String, Object> param,Condition condition){
+    int execute = -1;
+    if (null!=entityClass && null!=condition || param.size()>0) {
+      execute = MORE_BATIS.update(entityClass, param).where(condition).execute();
     }
     return execute;
   }

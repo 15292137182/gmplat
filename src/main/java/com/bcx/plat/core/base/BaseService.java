@@ -337,10 +337,25 @@ public abstract class BaseService<T extends BaseEntity<T>> {
         List<Map<String, Object>> list = null;
         try {
             list = getTClass().newInstance().singleSelectSort(entityClass, condition,orders);
-
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    /**
+     * 单个实体修改数据
+     * @param entityClass 接受实体类
+     * @param param 要修改的参数
+     * @param condition 过滤条件
+     * @return int
+     */
+    public int singleUpdate(Class entityClass,Map<String, Object> param,Condition condition){
+        try {
+            int i = getTClass().newInstance().singleUpdate(entityClass, param, condition);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
