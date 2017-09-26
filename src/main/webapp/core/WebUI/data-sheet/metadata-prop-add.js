@@ -200,13 +200,22 @@ var proEm = new Vue({
 
                 switch (datas.value){
                     case "keySet":
-                        this.$refs.valueOriginContent_1.setUrl({url:keySetPageUrl,key:'{"label":"keysetName","value":"rowId"}'});
+                        this.$refs.valueOriginContent_1.setUrl({
+                            url:keySetPageUrl,
+                            key:'{"label":"keysetName","value":"rowId"}'
+                        });
                         break;
                     case "sequenceRule":
-                        this.$refs.valueOriginContent_1.setUrl({url:sequenceRuleConfigPageUrl,key:'{"label":"seqName","value":"rowId"}'});
+                        this.$refs.valueOriginContent_1.setUrl({
+                            url:sequenceRuleConfigPageUrl,
+                            key:'{"label":"seqName","value":"rowId"}'
+                        });
                         break;
                     case "dataSet":
-                        this.$refs.valueOriginContent_1.setUrl({url:datasetConfigPageUrl,key:'{"label":"datasetName","value":"rowId"}'});
+                        this.$refs.valueOriginContent_1.setUrl({
+                            url:datasetConfigPageUrl,
+                            key:'{"label":"datasetName","value":"rowId"}'
+                        });
                         break;
                 }
             },

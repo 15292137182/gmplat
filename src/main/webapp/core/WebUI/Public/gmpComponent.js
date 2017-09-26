@@ -64,21 +64,35 @@ Vue.component("single-selection", {
     methods: {
         changeSelect(val) {
             // console.log(val);
-            if(this.isMultiple) {
-                _obj = val;
-            }else {
-                var _obj = {};
-                // 如果下拉框触发改变时 返回值不为空 则将option下与返回值相同的数据项传递给父组件
-                if(val != "") {
-                    _obj = this.options.find(function(item) {
-                        return item.value === val;
+            // 保存this指针
+            var _this = this;
+            // 向父组件传递的对象
+            var _obj = {
+                value: ""
+            };
+
+            if(val.length > 0 || val != "") {
+                if(this.isMultiple) {
+                    _obj = val;
+                    // 子组件向父组件传递的方法和参数
+                    _this.$emit("change-data", _obj);
+                }else {
+                    // 调用获取options方法 防止异步请求时间过长的问题
+                    _this.getOptions(function(data) {
+                        // console.log(data);
+                        _obj = data.find(function(item) {
+                            return item.value === val;
+                        });
+                        // console.log(_obj);
+                        // 子组件向父组件传递的方法和参数
+                        _this.$emit("change-data", _obj);
                     });
-                }else{
-                    _obj["value"]=val;
                 }
+            }else {
+                _obj.value = val;
+                // 子组件向父组件传递的方法和参数
+                _this.$emit("change-data", _obj);
             }
-            // 子组件向父组件传递的方法和参数
-            this.$emit("change-data", _obj);
         },
         // 级联下拉框方法
         setValue(val) {
@@ -110,14 +124,14 @@ Vue.component("single-selection", {
             this.params = param;
         },
         // 获取options
-        getOptions() {
+        getOptions(callback) {
             // 保存this指针
             var that = this;
             // 获取配置value-label
             var key_set;
-            this.key == "" ? key_set = "" : key_set = JSON.parse(this.key);
+            that.key == "" ? key_set = "" : key_set = JSON.parse(that.key);
             // 调用接口获取options
-            if(this.url != "") {
+            if(that.url != "" && that.key != "") {
                 $.ajax({
                     url:this.url,
                     type:"get",
@@ -141,6 +155,9 @@ Vue.component("single-selection", {
                                 // 赋值options
                                 that.options = _jsonObj;
                                 // console.log(that.options);
+                                if(callback) {
+                                    callback(_jsonObj);
+                                }
                             }
                         }
                     },

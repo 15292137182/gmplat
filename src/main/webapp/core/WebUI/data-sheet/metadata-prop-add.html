@@ -70,7 +70,7 @@
 
             <el-col :span="10">
                 <el-form-item label="值来源内容" prop="comContent">
-                    <single-selection @change-data="getValueOriginContent_1"  :initial="valueOriginContent_1" ref="valueOriginContent_1" v-show="!apparent">
+                    <single-selection @change-data="getValueOriginContent_1" :initial="valueOriginContent_1" ref="valueOriginContent_1" v-show="!apparent">
                         <!---->
                     </single-selection>
                     <el-input placeholder="请输入值来源内容" v-model="addProForm.comContent" v-show="apparent"></el-input>
