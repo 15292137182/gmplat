@@ -8,11 +8,7 @@ import java.util.List;
  */
 public class CheckResult {
 
-  private List<Error> errors;
-
-  public CheckResult() {
-    init();
-  }
+  private List<Error> errors = new ArrayList<>();
 
   /**
    * @return 是否存在错误
@@ -29,9 +25,14 @@ public class CheckResult {
   }
 
   /**
-   * 初始化，为 error 集合赋初始值
+   * 添加错误
+   *
+   * @param error 错误
+   * @return 返回自身
    */
-  private void init() {
-    errors = new ArrayList<>();
+  public CheckResult addError(Error error) {
+    this.errors.add(error);
+    return this;
   }
+
 }

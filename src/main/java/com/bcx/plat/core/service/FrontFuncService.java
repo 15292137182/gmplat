@@ -14,6 +14,7 @@ import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                 String keysetCode = "";
                 Condition buildDone = new ConditionBuilder(KeySet.class).and().equal("rowId", relate.getValueResourceContent()).endAnd().buildDone();
                 List<KeySet> keySets = keySetService.select(buildDone);
-                if (keySets.size()!=0) {
+                if (keySets.size() != 0) {
                   keysetCode = keySets.get(0).getKeysetCode();
                 }
                 map.put("ename", relate.getFieldAlias());
@@ -108,5 +109,19 @@ public class FrontFuncService extends BaseService<FrontFunc> {
       linkedList.addAll(UtilsTool.underlineKeyMapListToCamel(result));
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
+  }
+
+  @Resource
+  private FrontFuncProService frontFuncProService;
+
+  /**
+   * 根据功能块 rowId 查询属性列表，查询中对 rowId 没有做校验
+   *
+   * @param rowId 主键 rowId
+   * @return 返回查询结果集合
+   */
+  public List<FrontFuncPro> selectPropertiesByRowId(String rowId) {
+    Condition condition = new FieldCondition("func_row_id", Operator.EQUAL, rowId);
+    return frontFuncProService.select(condition);
   }
 }
