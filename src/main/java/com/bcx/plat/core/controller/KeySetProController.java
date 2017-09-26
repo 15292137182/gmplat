@@ -62,15 +62,25 @@ public class KeySetProController extends BaseController {
   @RequestMapping(value = "/add", method = POST)
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    KeySetPro KeySetPro = new KeySetPro().buildCreateInfo().fromMap(param);
-    int insert = KeySetPro.insert();
-    if (insert != -1) {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
-    } else {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+    String confKey = String.valueOf(param.get("confKey"));
+    if (!"".equals(confKey)) {
+      Condition condition = new ConditionBuilder(KeySetPro.class).and()
+          .equal("relateKeysetRowId", param.get("relateKeysetRowId"))
+          .equal("confKey", confKey).endAnd().buildDone();
+      List<KeySetPro> keySetPros = keySetProService.select(condition);
+      if (keySetPros.size() == 0) {
+        KeySetPro KeySetPro = new KeySetPro().buildCreateInfo().fromMap(param);
+        int insert = KeySetPro.insert();
+        if (insert != -1) {
+          return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+        } else {
+          return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+        }
+      }
+      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
     }
+    return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
-
   /**
    * 键值集合属性数据根据rowId修改数据
    *
@@ -79,22 +89,16 @@ public class KeySetProController extends BaseController {
    */
   @RequestMapping(value = "/modify", method = POST)
   public PlatResult update(@RequestParam Map<String, Object> param) {
-    MoreBatis moreBatis = (MoreBatis) SpringContextHolder.getApplicationContext().getBean("moreBatis");
     ServerResult result = new ServerResult();
     int update;
     if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
-      KeySetPro keySetPro = new KeySetPro();
-      //TODO MoreBatis
-      KeySetPro modify = keySetPro.fromMap(param).buildModifyInfo();
-      update = moreBatis.update(KeySetPro.class, param).where(new FieldCondition("rowId", Operator.EQUAL, param.get("rowId"))).execute();
-//            update = modify.updateById();
+      update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
       if (update != -1) {
         return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
       } else {
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
     }
-    moreBatis.update(KeySetPro.class, param);
     return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 

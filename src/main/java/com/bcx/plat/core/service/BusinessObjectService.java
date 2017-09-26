@@ -46,6 +46,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   private BusinessRelateTemplateService businessRelateTemplateService;
   @Autowired
   private TemplateObjectService templateObjectService;
+  @Autowired
+  private DataSetConfigService dataSetConfigService;
+  @Autowired
+  private KeySetService keySetService;
+  @Autowired
+  private SequenceRuleConfigService sequenceRuleConfigService;
 
 
   /**
@@ -264,6 +270,38 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       rest.put("ename", fieldAlias);
       rest.put("disableButton", false);
       rest.put("columnCname", map.get(rest.get("relateTableColumn")));
+
+      //TODO 遍历取值类型来源,根据来源取内容的名称 后面在键值集合配置页面里面可能会添加或删除字段
+      String valueResourceType = String.valueOf(rest.get("valueResourceType"));
+      switch (valueResourceType){
+        case "keySet":
+          Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
+          List<KeySet> select = keySetService.select(condition);
+          if (select.size()>0) {
+            rest.remove("valueResourceContent");
+            rest.put("valueResourceContent",select.get(0).getKeysetName());
+          }
+          break;
+        case "sequenceRule":
+          Condition conditions = new ConditionBuilder(SequenceRuleConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
+          List<SequenceRuleConfig> selects = sequenceRuleConfigService.select(conditions);
+          if (selects.size()>0) {
+            rest.remove("valueResourceContent");
+            rest.put("valueResourceContent",selects.get(0).getSeqName());
+          }
+          break;
+        case "dataSet":
+          Condition conditioned = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
+          List<DataSetConfig> selected = dataSetConfigService.select(conditioned);
+          if (selected.size()>0) {
+            rest.remove("valueResourceContent");
+            rest.put("valueResourceContent",selected.get(0).getDatasetName());
+          }
+          break;
+          default:
+
+      }
+
     }
     return result;
   }

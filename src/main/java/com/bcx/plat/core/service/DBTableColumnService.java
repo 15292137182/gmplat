@@ -52,22 +52,26 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
   public ServerResult addTableColumn(Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname"));
-    Condition condition = new ConditionBuilder(DBTableColumn.class).and()
-        .equal("columnEname", columnEname)
-        .equal("relateTableRowId", param.get("relateTableRowId"))
-        .endAnd().buildDone();
-    List<DBTableColumn> select = dbTableColumnService.select(condition);
-    if (select.size() == 0) {
-      DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
-      int insert = dbTableColumn.insert();
-      if (insert != -1) {
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, dbTableColumn);
+    if (!"".equals(columnEname)) {
+      Condition condition = new ConditionBuilder(DBTableColumn.class).and()
+          .equal("columnEname", columnEname)
+          .equal("relateTableRowId", param.get("relateTableRowId"))
+          .endAnd().buildDone();
+      List<DBTableColumn> select = dbTableColumnService.select(condition);
+      if (select.size() == 0) {
+        DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
+        int insert = dbTableColumn.insert();
+        if (insert != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, dbTableColumn);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+        }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
       }
-    } else {
-      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
     }
+    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+
   }
 
 

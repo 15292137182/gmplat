@@ -91,19 +91,22 @@ public class MaintDBTablesController extends BaseController {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname"));
     String tableSchema = String.valueOf(param.get("tableSchema"));
-    Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema",tableSchema).endAnd().buildDone();
-    List<Map> select = maintDBTablesService.selectMap(condition);
-    if (select.size() == 0) {
-      MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
-      int insert = maintDBTables.insert();
-      if (insert != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables));
+    if (!"".equals(tableEname)) {
+      Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
+      List<Map> select = maintDBTablesService.selectMap(condition);
+      if (select.size() == 0) {
+        MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
+        int insert = maintDBTables.insert();
+        if (insert != -1) {
+          return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables));
+        } else {
+          return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+        }
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
       }
-    } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
     }
+    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
 
 
