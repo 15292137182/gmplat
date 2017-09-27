@@ -1,6 +1,7 @@
 package com.bcx.plat.core.validate;
 
 import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.service.FrontFuncService;
 import com.bcx.plat.core.utils.SpringContextHolder;
 
@@ -35,7 +36,7 @@ public abstract class ValidateUtils {
 
   /**
    * 执行校验程序，map是传入的数据，property 是某个字段的配置属性，需要从 property 中得到需要进行校验的字段，然后对数据进行校验
-   * map 为 null 或者对应 map 中的值为 null 时，均认为该值是非法的 ，存在错误
+   * 非空逻辑:map 为 null 或者对应 map 中的值为 null 时，均认为该值是非法的 ，存在错误
    *
    * @param map         数据
    * @param checkResult 校验结果，校验的信息返回到 checkResult 中
@@ -58,8 +59,7 @@ public abstract class ValidateUtils {
    * @return 获取属性中对应的校验字段
    */
   private static String getPropertyFieldName(FrontFuncPro pro) {
-    // TODO 等待实现中
-    return "";
+    return SpringContextHolder.getBean(FrontFuncProService.class).queryBusinessProName(pro.getRowId());
   }
 
   /**
