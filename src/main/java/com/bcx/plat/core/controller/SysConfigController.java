@@ -114,7 +114,7 @@ public class SysConfigController extends BaseController {
       if (!("".equals(confKey))) {
         Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", param.get("confKey")).endAnd().buildDone();
         List<SysConfig> select = sysConfigService.select(condition);
-        if (select.size() == 0) {
+        if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
           SysConfig sysConfig = new SysConfig();
           SysConfig modify = sysConfig.fromMap(param).buildModifyInfo();
           update = modify.updateById();

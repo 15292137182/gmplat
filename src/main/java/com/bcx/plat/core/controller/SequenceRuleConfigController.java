@@ -5,6 +5,7 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
+import com.bcx.plat.core.entity.SysConfig;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.manager.TXManager;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -118,13 +119,19 @@ public class SequenceRuleConfigController extends BaseController {
       param.remove("seqCode");
       param.put("seqCode", seqCode);
       if (!"".equals(seqCode)) {
-        SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
-        SequenceRuleConfig modify = sequenceRuleConfig.fromMap(param).buildModifyInfo();
-        update = modify.updateById();
-        if (update != -1) {
-          return result(result.setStateMessage(STATUS_SUCCESS, Message.UPDATE_SUCCESS));
-        } else {
-          return result(result.setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
+        Condition condition = new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", param.get("seqCode")).endAnd().buildDone();
+        List<SequenceRuleConfig> select = sequenceRuleConfigService.select(condition);
+        if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
+          SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
+          SequenceRuleConfig modify = sequenceRuleConfig.fromMap(param).buildModifyInfo();
+          update = modify.updateById();
+          if (update != -1 ) {
+            return result(result.setStateMessage(STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+          } else {
+            return result(result.setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
+          }
+        }else{
+          return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
         }
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
