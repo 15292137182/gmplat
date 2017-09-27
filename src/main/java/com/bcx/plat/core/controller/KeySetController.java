@@ -168,10 +168,10 @@ public class KeySetController extends BaseController {
           return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_CANNOT_BE_DUPLICATED));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
       }
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_CANNOT_BE_EMPTY));
+    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
 
   /**
