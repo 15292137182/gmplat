@@ -29,6 +29,8 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  * @version 1.0
  * <pre> Histroy:
  *     2017/8/28  Wen TieHu Create
+ *     2017/9/27  Modify by YoungerOu
+ *        valid ename : can not be duplicated
  *  </pre>
  */
 @RestController
@@ -48,14 +50,14 @@ public class TemplateObjectProController extends BaseController {
     ServerResult serverResult = new ServerResult();
     Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
         .equal("ename", String.valueOf(param.get("ename")))
-        .equal("templateObjRowId",String.valueOf(param.get("templateObjRowId")))
+        .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
         .endAnd().buildDone();
     List<TemplateObjectPro> select = templateObjectProService.select(condition);
-    if (select.size()==0) {
+    if (select.size() == 0) {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
       int insert = templateObjectPro.insert();
       if (insert != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS,templateObjectPro));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, templateObjectPro));
       } else {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
       }
@@ -94,14 +96,25 @@ public class TemplateObjectProController extends BaseController {
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
     int update;
-    if (UtilsTool.isValid(param.get("proRowId"))) {
-      TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
-      Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", param.get("proRowId")).endAnd().buildDone();
-      update = templateObjectPro.update(condition);
-      if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS,templateObjectPro));
+    if (UtilsTool.isValid(param.get("proRowId"))) { // 判断rowId是否为空
+      Condition validCondition = new ConditionBuilder(TemplateObjectPro.class).and()
+          .equal("ename", String.valueOf(param.get("ename")))
+          .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
+          .endAnd().buildDone();
+      List<TemplateObjectPro> valid = templateObjectProService.select(validCondition);
+      if (valid.size() == 0) { // 判断英文名是否重复
+        TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
+        Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
+            .equal("proRowId", param.get("proRowId"))
+            .endAnd().buildDone();
+        update = templateObjectPro.update(condition);
+        if (update != -1) {
+          return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, templateObjectPro));
+        } else {
+          return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        }
       } else {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
       }
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
@@ -124,7 +137,7 @@ public class TemplateObjectProController extends BaseController {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro();
       del = templateObjectPro.deleteById(rowId);
       if (del != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS,maps));
+        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
       } else {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
       }
