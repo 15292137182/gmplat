@@ -454,6 +454,7 @@ var add = new Vue({
                 if(valid){
                     //新增
                     if (window.parent.config.operate == 1) {
+                        console.log(window.parent.config)
                         addObj.addOk(function(){
                             var data={
                                 "url":window.parent.insertUrl,
@@ -465,7 +466,8 @@ var add = new Vue({
                                     //    belongSystem:add.formTable.belongSystemInput,
                                     desp:add.formTable.despInput
                                 },
-                                "obj":add
+                                "obj":window.parent.config,
+                                "showMsg":true,
                             }
                             gmpAjax.showAjax(data,function(res){
                                 queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
@@ -476,6 +478,7 @@ var add = new Vue({
                     }
                     //编辑
                     if(window.parent.config.operate ==2){
+                        console.log(window.parent.config)
                         editObj.editOk(function(){
                             var data={
                                 "url":window.parent.modifyUrl,
@@ -488,7 +491,8 @@ var add = new Vue({
                                     belongSystem:add.formTable.belongSystemInput,
                                     desp:add.formTable.despInput
                                 },
-                                "obj":add
+                                "obj":window.parent.config,
+                                "showMsg":true,
                             }
                             gmpAjax.showAjax(data,function(res){
                                 queryData.getData(window.parent.queryPage,window.parent.config.input,window.parent.config,function(res){});
