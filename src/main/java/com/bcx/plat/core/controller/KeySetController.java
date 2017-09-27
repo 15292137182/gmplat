@@ -198,12 +198,19 @@ public class KeySetController extends BaseController {
       String keysetCode = String.valueOf(param.get("keysetCode")).trim();
       String keysetName = String.valueOf(param.get("keysetName")).trim();
       if (UtilsTool.isValid(keysetCode) && UtilsTool.isValid(keysetName)) {
-        KeySet keySet = new KeySet();
-        KeySet modify = keySet.fromMap(param).buildModifyInfo();
-        if (modify.updateById() != -1) {
-          return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        //获取代码做重复性判断
+        Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keysetCode).endAnd().buildDone();
+        List<KeySet> keySets = keySetService.select(condition);
+        if (keySets.size() == 0) {
+          KeySet keySet = new KeySet();
+          KeySet modify = keySet.fromMap(param).buildModifyInfo();
+          if (modify.updateById() != -1) {
+            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+          } else {
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+          }
         } else {
-          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
         }
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
