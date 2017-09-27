@@ -48,6 +48,9 @@ public class TemplateObjectProController extends BaseController {
   @RequestMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
+    if (!UtilsTool.isValid(param.get("ename").toString().trim())) { // ename不能为纯空格
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
+    }
     Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
         .equal("ename", String.valueOf(param.get("ename")))
         .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
@@ -97,6 +100,9 @@ public class TemplateObjectProController extends BaseController {
     ServerResult serverResult = new ServerResult();
     int update;
     if (UtilsTool.isValid(param.get("proRowId"))) { // 判断rowId是否为空
+      if (!UtilsTool.isValid(param.get("ename").toString().trim())) { // ename不能为纯空格
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
+      }
       Condition validCondition = new ConditionBuilder(TemplateObjectPro.class).and()
           .equal("ename", String.valueOf(param.get("ename")))
           .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
