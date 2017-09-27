@@ -69,12 +69,12 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryKeyCode")
-  public PlatResult queryKeyCode(String keyCode,String rowId) {
+  public PlatResult queryKeyCode(String keyCode, String rowId) {
     String row = String.valueOf(rowId);
     String keyCodes = String.valueOf(keyCode);
     ServerResult result = new ServerResult();
     if (!Objects.equals(row, "null") || !Objects.equals(keyCode, "null")) {
-      ServerResult serverResult = keySetService.queryKeyCode(keyCodes,row);
+      ServerResult serverResult = keySetService.queryKeyCode(keyCodes, row);
       return result(serverResult);
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
@@ -113,7 +113,7 @@ public class KeySetController extends BaseController {
                                  @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
                                  String order) {
     ServerResult result = new ServerResult();
-    if (null!=rowId) {
+    if (null != rowId) {
       LinkedList<Order> orders = UtilsTool.dataSort(order);
       if (UtilsTool.isValid(rowId)) {
         ServerResult serverResult = keySetService.queryProPage(search, rowId, pageNum, pageSize, orders);
@@ -121,7 +121,7 @@ public class KeySetController extends BaseController {
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
       }
-    }else{
+    } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
 
     }
@@ -154,14 +154,15 @@ public class KeySetController extends BaseController {
   @RequestMapping(value = "/add", method = RequestMethod.POST)
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    String keysetCode = String.valueOf(param.get("keysetCode"));
-    if (!"".equals(keysetCode)) {
+    String keysetCode = String.valueOf(param.get("keysetCode")).trim();
+    String keysetName = String.valueOf(param.get("keysetName")).trim();
+    if (UtilsTool.isValid(keysetCode) && UtilsTool.isValid(keysetName)) {
       //获取代码做重复性判断
       Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keysetCode).endAnd().buildDone();
       List<KeySet> keySets = keySetService.select(condition);
       if (keySets.size() == 0) {
         KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
-        if (UtilsTool.isValid(keySet.getKeysetName()) && keySet.insert() != -1) { // keysetName不为空才进行新增
+        if (keySet.insert() != -1) {
           return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
         } else {
           return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
@@ -201,12 +202,18 @@ public class KeySetController extends BaseController {
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
-      KeySet keySet = new KeySet();
-      KeySet modify = keySet.fromMap(param).buildModifyInfo();
-      if (UtilsTool.isValid(modify.getKeysetName()) && modify.updateById() != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+      String keysetCode = String.valueOf(param.get("keysetCode")).trim();
+      String keysetName = String.valueOf(param.get("keysetName")).trim();
+      if (UtilsTool.isValid(keysetCode) && UtilsTool.isValid(keysetName)) {
+        KeySet keySet = new KeySet();
+        KeySet modify = keySet.fromMap(param).buildModifyInfo();
+        if (modify.updateById() != -1) {
+          return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        } else {
+          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        }
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
       }
     }
     return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
