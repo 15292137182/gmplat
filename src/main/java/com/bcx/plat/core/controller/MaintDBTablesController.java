@@ -129,7 +129,7 @@ public class MaintDBTablesController extends BaseController {
     if (!"".equals(tableEname)) {
       Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
       List<Map> select = maintDBTablesService.selectMap(condition);
-      if (select.size() == 0) {
+      if (select.size() == 0 || select.get(0).get("rowId").equals(param.get("rowId"))) {
         if (UtilsTool.isValid(param.get("rowId"))) {
           MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
           int update = maintDBTables.updateById();

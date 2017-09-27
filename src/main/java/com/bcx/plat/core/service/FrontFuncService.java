@@ -90,7 +90,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
             .equal("funcCode", funcCode)
             .endAnd().buildDone();
         List<FrontFunc> select = select(condition);
-        if (select.size() == 0) {
+        if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
           FrontFunc frontFunc = new FrontFunc();
           FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
           update = modify.updateById();

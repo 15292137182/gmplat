@@ -79,7 +79,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     if (!"".equals(fieldAlias)) {
       Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
       List<BusinessObjectPro> select = select(condition);
-      if (select.size() == 0) {
+      if (select.size() == 0 || select.get(0).getRowId().equals(paramEntity.get("rowId"))) {
         businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
         businessObjectPro.updateById();
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObjectPro);

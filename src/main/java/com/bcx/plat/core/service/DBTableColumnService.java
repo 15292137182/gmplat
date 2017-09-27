@@ -92,7 +92,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
           .equal("relateTableRowId", param.get("relateTableRowId"))
           .endAnd().buildDone();
       List<DBTableColumn> select = dbTableColumnService.select(condition);
-      if (select.size() == 0) {
+      if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
         DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
         int update = dbTableColumn.updateById();
         if (update != -1) {
