@@ -63,7 +63,8 @@ var em = new Vue({
                                     relateTemplateObject: em.templateObj_1.value,//关联模板对象
                                     belongModule: em.belongModule_1.value,//所属模块
                                 },
-                                "obj":basTop
+                                "obj":basTop,
+                                "showMsg":true
                             };
                             gmpAjax.showAjax(data,function(res){
                                 console.log(res);
@@ -85,7 +86,8 @@ var em = new Vue({
                                     relateTemplateObject: em.templateObj_1.value,//关联模板对象
                                     belongModule: em.belongModule_1.value,//所属模块
                                 },
-                                "obj":basTop
+                                "obj":basTop,
+                                "showMsg":true
                             };
                             gmpAjax.showAjax(data,function(res){
                                 //分页跳回到第一页

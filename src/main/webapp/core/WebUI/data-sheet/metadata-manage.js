@@ -98,7 +98,7 @@ gmp_onload=function(){
                 var data={
                     "url":affectPropUrl,
                     "jsonData":{rowId:basLeft.currentId},
-                    "obj":basTop
+                    "obj":basTop,
                 };
                 gmpAjax.showAjax(data,function(res){
                     basLeft.searchLeft();
@@ -134,7 +134,8 @@ gmp_onload=function(){
                     var data={
                         "url":editObjUrl,
                         "jsonData":{rowId:basLeft.currentVal.rowId},
-                        "obj":basLeft
+                        "obj":basLeft,
+                        "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
@@ -158,7 +159,8 @@ gmp_onload=function(){
                     var data={
                         "url":deleteUrl,
                         "jsonData":{rowId:basLeft.currentVal.rowId},
-                        "obj":basLeft
+                        "obj":basLeft,
+                        "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页跳回到第一页
@@ -322,7 +324,8 @@ gmp_onload=function(){
                     var data={
                         "url":editQurProUrl,
                         "jsonData":{rowId: basRight.currentVal.rowId},
-                        "obj":basRight
+                        "obj":basRight,
+                        "showMsg":true
                     };
                     gmpAjax.showAjax(data, function (res) {
                         ///编辑拿到的数据
@@ -355,7 +358,8 @@ gmp_onload=function(){
                     var data={
                         "url":deleteProUrl,
                         "jsonData":{rowId: basRight.rightVal},
-                        "obj":basRight
+                        "obj":basRight,
+                        "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页查询

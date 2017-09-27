@@ -96,7 +96,8 @@ var proEm = new Vue({
                                         fieldAlias: proEm.addProForm.fieldAliasInput, //拓展英文名
                                         defaultValue: proEm.addProForm.defaultValue,//默认值
                                     },
-                                    "obj":basTop
+                                    "obj":basTop,
+                                    "showMsg":true
                                 };
                                 gmpAjax.showAjax(data,function(res){
                                     console.log(proEm.valueOriginContent_1.value)
@@ -126,7 +127,8 @@ var proEm = new Vue({
                                         defaultValue: proEm.addProForm.defaultValue,//默认值
 
                                     },
-                                    "obj":basTop
+                                    "obj":basTop,
+                                    "showMsg":true
                                 };
                                 gmpAjax.showAjax(data,function(res){
                                     //console.log(res);
