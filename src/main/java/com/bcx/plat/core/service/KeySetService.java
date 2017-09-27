@@ -9,6 +9,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -18,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.bcx.plat.core.utils.UtilsTool.convertMapToAndConditionSeparatedByLike;
+import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
 
 /**
  * 键值集合信息
@@ -126,21 +130,31 @@ public class KeySetService extends BaseService<KeySet> {
    * @param orders   排序
    * @return ServerResult
    */
-  public ServerResult queryProPage(String search, String rowId, int pageNum, int pageSize, List<Order> orders) {
-    //查询属性的搜索条件
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("confKey", "confValue"), UtilsTool.collectToSet(search));
+  public ServerResult queryProPage(String search, String rowId, String param, Integer pageNum, Integer pageSize, List<Order> orders) {
     Condition condition;
-    if (UtilsTool.isValid(search)) {
-      condition = new ConditionBuilder(KeySetPro.class)
-          .and().equal("relateKeysetRowId", rowId)
-          .or().addCondition(blankQuery).endOr()
-          .endAnd().buildDone();
-    } else {
-      condition = new ConditionBuilder(KeySetPro.class).and().equal("relateKeysetRowId", rowId).endAnd().buildDone();
+    if (UtilsTool.isValid(param)) { // 按照指定字段查询
+      condition = new And(new FieldCondition("relateKeysetRowId", Operator.EQUAL, rowId),
+          convertMapToAndConditionSeparatedByLike(KeySetPro.class, jsonToObj(param, Map.class)));
+    } else { // 按照空格查询
+      if (UtilsTool.isValid(search)) {
+        //查询属性的搜索条件
+        Or blankQuery = UtilsTool.createBlankQuery(Arrays.asList("confKey", "confValue"), UtilsTool.collectToSet(search));
+        condition = new ConditionBuilder(KeySetPro.class)
+            .and().equal("relateKeysetRowId", rowId)
+            .or().addCondition(blankQuery).endOr()
+            .endAnd().buildDone();
+      } else {
+        condition = new ConditionBuilder(KeySetPro.class).and().equal("relateKeysetRowId", rowId).endAnd().buildDone();
+      }
     }
-    PageResult<Map<String, Object>> result = keySetProService.selectPageMap(condition, orders, pageNum, pageSize);
+    PageResult<Map<String, Object>> result;
+    if (UtilsTool.isValid(pageNum)) { // 判断是否进行分页查询
+      result = keySetProService.selectPageMap(condition, orders, pageNum, pageSize);
+    } else {
+      result = new PageResult(keySetProService.selectMap(condition, orders));
+    }
     if (result.getResult().size() == 0) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_FAIL);
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     } else {
       return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }

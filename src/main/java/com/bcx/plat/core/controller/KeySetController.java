@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
+import com.bcx.plat.core.entity.KeySetPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -108,22 +109,14 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryProPage(String rowId, String search,
-                                 @RequestParam(value = "pageNum", defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                 @RequestParam(value = "pageSize", defaultValue = BaseConstants.PAGE_SIZE) int pageSize,
-                                 String order) {
+  public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult result = new ServerResult();
-    if (null != rowId) {
-      LinkedList<Order> orders = UtilsTool.dataSort(order);
-      if (UtilsTool.isValid(rowId)) {
-        ServerResult serverResult = keySetService.queryProPage(search, rowId, pageNum, pageSize, orders);
-        return result(serverResult);
-      } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-      }
+    if (UtilsTool.isValid(rowId)) {
+      LinkedList<Order> orders = UtilsTool.dataSort(KeySetPro.class, order);
+      ServerResult serverResult = keySetService.queryProPage(search, rowId, param, pageNum, pageSize, orders);
+      return result(serverResult);
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-
     }
   }
 
