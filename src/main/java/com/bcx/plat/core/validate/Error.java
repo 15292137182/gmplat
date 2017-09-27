@@ -1,11 +1,13 @@
 package com.bcx.plat.core.validate;
 
+import java.io.Serializable;
+
 /**
  * 错误信息容器
  * <p>
  * Create By HCL at 2017/9/21
  */
-public class Error {
+public class Error implements Serializable {
 
   private String fieldName;
   private String errorMessage;

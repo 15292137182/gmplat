@@ -43,11 +43,13 @@ public abstract class ValidateUtils {
    */
   private static void doValidate(Map map, CheckResult checkResult, FrontFuncPro property) {
     String fieldName = getPropertyFieldName(property);
-    Object fieldValue = null == map ? null :
-            (map.containsKey(fieldName) ? map.get(fieldName) : null);
-    // 是否可以为空
-    if (!Boolean.valueOf(property.getAllowEmpty()) && !isValid(fieldValue)) {
-      checkResult.addError(new Error(fieldName, String.format("%s 不能为空！", fieldName)));
+    if (isValid(fieldName)) {
+      Object fieldValue = null == map ? null :
+              (map.containsKey(fieldName) ? map.get(fieldName) : null);
+      // 是否可以为空
+      if (!Boolean.valueOf(property.getAllowEmpty()) && !isValid(fieldValue)) {
+        checkResult.addError(new Error(fieldName, String.format("%s 不能为空！", fieldName)));
+      }
     }
   }
 

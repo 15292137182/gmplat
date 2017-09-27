@@ -4,6 +4,7 @@ import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
 import com.bcx.plat.core.manager.SequenceManager;
+import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.BusinessObjectService;
 import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.SpringContextHolder;
@@ -41,6 +42,7 @@ public abstract class EntityFillUtils {
     if (null != entity && isValid(businessObjRI)) {
       Map entityMap = entity.toMap();
       if (null != entityMap) {
+        Map<String, String> fieldNameInvoke = getFieldName(businessObjRI);
         // 查询规则配置
         List<BusinessObjectPro> objectPros = getBusinessProperties(businessObjRI);
         objectPros.forEach(businessObjectPro -> {
@@ -51,7 +53,7 @@ public abstract class EntityFillUtils {
               String sequenceCode = getSerialCodeByRowId(businessObjectPro.getValueResourceContent());
               if (null != sequenceCode) {
                 value = SequenceManager.getInstance().buildSequenceNo(sequenceCode, args, entity);
-                entityMap.put(businessObjectPro.getPropertyCode(), value);
+                entityMap.put(fieldNameInvoke.get(businessObjectPro.getPropertyCode()), value);
               }
             }
           }
@@ -61,6 +63,17 @@ public abstract class EntityFillUtils {
       }
     }
     return false;
+  }
+
+  /**
+   * 查询字段属性对应的名称
+   *
+   * @param businessObjRI 对象属性rowId主键
+   * @return 返回查询结果
+   */
+  private static Map<String, String> getFieldName(String businessObjRI) {
+    BusinessObjectProService service = SpringContextHolder.getBean(BusinessObjectProService.class);
+    return service.obtainSequenceCode(businessObjRI);
   }
 
   /**
