@@ -959,7 +959,6 @@ var DynamicStitchings = (function(){
         var pageConfig = '<el-row type="flex" justify="end" style="padding-top:10px" class="block"><el-pagination @size-change="tableData.handleSizeChange" @current-change="tableData.handleCurrentChange" :current-page="tableData.pageNum" :page-sizes="[5,10,20]" :page-size="tableData.pageSize" :total="tableData.total" layout="total, sizes, prev, pager, next, jumper"></el-pagination></el-row>';
         var tableColumn='';//table列
         var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
-        console.log(thisObj);
         if(thisObj.checkbox==true){
             var selection = '<el-table-column data="checkTable" type="selection" width="55"></el-table-column>'
         }else{
@@ -1281,8 +1280,13 @@ function GmpTableBlock(jsonDataConfig,compId,blockId,formBlockItems,vueEl,tableI
     this.onUnCheckAll = jsonFunction.onUnCheckAll;//表格移除全选事件
 }
 //父组件数据
-GmpTableBlock.prototype.searchSelect = function(){
+GmpTableBlock.prototype.searchSelect = function(data){
     var that = this;
+    if(data){
+        console.log(data.length);
+        that.total = data.length;
+        this.tableObjArr["total"] = data.length;
+    }
     var compId = this.compId;
     console.log(that.total);
     this.tableObjArr["pageSize"] = that.pageSize;
@@ -1464,7 +1468,7 @@ GmpTableBlock.prototype.reload = function(json){
 GmpTableBlock.prototype.loadRecord = function(data){
     var that = this;
     this.tableObjArr = [];
-    this.searchSelect();
+    this.searchSelect(data);
     dataConversion.conversion(that.vueObj,data);
     for(var j=0;j<data.length;j++){
         this.tableObjArr.push(data[j]);

@@ -476,8 +476,13 @@ function gmpTableObj(jsonDataConfig,compId, blockId, formBlockItems, vueEl, tabl
 };
 
 // 父组件数据
-gmpTableObj.prototype.searchSelect = function() {
+gmpTableObj.prototype.searchSelect = function(data) {
     var that = this;
+    if(data){
+        console.log(data.length);
+        that.total = data.length;
+        this.tableObjArr["total"] = data.length;
+    }
     var compId = this.compId;
     console.log(that.total);
     this.tableObjArr["pageSize"] = that.pageSize;
@@ -536,7 +541,7 @@ gmpTableObj.prototype.searchSelect = function() {
             success: function(res) {
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
-                    console.log(that);
+                    console.log(data);
                     that.total = Number(res.resp.content.data.total);
                     // 清空数据
                     that.tableObjArr = [];
@@ -658,7 +663,7 @@ gmpTableObj.prototype.loadRecord = function(data) {
     // 清空数据
     this.tableObjArr = [];
     // 重新注入方法
-    this.searchSelect();
+    this.searchSelect(data);
     dataConversion.conversion(that.vueObj,data);
     for (var j = 0; j < data.length; j++) {
         this.tableObjArr.push(data[j]);
