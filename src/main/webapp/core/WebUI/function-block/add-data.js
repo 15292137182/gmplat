@@ -249,8 +249,9 @@ var em=new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
-                console.log(res);
+                // console.log(res);
                 var data = res.data;
+                console.log(window.parent.topButtonObj);
                 em.rowId=data[0].rowId;//新增成功后返回的ID
                 em.funcRowId=data[0].funcRowId;//功能块ID
                 em.$refs.objPro_1.setValue(data[0].relateBusiPro);//业务对象属性ID
@@ -283,15 +284,19 @@ var em=new Vue({
                 if(data[0].supportSort =="true"){
                     em.SupportSorting=true;//支持排序
                 }
-                em.$refs.showControl_1.setValue(data[0].displayWidget);
+                if(window.parent.topButtonObj.controlBottom) {
+                    em.$refs.showControl_1.setValue(data[0].displayWidget);
+                    em.$refs.showControl_1.setDisabled(true);
+                }
+                if(window.parent.topButtonObj.alignBottom) {
+                    em.$refs.align_1.setValue(data[0].align);//下拉框
+                    em.$refs.align_1.setDisabled(true);
+                }
                 em.formTable.nameInput = data[0].displayWidget;
-                em.$refs.showControl_1.setDisabled(true);
                 // em.formTable.lengthSection=data[0].lengthInterval;//长度区间
                 // em.formTable.testFunction=data[0].validateFunc;//验证函数
                 // em.formTable.displayFunction=data[0].displayFunc;//显示函数
                 // em.formTable.sortNumber=data[0].sort;//排序
-                em.$refs.align_1.setValue(data[0].align);//下拉框
-                em.$refs.align_1.setDisabled(true);
                 // em.formTable.Twidth=data[0].widthSetting//宽度
                 // em.formTable.Keyword1=data[0].keywordOne//关键字1
                 // em.formTable.Keyword2=data[0].keywordTwo//关键字2

@@ -71,26 +71,30 @@ Vue.component("single-selection", {
                 value: ""
             };
 
-            if(val.length > 0 || val != "") {
-                if(this.isMultiple) {
-                    _obj = val;
-                    // 子组件向父组件传递的方法和参数
-                    _this.$emit("change-data", _obj);
-                }else {
-                    // 调用获取options方法 防止异步请求时间过长的问题
-                    _this.getOptions(function(data) {
-                        // console.log(data);
-                        _obj = data.find(function(item) {
-                            return item.value === val;
-                        });
-                        // console.log(_obj);
+            if(val != null) {
+                if(val.length > 0 || val != "") {
+                    if(this.isMultiple) {
+                        _obj = val;
                         // 子组件向父组件传递的方法和参数
                         _this.$emit("change-data", _obj);
-                    });
+                    }else {
+                        // 调用获取options方法 防止异步请求时间过长的问题
+                        _this.getOptions(function(data) {
+                            // console.log(data);
+                            _obj = data.find(function(item) {
+                                return item.value === val;
+                            });
+                            // console.log(_obj);
+                            // 子组件向父组件传递的方法和参数
+                            _this.$emit("change-data", _obj);
+                        });
+                    }
+                }else {
+                    _obj.value = val;
+                    // 子组件向父组件传递的方法和参数
+                    _this.$emit("change-data", _obj);
                 }
             }else {
-                _obj.value = val;
-                // 子组件向父组件传递的方法和参数
                 _this.$emit("change-data", _obj);
             }
         },
