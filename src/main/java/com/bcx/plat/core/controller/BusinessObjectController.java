@@ -98,15 +98,16 @@ public class BusinessObjectController extends BaseController {
       List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
       for (Map<String, Object> results : result) {
         String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
-        List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
-        if (null == list) {
+        if (!(relateTemplateObject.contains("[") &&relateTemplateObject.contains("]"))) {
           relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
           List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
           if (templateObjects.size() > 0) {
             results.put("relateTemplate", templateObjects.get(0).get("templateName"));
           }
         } else {
+          List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
           StringBuilder templates = new StringBuilder();
+          if (null != list && list.size() > 0) {
           for (Object li : list) {
             String valueOf = String.valueOf(li);
             relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
@@ -117,6 +118,7 @@ public class BusinessObjectController extends BaseController {
               }
             }
           }
+        }
           if (templates.lastIndexOf(",") != -1) {
             String substring = templates.substring(0, templates.length() - 1);
             results.put("relateTemplate", substring);
