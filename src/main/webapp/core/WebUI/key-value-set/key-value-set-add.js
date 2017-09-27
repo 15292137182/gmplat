@@ -53,7 +53,8 @@ var keyValueSetAdd = new Vue({
            //         belongSystem:this.keyForm.belongSystemInput,
                     desp:this.keyForm.despInput
                 },
-                "obj":keyValueSetAdd
+                "obj":keyValueSetAdd,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                 queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet,function(res){
@@ -75,7 +76,8 @@ var keyValueSetAdd = new Vue({
                     desp:this.keyForm.despInput,
                     version:"1.0"
                 },
-                "obj":keyValueSetAdd
+                "obj":keyValueSetAdd,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                 queryData.getData(url,leftKeyValueSet.input,leftKeyValueSet);
