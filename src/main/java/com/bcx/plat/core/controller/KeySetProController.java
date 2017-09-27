@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySetPro;
-import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -14,7 +13,6 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.KeySetProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,8 +60,9 @@ public class KeySetProController extends BaseController {
   @RequestMapping(value = "/add", method = POST)
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    String confKey = String.valueOf(param.get("confKey"));
-    if (!"".equals(confKey)) {
+    String confKey = String.valueOf(param.get("confKey")).trim();
+    String confValue = String.valueOf(param.get("confValue")).trim();
+    if (UtilsTool.isValid(confKey) && UtilsTool.isValid(confValue)) {
       Condition condition = new ConditionBuilder(KeySetPro.class).and()
           .equal("relateKeysetRowId", param.get("relateKeysetRowId"))
           .equal("confKey", confKey).endAnd().buildDone();
@@ -81,6 +80,7 @@ public class KeySetProController extends BaseController {
     }
     return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
+
   /**
    * 键值集合属性数据根据rowId修改数据
    *
@@ -92,12 +92,16 @@ public class KeySetProController extends BaseController {
     ServerResult result = new ServerResult();
     int update;
     if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
-      update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
-      if (update != -1) {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
-      } else {
+      String confKey = String.valueOf(param.get("confKey")).trim();
+      String confValue = String.valueOf(param.get("confValue")).trim();
+      if (UtilsTool.isValid(confKey) && UtilsTool.isValid(confValue)) {
+        update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
+        if (update != -1) {
+          return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        }
         return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
       }
+      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
     }
     return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
