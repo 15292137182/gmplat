@@ -115,7 +115,8 @@ gmp_onload = function () {
                         "jsonData": {
                             rowId: config.currentVal.rowId
                         },
-                        "obj": config
+                        "obj": config,
+                        'showMsg':true
                     }
                     gmpAjax.showAjax(data, function (res) {
                         queryData.getData(queryPage, config.input, config, function (res) {
