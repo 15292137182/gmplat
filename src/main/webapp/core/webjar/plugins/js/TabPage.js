@@ -1283,9 +1283,9 @@ function GmpTableBlock(jsonDataConfig,compId,blockId,formBlockItems,vueEl,tableI
 GmpTableBlock.prototype.searchSelect = function(data){
     var that = this;
     if(data){
-        console.log(data.length);
-        that.total = data.length;
-        this.tableObjArr["total"] = data.length;
+        // console.log(data.length);
+        // that.total = data.length;
+        // this.tableObjArr["total"] = data.length;
     }
     var compId = this.compId;
     console.log(that.total);
@@ -1352,7 +1352,7 @@ GmpTableBlock.prototype.searchSelect = function(data){
             success: function(res) {
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
-                    console.log(that);
+                    console.log(data);
                     that.total = Number(res.resp.content.data.total);
                     // 清空数据
                     that.tableObjArr = [];
@@ -1367,14 +1367,14 @@ GmpTableBlock.prototype.searchSelect = function(data){
                 }
             },
             error: function() {
-                gmpPopup.throwMsg("表格查询数据失败！");
+                gmpPopup.throwMsg("显示多少条数据发生变化表格查询数据失败！");
             }
         })
     }
     //点击第几页
     this.tableObjArr["handleCurrentChange"] = function(val){
         that.pageNo = val;
-        console.log(that);
+        // console.log(that);
         if (that.queryUrl == null) {
             gmpPopup.throwMsg("未定义表格查询接口");
             return;
@@ -1387,7 +1387,7 @@ GmpTableBlock.prototype.searchSelect = function(data){
             success: function(res) {
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
-                    console.log(that);
+                    // console.log(that);
                     that.total = Number(res.resp.content.data.total);
                     // 清空数据
                     that.tableObjArr = [];
@@ -1402,7 +1402,7 @@ GmpTableBlock.prototype.searchSelect = function(data){
                 }
             },
             error: function() {
-                gmpPopup.throwMsg("表格查询数据失败！");
+                gmpPopup.throwMsg("点击第几页表格查询数据失败！");
             }
         })
     }
@@ -1457,21 +1457,24 @@ GmpTableBlock.prototype.reload = function(json){
         dataType:"json",
         data:that.queryParam,
         success:function(res){
-            that.loadRecord(res.resp.content.data.result);
+            that.total = res.resp.content.data.total;
+            that.loadRecord(res.resp.content.data);
         },
         error:function(){
             alert("表格查询数据失败！")
         }
     })
 }
-//表格由给定数据加载
-GmpTableBlock.prototype.loadRecord = function(data){
+// 表格由给定数据加载
+GmpTableBlock.prototype.loadRecord = function(data) {
     var that = this;
+    // 清空数据
     this.tableObjArr = [];
+    // 重新注入方法
     this.searchSelect(data);
-    dataConversion.conversion(that.vueObj,data);
-    for(var j=0;j<data.length;j++){
-        this.tableObjArr.push(data[j]);
+    dataConversion.conversion(that.vueObj,data.result);
+    for (var j = 0; j < data.result.length; j++) {
+        this.tableObjArr.push(data.result[j]);
     }
     var parentComponentName = this.compId;
     this.vueObj[parentComponentName] = this.tableObjArr;
@@ -1755,18 +1758,26 @@ GmpSearchBlock.prototype.getFilterData = function(){
 GmpSearchBlock.prototype.setFilterData = function(data){
     this.filterData = data;
 }
-//执行搜索操作
-GmpSearchBlock.prototype.search = function(json,callback){
+// 执行搜索操作
+GmpSearchBlock.prototype.search = function(json,callback) {
     var that = this;
     var url = that.selUrl;
     var dataJson = null;
     var pageConfig = {};
-    if(that.grids != undefined){
-        pageConfig = that.grids[0].getPageInfo();
-    }else{
-        pageConfig.pageSize = 10;
-        pageConfig.pageNo = 1;
-    }
+    var dataName = that.grids[0];
+    var gmpTableObj = "GmpTable."+dataName;
+    var gmpTableObjData = null;
+    eval("gmpTableObjData="+gmpTableObj);
+    console.log(gmpTableObjData);
+    pageConfig.pageSize = gmpTableObjData.pageSize;
+    pageConfig.pageNo = gmpTableObjData.pageNo;
+    // if(that.grids != undefined){
+    //     pageConfig = that.grids[0].getPageInfo();
+    // }else{
+    //      pageConfig.pageSize = 10;
+    //      pageConfig.pageNo = 1;
+    //  }
+
     var search = that.searchObj.sel;
     if(that.searchObj.key == ""){
         dataJson = {
@@ -1787,7 +1798,7 @@ GmpSearchBlock.prototype.search = function(json,callback){
         }
     }
     if(json){
-        if(json.url){
+        if(json.url != undefined){
             url = json.url;
             dataJson = json.data;
         }
@@ -1798,9 +1809,8 @@ GmpSearchBlock.prototype.search = function(json,callback){
         dataType:"json",
         data:dataJson,
         success:function(res){
-            // console.log(res);
-            var dataName = that.grids[0];
-            var load = "GmpTable."+dataName+".reload(res.resp.content.data.result)";
+            //var dataName = that.grids[0];
+            var load = "GmpTable."+dataName+".loadRecord(res.resp.content.data)";
             eval(load);
             if(callback){
                 callback(res);
@@ -1809,8 +1819,8 @@ GmpSearchBlock.prototype.search = function(json,callback){
         error:function(){
             alert("查询块请求失败！");
         }
-    })
-}
+    });
+};
 
 // var jsonDataConfigObj = (function(){
 //     var configData = function(){
