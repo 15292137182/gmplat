@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -23,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
@@ -36,8 +38,10 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  * Copyright: Shanghai BatchSight GMP Information of management platform, Inc. Copyright(c) 2017
  *
  * @author Wen TieHu
- *         <pre>History:
+ * <pre>History:
  *                   2017/8/28  Wen TieHu Create
+ *                   2017/9/27  YoungerOu modified
+ *                    before delete templateObject, delete templateObjectPro first.
  *                 </pre>
  */
 @RestController
@@ -72,12 +76,8 @@ public class TemplateObjectController extends BaseController {
       ServerResult serverResult = templateObjectService.queryTemplateProPage(rowId, search, param, pageNum, pageSize, order);
       return result(serverResult);
     }
-    return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
-
-
-
-
 
 
   /**
@@ -104,7 +104,7 @@ public class TemplateObjectController extends BaseController {
       List<Map> maps = templateObjectService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
       return result(new ServerResult<>(maps));
     }
-    return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL,Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 
   /**
@@ -171,6 +171,9 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
+    // 删除模板对象之前，先删除模板对象属性信息
+    Condition preCondition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();
+    templateObjectProService.delete(preCondition);
     Condition condition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> maps = templateObjectService.selectMap(condition);
     ServerResult serverResult = new ServerResult();
