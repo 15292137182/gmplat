@@ -139,7 +139,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
               for (Map pro : proRowId) {
                 String cname = String.valueOf(pro.get("cname"));
                 String ename = String.valueOf(pro.get("ename"));
-                if (ename.contains("_")) {
+                if (ename != null && ename.contains("_")) {
                   ename = underlineToCamel(String.valueOf(pro.get("ename")), false);
                 }
                 map.put("propertyName", cname);
@@ -160,7 +160,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                   keysetCode = keySets.get(0).getKeysetCode();
                 }
                 String fieldAlias = relate.getFieldAlias();
-                if (fieldAlias !=null &&relate.getFieldAlias().contains("_")) {
+                if (fieldAlias != null && relate.getFieldAlias().contains("_")) {
                   fieldAlias = underlineToCamel(relate.getFieldAlias(), false);
                 }
                 map.put("ename", fieldAlias);
@@ -175,7 +175,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                 }
                 for (DBTableColumn row : dbTableColumns) {
                   String columnEname = row.getColumnEname();
-                  if (row.getColumnEname().contains("_")) {
+                  if (row.getColumnEname() != null && row.getColumnEname().contains("_")) {
                     columnEname = underlineToCamel(row.getColumnEname(), false);
                   }
                   map.put("ename", columnEname);
