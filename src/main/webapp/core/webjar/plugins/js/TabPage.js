@@ -956,7 +956,7 @@ var DynamicStitchings = (function(){
         };
         var html = '';
         var str = '';
-        var pageConfig = '<el-row type="flex" justify="end" style="padding-top:10px" class="block"><el-pagination :current-page="1" :page-sizes="[5,10,20]" :page-size="10" :total="0" layout="total, sizes, prev, pager, next, jumper"></el-pagination></el-row>';
+        var pageConfig = '<el-row type="flex" justify="end" style="padding-top:10px" class="block"><el-pagination @size-change="tableData.handleSizeChange" @current-change="tableData.handleCurrentChange" :current-page="tableData.pageNum" :page-sizes="[5,10,20]" :page-size="tableData.pageSize" :total="tableData.total" layout="total, sizes, prev, pager, next, jumper"></el-pagination></el-row>';
         var tableColumn='';//table列
         var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
         console.log(thisObj);
@@ -1284,6 +1284,10 @@ function GmpTableBlock(jsonDataConfig,compId,blockId,formBlockItems,vueEl,tableI
 GmpTableBlock.prototype.searchSelect = function(){
     var that = this;
     var compId = this.compId;
+    console.log(that.total);
+    this.tableObjArr["pageSize"] = that.pageSize;
+    this.tableObjArr["pageNum"] = that.pageNo;
+    this.tableObjArr["total"] = that.total;
     var clickRowTime = null;
     var cellClickTime = null;
     //单击行事件
@@ -1328,11 +1332,82 @@ GmpTableBlock.prototype.searchSelect = function(){
     this.tableObjArr["deleteRow"] = function(index,row){
         that.onDeleteRow(index,row);
     }
+    //显示多少条数据发生变化
+    this.tableObjArr["handleSizeChange"] = function(val){
+        that.pageSize = val;
+        console.log(that);
+        if (that.queryUrl == null) {
+            gmpPopup.throwMsg("未定义表格查询接口");
+            return;
+        }
+        $.ajax({
+            url: that.queryUrl,
+            type: "get",
+            dataType: "json",
+            data: {search:"",pageSize:that.pageSize,pageNum:that.pageNo},
+            success: function(res) {
+                var data = res.resp.content.data.result;
+                if (data.length > 0) {
+                    console.log(that);
+                    that.total = Number(res.resp.content.data.total);
+                    // 清空数据
+                    that.tableObjArr = [];
+                    // 重新注入方法
+                    that.searchSelect();
+                    dataConversion.conversion(that.vueObj,data);
+                    for (var j = 0; j < data.length; j++) {
+                        that.tableObjArr.push(data[j]);
+                    }
+                    var parentComponentName = that.compId;
+                    that.vueObj[parentComponentName] = that.tableObjArr;
+                }
+            },
+            error: function() {
+                gmpPopup.throwMsg("表格查询数据失败！");
+            }
+        })
+    }
+    //点击第几页
+    this.tableObjArr["handleCurrentChange"] = function(val){
+        that.pageNo = val;
+        console.log(that);
+        if (that.queryUrl == null) {
+            gmpPopup.throwMsg("未定义表格查询接口");
+            return;
+        }
+        $.ajax({
+            url: that.queryUrl,
+            type: "get",
+            dataType: "json",
+            data: {search:"",pageSize:that.pageSize,pageNum:that.pageNo},
+            success: function(res) {
+                var data = res.resp.content.data.result;
+                if (data.length > 0) {
+                    console.log(that);
+                    that.total = Number(res.resp.content.data.total);
+                    // 清空数据
+                    that.tableObjArr = [];
+                    // 重新注入方法
+                    that.searchSelect();
+                    dataConversion.conversion(that.vueObj,data);
+                    for (var j = 0; j < data.length; j++) {
+                        that.tableObjArr.push(data[j]);
+                    }
+                    var parentComponentName = that.compId;
+                    that.vueObj[parentComponentName] = that.tableObjArr;
+                }
+            },
+            error: function() {
+                gmpPopup.throwMsg("表格查询数据失败！");
+            }
+        })
+    }
     var obj = {
         props:[],
         tableId:that.tableId
     }
     obj[compId] = this.tableObjArr;
+    console.log(obj);
     return obj;
 }
 //构建表格组件
