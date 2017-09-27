@@ -92,15 +92,8 @@ public class BusinessObjectProController extends BaseController {
    */
   @RequestMapping("/add")
   public PlatResult addBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
-    ServerResult result = new ServerResult();
-    BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
-    int insert = businessObjectPro.insert();
-    if (insert != -1) {
-      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, businessObjectPro));
-    } else {
-
-      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
-    }
+    ServerResult serverResult = businessObjectProService.insertBusinessPro(paramEntity);
+    return result(serverResult);
   }
 
   /**
@@ -111,12 +104,13 @@ public class BusinessObjectProController extends BaseController {
    */
   @RequestMapping("/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
-    BusinessObjectPro businessObjectPro = null;
+    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(paramEntity.get("rowId"))) {
-      businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
-      businessObjectPro.updateById();
+      ServerResult serverResult = businessObjectProService.updateBusinessPro(paramEntity);
+      return result(serverResult);
+    } else {
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-    return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObjectPro));
   }
 
   /**
@@ -130,7 +124,6 @@ public class BusinessObjectProController extends BaseController {
     //通过rowId查询数据
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> businessObjectPros = businessObjectProService.selectMap(condition);
-
     ServerResult result = new ServerResult();
     List<Map> frontFuncPros = frontFuncProService.selectMap(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
     int del;

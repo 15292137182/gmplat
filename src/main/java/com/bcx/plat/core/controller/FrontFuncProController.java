@@ -57,7 +57,7 @@ public class FrontFuncProController extends
    * 通用新增方法
    *
    * @param paramEntity 接受一个实体参数
-   * @return
+   * @return PlatResult
    */
   @RequestMapping(value = "/add", method = POST)
   public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {

@@ -77,7 +77,10 @@ public class SysConfigController extends BaseController {
   @RequestMapping(value = "/add", method = POST)
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
-    if (!("".equals(String.valueOf(param.get("confKey"))))) {
+    String confKey = String.valueOf(param.get("confKey")).trim();
+    param.remove("confKey");
+    param.put("confKey",confKey);
+    if (!("".equals(confKey))) {
       Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", param.get("confKey")).endAnd().buildDone();
       List<SysConfig> select = sysConfigService.select(condition);
       if (select.size() == 0) {
@@ -104,16 +107,31 @@ public class SysConfigController extends BaseController {
   public PlatResult update(@RequestParam Map<String, Object> param) {
     int update;
     if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
-      SysConfig sysConfig = new SysConfig();
-      SysConfig modify = sysConfig.fromMap(param).buildModifyInfo();
-      update = modify.updateById();
-      if (update != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
+      ServerResult serverResult = new ServerResult();
+      String confKey = String.valueOf(param.get("confKey")).trim();
+      param.remove("confKey");
+      param.put("confKey", confKey);
+      if (!("".equals(confKey))) {
+        Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", param.get("confKey")).endAnd().buildDone();
+        List<SysConfig> select = sysConfigService.select(condition);
+        if (select.size() == 0) {
+          SysConfig sysConfig = new SysConfig();
+          SysConfig modify = sysConfig.fromMap(param).buildModifyInfo();
+          update = modify.updateById();
+          if (update != -1) {
+            return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
+          } else {
+            return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+          }
+        } else {
+          return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+        }
       } else {
-        return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
       }
+    } else {
+      return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-    return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 
   /**

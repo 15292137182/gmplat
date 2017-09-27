@@ -4,7 +4,9 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DBTableColumn;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -97,13 +99,8 @@ public class DBTableColumnController extends BaseController {
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
-      DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
-      int update = dbTableColumn.updateById();
-      if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, dbTableColumn));
-      } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
-      }
+      ServerResult serverResult = dbTableColumnService.updateTableColumn(param);
+      return result(serverResult);
     } else {
       return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }

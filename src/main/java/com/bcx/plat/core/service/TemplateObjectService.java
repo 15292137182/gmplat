@@ -54,8 +54,7 @@ public class TemplateObjectService extends BaseService<TemplateObject> {
    * @return ServerResult
    */
   public ServerResult queryTemplateProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    List list = UtilsTool.jsonToObj(rowId, List.class);
-    if (null == list) {
+    if (!(rowId.contains("[") && rowId.contains("]"))) {
       List<Order> orders = dataSort(TemplateObjectPro.class, order);
       Condition condition = queryPTemplatePages(param, rowId, search);
       PageResult<Map<String, Object>> result;
@@ -67,6 +66,7 @@ public class TemplateObjectService extends BaseService<TemplateObject> {
       }
       return new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     } else {
+      List list = UtilsTool.jsonToObj(rowId, List.class);
       List<Map<String, Object>> lists = new ArrayList<>();
       PageResult<Map<String, Object>> result = null;
       for (Object li : list) {

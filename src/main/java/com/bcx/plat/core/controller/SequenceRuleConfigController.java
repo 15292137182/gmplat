@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.SequenceGenerate;
@@ -78,18 +79,27 @@ public class SequenceRuleConfigController extends BaseController {
    */
   @RequestMapping("/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
-    Condition condition = new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", param.get("seqCode")).endAnd().buildDone();
-    List<SequenceRuleConfig> select = sequenceRuleConfigService.select(condition);
-    if (select.size()==0) {
-      SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig().buildCreateInfo().fromMap(param);
-      int insert = sequenceRuleConfig.insert();
-      if (insert != -1) {
-        return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sequenceRuleConfig));
+    ServerResult result = new ServerResult();
+    String seqCode = String.valueOf(param.get("seqCode")).trim();
+    param.remove("seqCode");
+    param.put("seqCode", seqCode);
+    if (!"".equals(seqCode)) {
+      Condition condition = new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", param.get("seqCode")).endAnd().buildDone();
+      List<SequenceRuleConfig> select = sequenceRuleConfigService.select(condition);
+      if (select.size() == 0) {
+        SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig().buildCreateInfo().fromMap(param);
+        int insert = sequenceRuleConfig.insert();
+        if (insert != -1) {
+          return super.result(new ServerResult<>(STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sequenceRuleConfig));
+        } else {
+          return super.result(result.setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
+        }
       } else {
-        return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.NEW_ADD_FAIL));
+        return result(result.setStateMessage(STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
       }
+    } else {
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
     }
-    return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
   }
 
 
@@ -101,18 +111,27 @@ public class SequenceRuleConfigController extends BaseController {
    */
   @RequestMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
+    ServerResult result = new ServerResult();
     int update;
     if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
-      SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
-      SequenceRuleConfig modify = sequenceRuleConfig.fromMap(param).buildModifyInfo();
-      update = modify.updateById();
-      if (update != -1) {
-        return super.result(new ServerResult().setStateMessage(STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+      String seqCode = String.valueOf(param.get("seqCode")).trim();
+      param.remove("seqCode");
+      param.put("seqCode", seqCode);
+      if (!"".equals(seqCode)) {
+        SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
+        SequenceRuleConfig modify = sequenceRuleConfig.fromMap(param).buildModifyInfo();
+        update = modify.updateById();
+        if (update != -1) {
+          return result(result.setStateMessage(STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        } else {
+          return result(result.setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
+        }
       } else {
-        return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
       }
+    } else {
+      return result(result.setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-    return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 
   /**
@@ -123,17 +142,18 @@ public class SequenceRuleConfigController extends BaseController {
    */
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
+    ServerResult result = new ServerResult();
     int del;
     if (!rowId.isEmpty()) {
       SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
       del = sequenceRuleConfig.deleteById(rowId);
       if (del != -1) {
-        return result(new ServerResult().setStateMessage(STATUS_SUCCESS, Message.DELETE_SUCCESS));
+        return result(result.setStateMessage(STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
-        return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
+        return result(result.setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
       }
     } else {
-      return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return result(result.setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
 

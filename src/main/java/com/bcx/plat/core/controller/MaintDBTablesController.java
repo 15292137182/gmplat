@@ -89,8 +89,10 @@ public class MaintDBTablesController extends BaseController {
   @RequestMapping(value = "/add", method = RequestMethod.POST)
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    String tableEname = String.valueOf(param.get("tableEname"));
+    String tableEname = String.valueOf(param.get("tableEname")).trim();
     String tableSchema = String.valueOf(param.get("tableSchema"));
+    param.remove("tableEname");
+    param.put("tableEname",tableEname);
     if (!"".equals(tableEname)) {
       Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
       List<Map> select = maintDBTablesService.selectMap(condition);
@@ -119,18 +121,31 @@ public class MaintDBTablesController extends BaseController {
   @RequestMapping(value = "/modify", method = RequestMethod.POST)
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(param.get("rowId"))) {
-      MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
-      int update = maintDBTables.updateById();
-      if (update != -1) {
-        return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
-      } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
-      }
-    } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    String tableEname = String.valueOf(param.get("tableEname")).trim();
+    String tableSchema = String.valueOf(param.get("tableSchema"));
 
+    param.remove("tableEname");
+    param.put("tableEname",tableEname);
+    if (!"".equals(tableEname)) {
+      Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
+      List<Map> select = maintDBTablesService.selectMap(condition);
+      if (select.size() == 0) {
+        if (UtilsTool.isValid(param.get("rowId"))) {
+          MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
+          int update = maintDBTables.updateById();
+          if (update != -1) {
+            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+          } else {
+            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+          }
+        } else {
+          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+        }
+      }else {
+        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+      }
     }
+    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
 
   /**

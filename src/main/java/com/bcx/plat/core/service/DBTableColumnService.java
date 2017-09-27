@@ -51,7 +51,9 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    */
   public ServerResult addTableColumn(Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    String columnEname = String.valueOf(param.get("columnEname"));
+    String columnEname = String.valueOf(param.get("columnEname")).trim();
+    param.remove("columnEname");
+    param.put("columnEname",columnEname);
     if (!"".equals(columnEname)) {
       Condition condition = new ConditionBuilder(DBTableColumn.class).and()
           .equal("columnEname", columnEname)
@@ -71,7 +73,38 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       }
     }
     return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+  }
 
+  /**
+   *
+   * 数据库表字段修改
+   * @param param 修改参数
+   * @return ServerResult
+   */
+  public ServerResult updateTableColumn(Map<String, Object> param) {
+    ServerResult result = new ServerResult();
+    String columnEname = String.valueOf(param.get("columnEname")).trim();
+    param.remove("columnEname");
+    param.put("columnEname",columnEname);
+    if (!"".equals(columnEname)) {
+      Condition condition = new ConditionBuilder(DBTableColumn.class).and()
+          .equal("columnEname", columnEname)
+          .equal("relateTableRowId", param.get("relateTableRowId"))
+          .endAnd().buildDone();
+      List<DBTableColumn> select = dbTableColumnService.select(condition);
+      if (select.size() == 0) {
+        DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
+        int update = dbTableColumn.updateById();
+        if (update != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, dbTableColumn);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+        }
+      } else {
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+      }
+    }
+    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
   }
 
 

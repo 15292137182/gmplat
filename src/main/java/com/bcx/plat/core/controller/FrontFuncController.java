@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -172,14 +173,8 @@ public class FrontFuncController extends BaseController {
    */
   @RequestMapping("/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
-    FrontFunc frontFunc = new FrontFunc().buildCreateInfo().fromMap(param);
-    int insert = frontFunc.insert();
-    if (insert != -1) {
-      return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFunc));
-    } else {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
-    }
+    ServerResult serverResult = frontFuncService.insertFront(param);
+    return result(serverResult);
   }
 
   /**
@@ -191,16 +186,9 @@ public class FrontFuncController extends BaseController {
   @RequestMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    int update;
     if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
-      FrontFunc frontFunc = new FrontFunc();
-      FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
-      update = modify.updateById();
-      if (update != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
-      } else {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
-      }
+      ServerResult serverResult = frontFuncService.updateFront(param);
+      return result(serverResult);
     }
     return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
