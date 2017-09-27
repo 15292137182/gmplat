@@ -131,7 +131,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       if (isValid(relateTemplate)) {
         result.remove("relateTemplateObject");
       }
-      map.put("relateTemplateObject",list);
+      map.put("relateTemplateObject", list);
       return new ServerResult<>(BaseConstants.STATUS_SUCCESS, ServletUtils.getMessage(Message.QUERY_SUCCESS), map);
     } else {
       return null;
@@ -208,8 +208,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @return ServerResult
    */
   public ServerResult queryProPage(String search, String param, String rowId, Integer pageNum, Integer pageSize, List<Order> order) {
-    //查询属性的搜索条件
-    Or blankQuery = !isValid(search) ? null : createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), collectToSet(search));
     Condition condition;
     if (isValid(param)) {
       Map<String, Object> map = jsonToObj(param, Map.class);
@@ -217,6 +215,8 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map));
     } else {
       if (isValid(search)) {
+        //查询属性的搜索条件
+        Or blankQuery = createBlankQuery(Arrays.asList("propertyCode", "propertyName", "valueType"), collectToSet(search));
         condition = new ConditionBuilder(BusinessObjectPro.class)
             .and().equal("objRowId", rowId)
             .or().addCondition(blankQuery).endOr()
@@ -273,32 +273,32 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
 
       //TODO 遍历取值类型来源,根据来源取内容的名称 后面在键值集合配置页面里面可能会添加或删除字段
       String valueResourceType = String.valueOf(rest.get("valueResourceType"));
-      switch (valueResourceType){
+      switch (valueResourceType) {
         case "keySet":
           Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
           List<KeySet> select = keySetService.select(condition);
-          if (select.size()>0) {
+          if (select.size() > 0) {
             rest.remove("valueResourceContent");
-            rest.put("valueResourceContent",select.get(0).getKeysetName());
+            rest.put("valueResourceContent", select.get(0).getKeysetName());
           }
           break;
         case "sequenceRule":
           Condition conditions = new ConditionBuilder(SequenceRuleConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
           List<SequenceRuleConfig> selects = sequenceRuleConfigService.select(conditions);
-          if (selects.size()>0) {
+          if (selects.size() > 0) {
             rest.remove("valueResourceContent");
-            rest.put("valueResourceContent",selects.get(0).getSeqName());
+            rest.put("valueResourceContent", selects.get(0).getSeqName());
           }
           break;
         case "dataSet":
           Condition conditioned = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
           List<DataSetConfig> selected = dataSetConfigService.select(conditioned);
-          if (selected.size()>0) {
+          if (selected.size() > 0) {
             rest.remove("valueResourceContent");
-            rest.put("valueResourceContent",selected.get(0).getDatasetName());
+            rest.put("valueResourceContent", selected.get(0).getDatasetName());
           }
           break;
-          default:
+        default:
 
       }
 
