@@ -28,6 +28,9 @@ document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ib
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/gmpLayer.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/gmpOnload.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpAjax.js" charset="UTF-8"></script>');
+
+document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/gmpComponent.js" charset="UTF-8"></script>');
+
 // document.write('<script type="text/javascript" src="' + path +  '/WebUI/Public/ibcpSign.js" charset="UTF-8"></script>');
 // document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpSignature.js" charset="UTF-8"></script>');
 //document.write('<script type="text/javascript" src="' + path + '/WebUI/Public/ibcpPlugin.js" charset="UTF-8"></script>');
