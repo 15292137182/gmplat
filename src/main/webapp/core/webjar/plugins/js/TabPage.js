@@ -514,7 +514,8 @@ var gmpAjax = (function(){
                         }
                     }else{
                         callback(res.resp.content);
-                        showMsg.MsgOk(data.obj,res.resp.content.msg);
+                        // showMsg.MsgOk(data.obj,res.resp.content.msg);
+                        data.obj.$message.error(res.resp.content.msg);
                     }
                 }else{
                     data.obj.$message.error(res.resp.respMsg);
@@ -1235,7 +1236,13 @@ GmpForm1.prototype.submit = function(json,callback){
 
 
 //动态表格对象
-function GmpTableBlock(compId,blockId,formBlockItems,vueEl,tableId,postUrl,queryParam,submitUrl,jsonFunction){
+function GmpTableBlock(jsonDataConfig,compId,blockId,formBlockItems,vueEl,tableId,postUrl,queryParam,submitUrl,jsonFunction){
+    this.jsonDataConfig = jsonDataConfig;//配置信息
+    if(this.jsonDataConfig.checkbox){
+        this.checkbox = this.jsonDataConfig.checkbox;//表格右侧选择框
+    }else{
+        this.checkbox = false;//表格右侧选择框
+    }
     this.compId = compId;//父组件名字
     this.blockId = blockId; //功能块标识
     this.tableId = tableId;//需要替换下拉框值的表格标识
