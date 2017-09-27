@@ -9,15 +9,20 @@ import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 /**
  * 功能块业务层
@@ -35,6 +40,70 @@ public class FrontFuncService extends BaseService<FrontFunc> {
     this.businessObjectProService = businessObjectProService;
     this.dbTableColumnService = dbTableColumnService;
     this.keySetService = keySetService;
+  }
+
+
+  /**
+   * 前端功能块新增数据
+   *
+   * @param param 接受一个实体参数
+   * @return 返回操作信息
+   */
+  public ServerResult insertFront(Map<String, Object> param) {
+    ServerResult result = new ServerResult();
+    String funcCode = String.valueOf(param.get("funcCode")).trim();
+    param.remove("funcCode");
+    param.put("funcCode",funcCode);
+    if (!"".equals(funcCode)) {
+      Condition condition = new ConditionBuilder(FrontFunc.class).and()
+          .equal("funcCode", funcCode)
+          .endAnd().buildDone();
+      List<FrontFunc> select = select(condition);
+      if (select.size() == 0) {
+        FrontFunc frontFunc = new FrontFunc().buildCreateInfo().fromMap(param);
+        int insert = frontFunc.insert();
+        if (insert != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFunc);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+        }
+      } else {
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+      }
+    }
+    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+  }
+
+  /**
+   * 前端功能块修改数据
+   * @param param 接受需要修改的参数
+   * @return ServerResult
+   */
+  public ServerResult updateFront(Map<String,Object> param){
+    ServerResult result = new ServerResult();
+    int update;
+    String funcCode = String.valueOf(param.get("funcCode")).trim();
+    param.remove("funcCode");
+    param.put("funcCode",funcCode);
+      if (!"".equals(funcCode)) {
+        Condition condition = new ConditionBuilder(FrontFunc.class).and()
+            .equal("funcCode", funcCode)
+            .endAnd().buildDone();
+        List<FrontFunc> select = select(condition);
+        if (select.size() == 1) {
+          FrontFunc frontFunc = new FrontFunc();
+          FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
+          update = modify.updateById();
+          if (update != -1) {
+            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify);
+          } else {
+            return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+          }
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        }
+      }
+      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -68,8 +137,13 @@ public class FrontFuncService extends BaseService<FrontFunc> {
               }
               //拿到模板对象属性给功能块属性赋值
               for (Map pro : proRowId) {
-                map.put("propertyName", pro.get("cname").toString());
-                map.put("ename", pro.get("ename").toString());
+                String cname = String.valueOf(pro.get("cname"));
+                String ename = String.valueOf(pro.get("ename"));
+                if (ename.contains("_")) {
+                  ename = underlineToCamel(String.valueOf(pro.get("ename")), false);
+                }
+                map.put("propertyName", cname);
+                map.put("ename", ename);
               }
               break;
             case BaseConstants.ATTRIBUTE_SOURCE_BASE: // 穿透↓
@@ -85,7 +159,11 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                 if (keySets.size() != 0) {
                   keysetCode = keySets.get(0).getKeysetCode();
                 }
-                map.put("ename", relate.getFieldAlias());
+                String fieldAlias = relate.getFieldAlias();
+                if (relate.getFieldAlias().contains("_")) {
+                  fieldAlias = underlineToCamel(relate.getFieldAlias(), false);
+                }
+                map.put("ename", fieldAlias);
                 map.put("keysetCode", keysetCode);
                 map.put("valueResourceContent", relate.getValueResourceContent());
                 map.put("valueResourceType", relate.getValueResourceType());
@@ -96,7 +174,11 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                   continue;
                 }
                 for (DBTableColumn row : dbTableColumns) {
-                  map.put("ename", row.getColumnEname());
+                  String columnEname = row.getColumnEname();
+                  if (row.getColumnEname().contains("_")) {
+                    columnEname = underlineToCamel(row.getColumnEname(), false);
+                  }
+                  map.put("ename", columnEname);
                 }
               }
               break;
@@ -106,6 +188,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
         }
 
       }
+
       linkedList.addAll(UtilsTool.underlineKeyMapListToCamel(result));
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
