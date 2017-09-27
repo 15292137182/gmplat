@@ -251,7 +251,7 @@ var em=new Vue({
             gmpAjax.showAjax(data,function(res){
                 // console.log(res);
                 var data = res.data;
-                console.log(window.parent.topButtonObj);
+                // console.log(window.parent.topButtonObj);
                 em.rowId=data[0].rowId;//新增成功后返回的ID
                 em.funcRowId=data[0].funcRowId;//功能块ID
                 em.$refs.objPro_1.setValue(data[0].relateBusiPro);//业务对象属性ID
