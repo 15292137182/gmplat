@@ -160,7 +160,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
                   keysetCode = keySets.get(0).getKeysetCode();
                 }
                 String fieldAlias = relate.getFieldAlias();
-                if (relate.getFieldAlias().contains("_")) {
+                if (fieldAlias !=null &&relate.getFieldAlias().contains("_")) {
                   fieldAlias = underlineToCamel(relate.getFieldAlias(), false);
                 }
                 map.put("ename", fieldAlias);
@@ -186,9 +186,7 @@ public class FrontFuncService extends BaseService<FrontFunc> {
               return new ServerResult<>(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, linkedList);
           }
         }
-
       }
-
       linkedList.addAll(UtilsTool.underlineKeyMapListToCamel(result));
     }
     return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
