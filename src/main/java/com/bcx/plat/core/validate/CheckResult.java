@@ -15,7 +15,7 @@ public class CheckResult implements Serializable {
   /**
    * @return 是否存在错误
    */
-  public boolean hasError() {
+  public boolean hasErrors() {
     return null != errors && !errors.isEmpty();
   }
 

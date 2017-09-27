@@ -12,6 +12,12 @@ public class Error implements Serializable {
   private String fieldName;
   private String errorMessage;
 
+  /**
+   * 当前不允许在其他地方进行构造
+   *
+   * @param fieldName    属性名称
+   * @param errorMessage 错误消息
+   */
   protected Error(String fieldName, String errorMessage) {
     this.fieldName = fieldName;
     this.errorMessage = errorMessage;
