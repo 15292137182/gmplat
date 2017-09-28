@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
-import com.bcx.plat.core.entity.DBTableColumn;
 import com.bcx.plat.core.entity.FrontFunc;
 import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -60,8 +59,10 @@ public class FrontFuncController extends BaseController {
    * 查询前端功能块数据
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    分页方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
@@ -69,7 +70,7 @@ public class FrontFuncController extends BaseController {
     LinkedList<Order> orders = UtilsTool.dataSort(FrontFunc.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
-      Map map = UtilsTool.jsonToObj(param, Map.class);
+      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(FrontFunc.class, map);
     } else {
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
@@ -94,7 +95,6 @@ public class FrontFuncController extends BaseController {
   protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
     List<String> rowIds = result.stream().map((row) ->
         (String) row.get("relateBusiObj")).collect(Collectors.toList());
-
     List<BusinessObject> results = businessObjectService
         .select(new FieldCondition("rowId", Operator.IN, rowIds));
     HashMap<String, Object> map = new HashMap<>();
@@ -124,7 +124,7 @@ public class FrontFuncController extends BaseController {
           .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
 
       if (UtilsTool.isValid(funcRowId)) {
-        List<String> rowIds = funcRowId.stream().map((row) -> row.getRowId()).collect(Collectors.toList());
+        List<String> rowIds = funcRowId.stream().map(FrontFuncPro::getRowId).collect(Collectors.toList());
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
         if (frontFuncPros.size() > 0) {
           for (FrontFuncPro front : frontFuncPros) {
@@ -186,7 +186,7 @@ public class FrontFuncController extends BaseController {
   @RequestMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+    if (UtilsTool.isValid(param.get("rowId"))) {
       ServerResult serverResult = frontFuncService.updateFront(param);
       return result(serverResult);
     }
@@ -202,7 +202,7 @@ public class FrontFuncController extends BaseController {
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
     ServerResult serverResult = new ServerResult();
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = frontFuncService.selectMap(condition);
       return result(new ServerResult<>(select));
@@ -210,5 +210,4 @@ public class FrontFuncController extends BaseController {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
-
 }

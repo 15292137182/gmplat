@@ -72,10 +72,9 @@ public class DynamicTemplateController extends BaseController {
   @RequestMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    int update;
     if (UtilsTool.isValid(param.get("rowId"))) {
       DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
-      update = dataSetConfig.updateById();
+      int update = dataSetConfig.updateById();
       if (update != -1) {
         return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
       } else {
@@ -90,15 +89,14 @@ public class DynamicTemplateController extends BaseController {
    * 业务对象属性删除方法
    *
    * @param rowId 按照rowId查询
-   * @return serviceResult
+   * @return PlatResult
    */
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
-    int del;
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       DataSetConfig dataSetConfig = new DataSetConfig();
-      del = dataSetConfig.deleteById(rowId);
+      int del = dataSetConfig.deleteById(rowId);
       if (del != -1) {
         return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
@@ -113,8 +111,10 @@ public class DynamicTemplateController extends BaseController {
    * 根据数据集rowId查找数据
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
@@ -133,7 +133,6 @@ public class DynamicTemplateController extends BaseController {
     } else {
       result = new PageResult(dataSetConfigService.selectMap(condition, orders));
     }
-
     return result(new ServerResult<>(result));
   }
 
@@ -144,7 +143,7 @@ public class DynamicTemplateController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryById")
-  public Object queryById(String rowId) {
+  public PlatResult queryById(String rowId) {
     ServerResult serverResult = new ServerResult();
     List result = dataSetConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
     if (result.size() == 0) {

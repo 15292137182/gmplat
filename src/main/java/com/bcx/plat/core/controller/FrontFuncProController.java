@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.FrontFuncPro;
-import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -35,8 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
-public class FrontFuncProController extends
-    BaseController {
+public class FrontFuncProController extends BaseController {
 
   @Autowired
   private TemplateObjectProService templateObjectProService;
@@ -111,16 +109,18 @@ public class FrontFuncProController extends
       }
     }
     return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-
   }
 
 
   /**
    * 根据功能块 rowId 查找当前对象下的所有属性并分页显示
    *
+   * @param rowId    唯一标识
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
@@ -129,13 +129,17 @@ public class FrontFuncProController extends
     LinkedList<Order> orders = UtilsTool.dataSort(FrontFuncPro.class, order);
     if (UtilsTool.isValid(rowId)) {
       Condition condition;
-      if (UtilsTool.isValid(param)) { // 判断是否按照字段查询
+      if (UtilsTool.isValid(param)) { // 判断是否按照指定字段查询
         Map map = UtilsTool.jsonToObj(param, Map.class);
         condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
             UtilsTool.convertMapToAndConditionSeparatedByLike(FrontFuncPro.class, map));
       } else {
-        condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
-            UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)));
+        if (UtilsTool.isValid(search)) {
+          condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
+              UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)));
+        } else {
+          condition = new FieldCondition("funcRowId", Operator.EQUAL, rowId);
+        }
       }
       PageResult<Map<String, Object>> pageResult;
       if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
@@ -155,17 +159,16 @@ public class FrontFuncProController extends
    * 删除功能块属性数据
    *
    * @param rowId 业务对象rowId
-   * @return serviceResult
+   * @return PlatResult
    */
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> frontFuncPros = frontFuncProService.selectMap(condition);
     ServerResult result = new ServerResult();
-    int del;
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       FrontFuncPro frontFuncPro = new FrontFuncPro();
-      del = frontFuncPro.deleteById(rowId);
+      int del = frontFuncPro.deleteById(rowId);
       if (del != -1) {
         return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, frontFuncPros));
       } else {
@@ -185,13 +188,12 @@ public class FrontFuncProController extends
   @RequestMapping(value = "/modify", method = RequestMethod.POST)
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    int update;
-    if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+    if (UtilsTool.isValid(param.get("rowId"))) {
       FrontFuncPro frontFuncPro = new FrontFuncPro();
       FrontFuncPro modify = frontFuncPro.fromMap(param).buildModifyInfo();
       modify.setAttrSource(null);
       modify.setRelateBusiPro(null);
-      update = modify.updateById();
+      int update = modify.updateById();
       if (update != -1) {
         return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
       } else {
@@ -210,7 +212,7 @@ public class FrontFuncProController extends
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
     ServerResult serverResult = new ServerResult();
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = frontFuncProService.selectMap(condition);
       return result(new ServerResult<>(select));
