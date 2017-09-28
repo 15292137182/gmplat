@@ -43,30 +43,34 @@ public class TemplateObjectProController extends BaseController {
   /**
    * 模板对象属性方法
    *
+   * @param param 接受一个实体对象
    * @return 返回操作信息
    */
   @RequestMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
-    if (!UtilsTool.isValid(param.get("ename").toString().trim())) { // ename不能为纯空格
+    String ename = String.valueOf(param.get("")).trim();
+    param.put("ename", ename);
+    if (UtilsTool.isValid(ename)) {
+      Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
+          .equal("ename", ename)
+          .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
+          .endAnd().buildDone();
+      List<TemplateObjectPro> select = templateObjectProService.select(condition);
+      if (select.size() == 0) {
+        TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
+        int insert = templateObjectPro.insert();
+        if (insert != -1) {
+          return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, templateObjectPro));
+        } else {
+          return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+        }
+      } else {
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+      }
+    } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
     }
-    Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
-        .equal("ename", String.valueOf(param.get("ename")))
-        .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
-        .endAnd().buildDone();
-    List<TemplateObjectPro> select = templateObjectProService.select(condition);
-    if (select.size() == 0) {
-      TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildCreateInfo().fromMap(param);
-      int insert = templateObjectPro.insert();
-      if (insert != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, templateObjectPro));
-      } else {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
-      }
-    }
-    return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
-
   }
 
 
@@ -79,14 +83,13 @@ public class TemplateObjectProController extends BaseController {
   @RequestMapping("/queryById")
   public PlatResult queryById(String proRowId) {
     ServerResult serverResult = new ServerResult();
-    if (!proRowId.isEmpty()) {
+    if (UtilsTool.isValid(proRowId)) {
       Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("proRowId", proRowId).endAnd().buildDone();
       List<Map> maps = templateObjectProService.selectMap(condition);
       return result(new ServerResult<>(maps));
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-
   }
 
   /**
@@ -98,29 +101,31 @@ public class TemplateObjectProController extends BaseController {
   @RequestMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
-    int update;
     if (UtilsTool.isValid(param.get("proRowId"))) { // 判断rowId是否为空
-      if (!UtilsTool.isValid(param.get("ename").toString().trim())) { // ename不能为纯空格
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
-      }
-      Condition validCondition = new ConditionBuilder(TemplateObjectPro.class).and()
-          .equal("ename", String.valueOf(param.get("ename")))
-          .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
-          .endAnd().buildDone();
-      List<TemplateObjectPro> valid = templateObjectProService.select(validCondition);
-      if (valid.size() == 0) { // 判断英文名是否重复
-        TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
-        Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
-            .equal("proRowId", param.get("proRowId"))
+      String ename = String.valueOf(param.get("ename")).trim();
+      param.put("ename", ename);
+      if (UtilsTool.isValid(ename)) {
+        Condition validCondition = new ConditionBuilder(TemplateObjectPro.class).and()
+            .equal("ename", ename)
+            .equal("templateObjRowId", String.valueOf(param.get("templateObjRowId")))
             .endAnd().buildDone();
-        update = templateObjectPro.update(condition);
-        if (update != -1) {
-          return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, templateObjectPro));
+        List<TemplateObjectPro> valid = templateObjectProService.select(validCondition);
+        if (valid.size() == 0) { // 判断英文名是否重复
+          TemplateObjectPro templateObjectPro = new TemplateObjectPro().buildModifyInfo().fromMap(param);
+          Condition condition = new ConditionBuilder(TemplateObjectPro.class).and()
+              .equal("proRowId", param.get("proRowId"))
+              .endAnd().buildDone();
+          int update = templateObjectPro.update(condition);
+          if (update != -1) {
+            return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, templateObjectPro));
+          } else {
+            return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+          }
         } else {
-          return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+          return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
         }
       } else {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
       }
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
@@ -138,10 +143,9 @@ public class TemplateObjectProController extends BaseController {
     ServerResult serverResult = new ServerResult();
     Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> maps = templateObjectProService.selectMap(condition);
-    int del;
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro();
-      del = templateObjectPro.deleteById(rowId);
+      int del = templateObjectPro.deleteById(rowId);
       if (del != -1) {
         return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
       } else {

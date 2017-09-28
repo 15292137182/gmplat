@@ -26,7 +26,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 public class SystemController extends BaseController {
 
   /**
-   * 登陆请求
+   * 登录请求
    *
    * @param request 请求
    * @return 返回
@@ -39,11 +39,11 @@ public class SystemController extends BaseController {
     UsernamePasswordToken token = new UsernamePasswordToken(userId, password);
     Subject subject = SecurityUtils.getSubject();
     serverResult.setState(STATUS_FAIL);
-    // 开始登陆认证
+    // 开始登录认证
     try {
       subject.login(token);
       serverResult.setState(STATUS_SUCCESS);
-      serverResult.setMsg("登陆成功！");
+      serverResult.setMsg("登录成功！");
     } catch (IncorrectCredentialsException e) {
       serverResult.setMsg("帐号密码不匹配 ~");
       logger.warn(serverResult.getMsg() + " : " + userId + " | " + password + "\n" + e.getMessage());

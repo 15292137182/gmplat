@@ -124,17 +124,15 @@ public class MaintDBTablesController extends BaseController {
    * 编辑业务对象属性
    *
    * @param param 实体参数
-   * @return Map
+   * @return PlatResult
    */
   @RequestMapping(value = "/modify", method = RequestMethod.POST)
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname")).trim();
     String tableSchema = String.valueOf(param.get("tableSchema"));
-
-    param.remove("tableEname");
     param.put("tableEname", tableEname);
-    if (!"".equals(tableEname)) {
+    if (UtilsTool.isValid(tableEname)) {
       Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
       List<Map> select = maintDBTablesService.selectMap(condition);
       if (select.size() == 0 || select.get(0).get("rowId").equals(param.get("rowId"))) {
@@ -160,11 +158,11 @@ public class MaintDBTablesController extends BaseController {
    * 通用删除方法
    *
    * @param rowId 按照rowId查询
-   * @return Object
+   * @return PlatResult
    */
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
   public PlatResult delete(String rowId) {
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       ServerResult delete = maintDBTablesService.delete(rowId);
       return result(delete);
     } else {

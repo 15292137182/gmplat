@@ -3,9 +3,7 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.SequenceGenerate;
 import com.bcx.plat.core.entity.SequenceRuleConfig;
-import com.bcx.plat.core.entity.SysConfig;
 import com.bcx.plat.core.manager.SequenceManager;
 import com.bcx.plat.core.manager.TXManager;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -50,8 +48,10 @@ public class SequenceRuleConfigController extends BaseController {
    * 通用查询方法
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
@@ -82,9 +82,8 @@ public class SequenceRuleConfigController extends BaseController {
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String seqCode = String.valueOf(param.get("seqCode")).trim();
-    param.remove("seqCode");
     param.put("seqCode", seqCode);
-    if (!"".equals(seqCode)) {
+    if (isValid(seqCode)) {
       Condition condition = new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", param.get("seqCode")).endAnd().buildDone();
       List<SequenceRuleConfig> select = sequenceRuleConfigService.select(condition);
       if (select.size() == 0) {
@@ -105,7 +104,7 @@ public class SequenceRuleConfigController extends BaseController {
 
 
   /**
-   * 通过修改方法
+   * 序列规则修改方法
    *
    * @param param 接受一个实体参数
    * @return 返回操作信息
@@ -113,24 +112,22 @@ public class SequenceRuleConfigController extends BaseController {
   @RequestMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    int update;
-    if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+    if (isValid(param.get("rowId"))) {
       String seqCode = String.valueOf(param.get("seqCode")).trim();
-      param.remove("seqCode");
       param.put("seqCode", seqCode);
-      if (!"".equals(seqCode)) {
+      if (isValid(seqCode)) {
         Condition condition = new ConditionBuilder(SequenceRuleConfig.class).and().equal("seqCode", param.get("seqCode")).endAnd().buildDone();
         List<SequenceRuleConfig> select = sequenceRuleConfigService.select(condition);
         if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
           SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
           SequenceRuleConfig modify = sequenceRuleConfig.fromMap(param).buildModifyInfo();
-          update = modify.updateById();
-          if (update != -1 ) {
+          int update = modify.updateById();
+          if (update != -1) {
             return result(result.setStateMessage(STATUS_SUCCESS, Message.UPDATE_SUCCESS));
           } else {
             return result(result.setStateMessage(STATUS_FAIL, Message.UPDATE_FAIL));
           }
-        }else{
+        } else {
           return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
         }
       } else {
@@ -150,10 +147,9 @@ public class SequenceRuleConfigController extends BaseController {
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
-    int del;
-    if (!rowId.isEmpty()) {
+    if (isValid(rowId)) {
       SequenceRuleConfig sequenceRuleConfig = new SequenceRuleConfig();
-      del = sequenceRuleConfig.deleteById(rowId);
+      int del = sequenceRuleConfig.deleteById(rowId);
       if (del != -1) {
         return result(result.setStateMessage(STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
@@ -197,7 +193,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @return 返回
    */
   @RequestMapping(value = "/reset")
-  public Object resetSequenceNo(HttpServletRequest request) {
+  public PlatResult resetSequenceNo(HttpServletRequest request) {
     String rowId = request.getParameter("rowId");
     ServerResult<List<String>> _sr = new ServerResult<>();
     _sr.setState(STATUS_FAIL);
@@ -268,6 +264,5 @@ public class SequenceRuleConfigController extends BaseController {
     } else {
       return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
     }
-
   }
 }

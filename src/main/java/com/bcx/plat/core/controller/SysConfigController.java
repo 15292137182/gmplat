@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.MessageFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
@@ -44,17 +46,18 @@ public class SysConfigController extends BaseController {
    * 系统资源配置查询方法
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(SysConfig.class, order);
     Condition condition;
-    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
-      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
-      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(SysConfig.class, map);
+    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，按照指定字段查询
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(SysConfig.class, UtilsTool.jsonToObj(param, Map.class));
     } else { // 如果没有param参数，则进行空格查询
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
@@ -78,19 +81,17 @@ public class SysConfigController extends BaseController {
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
     String confKey = String.valueOf(param.get("confKey")).trim();
-    param.remove("confKey");
-    param.put("confKey",confKey);
-    if (!("".equals(confKey))) {
-      Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", param.get("confKey")).endAnd().buildDone();
+    param.put("confKey", confKey);
+    if (UtilsTool.isValid(confKey)) {
+      Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", confKey).endAnd().buildDone();
       List<SysConfig> select = sysConfigService.select(condition);
       if (select.size() == 0) {
         SysConfig sysConfig = new SysConfig().buildCreateInfo().fromMap(param);
         int insert = sysConfig.insert();
         if (insert != -1) {
           return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, sysConfig));
-        } else {
-          return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
+        return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
       }
       return super.result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
     }
@@ -105,19 +106,17 @@ public class SysConfigController extends BaseController {
    */
   @RequestMapping(value = "/modify", method = POST)
   public PlatResult update(@RequestParam Map<String, Object> param) {
-    int update;
-    if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+    if (UtilsTool.isValid(param.get("rowId"))) {
       ServerResult serverResult = new ServerResult();
       String confKey = String.valueOf(param.get("confKey")).trim();
-      param.remove("confKey");
       param.put("confKey", confKey);
-      if (!("".equals(confKey))) {
-        Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", param.get("confKey")).endAnd().buildDone();
+      if (UtilsTool.isValid(confKey)) {
+        Condition condition = new ConditionBuilder(SysConfig.class).and().equal("confKey", confKey).endAnd().buildDone();
         List<SysConfig> select = sysConfigService.select(condition);
         if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
           SysConfig sysConfig = new SysConfig();
           SysConfig modify = sysConfig.fromMap(param).buildModifyInfo();
-          update = modify.updateById();
+          int update = modify.updateById();
           if (update != -1) {
             return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
           } else {
@@ -138,13 +137,13 @@ public class SysConfigController extends BaseController {
    * 根据系统资源配置rowId删除当前数据
    *
    * @param rowId 业务对象rowId
-   * @return serviceResult
+   * @return PlatResult
    */
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(SysConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> maps = sysConfigService.selectMap(condition);
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       SysConfig sysConfig = new SysConfig();
       int del = sysConfig.deleteById(rowId);
       if (del != -1) {
@@ -156,6 +155,4 @@ public class SysConfigController extends BaseController {
       return super.result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
-
-
 }
