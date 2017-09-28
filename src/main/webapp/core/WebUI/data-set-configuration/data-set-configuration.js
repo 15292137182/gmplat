@@ -96,7 +96,7 @@ gmp_onload=function(){
                         "obj":dataSetConfigButton
                     }
                     gmpAjax.showAjax(data,function(res){
-                        var data =res.data[0];
+                        var data =res.data;
                         console.log(res);
                         addDataSet.isEdit = true;
                         addDataSet.formTable.datasetCode = data.datasetCode;

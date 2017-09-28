@@ -252,55 +252,55 @@ var em=new Vue({
                 // console.log(res);
                 var data = res.data;
                 // console.log(window.parent.topButtonObj);
-                em.rowId=data[0].rowId;//新增成功后返回的ID
-                em.funcRowId=data[0].funcRowId;//功能块ID
-                em.$refs.objPro_1.setValue(data[0].relateBusiPro);//业务对象属性ID
-                em.formTable.tableInput = data[0].relateBusiPro
-                em.formTable.nameTitle=data[0].displayTitle;//显示标题
-                em.formTable.lengthSection=data[0].lengthInterval;//长度区间
-                em.formTable.testFunction=data[0].validateFunc;//验证函数
-                em.formTable.displayFunction=data[0].displayFunc;//显示函数
-                em.formTable.sortNumber=data[0].sort;//排序
-                em.formTable.Twidth=data[0].widthSetting//宽度
-                em.formTable.Keyword1=data[0].keywordOne//关键字1
-                em.formTable.Keyword2=data[0].keywordTwo//关键字2
-                em.formTable.Keyword3=data[0].keywordThree//关键字3
+                em.rowId=data.rowId;//新增成功后返回的ID
+                em.funcRowId=data.funcRowId;//功能块ID
+                em.$refs.objPro_1.setValue(data.relateBusiPro);//业务对象属性ID
+                em.formTable.tableInput = data.relateBusiPro
+                em.formTable.nameTitle=data.displayTitle;//显示标题
+                em.formTable.lengthSection=data.lengthInterval;//长度区间
+                em.formTable.testFunction=data.validateFunc;//验证函数
+                em.formTable.displayFunction=data.displayFunc;//显示函数
+                em.formTable.sortNumber=data.sort;//排序
+                em.formTable.Twidth=data.widthSetting//宽度
+                em.formTable.Keyword1=data.keywordOne//关键字1
+                em.formTable.Keyword2=data.keywordTwo//关键字2
+                em.formTable.Keyword3=data.keywordThree//关键字3
                 em.isDisabled=true;
                 em.$refs.objPro_1.setDisabled(true);
-                if(data[0].wetherDisplay =="true"){
+                if(data.wetherDisplay =="true"){
                     em.checked=true;//是否显示
                 }else{
                     em.checked=false;//是否显示
                 }
-                if(data[0].wetherReadonly =="true"){
+                if(data.wetherReadonly =="true"){
                     em.checkedReady=true;//只读
                 }
-                if(data[0].allowEmpty =="true"){
+                if(data.allowEmpty =="true"){
                     em.checkedNull=true;//允许为空
                 }
-                if(data[0].exactQuery =="true"){
+                if(data.exactQuery =="true"){
                     em.ExactSearch=true;//精确查询
                 }
-                if(data[0].supportSort =="true"){
+                if(data.supportSort =="true"){
                     em.SupportSorting=true;//支持排序
                 }
                 if(window.parent.topButtonObj.controlBottom) {
-                    em.$refs.showControl_1.setValue(data[0].displayWidget);
+                    em.$refs.showControl_1.setValue(data.displayWidget);
                     em.$refs.showControl_1.setDisabled(true);
                 }
                 if(window.parent.topButtonObj.alignBottom) {
-                    em.$refs.align_1.setValue(data[0].align);//下拉框
+                    em.$refs.align_1.setValue(data.align);//下拉框
                     em.$refs.align_1.setDisabled(true);
                 }
-                em.formTable.nameInput = data[0].displayWidget;
-                // em.formTable.lengthSection=data[0].lengthInterval;//长度区间
-                // em.formTable.testFunction=data[0].validateFunc;//验证函数
-                // em.formTable.displayFunction=data[0].displayFunc;//显示函数
-                // em.formTable.sortNumber=data[0].sort;//排序
-                // em.formTable.Twidth=data[0].widthSetting//宽度
-                // em.formTable.Keyword1=data[0].keywordOne//关键字1
-                // em.formTable.Keyword2=data[0].keywordTwo//关键字2
-                // em.formTable.Keyword3=data[0].keywordThree//关键字3
+                em.formTable.nameInput = data.displayWidget;
+                // em.formTable.lengthSection=data.lengthInterval;//长度区间
+                // em.formTable.testFunction=data.validateFunc;//验证函数
+                // em.formTable.displayFunction=data.displayFunc;//显示函数
+                // em.formTable.sortNumber=data.sort;//排序
+                // em.formTable.Twidth=data.widthSetting//宽度
+                // em.formTable.Keyword1=data.keywordOne//关键字1
+                // em.formTable.Keyword2=data.keywordTwo//关键字2
+                // em.formTable.Keyword3=data.keywordThree//关键字3
                 // em.isDisabled=true;
                 //em.queryObjectProperties();
             })
@@ -315,7 +315,7 @@ var em=new Vue({
             }
             gmpAjax.showAjax(data,function(res){
                 var data = res;
-                em.formTable.tableInput = data[0].propertyCode+"("+data[0].propertyName+")"//业务对象属性中文名
+                em.formTable.tableInput = data.propertyCode+"("+data.propertyName+")"//业务对象属性中文名
             })
         },
 

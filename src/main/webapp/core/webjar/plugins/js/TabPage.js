@@ -1169,12 +1169,13 @@ GmpForm1.prototype.request = function(callback){
         dataType:"json",
         success:function(res){
             var arr = res.resp.content.data;
-            for(var j=0;j<arr.length;j++){
-                var obj = arr[j];
+            // for(var j=0;j<arr.length;j++){
+                // var obj = arr[j];
+                var obj = arr;
                 for(var k in obj){
                     that.formObj[k] = obj[k];
                 }
-            }
+            // }
             if(callback){
                 callback(res);
             }

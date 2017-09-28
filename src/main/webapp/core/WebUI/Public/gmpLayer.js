@@ -347,8 +347,9 @@ gmpFormObj.prototype.request = function(callback) {
         success: function(res) {
             var arr = res.resp.content.data;
             // console.log(arr);
-            for (var j = 0; j < arr.length; j++) {
-                var obj = arr[j];
+            // for (var j = 0; j < arr.length; j++) {
+                // var obj = arr[j];
+                var obj = arr;
                 for (var k in obj) {
                     that.formObj[k] = obj[k];
                     // if(k=="etc"){//扩展属性
@@ -358,7 +359,7 @@ gmpFormObj.prototype.request = function(callback) {
                     //     }
                     // }
                 }
-            }
+            // }
              // console.log(that.formObj);
             if (callback) {
                 callback(res.resp.content.data);

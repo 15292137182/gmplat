@@ -60,18 +60,18 @@ gmp_onload = function(){
                         var data = res.data;
                         console.log(data);
                         em.isEdit = true;
-                        em.formTable.codeInput=data[0].funcCode;
-                        em.formTable.nameInput=data[0].funcName;
-                        em.$refs.functionBlockType_1.setValue(data[0].funcType);
-                        em.formTable.typeInput = data[0].funcType;
-                        em.$refs.obj_1.setValue(data[0].relateBusiObj);
-                        em.formTable.objData = data[0].relateBusiObj;
+                        em.formTable.codeInput=data.funcCode;
+                        em.formTable.nameInput=data.funcName;
+                        em.$refs.functionBlockType_1.setValue(data.funcType);
+                        em.formTable.typeInput = data.funcType;
+                        em.$refs.obj_1.setValue(data.relateBusiObj);
+                        em.formTable.objData = data.relateBusiObj;
 
-                        em.$refs.belongModule_1.setValue(data[0].belongModule);
-                        em.formTable.Module = data[0].belongModule;
+                        em.$refs.belongModule_1.setValue(data.belongModule);
+                        em.formTable.Module = data.belongModule;
                         //   em.formTable.System=data[0].belongSystem;
-                        em.formTable.desp=data[0].desp;
-                        em.rowId=data[0].rowId;
+                        em.formTable.desp=data.desp;
+                        em.rowId=data.rowId;
                     })
                 });
             },
