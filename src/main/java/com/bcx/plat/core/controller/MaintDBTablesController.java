@@ -81,7 +81,7 @@ public class MaintDBTablesController extends BaseController {
   public PlatResult singleInputSelect(String search) {
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     List<Map<String, Object>> list = maintDBTablesService.singleSelect(MaintDBTables.class, blankQuery);
-    if (list.size() > 0) {
+    if (list!=null && list.size() > 0) {
       return result(new ServerResult<>(list));
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));

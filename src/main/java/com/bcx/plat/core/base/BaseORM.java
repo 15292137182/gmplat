@@ -373,9 +373,11 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @return list
    */
   public List<Map<String, Object>> singleSelect(Class entity, Condition condition) {
-    List<Map<String, Object>> execute = null;
+    List<Map<String, Object>> execute ;
     if (entity != null && condition != null) {
       execute = MORE_BATIS.select(entity).where(condition).execute();
+    } else{
+      execute = MORE_BATIS.select(entity).execute();
     }
     return execute;
   }

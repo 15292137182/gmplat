@@ -11,4 +11,4 @@ gen
 out/
 src/main/webapp/META-INF/
 /.idea/
-target/
+/target/
