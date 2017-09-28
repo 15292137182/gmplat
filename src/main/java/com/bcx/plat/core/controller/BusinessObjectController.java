@@ -40,8 +40,6 @@ public class BusinessObjectController extends BaseController {
 
   @Autowired
   private BusinessObjectService businessObjectService;
-  @Autowired
-  private TemplateObjectService templateObjectService;
 
   public List<String> blankSelectFields() {
     return Arrays.asList("objectCode", "objectName");
@@ -89,7 +87,7 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, int pageNum, int pageSize, String param, String order) {
+  public PlatResult queryPage(String search, Integer pageNum, Integer pageSize, String param, String order) {
     ServerResult result = businessObjectService.queryPagingBusinessObject(search, pageNum, pageSize, param, order);
     return result(result);
   }

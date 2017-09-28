@@ -102,10 +102,9 @@ public class TemplateObjectProController extends BaseController {
     ServerResult serverResult = new ServerResult();
     Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> maps = templateObjectProService.selectMap(condition);
-    int del;
     if (!rowId.isEmpty()) {
       TemplateObjectPro templateObjectPro = new TemplateObjectPro();
-      del = templateObjectPro.deleteById(rowId);
+      int del = templateObjectPro.deleteById(rowId);
       if (del != -1) {
         return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
       } else {

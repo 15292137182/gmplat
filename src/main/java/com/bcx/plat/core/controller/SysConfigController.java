@@ -47,7 +47,7 @@ public class SysConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPageSysConfig(String search, String param, int pageNum, int pageSize, String order) {
+  public PlatResult queryPageSysConfig(String search, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult serverResult = sysConfigService.queryPageSysConfig(search, param, pageNum, pageSize, order);
     return result(serverResult);
   }

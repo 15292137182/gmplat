@@ -100,7 +100,7 @@ public class FrontFuncProController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
-  public PlatResult queryProPage(String rowId, String search, String param, int pageNum, int pageSize, String order) {
+  public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     ServerResult serverResult = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult result = frontFuncProService.queryProPage(rowId, search, param, pageNum, pageSize, order);
