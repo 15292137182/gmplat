@@ -20,7 +20,6 @@ public class TXManager {
    */
   @FunctionalInterface
   public interface DBOperate {
-
     void operate() throws Exception;
   }
 
@@ -29,7 +28,6 @@ public class TXManager {
    */
   @FunctionalInterface
   public interface QNNOperate {
-
     void operator(PlatformTransactionManager manager, TransactionStatus status) throws Exception;
   }
 

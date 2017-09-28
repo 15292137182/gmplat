@@ -61,7 +61,6 @@ public class MoreBatisImpl implements MoreBatis {
         entityEntry = ((EntityEntryBuilder) entry).getEntry();
       } else {
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
-
       }
       final Class entryClass = entityEntry.getEntityClass();
       final TableSource entityEntryTable = entityEntry.getTable();
@@ -312,7 +311,6 @@ public class MoreBatisImpl implements MoreBatis {
       Class secondary, String relationPrimary, String relationSecondary) {
     return select(primary, secondary, relationPrimary, relationSecondary, JoinType.INNER_JOIN);
   }
-
 
   /**
    * 两个表join查询

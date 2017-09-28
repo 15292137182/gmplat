@@ -25,6 +25,7 @@ import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -398,7 +399,7 @@ public class Translator implements SqlComponentTranslator {
   }
 
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition,
-      LinkedList<Object> list, SqlSegment seperator) {
+                                                     LinkedList<Object> list, SqlSegment seperator) {
     if (chainCondition.getConditions().size() == 0) {
       return list;
     }
@@ -449,7 +450,6 @@ public class Translator implements SqlComponentTranslator {
         : quoteStr(table.getSchema()) + "." + quoteStr(table.getTableName());
     return strSource;
   }
-
 
   private LinkedList appendSql(String sqlSegment, LinkedList list) {
     return appendSql(new SqlSegment(sqlSegment), list);

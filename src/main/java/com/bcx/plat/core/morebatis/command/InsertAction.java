@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;

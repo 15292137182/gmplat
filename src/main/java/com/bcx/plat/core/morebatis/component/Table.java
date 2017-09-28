@@ -6,9 +6,7 @@ import com.bcx.plat.core.morebatis.phantom.TableSource;
 public class Table implements TableSource<Table> {
 
   private String tableName;
-
   private String schema;
-
   private SqlSegment sqlSegment;
 
   public Table() {

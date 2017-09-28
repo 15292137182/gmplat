@@ -74,7 +74,6 @@ public class SequenceManager {
   // 对象集合标记
   private String[] objectSigns;
 
-
   private static class SequenceManagerHolder {
     private static final SequenceManager instance = new SequenceManager();
   }
@@ -317,17 +316,17 @@ public class SequenceManager {
               if (key.contains(".")) {
                 String _key = key.substring(key.indexOf("."));
                 value = beanMap.containsKey(_key) && isValid(beanMap.get(_key)) ?
-                        beanMap.get(_key).toString() : defaultValue;
+                    beanMap.get(_key).toString() : defaultValue;
               } else {
                 value = null == args || args.isEmpty() ? defaultValue :
-                        isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
+                    isValid(args.get(key)) ? args.get(key).toString() : defaultValue;
               }
             } else {
               value = defaultValue;
             }
             String visible = a.length >= 3 ? a[2] : "";
             if (!isValid(visible) || visible.equalsIgnoreCase("1") || visible
-                    .equalsIgnoreCase("true")) {
+                .equalsIgnoreCase("true")) {
               moduleValue.put(module, value);
             }
           } else if (module.matches("^[$][{].*[}]$")) {
@@ -384,7 +383,7 @@ public class SequenceManager {
         String[] r = _rule.split("-");
         // 长度
         int length = r.length >= 1 ?
-                (r[0].matches("^\\d+$") ? Integer.valueOf(r[0]) : DEFAULT_SERIAL_LENGTH) : DEFAULT_SERIAL_LENGTH;
+            (r[0].matches("^\\d+$") ? Integer.valueOf(r[0]) : DEFAULT_SERIAL_LENGTH) : DEFAULT_SERIAL_LENGTH;
         // 获取分支
         StringBuilder branchValue;
         if (!branchValues.containsKey(_key)) {
@@ -397,7 +396,7 @@ public class SequenceManager {
           if (isValid(variables)) {
             for (String v : variables) {
               branchValue.append("[").append(v).append(":").append(variable.getOrDefault(v, ""))
-                      .append("]");
+                  .append("]");
             }
           }
         } else {
@@ -405,7 +404,7 @@ public class SequenceManager {
         }
         branchValues.put(_key, branchValue);
         int nextValue =
-                getCurrentVariableValue(ruleConfig.getRowId(), _key) + 1;
+            getCurrentVariableValue(ruleConfig.getRowId(), _key) + 1;
         keys.put(_key, nextValue);
         StringBuilder nv = new StringBuilder(String.valueOf(nextValue));
         if (nv.length() <= length) {
@@ -415,7 +414,7 @@ public class SequenceManager {
           // 若数据溢出时有异常，在此处追加 异常
         } else {
           throw Lang.makeThrow("Class [%s]: [%s] 该流水号已经用尽！请修改流水号规则或联系管理员！", getClass(),
-                  ruleConfig.getSeqCode());
+              ruleConfig.getSeqCode());
         }
         rm.put(modular, nv);
       }
@@ -458,8 +457,8 @@ public class SequenceManager {
       fieldConditions.add(new FieldCondition("seqRowId", Operator.EQUAL, seqRowId));
       fieldConditions.add(new FieldCondition("variableKey", Operator.EQUAL, variableKey));
       fieldConditions
-              .add(new FieldCondition("branchSign", Operator.EQUAL,
-                      isValid(branchValues.get(variableKey)) ? branchValues.get(variableKey).toString() : ""));
+          .add(new FieldCondition("branchSign", Operator.EQUAL,
+              isValid(branchValues.get(variableKey)) ? branchValues.get(variableKey).toString() : ""));
       // 检查对象标记是否存在
       StringBuilder os = new StringBuilder("");
       if (null != objectSigns) {

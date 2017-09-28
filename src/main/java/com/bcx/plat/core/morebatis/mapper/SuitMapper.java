@@ -4,6 +4,7 @@ import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
+
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,6 @@ public interface SuitMapper {
    * @return 查询结果
    */
   List<Map<String, Object>> select(QueryAction queryActionLite);
-
 
   int insert(InsertAction insertAction);
 

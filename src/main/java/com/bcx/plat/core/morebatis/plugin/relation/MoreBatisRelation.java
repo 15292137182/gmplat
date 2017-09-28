@@ -6,6 +6,7 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.Table;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.morebatis.plugin.relation.entity.Relation;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MoreBatisRelation {
@@ -42,7 +44,6 @@ public class MoreBatisRelation {
     }
   }
 
-
   /**
    * 获取集合
    */
@@ -58,9 +59,7 @@ public class MoreBatisRelation {
         .where(condition)
         .orderBy(new Order(moreBatis.getColumnByAlias(Relation.class, "sort"), Order.ASC))
         .execute();
-    return rows.stream().map((row) -> {
-      return (String) row.get("value");
-    }).collect(Collectors.toList());
+    return rows.stream().map((row) -> (String) row.get("value")).collect(Collectors.toList());
   }
 
   /**
@@ -80,7 +79,7 @@ public class MoreBatisRelation {
    * 根据值查找包含的主记录rowId
    */
   public Set<String> getPrimaryRowIdByValues(Class primary, String name,
-      Collection<String> values) {
+                                             Collection<String> values) {
     Condition condition = new ConditionBuilder(Relation.class).and()
         .equal("primaryTable", getTableNameFromClass(primary))
         .equal("name", name)
@@ -115,7 +114,7 @@ public class MoreBatisRelation {
    * 获取关联的子记录
    */
   public List<Map<String, Object>> getRelationRecord(Class primary, Class secondary, String name,
-      String rowId) {
+                                                     String rowId) {
     Condition condition = new ConditionBuilder(secondary).and()
         .in("rowId", getCollection(primary, name, rowId)).endAnd().buildDone();
     return moreBatis.select(secondary).where(condition).execute();
@@ -131,7 +130,7 @@ public class MoreBatisRelation {
         .endAnd()
         .buildDone();
     List<Map<String, Object>> rows = moreBatis.select(Relation.class)
-        .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value","name")))
+        .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value", "name")))
         .where(condition)
         .orderBy(new Order(moreBatis.getColumnByAlias(Relation.class, "sort"), Order.ASC))
         .execute();
@@ -152,7 +151,7 @@ public class MoreBatisRelation {
         .endAnd()
         .buildDone();
     List<Map<String, Object>> rows = moreBatis.select(Relation.class)
-        .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value","name","primaryRowId")))
+        .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value", "name", "primaryRowId")))
         .where(condition)
         .orderBy(
             new Order(moreBatis.getColumnByAlias(Relation.class, "primaryRowId"), Order.DESC),
@@ -184,7 +183,7 @@ public class MoreBatisRelation {
    * 向ListMap中存值
    */
   private Map<String, Map<String, List>> putMapListMap(Map<String, Map<String, List>> mapListMap,
-      String rowId, String key, Object value) {
+                                                       String rowId, String key, Object value) {
     Map<String, List> listMap = mapListMap.get(rowId);
     if (listMap == null) {
       listMap = new HashMap<>();
