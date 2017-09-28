@@ -40,7 +40,8 @@ var keyValueSetProAdd = new Vue({
                     confValue:this.keyForm.confValueInput,
                     desp:this.keyForm.despInput
                 },
-                "obj":keyValueSetProAdd
+                "obj":keyValueSetProAdd,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(topButtonObj.divIndex);
@@ -58,7 +59,8 @@ var keyValueSetProAdd = new Vue({
                     confValue:this.keyForm.confValueInput,
                     desp:this.keyForm.despInput
                 },
-                "obj":keyValueSetProAdd
+                "obj":keyValueSetProAdd,
+                "showMsg":true,
             }
             gmpAjax.showAjax(data,function(res){
                 ibcpLayer.Close(rightKeyValueSet.editProDivIndex);
