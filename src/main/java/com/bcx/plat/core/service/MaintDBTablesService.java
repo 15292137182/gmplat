@@ -31,6 +31,68 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
   @Autowired
   private DBTableColumnService dbTableColumnService;
 
+
+  /**
+   * 新增表信息属性
+   *
+   * @param param 接受实体参数
+   * @return PlatResult
+   */
+  public ServerResult addMaintDB(Map<String, Object> param) {
+    ServerResult result = new ServerResult();
+    String tableEname = String.valueOf(param.get("tableEname")).trim();
+    String tableSchema = String.valueOf(param.get("tableSchema"));
+    param.put("tableEname", tableEname);
+    if (UtilsTool.isValid(tableEname)) {
+      Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
+      List<Map> select = selectMap(condition);
+      if (select.size() == 0) {
+        MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
+        int insert = maintDBTables.insert();
+        if (insert != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+        }
+      } else {
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+      }
+    }
+    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+  }
+
+
+
+  /**
+   * 编辑业务对象属性
+   *
+   * @param param 实体参数
+   * @return Map
+   */
+  public ServerResult modifyBusinessObjPro(Map<String, Object> param) {
+    ServerResult result = new ServerResult();
+    String tableEname = String.valueOf(param.get("tableEname")).trim();
+    String tableSchema = String.valueOf(param.get("tableSchema"));
+    param.put("tableEname", tableEname);
+    if (!"".equals(tableEname)) {
+      Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
+      List<Map> select = selectMap(condition);
+      if (select.size() == 0 || select.get(0).get("rowId").equals(param.get("rowId"))) {
+        MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
+        int update = maintDBTables.updateById();
+        if (update != -1) {
+          return result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+        }
+      } else {
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+      }
+    }
+    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+  }
+
+
   /**
    * 根据维护表信息rowId删除数据
    *

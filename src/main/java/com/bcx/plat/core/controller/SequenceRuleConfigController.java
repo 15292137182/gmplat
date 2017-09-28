@@ -262,10 +262,10 @@ public class SequenceRuleConfigController extends BaseController {
         if (mapLists.size() == 0) {
           return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
         } else {
-          return super.result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists));
+          return super.result(new ServerResult( mapLists.get(0)));
         }
       } else {
-        return super.result(new ServerResult(STATUS_SUCCESS, Message.QUERY_SUCCESS, mapLists));
+        return super.result(new ServerResult( mapLists.get(0)));
       }
     } else {
       return super.result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));

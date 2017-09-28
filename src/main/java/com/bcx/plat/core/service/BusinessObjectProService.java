@@ -39,6 +39,9 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
   private DBTableColumnService dbTableColumnService;
   @Autowired
   private SequenceRuleConfigService sequenceRuleConfigService;
+  @Autowired
+  private FrontFuncProService frontFuncProService;
+
 
 
   /**
@@ -81,7 +84,6 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     ServerResult result = new ServerResult();
     BusinessObjectPro businessObjectPro;
     String fieldAlias = String.valueOf(paramEntity.get("fieldAlias")).trim();
-    paramEntity.remove("fieldAlias");
     paramEntity.put("fieldAlias", fieldAlias);
     if (!"".equals(fieldAlias)) {
       Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
@@ -97,6 +99,35 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
       return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
     }
   }
+
+  /**
+   * 业务对象属性删除方法
+   *
+   * @param rowId 按照rowId查询
+   * @return ServerResult
+   */
+  public ServerResult deleteBusinessPro(String rowId){
+    //通过rowId查询数据
+    Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+    List<Map> businessObjectPros = selectMap(condition);
+    ServerResult result = new ServerResult();
+    List<Map> frontFuncPros = frontFuncProService.selectMap(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
+    int del;
+    if (frontFuncPros.size() == 0) {
+      BusinessObjectPro businessObjectPro = new BusinessObjectPro();
+      del = businessObjectPro.deleteById(rowId);
+      if (del != -1) {
+        //接受rowId返回业务对象数据
+        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, businessObjectPros);
+      } else {
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+      }
+    } else {
+      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+    }
+  }
+
+
 
   /**
    * 根据业务对象属性rowId查询当前数据
@@ -120,7 +151,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     if (null != mapList) {
       businessObjectProMap.put("columnCname", mapList.get(0).get("columnCname"));
     }
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, businessObjectProMap);
+    return new ServerResult<>( businessObjectProMap);
   }
 
   /**

@@ -6,9 +6,7 @@ import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
 import com.bcx.plat.core.entity.BusinessObjectPro;
 import com.bcx.plat.core.entity.BusinessRelateTemplate;
-import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
-import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -74,8 +72,9 @@ public class BusinessObjectController extends BaseController {
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = businessObjectService.queryById(rowId);
       return result(serverResult);
+    } else {
+      return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
-    return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
   }
 
 
@@ -90,52 +89,9 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String param, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
-    Condition condition;
-    Condition relateCondition;
-    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
-      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
-      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObject.class, map);
-    } else {
-      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    }
-    ServerResult serverResult = businessObjectService.queryPage(condition, pageNum, pageSize, orders);
-    if (null != serverResult.getData()) {
-      List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
-      for (Map<String, Object> results : result) {
-        String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
-        if (!(relateTemplateObject.contains("[") && relateTemplateObject.contains("]"))) {
-          relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
-          List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
-          if (templateObjects.size() > 0) {
-            results.put("relateTemplate", templateObjects.get(0).get("templateName"));
-          }
-        } else {
-          List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
-          StringBuilder templates = new StringBuilder();
-          if (null != list && list.size() > 0) {
-            for (Object li : list) {
-              String valueOf = String.valueOf(li);
-              relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
-              List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
-              if (templateObjects.size() > 0) {
-                for (Map temp : templateObjects) {
-                  templates.append(temp.get("templateName")).append(",");
-                }
-              }
-            }
-          }
-          if (templates.lastIndexOf(",") != -1) {
-            String substring = templates.substring(0, templates.length() - 1);
-            results.put("relateTemplate", substring);
-          }
-        }
-      }
-      return super.result(serverResult);
-    } else {
-      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-    }
+  public PlatResult singleInputSelect(String search, int pageNum, int pageSize, String param, String order) {
+    ServerResult result = businessObjectService.queryPagingBusinessObject(search, pageNum, pageSize, param, order);
+    return result(result);
   }
 
 
@@ -191,14 +147,16 @@ public class BusinessObjectController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> paramEntity) {
+    ServerResult serverResult = new ServerResult();
     String rowId = paramEntity.get("rowId").toString();
-    ServerResult serverResult = null;
     if (UtilsTool.isValid(rowId)) {
       BusinessObject businessObject = new BusinessObject().fromMap(paramEntity);
       businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
       serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObject);
+      return result(serverResult);
+    } else {
+      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-    return super.result(serverResult);
   }
 
 

@@ -151,6 +151,6 @@ public class DataSetConfigController extends BaseController {
     if (result.size() == 0) {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
-    return result(new ServerResult<>(result));
+    return result(new ServerResult<>(result.get(0)));
   }
 }

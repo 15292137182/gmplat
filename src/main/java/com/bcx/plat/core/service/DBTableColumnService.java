@@ -84,7 +84,6 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
   public ServerResult updateTableColumn(Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname")).trim();
-    param.remove("columnEname");
     param.put("columnEname",columnEname);
     if (!"".equals(columnEname)) {
       Condition condition = new ConditionBuilder(DBTableColumn.class).and()
@@ -138,7 +137,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     } else {
       relateTableRowId = new PageResult(selectMap(condition, orders));
     }
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateTableRowId);
+    return new ServerResult<>(relateTableRowId);
   }
 
   /**

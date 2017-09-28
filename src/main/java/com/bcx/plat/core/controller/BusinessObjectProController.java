@@ -3,16 +3,10 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectProService;
 import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 业务对象属性Controller层
@@ -57,7 +52,7 @@ public class BusinessObjectProController extends BaseController {
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       ServerResult serverResult = businessObjectProService.queryById(rowId);
       return result(serverResult);
     } else {
@@ -76,7 +71,7 @@ public class BusinessObjectProController extends BaseController {
   @RequestMapping("/queryBusinPro")
   public PlatResult queryBusinPro(String objRowId, String frontRowId) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(objRowId)) {
+    if (isValid(objRowId)) {
       ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
       return result(serverResult);
     } else {
@@ -105,7 +100,7 @@ public class BusinessObjectProController extends BaseController {
   @PostMapping("/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(paramEntity.get("rowId"))) {
+    if (isValid(paramEntity.get("rowId"))) {
       ServerResult serverResult = businessObjectProService.updateBusinessPro(paramEntity);
       return result(serverResult);
     } else {
@@ -117,27 +112,16 @@ public class BusinessObjectProController extends BaseController {
    * 业务对象属性删除方法
    *
    * @param rowId 按照rowId查询
-   * @return serviceResult
+   * @return PlatResult
    */
   @PostMapping("/delete")
   public PlatResult delete(String rowId) {
-    //通过rowId查询数据
-    Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
-    List<Map> businessObjectPros = businessObjectProService.selectMap(condition);
     ServerResult result = new ServerResult();
-    List<Map> frontFuncPros = frontFuncProService.selectMap(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
-    int del;
-    if (frontFuncPros.size() == 0) {
-      BusinessObjectPro businessObjectPro = new BusinessObjectPro();
-      del = businessObjectPro.deleteById(rowId);
-      if (del != -1) {
-        //接受rowId返回业务对象数据
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, businessObjectPros));
-      } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
-      }
+    if (isValid(rowId)) {
+      ServerResult serverResult = businessObjectProService.deleteBusinessPro(rowId);
+      return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE));
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
 }

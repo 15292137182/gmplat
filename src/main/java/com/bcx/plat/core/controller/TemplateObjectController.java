@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
@@ -8,12 +9,14 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,11 +42,11 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * Copyright: Shanghai BatchSight GMP Information of management platform, Inc. Copyright(c) 2017
  *
  * @author Wen TieHu
- * <pre>History:
- *                   2017/8/28  Wen TieHu Create
- *                   2017/9/27  YoungerOu modified
- *                    before delete templateObject, delete templateObjectPro first.
- *                 </pre>
+ *         <pre>History:
+ *                           2017/8/28  Wen TieHu Create
+ *                           2017/9/27  YoungerOu modified
+ *                            before delete templateObject, delete templateObjectPro first.
+ *                         </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
@@ -66,7 +69,6 @@ public class TemplateObjectController extends BaseController {
    *
    * @param rowId    这个rowId指模版对象的RowId
    * @param search   空格查询的字符串
-   * @param param    按照指定字段查询
    * @param pageNum  页面号
    * @param pageSize 页面大小
    * @param order    排序信息（字符串）
@@ -74,11 +76,11 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryPropertiesPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    if (isValid(rowId)) {
+    if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = templateObjectService.queryTemplateProPage(rowId, search, param, pageNum, pageSize, order);
       return result(serverResult);
     }
-    return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 
 
@@ -86,7 +88,7 @@ public class TemplateObjectController extends BaseController {
    * 查询信息
    *
    * @param search 空格查询的值
-   * @return PlatResult
+   * @return 返回
    */
   @RequestMapping("/query")
   public PlatResult singleInputSelect(String search) {
@@ -102,37 +104,35 @@ public class TemplateObjectController extends BaseController {
    */
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
-    if (isValid(rowId)) {
+    if (UtilsTool.isValid(rowId)) {
       List<Map> maps = templateObjectService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
-      return result(new ServerResult<>(maps));
+      if (maps.size() == 0) {
+        return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      } else {
+        return result(new ServerResult<>(maps.get(0)));
+      }
+    } else {
+      return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-    return result(new ServerResult<>().setStateMessage(STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
 
   /**
    * 通用查询方法
    *
    * @param search   按照空格查询
-   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
-   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(TemplateObject.class, order);
-    Condition condition;
-    if (isValid(param)) {
-      condition = convertMapToAndConditionSeparatedByLike(TemplateObject.class, jsonToObj(param, Map.class));
-    } else {
-      condition = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));
-    }
+    Or blankQuery = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));
     PageResult<Map<String, Object>> pageResult;
-    if (isValid(pageNum)) { // 分页查询
-      pageResult = templateObjectService.selectPageMap(condition, orders, pageNum, pageSize);
+    if (isValid(pageSize)) { // 分页查询
+      pageResult = templateObjectService.selectPageMap(blankQuery, orders, pageNum, pageSize);
     } else { // 查询所有
-      pageResult = new PageResult(templateObjectService.selectMap(condition, orders));
+      pageResult = new PageResult(templateObjectService.selectMap(blankQuery, orders));
     }
     return result(new ServerResult<>(pageResult));
   }
@@ -140,7 +140,6 @@ public class TemplateObjectController extends BaseController {
   /**
    * 通用新增方法
    *
-   * @param map 接受一个实体对象
    * @return 返回操作信息
    */
   @PostMapping("/add")

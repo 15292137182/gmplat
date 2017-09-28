@@ -13,9 +13,10 @@ import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.ServletUtils;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +58,11 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   private KeySetService keySetService;
   @Autowired
   private SequenceRuleConfigService sequenceRuleConfigService;
+
+  public List<String> blankSelectFields() {
+    return Arrays.asList("objectCode", "objectName");
+  }
+
 
 
   /**
@@ -137,11 +143,72 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         result.remove("relateTemplateObject");
       }
       map.put("relateTemplateObject", list);
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, ServletUtils.getMessage(Message.QUERY_SUCCESS), map);
+      return new ServerResult<>(map);
     } else {
       return null;
     }
   }
+
+
+  /**
+   * 查询业务对象全部数据并分页显示
+   *
+   * @param search   按照空格查询
+   * @param pageNum  当前第几页
+   * @param pageSize 一页显示多少条
+   * @param param    按照指定字段查询
+   * @param order    排序方式
+   * @return PlatResult
+   */
+  @RequestMapping("/queryPage")
+  public ServerResult queryPagingBusinessObject(String search, Integer pageNum, Integer pageSize, String param, String order) {
+    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    Condition condition;
+    Condition relateCondition;
+    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(BusinessObject.class, map);
+    } else {
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+    ServerResult serverResult = queryPage(condition, pageNum, pageSize, orders);
+    if (null != serverResult.getData()) {
+      List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
+      for (Map<String, Object> results : result) {
+        String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
+        if (!(relateTemplateObject.contains("[") && relateTemplateObject.contains("]"))) {
+          relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
+          List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
+          if (templateObjects.size() > 0) {
+            results.put("relateTemplate", templateObjects.get(0).get("templateName"));
+          }
+        } else {
+          List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
+          StringBuilder templates = new StringBuilder();
+          if (null != list && list.size() > 0) {
+            for (Object li : list) {
+              String valueOf = String.valueOf(li);
+              relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
+              List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
+              if (templateObjects.size() > 0) {
+                for (Map temp : templateObjects) {
+                  templates.append(temp.get("templateName")).append(",");
+                }
+              }
+            }
+          }
+          if (templates.lastIndexOf(",") != -1) {
+            String substring = templates.substring(0, templates.length() - 1);
+            results.put("relateTemplate", substring);
+          }
+        }
+      }
+      return serverResult;
+    } else {
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+    }
+  }
+
 
 
   /**
@@ -155,13 +222,11 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   public ServerResult queryPage(Condition condition, Integer pageNum, Integer pageSize, List<Order> order) {
     PageResult<Map<String, Object>> result;
-
     if (isValid(pageNum)) { // 有分页参数进行分页查询
       result = selectPageMap(condition, order, pageNum, pageSize);
     } else { // 没有分页参数则查询全部
       result = new PageResult(selectMap(condition, order));
     }
-
     if (result.getResult().size() == 0) {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     } else {

@@ -149,7 +149,8 @@ public class DynamicTemplateController extends BaseController {
     List result = dataSetConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
     if (result.size() == 0) {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    }else{
+      return result(new ServerResult<>(result.get(0)));
     }
-    return result(new ServerResult<>(result));
   }
 }

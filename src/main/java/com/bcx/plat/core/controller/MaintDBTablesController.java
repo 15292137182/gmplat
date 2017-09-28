@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.MaintDBTables;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.Or;
@@ -61,7 +60,6 @@ public class MaintDBTablesController extends BaseController {
     } else { // 根据空格查询
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
-
     PageResult<MaintDBTables> maintDBTablesPageResult;
     if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
       maintDBTablesPageResult = maintDBTablesService.selectPage(condition, orders, pageNum, pageSize);
@@ -97,26 +95,8 @@ public class MaintDBTablesController extends BaseController {
    */
   @PostMapping(value = "/add")
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
-    String tableEname = String.valueOf(param.get("tableEname")).trim();
-    String tableSchema = String.valueOf(param.get("tableSchema"));
-    param.put("tableEname", tableEname);
-    if (UtilsTool.isValid(tableEname)) {
-      Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
-      List<Map> select = maintDBTablesService.selectMap(condition);
-      if (select.size() == 0) {
-        MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
-        int insert = maintDBTables.insert();
-        if (insert != -1) {
-          return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables));
-        } else {
-          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
-        }
-      } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
-      }
-    }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
+    ServerResult serverResult = maintDBTablesService.addMaintDB(param);
+    return result(serverResult);
   }
 
 
@@ -124,45 +104,28 @@ public class MaintDBTablesController extends BaseController {
    * 编辑业务对象属性
    *
    * @param param 实体参数
-   * @return PlatResult
+   * @return Map
    */
   @PostMapping(value = "/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    String tableEname = String.valueOf(param.get("tableEname")).trim();
-    String tableSchema = String.valueOf(param.get("tableSchema"));
-    param.put("tableEname", tableEname);
-    if (UtilsTool.isValid(tableEname)) {
-      Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
-      List<Map> select = maintDBTablesService.selectMap(condition);
-      if (select.size() == 0 || select.get(0).get("rowId").equals(param.get("rowId"))) {
-        if (UtilsTool.isValid(param.get("rowId"))) {
-          MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
-          int update = maintDBTables.updateById();
-          if (update != -1) {
-            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
-          } else {
-            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
-          }
-        } else {
-          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
-        }
-      } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
-      }
+    if (UtilsTool.isValid(param.get("rowId"))) {
+      ServerResult serverResult = maintDBTablesService.modifyBusinessObjPro(param);
+      return result(serverResult);
+    } else {
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
   }
 
   /**
    * 通用删除方法
    *
    * @param rowId 按照rowId查询
-   * @return PlatResult
+   * @return Object
    */
   @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (!rowId.isEmpty()) {
       ServerResult delete = maintDBTablesService.delete(rowId);
       return result(delete);
     } else {
