@@ -4,6 +4,8 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.BusinessRelateTemplate;
 import com.bcx.plat.core.entity.TemplateObject;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -73,13 +75,14 @@ public class BusinessObjectController extends BaseController {
   }
 
 
-
   /**
    * 查询业务对象全部数据并分页显示
    *
    * @param search   按照空格查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param param    按照指定字段查询
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
@@ -94,11 +97,11 @@ public class BusinessObjectController extends BaseController {
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     ServerResult serverResult = businessObjectService.queryPage(condition, pageNum, pageSize, orders);
-    if (null!=serverResult.getData()) {
+    if (null != serverResult.getData()) {
       List<Map<String, Object>> result = ((PageResult) serverResult.getData()).getResult();
       for (Map<String, Object> results : result) {
         String relateTemplateObject = String.valueOf(results.get("relateTemplateObject"));
-        if (!(relateTemplateObject.contains("[") &&relateTemplateObject.contains("]"))) {
+        if (!(relateTemplateObject.contains("[") && relateTemplateObject.contains("]"))) {
           relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", relateTemplateObject).endAnd().buildDone();
           List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
           if (templateObjects.size() > 0) {
@@ -108,17 +111,17 @@ public class BusinessObjectController extends BaseController {
           List list = UtilsTool.jsonToObj(relateTemplateObject, List.class);
           StringBuilder templates = new StringBuilder();
           if (null != list && list.size() > 0) {
-          for (Object li : list) {
-            String valueOf = String.valueOf(li);
-            relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
-            List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
-            if (templateObjects.size() > 0) {
-              for (Map temp : templateObjects) {
-                templates.append(temp.get("templateName")).append(",");
+            for (Object li : list) {
+              String valueOf = String.valueOf(li);
+              relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
+              List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
+              if (templateObjects.size() > 0) {
+                for (Map temp : templateObjects) {
+                  templates.append(temp.get("templateName")).append(",");
+                }
               }
             }
           }
-        }
           if (templates.lastIndexOf(",") != -1) {
             String substring = templates.substring(0, templates.length() - 1);
             results.put("relateTemplate", substring);
@@ -126,8 +129,8 @@ public class BusinessObjectController extends BaseController {
         }
       }
       return super.result(serverResult);
-    }else{
-      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS,Message.QUERY_FAIL));
+    } else {
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
     }
   }
 
@@ -135,14 +138,17 @@ public class BusinessObjectController extends BaseController {
   /**
    * 根据业务对象rowId查找当前对象下的所有属性并分页显示
    *
+   * @param rowId    业务对象rowId
    * @param search   按照空格查询
+   * @param param    按照指定参数查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(BusinessObjectPro.class, order);
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
@@ -220,7 +226,7 @@ public class BusinessObjectController extends BaseController {
   public PlatResult queryTemplate(String rowId, String order) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
-      LinkedList<Order> orders = UtilsTool.dataSort(order);
+      LinkedList<Order> orders = UtilsTool.dataSort(BusinessRelateTemplate.class, order);
       ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
       if (serverResult != null) {
         return super.result(serverResult);
