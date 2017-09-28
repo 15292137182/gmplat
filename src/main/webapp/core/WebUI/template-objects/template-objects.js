@@ -93,7 +93,7 @@ gmp_onload=function(){
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
                         console.log(res);
-                        var data=res.data[0];
+                        var data=res.data;
                         addTemp.addTempObj.codeInput=data.templateCode;
                         addTemp.addTempObj.nameInput=data.templateName;
                         addTemp.addTempObj.comContent=data.desp;
@@ -219,7 +219,7 @@ gmp_onload=function(){
                     gmpAjax.showAjax(data, function (res) {
                         console.log(res);
                         //编辑拿到的数据
-                        var data = res.data[0];
+                        var data = res.data;
                         addTempProp.addTempPropObj.codeInput=data.code;
                         addTempProp.addTempPropObj.engNameInput=data.ename;
                         addTempProp.addTempPropObj.chnNameInput=data.cname;
