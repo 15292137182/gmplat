@@ -8,7 +8,6 @@ import com.bcx.plat.core.entity.KeySetPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.KeySetService;
 import com.bcx.plat.core.utils.PlatResult;
@@ -66,7 +65,8 @@ public class KeySetController extends BaseController {
   /**
    * 根据主表键值集合代码查询数据
    *
-   * @param keyCode 按照空格查询
+   * @param keyCode 键值集合代码
+   * @param rowId   唯一标识
    * @return PlatResult
    */
   @RequestMapping("/queryKeyCode")
@@ -95,7 +95,7 @@ public class KeySetController extends BaseController {
       ServerResult<List<Map>> listServerResult = keySetService.queryPro(rowId);
       return result(listServerResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
 
@@ -103,9 +103,12 @@ public class KeySetController extends BaseController {
   /**
    * 根据业务对象rowId查找当前对象下的所有属性并分页显示
    *
+   * @param rowId    唯一标识
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryProPage")
@@ -181,7 +184,7 @@ public class KeySetController extends BaseController {
     if (keySets.size() == 0) {
       return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS));
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_CANNOT_BE_DUPLICATED));
+      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
     }
   }
 
@@ -224,20 +227,27 @@ public class KeySetController extends BaseController {
    * 键值集合查询方法
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = dataSort(order);
-    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-    PageResult<Map<String, Object>> keySet; // 后续判断初始化
+  public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(KeySet.class, order);
+    Condition condition;
+    if (UtilsTool.isValid(param)) { // 判断是否按照定字段查询
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(KeySet.class, UtilsTool.jsonToObj(param, Map.class));
+    } else { // 按照空格查询
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+    PageResult<Map<String, Object>> keySet;
     //判断是否分页查询
     if (UtilsTool.isValid(pageSize)) { // 分页查询
-      keySet = keySetService.selectPageMap(blankQuery, orders, pageNum, pageSize);
+      keySet = keySetService.selectPageMap(condition, orders, pageNum, pageSize);
     } else { // 查询所有
-      keySet = new PageResult(keySetService.selectMap(blankQuery, orders));
+      keySet = new PageResult(keySetService.selectMap(condition, orders));
     }
     return result(new ServerResult<>(keySet));
   }
@@ -259,6 +269,4 @@ public class KeySetController extends BaseController {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
-
-
 }

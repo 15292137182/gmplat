@@ -42,6 +42,16 @@ public class MaintDBTablesController extends BaseController {
     return Arrays.asList("tableSchema", "tableEname", "tableCname");
   }
 
+  /**
+   * 表信息分页查询方法
+   *
+   * @param search   按照空格查询
+   * @param param    按照指定字段查询
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
+   * @return PlatResult
+   */
   @RequestMapping("/queryPage")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(MaintDBTables.class, order);
@@ -71,11 +81,10 @@ public class MaintDBTablesController extends BaseController {
    */
   @RequestMapping("/query")
   public PlatResult singleInputSelect(String search) {
-    Or blankQuery = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     List<Map<String, Object>> list = maintDBTablesService.singleSelect(MaintDBTables.class, blankQuery);
     if (list.size() > 0) {
       return result(new ServerResult<>(list));
-
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
   }
@@ -84,16 +93,15 @@ public class MaintDBTablesController extends BaseController {
    * 新增表信息属性
    *
    * @param param 接受实体参数
-   * @return Map
+   * @return PlatResult
    */
   @RequestMapping(value = "/add", method = RequestMethod.POST)
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname")).trim();
     String tableSchema = String.valueOf(param.get("tableSchema"));
-    param.remove("tableEname");
-    param.put("tableEname",tableEname);
-    if (!"".equals(tableEname)) {
+    param.put("tableEname", tableEname);
+    if (UtilsTool.isValid(tableEname)) {
       Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
       List<Map> select = maintDBTablesService.selectMap(condition);
       if (select.size() == 0) {
@@ -102,7 +110,7 @@ public class MaintDBTablesController extends BaseController {
         if (insert != -1) {
           return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables));
         } else {
-          return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_FAIL));
+          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
         }
       } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
@@ -125,7 +133,7 @@ public class MaintDBTablesController extends BaseController {
     String tableSchema = String.valueOf(param.get("tableSchema"));
 
     param.remove("tableEname");
-    param.put("tableEname",tableEname);
+    param.put("tableEname", tableEname);
     if (!"".equals(tableEname)) {
       Condition condition = new ConditionBuilder(MaintDBTables.class).and().equal("tableEname", tableEname).equal("tableSchema", tableSchema).endAnd().buildDone();
       List<Map> select = maintDBTablesService.selectMap(condition);
@@ -141,7 +149,7 @@ public class MaintDBTablesController extends BaseController {
         } else {
           return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
         }
-      }else {
+      } else {
         return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
       }
     }

@@ -90,12 +90,11 @@ public class KeySetProController extends BaseController {
   @RequestMapping(value = "/modify", method = POST)
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    int update;
-    if ((!param.get("rowId").equals("")) || param.get("rowId") != null) {
+    if (UtilsTool.isValid(param.get("rowId"))) {
       String confKey = String.valueOf(param.get("confKey")).trim();
       String confValue = String.valueOf(param.get("confValue")).trim();
       if (UtilsTool.isValid(confKey) && UtilsTool.isValid(confValue)) {
-        update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
+        int update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
         if (update != -1) {
           return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
         }
@@ -110,15 +109,14 @@ public class KeySetProController extends BaseController {
    * 删除键值集合属性数据属性数据
    *
    * @param rowId 业务对象rowId
-   * @return serviceResult
+   * @return PlatResult
    */
   @RequestMapping(value = "/delete", method = POST)
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
-    int del;
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       KeySetPro keySetPro = new KeySetPro();
-      del = keySetPro.deleteById(rowId);
+      int del = keySetPro.deleteById(rowId);
       if (del != -1) {
         return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
@@ -139,7 +137,7 @@ public class KeySetProController extends BaseController {
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
     ServerResult serverResult = new ServerResult();
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       Condition condition = new ConditionBuilder(KeySetPro.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = keySetProService.selectMap(condition);
       return result(new ServerResult<>(select));
@@ -153,8 +151,10 @@ public class KeySetProController extends BaseController {
    * 键值集合查询方法
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
@@ -179,6 +179,4 @@ public class KeySetProController extends BaseController {
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
   }
-
-
 }
