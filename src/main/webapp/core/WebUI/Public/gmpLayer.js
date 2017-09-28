@@ -429,7 +429,7 @@ gmpFormObj.prototype.submit = function(json, callback) {
  */
 
 // 动态表格对象
-function gmpTableObj(jsonDataConfig,grids,compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
+function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
     this.jsonDataConfig = jsonDataConfig;//配置信息
     this.grids = grids;	//table响应数据对应的search.id
     if(this.jsonDataConfig.checkbox){

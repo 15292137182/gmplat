@@ -218,12 +218,12 @@ var getHtml = (function() {
                         _search.bulidComponent(jsonDataConfig);
                         // 缓存实例化对象
                         GmpSearch[compId] = _search;
-                        console.log(compId);
-                        console.log(GmpSearch[compId]);
+                        // console.log(compId);
+                        // console.log(GmpSearch[compId]);
                     }
                     if (arr[0].funcType == "grid") {
-                        console.log(compId);
-                        var _table = new gmpTableObj(jsonDataConfig,compId, code, arr, mainId, params.id, "", "", "", {
+                        // console.log(compId);
+                        var _table = new gmpTableObj(jsonDataConfig, [params.id], compId, code, arr, mainId, params.id, "", "", "", {
                             onClickRow: function (row) {},
                             onEditRow: function () {},
                             onDeleteRow: function () {},
