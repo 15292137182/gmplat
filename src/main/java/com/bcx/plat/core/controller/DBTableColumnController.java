@@ -4,9 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DBTableColumn;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.DBTableColumnService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -44,8 +42,10 @@ public class DBTableColumnController extends BaseController {
    *
    * @param search   按照空格查询
    * @param rowId    接受rowId
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPageById")
@@ -63,10 +63,11 @@ public class DBTableColumnController extends BaseController {
    * 根据表信息的rowId来查询表字段中的信息
    *
    * @param search 按照空格查询
+   * @param rowId  表信息唯一标识
    * @return PlatResult
    */
   @RequestMapping("/queryTabById")
-  public Object singleInputSelect(String search, String rowId) {
+  public PlatResult singleInputSelect(String search, String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = dbTableColumnService.queryTableById(rowId, search);
@@ -80,7 +81,7 @@ public class DBTableColumnController extends BaseController {
    * 新增表信息字段属性
    *
    * @param param 接受实体参数
-   * @return Map
+   * @return PlatResult
    */
   @RequestMapping(value = "/add", method = RequestMethod.POST)
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
@@ -93,7 +94,7 @@ public class DBTableColumnController extends BaseController {
    * 编辑业务对象属性
    *
    * @param param 实体参数
-   * @return Map
+   * @return PlatResult
    */
   @RequestMapping(value = "/modify", method = RequestMethod.POST)
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
@@ -111,10 +112,10 @@ public class DBTableColumnController extends BaseController {
    * 通用删除方法
    *
    * @param rowId 按照rowId查询
-   * @return serviceResult
+   * @return PlatResult
    */
   @RequestMapping("/delete")
-  public Object delete(String rowId) {
+  public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult delete = dbTableColumnService.delete(rowId);

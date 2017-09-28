@@ -1,7 +1,6 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.service.DataSetConfigService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,10 +16,10 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/busiRelate")
-public class BusinessRelateTemplateController extends BaseController{
+public class BusinessRelateTemplateController extends BaseController {
 
-    protected List<String> blankSelectFields() {
-        return Arrays.asList("datasetCode", "datasetName", "datasetType");
-    }
+  protected List<String> blankSelectFields() {
+    return Arrays.asList("datasetCode", "datasetName", "datasetType");
+  }
 
 }

@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
-import com.bcx.plat.core.entity.FrontFuncPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -74,7 +73,7 @@ public class BusinessObjectProController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryBusinPro")
-  public Object queryBusinPro(String objRowId, String frontRowId) {
+  public PlatResult queryBusinPro(String objRowId, String frontRowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(objRowId)) {
       ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
@@ -88,7 +87,7 @@ public class BusinessObjectProController extends BaseController {
    * 新增业务对象属性
    *
    * @param paramEntity 接受实体参数
-   * @return Map
+   * @return PlatResult
    */
   @RequestMapping("/add")
   public PlatResult addBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {

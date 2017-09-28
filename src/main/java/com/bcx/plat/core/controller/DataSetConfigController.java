@@ -65,7 +65,7 @@ public class DataSetConfigController extends BaseController {
    * 修改数据集数据
    *
    * @param param 接受实体参数
-   * @return platResult
+   * @return PlatResult
    */
   @RequestMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
@@ -88,14 +88,14 @@ public class DataSetConfigController extends BaseController {
    * 业务对象属性删除方法
    *
    * @param rowId 按照rowId查询
-   * @return serviceResult
+   * @return PlatResult
    */
   @RequestMapping("/delete")
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<DataSetConfig> dataSetConfigs = dataSetConfigService.select(condition);
     ServerResult result = new ServerResult();
-    if (!rowId.isEmpty()) {
+    if (UtilsTool.isValid(rowId)) {
       DataSetConfig dataSetConfig = new DataSetConfig();
       int del = dataSetConfig.deleteById(rowId);
       if (del != -1) {
@@ -112,8 +112,10 @@ public class DataSetConfigController extends BaseController {
    * 根据数据集rowId查找数据
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
@@ -132,7 +134,6 @@ public class DataSetConfigController extends BaseController {
     } else {
       result = new PageResult<>(dataSetConfigService.selectMap(condition, orders));
     }
-
     return result(new ServerResult<>(result));
   }
 
