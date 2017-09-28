@@ -1,8 +1,9 @@
 package com.bcx.plat.core.base;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import java.util.List;
 import java.util.Map;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * mybatis sql映射自定义接口
@@ -36,7 +37,7 @@ public interface BaseMapper<T extends BaseEntity> {
 
   /**
    * 批量删除数据
-   *
+   * <p>
    * Created by hcl at 2017-08-08
    */
   int batchDelete(Map map);

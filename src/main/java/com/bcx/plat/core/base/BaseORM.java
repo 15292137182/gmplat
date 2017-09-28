@@ -373,10 +373,10 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    * @return list
    */
   public List<Map<String, Object>> singleSelect(Class entity, Condition condition) {
-    List<Map<String, Object>> execute ;
+    List<Map<String, Object>> execute;
     if (entity != null && condition != null) {
       execute = MORE_BATIS.select(entity).where(condition).execute();
-    } else{
+    } else {
       execute = MORE_BATIS.select(entity).execute();
     }
     return execute;
@@ -384,12 +384,13 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   /**
    * 单表查询添加添加排序
-   * @param entity  接受实体类
+   *
+   * @param entity    接受实体类
    * @param condition 过滤条件
-   * @param orders  排序
-   * @return  list
+   * @param orders    排序
+   * @return list
    */
-  List<Map<String, Object>> singleSelectSort(Class entity, Condition condition,List<Order> orders) {
+  List<Map<String, Object>> singleSelectSort(Class entity, Condition condition, List<Order> orders) {
     List<Map<String, Object>> execute = null;
     if (entity != null && condition != null) {
       execute = MORE_BATIS.select(entity).where(condition).orderBy(orders).execute();
@@ -399,14 +400,15 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   /**
    * 单个实体修改数据
+   *
    * @param entityClass 接受实体类
-   * @param param 要修改的参数
-   * @param condition 过滤条件
+   * @param param       要修改的参数
+   * @param condition   过滤条件
    * @return int
    */
-  int singleUpdate(Class entityClass,Map<String, Object> param,Condition condition){
+  int singleUpdate(Class entityClass, Map<String, Object> param, Condition condition) {
     int execute = -1;
-    if (null!=entityClass && null!=condition || param.size()>0) {
+    if (null != entityClass && null != condition || param.size() > 0) {
       execute = MORE_BATIS.update(entityClass, param).where(condition).execute();
     }
     return execute;

@@ -27,7 +27,7 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
   }
 
   /**
-   * 更多序列话配置
+   * 更多序列化配置
    *
    * @return 将 javaBean 的内容输出到 map
    * @see com.bcx.plat.core.utils.JacksonAdapter
@@ -38,7 +38,7 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
 
   /**
    * 将 javaBean 中的内容读取到自身,默认根据 setter 方法进行读取
-   * 处理方式 : 如果一个 Map 中的某字段在所有类型的字段，例如拓展字段、基础字段、公共字段中都能找到，则所有该字段均会被赋值
+   * 处理方式 : 如果一个 Map 中的某字段在所有类型的字段，例如扩展字段、基础字段、公共字段中都能找到，则所有该字段均会被赋值
    * <p>
    * 更多反序列化配置：
    *
@@ -53,8 +53,8 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
       Method[] methods = current.getDeclaredMethods();
       for (Method method : methods) {
         if (method.getName().startsWith("set")
-                && method.getAnnotationsByType(JsonIgnore.class).length == 0
-                && method.getParameterCount() == 1) {
+            && method.getAnnotationsByType(JsonIgnore.class).length == 0
+            && method.getParameterCount() == 1) {
           String _fieldName = method.getName().substring(3, method.getName().length());
           String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
           Object value = map.get(fieldName);
@@ -80,11 +80,15 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
   }
 
 
-  default Map<String, Object> toDbMap(){
+  default Map<String, Object> toDbMap() {
     return toMap();
-  };
+  }
 
-  default T fromDbMap(Map map){
+  ;
+
+  default T fromDbMap(Map map) {
     return fromMap(map);
-  };
+  }
+
+  ;
 }

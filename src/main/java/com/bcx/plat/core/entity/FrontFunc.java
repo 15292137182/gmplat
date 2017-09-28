@@ -4,13 +4,10 @@ import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.manager.SequenceManager;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 /**
  * 前端功能块实体类 Created by Went on 2017/8/2.
  */
 public class FrontFunc extends BaseEntity<FrontFunc> {
-
 
   private String funcCode;//功能代码
   private String funcName;//功能名称
@@ -21,8 +18,6 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
   private String belongModule;//所属模块
   private String belongSystem;//所属系统
 
-
-
   /**
    * 构建 - 创建信息
    *
@@ -31,7 +26,6 @@ public class FrontFunc extends BaseEntity<FrontFunc> {
   @Override
   public FrontFunc buildCreateInfo() {
     this.funcCode = SequenceManager.getInstance().buildSequenceNo(CodeMessage.FUNC_FRONC, null);
-    setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }
 

@@ -4,8 +4,6 @@ import com.bcx.plat.core.base.BaseEntity;
 
 import java.io.Serializable;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 /**
  * Created by Went on 2017/7/31. 维护数据库表实体类
  */
@@ -17,7 +15,6 @@ public class MaintDBTables extends BaseEntity<MaintDBTables> implements Serializ
   private String tableCname;//表中文名
   private String desp;//说明
 
-
   /**
    * 构建 - 创建信息
    *
@@ -26,8 +23,6 @@ public class MaintDBTables extends BaseEntity<MaintDBTables> implements Serializ
   @Override
   public MaintDBTables buildCreateInfo() {
     this.getBaseTemplateBean().getDeleteFlag();
-    this.rowId = lengthUUID(32);
-
     return super.buildCreateInfo();
   }
 

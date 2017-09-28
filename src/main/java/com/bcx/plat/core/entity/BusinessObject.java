@@ -91,5 +91,4 @@ public class BusinessObject extends BaseEntity<BusinessObject> {
     this.relateTableRowId = relateTableRowId;
   }
 
-
 }

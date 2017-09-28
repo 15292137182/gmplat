@@ -3,7 +3,6 @@ package com.bcx.plat.core.entity;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.manager.SequenceManager;
-import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * Title: TemplateObject</p>
@@ -49,7 +48,6 @@ public class TemplateObject extends BaseEntity<TemplateObject> {
   public void setBelongSystem(String belongSystem) {
     this.belongSystem = belongSystem;
   }
-
 
   public String getTemplateCode() {
     return templateCode;

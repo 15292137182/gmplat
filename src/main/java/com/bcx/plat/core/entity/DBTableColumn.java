@@ -1,7 +1,5 @@
 package com.bcx.plat.core.entity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 import com.bcx.plat.core.base.BaseEntity;
 
 /**
@@ -9,18 +7,16 @@ import com.bcx.plat.core.base.BaseEntity;
  */
 public class DBTableColumn extends BaseEntity<DBTableColumn> {
 
-  private String relateTableRowId;
-  private String columnEname;
-  private String columnCname;
-  private String desp;
-
+  private String relateTableRowId;//关联表rowId
+  private String columnEname;//字段英文名
+  private String columnCname;//字段中文名
+  private String desp;//说明
 
   /**
    * 重载构建 - 创建信息方法，加入rowId
    */
   @Override
   public DBTableColumn buildCreateInfo() {
-    setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }
 

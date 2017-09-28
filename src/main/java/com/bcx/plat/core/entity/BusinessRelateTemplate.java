@@ -10,46 +10,47 @@ import com.bcx.plat.core.utils.UtilsTool;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                2017/8/30  Wen TieHu Create
  *          </pre>
  */
-public class BusinessRelateTemplate extends BaseEntity<BusinessRelateTemplate>{
-    private String businessRowId;//关联业务对象
-    private String templateRowId;//关联模板对象
+public class BusinessRelateTemplate extends BaseEntity<BusinessRelateTemplate> {
 
-    /**
-     * 构建 - 创建信息
-     *
-     * @return 返回自身
-     */
-    @Override
-    public BusinessRelateTemplate buildCreateInfo() {
-        this.rowId = UtilsTool.lengthUUID(32);
-        return this;
-    }
+  private String businessRowId;//关联业务对象
+  private String templateRowId;//关联模板对象
 
-    public String getRowId() {
-        return rowId;
-    }
+  /**
+   * 构建 - 创建信息
+   *
+   * @return 返回自身
+   */
+  @Override
+  public BusinessRelateTemplate buildCreateInfo() {
+    this.rowId = UtilsTool.lengthUUID(32);
+    return this;
+  }
 
-    public void setRowId(String rowId) {
-        this.rowId = rowId;
-    }
+  public String getRowId() {
+    return rowId;
+  }
 
-    public String getBusinessRowId() {
-        return businessRowId;
-    }
+  public void setRowId(String rowId) {
+    this.rowId = rowId;
+  }
 
-    public void setBusinessRowId(String businessRowId) {
-        this.businessRowId = businessRowId;
-    }
+  public String getBusinessRowId() {
+    return businessRowId;
+  }
 
-    public String getTemplateRowId() {
-        return templateRowId;
-    }
+  public void setBusinessRowId(String businessRowId) {
+    this.businessRowId = businessRowId;
+  }
 
-    public void setTemplateRowId(String templateRowId) {
-        this.templateRowId = templateRowId;
-    }
+  public String getTemplateRowId() {
+    return templateRowId;
+  }
+
+  public void setTemplateRowId(String templateRowId) {
+    this.templateRowId = templateRowId;
+  }
 }

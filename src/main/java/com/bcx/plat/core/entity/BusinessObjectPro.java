@@ -6,8 +6,6 @@ import com.bcx.plat.core.manager.SequenceManager;
 
 import java.io.Serializable;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 /**
  * 业务对象属性实体类 Created by Went on 2017/8/1.
  */
@@ -32,7 +30,6 @@ public class BusinessObjectPro extends BaseEntity<BusinessObjectPro> implements 
   @Override
   public BusinessObjectPro buildCreateInfo() {
     setPropertyCode(SequenceManager.getInstance().buildSequenceNo(CodeMessage.BUSIN_OBJECT_PRO, null));
-    setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }
 

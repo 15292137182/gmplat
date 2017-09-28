@@ -9,8 +9,6 @@ import com.bcx.plat.core.base.BaseEntity;
  */
 public class User extends BaseEntity<User> {
 
-
-
   private String id;
   private String name;
   private String portraitPath;

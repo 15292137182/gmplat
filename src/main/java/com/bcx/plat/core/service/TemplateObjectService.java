@@ -91,9 +91,9 @@ public class TemplateObjectService extends BaseService<TemplateObject> {
   /**
    * 数据封装
    *
-   * @param param  接受排序信息
+   * @param param  按照指定字段查询
    * @param rowId  唯一标示
-   * @param search 搜索条件
+   * @param search 按照空格查询
    * @return Condition
    */
   private Condition queryPTemplatePages(String param, String rowId, String search) {

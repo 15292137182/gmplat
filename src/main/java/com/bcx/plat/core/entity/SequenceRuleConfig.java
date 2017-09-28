@@ -2,27 +2,23 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 
-import static com.bcx.plat.core.utils.UtilsTool.lengthUUID;
-
 /**
  * 序列号规则配置 pojo 类
- *
+ * <p>
  * Create By HCL at 2017/8/6
  */
 public class SequenceRuleConfig extends BaseEntity<SequenceRuleConfig> {
 
-
-  private String seqCode;
-  private String seqName;
-  private String seqContent;
-  private String desp;
+  private String seqCode;//代码
+  private String seqName;//名称
+  private String seqContent;//内容
+  private String desp;//说明
   private String belongModule;//所属模块
   private String belongSystem;//所属系统
 
   @Override
   public SequenceRuleConfig buildCreateInfo() {
     getBaseTemplateBean().setVersion("1.0");
-    setRowId(lengthUUID(32));
     return super.buildCreateInfo();
   }
 

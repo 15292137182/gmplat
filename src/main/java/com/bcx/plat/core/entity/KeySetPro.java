@@ -1,7 +1,6 @@
 package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
-import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * <p>Title: keySetPro</p>
@@ -10,65 +9,64 @@ import com.bcx.plat.core.utils.UtilsTool;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                2017/8/30  Wen TieHu Create
  *          </pre>
  */
-public class KeySetPro extends BaseEntity<KeySetPro>{
+public class KeySetPro extends BaseEntity<KeySetPro> {
 
-    private String relateKeysetRowId;//关联键值集合唯一标示
-    private String confKey;//键
-    private String confValue;//值
-    private String desp;//说明
+  private String relateKeysetRowId;//关联键值集合唯一标示
+  private String confKey;//键
+  private String confValue;//值
+  private String desp;//说明
 
-    /**
-     * 构建 - 创建信息
-     *
-     * @return 返回自身
-     */
-    @Override
-    public KeySetPro buildCreateInfo() {
-        this.rowId = UtilsTool.lengthUUID(32);
-        return this;
-    }
+  /**
+   * 构建 - 创建信息
+   *
+   * @return 返回自身
+   */
+  @Override
+  public KeySetPro buildCreateInfo() {
+    return super.buildCreateInfo();
+  }
 
-    public String getRowId() {
-        return rowId;
-    }
+  public String getRowId() {
+    return rowId;
+  }
 
-    public void setRowId(String rowId) {
-        this.rowId = rowId;
-    }
+  public void setRowId(String rowId) {
+    this.rowId = rowId;
+  }
 
-    public String getRelateKeysetRowId() {
-        return relateKeysetRowId;
-    }
+  public String getRelateKeysetRowId() {
+    return relateKeysetRowId;
+  }
 
-    public void setRelateKeysetRowId(String relateKeysetRowId) {
-        this.relateKeysetRowId = relateKeysetRowId;
-    }
+  public void setRelateKeysetRowId(String relateKeysetRowId) {
+    this.relateKeysetRowId = relateKeysetRowId;
+  }
 
-    public String getConfKey() {
-        return confKey;
-    }
+  public String getConfKey() {
+    return confKey;
+  }
 
-    public void setConfKey(String confKey) {
-        this.confKey = confKey;
-    }
+  public void setConfKey(String confKey) {
+    this.confKey = confKey;
+  }
 
-    public String getConfValue() {
-        return confValue;
-    }
+  public String getConfValue() {
+    return confValue;
+  }
 
-    public void setConfValue(String confValue) {
-        this.confValue = confValue;
-    }
+  public void setConfValue(String confValue) {
+    this.confValue = confValue;
+  }
 
-    public String getDesp() {
-        return desp;
-    }
+  public String getDesp() {
+    return desp;
+  }
 
-    public void setDesp(String desp) {
-        this.desp = desp;
-    }
+  public void setDesp(String desp) {
+    this.desp = desp;
+  }
 }

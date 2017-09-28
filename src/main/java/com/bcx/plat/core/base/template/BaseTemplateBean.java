@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
-import static com.bcx.plat.core.utils.UtilsTool.getDateTimeNow;
-import static com.bcx.plat.core.utils.UtilsTool.jsonToObj;
-import static com.bcx.plat.core.utils.UtilsTool.objToJson;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 基础公共字段，定义了平台一些基础的字段和基本方法
@@ -69,7 +67,7 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
   }
 
   /**
-   * 创建 - 修改信息
+   * 创建 - 删除信息
    *
    * @return 返回自身
    */
@@ -85,10 +83,10 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
   @Override
   public Map<String, Object> toDbMap() {
     final Map map = jsonToObj(objToJson(this), HashMap.class);
-    final Map result=new HashMap<>();
-    map.forEach((k,v)->{
-      if (v!=null) {
-        result.put(k,v);
+    final Map result = new HashMap<>();
+    map.forEach((k, v) -> {
+      if (v != null) {
+        result.put(k, v);
       }
     });
     return result;

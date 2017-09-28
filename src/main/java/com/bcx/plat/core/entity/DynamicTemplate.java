@@ -3,7 +3,6 @@ package com.bcx.plat.core.entity;
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.constants.CodeMessage;
 import com.bcx.plat.core.manager.SequenceManager;
-import com.bcx.plat.core.utils.UtilsTool;
 
 /**
  * 动态模板实体类
@@ -29,7 +28,6 @@ public class DynamicTemplate extends BaseEntity<DynamicTemplate> {
     this.setDatasetCode(SequenceManager.getInstance().buildSequenceNo(CodeMessage.DYNAMIC_TEMPLATE, null));
 
     this.getBaseTemplateBean().setVersion("1.0");
-    this.rowId = UtilsTool.lengthUUID(32);
     return super.buildCreateInfo();
   }
 
