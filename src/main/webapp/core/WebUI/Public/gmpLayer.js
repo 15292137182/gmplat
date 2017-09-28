@@ -480,7 +480,8 @@ function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vue
 // 父组件数据
 gmpTableObj.prototype.searchSelect = function(data) {
     var that = this;
-    console.log(data);
+    // console.log(data);
+    // console.log(that.grids);
     var compId = this.compId;
      // console.log(that.total);
     // this.tableObjArr["pageSize"] = that.pageSize;
@@ -527,16 +528,39 @@ gmpTableObj.prototype.searchSelect = function(data) {
     //显示多少条数据发生变化
     this.tableObjArr["handleSizeChange"] = function(val){
         that.pageSize = val;
-        console.log(that);
         if (that.queryUrl == null) {
             gmpPopup.throwMsg("未定义表格查询接口");
             return;
+        }
+        var dataName = that.grids[0];
+        var gmpSearchObj = "GmpSearch."+dataName;
+        var gmpSearchObjData = null;
+        eval("gmpSearchObjData="+gmpSearchObj);
+        var search =gmpSearchObjData.searchObj.sel;
+        var dataJson = null;
+        if(gmpSearchObjData.searchObj.key == ""){
+            dataJson = {
+                param:{},
+                search:search,
+                pageSize:that.pageSize,
+                pageNum:that.pageNo
+            }
+        }else{
+            var parameter = {};
+            parameter[gmpSearchObjData.searchObj.key] = gmpSearchObjData.searchObj.sel;
+            var parameters = JSON.stringify(parameter);
+            dataJson = {
+                param:parameters,
+                search:'',
+                pageSize:that.pageSize,
+                pageNum:that.pageNo
+            }
         }
         $.ajax({
             url: that.queryUrl,
             type: "get",
             dataType: "json",
-            data: {search:"",pageSize:that.pageSize,pageNum:that.pageNo},
+            data: dataJson,
             success: function(res) {
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
@@ -562,21 +586,42 @@ gmpTableObj.prototype.searchSelect = function(data) {
     //点击第几页
     this.tableObjArr["handleCurrentChange"] = function(val){
         that.pageNo = val;
-        console.log(that.searchObj);
-        // console.log(that);
         if (that.queryUrl == null) {
             gmpPopup.throwMsg("未定义表格查询接口");
             return;
+        }
+        var dataName = that.grids[0];
+        var gmpSearchObj = "GmpSearch."+dataName;
+        var gmpSearchObjData = null;
+        eval("gmpSearchObjData="+gmpSearchObj);
+        var search =gmpSearchObjData.searchObj.sel;
+        var dataJson = null;
+        if(gmpSearchObjData.searchObj.key == ""){
+            dataJson = {
+                param:{},
+                search:search,
+                pageSize:that.pageSize,
+                pageNum:that.pageNo
+            }
+        }else{
+            var parameter = {};
+            parameter[gmpSearchObjData.searchObj.key] = gmpSearchObjData.searchObj.sel;
+            var parameters = JSON.stringify(parameter);
+            dataJson = {
+                param:parameters,
+                search:'',
+                pageSize:that.pageSize,
+                pageNum:that.pageNo
+            }
         }
         $.ajax({
             url: that.queryUrl,
             type: "get",
             dataType: "json",
-            data: {search:"",pageSize:that.pageSize,pageNum:that.pageNo},
+            data: dataJson,
             success: function(res) {
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
-                    // console.log(that);
                     that.total = Number(res.resp.content.data.total);
                     // 清空数据
                     that.tableObjArr = [];
@@ -609,7 +654,6 @@ gmpTableObj.prototype.searchSelect = function(data) {
         this.tableObjArr["total"] = that.total;
     }
     obj[compId] = this.tableObjArr;
-    console.log(obj);
     return obj;
 };
 
@@ -1009,17 +1053,9 @@ gmpsearchObj.prototype.search = function(json,callback) {
     var gmpTableObj = "GmpTable."+dataName;
     var gmpTableObjData = null;
     eval("gmpTableObjData="+gmpTableObj);
-    console.log(gmpTableObjData);
-    pageConfig.pageSize = gmpTableObjData.pageSize;
-    // pageConfig.pageNo = gmpTableObjData.pageNo;
-    pageConfig.pageNo = 1;
-    // if(that.grids != undefined){
-    //     pageConfig = that.grids[0].getPageInfo();
-    // }else{
-    //      pageConfig.pageSize = 10;
-    //      pageConfig.pageNo = 1;
-    //  }
 
+    pageConfig.pageSize = gmpTableObjData.pageSize;
+    pageConfig.pageNo = 1;
     var search = that.searchObj.sel;
     if(that.searchObj.key == ""){
         dataJson = {
