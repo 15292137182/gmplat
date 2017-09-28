@@ -19,7 +19,7 @@
             </el-row>
             <el-row id="app" style="margin-top: 10px;">
                 <el-col :span="24">
-                    <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable","id":"searchs"}' :table-data="table"></components>
+                    <components :is="gmpTable" data='{"main":"#app","code":"dataSetConfigTable","id":"grid", "bind": "searchs"}' :table-data="table"></components>
                 </el-col>
             </el-row>
         </div>

@@ -480,14 +480,7 @@ function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vue
 // 父组件数据
 gmpTableObj.prototype.searchSelect = function(data) {
     var that = this;
-    // console.log(data);
-    // console.log(that.grids);
     var compId = this.compId;
-     // console.log(that.total);
-    // this.tableObjArr["pageSize"] = that.pageSize;
-    // this.tableObjArr["pageNum"] = that.pageNo;
-    // this.tableObjArr["pageNum"] = 1;
-    // this.tableObjArr["total"] = that.total;
     var clickRowTime = null;
     var cellClickTime = null;
     //单击行事件
@@ -564,7 +557,6 @@ gmpTableObj.prototype.searchSelect = function(data) {
             success: function(res) {
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
-                    console.log(data);
                     that.total = Number(res.resp.content.data.total);
                     // 清空数据
                     that.tableObjArr = [];
@@ -620,11 +612,13 @@ gmpTableObj.prototype.searchSelect = function(data) {
             dataType: "json",
             data: dataJson,
             success: function(res) {
+                alert("点击第几页触发");
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
                     that.total = Number(res.resp.content.data.total);
                     // 清空数据
                     that.tableObjArr = [];
+                    // alert("第三次")
                     // 重新注入方法
                     that.searchSelect();
                     dataConversion.conversion(that.vueObj,data);
@@ -640,10 +634,6 @@ gmpTableObj.prototype.searchSelect = function(data) {
             }
         })
     }
-    var obj = {
-        props: [],
-        tableId: that.tableId
-    }
     if(data){
         this.tableObjArr["total"] = Number(data.total);
         this.tableObjArr["pageNum"] = data.pageNum;
@@ -653,12 +643,17 @@ gmpTableObj.prototype.searchSelect = function(data) {
         this.tableObjArr["pageNum"] = that.pageNo;
         this.tableObjArr["total"] = that.total;
     }
+    var obj = {
+        props: [],
+        tableId: that.tableId
+    }
     obj[compId] = this.tableObjArr;
     return obj;
 };
 
 // 构建表格组件
 gmpTableObj.prototype.bulidComponent = function(thisObj) {
+    // alert("第一次")
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
     // console.log(strHtml.html);
     var that = this;
@@ -713,6 +708,7 @@ gmpTableObj.prototype.reload = function(json) {
 
 // 表格由给定数据加载
 gmpTableObj.prototype.loadRecord = function(data) {
+    // alert("第二次")
     var that = this;
     // 清空数据
     this.tableObjArr = [];
@@ -1052,7 +1048,15 @@ gmpsearchObj.prototype.search = function(json,callback) {
     var dataName = that.grids[0];
     var gmpTableObj = "GmpTable."+dataName;
     var gmpTableObjData = null;
+
     eval("gmpTableObjData="+gmpTableObj);
+    console.log(gmpTableObjData);
+    // gmpTableObjData.tableObjArr["handleCurrentChange"](1);
+    // gmpTableObjData.tableObjArr = [];
+    // gmpTableObjData.vueObj.tableObjArr.total = 1;
+    // gmpTableObjData.vueObj.table.pageNum = 1;
+    // console.log(gmpTableObjData.tableObjArr.pageNum);
+    // gmpTableObjData.searchSelect();
 
     pageConfig.pageSize = gmpTableObjData.pageSize;
     pageConfig.pageNo = 1;
@@ -1081,21 +1085,21 @@ gmpsearchObj.prototype.search = function(json,callback) {
             dataJson = json.data;
         }
     }
-    $.ajax({
-        url:url,
-        type:"get",
-        dataType:"json",
-        data:dataJson,
-        success:function(res){
-            //var dataName = that.grids[0];
-            var load = "GmpTable."+dataName+".loadRecord(res.resp.content.data)";
-            eval(load);
-            if(callback){
-                callback(res);
-            }
-        },
-        error:function(){
-            alert("查询块请求失败！");
-        }
-    });
+    // $.ajax({
+    //     url:url,
+    //     type:"get",
+    //     dataType:"json",
+    //     data:dataJson,
+    //     success:function(res){
+    //         //var dataName = that.grids[0];
+    //         var load = "GmpTable."+dataName+".loadRecord(res.resp.content.data)";
+    //         eval(load);
+    //         if(callback){
+    //             callback(res);
+    //         }
+    //     },
+    //     error:function(){
+    //         alert("查询块请求失败！");
+    //     }
+    // });
 };

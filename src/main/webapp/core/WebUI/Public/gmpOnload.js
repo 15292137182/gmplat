@@ -223,7 +223,7 @@ var getHtml = (function() {
                     }
                     if (arr[0].funcType == "grid") {
                         // console.log(compId);
-                        var _table = new gmpTableObj(jsonDataConfig, [params.id], compId, code, arr, mainId, params.id, "", "", "", {
+                        var _table = new gmpTableObj(jsonDataConfig, [params.bind], compId, code, arr, mainId, params.id, "", "", "", {
                             onClickRow: function (row) {},
                             onEditRow: function () {},
                             onDeleteRow: function () {},

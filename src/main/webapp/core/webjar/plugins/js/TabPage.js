@@ -1852,23 +1852,23 @@ GmpSearchBlock.prototype.search = function(json,callback) {
             dataJson = json.data;
         }
     }
-    $.ajax({
-        url:url,
-        type:"get",
-        dataType:"json",
-        data:dataJson,
-        success:function(res){
-            //var dataName = that.grids[0];
-            var load = "GmpTable."+dataName+".loadRecord(res.resp.content.data)";
-            eval(load);
-            if(callback){
-                callback(res);
-            }
-        },
-        error:function(){
-            alert("查询块请求失败！");
-        }
-    });
+    // $.ajax({
+    //     url:url,
+    //     type:"get",
+    //     dataType:"json",
+    //     data:dataJson,
+    //     success:function(res){
+    //         //var dataName = that.grids[0];
+    //         var load = "GmpTable."+dataName+".loadRecord(res.resp.content.data)";
+    //         eval(load);
+    //         if(callback){
+    //             callback(res);
+    //         }
+    //     },
+    //     error:function(){
+    //         alert("查询块请求失败！");
+    //     }
+    // });
 };
 
 // var jsonDataConfigObj = (function(){
