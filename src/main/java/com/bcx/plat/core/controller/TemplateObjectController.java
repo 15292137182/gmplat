@@ -15,6 +15,7 @@ import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,10 @@ import java.util.Map;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static com.bcx.plat.core.utils.UtilsTool.*;
+import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
+import static com.bcx.plat.core.utils.UtilsTool.createBlankQuery;
+import static com.bcx.plat.core.utils.UtilsTool.dataSort;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * Title: TemplateObjectController</p>
@@ -139,7 +143,7 @@ public class TemplateObjectController extends BaseController {
    * @param map 接受一个实体对象
    * @return 返回操作信息
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult insert(@RequestParam Map map) {
     ServerResult serverResult = new ServerResult();
     TemplateObject templateObject = new TemplateObject().fromMap(map).buildCreateInfo();
@@ -156,7 +160,7 @@ public class TemplateObjectController extends BaseController {
    * @param map 实体类的json字符串
    * @return 返回操作信息
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult update(@RequestParam Map map) {
     ServerResult serverResult = new ServerResult();
     TemplateObject templateObject = new TemplateObject().fromMap(map).buildModifyInfo();
@@ -173,7 +177,7 @@ public class TemplateObjectController extends BaseController {
    * @param rowId 按照rowId查询
    * @return 返回操作信息
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     // 删除模板对象之前，先删除模板对象属性信息
     Condition preCondition = new ConditionBuilder(TemplateObjectPro.class).and().equal("templateObjRowId", rowId).endAnd().buildDone();

@@ -11,6 +11,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +47,7 @@ public class TemplateObjectProController extends BaseController {
    * @param param 接受一个实体对象
    * @return 返回操作信息
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
     String ename = String.valueOf(param.get("")).trim();
@@ -98,7 +99,7 @@ public class TemplateObjectProController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
     if (UtilsTool.isValid(param.get("proRowId"))) { // 判断rowId是否为空
@@ -138,7 +139,7 @@ public class TemplateObjectProController extends BaseController {
    * @param rowId 按照rowId查询
    * @return 返回操作信息
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public Object delete(String rowId) {
     ServerResult serverResult = new ServerResult();
     Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();

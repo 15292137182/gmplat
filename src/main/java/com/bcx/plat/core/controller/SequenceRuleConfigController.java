@@ -17,12 +17,18 @@ import com.bcx.plat.core.service.SequenceRuleConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_FAIL;
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
@@ -78,7 +84,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String seqCode = String.valueOf(param.get("seqCode")).trim();
@@ -109,7 +115,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (isValid(param.get("rowId"))) {
@@ -144,7 +150,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @param rowId 按照rowId查询
    * @return 返回操作信息
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (isValid(rowId)) {

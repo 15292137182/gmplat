@@ -3,7 +3,14 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.*;
+import com.bcx.plat.core.entity.BusinessObject;
+import com.bcx.plat.core.entity.BusinessObjectPro;
+import com.bcx.plat.core.entity.BusinessRelateTemplate;
+import com.bcx.plat.core.entity.DBTableColumn;
+import com.bcx.plat.core.entity.FrontFuncPro;
+import com.bcx.plat.core.entity.SequenceRuleConfig;
+import com.bcx.plat.core.entity.TemplateObject;
+import com.bcx.plat.core.entity.TemplateObjectPro;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -170,19 +177,6 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
         results.add(map);
       }
     }
-//        for (Map<String, Object> res : results) {
-//            String obj = res.get("objRowId").toString();
-//            Condition buildDone = new ConditionBuilder(FrontFuncPro.class).and().equal("relateBusiPro", obj).endAnd().buildDone();
-//            List<Map<String, Object>> relateBusiPro = singleSelect(FrontFuncPro.class, buildDone);
-//            if (!UtilsTool.isValid(relateBusiPro)) {
-//                continue;
-//            }
-//            for (Map<String, Object> relate : relateBusiPro) {
-//                if (relate.get("funcRowId").equals(frontRowId)) {
-//                    res.remove(res);
-//                }
-//            }
-//        }
     FieldCondition funcRowId = new FieldCondition("funcRowId", Operator.EQUAL, frontRowId);
     List<Map<String, Object>> relateBusiPro = super.singleSelect(FrontFuncPro.class, funcRowId);
     for (Map<String, Object> relate : relateBusiPro) {

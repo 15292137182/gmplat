@@ -11,7 +11,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.*;
-import static com.bcx.plat.core.utils.UtilsTool.collectToSet;
 
 /**
  * <p>Title: TemplateObjectService</p>

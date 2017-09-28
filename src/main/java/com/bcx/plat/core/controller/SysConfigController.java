@@ -13,6 +13,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,6 @@ import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 /**
@@ -77,7 +77,7 @@ public class SysConfigController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/add", method = POST)
+  @PostMapping(value = "/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
     String confKey = String.valueOf(param.get("confKey")).trim();
@@ -104,7 +104,7 @@ public class SysConfigController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/modify", method = POST)
+  @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     if (UtilsTool.isValid(param.get("rowId"))) {
       ServerResult serverResult = new ServerResult();
@@ -139,7 +139,7 @@ public class SysConfigController extends BaseController {
    * @param rowId 业务对象rowId
    * @return PlatResult
    */
-  @RequestMapping(value = "/delete", method = POST)
+  @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(SysConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> maps = sysConfigService.selectMap(condition);

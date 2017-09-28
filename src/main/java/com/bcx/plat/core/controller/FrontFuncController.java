@@ -19,11 +19,16 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -112,7 +117,7 @@ public class FrontFuncController extends BaseController {
    *
    * @param rowId 功能块rowId
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     //根据传入的rowId查询当前数据
@@ -171,7 +176,7 @@ public class FrontFuncController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = frontFuncService.insertFront(param);
     return result(serverResult);
@@ -183,7 +188,7 @@ public class FrontFuncController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {

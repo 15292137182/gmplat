@@ -15,6 +15,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +50,7 @@ public class DynamicTemplateController extends BaseController {
    * @param param 接受实体参数
    * @return PlatResult
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     param.remove("datasetCode");
@@ -69,7 +70,7 @@ public class DynamicTemplateController extends BaseController {
    * @param param 接受实体参数
    * @return platResult
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
@@ -91,7 +92,7 @@ public class DynamicTemplateController extends BaseController {
    * @param rowId 按照rowId查询
    * @return PlatResult
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {

@@ -10,8 +10,8 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,10 +42,8 @@ public class DBTableColumnController extends BaseController {
    *
    * @param search   按照空格查询
    * @param rowId    接受rowId
-   * @param param    按照指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
-   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPageById")
@@ -63,11 +61,10 @@ public class DBTableColumnController extends BaseController {
    * 根据表信息的rowId来查询表字段中的信息
    *
    * @param search 按照空格查询
-   * @param rowId  表信息唯一标识
    * @return PlatResult
    */
   @RequestMapping("/queryTabById")
-  public PlatResult singleInputSelect(String search, String rowId) {
+  public Object singleInputSelect(String search, String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = dbTableColumnService.queryTableById(rowId, search);
@@ -81,9 +78,9 @@ public class DBTableColumnController extends BaseController {
    * 新增表信息字段属性
    *
    * @param param 接受实体参数
-   * @return PlatResult
+   * @return Map
    */
-  @RequestMapping(value = "/add", method = RequestMethod.POST)
+  @PostMapping(value = "/add")
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = dbTableColumnService.addTableColumn(param);
     return result(serverResult);
@@ -94,9 +91,9 @@ public class DBTableColumnController extends BaseController {
    * 编辑业务对象属性
    *
    * @param param 实体参数
-   * @return PlatResult
+   * @return Map
    */
-  @RequestMapping(value = "/modify", method = RequestMethod.POST)
+  @PostMapping(value = "/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
@@ -112,10 +109,10 @@ public class DBTableColumnController extends BaseController {
    * 通用删除方法
    *
    * @param rowId 按照rowId查询
-   * @return PlatResult
+   * @return serviceResult
    */
-  @RequestMapping("/delete")
-  public PlatResult delete(String rowId) {
+  @PostMapping("/delete")
+  public Object delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult delete = dbTableColumnService.delete(rowId);

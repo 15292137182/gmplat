@@ -14,12 +14,16 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
@@ -130,7 +134,7 @@ public class KeySetController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping(value = "/delete", method = RequestMethod.POST)
+  @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
@@ -147,7 +151,7 @@ public class KeySetController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/add", method = RequestMethod.POST)
+  @PostMapping(value = "/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String keysetCode = String.valueOf(param.get("keysetCode")).trim();
@@ -194,7 +198,7 @@ public class KeySetController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/modify", method = RequestMethod.POST)
+  @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {

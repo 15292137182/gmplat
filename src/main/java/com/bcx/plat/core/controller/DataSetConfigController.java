@@ -15,6 +15,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +50,7 @@ public class DataSetConfigController extends BaseController {
    * @param param 接受实体参数
    * @return PlatResult
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
@@ -67,7 +68,7 @@ public class DataSetConfigController extends BaseController {
    * @param param 接受实体参数
    * @return PlatResult
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     int update;
@@ -90,7 +91,7 @@ public class DataSetConfigController extends BaseController {
    * @param rowId 按照rowId查询
    * @return PlatResult
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<DataSetConfig> dataSetConfigs = dataSetConfigService.select(condition);

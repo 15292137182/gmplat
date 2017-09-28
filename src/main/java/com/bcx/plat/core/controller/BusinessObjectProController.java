@@ -14,6 +14,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,7 +90,7 @@ public class BusinessObjectProController extends BaseController {
    * @param paramEntity 接受实体参数
    * @return PlatResult
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult addBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
     ServerResult serverResult = businessObjectProService.insertBusinessPro(paramEntity);
     return result(serverResult);
@@ -101,7 +102,7 @@ public class BusinessObjectProController extends BaseController {
    * @param paramEntity 实体参数
    * @return Map
    */
-  @RequestMapping("/modify")
+  @PostMapping("/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(paramEntity.get("rowId"))) {
@@ -118,7 +119,7 @@ public class BusinessObjectProController extends BaseController {
    * @param rowId 按照rowId查询
    * @return serviceResult
    */
-  @RequestMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     //通过rowId查询数据
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();

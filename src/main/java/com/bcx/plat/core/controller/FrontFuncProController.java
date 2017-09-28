@@ -17,15 +17,18 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 /**
@@ -57,7 +60,7 @@ public class FrontFuncProController extends BaseController {
    * @param paramEntity 接受一个实体参数
    * @return PlatResult
    */
-  @RequestMapping(value = "/add", method = POST)
+  @PostMapping(value = "/add")
   public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
     ServerResult result = new ServerResult();
     String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));//关联对象属性
@@ -161,7 +164,7 @@ public class FrontFuncProController extends BaseController {
    * @param rowId 业务对象rowId
    * @return PlatResult
    */
-  @RequestMapping(value = "/delete", method = POST)
+  @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> frontFuncPros = frontFuncProService.selectMap(condition);
@@ -185,7 +188,7 @@ public class FrontFuncProController extends BaseController {
    * @param param 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/modify", method = RequestMethod.POST)
+  @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {

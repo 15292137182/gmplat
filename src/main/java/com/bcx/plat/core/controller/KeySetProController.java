@@ -166,7 +166,6 @@ public class KeySetProController extends BaseController {
     } else {  // 根据空格查询
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
-
     PageResult<Map<String, Object>> keysetPro;
     if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
       keysetPro = keySetProService.selectPageMap(condition, orders, pageNum, pageSize);

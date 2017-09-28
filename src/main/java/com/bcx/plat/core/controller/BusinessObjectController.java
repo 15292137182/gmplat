@@ -19,12 +19,16 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -165,7 +169,7 @@ public class BusinessObjectController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping(value = "/changeOperat", method = RequestMethod.POST)
+  @PostMapping(value = "/changeOperat")
   public PlatResult changeOperation(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
@@ -185,7 +189,7 @@ public class BusinessObjectController extends BaseController {
    * @param paramEntity 接受一个实体参数
    * @return 返回操作信息
    */
-  @RequestMapping(value = "/modify", method = RequestMethod.POST)
+  @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> paramEntity) {
     String rowId = paramEntity.get("rowId").toString();
     ServerResult serverResult = null;
@@ -204,7 +208,7 @@ public class BusinessObjectController extends BaseController {
    * @param rowId 业务对象rowId
    * @return serviceResult
    */
-  @RequestMapping(value = "/delete", method = RequestMethod.POST)
+  @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {

@@ -14,8 +14,8 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -95,7 +95,7 @@ public class MaintDBTablesController extends BaseController {
    * @param param 接受实体参数
    * @return PlatResult
    */
-  @RequestMapping(value = "/add", method = RequestMethod.POST)
+  @PostMapping(value = "/add")
   public PlatResult addMaintDB(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname")).trim();
@@ -126,7 +126,7 @@ public class MaintDBTablesController extends BaseController {
    * @param param 实体参数
    * @return PlatResult
    */
-  @RequestMapping(value = "/modify", method = RequestMethod.POST)
+  @PostMapping(value = "/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname")).trim();
@@ -160,7 +160,7 @@ public class MaintDBTablesController extends BaseController {
    * @param rowId 按照rowId查询
    * @return PlatResult
    */
-  @RequestMapping(value = "/delete", method = RequestMethod.POST)
+  @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
     if (UtilsTool.isValid(rowId)) {
       ServerResult delete = maintDBTablesService.delete(rowId);
