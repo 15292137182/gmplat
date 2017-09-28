@@ -1235,8 +1235,9 @@ GmpForm1.prototype.submit = function(json,callback){
 
 
 //动态表格对象
-function GmpTableBlock(jsonDataConfig,compId,blockId,formBlockItems,vueEl,tableId,postUrl,queryParam,submitUrl,jsonFunction){
+function GmpTableBlock(jsonDataConfig,grids,compId,blockId,formBlockItems,vueEl,tableId,postUrl,queryParam,submitUrl,jsonFunction){
     this.jsonDataConfig = jsonDataConfig;//配置信息
+    this.grids = grids;	//table响应数据对应的search.id
     if(this.jsonDataConfig.checkbox){
         this.checkbox = this.jsonDataConfig.checkbox;//表格右侧选择框
     }else{
@@ -1374,7 +1375,6 @@ GmpTableBlock.prototype.searchSelect = function(data){
     //点击第几页
     this.tableObjArr["handleCurrentChange"] = function(val){
         that.pageNo = val;
-        // console.log(that);
         if (that.queryUrl == null) {
             gmpPopup.throwMsg("未定义表格查询接口");
             return;
@@ -1409,6 +1409,15 @@ GmpTableBlock.prototype.searchSelect = function(data){
     var obj = {
         props:[],
         tableId:that.tableId
+    }
+    if(data){
+        this.tableObjArr["total"] = Number(data.total);
+        this.tableObjArr["pageNum"] = data.pageNum;
+        this.tableObjArr["pageSize"] = data.pageSize;
+    }else{
+        this.tableObjArr["pageSize"] = that.pageSize;
+        this.tableObjArr["pageNum"] = that.pageNo;
+        this.tableObjArr["total"] = that.total;
     }
     obj[compId] = this.tableObjArr;
     console.log(obj);
@@ -1770,7 +1779,8 @@ GmpSearchBlock.prototype.search = function(json,callback) {
     eval("gmpTableObjData="+gmpTableObj);
     console.log(gmpTableObjData);
     pageConfig.pageSize = gmpTableObjData.pageSize;
-    pageConfig.pageNo = gmpTableObjData.pageNo;
+    // pageConfig.pageNo = gmpTableObjData.pageNo;
+    pageConfig.pageNo = 1;
     // if(that.grids != undefined){
     //     pageConfig = that.grids[0].getPageInfo();
     // }else{

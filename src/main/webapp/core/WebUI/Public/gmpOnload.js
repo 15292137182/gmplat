@@ -210,7 +210,19 @@ var getHtml = (function() {
                         // 缓存实例化对象
                         GmpForm[compId] = form;
                     }
+                    if (arr[0].funcType == "search") {
+                        // alert("search start");
+                        // console.log(_table);
+                        var _search = new gmpsearchObj(compId, code, arr, mainId, [params.bind]);
+                        // 创建vue实例
+                        _search.bulidComponent(jsonDataConfig);
+                        // 缓存实例化对象
+                        GmpSearch[compId] = _search;
+                        console.log(compId);
+                        console.log(GmpSearch[compId]);
+                    }
                     if (arr[0].funcType == "grid") {
+                        console.log(compId);
                         var _table = new gmpTableObj(jsonDataConfig,compId, code, arr, mainId, params.id, "", "", "", {
                             onClickRow: function (row) {},
                             onEditRow: function () {},
@@ -224,15 +236,6 @@ var getHtml = (function() {
                         // 缓存实例化对象
                         GmpTable[compId] = _table;
                         // alert("table done");
-                    }
-                    if (arr[0].funcType == "search") {
-                        // alert("search start");
-                        // console.log(_table);
-                        var _search = new gmpsearchObj(compId, code, arr, mainId, [params.bind]);
-                        // 创建vue实例
-                        _search.bulidComponent(jsonDataConfig);
-                        // 缓存实例化对象
-                        GmpSearch[compId] = _search;
                     }
                 }else {
                     // 提示错误信息

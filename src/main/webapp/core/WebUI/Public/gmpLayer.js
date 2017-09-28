@@ -429,8 +429,9 @@ gmpFormObj.prototype.submit = function(json, callback) {
  */
 
 // 动态表格对象
-function gmpTableObj(jsonDataConfig,compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
+function gmpTableObj(jsonDataConfig,grids,compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
     this.jsonDataConfig = jsonDataConfig;//配置信息
+    this.grids = grids;	//table响应数据对应的search.id
     if(this.jsonDataConfig.checkbox){
         this.checkbox = this.jsonDataConfig.checkbox;//表格右侧选择框
     }else{
@@ -478,16 +479,13 @@ function gmpTableObj(jsonDataConfig,compId, blockId, formBlockItems, vueEl, tabl
 // 父组件数据
 gmpTableObj.prototype.searchSelect = function(data) {
     var that = this;
-    if(data){
-        // console.log(data.total);
-        // that.total = data.total;
-        // this.tableObjArr["total"] = data.total;
-    }
+    console.log(data);
     var compId = this.compId;
-     console.log(that.total);
-    this.tableObjArr["pageSize"] = that.pageSize;
-    this.tableObjArr["pageNum"] = that.pageNo;
-    this.tableObjArr["total"] = that.total;
+     // console.log(that.total);
+    // this.tableObjArr["pageSize"] = that.pageSize;
+    // this.tableObjArr["pageNum"] = that.pageNo;
+    // this.tableObjArr["pageNum"] = 1;
+    // this.tableObjArr["total"] = that.total;
     var clickRowTime = null;
     var cellClickTime = null;
     //单击行事件
@@ -563,6 +561,7 @@ gmpTableObj.prototype.searchSelect = function(data) {
     //点击第几页
     this.tableObjArr["handleCurrentChange"] = function(val){
         that.pageNo = val;
+        console.log(that.searchObj);
         // console.log(that);
         if (that.queryUrl == null) {
             gmpPopup.throwMsg("未定义表格查询接口");
@@ -599,8 +598,17 @@ gmpTableObj.prototype.searchSelect = function(data) {
         props: [],
         tableId: that.tableId
     }
+    if(data){
+        this.tableObjArr["total"] = Number(data.total);
+        this.tableObjArr["pageNum"] = data.pageNum;
+        this.tableObjArr["pageSize"] = data.pageSize;
+    }else{
+        this.tableObjArr["pageSize"] = that.pageSize;
+        this.tableObjArr["pageNum"] = that.pageNo;
+        this.tableObjArr["total"] = that.total;
+    }
     obj[compId] = this.tableObjArr;
-    // console.log(obj);
+    console.log(obj);
     return obj;
 };
 
@@ -1002,7 +1010,8 @@ gmpsearchObj.prototype.search = function(json,callback) {
     eval("gmpTableObjData="+gmpTableObj);
     console.log(gmpTableObjData);
     pageConfig.pageSize = gmpTableObjData.pageSize;
-    pageConfig.pageNo = gmpTableObjData.pageNo;
+    // pageConfig.pageNo = gmpTableObjData.pageNo;
+    pageConfig.pageNo = 1;
     // if(that.grids != undefined){
     //     pageConfig = that.grids[0].getPageInfo();
     // }else{
