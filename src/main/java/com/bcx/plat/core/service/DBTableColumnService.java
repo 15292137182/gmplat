@@ -1,6 +1,5 @@
 package com.bcx.plat.core.service;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BusinessObjectPro;
@@ -52,7 +51,6 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    * @return serverResult
    */
   public ServerResult addTableColumn(Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname")).trim();
     param.remove("columnEname");
     param.put("columnEname", columnEname);
@@ -66,15 +64,15 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
         DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
         int insert = dbTableColumn.insert();
         if (insert != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, dbTableColumn);
+          return successData(Message.NEW_ADD_SUCCESS, dbTableColumn);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+          return error(Message.NEW_ADD_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        return error(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+    return error(Message.DATA_CANNOT_BE_EMPTY);
   }
 
   /**
@@ -84,7 +82,6 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    * @return ServerResult
    */
   public ServerResult updateTableColumn(Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname")).trim();
     param.put("columnEname", columnEname);
     if (!"".equals(columnEname)) {
@@ -97,15 +94,15 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
         DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
         int update = dbTableColumn.updateById();
         if (update != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, dbTableColumn);
+          return successData(Message.UPDATE_SUCCESS, dbTableColumn);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+          return error(Message.UPDATE_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        return error(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+    return error(Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -153,9 +150,9 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     List<DBTableColumn> relateTableRowId = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
         UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
     if (relateTableRowId.size() == 0) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, relateTableRowId);
+    return successData(Message.QUERY_SUCCESS, relateTableRowId);
   }
 
   /**
@@ -165,7 +162,6 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    * @return ServerResult
    */
   public ServerResult delete(String rowId) {
-    ServerResult result = new ServerResult();
     List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("relateTableColumn", Operator.EQUAL, rowId));
     if (relateTableColumn.size() == 0) {
       DBTableColumn dbTableColumn = new DBTableColumn().buildDeleteInfo();
@@ -174,15 +170,15 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       if (isValid(dbTableColumns) && dbTableColumns.size() > 0) {
         int del = dbTableColumn.deleteById(rowId);
         if (del != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dbTableColumns);
+          return successData(Message.DELETE_SUCCESS, dbTableColumns);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+          return error(Message.DELETE_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+        return error(Message.QUERY_FAIL);
       }
     } else {
-      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+      return error(Message.DATA_QUOTE);
     }
   }
 

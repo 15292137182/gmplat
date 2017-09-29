@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DataSetConfig;
@@ -26,6 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
+import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
+import static com.bcx.plat.core.constants.Message.PRIMARY_KEY_CANNOT_BE_EMPTY;
+import static com.bcx.plat.core.constants.Message.UPDATE_FAIL;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -53,13 +56,12 @@ public class DataSetConfigController extends BaseController {
    */
   @PostMapping("/add")
   public PlatResult addDataSet(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     DataSetConfig dataSetConfig = new DataSetConfig().buildCreateInfo().fromMap(param);
     int insert = dataSetConfig.insert();
     if (insert != -1) {
-      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, dataSetConfig));
+      return successData(NEW_ADD_SUCCESS, dataSetConfig);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+      return error(NEW_ADD_FAIL);
     }
   }
 
@@ -71,18 +73,16 @@ public class DataSetConfigController extends BaseController {
    */
   @PostMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
-    int update;
     if (UtilsTool.isValid(param.get("rowId"))) {
       DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
-      update = dataSetConfig.updateById();
+      int update = dataSetConfig.updateById();
       if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, dataSetConfig));
+        return successData(NEW_ADD_SUCCESS, dataSetConfig);
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        return error(UPDATE_FAIL);
       }
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -96,17 +96,16 @@ public class DataSetConfigController extends BaseController {
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<DataSetConfig> dataSetConfigs = dataSetConfigService.select(condition);
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       DataSetConfig dataSetConfig = new DataSetConfig();
       int del = dataSetConfig.deleteById(rowId);
       if (del != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dataSetConfigs));
+        return successData(Message.DELETE_SUCCESS, dataSetConfigs);
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+        return error(Message.DELETE_FAIL);
       }
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -139,8 +138,8 @@ public class DataSetConfigController extends BaseController {
     }
     if (isValid(result)) {
       return result(new ServerResult<>(result));
-    }else{
-      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+    } else {
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -152,10 +151,9 @@ public class DataSetConfigController extends BaseController {
    */
   @RequestMapping("/queryById")
   public Object queryById(String rowId) {
-    ServerResult serverResult = new ServerResult();
     List result = dataSetConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
     if (result.size() == 0) {
-      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
     return result(new ServerResult<>(result.get(0)));
   }

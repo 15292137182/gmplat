@@ -1,6 +1,5 @@
 package com.bcx.plat.core.service;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DBTableColumn;
@@ -39,7 +38,6 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
    * @return PlatResult
    */
   public ServerResult addMaintDB(Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname")).trim();
     String tableSchema = String.valueOf(param.get("tableSchema"));
     param.put("tableEname", tableEname);
@@ -50,17 +48,16 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         MaintDBTables maintDBTables = new MaintDBTables().buildCreateInfo().fromMap(param);
         int insert = maintDBTables.insert();
         if (insert != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, maintDBTables);
+          return successData(Message.NEW_ADD_SUCCESS, maintDBTables);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+          return error(Message.NEW_ADD_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        return error(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+    return error(Message.DATA_CANNOT_BE_EMPTY);
   }
-
 
 
   /**
@@ -70,7 +67,6 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
    * @return Map
    */
   public ServerResult modifyBusinessObjPro(Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     String tableEname = String.valueOf(param.get("tableEname")).trim();
     String tableSchema = String.valueOf(param.get("tableSchema"));
     param.put("tableEname", tableEname);
@@ -81,15 +77,15 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         MaintDBTables maintDBTables = new MaintDBTables().buildModifyInfo().fromMap(param);
         int update = maintDBTables.updateById();
         if (update != -1) {
-          return result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+          return successData(Message.UPDATE_SUCCESS, maintDBTables);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+          return error(Message.UPDATE_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        return error(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+    return error(Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -100,7 +96,6 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
    * @return ServerResult
    */
   public ServerResult delete(String rowId) {
-    ServerResult serverResult = new ServerResult();
     AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
     if (UtilsTool.isValid(rowId)) {
       //新增完成后将数据返回
@@ -120,10 +115,10 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         }
         MaintDBTables maintDBTables = new MaintDBTables().buildDeleteInfo();
         maintDBTables.delete(new FieldCondition("rowId", Operator.EQUAL, rowId));
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dbTables);
+        return successData(Message.DELETE_SUCCESS, dbTables);
       }
     }
-    return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+    return error(Message.DATA_QUOTE);
   }
 
 }

@@ -7,6 +7,8 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.utils.PlatResult;
+import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,45 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * 日志
    */
   private Logger logger = LoggerFactory.getLogger(getClass());
+
+
+
+
+
+  /**
+   * 操作成功
+   *
+   * @param successMessage 服务处理结果
+   * @return 平台包装后的结果
+   */
+  protected ServerResult success(String successMessage) {
+    return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS,successMessage);
+  }
+
+
+  /**
+   * 操作失败
+   *
+   * @param failMessage 服务处理结果
+   * @return 平台包装后的结果
+   */
+  protected ServerResult error(String failMessage) {
+    return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,failMessage);
+  }
+
+  /**
+   * 返回成功数据
+   *
+   * @param successMessage 成功消息
+   * @param data 成功数据
+   * @return 平台包装后的结果
+   */
+  protected ServerResult successData(String successMessage , Object data) {
+    return new ServerResult<>(BaseConstants.STATUS_SUCCESS,successMessage, data);
+  }
+
+
+
 
   /**
    * @return 泛型 T 的 class

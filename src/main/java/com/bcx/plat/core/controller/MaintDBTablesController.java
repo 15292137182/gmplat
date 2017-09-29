@@ -72,7 +72,7 @@ public class MaintDBTablesController extends BaseController {
       ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
       return result(pageResultServerResult);
     } else {
-      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -89,7 +89,7 @@ public class MaintDBTablesController extends BaseController {
     if (list != null && list.size() > 0) {
       return result(new ServerResult<>(list));
     }
-    return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    return error(Message.QUERY_FAIL);
   }
 
   /**
@@ -113,12 +113,11 @@ public class MaintDBTablesController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
       ServerResult serverResult = maintDBTablesService.modifyBusinessObjPro(param);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -134,7 +133,7 @@ public class MaintDBTablesController extends BaseController {
       ServerResult delete = maintDBTablesService.delete(rowId);
       return result(delete);
     } else {
-      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 }

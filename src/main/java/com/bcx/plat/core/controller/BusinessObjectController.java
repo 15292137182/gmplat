@@ -65,12 +65,11 @@ public class BusinessObjectController extends BaseController {
    */
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = businessObjectService.queryById(rowId);
       return result(serverResult);
     } else {
-      return PlatResult.success(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -106,12 +105,11 @@ public class BusinessObjectController extends BaseController {
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(BusinessObjectPro.class, order);
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -124,14 +122,13 @@ public class BusinessObjectController extends BaseController {
    */
   @PostMapping(value = "/changeOperat")
   public PlatResult changeOperation(String rowId) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS,
           businessObjectService.changeOperat(rowId));
       return PlatResult.success(serverResult);
     } else {
       logger.error("执行变更操作失败");
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error( Message.QUERY_FAIL);
     }
   }
 
@@ -144,15 +141,13 @@ public class BusinessObjectController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> paramEntity) {
-    ServerResult serverResult = new ServerResult();
     String rowId = paramEntity.get("rowId").toString();
     if (UtilsTool.isValid(rowId)) {
       BusinessObject businessObject = new BusinessObject().fromMap(paramEntity);
       businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
-      serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObject);
-      return result(serverResult);
+      return successData(Message.UPDATE_SUCCESS, businessObject);
     } else {
-      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -165,12 +160,11 @@ public class BusinessObjectController extends BaseController {
    */
   @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult delete = businessObjectService.delete(rowId);
-      return super.result(delete);
+      return result(delete);
     } else {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+      return error(Message.DELETE_FAIL);
     }
   }
 
@@ -182,19 +176,19 @@ public class BusinessObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryTemplatePro")
+  @SuppressWarnings("unchecked")
   public PlatResult queryTemplate(String rowId, String order) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       LinkedList<Order> orders = UtilsTool.dataSort(BusinessRelateTemplate.class, order);
       ServerResult<List<Map<String, Object>>> serverResult = businessObjectService.queryTemplatePro(rowId, orders);
       if (serverResult != null) {
         return super.result(serverResult);
       } else {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        return error(Message.QUERY_FAIL);
       }
     } else {
       logger.error("查询出业务关联模板属性失败");
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -214,8 +208,8 @@ public class BusinessObjectController extends BaseController {
     Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
     int update = businessObject.update(condition);
     if (-1 != update) {
-      return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, map));
+      return successData(Message.UPDATE_SUCCESS, map);
     }
-    return result(new ServerResult<>(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL, map));
+    return error(Message.UPDATE_FAIL);
   }
 }

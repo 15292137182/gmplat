@@ -88,9 +88,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
     }
     if (insert == -1) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, NEW_ADD_FAIL);
+      return error(NEW_ADD_FAIL);
     } else {
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, NEW_ADD_SUCCESS, businessObject);
+      return successData(NEW_ADD_SUCCESS, businessObject);
     }
   }
 
@@ -103,7 +103,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   @SuppressWarnings("unchecked")
   public ServerResult queryById(String rowId) {
-    ServerResult serverResult = new ServerResult();
     StringBuilder templates = new StringBuilder();
     List<Map> templateObjects = null;
     //根据业务对象rowId 查询当前数据
@@ -133,10 +132,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           map.put("relateTemplate", substring);
         }
       } else {
-        return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+        return error(Message.QUERY_FAIL);
       }
     } else {
-      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
     String relateTableRowId = String.valueOf(map.get("relateTableRowId"));
     List<Map> rowIds = maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
@@ -148,9 +147,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         return new ServerResult<>(map);
       }
     } else {
-      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
-    return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+    return error(Message.QUERY_FAIL);
   }
 
 
@@ -209,7 +208,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
       return serverResult;
     } else {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -225,7 +224,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    */
   @SuppressWarnings("unchecked")
   public ServerResult queryPage(Condition condition, Integer pageNum, Integer pageSize, List<Order> order) {
-    ServerResult serverResult = new ServerResult();
     PageResult<Map<String, Object>> result;
     if (isValid(pageNum)) { // 有分页参数进行分页查询
       result = selectPageMap(condition, order, pageNum, pageSize);
@@ -236,9 +234,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       for (Map<String, Object> rest : result.getResult()) {
         rest.put("disableButton", false);//前端页面删除,编辑,禁用按钮
       }
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, queryResultProcess(result));
+      return successData(Message.QUERY_SUCCESS, queryResultProcess(result));
     } else {
-      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -317,9 +315,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     }
     if (isValid(result) && result.getResult().size() > 0) {
       PageResult<Map<String, Object>> pageResult = queryProPage(result);
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult);
+      return successData( Message.QUERY_SUCCESS, pageResult);
     } else {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -433,12 +431,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       businessObjected.setChangeOperat(BaseConstants.CHANGE_OPERAT_SUCCESS);
       int update = businessObjected.update(condition);
       if (update != -1) {
-        return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+        return successData(Message.UPDATE_SUCCESS,businessObjected);
       } else {
-        return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+        return error(Message.UPDATE_FAIL);
       }
     } else {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+      return error(Message.UPDATE_FAIL);
     }
 
   }
@@ -460,7 +458,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         String rowId1 = busin.getRowId();
         List<FrontFuncPro> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
         if (funcRowId.size() != 0) {
-          return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+          return error(Message.DATA_QUOTE);
         }
       }
     } else if (businObj.size() == 0) {
@@ -474,10 +472,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       } else if (rowId != null && rowId.length() > 0) {
         Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
         delete(condition);
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, select);
+        return successData(Message.DELETE_SUCCESS, select);
       }
     }
-    return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+    return error(Message.DATA_QUOTE);
 
   }
 
@@ -489,7 +487,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @return platResult
    */
   public ServerResult queryTemplatePro(String rowId, LinkedList<Order> orders) {
-    ServerResult serverResult = new ServerResult();
     List<Map<String, Object>> linkedList = new ArrayList<>();
     List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId), orders);
     if (isValid(businessRowId) && businessRowId.size() > 0) {
@@ -504,9 +501,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           }
         }
       }
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
+      return successData(Message.QUERY_SUCCESS, linkedList);
     } else {
-      return serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_FAIL);
+      return error(Message.QUERY_FAIL);
     }
   }
 

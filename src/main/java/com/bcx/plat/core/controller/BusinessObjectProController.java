@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.service.BusinessObjectProService;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -31,11 +28,6 @@ public class BusinessObjectProController extends BaseController {
   private BusinessObjectProService businessObjectProService;
 
 
-  protected List<String> blankSelectFields() {
-    return Arrays.asList("propertyCode", "propertyName");
-  }
-
-
   /**
    * 根据业务对象属性rowId查询当前数据
    *
@@ -44,12 +36,11 @@ public class BusinessObjectProController extends BaseController {
    */
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
-    ServerResult result = new ServerResult();
     if (isValid(rowId)) {
       ServerResult serverResult = businessObjectProService.queryById(rowId);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -63,12 +54,11 @@ public class BusinessObjectProController extends BaseController {
    */
   @RequestMapping("/queryBusinPro")
   public PlatResult queryBusinPro(String objRowId, String frontRowId) {
-    ServerResult result = new ServerResult();
     if (isValid(objRowId)) {
       ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -92,12 +82,11 @@ public class BusinessObjectProController extends BaseController {
    */
   @PostMapping("/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> paramEntity) {
-    ServerResult result = new ServerResult();
     if (isValid(paramEntity.get("rowId"))) {
       ServerResult serverResult = businessObjectProService.updateBusinessPro(paramEntity);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -109,12 +98,11 @@ public class BusinessObjectProController extends BaseController {
    */
   @PostMapping("/delete")
   public PlatResult delete(String rowId) {
-    ServerResult result = new ServerResult();
     if (isValid(rowId)) {
       ServerResult serverResult = businessObjectProService.deleteBusinessPro(rowId);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 }

@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.DBTableColumn;
@@ -48,13 +47,12 @@ public class DBTableColumnController extends BaseController {
    */
   @RequestMapping("/queryPageById")
   public PlatResult queryPageById(String search, String rowId, String param, Integer pageNum, Integer pageSize, String order) {
-    ServerResult result = new ServerResult();
     LinkedList<Order> orders = UtilsTool.dataSort(DBTableColumn.class, order);
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = dbTableColumnService.queryPageById(search, param, rowId, orders, pageNum, pageSize);
       return result(serverResult);
     }
-    return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    return error(Message.QUERY_FAIL);
   }
 
   /**
@@ -65,12 +63,11 @@ public class DBTableColumnController extends BaseController {
    */
   @RequestMapping("/queryTabById")
   public Object singleInputSelect(String search, String rowId) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = dbTableColumnService.queryTableById(rowId, search);
-      return super.result(new ServerResult<>(serverResult));
+      return successData(Message.QUERY_SUCCESS,serverResult);
     } else {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      return error(Message.QUERY_FAIL);
     }
   }
 
@@ -95,12 +92,11 @@ public class DBTableColumnController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult modifyBusinessObjPro(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
       ServerResult serverResult = dbTableColumnService.updateTableColumn(param);
       return result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -113,12 +109,11 @@ public class DBTableColumnController extends BaseController {
    */
   @PostMapping("/delete")
   public Object delete(String rowId) {
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       ServerResult delete = dbTableColumnService.delete(rowId);
       return result(delete);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
