@@ -50,13 +50,13 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         if (insert != -1) {
           return successData(Message.NEW_ADD_SUCCESS, maintDBTables);
         } else {
-          return error(Message.NEW_ADD_FAIL);
+          return fail(Message.NEW_ADD_FAIL);
         }
       } else {
-        return error(Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return error(Message.DATA_CANNOT_BE_EMPTY);
+    return fail(Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -79,13 +79,13 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         if (update != -1) {
           return successData(Message.UPDATE_SUCCESS, maintDBTables);
         } else {
-          return error(Message.UPDATE_FAIL);
+          return fail(Message.UPDATE_FAIL);
         }
       } else {
-        return error(Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return error(Message.DATA_CANNOT_BE_EMPTY);
+    return fail(Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -118,7 +118,7 @@ public class MaintDBTablesService extends BaseService<MaintDBTables> {
         return successData(Message.DELETE_SUCCESS, dbTables);
       }
     }
-    return error(Message.DATA_QUOTE);
+    return fail(Message.DATA_QUOTE);
   }
 
 }

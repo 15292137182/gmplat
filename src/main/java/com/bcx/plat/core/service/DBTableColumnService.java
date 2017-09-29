@@ -66,13 +66,13 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
         if (insert != -1) {
           return successData(Message.NEW_ADD_SUCCESS, dbTableColumn);
         } else {
-          return error(Message.NEW_ADD_FAIL);
+          return fail(Message.NEW_ADD_FAIL);
         }
       } else {
-        return error(Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return error(Message.DATA_CANNOT_BE_EMPTY);
+    return fail(Message.DATA_CANNOT_BE_EMPTY);
   }
 
   /**
@@ -96,13 +96,13 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
         if (update != -1) {
           return successData(Message.UPDATE_SUCCESS, dbTableColumn);
         } else {
-          return error(Message.UPDATE_FAIL);
+          return fail(Message.UPDATE_FAIL);
         }
       } else {
-        return error(Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
-    return error(Message.DATA_CANNOT_BE_EMPTY);
+    return fail(Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -150,7 +150,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     List<DBTableColumn> relateTableRowId = select(new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
         UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search))));
     if (relateTableRowId.size() == 0) {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
     return successData(Message.QUERY_SUCCESS, relateTableRowId);
   }
@@ -172,13 +172,13 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
         if (del != -1) {
           return successData(Message.DELETE_SUCCESS, dbTableColumns);
         } else {
-          return error(Message.DELETE_FAIL);
+          return fail(Message.DELETE_FAIL);
         }
       } else {
-        return error(Message.QUERY_FAIL);
+        return fail(Message.QUERY_FAIL);
       }
     } else {
-      return error(Message.DATA_QUOTE);
+      return fail(Message.DATA_QUOTE);
     }
   }
 

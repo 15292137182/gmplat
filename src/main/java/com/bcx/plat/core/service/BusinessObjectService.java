@@ -17,12 +17,7 @@ import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
@@ -88,7 +83,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
     }
     if (insert == -1) {
-      return error(NEW_ADD_FAIL);
+      return fail(NEW_ADD_FAIL);
     } else {
       return successData(NEW_ADD_SUCCESS, businessObject);
     }
@@ -132,10 +127,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           map.put("relateTemplate", substring);
         }
       } else {
-        return error(Message.QUERY_FAIL);
+        return fail(Message.QUERY_FAIL);
       }
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
     String relateTableRowId = String.valueOf(map.get("relateTableRowId"));
     List<Map> rowIds = maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
@@ -147,9 +142,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         return new ServerResult<>(map);
       }
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
-    return error(Message.QUERY_FAIL);
+    return fail(Message.QUERY_FAIL);
   }
 
 
@@ -208,7 +203,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
       return serverResult;
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -236,7 +231,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
       return successData(Message.QUERY_SUCCESS, queryResultProcess(result));
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -315,9 +310,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     }
     if (isValid(result) && result.getResult().size() > 0) {
       PageResult<Map<String, Object>> pageResult = queryProPage(result);
-      return successData( Message.QUERY_SUCCESS, pageResult);
+      return successData(Message.QUERY_SUCCESS, pageResult);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -431,12 +426,12 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       businessObjected.setChangeOperat(BaseConstants.CHANGE_OPERAT_SUCCESS);
       int update = businessObjected.update(condition);
       if (update != -1) {
-        return successData(Message.UPDATE_SUCCESS,businessObjected);
+        return successData(Message.UPDATE_SUCCESS, businessObjected);
       } else {
-        return error(Message.UPDATE_FAIL);
+        return fail(Message.UPDATE_FAIL);
       }
     } else {
-      return error(Message.UPDATE_FAIL);
+      return fail(Message.UPDATE_FAIL);
     }
 
   }
@@ -458,7 +453,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         String rowId1 = busin.getRowId();
         List<FrontFuncPro> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
         if (funcRowId.size() != 0) {
-          return error(Message.DATA_QUOTE);
+          return fail(Message.DATA_QUOTE);
         }
       }
     } else if (businObj.size() == 0) {
@@ -475,7 +470,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         return successData(Message.DELETE_SUCCESS, select);
       }
     }
-    return error(Message.DATA_QUOTE);
+    return fail(Message.DATA_QUOTE);
 
   }
 
@@ -503,7 +498,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       }
       return successData(Message.QUERY_SUCCESS, linkedList);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 

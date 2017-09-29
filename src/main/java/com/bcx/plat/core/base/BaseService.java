@@ -51,7 +51,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * @param failMessage 服务处理结果
    * @return 平台包装后的结果
    */
-  protected ServerResult error(String failMessage) {
+  protected ServerResult fail(String failMessage) {
     return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,failMessage);
   }
 
