@@ -40,7 +40,7 @@ public class BusinessObjectProController extends BaseController {
       ServerResult serverResult = businessObjectProService.queryById(rowId);
       return result(serverResult);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -58,7 +58,7 @@ public class BusinessObjectProController extends BaseController {
       ServerResult serverResult = businessObjectProService.queryBusinPro(objRowId, frontRowId);
       return result(serverResult);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -86,7 +86,7 @@ public class BusinessObjectProController extends BaseController {
       ServerResult serverResult = businessObjectProService.updateBusinessPro(paramEntity);
       return result(serverResult);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -102,7 +102,7 @@ public class BusinessObjectProController extends BaseController {
       ServerResult serverResult = businessObjectProService.deleteBusinessPro(rowId);
       return result(serverResult);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 }

@@ -1,6 +1,5 @@
 package com.bcx.plat.core.base;
 
-import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ public abstract class BaseController {
     return PlatResult.success(serverResult);
   }
 
-
   /**
    * 操作成功
    *
@@ -35,9 +33,8 @@ public abstract class BaseController {
    * @return 平台包装后的结果
    */
   protected PlatResult success(String successMessage) {
-    return PlatResult.success(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS,successMessage));
+    return PlatResult.success(new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, successMessage));
   }
-
 
   /**
    * 操作失败
@@ -45,21 +42,20 @@ public abstract class BaseController {
    * @param failMessage 服务处理结果
    * @return 平台包装后的结果
    */
-  protected PlatResult error(String failMessage) {
-    return PlatResult.success(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,failMessage));
+  protected PlatResult fail(String failMessage) {
+    return PlatResult.success(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, failMessage));
   }
 
   /**
    * 返回成功数据
    *
    * @param successMessage 成功消息
-   * @param data 成功数据
+   * @param data           成功数据
    * @return 平台包装后的结果
    */
-  protected PlatResult successData(String successMessage , Object data) {
-    return PlatResult.success(new ServerResult<>(BaseConstants.STATUS_SUCCESS,successMessage, data));
+  protected PlatResult successData(String successMessage, Object data) {
+    return PlatResult.success(new ServerResult<>(BaseConstants.STATUS_SUCCESS, successMessage, data));
   }
-
 
 
 }

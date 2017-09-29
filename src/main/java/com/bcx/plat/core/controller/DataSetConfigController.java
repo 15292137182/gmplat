@@ -25,10 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
-import static com.bcx.plat.core.constants.Message.PRIMARY_KEY_CANNOT_BE_EMPTY;
-import static com.bcx.plat.core.constants.Message.UPDATE_FAIL;
+import static com.bcx.plat.core.constants.Message.*;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -61,7 +58,7 @@ public class DataSetConfigController extends BaseController {
     if (insert != -1) {
       return successData(NEW_ADD_SUCCESS, dataSetConfig);
     } else {
-      return error(NEW_ADD_FAIL);
+      return fail(NEW_ADD_FAIL);
     }
   }
 
@@ -79,10 +76,10 @@ public class DataSetConfigController extends BaseController {
       if (update != -1) {
         return successData(NEW_ADD_SUCCESS, dataSetConfig);
       } else {
-        return error(UPDATE_FAIL);
+        return fail(UPDATE_FAIL);
       }
     } else {
-      return error(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -102,10 +99,10 @@ public class DataSetConfigController extends BaseController {
       if (del != -1) {
         return successData(Message.DELETE_SUCCESS, dataSetConfigs);
       } else {
-        return error(Message.DELETE_FAIL);
+        return fail(Message.DELETE_FAIL);
       }
     } else {
-      return error(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -139,7 +136,7 @@ public class DataSetConfigController extends BaseController {
     if (isValid(result)) {
       return result(new ServerResult<>(result));
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -153,7 +150,7 @@ public class DataSetConfigController extends BaseController {
   public Object queryById(String rowId) {
     List result = dataSetConfigService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
     if (result.size() == 0) {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
     return result(new ServerResult<>(result.get(0)));
   }

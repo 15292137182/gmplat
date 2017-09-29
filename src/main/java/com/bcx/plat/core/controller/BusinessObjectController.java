@@ -21,11 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -69,7 +65,7 @@ public class BusinessObjectController extends BaseController {
       ServerResult serverResult = businessObjectService.queryById(rowId);
       return result(serverResult);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -109,7 +105,7 @@ public class BusinessObjectController extends BaseController {
       ServerResult serverResult = businessObjectService.queryProPage(search, param, rowId, pageNum, pageSize, orders);
       return result(serverResult);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -128,7 +124,7 @@ public class BusinessObjectController extends BaseController {
       return PlatResult.success(serverResult);
     } else {
       logger.error("执行变更操作失败");
-      return error( Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -147,7 +143,7 @@ public class BusinessObjectController extends BaseController {
       businessObject.update(new FieldCondition("rowId", Operator.EQUAL, rowId));
       return successData(Message.UPDATE_SUCCESS, businessObject);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -164,7 +160,7 @@ public class BusinessObjectController extends BaseController {
       ServerResult delete = businessObjectService.delete(rowId);
       return result(delete);
     } else {
-      return error(Message.DELETE_FAIL);
+      return fail(Message.DELETE_FAIL);
     }
   }
 
@@ -184,11 +180,11 @@ public class BusinessObjectController extends BaseController {
       if (serverResult != null) {
         return super.result(serverResult);
       } else {
-        return error(Message.QUERY_FAIL);
+        return fail(Message.QUERY_FAIL);
       }
     } else {
       logger.error("查询出业务关联模板属性失败");
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -210,6 +206,6 @@ public class BusinessObjectController extends BaseController {
     if (-1 != update) {
       return successData(Message.UPDATE_SUCCESS, map);
     }
-    return error(Message.UPDATE_FAIL);
+    return fail(Message.UPDATE_FAIL);
   }
 }

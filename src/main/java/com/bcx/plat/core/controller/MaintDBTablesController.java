@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.MaintDBTables;
@@ -72,7 +71,7 @@ public class MaintDBTablesController extends BaseController {
       ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
       return result(pageResultServerResult);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -89,7 +88,7 @@ public class MaintDBTablesController extends BaseController {
     if (list != null && list.size() > 0) {
       return result(new ServerResult<>(list));
     }
-    return error(Message.QUERY_FAIL);
+    return fail(Message.QUERY_FAIL);
   }
 
   /**
@@ -117,7 +116,7 @@ public class MaintDBTablesController extends BaseController {
       ServerResult serverResult = maintDBTablesService.modifyBusinessObjPro(param);
       return result(serverResult);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -133,7 +132,7 @@ public class MaintDBTablesController extends BaseController {
       ServerResult delete = maintDBTablesService.delete(rowId);
       return result(delete);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 }

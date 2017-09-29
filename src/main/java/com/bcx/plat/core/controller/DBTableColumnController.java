@@ -52,7 +52,7 @@ public class DBTableColumnController extends BaseController {
       ServerResult serverResult = dbTableColumnService.queryPageById(search, param, rowId, orders, pageNum, pageSize);
       return result(serverResult);
     }
-    return error(Message.QUERY_FAIL);
+    return fail(Message.QUERY_FAIL);
   }
 
   /**
@@ -65,9 +65,9 @@ public class DBTableColumnController extends BaseController {
   public Object singleInputSelect(String search, String rowId) {
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = dbTableColumnService.queryTableById(rowId, search);
-      return successData(Message.QUERY_SUCCESS,serverResult);
+      return successData(Message.QUERY_SUCCESS, serverResult);
     } else {
-      return error(Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
   }
 
@@ -96,7 +96,7 @@ public class DBTableColumnController extends BaseController {
       ServerResult serverResult = dbTableColumnService.updateTableColumn(param);
       return result(serverResult);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -113,7 +113,7 @@ public class DBTableColumnController extends BaseController {
       ServerResult delete = dbTableColumnService.delete(rowId);
       return result(delete);
     } else {
-      return error(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
