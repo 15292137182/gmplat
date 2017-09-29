@@ -528,13 +528,13 @@ var add = new Vue({
             }
             gmpAjax.showAjax(data,function(res){
                 var data=res.data;
-                add.formTable.seqCodeInput=data[0].seqCode;
-                add.formTable.seqNameInput=data[0].seqName;
-                add.formTable.seqContentInput=data[0].seqContent;
-                add.$refs.belongModule_1.setValue(data[0].belongModule);
-                add.formTable.belongSystemInput=data[0].belongSystem;
-                add.formTable.despInput=data[0].desp;
-                add.formTable.versionInput=data[0].version;
+                add.formTable.seqCodeInput=data.seqCode;
+                add.formTable.seqNameInput=data.seqName;
+                add.formTable.seqContentInput=data.seqContent;
+                add.$refs.belongModule_1.setValue(data.belongModule);
+                add.formTable.belongSystemInput=data.belongSystem;
+                add.formTable.despInput=data.desp;
+                add.formTable.versionInput=data.version;
 
                 // add.loadTemplate(data[0].seqContent);
             })

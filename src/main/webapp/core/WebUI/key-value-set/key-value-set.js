@@ -62,12 +62,12 @@ gmp_onload=function(){
                     gmpAjax.showAjax(data,function(res){
                         var data=res.data;
                         topButtonObj.isEdit=true;
-                        keyValueSetAdd.keyForm.keysetCodeInput =data[0].keysetCode;
-                        keyValueSetAdd.keyForm.keysetNameInput = data[0].keysetName;
-                        keyValueSetAdd.$refs.belongModule_1.setValue(data[0].belongModule);
+                        keyValueSetAdd.keyForm.keysetCodeInput =data.keysetCode;
+                        keyValueSetAdd.keyForm.keysetNameInput = data.keysetName;
+                        keyValueSetAdd.$refs.belongModule_1.setValue(data.belongModule);
                         //       keyValueSetAdd.keyForm.belongSystemInput = data[0].belongSystem;
-                        keyValueSetAdd.keyForm.despInput = data[0].desp;
-                        keyValueSetAdd.keyForm.versionInput = data[0].version;
+                        keyValueSetAdd.keyForm.despInput = data.desp;
+                        keyValueSetAdd.keyForm.versionInput = data.version;
                     })
                 });
             },
@@ -166,9 +166,9 @@ gmp_onload=function(){
                         //code值
                         var data=res.data;
                         topButtonObj.isEdit=true;
-                        keyValueSetProAdd.keyForm.confKeyInput = data[0].confKey;
-                        keyValueSetProAdd.keyForm.confValueInput = data[0].confValue;
-                        keyValueSetProAdd.keyForm.despInput = data[0].desp;
+                        keyValueSetProAdd.keyForm.confKeyInput = data.confKey;
+                        keyValueSetProAdd.keyForm.confValueInput = data.confValue;
+                        keyValueSetProAdd.keyForm.despInput = data.desp;
                     })
                 });
             },
