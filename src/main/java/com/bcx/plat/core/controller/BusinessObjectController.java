@@ -12,7 +12,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.BusinessObjectService;
-import com.bcx.plat.core.service.TemplateObjectService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -51,7 +50,7 @@ public class BusinessObjectController extends BaseController {
    * @param param 接受一个实体参数
    * @return PlatResult
    */
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
     //新增业务对象数据
     ServerResult serverResult = businessObjectService.addBusiness(param);

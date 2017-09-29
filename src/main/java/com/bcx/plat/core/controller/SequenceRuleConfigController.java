@@ -61,6 +61,7 @@ public class SequenceRuleConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult selectWithPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(SequenceRuleConfig.class, order);
     Condition condition;
@@ -75,7 +76,11 @@ public class SequenceRuleConfigController extends BaseController {
     } else { // 如果没有分页参数，查询全部
       result = new PageResult(sequenceRuleConfigService.selectMap(condition, orders));
     }
-    return result(new ServerResult<>(result));
+    if (isValid(result)) {
+      return result(new ServerResult<>(result));
+    }else{
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+    }
   }
 
   /**

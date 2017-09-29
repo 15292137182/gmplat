@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 /**
  * 前端功能块属性项信息维护 service层
  * Created by Wen Tiehu on 2017/8/4.
@@ -49,27 +51,25 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
     ServerResult result = new ServerResult();
     String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));//关联对象属性
     List<Map> rowId = selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-
-    int insert = -1;
-    if (!UtilsTool.isValid(rowId)) { // 如果没有关联对象属性，进行新增
+    if (!isValid(rowId)) { // 如果没有关联对象属性，进行新增
       //判断关联对象属性是属于基本属性还是模板属性
       //从模板对象属性表中查询是否存在此属性，如果存在，则attrSource="module"，否则attrSource="base"
       List<Map> templateObjectPros = templateObjectProService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-      if (UtilsTool.isValid(templateObjectPros)) {
+      if (isValid(templateObjectPros)) {
         paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_MODULE);
       } else {
         paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_BASE);
       }
       // 进行新增
       FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
-      insert = frontFuncPro.insert();
+      int insert = frontFuncPro.insert();
       if (insert == -1) {
         return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
       } else {
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFuncPro);
       }
     } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE, insert);
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE);
     }
   }
 
@@ -95,7 +95,7 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
         String relateBusiPro = res.get("relateBusiPro").toString();
         List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
         for (BusinessObjectPro relate : relateTableColumn) {
-          if (UtilsTool.isValid(relate.getFieldAlias())) {
+          if (isValid(relate.getFieldAlias())) {
             res.put("ename", relate.getFieldAlias());
             res.put("propertyName", relate.getPropertyName());
           } else {
@@ -124,15 +124,16 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
    * @param order    排序方式
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(FrontFuncPro.class, order);
     Condition condition;
-    if (UtilsTool.isValid(param)) { // 判断是否按照指定字段查询
+    if (isValid(param)) { // 判断是否按照指定字段查询
       Map map = UtilsTool.jsonToObj(param, Map.class);
       condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
           UtilsTool.convertMapToAndConditionSeparatedByLike(FrontFuncPro.class, map));
     } else {
-      if (UtilsTool.isValid(search)) {
+      if (isValid(search)) {
         condition = new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
             UtilsTool.createBlankQuery(Collections.singletonList("displayTitle"), UtilsTool.collectToSet(search)));
       } else {
@@ -140,14 +141,19 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
       }
     }
     PageResult<Map<String, Object>> pageResult;
-    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+    if (isValid(pageNum)) { // 判断是否分页查询
       pageResult = selectPageMap(condition, orders, pageNum, pageSize);
     } else {
       pageResult = new PageResult(selectMap(condition, orders));
     }
-    List<Map<String, Object>> list = queryProPage(pageResult.getResult());
-    pageResult.setResult(list);
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult);
+    if (isValid(pageResult)) {
+      List<Map<String, Object>> list = queryProPage(pageResult.getResult());
+      pageResult.setResult(list);
+      return new ServerResult<>(pageResult);
+    } else {
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+
+    }
   }
 
 
@@ -160,7 +166,7 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
   public String queryBusinessProName(String rowId) {
     Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<FrontFuncPro> frontFuncPros = select(condition);
-    if (frontFuncPros.size() > 0) {
+    if (isValid(frontFuncPros) && frontFuncPros.size() > 0) {
       String relateBusiPro = frontFuncPros.get(0).getRelateBusiPro();
       Condition buildDone = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", relateBusiPro).endAnd().buildDone();
       List<BusinessObjectPro> businessObjectPros = businessObjectProService.select(buildDone);

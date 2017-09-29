@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * <p>Title: TemplateObjectProController</p>
@@ -29,10 +29,10 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  * @author Wen TieHu
  * @version 1.0
  *          <pre> Histroy:
- *              2017/8/28  Wen TieHu Create
- *              2017/9/27  Modify by YoungerOu
- *                 valid ename : can not be duplicated
- *           </pre>
+ *                       2017/8/28  Wen TieHu Create
+ *                       2017/9/27  Modify by YoungerOu
+ *                          valid ename : can not be duplicated
+ *                    </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObjPro")
@@ -83,7 +83,7 @@ public class TemplateObjectProController extends BaseController {
   @PostMapping("/modify")
   public PlatResult modifyDataSet(@RequestParam Map<String, Object> param) {
     ServerResult serverResult = new ServerResult();
-    if (UtilsTool.isValid(param.get("proRowId"))) { // 判断rowId是否为空
+    if (isValid(param.get("proRowId"))) { // 判断rowId是否为空
       ServerResult result = templateObjectProService.modifyTemplatePro(param);
       return result(result);
     } else {
@@ -100,15 +100,19 @@ public class TemplateObjectProController extends BaseController {
   @PostMapping("/delete")
   public Object delete(String rowId) {
     ServerResult serverResult = new ServerResult();
-    Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
-    List<Map> maps = templateObjectProService.selectMap(condition);
-    if (!rowId.isEmpty()) {
-      TemplateObjectPro templateObjectPro = new TemplateObjectPro();
-      int del = templateObjectPro.deleteById(rowId);
-      if (del != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
+    if (isValid(rowId)) {
+      Condition condition = new ConditionBuilder(TemplateObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
+      List<Map> maps = templateObjectProService.selectMap(condition);
+      if (isValid(maps)) {
+        TemplateObjectPro templateObjectPro = new TemplateObjectPro();
+        int del = templateObjectPro.deleteById(rowId);
+        if (del != -1) {
+          return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
+        } else {
+          return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+        }
       } else {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
       }
     } else {
       return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));

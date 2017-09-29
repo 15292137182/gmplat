@@ -16,7 +16,6 @@ import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,10 +58,10 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   @Autowired
   private SequenceRuleConfigService sequenceRuleConfigService;
 
+
   public List<String> blankSelectFields() {
     return Arrays.asList("objectCode", "objectName");
   }
-
 
 
   /**
@@ -80,7 +79,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     String rowId = businessObject.getRowId();
     String relateTemplateObject = businessObject.getRelateTemplateObject();
     List list = jsonToObj(relateTemplateObject, List.class);
-    if (null != list) {
+    if (null != list && list.size() > 0) {
       for (Object li : list) {
         brt.setBusinessRowId(rowId);
         brt.setTemplateRowId(li.toString());
@@ -88,7 +87,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         new BusinessRelateTemplate().buildCreateInfo().fromMap(brt.toMap()).insert();
       }
     }
-    if (insert != 1) {
+    if (insert == -1) {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, NEW_ADD_FAIL);
     } else {
       return new ServerResult<>(BaseConstants.STATUS_SUCCESS, NEW_ADD_SUCCESS, businessObject);
@@ -102,7 +101,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param rowId 唯一标示
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryById(String rowId) {
+    ServerResult serverResult = new ServerResult();
     StringBuilder templates = new StringBuilder();
     List<Map> templateObjects = null;
     //根据业务对象rowId 查询当前数据
@@ -131,22 +132,25 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           String substring = templates.substring(0, templates.length() - 1);
           map.put("relateTemplate", substring);
         }
+      } else {
+        return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
       }
+    } else {
+      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
     String relateTableRowId = String.valueOf(map.get("relateTableRowId"));
-    List<Map> rowId1 = maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-    if (isValid(rowId1)) {
+    List<Map> rowIds = maintDBTablesService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+    if (isValid(rowIds)) {
       String relateTemplateObject = String.valueOf(map.get("relateTemplateObject"));
       List list = jsonToObj(relateTemplateObject, List.class);
-      String relateTemplate = String.valueOf(map.get("relateTemplateObject"));
-      if (isValid(relateTemplate)) {
-        result.remove("relateTemplateObject");
+      if (isValid(list) && list.size() > 0) {
+        map.put("relateTemplateObject", list);
+        return new ServerResult<>(map);
       }
-      map.put("relateTemplateObject", list);
-      return new ServerResult<>(map);
     } else {
-      return null;
+      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
+    return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
   }
 
 
@@ -160,7 +164,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param order    排序方式
    * @return PlatResult
    */
-  @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public ServerResult queryPagingBusinessObject(String search, Integer pageNum, Integer pageSize, String param, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
@@ -190,7 +194,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
               String valueOf = String.valueOf(li);
               relateCondition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", valueOf).endAnd().buildDone();
               List<Map> templateObjects = templateObjectService.selectMap(relateCondition);
-              if (templateObjects.size() > 0) {
+              if (templateObjects != null && templateObjects.size() > 0) {
                 for (Map temp : templateObjects) {
                   templates.append(temp.get("templateName")).append(",");
                 }
@@ -210,7 +214,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   }
 
 
-
   /**
    * 分页显示查询
    *
@@ -220,25 +223,27 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param order     排序
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryPage(Condition condition, Integer pageNum, Integer pageSize, List<Order> order) {
+    ServerResult serverResult = new ServerResult();
     PageResult<Map<String, Object>> result;
     if (isValid(pageNum)) { // 有分页参数进行分页查询
       result = selectPageMap(condition, order, pageNum, pageSize);
     } else { // 没有分页参数则查询全部
       result = new PageResult(selectMap(condition, order));
     }
-    if (result.getResult().size() == 0) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-    } else {
+    if (isValid(result) && result.getResult().size() > 0) {
       for (Map<String, Object> rest : result.getResult()) {
         rest.put("disableButton", false);//前端页面删除,编辑,禁用按钮
       }
       return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, queryResultProcess(result));
+    } else {
+      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
   }
 
   /**
-   * 数据封装
+   * 数据转换
    *
    * @param result 接受参数
    * @return PageResult
@@ -249,22 +254,30 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
   }
 
   /**
+   * 数据封装
+   *
    * @param result 返回值
    * @return 返回值
    */
+  @SuppressWarnings("unchecked")
   private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
     List<String> rowIds = result.stream().map((row) ->
         (String) row.get("relateTableRowId")).collect(Collectors.toList());
     Condition condition = new ConditionBuilder(MaintDBTables.class).and().in("rowId", rowIds).endAnd().buildDone();
     List<Map> results = maintDBTablesService.selectMap(condition);
-    HashMap<String, Object> map = new HashMap<>();
-    for (Map<String, Object> row : results) {
-      map.put((String) row.get("rowId"), row.get("tableCname"));
+    if (isValid(results) && results.size() > 0) {
+      HashMap<String, Object> map = new HashMap<>();
+      for (Map row : results) {
+        map.put((String) row.get("rowId"), row.get("tableCname"));
+      }
+      for (Map row : result) {
+        String relateTableRowId = String.valueOf(row.get("relateTableRowId"));
+        row.put("associatTable", map.get(relateTableRowId));
+      }
+      return result;
+    } else {
+      return null;
     }
-    for (Map<String, Object> row : result) {
-      row.put("associatTable", map.get(row.get("relateTableRowId")));
-    }
-    return result;
   }
 
   /**
@@ -277,10 +290,11 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param order    排序
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryProPage(String search, String param, String rowId, Integer pageNum, Integer pageSize, List<Order> order) {
     Condition condition;
     if (isValid(param)) {
-      Map<String, Object> map = jsonToObj(param, Map.class);
+      Map map = jsonToObj(param, Map.class);
       condition = new And(new FieldCondition("objRowId", Operator.EQUAL, rowId),
           convertMapToAndConditionSeparatedByLike(BusinessObjectPro.class, map));
     } else {
@@ -295,18 +309,17 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
         condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", rowId).endAnd().buildDone();
       }
     }
-
     PageResult<Map<String, Object>> result;
     if (isValid(pageNum)) { // 有分页参数进行分页查询
       result = businessObjectProService.selectPageMap(condition, order, pageNum, pageSize);
     } else { // 没有分页参数则查询全部
       result = new PageResult(businessObjectProService.selectMap(condition, order));
     }
-    if (result.getResult().size() == 0) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
-    } else {
+    if (isValid(result) && result.getResult().size() > 0) {
       PageResult<Map<String, Object>> pageResult = queryProPage(result);
       return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, pageResult);
+    } else {
+      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
     }
   }
 
@@ -320,16 +333,19 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     Map<String, Object> map = new HashMap<>();
     for (Map<String, Object> rest : result.getResult()) {
       String relateTableColumn = (String) rest.get("relateTableColumn");
-      List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new ConditionBuilder(DBTableColumn.class)
-          .and()
-          .equal("rowId", relateTableColumn).endAnd().buildDone());
-      for (DBTableColumn aMapList : dbTableColumns) {
-        map.put(aMapList.getRowId(), aMapList.getColumnCname());
+      Condition condition = new ConditionBuilder(DBTableColumn.class)
+          .and().equal("rowId", relateTableColumn)
+          .endAnd().buildDone();
+      List<DBTableColumn> dbTableColumns = dbTableColumnService.select(condition);
+      if (isValid(dbTableColumns) && dbTableColumns.size() > 0) {
+        for (DBTableColumn aMapList : dbTableColumns) {
+          map.put(aMapList.getRowId(), aMapList.getColumnCname());
+        }
       }
     }
     for (Map<String, Object> rest : result.getResult()) {
       String fieldAlias = String.valueOf(rest.get("fieldAlias"));
-      if (fieldAlias.equals("null")) {
+      if (!isValid(fieldAlias)) {
         String relateTableColumn = String.valueOf(rest.get("relateTableColumn"));
         Condition condition = new ConditionBuilder(DBTableColumn.class).and().equal("rowId", relateTableColumn).endAnd().buildDone();
         List<Map<String, Object>> singleSelect = singleSelect(DBTableColumn.class, condition);
@@ -337,30 +353,31 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           fieldAlias = String.valueOf(singleSelect.get(0).get("columnEname"));
         }
       }
+      String relateTableColumn = String.valueOf(rest.get("relateTableColumn"));
       rest.put("ename", fieldAlias);
       rest.put("disableButton", false);
-      rest.put("columnCname", map.get(rest.get("relateTableColumn")));
+      rest.put("columnCname", map.get(relateTableColumn));
 
       //TODO 遍历取值类型来源,根据来源取内容的名称 后面在键值集合配置页面里面可能会添加或删除字段
       String valueResourceType = String.valueOf(rest.get("valueResourceType"));
       switch (valueResourceType) {
-        case "keySet":
+        case BaseConstants.KEY_SET:
           Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
           List<KeySet> select = keySetService.select(condition);
-          if (select.size() > 0) {
+          if (isValid(select) && select.size() > 0) {
             rest.remove("valueResourceContent");
             rest.put("valueResourceContent", select.get(0).getKeysetName());
           }
           break;
-        case "sequenceRule":
+        case BaseConstants.SEQUENCE_RULE:
           Condition conditions = new ConditionBuilder(SequenceRuleConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
           List<SequenceRuleConfig> selects = sequenceRuleConfigService.select(conditions);
-          if (selects.size() > 0) {
+          if (selects != null && selects.size() > 0) {
             rest.remove("valueResourceContent");
             rest.put("valueResourceContent", selects.get(0).getSeqName());
           }
           break;
-        case "dataSet":
+        case BaseConstants.DATA_SET:
           Condition conditioned = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
           List<DataSetConfig> selected = dataSetConfigService.select(conditioned);
           if (selected.size() > 0) {
@@ -369,7 +386,6 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           }
           break;
         default:
-
       }
 
     }
@@ -386,7 +402,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     Map<String, Object> oldRowId = new HashMap<>();
     List<BusinessObject> businessObjects = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
     List<String> row = businessObjects.stream().map((rowIds) ->
-        rowIds.getChangeOperat()).collect(Collectors.toList());
+        String.valueOf(rowIds.getChangeOperat())).collect(Collectors.toList());
     if (isValid(rowId) && row.get(0).equals(BaseConstants.CHANGE_OPERAT_FAIL)) {
       List<BusinessObject> businessObjectList = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
       BusinessObject objectMap = businessObjectList.get(0);
@@ -411,11 +427,16 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       businessObject.insert();
       oldRowId.put("status", BaseConstants.INVALID);
       Condition condition = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
-      businessObjects.get(0).setEtc(oldRowId);
-      businessObjects.get(0).setRowId(rowId);
-      businessObjects.get(0).setChangeOperat(BaseConstants.CHANGE_OPERAT_SUCCESS);
-      int update = businessObjects.get(0).update(condition);
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+      BusinessObject businessObjected = businessObjects.get(0);
+      businessObjected.setEtc(oldRowId);
+      businessObjected.setRowId(rowId);
+      businessObjected.setChangeOperat(BaseConstants.CHANGE_OPERAT_SUCCESS);
+      int update = businessObjected.update(condition);
+      if (update != -1) {
+        return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS);
+      } else {
+        return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+      }
     } else {
       return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
     }
@@ -445,9 +466,9 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     } else if (businObj.size() == 0) {
       List<BusinessObjectPro> list = businessObjectProService
           .select(new FieldCondition("objRowId", Operator.EQUAL, rowId));
-      if (isValid(list)) {
+      if (isValid(list) && list.size() > 0) {
         List<String> rowIds = list.stream().map((row) ->
-            (String) row.getRowId()).collect(Collectors.toList());
+            String.valueOf(row.getRowId())).collect(Collectors.toList());
         businessObjectProService.delete(new FieldCondition("rowId", Operator.IN, rowIds));
 
       } else if (rowId != null && rowId.length() > 0) {
@@ -467,21 +488,26 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param orders 排序
    * @return platResult
    */
-  public ServerResult<List<Map<String, Object>>> queryTemplatePro(String rowId, LinkedList<Order> orders) {
+  public ServerResult queryTemplatePro(String rowId, LinkedList<Order> orders) {
+    ServerResult serverResult = new ServerResult();
     List<Map<String, Object>> linkedList = new ArrayList<>();
     List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId), orders);
-    for (BusinessRelateTemplate bri : businessRowId) {
-      String templateRowId = bri.getTemplateRowId();
-      List<Map<String, Object>> result = singleSelect(TemplateObjectPro.class, new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId));
+    if (isValid(businessRowId) && businessRowId.size() > 0) {
+      for (BusinessRelateTemplate bri : businessRowId) {
+        String templateRowId = bri.getTemplateRowId();
+        List<Map<String, Object>> result = singleSelect(TemplateObjectPro.class, new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId));
 
-      List<Map<String, Object>> list = underlineKeyMapListToCamel(result);
-      for (Map<String, Object> li : list) {
-        if (result.size() != 0) {
-          linkedList.add(li);
+        List<Map<String, Object>> list = underlineKeyMapListToCamel(result);
+        for (Map<String, Object> li : list) {
+          if (result.size() != 0) {
+            linkedList.add(li);
+          }
         }
       }
+      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
+    } else {
+      return serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_FAIL);
     }
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, linkedList);
   }
 
   /**

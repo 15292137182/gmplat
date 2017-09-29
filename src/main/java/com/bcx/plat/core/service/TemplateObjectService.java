@@ -1,5 +1,6 @@
 package com.bcx.plat.core.service;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.TemplateObject;
@@ -21,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.bcx.plat.core.base.BaseConstants.STATUS_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
@@ -31,9 +31,9 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
  *
  * @author Wen TieHu
  * @version 1.0
- * <pre>Histroy:
- * 2017/8/28  Wen TieHu Create
- * </pre>
+ *          <pre>Histroy:
+ *          2017/8/28  Wen TieHu Create
+ *          </pre>
  */
 @Service
 public class TemplateObjectService extends BaseService<TemplateObject> {
@@ -51,6 +51,7 @@ public class TemplateObjectService extends BaseService<TemplateObject> {
    * @param order    排序
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryTemplateProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     if (!(rowId.contains("[") && rowId.contains("]"))) {
       List<Order> orders = dataSort(TemplateObjectPro.class, order);
@@ -62,28 +63,30 @@ public class TemplateObjectService extends BaseService<TemplateObject> {
         List<Map> selectMap = templateObjectProService.selectMap(condition, orders);
         result = new PageResult(selectMap);
       }
-      return new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+      return new ServerResult<>(result);
     } else {
       List list = UtilsTool.jsonToObj(rowId, List.class);
-      List<Map<String, Object>> lists = new ArrayList<>();
-      PageResult<Map<String, Object>> result = null;
-      for (Object li : list) {
-        String row = String.valueOf(li);
-        List<Order> orders = dataSort(TemplateObjectPro.class, order);
-        Condition condition = queryPTemplatePages(param, row, search);
-        if (isValid(pageNum)) { // 判断是否分页查询
-          result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
-        } else {
-          List<Map> maps = templateObjectProService.selectMap(condition, orders);
-          result = new PageResult(maps);
+      if (isValid(list)) {
+        List<Map<String, Object>> lists = new ArrayList<>();
+        PageResult<Map<String, Object>> result = null;
+        for (Object li : list) {
+          String row = String.valueOf(li);
+          List<Order> orders = dataSort(TemplateObjectPro.class, order);
+          Condition condition = queryPTemplatePages(param, row, search);
+          if (isValid(pageNum)) { // 判断是否分页查询
+            result = templateObjectProService.selectPageMap(condition, orders, pageNum, pageSize);
+          } else {
+            List<Map> maps = templateObjectProService.selectMap(condition, orders);
+            result = new PageResult(maps);
+          }
+          List<Map<String, Object>> resultResult = result.getResult();
+          lists.addAll(resultResult);
+          result.setResult(lists);
         }
-        List<Map<String, Object>> resultResult = result.getResult();
-        for (Map<String, Object> resultres : resultResult) {
-          lists.add(resultres);
-        }
-        result.setResult(lists);
+        return new ServerResult<>(result);
+      }else{
+        return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
       }
-      return new ServerResult<>(STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
     }
   }
 
@@ -96,6 +99,7 @@ public class TemplateObjectService extends BaseService<TemplateObject> {
    * @param search 按照空格查询
    * @return Condition
    */
+  @SuppressWarnings("unchecked")
   private Condition queryPTemplatePages(String param, String rowId, String search) {
     Condition condition;
     if (isValid(param)) { // 判断是否根据指定字段查询

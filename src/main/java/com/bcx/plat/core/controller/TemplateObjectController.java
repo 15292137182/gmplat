@@ -43,10 +43,10 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * @author Wen TieHu
  *         <pre>History:
- *                           2017/8/28  Wen TieHu Create
- *                           2017/9/27  YoungerOu modified
- *                            before delete templateObject, delete templateObjectPro first.
- *                         </pre>
+ *                                                           2017/8/28  Wen TieHu Create
+ *                                                           2017/9/27  YoungerOu modified
+ *                                                            before delete templateObject, delete templateObjectPro first.
+ *                                                         </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")
@@ -78,7 +78,11 @@ public class TemplateObjectController extends BaseController {
   public PlatResult queryPropertiesPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = templateObjectService.queryTemplateProPage(rowId, search, param, pageNum, pageSize, order);
-      return result(serverResult);
+      if (isValid(serverResult)) {
+        return result(serverResult);
+      } else {
+        return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      }
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
   }
@@ -93,7 +97,11 @@ public class TemplateObjectController extends BaseController {
   @RequestMapping("/query")
   public PlatResult singleInputSelect(String search) {
     List<Map> maps = templateObjectService.selectMap(createBlankQuery(blankSelectFields(), collectToSet(search)));
-    return result(new ServerResult<>(maps));
+    if (isValid(maps)) {
+      return result(new ServerResult<>(maps));
+    } else {
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    }
   }
 
   /**
@@ -106,10 +114,10 @@ public class TemplateObjectController extends BaseController {
   public PlatResult queryById(String rowId) {
     if (UtilsTool.isValid(rowId)) {
       List<Map> maps = templateObjectService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
-      if (maps.size() == 0) {
-        return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-      } else {
+      if (isValid(maps) && maps.size() > 0) {
         return result(new ServerResult<>(maps.get(0)));
+      } else {
+        return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
       }
     } else {
       return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
@@ -125,6 +133,7 @@ public class TemplateObjectController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult singleInputSelect(String search, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(TemplateObject.class, order);
     Or blankQuery = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));
@@ -134,7 +143,11 @@ public class TemplateObjectController extends BaseController {
     } else { // 查询所有
       pageResult = new PageResult(templateObjectService.selectMap(blankQuery, orders));
     }
-    return result(new ServerResult<>(pageResult));
+    if (isValid(pageResult)) {
+      return result(new ServerResult<>(pageResult));
+    } else {
+      return result(new ServerResult<>().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    }
   }
 
   /**
@@ -183,11 +196,15 @@ public class TemplateObjectController extends BaseController {
     templateObjectProService.delete(preCondition);
     Condition condition = new ConditionBuilder(TemplateObject.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> maps = templateObjectService.selectMap(condition);
-    ServerResult serverResult = new ServerResult();
-    int status = new TemplateObject().buildDeleteInfo().deleteById(rowId);
-    if (-1 == status) {
-      return result(serverResult.setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
+    if (isValid(maps)) {
+      ServerResult serverResult = new ServerResult();
+      int status = new TemplateObject().buildDeleteInfo().deleteById(rowId);
+      if (-1 == status) {
+        return result(serverResult.setStateMessage(STATUS_FAIL, Message.DELETE_FAIL));
+      }
+      return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
+    } else {
+      return result(new ServerResult().setStateMessage(STATUS_FAIL, Message.QUERY_FAIL));
     }
-    return result(new ServerResult<>(STATUS_SUCCESS, Message.DELETE_SUCCESS, maps));
   }
 }

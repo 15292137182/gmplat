@@ -26,6 +26,7 @@ import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -35,9 +36,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  *
  * @author Wen TieHu
  * @version 1.0
- * <pre>Histroy:
- *  2017/8/30  Wen TieHu Create
- *          </pre>
+ *          <pre>Histroy:
+ *           2017/8/30  Wen TieHu Create
+ *                   </pre>
  */
 @RequestMapping(PLAT_SYS_PREFIX + "/core/keySetPro")
 @RestController
@@ -62,11 +63,15 @@ public class KeySetProController extends BaseController {
     ServerResult result = new ServerResult();
     String confKey = String.valueOf(param.get("confKey")).trim();
     String confValue = String.valueOf(param.get("confValue")).trim();
+
     if (UtilsTool.isValid(confKey) && UtilsTool.isValid(confValue)) {
+
       Condition condition = new ConditionBuilder(KeySetPro.class).and()
           .equal("relateKeysetRowId", param.get("relateKeysetRowId"))
           .equal("confKey", confKey).endAnd().buildDone();
+
       List<KeySetPro> keySetPros = keySetProService.select(condition);
+
       if (keySetPros.size() == 0) {
         KeySetPro KeySetPro = new KeySetPro().buildCreateInfo().fromMap(param);
         int insert = KeySetPro.insert();
@@ -91,10 +96,14 @@ public class KeySetProController extends BaseController {
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(param.get("rowId"))) {
+
       String confKey = String.valueOf(param.get("confKey")).trim();
       String confValue = String.valueOf(param.get("confValue")).trim();
+
       if (UtilsTool.isValid(confKey) && UtilsTool.isValid(confValue)) {
+
         int update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
+
         if (update != -1) {
           return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
         }
@@ -115,8 +124,11 @@ public class KeySetProController extends BaseController {
   public PlatResult delete(String rowId) {
     ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
+
       KeySetPro keySetPro = new KeySetPro();
+
       int del = keySetPro.deleteById(rowId);
+
       if (del != -1) {
         return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS));
       } else {
@@ -140,9 +152,9 @@ public class KeySetProController extends BaseController {
     if (UtilsTool.isValid(rowId)) {
       Condition condition = new ConditionBuilder(KeySetPro.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = keySetProService.selectMap(condition);
-      if (select.size()==0) {
+      if (!isValid(select) && select.size() == 0) {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-      }else{
+      } else {
         return result(new ServerResult<>(select.get(0)));
       }
     } else {
@@ -162,6 +174,7 @@ public class KeySetProController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(KeySetPro.class, order);
     Condition condition;
@@ -177,7 +190,7 @@ public class KeySetProController extends BaseController {
       keysetPro = new PageResult(keySetProService.selectMap(condition, orders));
     }
 
-    if (keysetPro.getResult() != null) {
+    if (isValid(keysetPro) && keysetPro.getResult().size()>0) {
       return result(new ServerResult<>(keysetPro));
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 数据库表信息Controller层
@@ -52,6 +53,7 @@ public class MaintDBTablesController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(MaintDBTables.class, order);
     Condition condition;
@@ -66,9 +68,12 @@ public class MaintDBTablesController extends BaseController {
     } else {
       maintDBTablesPageResult = new PageResult(maintDBTablesService.selectMap(condition, orders));
     }
-
-    ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
-    return result(pageResultServerResult);
+    if (isValid(maintDBTablesPageResult)) {
+      ServerResult<PageResult<MaintDBTables>> pageResultServerResult = new ServerResult<>(maintDBTablesPageResult);
+      return result(pageResultServerResult);
+    } else {
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    }
   }
 
   /**
@@ -81,7 +86,7 @@ public class MaintDBTablesController extends BaseController {
   public PlatResult singleInputSelect(String search) {
     Or blankQuery = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     List<Map<String, Object>> list = maintDBTablesService.singleSelect(MaintDBTables.class, blankQuery);
-    if (list!=null && list.size() > 0) {
+    if (list != null && list.size() > 0) {
       return result(new ServerResult<>(list));
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));

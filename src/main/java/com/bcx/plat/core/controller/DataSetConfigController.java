@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 
 /**
@@ -120,6 +121,7 @@ public class DataSetConfigController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(DataSetConfig.class, order);
     Condition condition;
@@ -135,7 +137,11 @@ public class DataSetConfigController extends BaseController {
     } else {
       result = new PageResult<>(dataSetConfigService.selectMap(condition, orders));
     }
-    return result(new ServerResult<>(result));
+    if (isValid(result)) {
+      return result(new ServerResult<>(result));
+    }else{
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+    }
   }
 
   /**

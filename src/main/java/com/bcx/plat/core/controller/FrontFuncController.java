@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 前端功能模块 Created by Went on 2017/8/2.
@@ -71,24 +72,30 @@ public class FrontFuncController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(FrontFunc.class, order);
     Condition condition;
-    if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
+    if (isValid(param)) { // 判断是否根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(FrontFunc.class, map);
     } else {
-      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+      condition = !isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     PageResult<Map<String, Object>> result;
-    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+    if (isValid(pageNum)) { // 判断是否分页查询
       result = frontFuncService.selectPageMap(condition, orders, pageNum, pageSize);
     } else {
       result = new PageResult(frontFuncService.selectMap(condition, orders));
     }
-    List<Map<String, Object>> list = queryResultProcessAction(result.getResult());
-    result.setResult(list);
-    return result(new ServerResult<>(result));
+    if (isValid(result)) {
+      List<Map<String, Object>> list = queryResultProcessAction(result.getResult());
+      result.setResult(list);
+      return result(new ServerResult<>(result));
+    } else {
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+
+    }
   }
 
   /**
@@ -97,7 +104,7 @@ public class FrontFuncController extends BaseController {
    * @param result 接受serviceResult封装的参数
    * @return list
    */
-  protected List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
+  private List<Map<String, Object>> queryResultProcessAction(List<Map<String, Object>> result) {
     List<String> rowIds = result.stream().map((row) ->
         (String) row.get("relateBusiObj")).collect(Collectors.toList());
     List<BusinessObject> results = businessObjectService
@@ -107,7 +114,8 @@ public class FrontFuncController extends BaseController {
       map.put(row.getRowId(), row.getObjectName());
     }
     for (Map<String, Object> row : result) {
-      row.put("objectName", map.get(row.get("relateBusiObj")));
+      String relateBusiObj = String.valueOf(row.get("relateBusiObj"));
+      row.put("objectName", map.get(relateBusiObj));
     }
     return result;
   }
@@ -123,15 +131,13 @@ public class FrontFuncController extends BaseController {
     //根据传入的rowId查询当前数据
     Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<FrontFunc> frontFuncs = frontFuncService.select(condition);
-
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       List<FrontFuncPro> funcRowId = frontFuncProService
           .select(new FieldCondition("funcRowId", Operator.EQUAL, rowId));
-
-      if (UtilsTool.isValid(funcRowId)) {
+      if (isValid(funcRowId)) {
         List<String> rowIds = funcRowId.stream().map(FrontFuncPro::getRowId).collect(Collectors.toList());
         List<FrontFuncPro> frontFuncPros = frontFuncProService.select(new FieldCondition("rowId", Operator.IN, rowIds));
-        if (frontFuncPros.size() > 0) {
+        if (isValid(frontFuncPros) && frontFuncPros.size() > 0) {
           for (FrontFuncPro front : frontFuncPros) {
             String frontRowId = front.getRowId();
             Condition buildDone = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", frontRowId).endAnd().buildDone();
@@ -161,7 +167,7 @@ public class FrontFuncController extends BaseController {
   @RequestMapping("/queryFuncCode")
   public PlatResult queryFuncCode(String funcCode) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(funcCode)) {
+    if (isValid(funcCode)) {
       List list = UtilsTool.jsonToObj(funcCode, List.class);
       ServerResult<LinkedList<Map<String, Object>>> linkedListServerResult = frontFuncService.queryFuncCode(list);
       return result(linkedListServerResult);
@@ -191,7 +197,7 @@ public class FrontFuncController extends BaseController {
   @PostMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(param.get("rowId"))) {
+    if (isValid(param.get("rowId"))) {
       ServerResult serverResult = frontFuncService.updateFront(param);
       return result(serverResult);
     }
@@ -207,10 +213,10 @@ public class FrontFuncController extends BaseController {
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
     ServerResult serverResult = new ServerResult();
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = frontFuncService.selectMap(condition);
-      if (select.size()==0) {
+      if (select.size() == 0) {
         return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
       }
       return result(new ServerResult<>(select.get(0)));

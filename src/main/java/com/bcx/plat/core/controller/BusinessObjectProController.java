@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.service.BusinessObjectProService;
-import com.bcx.plat.core.service.FrontFuncProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 @RestController
 public class BusinessObjectProController extends BaseController {
 
-  private final FrontFuncProService frontFuncProService;
-  private final BusinessObjectProService businessObjectProService;
-
   @Autowired
-  public BusinessObjectProController(FrontFuncProService frontFuncProService, BusinessObjectProService businessObjectProService) {
-    this.frontFuncProService = frontFuncProService;
-    this.businessObjectProService = businessObjectProService;
-  }
+  private BusinessObjectProService businessObjectProService;
 
 
   protected List<String> blankSelectFields() {

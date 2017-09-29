@@ -27,6 +27,7 @@ import java.util.Objects;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 键值集合Controller层
@@ -238,6 +239,7 @@ public class KeySetController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
+  @SuppressWarnings("unchecked")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(KeySet.class, order);
     Condition condition;
@@ -253,7 +255,11 @@ public class KeySetController extends BaseController {
     } else { // 查询所有
       keySet = new PageResult(keySetService.selectMap(condition, orders));
     }
-    return result(new ServerResult<>(keySet));
+    if (isValid(keySet)) {
+      return result(new ServerResult<>(keySet));
+    }else{
+      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+    }
   }
 
   /**

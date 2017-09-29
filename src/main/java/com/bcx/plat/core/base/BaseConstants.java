@@ -30,4 +30,9 @@ public class BaseConstants {
   public static final String ATTRIBUTE_SOURCE_MODULE = "module";//模块属性
 
 
+  public static final String SEQUENCE_RULE = "sequenceRule";//序列查询
+  public static final String DATA_SET = "dataSet";//数据集
+  public static final String KEY_SET = "keySet";//键值集合
+
+
 }

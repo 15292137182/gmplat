@@ -10,7 +10,6 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.FrontFuncProService;
-import com.bcx.plat.core.service.TemplateObjectProService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -36,8 +35,6 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/fronFuncPro")
 public class FrontFuncProController extends BaseController {
 
-  @Autowired
-  private TemplateObjectProService templateObjectProService;
   @Autowired
   private FrontFuncProService frontFuncProService;
 

@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bcx.plat.core.base.BaseConstants.SEQUENCE_RULE;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 /**
  * 业务对象
  * Created by Wen Tiehu on 2017/8/7.
@@ -43,7 +46,6 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
   private FrontFuncProService frontFuncProService;
 
 
-
   /**
    * 新增业务对象属性
    *
@@ -52,10 +54,9 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    */
   public ServerResult insertBusinessPro(Map<String, Object> paramEntity) {
     String fieldAlias = String.valueOf(paramEntity.get("fieldAlias")).trim();
-    paramEntity.remove("fieldAlias");
     paramEntity.put("fieldAlias", fieldAlias);
     ServerResult result = new ServerResult();
-    if (!"".equals(fieldAlias)) {
+    if (isValid(fieldAlias)) {
       Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
       List<BusinessObjectPro> select = select(condition);
       if (select.size() == 0) {
@@ -85,13 +86,17 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     BusinessObjectPro businessObjectPro;
     String fieldAlias = String.valueOf(paramEntity.get("fieldAlias")).trim();
     paramEntity.put("fieldAlias", fieldAlias);
-    if (!"".equals(fieldAlias)) {
+    if (isValid(fieldAlias)) {
       Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
       List<BusinessObjectPro> select = select(condition);
       if (select.size() == 0 || select.get(0).getRowId().equals(paramEntity.get("rowId"))) {
         businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
-        businessObjectPro.updateById();
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObjectPro);
+        int byId = businessObjectPro.updateById();
+        if (byId != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObjectPro);
+        } else {
+          return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+        }
       } else {
         return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
       }
@@ -106,16 +111,15 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    * @param rowId 按照rowId查询
    * @return ServerResult
    */
-  public ServerResult deleteBusinessPro(String rowId){
+  public ServerResult deleteBusinessPro(String rowId) {
     //通过rowId查询数据
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> businessObjectPros = selectMap(condition);
     ServerResult result = new ServerResult();
     List<Map> frontFuncPros = frontFuncProService.selectMap(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
-    int del;
     if (frontFuncPros.size() == 0) {
       BusinessObjectPro businessObjectPro = new BusinessObjectPro();
-      del = businessObjectPro.deleteById(rowId);
+      int del = businessObjectPro.deleteById(rowId);
       if (del != -1) {
         //接受rowId返回业务对象数据
         return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, businessObjectPros);
@@ -128,7 +132,6 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
   }
 
 
-
   /**
    * 根据业务对象属性rowId查询当前数据
    *
@@ -137,7 +140,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    */
   public ServerResult queryById(String rowId) {
     List<BusinessObjectPro> businessObjectPros = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
-    if (businessObjectPros == null || businessObjectPros.size() != 1) {
+    if (!isValid(businessObjectPros) || businessObjectPros.size() == 0) {
       ServerResult serverResult = new ServerResult();
       return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, ServletUtils.getMessage(Message.QUERY_FAIL));
     }
@@ -148,10 +151,10 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
       return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, businessObjectProMap);
     }
     List<Map> mapList = dbTableColumnService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
-    if (null != mapList) {
+    if (null != mapList && mapList.size() > 0) {
       businessObjectProMap.put("columnCname", mapList.get(0).get("columnCname"));
     }
-    return new ServerResult<>( businessObjectProMap);
+    return new ServerResult<>(businessObjectProMap);
   }
 
   /**
@@ -175,7 +178,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     Condition condition = new And(new FieldCondition(field, Operator.EQUAL, objRowId));
     //查询条件
     List<Map<String, Object>> result =
-            leftAssociationQuery(BusinessObject.class, BusinessObjectPro.class, "rowId", "objRowId", condition);
+        leftAssociationQuery(BusinessObject.class, BusinessObjectPro.class, "rowId", "objRowId", condition);
     // 遍历添加数据到results
     for (Map<String, Object> res : result) {
       res.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_BASE);
@@ -186,7 +189,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     //过滤条件
     FieldCondition businessRowId = new FieldCondition(byAlias, Operator.EQUAL, objRowId);
     List<Map<String, Object>> execute = leftAssociationQuery(BusinessObject.class, BusinessRelateTemplate.class,
-            "rowId", "businessRowId", businessRowId);
+        "rowId", "businessRowId", businessRowId);
     // 将返回的结果下划线转为驼峰
     List<Map<String, Object>> list = UtilsTool.underlineKeyMapListToCamel(execute);
     // 遍历关联表中的结果,获取关联的模板对象的rowId
@@ -219,7 +222,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
           } catch (NullPointerException e) {
             continue;
           }
-          if ((!UtilsTool.isValid(relateBusiPro1))) {
+          if ((!isValid(relateBusiPro1))) {
             continue;
           }
           if (relateBusiPro1.equals(objRowId)) {
@@ -239,7 +242,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    * 获取来源值类型来源为序列
    *
    * @param objRowId 接受业务对象rowId
-   * @return
+   * @return Map
    */
   public Map obtainSequenceCode(String objRowId) {
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", objRowId).endAnd().buildDone();
@@ -247,7 +250,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     Map<String, Object> map = new HashMap<>();
     for (BusinessObjectPro m : maps) {
       String valueResourceType = String.valueOf(m.getValueResourceType());
-      if ("sequenceRule".equals(valueResourceType)) {
+      if (SEQUENCE_RULE.equals(valueResourceType)) {
         String valueResourceContent = String.valueOf(m.getValueResourceContent());
         Condition done = new ConditionBuilder(SequenceRuleConfig.class).and().equal("rowId", valueResourceContent).endAnd().buildDone();
         List<SequenceRuleConfig> select = sequenceRuleConfigService.select(done);
@@ -275,8 +278,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
   public Map queryByIds(String rowId) {
     List<BusinessObjectPro> businessObjectPros = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
     BusinessObjectPro businessObjectPro = businessObjectPros.get(0);
-    Map<String, Object> businessObjectProMap = businessObjectPro.toMap();
-    return businessObjectProMap;
+    return businessObjectPro.toMap();
   }
 
 

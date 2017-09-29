@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
+
 /**
  * Create By HCL at 2017/8/1
  */
@@ -53,7 +55,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname")).trim();
     param.remove("columnEname");
-    param.put("columnEname",columnEname);
+    param.put("columnEname", columnEname);
     if (!"".equals(columnEname)) {
       Condition condition = new ConditionBuilder(DBTableColumn.class).and()
           .equal("columnEname", columnEname)
@@ -76,15 +78,15 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
   }
 
   /**
-   *
    * 数据库表字段修改
+   *
    * @param param 修改参数
    * @return ServerResult
    */
   public ServerResult updateTableColumn(Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String columnEname = String.valueOf(param.get("columnEname")).trim();
-    param.put("columnEname",columnEname);
+    param.put("columnEname", columnEname);
     if (!"".equals(columnEname)) {
       Condition condition = new ConditionBuilder(DBTableColumn.class).and()
           .equal("columnEname", columnEname)
@@ -117,22 +119,22 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
    * @param pageSize 一页显示多少条
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryPageById(String search, String param, String rowId, LinkedList<Order> orders, Integer pageNum, Integer pageSize) {
     Condition condition;
-    if (UtilsTool.isValid(param)) { // 判断是否根据指定字段查询
+    if (isValid(param)) { // 判断是否根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       condition = new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId), UtilsTool.convertMapToAndConditionSeparatedByLike(DBTableColumn.class, map));
     } else {
-      if (UtilsTool.isValid(search)) {
+      if (isValid(search)) {
         condition = new And(new FieldCondition("relateTableRowId", Operator.EQUAL, rowId),
             UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search)));
       } else {
         condition = new FieldCondition("relateTableRowId", Operator.EQUAL, rowId);
       }
     }
-
     PageResult<Map<String, Object>> relateTableRowId;
-    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+    if (isValid(pageNum)) { // 判断是否分页查询
       relateTableRowId = selectPageMap(condition, orders, pageNum, pageSize);
     } else {
       relateTableRowId = new PageResult(selectMap(condition, orders));
@@ -169,11 +171,15 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       DBTableColumn dbTableColumn = new DBTableColumn().buildDeleteInfo();
       Condition condition = new ConditionBuilder(DBTableColumn.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<DBTableColumn> dbTableColumns = select(condition);
-      int del = dbTableColumn.deleteById(rowId);
-      if (del != -1) {
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dbTableColumns);
+      if (isValid(dbTableColumns) && dbTableColumns.size() > 0) {
+        int del = dbTableColumn.deleteById(rowId);
+        if (del != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, dbTableColumns);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+        }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
       }
     } else {
       return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
