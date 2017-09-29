@@ -36,7 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *           2017/8/30  Wen TieHu Create
  *                   </pre>
  */
@@ -95,19 +95,25 @@ public class KeySetProController extends BaseController {
   @RequestMapping(value = "/modify", method = POST)
   public PlatResult update(@RequestParam Map<String, Object> param) {
     ServerResult result = new ServerResult();
-    if (UtilsTool.isValid(param.get("rowId"))) {
-
+    String rowId = String.valueOf(param.get("rowId"));
+    if (UtilsTool.isValid(rowId)) {
       String confKey = String.valueOf(param.get("confKey")).trim();
       String confValue = String.valueOf(param.get("confValue")).trim();
-
+      param.put("confKey", confKey);
+      param.put("confValue", confValue);
       if (UtilsTool.isValid(confKey) && UtilsTool.isValid(confValue)) {
-
-        int update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, param.get("rowId")));
-
-        if (update != -1) {
-          return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+        Condition condition = new ConditionBuilder(KeySetPro.class).and()
+            .equal("relateKeysetRowId", param.get("relateKeysetRowId"))
+            .equal("confKey", confKey).endAnd().buildDone();
+        List<KeySetPro> keySetPros = keySetProService.select(condition);
+        if (keySetPros.size() == 0 || keySetPros.get(0).getRowId().equals(rowId)) {
+          int update = keySetProService.singleUpdate(KeySetPro.class, param, new FieldCondition("rowId", Operator.EQUAL, rowId));
+          if (update != -1) {
+            return super.result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+          }
+          return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
         }
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
       }
       return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
     }
@@ -138,7 +144,6 @@ public class KeySetProController extends BaseController {
       return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
     }
   }
-
 
   /**
    * 根据rowId查询数据
@@ -190,7 +195,7 @@ public class KeySetProController extends BaseController {
       keysetPro = new PageResult(keySetProService.selectMap(condition, orders));
     }
 
-    if (isValid(keysetPro) && keysetPro.getResult().size()>0) {
+    if (isValid(keysetPro) && keysetPro.getResult().size() > 0) {
       return result(new ServerResult<>(keysetPro));
     }
     return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
