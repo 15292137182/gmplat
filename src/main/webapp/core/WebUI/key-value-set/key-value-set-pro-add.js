@@ -57,6 +57,7 @@ var keyValueSetProAdd = new Vue({
                     rowId:rowId,
                     confKey:this.keyForm.confKeyInput,
                     confValue:this.keyForm.confValueInput,
+                    relateKeysetRowId:leftKeyValueSet.rowId,
                     desp:this.keyForm.despInput
                 },
                 "obj":keyValueSetProAdd,
