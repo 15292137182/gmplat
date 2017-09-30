@@ -45,17 +45,15 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
   @Autowired
   private FrontFuncProService frontFuncProService;
 
-
   /**
    * 新增业务对象属性
    *
    * @param paramEntity 接受实体参数
-   * @return Map
+   * @return ServerResult
    */
   public ServerResult insertBusinessPro(Map<String, Object> paramEntity) {
     String fieldAlias = String.valueOf(paramEntity.get("fieldAlias")).trim();
     paramEntity.put("fieldAlias", fieldAlias);
-    ServerResult result = new ServerResult();
     if (isValid(fieldAlias)) {
       Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
       List<BusinessObjectPro> select = select(condition);
@@ -63,15 +61,15 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
         BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
         int insert = businessObjectPro.insert();
         if (insert != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, businessObjectPro);
+          return successData(Message.NEW_ADD_SUCCESS, businessObjectPro);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+          return fail(Message.NEW_ADD_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     } else {
-      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+      return fail(Message.DATA_CANNOT_BE_EMPTY);
     }
   }
 
@@ -79,29 +77,27 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    * 编辑业务对象属性
    *
    * @param paramEntity 实体参数
-   * @return Map
+   * @return ServerResult
    */
   public ServerResult updateBusinessPro(Map<String, Object> paramEntity) {
-    ServerResult result = new ServerResult();
-    BusinessObjectPro businessObjectPro;
     String fieldAlias = String.valueOf(paramEntity.get("fieldAlias")).trim();
     paramEntity.put("fieldAlias", fieldAlias);
     if (isValid(fieldAlias)) {
       Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
       List<BusinessObjectPro> select = select(condition);
       if (select.size() == 0 || select.get(0).getRowId().equals(paramEntity.get("rowId"))) {
-        businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
+        BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildModifyInfo().fromMap(paramEntity);
         int byId = businessObjectPro.updateById();
         if (byId != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, businessObjectPro);
+          return successData(Message.UPDATE_SUCCESS, businessObjectPro);
         } else {
-          return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
+          return fail(Message.UPDATE_FAIL);
         }
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
     } else {
-      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
+      return fail(Message.DATA_CANNOT_BE_EMPTY);
     }
   }
 
@@ -115,19 +111,18 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     //通过rowId查询数据
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> businessObjectPros = selectMap(condition);
-    ServerResult result = new ServerResult();
     List<Map> frontFuncPros = frontFuncProService.selectMap(new FieldCondition("relateBusiPro", Operator.EQUAL, rowId));
     if (frontFuncPros.size() == 0) {
       BusinessObjectPro businessObjectPro = new BusinessObjectPro();
       int del = businessObjectPro.deleteById(rowId);
       if (del != -1) {
         //接受rowId返回业务对象数据
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, businessObjectPros);
+        return successData(Message.DELETE_SUCCESS, businessObjectPros);
       } else {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL);
+        return fail(Message.DELETE_FAIL);
       }
     } else {
-      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_QUOTE);
+      return fail(Message.DATA_QUOTE);
     }
   }
 
@@ -141,14 +136,13 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
   public ServerResult queryById(String rowId) {
     List<BusinessObjectPro> businessObjectPros = select(new FieldCondition("rowId", Operator.EQUAL, rowId));
     if (!isValid(businessObjectPros) || businessObjectPros.size() == 0) {
-      ServerResult serverResult = new ServerResult();
-      return serverResult.setStateMessage(BaseConstants.STATUS_FAIL, ServletUtils.getMessage(Message.QUERY_FAIL));
+      return fail(ServletUtils.getMessage(Message.QUERY_FAIL));
     }
     BusinessObjectPro businessObjectPro = businessObjectPros.get(0);
     String relateTableColumn = businessObjectPro.getRelateTableColumn();
     Map<String, Object> businessObjectProMap = businessObjectPro.toMap();
     if (relateTableColumn == null) {
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, businessObjectProMap);
+      return new ServerResult<>(businessObjectProMap);
     }
     List<Map> mapList = dbTableColumnService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateTableColumn));
     if (null != mapList && mapList.size() > 0) {
@@ -232,9 +226,9 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
       }
     }
     if (result.size() == 0) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     }
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, UtilsTool.underlineKeyMapListToCamel(results));
+    return new ServerResult<>(UtilsTool.underlineKeyMapListToCamel(results));
   }
 
 
@@ -242,7 +236,7 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    * 获取来源值类型来源为序列
    *
    * @param objRowId 接受业务对象rowId
-   * @return Map
+   * @return ServerResult
    */
   public Map obtainSequenceCode(String objRowId) {
     Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId", objRowId).endAnd().buildDone();
@@ -280,6 +274,5 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
     BusinessObjectPro businessObjectPro = businessObjectPros.get(0);
     return businessObjectPro.toMap();
   }
-
 
 }
