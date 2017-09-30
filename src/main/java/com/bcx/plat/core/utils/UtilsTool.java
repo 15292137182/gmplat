@@ -172,7 +172,7 @@ public class UtilsTool {
   public static Set<String> collectToSet(String str) {
     Set<String> result = new HashSet<>();
     if (isValid(str)) {
-      String[] ss = str.split("[\\s;,；，]+");
+      String[] ss = str.split("[\\s]+");
       result.addAll(Arrays.asList(ss));
     }
     return result;
