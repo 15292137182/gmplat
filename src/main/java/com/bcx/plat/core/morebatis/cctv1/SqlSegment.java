@@ -8,10 +8,6 @@ public class SqlSegment {
     return argument;
   }
 
-//  public void setSegment(Object argument) {
-//    this.argument = argument;
-//  }
-
   public SqlSegment(Object argument) {
     this.argument = argument;
   }

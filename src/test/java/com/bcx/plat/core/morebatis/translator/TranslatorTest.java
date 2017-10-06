@@ -8,13 +8,12 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.builder.OrderBuilder;
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.translator.postgre.Translator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
-
-import static org.junit.Assert.*;
 
 
 public class TranslatorTest extends BaseTest{

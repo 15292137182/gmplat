@@ -343,6 +343,7 @@ public class UtilsTool {
    * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__ 为倒序
    * @return linkedList参数
    */
+  @SuppressWarnings("unchecked")
   public static LinkedList<Order> dataSort(String order) {
     LinkedList<Order> orders = new LinkedList<>();
     if (order == null) {

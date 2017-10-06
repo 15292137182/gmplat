@@ -7,7 +7,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.performance.mybatis.MybatisOperation;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.translator.Translator;
+import com.bcx.plat.core.morebatis.translator.postgre.Translator;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Before;
 import org.junit.Test;

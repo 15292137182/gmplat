@@ -1,62 +1,67 @@
 package com.bcx.plat.core.morebatis.component.function;
 
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
+import java.util.Arrays;
+import java.util.List;
 
 public class Functions {
 
-  private static abstract class SingleArgsFunction<T> implements FieldSource<T>{
-    Object args;
-    public Object getArgs() {
+  public static abstract class SqlFunction<T> implements FieldSource<T>{
+    List<Object> args;
+
+    public List<Object> getArgs() {
       return args;
     }
-    public void setArgs(Object args) {
+
+    public void setArgs(List<Object> args) {
       this.args = args;
     }
-    public SingleArgsFunction(Object args){
-      this.args=args;
+
+    public SqlFunction(Object ... args){
+      this.args= Arrays.asList(args);
     }
   }
 
-  public static class Sum extends SingleArgsFunction<Sum>{
+  public static class Sum extends SqlFunction<Sum> {
 
     public Sum(Object args) {
       super(args);
     }
   }
 
-  public static class Count extends SingleArgsFunction<Count>{
+  public static class Count extends SqlFunction<Count> {
 
     public Count(Object args) {
       super(args);
     }
   }
 
-  public static class First extends SingleArgsFunction<First>{
+  public static class First extends SqlFunction<First> {
 
     public First(Object args) {
       super(args);
     }
   }
 
-  public static class Last extends SingleArgsFunction<Last>{
+  public static class Last extends SqlFunction<Last> {
     public Last(Object args) {
       super(args);
     }
   }
 
-  public static class Max extends SingleArgsFunction<Max>{
+  public static class Max extends SqlFunction<Max> {
     public Max(Object args) {
       super(args);
     }
   }
 
-  public static class Min extends SingleArgsFunction<Min>{
+  public static class Min extends SqlFunction<Min> {
     public Min(Object args) {
       super(args);
     }
   }
 
-  public static class Total extends SingleArgsFunction<Total>{
+  public static class Total extends SqlFunction<Total> {
     public Total(Object args) {
       super(args);
     }
