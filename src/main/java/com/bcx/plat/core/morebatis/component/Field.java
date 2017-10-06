@@ -7,7 +7,6 @@ import com.bcx.plat.core.utils.UtilsTool;
  * 普通字段
  */
 public class Field implements AliasedColumn {
-
   /**
    * 所在表
    */
@@ -29,12 +28,7 @@ public class Field implements AliasedColumn {
     this.fieldName = UtilsTool.camelToUnderline(alias);
     this.alias = alias;
   }
-
-  public Field(String fieldName, String alias) {
-    this.fieldName = fieldName;
-    this.alias = alias;
-  }
-
+  @Deprecated
   public Field(Table table, String fieldName, String alias) {
     this.table = table;
     this.fieldName = fieldName;
@@ -49,10 +43,12 @@ public class Field implements AliasedColumn {
     this.fieldName = fieldName;
   }
 
+  @Deprecated
   public String getAlias() {
     return alias;
   }
 
+  @Deprecated
   public void setAlias(String alias) {
     this.alias = alias;
   }

@@ -3,6 +3,9 @@ package com.bcx.plat.core.morebatis.plugin.relation.entity;
 import com.bcx.plat.core.base.support.BeanInterface;
 import java.util.List;
 
+/**
+ * 专门用来存放集合数据的表所对应的实体类
+ */
 public class Relation implements BeanInterface<Relation>{
   private String rowId;
   private String primaryTable;

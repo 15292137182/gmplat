@@ -16,6 +16,7 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
+import com.bcx.plat.core.morebatis.configuration.builder.EntityEntriesBuilder;
 import com.bcx.plat.core.morebatis.configuration.builder.EntityEntryBuilder;
 import com.bcx.plat.core.morebatis.mapper.SuitMapper;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -53,32 +54,45 @@ public class MoreBatisImpl implements MoreBatis {
     entityPks = new HashMap<>();
     entityTables = new HashMap<>();
     aliasMap = new HashMap<>();
+    List<EntityEntriesBuilder> entriesBuilders=new LinkedList<>();
     for (Object entry : entityEntries) {
       EntityEntry entityEntry;
       if (entry instanceof EntityEntry) {
         entityEntry = (EntityEntry) entry;
       } else if (entry instanceof EntityEntryBuilder) {
         entityEntry = ((EntityEntryBuilder) entry).getEntry();
-      } else {
+      } else if (entry instanceof EntityEntriesBuilder){
+        entriesBuilders.add((EntityEntriesBuilder) entry);
+        continue;
+      }else{
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
       }
-      final Class entryClass = entityEntry.getEntityClass();
-      final TableSource entityEntryTable = entityEntry.getTable();
-      Map<String, Field> aliasMap = this.aliasMap.get(entryClass);
-      LinkedList<Field> fieldInTables = new LinkedList<>();
-      if (aliasMap == null) {
-        aliasMap = new HashMap<>();
-        this.aliasMap.put(entryClass, aliasMap);
-      }
-      for (Field Field : entityEntry.getFields()) {
-        aliasMap.put(Field.getAlias(), Field);
-      }
-      entityColumns.put(entryClass,
-          immute(bindWithTable((Table) entityEntryTable, entityEntry.getFields())));
-      entityTables.put(entryClass, entityEntryTable);
-      entityPks
-          .put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getPks())));
+      registeEntityEntry(entityEntry);
     }
+    for (EntityEntriesBuilder entriesBuilder : entriesBuilders) {
+      for (EntityEntry entityEntry : entriesBuilder.getEntries()) {
+        registeEntityEntry(entityEntry);
+      }
+    }
+  }
+
+  private void registeEntityEntry(EntityEntry entityEntry) {
+    final Class entryClass = entityEntry.getEntityClass();
+    final TableSource entityEntryTable = entityEntry.getTable();
+    Map<String, Field> aliasMap = this.aliasMap.get(entryClass);
+    LinkedList<Field> fieldInTables = new LinkedList<>();
+    if (aliasMap == null) {
+      aliasMap = new HashMap<>();
+      this.aliasMap.put(entryClass, aliasMap);
+    }
+    for (Field Field : entityEntry.getFields()) {
+      aliasMap.put(Field.getAlias(), Field);
+    }
+    entityColumns.put(entryClass,
+        immute(bindWithTable((Table) entityEntryTable, entityEntry.getFields())));
+    entityTables.put(entryClass, entityEntryTable);
+    entityPks
+        .put(entryClass, immute(bindWithTable((Table) entityEntryTable, entityEntry.getPks())));
   }
 
   /**

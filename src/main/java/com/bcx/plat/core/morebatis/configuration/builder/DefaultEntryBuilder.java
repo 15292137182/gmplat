@@ -64,6 +64,7 @@ public class DefaultEntryBuilder implements EntityEntryBuilder {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public EntityEntry getEntry() {
     final Table table = new Table(schema, tableName);
     final List<Field> fields = new LinkedList<>();

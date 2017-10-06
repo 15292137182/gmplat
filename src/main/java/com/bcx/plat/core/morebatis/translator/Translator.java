@@ -17,6 +17,8 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
+import com.bcx.plat.core.morebatis.phantom.Alias;
+import com.bcx.plat.core.morebatis.phantom.Aliased;
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -33,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Translator implements SqlComponentTranslator {
-
   private static final SqlSegment SELECT = new SqlSegment("SELECT");
   private static final SqlSegment DELETE = new SqlSegment("DELETE");
   private static final SqlSegment INSERT_INTO = new SqlSegment("INSERT INTO");
@@ -184,7 +185,7 @@ public class Translator implements SqlComponentTranslator {
     return linkedList;
   }
 
-  public LinkedList translateTableSource(TableSource t) {
+  private LinkedList translateTableSource(TableSource t) {
     return translateTableSource(t, new LinkedList());
   }
 
@@ -226,7 +227,7 @@ public class Translator implements SqlComponentTranslator {
     return linkedList;
   }
 
-  public LinkedList translateOrder(Order order, LinkedList linkedList) {
+  private LinkedList translateOrder(Order order, LinkedList linkedList) {
     final Object source = order.getSource();
     if (source instanceof FieldSource) {
       translateFieldSource((FieldSource) source, linkedList);
@@ -243,7 +244,7 @@ public class Translator implements SqlComponentTranslator {
 
   //字段系列+++
 
-  public LinkedList translateAliasedColumn(AliasedColumn aliasedColumn, LinkedList linkedList) {
+  private LinkedList translateAliasedColumn(AliasedColumn aliasedColumn, LinkedList linkedList) {
     translateFieldSource(aliasedColumn, linkedList);
     final String alias = aliasedColumn.getAlias();
     if (alias != null) {
@@ -253,23 +254,25 @@ public class Translator implements SqlComponentTranslator {
     return linkedList;
   }
 
-  public LinkedList translateFieldSource(FieldSource fieldSource, LinkedList linkedList) {
+  private LinkedList translateFieldSource(FieldSource fieldSource, LinkedList linkedList) {
     if (fieldSource instanceof Field) {
       translateFieldSource((Field) fieldSource, linkedList);
     } else if (fieldSource instanceof SubAttribute) {
       translateFieldSource(((SubAttribute) fieldSource).getField(), linkedList);
       appendSql(JSON_ATTR, linkedList);
       appendArgs(((SubAttribute) fieldSource).getKey(), linkedList);
+    } else if (fieldSource instanceof Aliased) {
+      translateFieldSource(((Aliased) fieldSource).getFieldSource(), linkedList);
     }
     return linkedList;
   }
 
-  public LinkedList translateFieldOnlyName(Field field, LinkedList linkedList) {
+  private LinkedList translateFieldOnlyName(Field field, LinkedList linkedList) {
     linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
     return linkedList;
   }
 
-  public LinkedList translateFieldSource(Field field, LinkedList linkedList) {
+  private LinkedList translateFieldSource(Field field, LinkedList linkedList) {
     final Table table = field.getTable();
     if (table != null) {
       linkedList.add(new SqlSegment(getTableStr(table) + "." + quoteStr(field.getFieldName())));
@@ -280,7 +283,7 @@ public class Translator implements SqlComponentTranslator {
     return linkedList;
   }
 
-  public LinkedList translateTableSource(TableSource tableSource, LinkedList linkedList) {
+  private LinkedList translateTableSource(TableSource tableSource, LinkedList linkedList) {
     if (tableSource instanceof Table) {
       return translateTable((Table) tableSource, linkedList);
     } else if (tableSource instanceof JoinTable) {
@@ -321,7 +324,7 @@ public class Translator implements SqlComponentTranslator {
 
   //条件系列+++
 
-  public LinkedList<Object> translateCondition(Condition condition, LinkedList<Object> list) {
+  private LinkedList<Object> translateCondition(Condition condition, LinkedList<Object> list) {
     if (condition instanceof ChainCondition) {
       if (condition instanceof And) {
         translateAnd((And) condition, list);
@@ -387,14 +390,14 @@ public class Translator implements SqlComponentTranslator {
     return list;
   }
 
-  public LinkedList<Object> translateAnd(And andCondition, LinkedList<Object> list) {
+  private LinkedList<Object> translateAnd(And andCondition, LinkedList<Object> list) {
     return translateChainCondition(andCondition, list, AND);
   }
   /*条件系列*/
 
   /*Table系列*/
 
-  public LinkedList<Object> translateOr(Or orCondition, LinkedList<Object> list) {
+  private LinkedList<Object> translateOr(Or orCondition, LinkedList<Object> list) {
     return translateChainCondition(orCondition, list, OR);
   }
 
