@@ -11,7 +11,7 @@ public class UpdateAction {
 
   private TableSource tableSource;
   private Class<? extends BeanInterface> entityClass;
-  private Map<String, Object> values;
+  private Map values;
   private Condition where;
   private MoreBatis app;
   private SqlComponentTranslator translator;
@@ -37,7 +37,7 @@ public class UpdateAction {
     return values;
   }
 
-  public void setValues(Map<String, Object> values) {
+  public void setValues(Map values) {
     this.values = values;
   }
 
@@ -67,7 +67,7 @@ public class UpdateAction {
     return this;
   }
 
-  public UpdateAction set(Map<String, Object> row) {
+  public UpdateAction set(Map row) {
     setValues(row);
     return this;
   }

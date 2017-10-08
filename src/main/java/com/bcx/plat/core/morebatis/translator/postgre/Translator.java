@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Translator implements SqlComponentTranslator {
   private MoreBatis moreBatis;
@@ -116,17 +117,17 @@ public class Translator implements SqlComponentTranslator {
     translateTable((Table) updateAction.getTableSource(), linkedList);
     appendSql(SqlTokens.SET, linkedList);
     Class<? extends BeanInterface> entityClass = updateAction.getEntityClass();
-    Iterator<Map.Entry<String, Object>> entryIterator = updateAction.getValues().entrySet()
+    Iterator entryIterator = updateAction.getValues().entrySet()
         .iterator();
     while (entryIterator.hasNext()) {
-      final Map.Entry<String, Object> entry = entryIterator.next();
+      final Map.Entry entry = (Entry) entryIterator.next();
       Field field;
       try {
-        field = getMoreBatis().getColumnByAlias(entityClass, entry.getKey());
+        field = getMoreBatis().getColumnByAlias(entityClass, (String) entry.getKey());
       } catch (NullPointerException e) {
         continue;
       }
-      translateFieldOnlyName(field, linkedList);
+      translateFieldWithoutTable(field, linkedList);
       appendSql(SqlTokens.EQUAL, linkedList);
       if (entry.getValue() instanceof Map) {
         appendSql(mergeMap(field.getFieldSource()), linkedList);
@@ -154,7 +155,7 @@ public class Translator implements SqlComponentTranslator {
     appendSql(SqlTokens.BRACKET_START, linkedList);
     while (iterator.hasNext()) {
       final Field field = iterator.next();
-      translateFieldOnlyName(field, linkedList);
+      translateFieldWithoutTable(field, linkedList);
       appendSql(SqlTokens.COMMA, linkedList);
     }
     if (linkedList.getLast() == SqlTokens.COMMA) {
@@ -231,7 +232,7 @@ public class Translator implements SqlComponentTranslator {
     return linkedList;
   }
 
-  private LinkedList translateFieldOnlyName(Field field, LinkedList linkedList) {
+  private LinkedList translateFieldWithoutTable(Field field, LinkedList linkedList) {
     linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
     return linkedList;
   }
@@ -418,7 +419,7 @@ public class Translator implements SqlComponentTranslator {
     return strSource;
   }
 
-  private LinkedList appendSql(String sqlSegment, LinkedList list) {
+  protected LinkedList appendSql(String sqlSegment, LinkedList list) {
     return appendSql(new SqlSegment(sqlSegment), list);
   }
 

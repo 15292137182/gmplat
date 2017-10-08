@@ -1,11 +1,15 @@
 package com.bcx.plat.core.morebatis.translator.postgre;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
+import com.bcx.plat.core.morebatis.component.function.ArithmeticExpression;
 import com.bcx.plat.core.morebatis.component.function.Functions.*;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.FunctionResolution;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class PostgreFunctionResolution implements FunctionResolution {
   protected static final SqlSegment SUM  = new SqlSegment("SUM(");
@@ -38,6 +42,21 @@ public class PostgreFunctionResolution implements FunctionResolution {
       singleArgsFunction(function,MIN,linkedList);
     } else if (function instanceof Total) {
       singleArgsFunction(function,TOTAL,linkedList);
+    } else if (function instanceof ArithmeticExpression){
+      String[] parts = ("("+((ArithmeticExpression) function).getExpression()+")").split("\\?");
+      Iterator<String> partIterator = Arrays.asList(parts).iterator();
+      Iterator argsIterator = function.getArgs().iterator();
+      try {
+        while (partIterator.hasNext()) {
+          final String part = partIterator.next();
+          translator.appendSql(part,linkedList);
+          if (partIterator.hasNext()) {
+            translator.appendArgs(argsIterator.next(), linkedList);
+          }
+        }
+      } catch (NoSuchElementException e) {
+        throw new NoSuchElementException("实际参数数量低于问号数量");
+      }
     }
     return linkedList;
   }

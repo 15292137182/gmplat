@@ -183,65 +183,66 @@ public abstract class ConditionSequenceBuilder<CONDITION extends ChainCondition<
   }
 
 
-  private CURRENT_NODE equal(FieldSource FieldSource, Object value) {
+  private CURRENT_NODE equal(FieldSource fieldSource, Object value) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.EQUAL, value));
+        new FieldCondition(fieldSource, Operator.EQUAL, value));
   }
 
-  private CURRENT_NODE in(FieldSource FieldSource, Collection value) {
+  private CURRENT_NODE in(FieldSource fieldSource, Collection value) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.IN, value));
+        new FieldCondition(fieldSource, Operator.IN, value));
   }
 
-  private CURRENT_NODE in(FieldSource FieldSource, QueryAction value) {
+  private CURRENT_NODE in(FieldSource fieldSource, QueryAction value) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.IN, value));
+        new FieldCondition(fieldSource, Operator.IN, value));
   }
 
-  private CURRENT_NODE between(FieldSource FieldSource, Object rangeStart, Object rangeEnd) {
+  private CURRENT_NODE between(FieldSource fieldSource, Object rangeStart, Object rangeEnd) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.BETWEEN,
+        new FieldCondition(fieldSource, Operator.BETWEEN,
             new Object[]{rangeStart, rangeEnd}));
   }
 
-  private CURRENT_NODE like(FieldSource FieldSource, String value) {
+  private CURRENT_NODE like(FieldSource fieldSource, String value) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.LIKE_FULL, value));
+        new FieldCondition(fieldSource, Operator.LIKE_FULL, value));
   }
 
-  private CURRENT_NODE endWith(FieldSource FieldSource, String value) {
+  private CURRENT_NODE endWith(FieldSource fieldSource, String value) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.LIKE_LEFT, value));
+        new FieldCondition(fieldSource, Operator.LIKE_LEFT, value));
   }
 
 
-  private CURRENT_NODE startWith(FieldSource FieldSource, String value) {
+  private CURRENT_NODE startWith(FieldSource fieldSource, String value) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.LIKE_RIGHT, value));
+        new FieldCondition(fieldSource, Operator.LIKE_RIGHT, value));
   }
 
-  private CURRENT_NODE isNull(FieldSource FieldSource) {
+  private CURRENT_NODE isNull(FieldSource fieldSource) {
     return addCondition(
-        new FieldCondition(FieldSource, Operator.IS_NULL, null));
+        new FieldCondition(fieldSource, Operator.IS_NULL, null));
   }
 
-  private CURRENT_NODE notEqual(FieldSource FieldSource, Object value) {
+  private CURRENT_NODE notEqual(FieldSource fieldSource, Object value) {
     return addNotCondition(
-        new FieldCondition(FieldSource, Operator.EQUAL, value));
+        new FieldCondition(fieldSource, Operator.EQUAL, value));
   }
 
-  private CURRENT_NODE notIn(FieldSource FieldSource, Collection value) {
-    return notIn(FieldSource, value);
+  private CURRENT_NODE notIn(FieldSource fieldSource, Collection value) {
+    return addNotCondition(new FieldCondition(fieldSource,Operator.IN,value));
+//    notIn(FieldSource, value);
   }
 
-  private CURRENT_NODE notIn(FieldSource FieldSource, QueryAction value) {
-    return notIn(FieldSource, value);
+  private CURRENT_NODE notIn(FieldSource fieldSource, QueryAction value) {
+    return addNotCondition(new FieldCondition(fieldSource,Operator.IN,value));
   }
 
 
-  private CURRENT_NODE notBetween(FieldSource FieldSource, Object rangeStart, Object rangeEnd) {
+  private CURRENT_NODE notBetween(FieldSource fieldSource, Object rangeStart, Object rangeEnd) {
     return addNotCondition(
-        new FieldCondition(FieldSource, Operator.BETWEEN,
+        new FieldCondition(fieldSource, Operator.BETWEEN,
             new Object[]{rangeStart, rangeEnd}));
   }
 
@@ -261,9 +262,9 @@ public abstract class ConditionSequenceBuilder<CONDITION extends ChainCondition<
         rangeEnd);
   }
 
-  private CURRENT_NODE notLike(FieldSource FieldSource, String value) {
+  private CURRENT_NODE notLike(FieldSource fieldSource, String value) {
     return addNotCondition(
-        new FieldCondition(FieldSource, Operator.LIKE_FULL, value));
+        new FieldCondition(fieldSource, Operator.LIKE_FULL, value));
   }
 
   public CURRENT_NODE notLike(Class<? extends BeanInterface> entityClass, String alias,
@@ -280,8 +281,8 @@ public abstract class ConditionSequenceBuilder<CONDITION extends ChainCondition<
     return notLike(getColumnByAlias(conditionBuilderContext.getClz(), alias), value);
   }
 
-  private CURRENT_NODE notEndWith(FieldSource FieldSource, String value) {
-    return notEndWith(FieldSource, value);
+  private CURRENT_NODE notEndWith(FieldSource fieldSource, String value) {
+    return addNotCondition(new FieldCondition(fieldSource,Operator.LIKE_RIGHT,value));
   }
 
   public CURRENT_NODE notEndWith(Class<? extends BeanInterface> entityClass, String alias,
@@ -298,8 +299,8 @@ public abstract class ConditionSequenceBuilder<CONDITION extends ChainCondition<
     return notEndWith(getColumnByAlias(conditionBuilderContext.getClz(), alias), value);
   }
 
-  private CURRENT_NODE notStartWith(FieldSource FieldSource, String value) {
-    return notStartWith(FieldSource, value);
+  private CURRENT_NODE notStartWith(FieldSource fieldSource, String value) {
+    return notStartWith(fieldSource, value);
   }
 
   public CURRENT_NODE notStartWith(Class<? extends BeanInterface> entityClass, String alias,
@@ -316,9 +317,9 @@ public abstract class ConditionSequenceBuilder<CONDITION extends ChainCondition<
     return notStartWith(getColumnByAlias(conditionBuilderContext.getClz(), alias), value);
   }
 
-  private CURRENT_NODE notNull(FieldSource FieldSource) {
+  private CURRENT_NODE notNull(FieldSource fieldSource) {
     return addNotCondition(
-        new FieldCondition(FieldSource, Operator.IS_NULL, null));
+        new FieldCondition(fieldSource, Operator.IS_NULL, null));
   }
 
   public CURRENT_NODE notNull(Class<? extends BeanInterface> entityClass, String alias) {

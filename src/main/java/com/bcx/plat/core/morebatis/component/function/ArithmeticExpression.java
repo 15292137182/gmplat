@@ -1,22 +1,29 @@
 package com.bcx.plat.core.morebatis.component.function;
 
+import com.bcx.plat.core.morebatis.component.function.Functions.SqlFunction;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import java.util.Arrays;
 import java.util.List;
 
-public class ArithmeticExpression implements FieldSource<ArithmeticException> {
+public class ArithmeticExpression extends SqlFunction<ArithmeticException> {
 
   private String expression;
 
-  private List<Object> objects;
-
-  ArithmeticExpression(String expression,Object ... objects){
+  public ArithmeticExpression(String expression,Object ... objects){
+    super(objects);
     this.expression=expression;
-    this.objects= Arrays.asList(objects);
   }
 
-  ArithmeticExpression(String expression,List<Object> objects){
+  public ArithmeticExpression(String expression,List<Object> objects){
+    super(objects);
     this.expression=expression;
-    this.objects= objects;
+  }
+
+  public String getExpression() {
+    return expression;
+  }
+
+  public void setExpression(String expression) {
+    this.expression = expression;
   }
 }
