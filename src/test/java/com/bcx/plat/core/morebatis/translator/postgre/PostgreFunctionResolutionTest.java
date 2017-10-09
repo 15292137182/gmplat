@@ -11,6 +11,7 @@ import com.bcx.plat.core.morebatis.component.function.ArithmeticExpression;
 import com.bcx.plat.core.morebatis.component.function.Functions.Count;
 import com.bcx.plat.core.morebatis.phantom.Aliased;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +20,11 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
+@Rollback
 public class PostgreFunctionResolutionTest extends BaseTest{
   @Autowired
   MoreBatis moreBatis;
@@ -39,25 +44,8 @@ public class PostgreFunctionResolutionTest extends BaseTest{
 
   @Test
   public void testArithmetic(){
-    BusinessObject businessObject=new BusinessObject();
-    final String objectName = "全是字符串，根本找不到包含数字属性的对象";
-    final String etcFieldName = "所以我只好使用扩展字段了";
-    final long increment=28827;
-    businessObject.setObjectName(objectName);
-    HashMap<String,Integer> etc=new HashMap<>();
-    etc.put(etcFieldName, 100);
-    businessObject.setEtc(etc);
-    businessObject.buildCreateInfo().insert();
-    final String rowId=businessObject.getRowId();
-    Field etcField = moreBatis.getColumnByAlias(BusinessObject.class, etcFieldName);
-    ArithmeticExpression expression = new ArithmeticExpression("?+" + 28827, etcField);
-    HashMap<String,Object> updateArgs=new HashMap<>();
-    updateArgs.put(etcFieldName, expression);
-    Condition condition = new ConditionBuilder(
-        BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
-    moreBatis.update(BusinessObject.class, updateArgs).where(condition).execute();
-    Long result = (Long) ((Map) moreBatis.select(BusinessObject.class).where(condition).execute().get(0)
-        .get("etc")).get(etcFieldName);
-    Assert.assertTrue("表达式失败了", (28827+100)== result);
+    ArithmeticExpression expression = new ArithmeticExpression("?+10", 100);
+    Aliased aliased=new Aliased(expression,"test");
+    Assert.assertTrue("表达式测试失败了", 110==(Integer) moreBatis.selectStatement().select(aliased).execute().get(0).get("test"));
   }
 }

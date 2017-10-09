@@ -370,6 +370,7 @@ public class MoreBatisImpl implements MoreBatis {
    * @param entity 实体类的对象
    * @param value 要更新的值(支持null)
    */
+  @SuppressWarnings("unchecked")
   public UpdateAction update(Class entity, Map<String, Object> value) {
     UpdateAction update = updateStatement().from(entityTables.get(entity)).set(value);
     update.setEntityClass(entity);

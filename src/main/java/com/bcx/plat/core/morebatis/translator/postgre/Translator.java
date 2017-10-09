@@ -36,9 +36,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class Translator implements SqlComponentTranslator {
+
   private MoreBatis moreBatis;
 
-  private final PostgreFunctionResolution functionResolution=new PostgreFunctionResolution(this);
+  private static final SqlSegment CAST_MAP_SEGMENT_1 = new SqlSegment("(CASE when jsonb_typeof(");
+  private static final SqlSegment CAST_MAP_SEGMENT_2 = new SqlSegment(")='object' THEN");
+  private static final SqlSegment CAST_MAP_SEGMENT_3 = new SqlSegment(" ELSE '{}'::jsonb END)||");
+
+  private final PostgreFunctionResolution functionResolution = new PostgreFunctionResolution(this);
 
   private MoreBatis getMoreBatis() {
     if (moreBatis == null) {
@@ -50,8 +55,12 @@ public class Translator implements SqlComponentTranslator {
   public LinkedList translateQueryAction(QueryAction queryAction, LinkedList linkedList) {
     appendSql(SqlTokens.SELECT, linkedList);
     translateColumns(queryAction, linkedList);
+    final TableSource tableSource = queryAction.getTableSource();
+    if (tableSource==null) {
+      return linkedList;
+    }
     linkedList.add(SqlTokens.FROM);
-    translateTableSource(queryAction.getTableSource(), linkedList);
+    translateTableSource(tableSource, linkedList);
     Condition where = queryAction.getWhere();
     if (where != null) {
       if (!((where instanceof ChainCondition)
@@ -119,18 +128,19 @@ public class Translator implements SqlComponentTranslator {
     Class<? extends BeanInterface> entityClass = updateAction.getEntityClass();
     Iterator entryIterator = updateAction.getValues().entrySet()
         .iterator();
+    final MoreBatis moreBatis = getMoreBatis();
     while (entryIterator.hasNext()) {
       final Map.Entry entry = (Entry) entryIterator.next();
-      Field field;
+      FieldSource field;
       try {
-        field = getMoreBatis().getColumnByAlias(entityClass, (String) entry.getKey());
+        field=moreBatis.getColumnByAlias(entityClass, (String) entry.getKey());
+        translateFieldSourceWithoutTable(field, linkedList);
       } catch (NullPointerException e) {
         continue;
       }
-      translateFieldWithoutTable(field, linkedList);
       appendSql(SqlTokens.EQUAL, linkedList);
       if (entry.getValue() instanceof Map) {
-        appendSql(mergeMap(field.getFieldSource()), linkedList);
+        mergeMap(field, linkedList);
       }
       appendArgs(entry.getValue(), linkedList);
       appendSql(SqlTokens.COMMA, linkedList);
@@ -155,7 +165,7 @@ public class Translator implements SqlComponentTranslator {
     appendSql(SqlTokens.BRACKET_START, linkedList);
     while (iterator.hasNext()) {
       final Field field = iterator.next();
-      translateFieldWithoutTable(field, linkedList);
+      translateFieldSourceWithoutTable(field, linkedList);
       appendSql(SqlTokens.COMMA, linkedList);
     }
     if (linkedList.getLast() == SqlTokens.COMMA) {
@@ -214,15 +224,15 @@ public class Translator implements SqlComponentTranslator {
 
   public LinkedList translateFieldSource(FieldSource fieldSource, LinkedList linkedList) {
     if (fieldSource instanceof Field) {
-      translateFieldSource((Field) fieldSource, linkedList);
+      translateField((Field) fieldSource, linkedList);
     } else if (fieldSource instanceof SubAttribute) {
       translateFieldSource(((SubAttribute) fieldSource).getField(), linkedList);
       appendSql(SqlTokens.JSON_ATTR, linkedList);
       appendArgs(((SubAttribute) fieldSource).getKey(), linkedList);
     } else if (fieldSource instanceof Aliased) {
       translateFieldSource(((Aliased) fieldSource).getFieldSource(), linkedList);
-    } else if (fieldSource instanceof SqlFunction){
-      translateFunction((SqlFunction)fieldSource,linkedList);
+    } else if (fieldSource instanceof SqlFunction) {
+      translateFunction((SqlFunction) fieldSource, linkedList);
     }
     return linkedList;
   }
@@ -232,17 +242,23 @@ public class Translator implements SqlComponentTranslator {
     return linkedList;
   }
 
-  private LinkedList translateFieldWithoutTable(Field field, LinkedList linkedList) {
-    linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
+
+  private LinkedList translateFieldSourceWithoutTable(FieldSource field, LinkedList linkedList) {
+    if (field instanceof Field) {
+      appendSql(quoteStr(((Field) field).getFieldName()), linkedList);
+    } else if (field instanceof SubAttribute) {
+      translateFieldSourceWithoutTable(((SubAttribute) field).getField(), linkedList);
+      appendSql(SqlTokens.JSON_ATTR, linkedList);
+      appendSql(((SubAttribute) field).getKey(), linkedList);
+    }
     return linkedList;
   }
 
-  private LinkedList translateFieldSource(Field field, LinkedList linkedList) {
+  private LinkedList translateField(Field field, LinkedList linkedList) {
     final Table table = field.getTable();
     if (table != null) {
       linkedList.add(new SqlSegment(getTableStr(table) + "." + quoteStr(field.getFieldName())));
     } else {
-      //TODO 所有对fieldCondition的访问移除以后 这个地方要删除
       linkedList.add(new SqlSegment(quoteStr(field.getFieldName())));
     }
     return linkedList;
@@ -367,7 +383,7 @@ public class Translator implements SqlComponentTranslator {
   }
 
   private LinkedList<Object> translateChainCondition(ChainCondition chainCondition,
-                                                     LinkedList<Object> list, SqlSegment seperator) {
+      LinkedList<Object> list, SqlSegment seperator) {
     if (chainCondition.getConditions().size() == 0) {
       return list;
     }
@@ -406,9 +422,15 @@ public class Translator implements SqlComponentTranslator {
     return '"' + str + '"';
   }
 
-  private SqlSegment mergeMap(String fieldName) {
-    return new SqlSegment("(CASE when jsonb_typeof(" + fieldName + ")='object' THEN " + fieldName
-        + " ELSE '{}'::jsonb END)||");
+  private LinkedList mergeMap(FieldSource fieldSource, LinkedList linkedList) {
+//    linkedList.add()
+    LinkedList fieldSourceSegment = translateFieldSource(fieldSource, new LinkedList());
+    linkedList.add(CAST_MAP_SEGMENT_1);
+    linkedList.addAll(fieldSourceSegment);
+    linkedList.add(CAST_MAP_SEGMENT_2);
+    linkedList.addAll(fieldSourceSegment);
+    linkedList.add(CAST_MAP_SEGMENT_3);
+    return linkedList;
   }
 
   private String getTableStr(Table table) {
