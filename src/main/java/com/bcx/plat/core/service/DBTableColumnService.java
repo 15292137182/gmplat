@@ -152,7 +152,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
     if (relateTableRowId.size() == 0) {
       return fail(Message.QUERY_FAIL);
     }
-    return successData(Message.QUERY_SUCCESS, relateTableRowId);
+    return new ServerResult<>(relateTableRowId);
   }
 
   /**
@@ -181,6 +181,5 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       return fail(Message.DATA_QUOTE);
     }
   }
-
 
 }

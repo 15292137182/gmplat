@@ -33,12 +33,16 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 @Service
 public class FrontFuncProService extends BaseService<FrontFuncPro> {
 
+  private final BusinessObjectProService businessObjectProService;
+  private final DBTableColumnService dbTableColumnService;
+  private final TemplateObjectProService templateObjectProService;
+
   @Autowired
-  private BusinessObjectProService businessObjectProService;
-  @Autowired
-  private DBTableColumnService dbTableColumnService;
-  @Autowired
-  private TemplateObjectProService templateObjectProService;
+  public FrontFuncProService(BusinessObjectProService businessObjectProService, DBTableColumnService dbTableColumnService, TemplateObjectProService templateObjectProService) {
+    this.businessObjectProService = businessObjectProService;
+    this.dbTableColumnService = dbTableColumnService;
+    this.templateObjectProService = templateObjectProService;
+  }
 
 
   /**
@@ -48,7 +52,6 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
    * @return PlatResult
    */
   public ServerResult addFrontPro(Map<String, Object> paramEntity) {
-    ServerResult result = new ServerResult();
     String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));//关联对象属性
     List<Map> rowId = selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
     if (!isValid(rowId)) { // 如果没有关联对象属性，进行新增
@@ -64,12 +67,12 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
       FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
       int insert = frontFuncPro.insert();
       if (insert == -1) {
-        return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+        return fail(Message.NEW_ADD_FAIL);
       } else {
-        return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFuncPro);
+        return successData(Message.NEW_ADD_SUCCESS, frontFuncPro);
       }
     } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DATA_QUOTE);
+      return fail(Message.DATA_QUOTE);
     }
   }
 
@@ -151,7 +154,7 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
       pageResult.setResult(list);
       return new ServerResult<>(pageResult);
     } else {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
 
     }
   }
