@@ -2,7 +2,7 @@ package com.bcx.plat.core.morebatis.translator.postgre;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.function.ArithmeticExpression;
-import com.bcx.plat.core.morebatis.component.function.Functions.*;
+import com.bcx.plat.core.morebatis.component.function.*;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.FunctionResolution;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
@@ -19,6 +19,7 @@ public class PostgreFunctionResolution implements FunctionResolution {
   protected static final SqlSegment MAX = new SqlSegment("MAX(");
   protected static final SqlSegment MIN = new SqlSegment("MIN(");
   protected static final SqlSegment TOTAL = new SqlSegment("TOTAL(");
+  protected static final SqlSegment CONCAT = new SqlSegment("CONCAT(");
 
   private Translator translator;
 
@@ -42,6 +43,14 @@ public class PostgreFunctionResolution implements FunctionResolution {
       singleArgsFunction(function,MIN,linkedList);
     } else if (function instanceof Total) {
       singleArgsFunction(function,TOTAL,linkedList);
+    } else if (function instanceof Concat){
+      translator.appendSql(CONCAT, linkedList);
+      for (Object args : function.getArgs()) {
+        translator.appendArgs(args, linkedList);
+        translator.appendSql(SqlTokens.COMMA, linkedList);
+      }
+      linkedList.removeLast();
+      translator.appendSql(SqlTokens.BRACKET_END,linkedList );
     } else if (function instanceof ArithmeticExpression){
       String[] parts = ("("+((ArithmeticExpression) function).getExpression()+")").split("\\?");
       Iterator<String> partIterator = Arrays.asList(parts).iterator();

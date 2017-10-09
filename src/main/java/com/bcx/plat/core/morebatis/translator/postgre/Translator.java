@@ -17,7 +17,7 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.morebatis.component.function.Functions.SqlFunction;
+import com.bcx.plat.core.morebatis.component.function.SqlFunction;
 import com.bcx.plat.core.morebatis.phantom.Aliased;
 import com.bcx.plat.core.morebatis.phantom.AliasedColumn;
 import com.bcx.plat.core.morebatis.phantom.ChainCondition;
@@ -148,8 +148,10 @@ public class Translator implements SqlComponentTranslator {
     if (linkedList.getLast() == SqlTokens.COMMA) {
       linkedList.removeLast();
     }
+    final Condition where = updateAction.getWhere();
+    if (where==null) return linkedList;
     appendSql(SqlTokens.WHERE, linkedList);
-    translateCondition(updateAction.getWhere(), linkedList);
+    translateCondition(where, linkedList);
     return linkedList;
   }
 
