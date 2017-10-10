@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单资源维护</title>
+</head>
+<body>
+<div id="out">
+    <el-row id="add" style="margin-top: 10px;">
+        <el-col :span="4" :offset="20" style="text-align: right;">
+            <el-button type="info" icon="plus" size="small" @click="click">新增</el-button>
+        </el-col>
+    </el-row>
+    <div class="allBorder" style="padding: 10px;margin-top: 10px;">
+        <el-row id="search">
+            <el-col :span="7">
+                <components :is="searchBlock" data='{"main":"#search","code":"menuResourceSearch","bind":"table"}' :search-input="searchs"></components>
+            </el-col>
+        </el-row>
+        <el-row id="app" style="margin-top: 10px;">
+            <el-col :span="24">
+                <components :is="gmpTable" data='{"main":"#app","code":"menuResourceTable","id":"grid", "bind": "searchs"}' :table-data="table"></components>
+            </el-col>
+        </el-row>
+    </div>
+</div>
+
+<script type="text/javascript" src="../Public/publicjs.js"></script>
+<script>
+    var select_row;
+    function GlobalParameter() {
+        var args={"tableKeySet":{"grid":{category:"menuResourceType"}}};
+        return args;
+    };
+    function LoadingConfig(){
+//            var json = jsonDataConfigObj.configData();
+        var json = {};
+        json.checkbox = false;
+        return json;
+    }
+    gmp_onload = function () {
+        // 加载数据
+        GmpTable.table.reload({
+            queryUrl: serverPath + '/menu/queryPage',
+            queryParam: {
+                search:"",
+                pageSize:"10",
+                pageNum:"1"
+            }
+        });
+        // 编辑
+        GmpTable.table.onEditRow = function (index, row) {
+            select_row = row;
+            var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {});
+        }
+
+        //删除
+        GmpTable.table.onDeleteRow = function (index, row) {
+            select_row = row;
+//                console.log(select_row);
+//                console.log(GmpTable.table.vueObj);
+            deleteObj.del(function(){
+                var data = {
+                    "url":serverPath+'/dynamicTemplate/delete',//删除
+                    "jsonData":{
+                        rowId:select_row.rowId
+                    },
+                    "obj":GmpTable.table.vueObj
+                }
+                gmpAjax.showAjax(data,function(res){
+                    GmpTable.table.reload({
+                        queryUrl: serverPath + '/dynamicTemplate/queryPage',
+                        queryParam: {
+                            search:"",
+                            pageSize:"10",
+                            pageNum:"1"
+                        }
+                    });
+                })
+            })
+        }
+
+        // 搜索
+        GmpSearch.searchs.setOptions({
+            selUrl: serverPath + '/dynamicTemplate/queryPage'
+        });
+    };
+
+    var add = new Vue({
+        el: "#add",
+        data: function() {
+            return {
+                flag: "edit"
+            }
+        },
+        methods: {
+            click() {
+                select_row = [];
+                // 该表标识
+                add.flag = "add";
+                // 弹出
+                var divIndex = gmpPopup.dynamicDiv('demo2.html', '新增', '400px', '470px', function() {});
+            }
+        }
+    });
+</script>
+</body>
+</html>
