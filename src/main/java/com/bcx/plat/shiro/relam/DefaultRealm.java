@@ -3,13 +3,11 @@ package com.bcx.plat.shiro.relam;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
-import com.bcx.plat.core.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -23,10 +21,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * <p>
  * Create By HCL at 2017/8/14
  */
-public class DefaultRelam extends AuthorizingRealm {
-
-  @Autowired
-  UserService userService;
+public class DefaultRealm extends AuthorizingRealm {
 
   /**
    * 默认的授权方法
