@@ -15,6 +15,10 @@
         <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
           <!--p:entityClass="com.bcx.plat.core.entity.BusinessObject" p:tableName="t_business_object"-->
           <!--p:pks="#{'rowId'}"/>-->
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.Employee"
+              p:tableName="t_employee"
+              p:pks="#{'rowId'}"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.TestEntityEntriesBuilder"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.BusinessObjectPro"
