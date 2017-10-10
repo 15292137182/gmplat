@@ -9,7 +9,6 @@ public abstract class Global {
 
   private static PropertiesLoader loader = new PropertiesLoader("properties/gmplat.properties");
 
-  //
   public static final String PLAT_SYS_PREFIX = "/gmp/sys";
 
   /**
