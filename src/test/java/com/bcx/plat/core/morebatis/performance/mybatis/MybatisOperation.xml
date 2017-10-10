@@ -15,7 +15,22 @@
  "t_business_object"."etc" AS "etc" ,
  "t_business_object"."row_id" AS "rowId" FROM "t_business_object"
   WHERE
-  ( "t_business_object"."etc" ::jsonb->> 'a' = #{a} )
+  object_name = #{objectName}
   </select>
+
+ <insert id="insert">
+  insert into "t_business_object" (row_id,object_name) VALUES ( #{rowId},#{objectName} )
+ </insert>
+
+ <delete id="delete">
+  DELETE FROM "t_business_object" WHERE object_name = #{objectName}
+ </delete>
+
+ <update id="update">
+  UPDATE "t_business_object" SET
+  row_id=#{rowId},
+  object_name = #{objectName}
+  WHERE row_id=#{rowId}
+ </update>
 
 </mapper>
