@@ -951,6 +951,7 @@ var DynamicStitchings = (function(){
         return column;
     }
     var Concatenation = function(arr,thisObj){//判断是什么功能块，并获取html片段
+        console.log(thisObj);
         var htmlObj = {
             item : arr
         };
@@ -958,11 +959,14 @@ var DynamicStitchings = (function(){
         var str = '';
         var pageConfig = '<el-row type="flex" justify="end" style="padding-top:10px" class="block"><el-pagination @size-change="tableData.handleSizeChange" @current-change="tableData.handleCurrentChange" :current-page="tableData.pageNum" :page-sizes="[5,10,20]" :page-size="tableData.pageSize" :total="tableData.total" layout="total, sizes, prev, pager, next, jumper"></el-pagination></el-row>';
         var tableColumn='';//table列
-        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope"><el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
-        if(thisObj.checkbox==true){
-            var selection = '<el-table-column data="checkTable" type="selection" width="55"></el-table-column>'
-        }else{
-            var selection = '';
+        var configTableColum = '<el-button type="text" size="small" icon="search" @click="tableData.editRow(scope.$index,scope.row)"></el-button>'//用户配置操作列函数配置
+        var OperationColumn ='<el-table-column fixed="right" label="操作"width="100"><template scope="scope">'+configTableColum+'<el-button type="text" size="small" icon="edit" @click="tableData.editRow(scope.$index,scope.row)"></el-button><el-button type="text" size="small" icon="delete" @click="tableData.deleteRow(scope.$index,scope.row)"></el-button></template></el-table-column>';
+        if(thisObj){
+            if(thisObj.checkbox==true){
+                var selection = '<el-table-column data="checkTable" type="selection" width="55"></el-table-column>'
+            }else{
+                var selection = '';
+            }
         }
         var i;
         for(i=0;i<arr.length;i++){

@@ -189,7 +189,8 @@ var getHtml = (function() {
                     if (arr[0].funcType == "form") {
                         var form = new gmpFormObj(compId, code, arr, mainId, "", "");
                         // 创建vue实例
-                        form.bulidComponent(jsonDataConfig);
+                        // form.bulidComponent(jsonDataConfig);
+                        form.bulidComponent();
                         // 获取下拉框options
                         // console.log(form);
                         var _target = form.formObj;
@@ -215,7 +216,8 @@ var getHtml = (function() {
                         // console.log(_table);
                         var _search = new gmpsearchObj(compId, code, arr, mainId, [params.bind]);
                         // 创建vue实例
-                        _search.bulidComponent(jsonDataConfig);
+                        // _search.bulidComponent(jsonDataConfig);
+                        _search.bulidComponent();
                         // 缓存实例化对象
                         GmpSearch[compId] = _search;
                         // console.log(compId);

@@ -432,6 +432,7 @@ gmpFormObj.prototype.submit = function(json, callback) {
 // 动态表格对象
 function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
     this.jsonDataConfig = jsonDataConfig;//配置信息
+    // console.log(jsonDataConfig);
     this.grids = grids;	//table响应数据对应的search.id
     if(this.jsonDataConfig.checkbox){
         this.checkbox = this.jsonDataConfig.checkbox;//表格右侧选择框
@@ -648,11 +649,13 @@ gmpTableObj.prototype.searchSelect = function(data) {
         tableId: that.tableId
     }
     obj[compId] = this.tableObjArr;
+    // console.log(obj);
     return obj;
 };
 
 // 构建表格组件
 gmpTableObj.prototype.bulidComponent = function(thisObj) {
+    // console.log(thisObj);
     // alert("第一次")
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
     // console.log(strHtml.html);
@@ -1056,6 +1059,7 @@ gmpsearchObj.prototype.search = function(json,callback) {
     // gmpTableObjData.vueObj.tableObjArr.total = 1;
     // gmpTableObjData.vueObj.table.pageNum = 1;
     // console.log(gmpTableObjData.tableObjArr.pageNum);
+    // console.log(gmpTableObjData.vueObj.table);
     // gmpTableObjData.searchSelect();
 
     pageConfig.pageSize = gmpTableObjData.pageSize;
