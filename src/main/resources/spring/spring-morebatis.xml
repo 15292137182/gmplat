@@ -104,10 +104,14 @@
           p:entityClass="com.bcx.plat.core.morebatis.plugin.relation.entity.Relation"
           p:tableName="t_relation" p:pks="#{'rowId'}"/>
 
-          <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                p:entityClass="com.bcx.plat.core.entity.SystemSetting"
-                p:tableName="t_system_setting"
-                p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.SystemSetting"
+              p:tableName="t_system_setting"
+              p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.BaseOrg"
+              p:tableName="t_base_org"
+              p:pks="#{'rowId'}"/>
       </list>
     </constructor-arg>
   </bean>

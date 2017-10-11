@@ -5,7 +5,7 @@ CREATE TABLE public.t_base_org (
   org_pid          VARCHAR(64)  NULL,
   org_id           VARCHAR(64)  NULL,
   org_name         VARCHAR(128) NULL,
-  org_sort         VARCHAR(4)   NULL,
+  org_sort         INT          NULL,
   org_level        VARCHAR(4)   NULL,
   fixed_phone      VARCHAR(32)  NULL,
   address          TEXT         NULL,
