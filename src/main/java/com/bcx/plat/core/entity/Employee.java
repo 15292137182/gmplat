@@ -2,6 +2,12 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 
+/**
+ * 人员信息实体类
+ * <p>
+ * Created by YoungerOu on 2017/10/10.
+ * <p>
+ */
 public class Employee extends BaseEntity<Employee> {
   private String employeeNo;//用户工号
   private String employeeName;//用户姓名
