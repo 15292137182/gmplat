@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event_Add</title>
+    <style>
+
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
+
+        input {
+            -webkit-user-select: auto !important;
+        }
+        .demo_line{
+            padding: 0 10px 0;
+            margin: 14px 0 20px 0;
+            line-height: 1px;
+            border-left: 20px solid #ddd;
+            border-right: 440px solid #ddd;
+            text-align: left;
+        }
+        .demo_line>span{
+            font-size:16px;
+        }
+        .el-form-item__label{
+            font-size:13px;
+        }
+        form .el-input__inner{
+            font-size:12px;
+        }
+        form .el-form-item {
+            margin-bottom: 16px;
+        }
+        form .el-form-item__label{
+           width:115px !important;
+        }
+        form .el-form-item__content{
+            margin-left:120px !important;
+        }
+    </style>
+</head>
+<body>
+<div id="addProEvent" style="margin-top:20px">
+    <el-form :label-position="labelPosition" label-width="120px" :model="addProForm" ref='addProForm' :rules="rules"
+             style="padding:0 20px" class="demo-ruleForm">
+        <div class="demo_line"><span>基本信息</span></div>
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="用户姓名" prop="useName">
+                    <el-input placeholder="请输入用户姓名" v-model="addProForm.useName" ref="addProForm.useName"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="性别" prop="useSex">
+                    <el-select v-model="addProForm.useSex" placeholder="请选择性别" clearable >
+                        <el-option value="男">男</el-option>
+                        <el-option value="女">女</el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="身份证" prop="useIdentify">
+                    <el-input placeholder="请输入身份证" v-model="addProForm.useIdentify" ref="addProForm.useIdentify"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="入职日期" prop="useDate">
+                    <el-date-picker
+                            v-model="addProForm.useDate"
+                            type="date"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <div class="demo_line"><span>账号信息</span></div>
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="用户昵称" prop="useCode">
+                    <el-input placeholder="请输入用户昵称" v-model="addProForm.useCode" ref="addProForm.useCode"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="所属部门" prop="usePart" class="demo-input-suffix">
+                    <div class="demo-input-suffix">
+                        <el-input placeholder="请选择所属部门" suffix-icon="el-icon-date" v-model="addProForm.usePart" ref="addProForm.usePart"></el-input>
+                    </div>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="邮箱" prop="useEmail">
+                    <el-input placeholder="请输入邮箱" v-model="addProForm.useEmail" ref="addProForm.useEmail"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="初始密码" prop="uniquePassword">
+                    <el-input placeholder="请输入用户姓名" v-model="addProForm.uniquePassword" ref="addProForm.uniquePassword"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="职务" prop="useDuty">
+                    <el-input placeholder="请输入职务" v-model="addProForm.useDuty" ref="addProForm.useDuty"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="用户工号" prop="useCode">
+                    <el-input placeholder="请输入用户工号" v-model="addProForm.useCode" ref="addProForm.useCode"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <div class="demo_line"><span>联系信息</span></div>
+        <el-row class="row-bg">
+            <el-col :span="11">
+                <el-form-item label="移动电话" prop="usePhone">
+                    <el-input placeholder="请输入移动电话" v-model="addProForm.usePhone" ref="addProForm.usePhone"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="办公电话" prop="useAllPhone">
+                    <el-input placeholder="请输入办公电话" v-model="addProForm.useAllPhone" ref="addProForm.useAllPhone"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <div class="demo_line"><span>其他信息</span></div>
+
+        <el-row class="row-bg">
+            <el-col :span="24">
+                <el-form-item label="说明" prop="useInstruction">
+                    <el-input type="textarea" :rows="1" placeholder="请输入说明" v-model="addProForm.useInstruction" ref="addProForm.useInstruction">
+                    </el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item label="备注" prop="useRemark">
+                    <el-input type="textarea" :rows="1" placeholder="请输入备注" v-model="addProForm.useRemark" ref="addProForm.useRemark">
+                    </el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="conformEvent('addProForm')">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script src="personnel_add.js"></script>
+</body>
+</html>

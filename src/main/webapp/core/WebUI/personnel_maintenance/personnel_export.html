@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="perExport" style="margin:20px 20px">
+    <el-checkbox-group v-model="checkedCities1" :min="1" :max="2">
+        <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+        <!--<el-checkbox v-model="employeeNo">用户工号</el-checkbox>-->
+        <!--<el-checkbox v-model="employeeName">用户姓名</el-checkbox>-->
+        <!--<el-checkbox v-model="employeeNickname">用户昵称</el-checkbox>-->
+        <!--<el-checkbox v-model="status">状态</el-checkbox>-->
+        <!--<el-checkbox v-model="password">密码</el-checkbox>-->
+        <!--<el-checkbox v-model="belongOrganization">所属部门</el-checkbox>-->
+        <!--<el-checkbox v-model="idCard">身份证</el-checkbox>-->
+        <!--<el-checkbox v-model="mobilePhone">移动电话</el-checkbox>-->
+        <!--<el-checkbox v-model="officePhone">办公电话</el-checkbox>-->
+        <!--<el-checkbox v-model="email">邮箱</el-checkbox>-->
+        <!--<el-checkbox v-model="gender">性别</el-checkbox>-->
+        <!--<el-checkbox v-model="job">职务</el-checkbox>-->
+        <!--<el-checkbox v-model="hiredate">入职日期</el-checkbox>-->
+        <!--<el-checkbox v-model="description">说明</el-checkbox>-->
+        <!--<el-checkbox v-model="remarks">备注</el-checkbox>-->
+    </el-checkbox-group>
+</div>
+<script>
+    const cityOptions = ['上海', '北京', '广州', '深圳'];
+    var personExport=new Vue({
+        el:"#perExport",
+        data:{
+//            employeeNo:true,
+//            employeeName:true,
+//            employeeNickname:true,
+//            status:true,
+//            password:true,
+//            belongOrganization:true,
+//            idCard:true,
+//            mobilePhone:true,
+//            officePhone:true,
+//            email:true,
+//            gender:true,
+//            job:true,
+//            hiredate:true,
+//            description:true,
+//            remarks:true,
+            checkedCities1: ['上海', '北京'],
+            cities: cityOptions
+        },
+        methods:{
+
+        }
+    })
+</script>
+</body>
+</html>
