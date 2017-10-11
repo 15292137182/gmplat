@@ -53,9 +53,10 @@ public class BusinessObjectProService extends BaseService<BusinessObjectPro> {
    */
   public ServerResult insertBusinessPro(Map<String, Object> paramEntity) {
     String fieldAlias = String.valueOf(paramEntity.get("fieldAlias")).trim();
+    String objRowId = String.valueOf(paramEntity.get("objRowId")).trim();
     paramEntity.put("fieldAlias", fieldAlias);
     if (isValid(fieldAlias)) {
-      Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("fieldAlias", fieldAlias).endAnd().buildDone();
+      Condition condition = new ConditionBuilder(BusinessObjectPro.class).and().equal("objRowId",objRowId).equal("fieldAlias", fieldAlias).endAnd().buildDone();
       List<BusinessObjectPro> select = select(condition);
       if (select.size() == 0) {
         BusinessObjectPro businessObjectPro = new BusinessObjectPro().buildCreateInfo().fromMap(paramEntity);
