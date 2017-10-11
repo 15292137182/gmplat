@@ -342,7 +342,7 @@ gmpFormObj.prototype.request = function(callback) {
     var url = this.postUrl;
     $.ajax({
         url: url,
-        type: "post",
+        type: "get",
         data: data,
         success: function(res) {
             var arr = res.resp.content.data;

@@ -29,7 +29,7 @@
 <script>
     var select_row;
     function GlobalParameter() {
-        var args={"tableKeySet":{"grid":{category:"menuResourceType"}}};
+        var args={"tableKeySet":{"grid":{category:"menuResourceType",grantAuth:"menuResourceSelect",avail:"menuResourceSelect"}}};
         return args;
     };
     function LoadingConfig(){
@@ -39,6 +39,7 @@
         return json;
     }
     gmp_onload = function () {
+        console.log(GmpTable);
         // 加载数据
         GmpTable.table.reload({
             queryUrl: serverPath + '/menu/queryPage',
@@ -51,7 +52,7 @@
         // 编辑
         GmpTable.table.onEditRow = function (index, row) {
             select_row = row;
-            var divIndex = gmpPopup.dynamicDiv('demo2.html', '编辑', '400px', '470px', function() {});
+            var divIndex = gmpPopup.dynamicDiv('add-menu-resource.html', '编辑', '400px', '470px', function() {});
         }
 
         //删除
@@ -61,15 +62,16 @@
 //                console.log(GmpTable.table.vueObj);
             deleteObj.del(function(){
                 var data = {
-                    "url":serverPath+'/dynamicTemplate/delete',//删除
+                    "url":serverPath+'/menu/delete',//删除
                     "jsonData":{
                         rowId:select_row.rowId
                     },
-                    "obj":GmpTable.table.vueObj
+                    "obj":GmpTable.table.vueObj,
+                    "showMsg":true
                 }
                 gmpAjax.showAjax(data,function(res){
                     GmpTable.table.reload({
-                        queryUrl: serverPath + '/dynamicTemplate/queryPage',
+                        queryUrl: serverPath + '/menu/queryPage',
                         queryParam: {
                             search:"",
                             pageSize:"10",
@@ -99,7 +101,7 @@
                 // 该表标识
                 add.flag = "add";
                 // 弹出
-                var divIndex = gmpPopup.dynamicDiv('demo2.html', '新增', '400px', '470px', function() {});
+                var divIndex = gmpPopup.dynamicDiv('add-menu-resource.html', '新增', '400px', '470px', function() {});
             }
         }
     });
