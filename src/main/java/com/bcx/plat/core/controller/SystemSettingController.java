@@ -6,6 +6,7 @@ import com.bcx.plat.core.service.SystemSettingService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -46,7 +47,7 @@ public class SystemSettingController extends BaseController {
    * @return 返回操作结果
    */
   @RequestMapping(value = "/saveSettings", method = POST)
-  public PlatResult saveSettings(Map<String, Object> settings) {
+  public PlatResult saveSettings(@RequestParam Map<String, Object> settings) {
     return super.result(systemSettingService.saveSettings(settings));
   }
 

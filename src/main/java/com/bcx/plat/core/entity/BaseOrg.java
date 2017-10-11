@@ -5,7 +5,7 @@ import com.bcx.plat.core.base.BaseEntity;
 /**
  * Create By HCL at 2017/10/11
  */
-public class BaseOrg extends BaseEntity {
+public class BaseOrg extends BaseEntity<BaseOrg> {
 
   private String orgPid;
   private String orgId;
