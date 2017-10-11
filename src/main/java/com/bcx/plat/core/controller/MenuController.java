@@ -26,10 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
-import static com.bcx.plat.core.constants.Message.PRIMARY_KEY_CANNOT_BE_EMPTY;
-import static com.bcx.plat.core.constants.Message.UPDATE_FAIL;
+import static com.bcx.plat.core.constants.Message.*;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -83,7 +80,7 @@ public class MenuController extends BaseController {
       Menu menu = new Menu().buildModifyInfo().fromMap(param);
       int update = menu.updateById();
       if (update != -1) {
-        return successData(NEW_ADD_SUCCESS, menu);
+        return successData(UPDATE_SUCCESS, menu);
       } else {
         return fail(UPDATE_FAIL);
       }
@@ -156,12 +153,11 @@ public class MenuController extends BaseController {
    * @return PlatResult
    */
   @GetMapping("/queryById")
-  public Object queryById(String rowId) {
-    List result = menuService.selectMap(new FieldCondition("rowId", Operator.EQUAL, rowId));
-    if (result.size() == 0) {
-      return fail(Message.QUERY_FAIL);
+  public PlatResult queryById(String rowId) {
+    if (isValid(rowId)) {
+      return result(new ServerResult<>(new Menu().selectOneById(rowId)));
+    }else{
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
-    return result(new ServerResult<>(result.get(0)));
   }
-
 }

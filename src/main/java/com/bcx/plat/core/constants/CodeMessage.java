@@ -13,4 +13,5 @@ public class CodeMessage {
   public static final String TEMPLATE = "template";    //模板对象配置代码
   public static final String TEMPLATE_PROPERTY = "templateProperty";    //模板对象属性配置代码
   public static final String DYNAMIC_TEMPLATE = "dynamicTemplateCode";
+  public static final String USER_GROUP_NUMBER = "userGroupNumber";//用户组编号
 }

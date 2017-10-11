@@ -84,6 +84,11 @@
           p:pks="#{'rowId'}"/>
 
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.UserGroup"
+          p:tableName="t_user_group"
+          p:pks="#{'rowId'}"/>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
           p:tableName="t_business_relate_template" p:pks="#{'rowId'}"/>
 
