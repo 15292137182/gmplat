@@ -73,7 +73,7 @@ public abstract class SystemSettingManager {
           }
         });
         fixSettingData(setting, key);
-        if (setting.size() > 1) {
+        if (isValid(setting.get("value"))) {
           settingData.add(setting);
         }
       });

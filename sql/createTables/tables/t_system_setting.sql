@@ -7,6 +7,7 @@ CREATE TABLE public.t_system_setting (
   name             VARCHAR(32) DEFAULT '',
   value            VARCHAR(64) DEFAULT '',
   remark           VARCHAR(64) DEFAULT '',
+
   etc              JSONB       DEFAULT '{}',
   status           VARCHAR(8)  NULL,
   "version"        VARCHAR(16) NULL,
