@@ -104,7 +104,7 @@ public class SysConfigService extends BaseService<SysConfig> {
     LinkedList<Order> orders = dataSort(SysConfig.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
-      Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
+      Map map = UtilsTool.jsonToObj(param, Map.class);
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(SysConfig.class, map);
     } else { // 如果没有param参数，则进行空格查询
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));

@@ -34,7 +34,7 @@ public abstract class Global {
    * @param key 值
    * @return 返回
    */
-  public static String getStringValue(String key) {
+  public static String getValueAsString(String key) {
     Object _obj = getValue(key);
     if (null != _obj) {
       return String.valueOf(_obj);
