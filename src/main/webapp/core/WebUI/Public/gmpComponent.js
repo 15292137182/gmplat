@@ -339,7 +339,8 @@ Vue.component("multiple-selection", {
  */
 Vue.component("base-tree", {
     // 是否可过滤 默认展开的节点 默认选择的节点
-    props: ["isFilter", "defaultExpandedKeys", "defaultCheckedKeys"],
+    // props: ["isFilter", "defaultExpandedKeys", "defaultCheckedKeys"],
+    props: ["initial"],
     watch: {
         filterText(val) {
             this.$refs.tree.filter(val);
@@ -347,8 +348,18 @@ Vue.component("base-tree", {
     },
     data() {
         return {
+            // 是否可过滤
+            isFilter: false,
+            // 过滤文本
             filterText: "",
-            datas: [{
+            // 默认展开的节点
+            defaultExpandedKeys: [],
+            // 默认选中的节点
+            defaultCheckedKeys: [],
+            // 获取树数据接口
+            url: "",
+            // 树数据
+            treeData: [{
                 id: 1,
                 label: '一级 1',
                 children: [{
@@ -412,8 +423,31 @@ Vue.component("base-tree", {
             }
         }
     },
-    mounted() {
-        //
+    beforeMount() {
+        // 获取配置接口
+        if(this.initial.url) {
+            this.url = this.initial.url;
+        }else {
+            this.url = "";
+        }
+        // 获取配置过滤Boolean值
+        if(this.initial.filter) {
+            this.isFilter = true;
+        }else {
+            this.isFilter = false;
+        }
+        // 获取默认展开节点
+        if(this.initial.expanded) {
+            this.defaultExpandedKeys = this.initial.expanded;
+        }else {
+            this.defaultExpandedKeys = [];
+        }
+        // 获取配置选中节点
+        if(this.initial.checked) {
+            this.defaultCheckedKeys = this.initial.checked;
+        }else {
+            this.defaultCheckedKeys = [];
+        }
     },
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
@@ -431,7 +465,7 @@ Vue.component("base-tree", {
     },
     template: `<div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
-                    <el-tree :data="datas" show-checkbox @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-tree :data="treeData" show-checkbox @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });
