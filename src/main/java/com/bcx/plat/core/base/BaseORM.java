@@ -323,6 +323,24 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
   }
 
+  public int logicalDeleteById() {
+    return logicalDeleteById(getPk());
+  }
+
+  /**
+   * 逻辑删除
+   *
+   * @param id 主键
+   * @return
+   */
+  public int logicalDeleteById(Serializable id) {
+    if (null == id) {
+      return -1;
+    } else {
+      return MORE_BATIS.update(getClass(), this.toDbMap()).where(new FieldCondition("rowId", Operator.EQUAL, id)).execute();
+    }
+  }
+
   private static Or getNoDeleteCondition() {
     FieldCondition isNull = new FieldCondition("deleteFlag", Operator.IS_NULL, null);
     FieldCondition notFlag = new FieldCondition("deleteFlag", Operator.EQUAL, DELETE_FLAG).not();

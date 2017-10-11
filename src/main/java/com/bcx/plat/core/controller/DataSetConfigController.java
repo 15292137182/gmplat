@@ -74,7 +74,7 @@ public class DataSetConfigController extends BaseController {
       DataSetConfig dataSetConfig = new DataSetConfig().buildModifyInfo().fromMap(param);
       int update = dataSetConfig.updateById();
       if (update != -1) {
-        return successData(NEW_ADD_SUCCESS, dataSetConfig);
+        return successData(UPDATE_SUCCESS, dataSetConfig);
       } else {
         return fail(UPDATE_FAIL);
       }

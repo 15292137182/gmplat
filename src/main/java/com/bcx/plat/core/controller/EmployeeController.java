@@ -10,6 +10,7 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,12 +36,12 @@ public class EmployeeController extends BaseController {
   }
 
   /**
-   * 人员信息查询方法
+   * 人员信息 - 查询方法
    *
-   * @param search   按照模糊查询
+   * @param search   按照空格查询
    * @param pageNum  页码
    * @param pageSize 页面大小
-   * @param param    按照指定字段查询
+   * @param param    按照指定字段查询(json)
    * @param order    排序方式
    * @return PlatResult
    */
@@ -51,7 +52,7 @@ public class EmployeeController extends BaseController {
   }
 
   /**
-   * 根据指定的一个或多个组织机构查询人员信息
+   * 人员信息 - 根据指定的一个或多个组织机构查询
    *
    * @param param 组织机构参数，以数组的形式传入["1","2"]
    * @return PlatResult
@@ -68,55 +69,93 @@ public class EmployeeController extends BaseController {
   }
 
   /**
-   * 根据工号精确查询
+   * 人员信息 - 根据指定字段精确查询
    *
-   * @param employeeNo 用户工号
+   * @param param 接收指定参数(rowId, employeeNo...)
    * @return PlatResult
    */
-  @RequestMapping("/queryByEmployeeNo")
-  public PlatResult queryByEmpNo(String employeeNo) {
-    if (UtilsTool.isValid(employeeNo)) {
-      Condition condition = new ConditionBuilder(Employee.class).and().equal("employeeNo", employeeNo).endAnd().buildDone();
-      return selectMapByCondition(condition);
+  @RequestMapping("/queryBySpecify")
+  public PlatResult queryBySpecify(@RequestParam Map<String, Object> param) {
+    if (!param.isEmpty()) {
+      Condition condition = UtilsTool.convertMapToAndCondition(Employee.class, param);
+      List<Map> select = employeeService.selectMap(condition);
+      if (!select.isEmpty()) {
+        return successData(Message.QUERY_SUCCESS, select);
+      } else {
+        return fail(Message.QUERY_FAIL);
+      }
+    } else {
+      return fail(Message.QUERY_FAIL);
+    }
+  }
+
+  /**
+   * 人员信息 - 新增
+   *
+   * @param param
+   * @return PlatResult
+   */
+  @PostMapping("/add")
+  public PlatResult add(@RequestParam Map<String, Object> param) {
+    ServerResult result = new ServerResult();
+
+    return null;
+  }
+
+  /**
+   * 人员信息 - 编辑
+   *
+   * @param param 接收一个实体参数
+   * @return PlatResult
+   */
+  @PostMapping("/modify")
+  public PlatResult modify(@RequestParam Map<String, Object> param) {
+    if (UtilsTool.isValid(param.get("rowId"))) {
+      Object employeeNo = param.get("employeeNo");
+      Object employeeName = param.get("employeeName");
+      if (null != employeeNo && !"".equals(employeeNo.toString().trim())
+          && null != employeeName && !"".equals(employeeName.toString().trim())) {//工号和姓名不能为空
+        //工号不能重复
+        Condition condition = new ConditionBuilder(Employee.class).and().equal("employeeNo", employeeNo).endAnd().buildDone();
+        List<Employee> employees = employeeService.select(condition);
+        if (employees.isEmpty()) {
+          param.put("employeeNo", employeeNo.toString().trim());
+          param.put("employeeName", employeeName.toString().trim());
+          Employee employee = new Employee();
+          Employee modify = employee.fromMap(param).buildModifyInfo();
+          if (modify.updateById() != -1) {
+            return success(Message.UPDATE_SUCCESS);
+          } else {
+            return fail(Message.UPDATE_FAIL);
+          }
+        } else {
+          return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+        }
+      } else {
+        return fail(Message.DATA_CANNOT_BE_EMPTY);
+      }
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
   /**
-   * 根据rowId精确查询
+   * 人员信息 - 删除
    *
    * @param rowId 唯一标识
    * @return PlatResult
    */
-  @RequestMapping("/queryById")
-  public PlatResult queryById(String rowId) {
+  @PostMapping("/delete")
+  public PlatResult delete(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Condition condition = new ConditionBuilder(Employee.class).and().equal("rowId", rowId).endAnd().buildDone();
-      return selectMapByCondition(condition);
+      Employee employee = new Employee().buildDeleteInfo();
+      if (employee.logicalDeleteById(rowId) != -1) {
+        return success(Message.DELETE_SUCCESS);
+      } else {
+        return fail(Message.DELETE_FAIL);
+      }
     } else {
-      return fail(Message.QUERY_FAIL);
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
-  }
-
-  /**
-   * 提取冗余代码单独封装
-   *
-   * @param condition 查询条件
-   * @return PlatResult
-   */
-  private PlatResult selectMapByCondition(Condition condition) {
-    List<Map> select = employeeService.selectMap(condition);
-    if (!select.isEmpty()) {
-      return successData(Message.QUERY_SUCCESS, select);
-    } else {
-      return fail(Message.QUERY_FAIL);
-    }
-  }
-
-  public PlatResult add(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
-
-    return null;
   }
 }

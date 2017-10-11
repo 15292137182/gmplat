@@ -27,31 +27,21 @@ public class EmployeeControllerTest extends BaseControllerTest<EmployeeControlle
   }
 
   @Test
-  public void testQueryById() throws Exception {
+  public void testQueryBySpecify() throws Exception {
     //准备参数
     String rowId = "123456789";
+    String employeeNo = "001";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "employee/queryById")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "employee/queryBySpecify")
             .accept(MediaType.APPLICATION_JSON)
-            .param("rowId", rowId)
-    );
-    //显示结果
-    showResult(resultActions);
-  }
-  @Test
-  public void testQueryByEmpNo() throws Exception {
-    //准备参数
-    String employeeNo = "0011";
-    //发送请求
-    ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "employee/queryByEmployeeNo")
-            .accept(MediaType.APPLICATION_JSON)
+//            .param("rowId", rowId)
             .param("employeeNo", employeeNo)
     );
     //显示结果
     showResult(resultActions);
   }
+
   @Test
   public void testQueryByOrganization() throws Exception {
     //准备参数
@@ -61,6 +51,38 @@ public class EmployeeControllerTest extends BaseControllerTest<EmployeeControlle
         MockMvcRequestBuilders.post(URL_TEMPLATE + "employee/queryByOrganization")
             .accept(MediaType.APPLICATION_JSON)
             .param("param", param)
+    );
+    //显示结果
+    showResult(resultActions);
+  }
+
+  @Test
+  public void testModify() throws Exception {
+    //准备参数
+    String rowId = "123456789";
+    String employeeNo = " df";
+    String employeeName = "df ";
+    //发送请求
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "employee/modify")
+            .accept(MediaType.APPLICATION_JSON)
+            .param("rowId", rowId)
+            .param("employeeNo", employeeNo)
+            .param("employeeName", employeeName)
+    );
+    //显示结果
+    showResult(resultActions);
+  }
+
+  @Test
+  public void testDelete() throws Exception {
+    //准备参数
+    String rowId = "123456789";
+    //发送请求
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "employee/delete")
+            .accept(MediaType.APPLICATION_JSON)
+            .param("rowId", rowId)
     );
     //显示结果
     showResult(resultActions);
