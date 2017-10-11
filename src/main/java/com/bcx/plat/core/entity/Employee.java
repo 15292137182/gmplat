@@ -5,7 +5,7 @@ import com.bcx.plat.core.base.BaseEntity;
 public class Employee extends BaseEntity<Employee> {
   private String employeeNo;//用户工号
   private String employeeName;//用户姓名
-  private String employeeNickName;//用户昵称
+  private String employeeNickname;//用户昵称
   private String password;//密码
   private String status;//状态
   private String belongOrganization;//所属部门
@@ -43,12 +43,12 @@ public class Employee extends BaseEntity<Employee> {
     this.employeeName = employeeName;
   }
 
-  public String getEmployeeNickName() {
-    return employeeNickName;
+  public String getEmployeeNickname() {
+    return employeeNickname;
   }
 
-  public void setEmployeeNickName(String employeeNickName) {
-    this.employeeNickName = employeeNickName;
+  public void setEmployeeNickname(String employeeNickname) {
+    this.employeeNickname = employeeNickname;
   }
 
   public String getPassword() {
