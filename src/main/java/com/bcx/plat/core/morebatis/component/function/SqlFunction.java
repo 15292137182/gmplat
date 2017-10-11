@@ -15,7 +15,11 @@ public abstract class SqlFunction<T> implements FieldSource<T> {
     this.args = args;
   }
 
-  public SqlFunction(Object ... args){
+  protected SqlFunction(Object ... args){
     this.args= Arrays.asList(args);
+  }
+
+  protected SqlFunction(List args){
+    this.args= args;
   }
 }

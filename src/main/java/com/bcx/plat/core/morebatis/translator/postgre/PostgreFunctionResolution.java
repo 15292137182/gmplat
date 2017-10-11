@@ -2,7 +2,8 @@ package com.bcx.plat.core.morebatis.translator.postgre;
 
 import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 import com.bcx.plat.core.morebatis.component.function.ArithmeticExpression;
-import com.bcx.plat.core.morebatis.component.function.*;
+import com.bcx.plat.core.morebatis.component.function.Functions.*;
+import com.bcx.plat.core.morebatis.component.function.SqlFunction;
 import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.FunctionResolution;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;

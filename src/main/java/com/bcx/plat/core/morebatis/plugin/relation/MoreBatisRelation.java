@@ -132,7 +132,7 @@ public class MoreBatisRelation {
     List<Map<String, Object>> rows = moreBatis.select(Relation.class)
         .select(moreBatis.getColumnByAlias(Relation.class, Arrays.asList("value", "name")))
         .where(condition)
-        .orderBy(new Order(moreBatis.getColumnByAlias(Relation.class, "sort"), Order.ASC))
+        .orderBy(new Order("sort", Order.ASC))
         .execute();
     Map<String, List> listMap = new HashMap<>();
     rows.forEach((row) -> {
