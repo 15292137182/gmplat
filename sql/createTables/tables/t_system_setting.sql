@@ -7,7 +7,7 @@ CREATE TABLE public.t_system_setting (
   name             VARCHAR(32) DEFAULT '',
   value            VARCHAR(64) DEFAULT '',
   remark           VARCHAR(64) DEFAULT '',
-
+  etc              JSONB       DEFAULT '{}',
   status           VARCHAR(8)  NULL,
   "version"        VARCHAR(16) NULL,
   create_time      VARCHAR(32) NULL,
@@ -23,4 +23,4 @@ CREATE TABLE public.t_system_setting (
   belong_module    VARCHAR(32) NULL,
   belong_system    VARCHAR(32) NULL
 );
-COMMENT ON TABLE public.t_system_setting IS '模板对象';
+COMMENT ON TABLE public.t_system_setting IS '系统设置表';
