@@ -8,10 +8,10 @@ import com.bcx.plat.core.base.BaseEntity;
  */
 public class SystemSetting extends BaseEntity<SystemSetting> {
 
-  public String key;
-  public String name;
-  public String value;
-  public String remark;
+  private String key;
+  private String name;
+  private String value;
+  private String remark;
 
   public String getName() {
     return name;

@@ -1,6 +1,9 @@
 package com.bcx.plat.core.manager;
 
 import com.bcx.BaseTest;
+import org.junit.Test;
+
+import java.util.List;
 
 /**
  * 系统设置单元测试
@@ -9,8 +12,10 @@ import com.bcx.BaseTest;
  */
 public class SystemSettingManagerTest extends BaseTest {
 
+  @Test
   public void test() {
-
+    List settings = SystemSettingManager.getSystemSettingList();
+    assert settings != null;
   }
 
 }

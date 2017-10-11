@@ -29,17 +29,36 @@ public abstract class Global {
   }
 
   /**
+   * 作为 int 类型的值输出
+   *
+   * @param key          key
+   * @param defaultValue 默认值
+   * @return 返回
+   */
+  public static int getValueAsInt(String key, int defaultValue) {
+    Object _obj = getValue(key);
+    if (null != _obj && _obj.toString().matches("^[-]?\\d+$")) {
+      return Integer.valueOf(_obj.toString());
+    }
+    return defaultValue;
+  }
+
+  public static String getValueAsString(String key, String defaultValue) {
+    Object _obj = getValue(key);
+    if (null != _obj) {
+      return String.valueOf(_obj);
+    }
+    return defaultValue;
+  }
+
+  /**
    * 获取 String 类型的值
    *
    * @param key 值
    * @return 返回
    */
   public static String getValueAsString(String key) {
-    Object _obj = getValue(key);
-    if (null != _obj) {
-      return String.valueOf(_obj);
-    }
-    return null;
+    return getValueAsString(key, null);
   }
 
 }
