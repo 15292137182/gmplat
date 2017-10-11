@@ -80,6 +80,11 @@
           p:pks="#{'proRowId'}"/>
 
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+          p:entityClass="com.bcx.plat.core.entity.Menu"
+          p:tableName="t_menu"
+          p:pks="#{'rowId'}"/>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
           p:tableName="t_business_relate_template" p:pks="#{'rowId'}"/>
 
