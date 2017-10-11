@@ -18,7 +18,7 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro> {
   private String lengthInterval;//长度区间
   private String validateFunc;//验证函数
   private String displayFunc;//显示函数
-  private String sort;//排序
+  private Integer sort;//排序
   private String widthSetting;//宽度设置
   private String align;//对齐方式
   private String exactQuery;//是否精确查询
@@ -133,11 +133,11 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro> {
     this.displayFunc = displayFunc;
   }
 
-  public String getSort() {
+  public Integer getSort() {
     return sort;
   }
 
-  public void setSort(String sort) {
+  public void setSort(Integer sort) {
     this.sort = sort;
   }
 

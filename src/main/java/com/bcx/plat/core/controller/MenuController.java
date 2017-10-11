@@ -50,7 +50,7 @@ public class MenuController extends BaseController {
   private MenuService menuService;
 
   protected List<String> blankSelectFields() {
-    return Arrays.asList("parentNumber", "number", "name", "category", "category", "url");
+    return Arrays.asList("parentNumber", "number", "name", "category", "sort", "url", "icon", "grantAuth");
   }
 
 

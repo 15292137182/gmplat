@@ -64,6 +64,8 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
         paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_BASE);
       }
       // 进行新增
+      Integer sort = Integer.parseInt(String.valueOf(paramEntity.get("sort")));
+      paramEntity.put("sort",sort);
       FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
       int insert = frontFuncPro.insert();
       if (insert == -1) {
