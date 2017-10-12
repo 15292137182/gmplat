@@ -171,44 +171,44 @@ public abstract class SystemSettingManager {
     if (getValidSettingKeys().contains(key)) {
       switch (key) {
         case SESSION_TIME_OUT:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "会话超时时间(分钟)", "-1 时会话将永不过期！");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "会话超时时间(分钟)", "-1 时会话将永不过期！");
           break;
         case PWD_SECURITY_DATE:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "密码安全时间(月)", "-1 时不限制");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "密码安全时间(月)", "-1 时不限制");
           break;
         case LOGIN_FAILED_LIMIT:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "每日允许登录失败次数", "-1 时不限制");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "每日允许登录失败次数", "-1 时不限制");
           break;
         case PWD_REQUIREMENTS:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "密码要求", "默认无任何要求");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "密码要求", "默认无任何要求");
           break;
         case MIN_PWD_LENGTH:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "密码最小长度", "最小长度为 1 ~");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "密码最小长度", "最小长度为 1 ~");
           break;
         case DEFAULT_PWD:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "默认密码", "");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "默认密码", "");
           break;
         case MAX_PWD_LENGTH:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "密码最大长度", "最大长度为 64 ~");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "密码最大长度", "最大长度为 64 ~");
           break;
         case UPLOAD_FILE_LIMIT:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "上传文件限制", "1：开启限制；0：关闭限制");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "上传文件限制", "1：开启限制；0：关闭限制");
           break;
         case MIN_UPLOAD_FILE_SIZE:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "最小文件大小（KB）", "最小允许上传的文件大小，-1 不限制;默认不限制");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "最小文件大小（KB）", "最小允许上传的文件大小，-1 不限制;默认不限制");
           break;
         case MAX_UPLOAD_FILE_SIZE:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "最大文件大小（KB）", "最大允许上传的文件大小，-1 不限制；默认不限制");
+          fillIfAbsent(setting, getDefaultSettings().get(key), "最大文件大小（KB）", "最大允许上传的文件大小，-1 不限制；默认不限制");
           break;
         case UPLOAD_FILE_SUFFIX:
-          fixIfAbsent(setting, getDefaultSettings().get(key), "允许上传文件后缀名"
+          fillIfAbsent(setting, getDefaultSettings().get(key), "允许上传文件后缀名"
                   , "[正则表达式] （例如需要上传的文件后缀名为 txt 或者 mp3 ： ^txt|mp3$；对上传的文件名没有任何限制则留空或者写为 ： ^.*$）");
           break;
       }
     }
   }
 
-  private static void fixIfAbsent(Map<String, Object> setting, Object value, String name, String explain) {
+  private static void fillIfAbsent(Map<String, Object> setting, Object value, String name, String explain) {
     putIfInvalid(setting, "value", value);
     putIfInvalid(setting, "name", name);
     putIfInvalid(setting, "explain", explain);
