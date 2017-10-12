@@ -189,8 +189,8 @@ public class UserGroupController extends BaseController {
    * @param rowId 功能块 rowId
    * @return PlatResult
    */
-  @GetMapping("/queryById/{rowId}")
-  public PlatResult queryById(@PathVariable String rowId) {
+  @GetMapping("/queryById")
+  public PlatResult queryById(String rowId) {
     if (isValid(rowId)) {
       return result(new ServerResult<>(new UserGroup().selectOneById(rowId)));
     } else {
