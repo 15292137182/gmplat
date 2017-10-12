@@ -102,7 +102,7 @@ public abstract class SystemSettingManager {
         if (key.equals(systemSetting.getKey())) {
           setting.put("name", systemSetting.getName());
           setting.put("value", systemSetting.getValue());
-          setting.put("remark", systemSetting.getRemark());
+          setting.put("remark", systemSetting.getRemarks());
         }
       });
       fixSettingData(setting, key);

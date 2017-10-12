@@ -11,7 +11,7 @@ public class SystemSetting extends BaseEntity<SystemSetting> {
   private String key;
   private String name;
   private String value;
-  private String remark;
+  private String remarks;
 
   public String getName() {
     return name;
@@ -21,12 +21,12 @@ public class SystemSetting extends BaseEntity<SystemSetting> {
     this.name = name;
   }
 
-  public String getRemark() {
-    return remark;
+  public String getRemarks() {
+    return remarks;
   }
 
-  public void setRemark(String remark) {
-    this.remark = remark;
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
   }
 
   public String getKey() {
