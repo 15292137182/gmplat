@@ -3,12 +3,12 @@ DROP TABLE IF EXISTS public.t_permission;
 CREATE TABLE public.t_permission (
   row_id           VARCHAR(70) NOT NULL PRIMARY KEY,
 
-  "key"            VARCHAR(32) NOT NULL,
-  name             VARCHAR(32) DEFAULT '',
-  value            VARCHAR(64) DEFAULT '',
-  remark           VARCHAR(64) DEFAULT '',
+  permission_id    VARCHAR(32) NOT NULL,
+  permission_name  VARCHAR(64),
+  permission_type  VARCHAR(4),
+  "desc"           TEXT  DEFAULT '',
 
-  etc              JSONB       DEFAULT '{}',
+  etc              JSONB DEFAULT '{}',
   status           VARCHAR(8)  NULL,
   "version"        VARCHAR(16) NULL,
   create_time      VARCHAR(32) NULL,
