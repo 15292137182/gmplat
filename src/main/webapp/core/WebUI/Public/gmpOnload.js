@@ -198,13 +198,17 @@ var getHtml = (function() {
                         // 遍历当前功能块
                         $.each(_obj, function(index, item) {
                             // 若当前功能块属于下拉框并且之来源类型是keySet
-                            if(item.displayWidget == "select-base" || item.valueResourceType == "keySet") {
+                            if(item.displayWidget == "select-base" && item.valueResourceType == "keySet") {
                                 var _key = item.ename;
                                 var _rowId = item.valueResourceContent
                                 if(_rowId != "") {
                                     // 获取option
                                     getOptions.option(_target, _key, _rowId);
                                 }
+                            }
+                            if(item.displayWidget == "select-base" && item.valueResourceType == "interfaceQuery") {
+                                // console.log(item);
+                                getOptions.query();
                             }
                         });
 
@@ -305,12 +309,48 @@ var getOptions = (function() {
                 }
             },
             error:function() {
-                console.log("查询数据失败");
+                gmpPopup.throwMsg("查询数据失败");
+            }
+        });
+    };
+
+    var query = function(_url, _name) {
+        var jsonString = JSON.stringify({pageNum:""});
+        // 接口接收参数
+        var params = {
+            param: jsonString
+        };
+        console.log(params);
+        // 调用接口
+        $.ajax({
+            url: serverPath + "/page/queryPage",
+            type: "get",
+            data:  params,
+            dataType: "json",
+            success:function(res) {
+                if(res.resp.respCode == "000"){
+                    if(res.resp.content.state == "1"){
+                        var _jsonObj = res.resp.content.data;
+                        // 循环配置value-label
+                        // for(var i = 0;i < _jsonObj.length;i++) {
+                        //     _jsonObj[i].value = _jsonObj[i].confKey;
+                        //     _jsonObj[i].label = _jsonObj[i].confValue;
+                        // }
+                        // // 赋值options
+                        // var _optionName = key + "Option";
+                        // target[_optionName] = _jsonObj;
+                        console.log(_jsonObj);
+                    }
+                }
+            },
+            error:function() {
+                gmpPopup.throwMsg("查询数据失败");
             }
         });
     };
 
     return {
-        option: option
+        option: option,
+        query: query
     }
 })();

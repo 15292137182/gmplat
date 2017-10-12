@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基本树结构</title>
+</head>
+<body>
+    <el-row id="app" style="margin-top: 20px;">
+        <el-col :span="12" :offset="6">
+            <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+        </el-col>
+    </el-row>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    treeData: {
+                        // 是否显示checkbook 默认为不显示
+                        checkbox: true,
+                        // 获取树节点接口
+                        url: serverPath + "/userGroup/queryPage",
+                        // 设置参数 -- 树节点上显示的文字
+                        defaultProps: {
+                            children: 'children',
+                            label: 'groupName'
+                        }
+                    }
+                }
+            },
+            methods: {
+                getNodes(data) {
+                    console.log(data);
+                },
+                getChecked(data) {
+                    console.log(data);
+                }
+            }
+        })
+    </script>
+</body>
+</html>

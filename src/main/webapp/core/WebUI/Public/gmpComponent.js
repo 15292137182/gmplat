@@ -348,6 +348,8 @@ Vue.component("base-tree", {
     },
     data() {
         return {
+            // 是否显示复选框
+            checkbox: false,
             // 是否可过滤
             isFilter: false,
             // 过滤文本
@@ -359,71 +361,18 @@ Vue.component("base-tree", {
             // 获取树数据接口
             url: "",
             // 树数据
-            treeData: [{
-                id: 1,
-                label: '一级 1',
-                children: [{
-                    id: 4,
-                    label: '二级 1-1',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                }]
-            }, {
-                id: 2,
-                label: '一级 2',
-                children: [{
-                    id: 5,
-                    label: '二级 2-1'
-                }, {
-                    id: 6,
-                    label: '二级 2-2'
-                }]
-            }, {
-                id: 3,
-                label: '一级 3',
-                children: [{
-                    id: 7,
-                    label: '二级 3-1'
-                }, {
-                    id:8,
-                    label: '二级 3-2',
-                    children: [{
-                        id:11,
-                        label: '三级 3-2-1'
-                    }, {
-                        id:12,
-                        label: '三级 3-2-2'
-                    }, {
-                        id:13,
-                        label: '三级 3-2-3'
-                    }]
-                }, {
-                    id: 14,
-                    label: '二级 3-3',
-                    children: [{
-                        id: 15,
-                        label: '三级 3-3-1'
-                    }, {
-                        id: 16,
-                        label: '三级 3-3-2'
-                    }, {
-                        id: 17,
-                        label: '三级 3-3-3'
-                    }]
-                }]
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
-            }
+            treeNodes: [],
+            // 配置选项
+            defaultProps: {}
         }
     },
     beforeMount() {
+        // 获取复选框显示配置
+        if(this.initial.checkbox) {
+            this.checkbox = true;
+        }else {
+            this.checkbox = false;
+        }
         // 获取配置接口
         if(this.initial.url) {
             this.url = this.initial.url;
@@ -448,6 +397,16 @@ Vue.component("base-tree", {
         }else {
             this.defaultCheckedKeys = [];
         }
+        // 获取defaultProps
+        if(this.initial.defaultProps) {
+            this.defaultProps = this.initial.defaultProps;
+        }else {
+            this.defaultProps = {};
+        }
+    },
+    mounted() {
+        // 调用接口获取树节点
+        this.getNode();
     },
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
@@ -461,11 +420,43 @@ Vue.component("base-tree", {
         filterNode(value, data) {
             if (!value) return true;
             return data.label.indexOf(value) !== -1;
+        },
+        // 调接口获取数据
+        getNode(callback) {
+            // 保存this指针
+            var that = this;
+            // 调用接口获取树节点
+            if(that.url != "") {
+                $.ajax({
+                    url:this.url,
+                    type:"get",
+                    data: "",
+                    dataType:"json",
+                    success:function(res){
+                        if(res.resp.respCode == "000"){
+                            if(res.resp.content.state == "1"){
+                                var _jsonObj = res.resp.content.data.result;
+                                // 赋值options
+                                that.treeNodes = _jsonObj;
+                                // console.log(_jsonObj);
+                                // console.log(that.treeNodes);
+                                // 回调
+                                if(callback) {
+                                    callback(_jsonObj);
+                                }
+                            }
+                        }
+                    },
+                    error:function(){
+                        gmpPopup.throwMsg("查询失败！");
+                    }
+                });
+            }
         }
     },
     template: `<div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
-                    <el-tree :data="treeData" show-checkbox @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-tree :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });
