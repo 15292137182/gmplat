@@ -13,6 +13,7 @@ import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -188,8 +189,8 @@ public class UserGroupController extends BaseController {
    * @param rowId 功能块 rowId
    * @return PlatResult
    */
-  @GetMapping("/queryById")
-  public PlatResult queryById(String rowId) {
+  @GetMapping("/queryById/{rowId}")
+  public PlatResult queryById(@PathVariable String rowId) {
     if (isValid(rowId)) {
       return result(new ServerResult<>(new UserGroup().selectOneById(rowId)));
     } else {

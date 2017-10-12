@@ -108,9 +108,15 @@
               p:entityClass="com.bcx.plat.core.entity.SystemSetting"
               p:tableName="t_system_setting"
               p:pks="#{'rowId'}"/>
+
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
               p:entityClass="com.bcx.plat.core.entity.BaseOrg"
               p:tableName="t_base_org"
+              p:pks="#{'rowId'}"/>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.Button"
+              p:tableName="t_button"
               p:pks="#{'rowId'}"/>
       </list>
     </constructor-arg>

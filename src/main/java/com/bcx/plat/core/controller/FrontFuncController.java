@@ -88,13 +88,12 @@ public class FrontFuncController extends BaseController {
     } else {
       result = new PageResult(frontFuncService.selectMap(condition, orders));
     }
-    if (isValid(result)) {
+    if (isValid(result) && result.getResult().size() > 0) {
       List<Map<String, Object>> list = queryResultProcessAction(result.getResult());
       result.setResult(list);
       return result(new ServerResult<>(result));
     } else {
       return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
-
     }
   }
 

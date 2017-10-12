@@ -41,7 +41,7 @@
         <!-- Shiro的核心安全接口,这个属性是必须的 -->
         <property name="securityManager" ref="securityManager"/>
         <!-- 要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
-        <property name="loginUrl" value="/login.html"/>
+        <property name="loginUrl" value="/index.html"/>
         <!-- Shiro权限过滤过滤器定义 -->
         <property name="filterChainDefinitions" ref="shiroFilterChainDefinitions"/>
     </bean>

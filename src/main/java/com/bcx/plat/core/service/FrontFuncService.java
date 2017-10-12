@@ -54,7 +54,6 @@ public class FrontFuncService extends BaseService<FrontFunc> {
   public ServerResult insertFront(Map<String, Object> param) {
     ServerResult result = new ServerResult();
     String funcCode = String.valueOf(param.get("funcCode")).trim();
-    param.remove("funcCode");
     param.put("funcCode",funcCode);
     if (!"".equals(funcCode)) {
       Condition condition = new ConditionBuilder(FrontFunc.class).and()
