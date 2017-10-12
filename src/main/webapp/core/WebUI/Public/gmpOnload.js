@@ -208,7 +208,8 @@ var getHtml = (function() {
                             }
                             if(item.displayWidget == "select-base" && item.valueResourceType == "interfaceQuery") {
                                 // console.log(item);
-                                getOptions.query();
+                                var _key = item.ename;
+                                getOptions.query(_target, _key);
                             }
                         });
 
@@ -314,32 +315,31 @@ var getOptions = (function() {
         });
     };
 
-    var query = function(_url, _name) {
-        var jsonString = JSON.stringify({pageNum:""});
+    var query = function(target, key) {
+        // var jsonString = JSON.stringify({pageNum:""});
         // 接口接收参数
-        var params = {
-            param: jsonString
-        };
-        console.log(params);
+        // var params = {
+        //     param: jsonString
+        // };
         // 调用接口
         $.ajax({
             url: serverPath + "/page/queryPage",
             type: "get",
-            data:  params,
+            data:  "",
             dataType: "json",
             success:function(res) {
                 if(res.resp.respCode == "000"){
                     if(res.resp.content.state == "1"){
-                        var _jsonObj = res.resp.content.data;
+                        var _jsonObj = res.resp.content.data.result;
                         // 循环配置value-label
-                        // for(var i = 0;i < _jsonObj.length;i++) {
-                        //     _jsonObj[i].value = _jsonObj[i].confKey;
-                        //     _jsonObj[i].label = _jsonObj[i].confValue;
-                        // }
-                        // // 赋值options
-                        // var _optionName = key + "Option";
-                        // target[_optionName] = _jsonObj;
-                        console.log(_jsonObj);
+                        for(var i = 0;i < _jsonObj.length;i++) {
+                            _jsonObj[i].value = _jsonObj[i].rowId;
+                            _jsonObj[i].label = _jsonObj[i].pageNumber;
+                        }
+                        // 赋值options
+                        var _optionName = key + "Option";
+                        target[_optionName] = _jsonObj;
+                        // console.log(_jsonObj);
                     }
                 }
             },
