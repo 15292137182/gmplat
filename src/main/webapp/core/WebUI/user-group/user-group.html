@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        .el-input {
+            width: 185px;
+        }
+    </style>
+</head>
+<body>
+<div id="basTop">
+    <el-row type="flex" justify="end">
+        <el-col :span="24">
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加用户组</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">删除用户组</el-button>
+            <el-button type="warning" icon="star-off" size="small" @click.native="affectProp" v-bind:disabled="takeEffect">添加组人员</el-button>
+        </el-col>
+    </el-row>
+</div>
+
+<el-col :span="6" id="left" style="margin-left:15px">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color">
+                    <span>树状结构检索</span>
+                </div>
+                <div style="padding:20px 20px">
+                        <div style="padding:20px 20px" id="leftTree">
+                            <el-tree
+                                    :data="data"
+                                    :props="defaultProps"
+                                    accordion
+                                    @node-click="handleNodeClick">
+                            </el-tree>
+                        </div>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+
+<el-col :span="17" id="right" style="margin-left:15px">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color">
+                    <span>用户组信息</span>
+                </div>
+                <el-col :span="24">
+                    <div style="padding:20px 20px 10px 20px" >
+                        <div>
+                            <el-row :gutter="20">
+                                <el-col :span="8">
+                                    <el-input  v-model="input3">
+                                        <template slot="prepend">名称</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input v-model="input3">
+                                        <template slot="prepend">所属部门</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input v-model="input3">
+                                        <template slot="prepend">组类别</template>
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                            <br>
+                            <el-row :gutter="20">
+                                <el-col :span="8">
+                                    <el-input  v-model="input3">
+                                        <template slot="prepend">描述</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input v-model="input3">
+                                        <template slot="prepend">备注</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-button type="primary">保存</el-button>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </div>
+                </el-col>
+            </el-col>
+        </el-row>
+        </el-row>
+    </div>
+</el-col>
+
+<el-col :span="17" id="rightBottom" style="margin-left:15px;margin-top:20px;">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color">
+                    <span>用户组下的用户信息</span>
+                </div>
+                <div style="padding:10px 20px">
+                    <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                    v-loading="loading"
+                    element-loading-text="加载中" @sort-change="headSort"
+                    @row-click="currentChange"
+                    class="tableStyle"
+                    style="width: 100%">
+                    <el-table-column type="expand">
+                        <template scope="props">
+                            <el-form label-position="left" inline class="demo-table-expand">
+                                <el-row>
+                                    <el-col :span="12">
+                                    <el-form-item label="昵称">
+                                        <span>{{ props.row.employeeName }}</span>
+                                    </el-form-item>
+                                </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="邮箱">
+                                            <span>{{ props.row.employeeNickname }}</span>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="employeeNo" label="工号" sortable="custom" width="160"
+                    show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="password" label="姓名" sortable="custom" width="160"
+                    show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="belongOrganization" label="状态" width="100"
+                    show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="status" label="部门" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="gender" label="职务" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="" label="操作" width="100">
+                        <template scope="scope">
+                            <el-button @click.native="editProp" type="text" size="small" icon="edit"
+                            :disabled=scope.row.testDemo></el-button>
+                        </template>
+                    </el-table-column>
+                    </el-table>
+                    <el-row type="flex" justify="end" style="padding-top: 10px">
+                        <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page.sync="pageNum"
+                            :page-sizes="[5,10,20]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next"
+                            :total="allDate">
+                        </el-pagination>
+                    </el-row>
+                </div>
+            </el-col>
+        </el-row>
+        </el-row>
+    </div>
+</el-col>
+
+
+<script src="user-group.js"></script>
+</body>
+</html>

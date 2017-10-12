@@ -3,50 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .demo{
+            padding:10px 10px;
+        }
+    </style>
 </head>
 <body>
-<div id="perExport" style="margin:20px 20px">
-    <el-checkbox-group v-model="checkedCities1" :min="1" :max="2">
-        <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-        <!--<el-checkbox v-model="employeeNo">用户工号</el-checkbox>-->
-        <!--<el-checkbox v-model="employeeName">用户姓名</el-checkbox>-->
-        <!--<el-checkbox v-model="employeeNickname">用户昵称</el-checkbox>-->
-        <!--<el-checkbox v-model="status">状态</el-checkbox>-->
-        <!--<el-checkbox v-model="password">密码</el-checkbox>-->
-        <!--<el-checkbox v-model="belongOrganization">所属部门</el-checkbox>-->
-        <!--<el-checkbox v-model="idCard">身份证</el-checkbox>-->
-        <!--<el-checkbox v-model="mobilePhone">移动电话</el-checkbox>-->
-        <!--<el-checkbox v-model="officePhone">办公电话</el-checkbox>-->
-        <!--<el-checkbox v-model="email">邮箱</el-checkbox>-->
-        <!--<el-checkbox v-model="gender">性别</el-checkbox>-->
-        <!--<el-checkbox v-model="job">职务</el-checkbox>-->
-        <!--<el-checkbox v-model="hiredate">入职日期</el-checkbox>-->
-        <!--<el-checkbox v-model="description">说明</el-checkbox>-->
-        <!--<el-checkbox v-model="remarks">备注</el-checkbox>-->
-    </el-checkbox-group>
+<div id="perExport" style="margin:20px 30px">
+        <div>
+            <el-col :span="8" class="demo"><el-checkbox v-model="employeeNo" label="用户工号" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"><el-checkbox v-model="employeeName" label="用户姓名" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"><el-checkbox v-model="employeeNickname" label="用户昵称" border></el-checkbox></el-col>
+        </div>
+        <div>
+            <el-col :span="8" class="demo"><el-checkbox v-model="password" label="密码" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"> <el-checkbox v-model="belongOrganization" label="所属部门" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo">  <el-checkbox v-model="idCard" label="身份证" border></el-checkbox></el-col>
+        </div>
+        <div>
+             <el-col :span="8" class="demo"><el-checkbox v-model="officePhone" label="办公电话" border></el-checkbox></el-col>
+             <el-col :span="8" class="demo"> <el-checkbox v-model="email" label="邮箱" border></el-checkbox></el-col>
+             <el-col :span="8" class="demo"> <el-checkbox v-model="gender" label="性别" border></el-checkbox></el-col>
+        </div>
+    <div>
+        <el-col :span="8" class="demo"><el-checkbox v-model="status" label="状态" border></el-checkbox></el-col>
+        <el-col :span="8" class="demo"><el-checkbox v-model="mobilePhone" label="移动电话" border></el-checkbox></el-col>
+        <el-col :span="8" class="demo"><el-checkbox v-model="job" label="职务" border></el-checkbox></el-col>
+    </div>
+    <div>
+         <el-col :span="8" class="demo"> <el-checkbox v-model="hiredate" label="入职日期" border></el-checkbox></el-col>
+         <el-col :span="8" class="demo"> <el-checkbox v-model="description" label="说明" border></el-checkbox></el-col>
+         <el-col :span="8" class="demo"><el-checkbox v-model="remarks" label="备注" border></el-checkbox></el-col>
+    </div>
+    <div style="padding:15px 10px">
+        <el-radio class="radio" v-model="radio" label="1">2013版</el-radio>
+        <el-radio class="radio" v-model="radio" label="2">2017版</el-radio>
+    </div>
+    <el-row>
+        <el-col :span="17" style="text-align: right" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancel">确定</el-button>
+        </el-col>
+    </el-row>
 </div>
 <script>
-    const cityOptions = ['上海', '北京', '广州', '深圳'];
     var personExport=new Vue({
         el:"#perExport",
         data:{
-//            employeeNo:true,
-//            employeeName:true,
-//            employeeNickname:true,
-//            status:true,
-//            password:true,
-//            belongOrganization:true,
-//            idCard:true,
-//            mobilePhone:true,
-//            officePhone:true,
-//            email:true,
-//            gender:true,
-//            job:true,
-//            hiredate:true,
-//            description:true,
-//            remarks:true,
-            checkedCities1: ['上海', '北京'],
-            cities: cityOptions
+            radio:'1',
+            useSex:'',
+            employeeNo:true,
+            employeeName:true,
+            employeeNickname:true,
+            status:true,
+            password:true,
+            belongOrganization:true,
+            idCard:true,
+            mobilePhone:true,
+            officePhone:true,
+            email:true,
+            gender:true,
+            job:true,
+            hiredate:true,
+            description:true,
+            remarks:true,
         },
         methods:{
 
