@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .el-select-dropdown {
+            z-index: 900000000 !important;
+        }
+        .el-picker-panel{
+            z-index: 999000000 !important;
+        }
+        .el-form-item{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <el-row id="app_2" style="margin-top: 15px;">
+        <el-col :span="24">
+            <components :is="gmpForm" data='{"main":"#app_2","code":"pageButtonForm"}' :child-form-table="formTable"></components>
+        </el-col>
+    </el-row>
+    <el-row id="app1" style="margin-bottom: 10px;">
+        <el-col :span="4" offset="8">
+            <el-button type="info" @click="demo">保存</el-button>
+        </el-col>
+        <el-col :span="4">
+            <el-button type="info" @click="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<!--<script type="text/javascript" src="../Public/publicjs.js"></script>-->
+<script>
+    gmp_onload = function() {
+        // 若为空则为新增状态
+        if(select_row != "") {
+            var _rowId = select_row.rowId;
+            // 设置取值url param
+            GmpForm.formTable.setOptions({
+                postUrl: serverPath + "/button/queryById",
+                postParam: {
+                    rowId: _rowId
+                }
+            });
+
+            // 加载编辑页面数据
+            GmpForm.formTable.request(function(data) {});
+
+//            GmpForm.formTable.formObj.belongModuleOption.splice(0, 1);
+//            GmpForm.formTable.formObj.belongModuleOption.push({
+//                value: "beijing",
+//                label: "北京"
+//            });
+//
+//            GmpForm.formTable.formObj.datasetTypeOption.splice(0, 1);
+//            GmpForm.formTable.formObj.datasetTypeOption.push({
+//                value: "shanghai",
+//                label: "上海"
+//            });
+        }
+    };
+
+    var vm = new Vue({
+        el:"#app1",
+        data:{
+            rowId: ""
+        },
+        mounted() {
+            //
+        },
+        methods:{
+            demo() {
+                if(add.flag == "add") {
+                    console.log(GmpForm.formTable.getData().data);
+                    var data = {
+                        "url":serverPath + "/button/add",//新增
+                        "jsonData":GmpForm.formTable.getData().data,
+                        "obj":GmpTable.table.vueObj,
+                        "showMsg":true
+                    }
+                    addObj.addOk(function(){
+                        gmpAjax.showAjax(data,function(res){
+                            // 成功回调
+                            GmpTable.table.reload({
+                                queryUrl: serverPath+'/button/queryPage',
+                                queryParam: {
+                                    search:"",
+                                    pageSize:"10",
+                                    pageNum:"1"
+                                }
+                            });
+                            // 关闭弹层
+                            vm.cancel();
+                        })
+
+                        // 获取页面数据
+//                        var _json = {
+//                            formUrl: serverPath + "/menu/add",
+//                            data: GmpForm.formTable.getData().data
+//                        };
+//                        GmpForm.formTable.submit(_json, function() {
+//                            // 成功回调
+//                            GmpTable.table.reload({
+//                                queryUrl: serverPath+'/menu/queryPage',
+//                                queryParam: {
+//                                    search:"",
+//                                    pageSize:"10",
+//                                    pageNum:"1"
+//                                }
+//                            });
+//                            // 关闭弹层
+//                            vm.cancel();
+//                        });
+                    })
+                }else {
+                    //获取页面数据
+                    var _json1 = GmpForm.formTable.getData().data;
+                    // 获取当前行rowId
+                    _json1["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
+                    console.log(_json1);
+                    var data = {
+                        "url":serverPath + "/button/modify",//编辑
+                        "jsonData":_json1,
+                        "obj":GmpTable.table.vueObj,
+                        "showMsg":true
+                    }
+                    editObj.editOk(function(){
+                        gmpAjax.showAjax(data,function(res){
+                            // 成功回调
+                            GmpTable.table.reload({
+                                queryUrl: serverPath+'/button/queryPage',
+                                queryParam: {
+                                    search:"",
+                                    pageSize:"10",
+                                    pageNum:"1"
+                                }
+                            });
+                            // 关闭弹层
+                            vm.cancel();
+                        })
+                    })
+//                    // 获取页面数据
+//                    var _json = {
+//                        formUrl: serverPath + "/menu/modify",
+//                        data: GmpForm.formTable.getData().data
+//                    };
+//                    // 获取当前行rowId
+//                    _json.data["rowId"] = GmpForm.formTable.vueObj.formTable.rowId;
+//                    GmpForm.formTable.submit(_json, function() {
+//                        // 成功回调
+//                        GmpTable.table.reload({
+//                            queryUrl: serverPath+'/menu/queryPage',
+//                            queryParam: {
+//                                search:"",
+//                                pageSize:"10",
+//                                pageNum:"1"
+//                            }
+//                        });
+//                        // 关闭弹层
+//                        vm.cancel();
+//                    });
+                }
+            },
+            cancel() {
+                gmpPopup.close();
+            }
+        }
+    })
+</script>
+</html>
