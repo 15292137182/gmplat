@@ -25,6 +25,7 @@ public abstract class SystemSettingManager {
   public static final String MIN_PWD_LENGTH = "minPwdLength";
   public static final String MAX_PWD_LENGTH = "maxPwdLength";
   public static final String DEFAULT_PWD = "defaultPwd";
+  public static final String PASSWORD_STRENGTH = "pwdStrength";
 
   public static final String UPLOAD_FILE_LIMIT = "uploadFileLimit";
   public static final String MIN_UPLOAD_FILE_SIZE = "minUploadFileSize";
@@ -68,6 +69,7 @@ public abstract class SystemSettingManager {
     keys.add(MIN_UPLOAD_FILE_SIZE);
     keys.add(MAX_UPLOAD_FILE_SIZE);
     keys.add(UPLOAD_FILE_SUFFIX);
+    keys.add(PASSWORD_STRENGTH);
     return keys;
   }
 
@@ -139,6 +141,9 @@ public abstract class SystemSettingManager {
           case MAX_PWD_LENGTH:
             value = Global.getValueAsInt(PROPERTIES_KEY_PREFIX + MAX_PWD_LENGTH, 64);
             break;
+          case PASSWORD_STRENGTH:
+            value = Global.getValueAsInt(PROPERTIES_KEY_PREFIX + PASSWORD_STRENGTH, -1);
+            break;
           case DEFAULT_PWD:
             value = Global.getValueAsString(PROPERTIES_KEY_PREFIX + DEFAULT_PWD, "123456");
             break;
@@ -190,6 +195,9 @@ public abstract class SystemSettingManager {
           break;
         case MAX_PWD_LENGTH:
           fillIfAbsent(setting, getDefaultSettings().get(key), "密码最大长度", "最大长度为 64 ~");
+          break;
+        case PASSWORD_STRENGTH:
+          fillIfAbsent(setting, getDefaultSettings().get(key), "最低密码强度", "-1 时不限制");
           break;
         case UPLOAD_FILE_LIMIT:
           fillIfAbsent(setting, getDefaultSettings().get(key), "上传文件限制", "1：开启限制；0：关闭限制");
