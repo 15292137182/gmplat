@@ -229,7 +229,20 @@ var getHtml = (function() {
                         // console.log(GmpSearch[compId]);
                     }
                     if (arr[0].funcType == "grid") {
-                        // console.log(compId);
+                        var render = [];
+                        if(params.icon == undefined) {
+                            params.icon = true;
+                        }else if(params.icon == "false") {
+                            params.icon = false;
+                            render.push({customImg:"search",customFuntion:function(index,row){
+                                alert(index);
+                            }});
+                        }else {
+                            render.push({customImg:"search",customFuntion:function(index,row){
+                                alert(index);
+                            }});
+                        }
+
                         var _table = new gmpTableObj(jsonDataConfig, [params.bind], compId, code, arr, mainId, params.id, "", "", "", {
                             onClickRow: function (row) {},
                             onEditRow: function () {},
@@ -237,10 +250,8 @@ var getHtml = (function() {
                             onCellClick: function (row) {},
                             onDbClick: function (row) {},
                             onDbCellClick: function (row) {},
-                            buttonDisabled:false
-                        },[{customImg:"search",customFuntion:function(index,row){
-                                alert(index);
-                        }}]);
+                            buttonDisabled:params.icon
+                        },render);
                         // 创建vue实例
                         _table.bulidComponent(_table);
                         // 缓存实例化对象

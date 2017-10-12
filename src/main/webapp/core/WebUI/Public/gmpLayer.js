@@ -483,8 +483,10 @@ function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vue
     }
     if(JsonCustomFuntion){
         console.log(JsonCustomFuntion);
-        this.customFuntion = JsonCustomFuntion[0].customFuntion;
-        this.customImg = JsonCustomFuntion[0].customImg;
+        if(JsonCustomFuntion[0]){
+            this.customFuntion = JsonCustomFuntion[0].customFuntion;
+            this.customImg = JsonCustomFuntion[0].customImg;
+        }
     }
 };
 
