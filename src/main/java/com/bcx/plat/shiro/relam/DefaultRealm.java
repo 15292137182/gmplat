@@ -1,6 +1,6 @@
 package com.bcx.plat.shiro.relam;
 
-import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.entity.Users;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import org.apache.shiro.SecurityUtils;
@@ -43,15 +43,15 @@ public class DefaultRealm extends AuthorizingRealm {
    */
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
-          throws AuthenticationException {
+      throws AuthenticationException {
     UsernamePasswordToken upToken = (UsernamePasswordToken) token;
     String userId = (String) upToken.getPrincipal();
     String password = String.valueOf(upToken.getPassword());
     if (isValid(userId) && isValid(password)) {
-      List<User> userMaps = new User()
-              .selectSimple(new FieldCondition("id", Operator.EQUAL, userId));
+      List<Users> userMaps = new Users()
+          .selectSimple(new FieldCondition("id", Operator.EQUAL, userId));
       if (userMaps.size() == 1) {
-        User user = userMaps.get(0);
+        Users user = userMaps.get(0);
         if (null != user) {
           String dbPassword = user.getPassword();
           if (validPassword(password, dbPassword)) {

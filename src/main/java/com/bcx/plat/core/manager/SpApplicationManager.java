@@ -1,6 +1,6 @@
 package com.bcx.plat.core.manager;
 
-import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.entity.Users;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,16 +38,16 @@ public class SpApplicationManager {
    *
    * @return 返回登录者
    */
-  public User getLoginUser() {
-    User _user = null;
+  public Users getLoginUser() {
+    Users _user = null;
     try {
-      _user = (User) SecurityUtils.getSubject().getSession().getAttribute("user");
+      _user = (Users) SecurityUtils.getSubject().getSession().getAttribute("user");
     } catch (RuntimeException ignore) {
       logger.error("获取用户失败，已使用空 user 信息");
     }
     if (null != _user) {
       return _user;
     }
-    return new User();
+    return new Users();
   }
 }

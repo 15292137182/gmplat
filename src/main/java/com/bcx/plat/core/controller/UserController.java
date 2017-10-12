@@ -2,10 +2,10 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.Employee;
+import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.service.EmployeeService;
+import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -25,14 +25,14 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  * Created by YoungerOu on 2017/10/10.
  */
 @RestController
-@RequestMapping(PLAT_SYS_PREFIX + "/core/employee")
-public class EmployeeController extends BaseController {
+@RequestMapping(PLAT_SYS_PREFIX + "/core/user")
+public class UserController extends BaseController {
 
-  private EmployeeService employeeService;
+  private UserService userService;
 
   @Autowired
-  public EmployeeController(EmployeeService employeeService) {
-    this.employeeService = employeeService;
+  public UserController(UserService userService) {
+    this.userService = userService;
   }
 
   /**
@@ -47,7 +47,7 @@ public class EmployeeController extends BaseController {
    */
   @RequestMapping("/queryPage")
   public PlatResult queryPage(String search, Integer pageNum, Integer pageSize, String param, String order) {
-    ServerResult result = employeeService.queryPage(search, pageNum, pageSize, param, order);
+    ServerResult result = userService.queryPage(search, pageNum, pageSize, param, order);
     return result(result);
   }
 
@@ -57,11 +57,11 @@ public class EmployeeController extends BaseController {
    * @param param 组织机构参数，以数组的形式传入["1","2"]
    * @return PlatResult
    */
-  @RequestMapping("/queryByOrganization")
-  public PlatResult queryByOrganization(String param) {
+  @RequestMapping("/queryByOrg")
+  public PlatResult queryByOrg(String param) {
     if (UtilsTool.isValid(param)) {
       List list = UtilsTool.jsonToObj(param, List.class);
-      ServerResult serverResult = employeeService.queryByOrganization(list);
+      ServerResult serverResult = userService.queryByOrg(list);
       return result(serverResult);
     } else {
       return fail(Message.QUERY_FAIL);
@@ -71,14 +71,14 @@ public class EmployeeController extends BaseController {
   /**
    * 人员信息 - 根据指定字段精确查询
    *
-   * @param param 接收指定参数(rowId, employeeNo...)
+   * @param param 接收指定参数(rowId, id, name...)
    * @return PlatResult
    */
   @RequestMapping("/queryBySpecify")
   public PlatResult queryBySpecify(@RequestParam Map<String, Object> param) {
     if (!param.isEmpty()) {
-      Condition condition = UtilsTool.convertMapToAndCondition(Employee.class, param);
-      List<Map> select = employeeService.selectMap(condition);
+      Condition condition = UtilsTool.convertMapToAndCondition(User.class, param);
+      List<Map> select = userService.selectMap(condition);
       if (!select.isEmpty()) {
         return successData(Message.QUERY_SUCCESS, select);
       } else {
@@ -111,18 +111,18 @@ public class EmployeeController extends BaseController {
   @PostMapping("/modify")
   public PlatResult modify(@RequestParam Map<String, Object> param) {
     if (UtilsTool.isValid(param.get("rowId"))) {
-      Object employeeNo = param.get("employeeNo");
-      Object employeeName = param.get("employeeName");
-      if (null != employeeNo && !"".equals(employeeNo.toString().trim())
-          && null != employeeName && !"".equals(employeeName.toString().trim())) {//工号和姓名不能为空
+      Object id = param.get("id");
+      Object name = param.get("name");
+      if (null != id && !"".equals(id.toString().trim())
+          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
         //工号不能重复
-        Condition condition = new ConditionBuilder(Employee.class).and().equal("employeeNo", employeeNo).endAnd().buildDone();
-        List<Employee> employees = employeeService.select(condition);
-        if (employees.isEmpty()) {
-          param.put("employeeNo", employeeNo.toString().trim());
-          param.put("employeeName", employeeName.toString().trim());
-          Employee employee = new Employee();
-          Employee modify = employee.fromMap(param).buildModifyInfo();
+        Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
+        List<User> users = userService.select(condition);
+        if (users.isEmpty()) {
+          param.put("id", id.toString().trim());
+          param.put("name", name.toString().trim());
+          User user = new User();
+          User modify = user.fromMap(param).buildModifyInfo();
           if (modify.updateById() != -1) {
             return success(Message.UPDATE_SUCCESS);
           } else {
@@ -148,14 +148,27 @@ public class EmployeeController extends BaseController {
   @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Employee employee = new Employee().buildDeleteInfo();
-      if (employee.logicalDeleteById(rowId) != -1) {
-        return success(Message.DELETE_SUCCESS);
+      User user = new User().buildDeleteInfo();
+      if (user.logicalDeleteById(rowId) != -1) {
+        return successData(Message.DELETE_SUCCESS, user);
       } else {
         return fail(Message.DELETE_FAIL);
       }
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+  }
+
+  /**
+   * 人员信息 - 锁定账号
+   *
+   * @param rowId 唯一标识
+   *              状态（1：解锁，2：锁定，3：失效，4：启用）
+   * @return PlatResult
+   */
+  @PostMapping
+  public PlatResult lock(String rowId) {
+
+    return null;
   }
 }

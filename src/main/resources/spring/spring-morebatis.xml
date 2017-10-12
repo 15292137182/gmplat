@@ -15,8 +15,8 @@
           <!--p:entityClass="com.bcx.plat.core.entity.BusinessObject" p:tableName="t_business_object"-->
           <!--p:pks="#{'rowId'}"/>-->
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-              p:entityClass="com.bcx.plat.core.entity.Employee"
-              p:tableName="t_employee"
+              p:entityClass="com.bcx.plat.core.entity.User"
+              p:tableName="t_user"
               p:pks="#{'rowId'}"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.TestEntityEntriesBuilder"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
@@ -98,7 +98,7 @@
           p:tableName="t_business_relate_template" p:pks="#{'rowId'}"/>
 
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-          p:entityClass="com.bcx.plat.core.entity.User" p:tableName="t_user" p:pks="#{'rowId'}"/>
+          p:entityClass="com.bcx.plat.core.entity.Users" p:tableName="t_users" p:pks="#{'rowId'}"/>
 
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.morebatis.plugin.relation.entity.Relation"

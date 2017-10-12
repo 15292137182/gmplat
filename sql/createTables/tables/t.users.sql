@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS public.t_user;
 
-CREATE TABLE public.t_user (
+CREATE TABLE public.t_users (
   row_id               VARCHAR(70)            NOT NULL PRIMARY KEY,
 
   id                   VARCHAR(32) DEFAULT '' NOT NULL,

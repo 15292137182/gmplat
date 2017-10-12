@@ -2,7 +2,7 @@ package com.bcx.plat.core.base.template;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.support.BeanInterface;
-import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.entity.Users;
 import com.bcx.plat.core.manager.SpApplicationManager;
 
 import java.util.HashMap;
@@ -47,9 +47,9 @@ public class BaseTemplateBean implements BeanInterface<BaseTemplateBean> {
    */
   public BaseTemplateBean buildCreateInfo() {
     this.createTime = getDateTimeNow();
-    User user = SpApplicationManager.getInstance().getLoginUser();
-    this.createUser = user.getId();
-    this.createUserName = user.getName();
+    Users users = SpApplicationManager.getInstance().getLoginUser();
+    this.createUser = users.getId();
+    this.createUserName = users.getName();
     this.buildModifyInfo();
     return this;
   }

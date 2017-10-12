@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
  * 用户信息维护Controller测试类
  * Created by YoungerOu on 2017/10/11
  */
-public class EmployeeControllerTest extends BaseControllerTest<EmployeeController> {
+public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testQueryPage() throws Exception {
     //准备参数
