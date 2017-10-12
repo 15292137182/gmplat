@@ -1,8 +1,10 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.manager.SystemSettingManager;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,9 +100,76 @@ public class UserController extends BaseController {
    */
   @PostMapping("/add")
   public PlatResult add(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
+    Object id = param.get("id");
+    Object name = param.get("name");
+    if (null != id && !"".equals(id.toString().trim())
+        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+      //根据工号查询是否已存在该工号的记录
+      Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
+      List<User> list = userService.select(validCondition);
+      if (list.isEmpty()) {
+        param.put("id", id.toString().trim());
+        param.put("name", name.toString().trim());
+        //密码：从系统设置获取密码强度、长度校验的规则 进行校验
+        String password = String.valueOf(param.get("password"));//获取密码进行校验
+        if (validPassword(password)) {
+          param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+          param.put("status", BaseConstants.IN_USE);
+          User user = new User().buildCreateInfo().fromMap(param);
+          if (user.insert() != -1) {
+            return successData(Message.NEW_ADD_SUCCESS, user);
+          } else {
+            return fail(Message.NEW_ADD_FAIL);
+          }
+        } else {
+          return fail(Message.NEW_ADD_FAIL);
+        }
+      } else {
+        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+      }
+    } else {
+      return fail(Message.DATA_CANNOT_BE_EMPTY);
+    }
+  }
 
-    return null;
+  /**
+   * 校验密码长度及强度
+   *
+   * @param password 要校验的密码
+   * @return true or false 密码是否符合要求
+   */
+  private boolean validPassword(String password) {
+    int minPwdLength = Integer.parseInt(SystemSettingManager.getSettingValue(SystemSettingManager.MIN_PWD_LENGTH).toString());
+    int maxPwdLength = Integer.parseInt(SystemSettingManager.getSettingValue(SystemSettingManager.MAX_PWD_LENGTH).toString());
+    if (password.length() >= minPwdLength && password.length() <= maxPwdLength) {//密码长度符合要求
+      //验证密码强度
+      String pwdRequirements = SystemSettingManager.getSettingValue("pwdRequirements").toString();
+      if (!pwdRequirements.equals("0000")) {
+        String upperCase = pwdRequirements.substring(0, 1);
+        String lowercase = pwdRequirements.substring(1, 2);
+        String num = pwdRequirements.substring(2, 3);
+        String other = pwdRequirements.substring(3, 4);
+        String regex = "(?:";
+        if (upperCase.equals("1")) {
+          regex += "(?=.*[A-Z])";
+        }
+        if (lowercase.equals("1")) {
+          regex += "(?=.*[a-z])";
+        }
+        if (num.equals("1")) {
+          regex += "(?=.*[0-9])";
+        }
+        if (other.equals("1")) {
+          regex += "(?=.*[^A-Za-z0-9\\s])";
+        }
+        regex += ").*";
+        return pwdRequirements.matches(regex);
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -166,9 +236,115 @@ public class UserController extends BaseController {
    *              状态（1：解锁，2：锁定，3：失效，4：启用）
    * @return PlatResult
    */
-  @PostMapping
+  @PostMapping("/lock")
   public PlatResult lock(String rowId) {
+    if (UtilsTool.isValid(rowId)) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("rowId", rowId);
+      map.put("status", BaseConstants.LOCKED);
+      map.put("accountLockedTime", UtilsTool.getDateTimeNow());
+      User user = new User().buildModifyInfo().fromMap(map);
+      if (user.updateById() != -1) {
+        return success(Message.OPERATOR_SUCCESS);
+      } else {
+        return fail(Message.OPERATOR_FAIL);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
 
-    return null;
+  /**
+   * 人员信息 - 解锁账号
+   *
+   * @param rowId 唯一标识
+   * @return PlatResult
+   */
+  @PostMapping("/unLock")
+  public PlatResult unLock(String rowId) {
+    if (UtilsTool.isValid(rowId)) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("rowId", rowId);
+      map.put("status", BaseConstants.UNLOCK);
+      map.put("accountLockedTime", "");
+      User user = new User().buildModifyInfo().fromMap(map);
+      if (user.updateById() != -1) {
+        return success(Message.OPERATOR_SUCCESS);
+      } else {
+        return fail(Message.OPERATOR_FAIL);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
+  /**
+   * 人员信息 - 启用账号
+   *
+   * @param rowId
+   * @return PlatResult
+   */
+  @PostMapping("/inUse")
+  public PlatResult inUse(String rowId) {
+    if (UtilsTool.isValid(rowId)) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("rowId", rowId);
+      map.put("status", BaseConstants.IN_USE);
+      User user = new User().buildModifyInfo().fromMap(map);
+      if (user.updateById() != -1) {
+        return success(Message.OPERATOR_SUCCESS);
+      } else {
+        return fail(Message.OPERATOR_FAIL);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
+  /**
+   * 人员信息 - 失效账号
+   *
+   * @param rowId
+   * @return PlatResult
+   */
+  @PostMapping("/outOfUse")
+  public PlatResult outOfUse(String rowId) {
+    if (UtilsTool.isValid(rowId)) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("rowId", rowId);
+      map.put("status", BaseConstants.OUT_OF_USE);
+      User user = new User().buildModifyInfo().fromMap(map);
+      if (user.updateById() != -1) {
+        return success(Message.OPERATOR_SUCCESS);
+      } else {
+        return fail(Message.OPERATOR_FAIL);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
+  /**
+   * 人员信息 - 重置密码
+   *
+   * @param rowId 唯一标识
+   * @return PlatResult
+   */
+  @PostMapping("/resetPassword")
+  public PlatResult resetPassword(String rowId) {
+    if (UtilsTool.isValid(rowId)) {
+      String defaultPassword = SystemSettingManager.getDefaultPwd();
+      Map<String, Object> map = new HashMap<>();
+      map.put("rowId", rowId);
+      map.put("password", defaultPassword);
+      User user = new User().buildModifyInfo().fromMap(map);
+      if (user.updateById() != -1) {
+        return success(Message.UPDATE_SUCCESS);
+      } else {
+        return fail(Message.UPDATE_FAIL);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
   }
 }

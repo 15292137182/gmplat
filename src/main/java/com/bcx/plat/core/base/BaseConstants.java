@@ -34,5 +34,10 @@ public class BaseConstants {
   public static final String DATA_SET = "dataSet";//数据集
   public static final String KEY_SET = "keySet";//键值集合
 
+  //人员信息状态
+  public static final String LOCKED = "01";//锁定
+  public static final String UNLOCK = "02";//解锁
+  public static final String IN_USE = "03";//启用
+  public static final String OUT_OF_USE = "04";//失效
 
 }
