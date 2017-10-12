@@ -24,14 +24,32 @@ public abstract class SystemSettingManager {
   public static final String PWD_REQUIREMENTS = "pwdRequirements";  // 密码要求表达式
   public static final String MIN_PWD_LENGTH = "minPwdLength";
   public static final String MAX_PWD_LENGTH = "maxPwdLength";
+  public static final String DEFAULT_PWD = "defaultPwd";
 
   public static final String UPLOAD_FILE_LIMIT = "uploadFileLimit";
   public static final String MIN_UPLOAD_FILE_SIZE = "minUploadFileSize";
   public static final String MAX_UPLOAD_FILE_SIZE = "maxUploadFileSize";
   public static final String UPLOAD_FILE_SUFFIX = "uploadFileSuffix";
 
-  private static List<Map<String, Object>> settingData;
-  private static Map<String, Object> propertySetting;
+  private static Map<String, Object> settingData;
+  private static Map<String, Object> defaultSetting;
+
+  /**
+   * @return 默认密码
+   */
+  public static String getDefaultPwd() {
+    return String.valueOf(getSettingValue(DEFAULT_PWD));
+  }
+
+  /**
+   * 获取指定系统配置
+   *
+   * @param key key
+   * @return 返回指定 key 的默认值，不存在返回 null
+   */
+  public static Object getSettingValue(String key) {
+    return getSystemSetting().get(key);
+  }
 
   /**
    * @return 有效的系统设置的键值
@@ -39,11 +57,12 @@ public abstract class SystemSettingManager {
   public static Set<String> getValidSettingKeys() {
     Set<String> keys = new HashSet<>();
     keys.add(SESSION_TIME_OUT);
-    keys.add(PWD_SECURITY_DATE);
     keys.add(LOGIN_FAILED_LIMIT);
+    keys.add(PWD_SECURITY_DATE);
     keys.add(PWD_REQUIREMENTS);
     keys.add(MIN_PWD_LENGTH);
     keys.add(MAX_PWD_LENGTH);
+    keys.add(DEFAULT_PWD);
 
     keys.add(UPLOAD_FILE_LIMIT);
     keys.add(MIN_UPLOAD_FILE_SIZE);
@@ -52,41 +71,53 @@ public abstract class SystemSettingManager {
     return keys;
   }
 
+
+  /**
+   * @return 获取设置信息
+   */
+  public static Map<String, Object> getSystemSetting() {
+    if (null == settingData) {
+      settingData = new HashMap<>();
+      getSystemSettingList().forEach(map -> settingData.put((String) map.get("key"), map.get("value")));
+    }
+    return settingData;
+  }
+
   /**
    * 获取系统配置信息
    *
    * @return 返回
    */
   public static List<Map<String, Object>> getSystemSettingList() {
-    if (null == settingData) {
-      settingData = new ArrayList<>();
-      SystemSettingService systemSettingService = SpringContextHolder.getBean(SystemSettingService.class);
-      List<SystemSetting> settings = systemSettingService.selectAllValidSetting();
-      getValidSettingKeys().forEach(key -> {
-        Map<String, Object> setting = new HashMap<>();
-        setting.put("key", key);
-        settings.forEach(systemSetting -> {
-          if (key.equals(systemSetting.getKey())) {
-            setting.put("name", systemSetting.getName());
-            setting.put("value", systemSetting.getValue());
-            setting.put("remark", systemSetting.getRemark());
-          }
-        });
-        fixSettingData(setting, key);
-        if (isValid(setting.get("value"))) {
-          settingData.add(setting);
+    List<Map<String, Object>> settingList = new ArrayList<>();
+
+    SystemSettingService systemSettingService = SpringContextHolder.getBean(SystemSettingService.class);
+    List<SystemSetting> settings = systemSettingService.selectAllValidSetting();
+    getValidSettingKeys().forEach(key -> {
+      Map<String, Object> setting = new HashMap<>();
+      setting.put("key", key);
+      settings.forEach(systemSetting -> {
+        if (key.equals(systemSetting.getKey())) {
+          setting.put("name", systemSetting.getName());
+          setting.put("value", systemSetting.getValue());
+          setting.put("remark", systemSetting.getRemark());
         }
       });
-    }
-    return settingData;
+      fixSettingData(setting, key);
+      if (setting.size() > 1) {
+        settingList.add(setting);
+      }
+    });
+
+    return settingList;
   }
 
   /**
    * @return 获取默认配置信息
    */
   public static Map<String, Object> getDefaultSettings() {
-    if (propertySetting == null) {
-      propertySetting = new HashMap<>();
+    if (defaultSetting == null) {
+      defaultSetting = new HashMap<>();
       getValidSettingKeys().forEach(key -> {
         Object value = null;
         switch (key) {
@@ -108,6 +139,9 @@ public abstract class SystemSettingManager {
           case MAX_PWD_LENGTH:
             value = Global.getValueAsInt(PROPERTIES_KEY_PREFIX + MAX_PWD_LENGTH, 64);
             break;
+          case DEFAULT_PWD:
+            value = Global.getValueAsString(PROPERTIES_KEY_PREFIX + DEFAULT_PWD, "123456");
+            break;
           case UPLOAD_FILE_LIMIT:
             value = Global.getValueAsString(PROPERTIES_KEY_PREFIX + UPLOAD_FILE_LIMIT, "0");
             break;
@@ -121,10 +155,10 @@ public abstract class SystemSettingManager {
             value = Global.getValueAsString(PROPERTIES_KEY_PREFIX + UPLOAD_FILE_SUFFIX, "");
             break;
         }
-        propertySetting.put(key, value);
+        defaultSetting.put(key, value);
       });
     }
-    return propertySetting;
+    return defaultSetting;
   }
 
   /**
@@ -150,6 +184,9 @@ public abstract class SystemSettingManager {
           break;
         case MIN_PWD_LENGTH:
           fixIfAbsent(setting, getDefaultSettings().get(key), "密码最小长度", "最小长度为 1 ~");
+          break;
+        case DEFAULT_PWD:
+          fixIfAbsent(setting, getDefaultSettings().get(key), "默认密码", "");
           break;
         case MAX_PWD_LENGTH:
           fixIfAbsent(setting, getDefaultSettings().get(key), "密码最大长度", "最大长度为 64 ~");

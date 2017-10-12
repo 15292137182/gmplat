@@ -16,6 +16,9 @@ public class SystemSettingManagerTest extends BaseTest {
   public void test() {
     List settings = SystemSettingManager.getSystemSettingList();
     assert settings != null;
+
+    String defaultPassword = SystemSettingManager.getDefaultPwd();
+    assert null != defaultPassword;
   }
 
 }
