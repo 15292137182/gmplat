@@ -47,5 +47,13 @@
         "title": "动态模板维护",
         "icon": " fa-navicon",
         "href": "core/WebUI/data-base/interactive.html"
+    },{
+        "title": "菜单资源维护",
+        "icon": "&#xe641;",
+        "href": "core/WebUI/menu-resource/menu-resource.html"
+    },{
+        "title": "页面资源维护",
+        "icon": "&#xe641;",
+        "href": "core/WebUI/page-resources/page-resources.html"
     }]
 }];
