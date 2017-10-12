@@ -673,7 +673,6 @@ gmpTableObj.prototype.searchSelect = function(data) {
 
 // 构建表格组件
 gmpTableObj.prototype.bulidComponent = function(thisObj) {
-    // console.log(thisObj);
     // alert("第一次")
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
     var that = this;

@@ -19,7 +19,7 @@
         </el-row>
         <el-row id="app" style="margin-top: 10px;">
             <el-col :span="24">
-                <components :is="gmpTable" data='{"main":"#app","code":"pageButtonTable","id":"grid", "bind": "searchs", "icon": "false"}' :table-data="table"></components>
+                <components :is="gmpTable" data='{"main":"#app","code":"pageButtonTable","id":"grid", "bind": "searchs"}' :table-data="table"></components>
             </el-col>
         </el-row>
     </div>
@@ -36,6 +36,17 @@
 //            var json = jsonDataConfigObj.configData();
         var json = {};
         json.checkbox = false;
+        json.funcType = "grid";
+        json.displayTitle = "页面标识";
+        json.ename = "pageName";
+        //是否需要默认按钮（编辑，删除）
+        json.icon = true;
+        //自定义按钮事件及图标（仅支持element ui）
+//        json.customFuntion = {customImg:"search",
+//                customFuntion:function(index,row){
+//                alert(index);
+//            }
+//        }
         return json;
     }
     gmp_onload = function () {

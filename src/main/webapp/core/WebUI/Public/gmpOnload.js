@@ -229,28 +229,26 @@ var getHtml = (function() {
                         // console.log(GmpSearch[compId]);
                     }
                     if (arr[0].funcType == "grid") {
+                        if(jsonDataConfig.displayTitle){
+                            arr.push(jsonDataConfig)
+                        }
                         var render = [];
-                        if(params.icon == undefined) {
-                            params.icon = true;
-                        }else if(params.icon == "false") {
-                            params.icon = false;
-                            render.push({customImg:"search",customFuntion:function(index,row){
-                                alert(index);
-                            }});
+                        if(jsonDataConfig.icon == undefined) {
+                            jsonDataConfig.icon = true;
                         }else {
-                            render.push({customImg:"search",customFuntion:function(index,row){
-                                alert(index);
-                            }});
+                            render.push(jsonDataConfig.customFuntion);
                         }
 
                         var _table = new gmpTableObj(jsonDataConfig, [params.bind], compId, code, arr, mainId, params.id, "", "", "", {
-                            onClickRow: function (row) {},
+                            onClickRow: function (row) {
+                                console.log(row);
+                            },
                             onEditRow: function () {},
                             onDeleteRow: function () {},
                             onCellClick: function (row) {},
                             onDbClick: function (row) {},
                             onDbCellClick: function (row) {},
-                            buttonDisabled:params.icon
+                            buttonDisabled:jsonDataConfig.icon
                         },render);
                         // 创建vue实例
                         _table.bulidComponent(_table);
