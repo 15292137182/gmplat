@@ -8,8 +8,10 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -27,7 +29,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
    * @param params 实体类参数
    * @return 返回操作信息
    */
-  public ServerResult insertEntityMap(Map<String, Object> params) {
+  public ServerResult insertOrgMap(Map<String, Object> params) {
     if (null != params) {
       BaseOrg org = new BaseOrg().fromMap(params);
       if (!isValid(org.getOrgPid()) || ORG_ROOT_NODE_ID.equalsIgnoreCase(org.getOrgId())) {
@@ -44,6 +46,66 @@ public class BaseOrgService extends BaseService<BaseOrg> {
       return success(Message.NEW_ADD_SUCCESS);
     }
     return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
+   * 更新数据
+   *
+   * @param params 参数
+   * @return 返回操作结果
+   */
+  public ServerResult updateOrgMap(Map<String, Object> params) {
+    if (null != params) {
+      BaseOrg org = new BaseOrg().fromMap(params);
+      if (isValid(org.getRowId())) {
+        if (!isValid(org.getOrgPid()) || ORG_ROOT_NODE_ID.equalsIgnoreCase(org.getOrgId())) {
+          return fail("无效的组织机构编号！");
+        }
+        if (!isPidLegal(org.getOrgId(), org.getOrgPid())) {
+          return fail("无效的父组织机构！");
+        }
+        org.buildModifyInfo().updateById();
+        return success(Message.UPDATE_SUCCESS);
+      }
+    }
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
+   * 根据 rowIds 删除数据
+   *
+   * @param rowIds rowId 集合
+   * @return 返回
+   */
+  public ServerResult deleteByRowIds(String[] rowIds) {
+    if (null != rowIds && rowIds.length > 0) {
+      Set<String> canDelete = new HashSet<>();
+      for (String rowId : rowIds) {
+        if (canDelete(rowId)) {
+          canDelete.add(rowId);
+        }
+      }
+      Condition condition = new ConditionBuilder(BaseOrg.class)
+              .and().in("rowId", canDelete).endAnd().buildDone();
+      delete(condition);
+      return success(String.format("成功删除了 %d 数据！", canDelete.size()));
+    }
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
+   * @param rowId 组织机构 rowId
+   * @return 该组织机构是否能被删除
+   */
+  private boolean canDelete(String rowId) {
+    // 查询当前 rowId 的编号
+    BaseOrg org = new BaseOrg().selectOneById(rowId);
+    if (null != org) {
+      Condition condition = new ConditionBuilder(BaseOrg.class)
+              .and().equal("orgPid", org.getOrgId()).endAnd().buildDone();
+      return select(condition).isEmpty();
+    }
+    return false;
   }
 
   /**
@@ -97,5 +159,6 @@ public class BaseOrgService extends BaseService<BaseOrg> {
     }
     return false;
   }
+
 
 }
