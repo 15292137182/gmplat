@@ -95,7 +95,7 @@ public class UserController extends BaseController {
   /**
    * 人员信息 - 新增
    *
-   * @param param
+   * @param param 接收一个实体参数
    * @return PlatResult
    */
   @PostMapping("/add")
@@ -110,8 +110,8 @@ public class UserController extends BaseController {
       if (list.isEmpty()) {
         param.put("id", id.toString().trim());
         param.put("name", name.toString().trim());
-        //密码：从系统设置获取密码强度、长度校验的规则 进行校验
-        String password = String.valueOf(param.get("password"));//获取密码进行校验
+        //从系统设置获取密码强度、长度校验的规则 进行校验
+        String password = String.valueOf(param.get("password"));
         if (validPassword(password)) {
           param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
           param.put("status", BaseConstants.IN_USE);
@@ -203,6 +203,38 @@ public class UserController extends BaseController {
         }
       } else {
         return fail(Message.DATA_CANNOT_BE_EMPTY);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
+  /**
+   * 个人信息维护 - 修改密码
+   *
+   * @param param 接收rowId、password参数
+   * @return PlatResult
+   */
+  @PostMapping("/modifyPassword")
+  public PlatResult modifyPassword(@RequestParam Map<String, Object> param) {
+    if (UtilsTool.isValid(param.get("rowId"))) {
+      //查询原密码
+      Condition condition = new ConditionBuilder(User.class).and().equal("rowId", param.get("rowId")).endAnd().buildDone();
+      List oldOne = userService.singleSelect(User.class, condition);
+      String oldPwd = ((Map) oldOne.get(0)).get("password").toString();//数据库中的原密码
+      String oldPassword = String.valueOf(param.get("oldPassword"));//用户输入的原密码
+      String password = String.valueOf(param.get("password"));
+      if (oldPwd.equals(oldPassword) && validPassword(password)) {//校验密码
+        param.remove("oldPassword");
+        param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+        User user = new User().buildModifyInfo().fromMap(param);
+        if (user.updateById() != -1) {
+          return success(Message.UPDATE_SUCCESS);
+        } else {
+          return fail(Message.UPDATE_FAIL);
+        }
+      } else {
+        return fail(Message.UPDATE_FAIL);
       }
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);

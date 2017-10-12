@@ -177,4 +177,22 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
     //显示结果
     showResult(resultActions);
   }
+
+  @Test
+  public void testModifyPassword() throws Exception {
+    //准备参数
+    String rowId = "123456789";
+    String oldPassword = "123456";
+    String password = "123457890";
+    //发送请求
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/modifyPassword")
+            .accept(MediaType.APPLICATION_JSON)
+            .param("password", password)
+            .param("rowId", rowId)
+            .param("oldPassword", oldPassword)
+    );
+    //显示结果
+    showResult(resultActions);
+  }
 }
