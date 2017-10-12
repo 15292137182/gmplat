@@ -430,7 +430,7 @@ gmpFormObj.prototype.submit = function(json, callback) {
  */
 
 // 动态表格对象
-function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction) {
+function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vueEl, tableId, postUrl, queryParam, submitUrl, jsonFunction,JsonCustomFuntion) {
     this.jsonDataConfig = jsonDataConfig;//配置信息
     // console.log(jsonDataConfig);
     this.grids = grids;	//table响应数据对应的search.id
@@ -464,7 +464,9 @@ function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vue
 
     this.rows = []; //选中行数据
 
+    this.buttonDisabled = true;
     if (jsonFunction) {
+        console.log(jsonFunction);
         this.onClickRow = jsonFunction.onClickRow; //单击行事件
         this.onEditRow = jsonFunction.onEditRow; //编辑行事件
         this.onDeleteRow = jsonFunction.onDeleteRow; //删除行事件
@@ -475,6 +477,14 @@ function gmpTableObj(jsonDataConfig, grids, compId, blockId, formBlockItems, vue
         this.onUnCheck = jsonFunction.onUnCheck; //表格取消选中事件
         this.onCheckAll = jsonFunction.onCheckAll; //表格全选事件
         this.onUnCheckAll = jsonFunction.onUnCheckAll; //表格移除全选事件
+        if(jsonFunction.buttonDisabled ==false){
+            this.buttonDisabled = jsonFunction.buttonDisabled;
+        }
+    }
+    if(JsonCustomFuntion){
+        console.log(JsonCustomFuntion);
+        this.customFuntion = JsonCustomFuntion[0].customFuntion;
+        this.customImg = JsonCustomFuntion[0].customImg;
     }
 };
 
@@ -613,7 +623,7 @@ gmpTableObj.prototype.searchSelect = function(data) {
             dataType: "json",
             data: dataJson,
             success: function(res) {
-                alert("点击第几页触发");
+                // alert("点击第几页触发");
                 var data = res.resp.content.data.result;
                 if (data.length > 0) {
                     that.total = Number(res.resp.content.data.total);
@@ -635,6 +645,12 @@ gmpTableObj.prototype.searchSelect = function(data) {
             }
         })
     }
+    //自定义按钮
+    this.tableObjArr["customFuntion"] = function(index,row){
+        that.customFuntion(index,row);
+    }
+    //自定义按钮图标
+    this.tableObjArr["customImg"] = this.customImg;
     if(data){
         this.tableObjArr["total"] = Number(data.total);
         this.tableObjArr["pageNum"] = data.pageNum;
@@ -658,7 +674,6 @@ gmpTableObj.prototype.bulidComponent = function(thisObj) {
     // console.log(thisObj);
     // alert("第一次")
     var strHtml = DynamicStitchings.Concatenation(this.formBlockItems,thisObj);
-    // console.log(strHtml.html);
     var that = this;
     var id = that.vueEl;
     var vue = new Vue({
