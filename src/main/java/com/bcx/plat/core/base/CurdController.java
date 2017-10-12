@@ -74,8 +74,8 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
    */
   @PostMapping("/add")
   public PlatResult addMenu(@RequestParam Map<String, Object> param) {
-    getInstance().buildCreateInfo().fromMap(param);
-    int insert = getInstance().insert();
+    E e = getInstance().buildCreateInfo().fromMap(param);
+    int insert = e.insert();
     if (insert != -1) {
       return successData(NEW_ADD_SUCCESS, getInstance());
     } else {
@@ -92,8 +92,8 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
   @PostMapping("/modify")
   public PlatResult modifyMenu(@RequestParam Map<String, Object> param) {
     if (UtilsTool.isValid(param.get("rowId"))) {
-      getInstance().buildModifyInfo().fromMap(param);
-      int update = getInstance().updateById();
+      E en = getInstance().buildModifyInfo().fromMap(param);
+      int update = en.updateById();
       if (update != -1) {
         return successData(UPDATE_SUCCESS, getInstance());
       } else {
@@ -110,9 +110,9 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
    * @param rowId 按照rowId查询
    * @return PlatResult
    */
-  @GetMapping("/delete")
+  @PostMapping("/delete")
   public PlatResult delete(String rowId) {
-    Condition condition = new ConditionBuilder(Menu.class).and().equal("rowId", rowId).endAnd().buildDone();
+    Condition condition = new ConditionBuilder(getClassE()).and().equal("rowId", rowId).endAnd().buildDone();
     List<E> select = s.select(condition);
     if (UtilsTool.isValid(rowId)) {
       int del = getInstance().deleteById(rowId);

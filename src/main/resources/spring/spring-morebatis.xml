@@ -118,6 +118,11 @@
               p:entityClass="com.bcx.plat.core.entity.Button"
               p:tableName="t_button"
               p:pks="#{'rowId'}"/>
+
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.FuncOperat"
+              p:tableName="t_func_operat"
+              p:pks="#{'rowId'}"/>
       </list>
     </constructor-arg>
   </bean>

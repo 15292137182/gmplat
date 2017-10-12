@@ -3,11 +3,13 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Button;
+import com.bcx.plat.core.entity.Page;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.ButtonService;
+import com.bcx.plat.core.service.PageService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -19,9 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.constants.Message.*;
@@ -43,6 +48,8 @@ public class ButtonController extends BaseController{
 
   @Resource
   private ButtonService buttonService;
+  @Resource
+  private PageService pageService;
 
   protected List<String> blankSelectFields() {
     return Arrays.asList("parentNumber", "number", "name", "category", "sort", "url", "icon", "grantAuth");
@@ -138,6 +145,16 @@ public class ButtonController extends BaseController{
       result = new PageResult<>(buttonService.selectMap(condition, orders));
     }
     if (isValid(result)) {
+      List<Map> list = result.getResult();
+      for (Map li : list){
+        String pageIdent = String.valueOf(li.get("pageIdent"));
+        Condition buildDone = new ConditionBuilder(Page.class).and().equal("rowId", pageIdent).endAnd().buildDone();
+        List<Page> select = pageService.select(buildDone);
+        for (Page page :select){
+          String pageName = page.getPageName();
+          li.put("pageName",pageName);
+        }
+      }
       return result(new ServerResult<>(result));
     } else {
       return fail(Message.QUERY_FAIL);
