@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织机构信息</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        .el-input {
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+<div id="basTop">
+    <el-row type="flex" justify="end">
+        <el-col :span="24">
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加组织机构</el-button>
+            <el-button type="danger" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">删除组织机构</el-button>
+        </el-col>
+    </el-row>
+</div>
+
+<el-col :span="4" id="left" style="margin-left:15px;" >
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color">
+                    <span>树状结构检索</span>
+                </div>
+                <div style="padding:20px 20px">
+                    <el-col style="padding:10px 5px">
+                        <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                    </el-col>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+
+<el-col :span="19" id="right" style="margin-left:15px">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color">
+                    <span>详细信息</span>
+                </div>
+                <el-col :span="24">
+                    <div style="padding:10px 20px 10px 20px" >
+                        <div>
+                            <el-row :gutter="20">
+                                <el-col :span="8">
+                                    <el-input  v-model="groupName">
+                                        <template slot="prepend">上级机构</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input v-model="belongSector">
+                                        <template slot="prepend">机构编号</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input v-model="groupCategory">
+                                        <template slot="prepend">机构名称</template>
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                            <br>
+                            <el-row :gutter="20" style="margin-top:-10px ">
+                                <el-col :span="8">
+                                    <el-input  v-model="desc">
+                                        <template slot="prepend">排序</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input v-model="remarks">
+                                        <template slot="prepend">固定电话</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-input  v-model="remarks">
+                                        <template slot="prepend">机构地址</template>
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="20" style="margin-top:10px">
+                                <el-col :span="8">
+                                    <el-input v-model="remarks">
+                                        <template slot="prepend">说明</template>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8" :offset="8">
+                                    <el-button type="primary">保存</el-button>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </div>
+                </el-col>
+            </el-col>
+        </el-row>
+        </el-row>
+    </div>
+</el-col>
+
+<el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:20px;">
+    <div class="allBorder">
+        <el-row>
+            <el-col>
+                <div class="bg-color">
+                    <span>组织机构</span>
+                </div>
+                <div style="padding:20px 20px">
+                    <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                        <el-tab-pane label="组织机构查看" name="first">
+                            <template>
+                                <el-table></el-table>
+                            </template>
+                        </el-tab-pane>
+                        <el-tab-pane label=" 角色查看" name="second">
+                            <template>
+                                <el-table></el-table>
+                            </template>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+
+
+<script src="organizational-information.js"></script>
+</body>
+</html>
