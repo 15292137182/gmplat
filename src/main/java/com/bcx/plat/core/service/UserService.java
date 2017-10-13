@@ -36,13 +36,23 @@ public class UserService extends BaseService<User> {
    * @param order    排序方式
    * @return ServerResult
    */
-  public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
+  public ServerResult queryPage(String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
     } else {
-      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+      if (UtilsTool.isValid(search)) {
+        condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+        if (UtilsTool.isValid(searchBy)) {
+          condition = new ConditionBuilder(User.class)
+              .and().addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+              .or().addCondition(condition).endOr().endAnd()
+              .buildDone();
+        }
+      } else {
+        condition = null;
+      }
     }
     PageResult<Map<String, Object>> users;
     if (UtilsTool.isValid(pageNum)) {//判断是否分页查询

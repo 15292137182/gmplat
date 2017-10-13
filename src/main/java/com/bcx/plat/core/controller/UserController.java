@@ -42,6 +42,7 @@ public class UserController extends BaseController {
    * 人员信息 - 查询方法
    *
    * @param search   按照空格查询
+   * @param searchBy 空格查询的指定字段
    * @param param    按照指定字段查询(json)
    * @param pageNum  页码
    * @param pageSize 页面大小
@@ -49,8 +50,8 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    ServerResult result = userService.queryPage(search, param, pageNum, pageSize, order);
+  public PlatResult queryPage(String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
+    ServerResult result = userService.queryPage(search, searchBy, param, pageNum, pageSize, order);
     return result(result);
   }
 
@@ -313,7 +314,7 @@ public class UserController extends BaseController {
   /**
    * 人员信息 - 启用账号
    *
-   * @param rowId
+   * @param rowId 唯一标识
    * @return PlatResult
    */
   @PostMapping("/inUse")
@@ -336,7 +337,7 @@ public class UserController extends BaseController {
   /**
    * 人员信息 - 失效账号
    *
-   * @param rowId
+   * @param rowId 唯一标识
    * @return PlatResult
    */
   @PostMapping("/outOfUse")
