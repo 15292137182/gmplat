@@ -73,7 +73,6 @@ public abstract class SystemSettingManager {
     return keys;
   }
 
-
   /**
    * @return 获取设置信息
    */

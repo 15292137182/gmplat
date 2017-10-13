@@ -60,7 +60,6 @@ public class UtilsTool {
     return null != collection && !collection.isEmpty();
   }
 
-
   /**
    * 返回指定长度的随机字符串
    *
