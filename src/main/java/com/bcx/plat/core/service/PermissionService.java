@@ -8,7 +8,11 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 权限服务类
@@ -38,6 +42,23 @@ public class PermissionService extends BaseService<Permission> {
   }
 
   /**
+   * 更新数据
+   *
+   * @param params 参数
+   * @return 返回操作结果
+   */
+  public ServerResult updateOrgMap(Map<String, Object> params) {
+    if (null != params) {
+      Permission permission = new Permission().fromMap(params);
+      if (isValid(permission.getRowId())) {
+        permission.buildModifyInfo().updateById();
+        return success(Message.UPDATE_SUCCESS);
+      }
+    }
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
    * @param permissionId 权限编号
    * @return 当前权限编号是否已经存子啊
    */
@@ -46,6 +67,23 @@ public class PermissionService extends BaseService<Permission> {
             .and().equal("permissionId", permissionId).endAnd()
             .buildDone();
     return !select(condition).isEmpty();
+  }
+
+  /**
+   * 根据 rowIds 删除数据
+   *
+   * @param rowIds rowId 集合
+   * @return 返回
+   */
+  public ServerResult deleteByRowIds(String[] rowIds) {
+    if (null != rowIds && rowIds.length > 0) {
+      List<String> rowIdList = Arrays.asList(rowIds);
+      Condition condition = new ConditionBuilder(Permission.class)
+              .and().in("rowId", rowIdList).endAnd().buildDone();
+      delete(condition);
+      return success(String.format("成功删除了 %d 数据！", rowIdList.size()));
+    }
+    return fail(Message.INVALID_REQUEST);
   }
 
 }
