@@ -45,6 +45,17 @@ public class UtilsTool {
     return null != obj && !"".equals(obj.toString());
   }
 
+  public static boolean isValidAll(Object... obj) {
+    for (Object o : obj) {
+      if (null != o && !"".equals(o.toString().trim())) {
+        continue;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public static boolean isValid(Collection collection) {
     return null != collection && !collection.isEmpty();
   }

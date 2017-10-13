@@ -18,6 +18,10 @@
               p:entityClass="com.bcx.plat.core.entity.User"
               p:tableName="t_user"
               p:pks="#{'rowId'}"/>
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+              p:entityClass="com.bcx.plat.core.entity.Role"
+              p:tableName="t_role"
+              p:pks="#{'rowId'}"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.TestEntityEntriesBuilder"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.BusinessObjectPro"

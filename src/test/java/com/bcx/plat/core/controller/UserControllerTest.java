@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.utils.UtilsTool;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -161,10 +162,21 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testAdd() throws Exception {
     //准备参数
-    String id = "003";
+    String id = "004";
     String name = "zhangsan";
     String password = "12345";
     String belongOrg = "2";
+    String nickname = "nick";
+    String mobilePhone = "15618908988";
+    String officePhone = "010-68508899";
+    String email = "abc@126.com";
+    String gender = "男";
+    String job = "主席";
+    String idCard = "310102199801251726";
+    String hiredate = UtilsTool.getDateTimeNow();
+    String description = "说明";
+    String remarks = "备注";
+
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/add")
@@ -173,6 +185,16 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
             .param("name", name)
             .param("password", password)
             .param("belongOrg", belongOrg)
+            .param("nickname", nickname)
+            .param("mobilePhone", mobilePhone)
+            .param("officePhone", officePhone)
+            .param("email", email)
+            .param("gender", gender)
+            .param("job", job)
+            .param("hiredate", hiredate)
+            .param("description", description)
+            .param("remarks", remarks)
+            .param("idCard", idCard)
     );
     //显示结果
     showResult(resultActions);
