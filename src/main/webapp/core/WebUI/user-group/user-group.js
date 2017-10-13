@@ -4,6 +4,10 @@
 var basTop;
 var left;
 var right;
+
+//查用户组信息
+var searchGroup=serverPath + "/userGroup/queryById";
+
 gmp_onload=function(){
     basTop = new Vue({
         el: '#basTop',
@@ -49,57 +53,55 @@ gmp_onload=function(){
     left=new Vue({
         el:'#left',
         data:getData.dataObj({
-            data: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }],
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label',
-            },
+            treeData: {
+                // 是否显示checkbook 默认为不显示
+                checkbox: false,
+                // 获取树节点接口
+                url: serverPath + "/userGroup/queryPage",
+                // 设置参数 -- 树节点上显示的文字
+                defaultProps: {
+                    children: 'children',
+                    label: 'groupName'
+                }
+            }
         }),
         methods:{
-            handleNodeClick(data){
-                //console.log(data);
+            //点击左边的树得到数据
+            getNodes(data) {
+                this.rowId=data.rowId
+                $.ajax({
+                    url:searchGroup,
+                    type:"get",
+                    data:{
+                        rowId:this.rowId
+                    },
+                    dataType:"json",
+                    xhrFields: {withCredentials: true},
+                    success:function(res){
+                        var data=res.resp.content.data;
+                        right.groupName=data.groupName;
+                        right.belongSector=data.belongSector;
+                        right.groupCategory=data.groupCategory;
+                        right.desc=data.desc;
+                        right.remarks=data.remarks;
+                    },
+                })
             },
+            //复选框选中得到得值
+            getChecked(data) {
+                console.log(data);
+            }
         },
     })
 
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
-            input3:'',
+            groupName:'',
+            belongSector:'',
+            groupCategory:'',
+            desc:'',
+            remarks:'',
         }),
         methods: {
 

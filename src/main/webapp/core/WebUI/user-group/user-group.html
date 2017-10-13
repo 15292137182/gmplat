@@ -21,7 +21,7 @@
     </el-row>
 </div>
 
-<el-col :span="6" id="left" style="margin-left:15px">
+<el-col :span="4" id="left" style="margin-left:15px">
     <div class="allBorder">
         <el-row>
             <el-col>
@@ -29,21 +29,16 @@
                     <span>树状结构检索</span>
                 </div>
                 <div style="padding:20px 20px">
-                        <div style="padding:20px 20px" id="leftTree">
-                            <el-tree
-                                    :data="data"
-                                    :props="defaultProps"
-                                    accordion
-                                    @node-click="handleNodeClick">
-                            </el-tree>
-                        </div>
+                    <el-col style="padding:10px 5px">
+                        <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                    </el-col>
                 </div>
             </el-col>
         </el-row>
     </div>
 </el-col>
 
-<el-col :span="17" id="right" style="margin-left:15px">
+<el-col :span="19" id="right" style="margin-left:15px">
     <div class="allBorder">
         <el-row>
             <el-col>
@@ -55,17 +50,17 @@
                         <div>
                             <el-row :gutter="20">
                                 <el-col :span="8">
-                                    <el-input  v-model="input3">
+                                    <el-input  v-model="groupName">
                                         <template slot="prepend">名称</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input v-model="input3">
+                                    <el-input v-model="belongSector">
                                         <template slot="prepend">所属部门</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input v-model="input3">
+                                    <el-input v-model="groupCategory">
                                         <template slot="prepend">组类别</template>
                                     </el-input>
                                 </el-col>
@@ -73,12 +68,12 @@
                             <br>
                             <el-row :gutter="20">
                                 <el-col :span="8">
-                                    <el-input  v-model="input3">
+                                    <el-input  v-model="desc">
                                         <template slot="prepend">描述</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input v-model="input3">
+                                    <el-input v-model="remarks">
                                         <template slot="prepend">备注</template>
                                     </el-input>
                                 </el-col>
@@ -95,7 +90,7 @@
     </div>
 </el-col>
 
-<el-col :span="17" id="rightBottom" style="margin-left:15px;margin-top:20px;">
+<el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:20px;">
     <div class="allBorder">
         <el-row>
             <el-col>

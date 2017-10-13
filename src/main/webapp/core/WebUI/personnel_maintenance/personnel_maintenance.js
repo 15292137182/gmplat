@@ -6,7 +6,9 @@ var left;
 var leftBottom;
 var right;
 //查询接口
-var searchMore=serverPath + "/employee/queryPage";
+var searchMore=serverPath + "/user/queryPage";
+
+
 
 gmp_onload=function(){
     basTop = new Vue({
@@ -25,6 +27,14 @@ gmp_onload=function(){
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '660px',function(){
 
                 });
+            },
+            //导出选择版本
+            chooseVersion(){
+                var htmlUrl = 'chooseVersion.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '选择版本', '300px', '200px',function(){
+
+                });
+
             },
             //新增业务对象属性
             addProp(){

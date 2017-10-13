@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="chooseVersion" style="padding:22px 20px">
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-radio class="radio" v-model="radio" label="xls">2003</el-radio>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-radio class="radio" v-model="radio" label="xlsx">2007</el-radio>
+        </el-col>
+    </el-row>
+
+    <el-row style="padding:22px 20px">
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script>
+    //导入确定版本接口
+    var conVersion=serverPath + "/excel/exportModule";
+
+    var chooseVersion=new Vue({
+        el:'#chooseVersion',
+        data:{
+            radio: 'xls'
+        },
+        methods:{
+            conformEvent(){
+                $.ajax({
+                    url:conVersion,
+                    type:"get",
+                    data:{
+                        suffix:this.radio
+                    },
+                    dataType:"json",
+                    xhrFields: {withCredentials: true},
+                    success:function(res){
+                       console.log(111)
+                    },
+                    error:function(){
+                        console.log(2222)
+                    }
+                })
+                ibcpLayer.Close(divIndex);
+            },
+            cancel(){
+                ibcpLayer.Close(divIndex);
+            }
+        }
+    })
+</script>
+</body>
+</html>
