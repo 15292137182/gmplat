@@ -42,15 +42,15 @@ public class UserController extends BaseController {
    * 人员信息 - 查询方法
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询(json)
    * @param pageNum  页码
    * @param pageSize 页面大小
-   * @param param    按照指定字段查询(json)
    * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search, Integer pageNum, Integer pageSize, String param, String order) {
-    ServerResult result = userService.queryPage(search, pageNum, pageSize, param, order);
+  public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    ServerResult result = userService.queryPage(search, param, pageNum, pageSize, order);
     return result(result);
   }
 
@@ -265,7 +265,7 @@ public class UserController extends BaseController {
    * 人员信息 - 锁定账号
    *
    * @param rowId 唯一标识
-   *              状态（1：解锁，2：锁定，3：失效，4：启用）
+   *              状态（01：解锁，02：锁定，03：失效，04：启用）
    * @return PlatResult
    */
   @PostMapping("/lock")

@@ -27,22 +27,22 @@ public class UserService extends BaseService<User> {
   }
 
   /**
-   * 用户信息分页查询
+   * 人员信息分页查询
    *
    * @param search   按照空格查询
+   * @param param    按照指定字段查询
    * @param pageNum  页码
    * @param pageSize 页面大小
-   * @param param    按照指定字段查询
    * @param order    排序方式
    * @return ServerResult
    */
-  public ServerResult queryPage(String search, Integer pageNum, Integer pageSize, String param, String order) {
+  public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
     } else {
-      condition = !UtilsTool.isValid(param) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     PageResult<Map<String, Object>> users;
     if (UtilsTool.isValid(pageNum)) {//判断是否分页查询
@@ -50,7 +50,7 @@ public class UserService extends BaseService<User> {
     } else {
       users = new PageResult(selectMap(condition, orders));
     }
-    if (UtilsTool.isValid(users.getResult())) {
+    if (UtilsTool.isValid(null == users ? null : users.getResult())) {
       return new ServerResult<>(users);
     } else {
       return fail(Message.QUERY_FAIL);
