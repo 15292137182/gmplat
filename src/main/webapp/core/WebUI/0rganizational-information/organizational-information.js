@@ -153,14 +153,18 @@ gmp_onload=function(){
             activeName:'first',
         }),
         methods:{
-            handleNodeClick(data){
-                //console.log(data);
-            },
             //tab页点击交换
             handleClick(){
 
+            },
+            //点击
+            firstClick(){
+                alert("1");
+            },
+            //表点击
+            twoClick(){
+                alert("2");
             }
-
         },
         create(){
             $(document).ready(function () {
