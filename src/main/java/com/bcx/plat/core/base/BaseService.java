@@ -7,7 +7,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
@@ -31,9 +30,6 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   private Logger logger = LoggerFactory.getLogger(getClass());
 
 
-
-
-
   /**
    * 操作成功
    *
@@ -41,7 +37,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * @return 平台包装后的结果
    */
   protected ServerResult success(String successMessage) {
-    return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS,successMessage);
+    return new ServerResult().setStateMessage(BaseConstants.STATUS_SUCCESS, successMessage);
   }
 
 
@@ -52,21 +48,19 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * @return 平台包装后的结果
    */
   protected ServerResult fail(String failMessage) {
-    return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,failMessage);
+    return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, failMessage);
   }
 
   /**
    * 返回成功数据
    *
    * @param successMessage 成功消息
-   * @param data 成功数据
+   * @param data           成功数据
    * @return 平台包装后的结果
    */
-  protected ServerResult successData(String successMessage , Object data) {
-    return new ServerResult<>(BaseConstants.STATUS_SUCCESS,successMessage, data);
+  protected ServerResult successData(String successMessage, Object data) {
+    return new ServerResult<>(BaseConstants.STATUS_SUCCESS, successMessage, data);
   }
-
-
 
 
   /**
@@ -269,13 +263,8 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    *
    * @return int
    */
-  public int insert() {
-    try {
-      return getTClass().newInstance().insert();
-    } catch (InstantiationException | IllegalAccessException e) {
-      e.printStackTrace();
-    }
-    return -1;
+  public int insert(T entity) {
+    return entity.insert();
   }
 
   /**
@@ -286,13 +275,8 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * @param condition 接受参数
    * @return int
    */
-  public int update(Condition condition) {
-    try {
-      return getTClass().newInstance().update(condition);
-    } catch (InstantiationException | IllegalAccessException e) {
-      e.printStackTrace();
-    }
-    return -1;
+  public int update(T entity, Condition condition) {
+    return entity.update(condition);
   }
 
   /**
