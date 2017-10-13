@@ -98,3 +98,46 @@ td.el-table__expanded-cell{
 .demo-table-expand label {
     color: #99a9bf;
 }
+
+/* 树形下拉框样式 */
+#select_tree {
+    width: 215px;
+    max-height: 350px;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+#select_tree .el-tree {
+    border: none;
+}
+
+#gmpDrop .el-input .el-input__icon {
+    transform: rotateZ(180deg);
+}
+
+#gmpDrop .el-input .is-reverse {
+    transition: transform .3s;
+    transform: rotateZ(360deg);
+}
+
+#gmpDrop .el-icon-circle-close {
+    opacity: 1;
+    transition: opacity .3s;
+}
+
+#select_tree li {
+    padding: 0;
+    position: relative;
+}
+
+#select_tree li:last-child {
+    padding-right: 7px;
+    text-align: right;
+}
+
+#select_tree li:last-child:hover {
+    background-color: #fff;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>树形下拉框</title>
+</head>
+<body>
+    <el-row id="app" style="margin-top: 20px;">
+        <el-col :span="12" :offset="6">
+            <select-tree :initial="config"></select-tree>
+        </el-col>
+    </el-row>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    config: {
+                        // 显示复选框
+                        checkbox: true,
+                        // 配置显示项
+                        defaultProps: {
+                            label: 'label'
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
