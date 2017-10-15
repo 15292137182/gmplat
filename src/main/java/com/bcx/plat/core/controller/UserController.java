@@ -50,8 +50,8 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryPage")
-  public PlatResult queryPage(String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
-    ServerResult result = userService.queryPage(search, searchBy, param, pageNum, pageSize, order);
+  public PlatResult queryPage(String rowId, String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
+    ServerResult result = userService.queryPage(rowId, search, searchBy, param, pageNum, pageSize, order);
     return result(result);
   }
 
