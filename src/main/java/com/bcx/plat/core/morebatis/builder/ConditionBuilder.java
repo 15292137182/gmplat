@@ -13,7 +13,7 @@ public class ConditionBuilder implements ConditionSequence {
 
   private ConditionBuilderContext conditionBuilderContext;
 
-  private static final MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
+//  private static final MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
 
   public ConditionBuilder(Class<? extends BeanInterface> entityClass,
       String defaultMapColumnAlias) {

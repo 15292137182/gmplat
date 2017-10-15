@@ -9,15 +9,22 @@ public class ConditionBuilderContext {
 
   private TableSource tableSource;
   private Class<? extends BeanInterface> clz;
-  private static final MoreBatis moreBatis = SpringContextHolder.getBean("moreBatis");
+  private static MoreBatis moreBatis;
 
   public ConditionBuilderContext(Class<? extends BeanInterface> clz) {
     this.clz = clz;
-    tableSource = moreBatis.getTable(clz);
+    tableSource = getMoreBatis().getTable(clz);
   }
 
   public TableSource getTableSource() {
     return tableSource;
+  }
+
+  private MoreBatis getMoreBatis(){
+    if (moreBatis==null) {
+      moreBatis = SpringContextHolder.getBean("moreBatis");
+    }
+    return moreBatis;
   }
 
   public Class<? extends BeanInterface> getClz() {

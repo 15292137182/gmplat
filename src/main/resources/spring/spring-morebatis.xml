@@ -6,12 +6,12 @@
 
   <bean id="sqlTranslator" class="com.bcx.plat.core.morebatis.translator.postgre.Translator"/>
 
-  <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatisImpl">
+  <bean id="moreBatis" class="com.bcx.plat.core.morebatis.app.MoreBatisImpl" lazy-init="true" init-method="init">
     <constructor-arg name="suitMapper" ref="postgreSuitMapper"/>
     <constructor-arg name="translator" ref="sqlTranslator"/>
     <constructor-arg name="entityEntries">
       <list>
-        <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.TestEntityEntriesBuilder"/>-->
+        <bean class="com.bcx.plat.core.morebatis.configuration.builder.DbEntityEntriesBuilder"/>
         <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
           p:entityClass="com.bcx.plat.core.entity.BusinessObject" p:tableName="t_business_object"
           p:pks="#{'rowId'}"/>

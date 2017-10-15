@@ -44,6 +44,7 @@ public class MoreBatisImpl implements MoreBatis {
   private Map<Class, Map<String, Field>> aliasMap;
   private Map<Class, TableSource> entityTables;
   private String defaultMapColumnAlias = "etc";
+  private List<EntityEntriesBuilder> entityEntriesBuilders;
 
   public MoreBatisImpl(SuitMapper suitMapper, SqlComponentTranslator translator,
       Collection entityEntries, String defaultMapColumnAlias) {
@@ -69,11 +70,16 @@ public class MoreBatisImpl implements MoreBatis {
       }
       registeEntityEntry(entityEntry);
     }
-    for (EntityEntriesBuilder entriesBuilder : entriesBuilders) {
-      for (EntityEntry entityEntry : entriesBuilder.getEntries()) {
+    entityEntriesBuilders=entriesBuilders;
+  }
+
+  public void init(){
+    for (EntityEntriesBuilder entriesBuilder : entityEntriesBuilders) {
+      for (EntityEntry entityEntry : entriesBuilder.getEntries(this)) {
         registeEntityEntry(entityEntry);
       }
     }
+    entityEntriesBuilders=null;
   }
 
   private void registeEntityEntry(EntityEntry entityEntry) {

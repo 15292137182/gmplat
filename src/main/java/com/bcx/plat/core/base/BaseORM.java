@@ -31,11 +31,18 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   @JsonIgnore
   @IgnoredField
-  private static final MoreBatis MORE_BATIS = (MoreBatis) SpringContextHolder.getBean("moreBatis");
+  private static MoreBatis MORE_BATIS;
   @IgnoredField
   @JsonIgnore
   private static final Or NOT_DELETE_OR = getNoDeleteCondition();
-
+  
+  private static MoreBatis getMoreBatis(){
+    if (MORE_BATIS==null) {
+      MORE_BATIS = (MoreBatis) SpringContextHolder.getBean("moreBatis");
+    }
+    return MORE_BATIS;
+  }
+  
   /**
    * 插入数据方法
    *
@@ -43,7 +50,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   @SuppressWarnings("unchecked")
   public int insert() {
-    return MORE_BATIS.insertEntity((T) this);
+    return getMoreBatis().insertEntity((T) this);
   }
 
   /**
@@ -113,7 +120,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
           }
         });
       }
-      UpdateAction ua = MORE_BATIS.update(getClass(), map).where(new And(condition, NOT_DELETE_OR));
+      UpdateAction ua = getMoreBatis().update(getClass(), map).where(new And(condition, NOT_DELETE_OR));
       return ua.execute();
     } else {
       return -1;
@@ -212,7 +219,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     } else {
       and = NOT_DELETE_OR;
     }
-    QueryAction qa = MORE_BATIS.select(getClass()).where(and);
+    QueryAction qa = getMoreBatis().select(getClass()).where(and);
     List<Map<String, Object>> result;
     if (orders != null) {
       qa = qa.orderBy(orders);
@@ -249,7 +256,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     } else {
       and = NOT_DELETE_OR;
     }
-    PageResult result = MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
+    PageResult result = getMoreBatis().select(getClass()).where(and).orderBy(orders).selectPage(num, size);
     List<T> data = new ArrayList<>();
     result.getResult().forEach(map -> {
       try {
@@ -278,7 +285,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     } else {
       and = NOT_DELETE_OR;
     }
-    return MORE_BATIS.select(getClass()).where(and).orderBy(orders).selectPage(num, size);
+    return getMoreBatis().select(getClass()).where(and).orderBy(orders).selectPage(num, size);
   }
 
   /**
@@ -294,7 +301,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     } else {
       and = NOT_DELETE_OR;
     }
-    return MORE_BATIS.delete(getClass()).where(and).execute();
+    return getMoreBatis().delete(getClass()).where(and).execute();
 
   }
 
@@ -337,7 +344,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null == id) {
       return -1;
     } else {
-      return MORE_BATIS.update(getClass(), this.toDbMap()).where(new FieldCondition("rowId", Operator.EQUAL, id)).execute();
+      return getMoreBatis().update(getClass(), this.toDbMap()).where(new FieldCondition("rowId", Operator.EQUAL, id)).execute();
     }
   }
 
@@ -361,9 +368,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
                                                     Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, Condition condition) {
     List<Map<String, Object>> execute;
     if (condition != null) {
-      execute = MORE_BATIS.select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).execute();
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).execute();
     } else {
-      execute = MORE_BATIS.select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).execute();
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).execute();
     }
     return execute;
   }
@@ -378,7 +385,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   public Field columnByAlias(Class<T> entityClass, String alias) {
     Field columnByAlias = null;
     if (entityClass != null && (!alias.isEmpty())) {
-      columnByAlias = MORE_BATIS.getColumnByAlias(entityClass, alias);
+      columnByAlias = getMoreBatis().getColumnByAlias(entityClass, alias);
     }
     return columnByAlias;
   }
@@ -393,9 +400,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   public List<Map<String, Object>> singleSelect(Class entity, Condition condition) {
     List<Map<String, Object>> execute;
     if (entity != null && condition != null) {
-      execute = MORE_BATIS.select(entity).where(condition).execute();
+      execute = getMoreBatis().select(entity).where(condition).execute();
     } else {
-      execute = MORE_BATIS.select(entity).execute();
+      execute = getMoreBatis().select(entity).execute();
     }
     return execute;
   }
@@ -411,7 +418,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   List<Map<String, Object>> singleSelectSort(Class entity, Condition condition, List<Order> orders) {
     List<Map<String, Object>> execute = null;
     if (entity != null && condition != null) {
-      execute = MORE_BATIS.select(entity).where(condition).orderBy(orders).execute();
+      execute = getMoreBatis().select(entity).where(condition).orderBy(orders).execute();
     }
     return execute;
   }
@@ -427,7 +434,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   int singleUpdate(Class entityClass, Map<String, Object> param, Condition condition) {
     int execute = -1;
     if (null != entityClass && null != condition || param.size() > 0) {
-      execute = MORE_BATIS.update(entityClass, param).where(condition).execute();
+      execute = getMoreBatis().update(entityClass, param).where(condition).execute();
     }
     return execute;
   }
