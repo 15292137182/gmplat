@@ -11,17 +11,22 @@ import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * 用户信息controller层
@@ -104,7 +109,7 @@ public class UserController extends BaseController {
     Object id = param.get("id");
     Object name = param.get("name");
     if (null != id && !"".equals(id.toString().trim())
-        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+            && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
       //根据工号查询是否已存在该工号的记录
       Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
       List<User> list = userService.select(validCondition);
@@ -185,7 +190,7 @@ public class UserController extends BaseController {
       Object id = param.get("id");
       Object name = param.get("name");
       if (null != id && !"".equals(id.toString().trim())
-          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+              && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
@@ -380,4 +385,23 @@ public class UserController extends BaseController {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
+
+  /**
+   * 下载用户信息
+   */
+  @RequestMapping(value = "/downloadExcel", method = {POST, GET})
+  public void downloadExcel(String fileName, String[] rowIds, String[] fields, HttpServletResponse response) {
+    // 获取 excel
+    HSSFWorkbook workbook = userService.exportToExcelByte(rowIds, fields);
+    response.reset();
+    response.setContentType("application/x-msdownload");
+    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+    try {
+      // 将数据写入到输出流
+      workbook.write(response.getOutputStream());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 }

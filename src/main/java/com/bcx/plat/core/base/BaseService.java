@@ -75,6 +75,30 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   }
 
   /**
+   * @return 返回数据库中的所有数据
+   */
+  public List<T> selectAll() {
+    try {
+      return getTClass().newInstance().selectAll();
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
+   * @return 返回数据库中的所有数据
+   */
+  public List<Map> selectAllMap() {
+    try {
+      return getTClass().newInstance().selectAllMap();
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
    * 根据参数查询实体类，不分页
    *
    * @param condition 条件
