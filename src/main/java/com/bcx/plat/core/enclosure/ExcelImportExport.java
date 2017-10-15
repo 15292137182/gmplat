@@ -1,6 +1,5 @@
 package com.bcx.plat.core.enclosure;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.controller.UserController;
@@ -9,7 +8,6 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -63,24 +61,24 @@ public class ExcelImportExport extends BaseController {
   @GetMapping("/exportModule")
   public void excelExport(HttpServletResponse response, String suffix) {
     if (suffix == null) {
-      suffix = "xlsx";
+      suffix = "xls";
     }
     String[] cells = {"工号", "姓名", "昵称", "性别", "所属部门", "身份证", "移动电话", "办公电话"
-        , "邮箱", "职务", "入职日期", "密码更新日期", "上次登录时间", "账号锁定日期", "说明", "备注"};
+        , "邮箱", "职务", "入职日期", "说明", "备注"};
     try {
-      String fileName = "用户模板" + UtilsTool.lengthUUID(5);
+      String fileName = "用户模板";
       response.reset();
       response.setContentType("application/x-download");
       response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + "." + suffix, "UTF-8"));
       ServletOutputStream outputStream = response.getOutputStream();
-      Workbook workbook =null;
+      Workbook workbook = null;
       if (suffix.equals("xls")) {
         // 第一步，创建一个webbook，对应一个Excel文件
-        workbook= ExcelUtils.ExportExcel(cells, new HSSFWorkbook(), "用户模板1");
+        workbook = ExcelUtils.ExportExcelList(cells, new HSSFWorkbook(), "用户模板");
       } else if (suffix.equals("xlsx")) {
-        workbook = ExcelUtils.ExportExcel(cells, new XSSFWorkbook(), "用户模板2");
+        workbook = ExcelUtils.ExportExcelList(cells, new XSSFWorkbook(), "用户模板");
       }
-      if (workbook!=null) {
+      if (workbook != null) {
         workbook.write(outputStream);
       }
       outputStream.close();
@@ -113,7 +111,9 @@ public class ExcelImportExport extends BaseController {
       } else if ("xlsx".equals(suffix)) {
         data = ExcelUtils.ExcelVerConvert(new XSSFWorkbook(inputStream));
       }
-      if (data != null) {
+      if (data != null && data.size() == 0) {
+        return fail(Message.PARSING_EXCEL_FAIL);
+      } else if (data != null) {
         for (Map li : data) {
           String id = String.valueOf(li.get("id"));
           String name = String.valueOf(li.get("name"));
@@ -122,17 +122,17 @@ public class ExcelImportExport extends BaseController {
             //根据工号查询是否已存在该工号的记录
             Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.trim()).endAnd().buildDone();
             List<User> list = userService.select(validCondition);
-            if (list.size()!=0)  return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+            if (list.size() != 0) return fail(Message.DATA_CANNOT_BE_DUPLICATED);
           } else {
             return fail(Message.DATA_CANNOT_BE_EMPTY);
           }
         }
+        PlatResult add = null;
         for (Map li : data) {
-          PlatResult add = userController.add(li);
-          System.out.println(add);
+          add = userController.add(li);
         }
+        return successData(Message.QUERY_SUCCESS, add);
       }
-      return success(Message.QUERY_SUCCESS);
     } catch (Exception e) {
       e.printStackTrace();
     }
