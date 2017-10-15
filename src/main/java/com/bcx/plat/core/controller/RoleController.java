@@ -114,4 +114,21 @@ public class RoleController extends BaseController {
       return fail(Message.QUERY_FAIL);
     }
   }
+
+  /**
+   * 删除角色下的用户信息
+   *
+   * @param roleRowId  角色rowId
+   * @param userRowIds 用户rowId 集合
+   * @return 返回操作结果信息
+   */
+  @RequestMapping(value = "/deleteUsers")
+  public PlatResult deleteRoleUsers(String roleRowId, String[] userRowIds) {
+    boolean success = roleService.deleteUserInRole(roleRowId, userRowIds);
+    if (success) {
+      return success(Message.DELETE_SUCCESS);
+    } else {
+      return fail(Message.INVALID_REQUEST);
+    }
+  }
 }

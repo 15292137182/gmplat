@@ -194,4 +194,22 @@ public class RoleService extends BaseService<Role> {
     return null;
   }
 
+  /**
+   * 删除角色下的用户信息
+   *
+   * @param roleRowId  角色rowId
+   * @param userRowIds 用户rowId 集合
+   * @return 返回结果
+   */
+  public boolean deleteUserInRole(String roleRowId, String[] userRowIds) {
+    if (isValid(roleRowId) && null != userRowIds && userRowIds.length != 0) {
+      Condition condition = new ConditionBuilder(UserRelateRole.class)
+              .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
+              .buildDone();
+      new UserRelateRole().delete(condition);
+      return true;
+    }
+    return false;
+  }
+
 }
