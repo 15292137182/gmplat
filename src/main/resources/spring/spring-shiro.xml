@@ -5,6 +5,11 @@
 
     <description>Shiro Configuration</description>
 
+    <!-- 加载配置属性文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:properties/gmplat.properties"/>
+    </bean>
+
     <!-- 继承自 AuthorizingRealm 的自定义Realm,即指定 Shiro 验证用户登录的类为自定义的 ShiroDBRealm.java -->
     <bean id="defaultRealm" class="com.bcx.plat.shiro.relam.DefaultRealm">
         <property name="cachingEnabled" value="true"/>

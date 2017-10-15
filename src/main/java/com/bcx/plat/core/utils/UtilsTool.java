@@ -16,6 +16,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -385,4 +387,29 @@ public class UtilsTool {
     }
     return orders;
   }
+
+  /**
+   * 时间比较
+   *
+   * @param oldDate 需要比较的时间
+   * @param nowDate 当前时间
+   * @return 相差天数
+   */
+  public static long dateCompare(String oldDate, String nowDate) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+    Date now = null;
+    Date old = null;
+    long Compare = 0L;
+    try {
+      now = sdf.parse(nowDate);
+      old = sdf.parse(oldDate);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    if (now != null && old != null) {
+      Compare = now.getTime() - old.getTime();
+    }
+    return Compare / (24 * 60 * 60 * 1000);
+  }
+
 }

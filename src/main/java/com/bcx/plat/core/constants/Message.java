@@ -22,5 +22,7 @@ public class Message {
   public static final String DATA_CANNOT_BE_EMPTY = "DATA_CANNOT_BE_EMPTY";
 
   public static final String INVALID_REQUEST = "INVALID_REQUEST";
+  public static final String REGULAR_REPLACE = "REGULAR_REPLACE";
+
 
 }

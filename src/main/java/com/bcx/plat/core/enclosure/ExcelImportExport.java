@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -45,7 +46,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
  */
 @Controller
 @RequestMapping(PLAT_SYS_PREFIX + "/core/excel")
-public class ExcelModuleExport extends BaseController {
+public class ExcelImportExport extends BaseController {
 
 
   @Resource
@@ -60,7 +61,7 @@ public class ExcelModuleExport extends BaseController {
    * @param suffix   文件后缀
    */
   @GetMapping("/exportModule")
-  public void ExcelExport(HttpServletResponse response, String suffix) {
+  public void excelExport(HttpServletResponse response, String suffix) {
     if (suffix == null) {
       suffix = "xlsx";
     }
@@ -96,7 +97,8 @@ public class ExcelModuleExport extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/excelUpload")
-  public PlatResult Excel(HttpServletRequest request) {
+  @ResponseBody
+  public PlatResult excelUpload(HttpServletRequest request) {
     try {
       List<Map> data = null;
       FileItemFactory factory = new DiskFileItemFactory();
@@ -130,6 +132,7 @@ public class ExcelModuleExport extends BaseController {
           System.out.println(add);
         }
       }
+      return success(Message.QUERY_SUCCESS);
     } catch (Exception e) {
       e.printStackTrace();
     }
