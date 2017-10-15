@@ -1,6 +1,7 @@
 package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -11,6 +12,7 @@ import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
@@ -28,7 +30,15 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * 日志
    */
   private Logger logger = LoggerFactory.getLogger(getClass());
+  protected MoreBatis moreBatis;
 
+  public BaseService() {
+  }
+
+  @Autowired
+  public BaseService(MoreBatis moreBatis) {
+    this.moreBatis = moreBatis;
+  }
 
   /**
    * 操作成功

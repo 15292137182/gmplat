@@ -36,11 +36,13 @@ public class UserService extends BaseService<User> {
    * @param order    排序方式
    * @return ServerResult
    */
-  public ServerResult queryPage(String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
+  public ServerResult queryPage(String rowId, String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
     if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
+      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
+//      QueryAction queryAction=moreBatis.selectStatement().select(moreBatis.getColumnByAlias())
     } else {
       if (UtilsTool.isValid(search)) {
         condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
@@ -50,6 +52,7 @@ public class UserService extends BaseService<User> {
               .or().addCondition(condition).endOr().endAnd()
               .buildDone();
         }
+        condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
       } else {
         condition = null;
       }

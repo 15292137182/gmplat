@@ -14,14 +14,19 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testQueryPage() throws Exception {
     //准备参数
-    String search = "[\"j\"]";
-    String param = "{\"name\":\"joe\"}";
+    String search = "1";
+    String param = "{\"name\":\"zhang\"}";
+    String rowId="2";
+    String searchBy="{\"status\":\"02\"}";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryPage")
             .accept(MediaType.APPLICATION_JSON)
-//            .param("search", search)
-//            .param("param", param)
+            .param("search", search)
+            .param("param", param)
+            .param("rowId", rowId)
+//            .param("searchBy", searchBy)
+
     );
     //显示结果
     showResult(resultActions);
