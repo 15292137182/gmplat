@@ -148,7 +148,7 @@ public class UserService extends BaseService<User> {
    * @param rowIds 需要导出的用户 rowId，如果无效，则导出全部用户信息
    * @param fields 需要导出的字段，如果无效，则默认选取上次配置
    *               如果上次配置不存在，则选用默认数据
-   * @return excel 字节，返回类型为  xls 类型字节
+   * @return excel 字节，返回类型为 xls 类型字节
    */
   public HSSFWorkbook exportToExcelByte(String[] rowIds, String[] fields) {
     List<Map> users;

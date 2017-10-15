@@ -3,6 +3,8 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Role;
+import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.entity.UserRelateRole;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -11,10 +13,14 @@ import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 角色业务层
@@ -25,6 +31,10 @@ import java.util.Map;
  */
 @Service
 public class RoleService extends BaseService<Role> {
+
+  @Resource
+  private UserService userService;
+
   private List<String> blankSelectFields() {
     return Arrays.asList("roleId", "roleName", "roleType");
   }
@@ -60,7 +70,7 @@ public class RoleService extends BaseService<Role> {
     Object roleId = param.get("roleId");
     Object roleName = param.get("roleName");
     Object roleType = param.get("roleType");
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       if (UtilsTool.isValidAll(roleId, roleName, roleType)) {//验证非空
         //角色编号唯一
         Condition condition = new ConditionBuilder(Role.class).and().equal("roleId", roleId).endAnd().buildDone();
@@ -99,18 +109,18 @@ public class RoleService extends BaseService<Role> {
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
     Condition condition;
-    if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
+    if (isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(Role.class, UtilsTool.jsonToObj(param, Map.class));
     } else {
-      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+      condition = !isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     PageResult<Map<String, Object>> roles;
-    if (UtilsTool.isValid(pageNum)) {//判断是否分页查询
+    if (isValid(pageNum)) {//判断是否分页查询
       roles = selectPageMap(condition, orders, pageNum, pageSize);
     } else {
       roles = new PageResult(selectMap(condition, orders));
     }
-    if (UtilsTool.isValid(null == roles ? null : roles.getResult())) {
+    if (isValid(null == roles ? null : roles.getResult())) {
       return new ServerResult<>(roles);
     } else {
       return fail(Message.QUERY_FAIL);
@@ -136,4 +146,52 @@ public class RoleService extends BaseService<Role> {
       return fail(Message.QUERY_FAIL);
     }
   }
+
+  /**
+   * 根据 rowId 查询角色下的用户
+   *
+   * @param rowId    角色的 rowId
+   * @param orders   排序
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @return 返回分页查询结果
+   */
+  public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, List<Order> orders, int pageNum, int pageSize) {
+    if (isValid(rowId)) {
+      Condition condition = new ConditionBuilder(UserRelateRole.class)
+              .and().equal("roleRowId", rowId).endAnd().buildDone();
+      List<UserRelateRole> relateRoles = new UserRelateRole().selectSimple(condition);
+      if (!relateRoles.isEmpty()) {
+        List<String> userRowIds = relateRoles.stream()
+                .map(UserRelateRole::getUserRowId)
+                .collect(Collectors.toList());
+        Condition condition1 = new ConditionBuilder(User.class)
+                .and().in("rowId", userRowIds).endAnd().buildDone();
+        return userService.selectPageMap(condition, orders, pageNum, pageSize);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 根据角色编号进行查询
+   *
+   * @param roleId   角色编号
+   * @param orders   排序
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @return 返回查询结果
+   */
+  public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
+    if (isValid(roleId)) {
+      Condition condition = new ConditionBuilder(Role.class)
+              .and().equal("roleId", roleId).endAnd().buildDone();
+      List<Role> roles = select(condition);
+      if (!roles.isEmpty()) {
+        return queryRoleUserByRowId(roles.get(0).getRowId(), orders, pageNum, pageSize);
+      }
+    }
+    return null;
+  }
+
 }

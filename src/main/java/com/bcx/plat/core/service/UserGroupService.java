@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy:
+ * <pre>Histroy:
  *                2017/10/11  Wen TieHu Create
  *          </pre>
  */
 @Service
-public class UserGroupService extends BaseService<UserGroup>{
+public class UserGroupService extends BaseService<UserGroup> {
+
 }
