@@ -11,6 +11,7 @@ public class DBTableColumn extends BaseEntity<DBTableColumn> {
   private String columnEname;//字段英文名
   private String columnCname;//字段中文名
   private String desp;//说明
+  private Boolean isPk; //是否主键
 
   /**
    * 重载构建 - 创建信息方法，加入rowId
@@ -58,5 +59,13 @@ public class DBTableColumn extends BaseEntity<DBTableColumn> {
 
   public void setDesp(String desp) {
     this.desp = desp;
+  }
+
+  public Boolean isPk() {
+    return isPk;
+  }
+
+  public void setPk(Boolean pk) {
+    isPk = pk;
   }
 }
