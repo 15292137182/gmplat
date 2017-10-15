@@ -38,7 +38,9 @@ public class UserService extends BaseService<User> {
   /**
    * 人员信息分页查询
    *
+   * @param rowId    所属部门id
    * @param search   按照空格查询
+   * @param searchBy 空格查询的精确查询（是不是很拗口？我也hin无奈啊）
    * @param param    按照指定字段查询
    * @param pageNum  页码
    * @param pageSize 页面大小
@@ -50,18 +52,23 @@ public class UserService extends BaseService<User> {
     Condition condition;
     if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
-      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
-//      QueryAction queryAction=moreBatis.selectStatement().select(moreBatis.getColumnByAlias())
-    } else if (UtilsTool.isValid(search)) {
-      condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-      if (UtilsTool.isValid(searchBy)) {
-        condition = new ConditionBuilder(User.class)
-            .and().addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
-            .or().addCondition(condition).endOr().endAnd()
-            .buildDone();
-      }
-      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
+    } else if (UtilsTool.isValid(search)) {//模糊查询
+      condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or
     } else {
+      condition = null;
+    }
+    if (null != condition && UtilsTool.isValid(searchBy)) {//精确查询
+      condition = new ConditionBuilder(User.class).and()
+          .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+          .or().addCondition(condition).endOr().endAnd().buildDone();
+    } else if (null == condition && UtilsTool.isValid(searchBy)) {
+      condition = new ConditionBuilder(User.class).and()
+          .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+          .endAnd().buildDone();
+    }
+    if (null != condition && UtilsTool.isValid(rowId)) {//根据组织机构查询
+      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
+    } else if (null == condition && UtilsTool.isValid(rowId)) {
       condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).endAnd().buildDone();
     }
 

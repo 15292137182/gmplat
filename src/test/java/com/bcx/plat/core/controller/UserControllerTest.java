@@ -15,9 +15,9 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   public void testQueryPage() throws Exception {
     //准备参数
     String search = "zhang";
-    String param = "{\"name\":\"zhangsan\"}";
-    String rowId="2";
-    String searchBy="{\"status\":\"03\"}";
+    String param = "{\"name\":\"joker\"}";
+    String rowId = "2";
+    String searchBy = "{\"status\":\"03\"}";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryPage")
@@ -25,7 +25,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
 //            .param("search", search)
 //            .param("param", param)
             .param("rowId", rowId)
-//            .param("searchBy", searchBy)
+            .param("searchBy", searchBy)
 
     );
     //显示结果
