@@ -1,6 +1,10 @@
 package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
+import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.RoleService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -10,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.utils.UtilsTool.dataSort;
+import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 角色controller层
@@ -71,6 +78,7 @@ public class RoleController extends BaseController {
     return result(result);
   }
 
+
   /**
    * 角色 - 根据指定字段精确查询
    *
@@ -79,7 +87,31 @@ public class RoleController extends BaseController {
    */
   @RequestMapping("/queryBySpecify")
   public PlatResult queryBySpecify(@RequestParam Map<String, Object> param) {
-    ServerResult result=roleService.queryBySpecify(param);
+    ServerResult result = roleService.queryBySpecify(param);
     return result(result);
+  }
+
+  /**
+   * 分页查询数据
+   *
+   * @param pageNum  当前第几页
+   * @param pageSize 一页显示多少条
+   * @param order    排序方式
+   * @return PlatResult
+   */
+  @RequestMapping(value = "/queryUsers")
+  public PlatResult queryUsersByRowId(String rowId, String roleId, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(User.class, order);
+    PageResult result = null;
+    if (isValid(rowId)) {
+      result = roleService.queryRoleUserByRowId(rowId, orders, pageNum, pageSize);
+    } else if (isValid(roleId)) {
+      result = roleService.queryRoleuserByRoleId(roleId, orders, pageNum, pageSize);
+    }
+    if (isValid(result)) {
+      return result(new ServerResult<>(result));
+    } else {
+      return fail(Message.QUERY_FAIL);
+    }
   }
 }
