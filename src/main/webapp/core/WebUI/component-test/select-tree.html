@@ -20,10 +20,21 @@
                     config: {
                         // 显示复选框
                         checkbox: true,
+                        // 默认展开
+//                        expanded: [],
                         // 配置显示项
                         defaultProps: {
-                            label: 'label'
-                        }
+                            // 树节点显示文字
+                            label: 'orgName',
+                            // 节点id
+                            id: "rowId",
+                            // 父节点信息
+                            parentId: "orgPid",
+                            // 当前节点信息
+                            selfId: "orgId"
+                        },
+                        // 获取数据接口
+                        url: serverPath + "/baseOrg/queryPage"
                     }
                 }
             }

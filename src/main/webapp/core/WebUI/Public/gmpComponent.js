@@ -423,6 +423,41 @@ Vue.component("base-tree", {
             if (!value) return true;
             return data.label.indexOf(value) !== -1;
         },
+        // 组织层级关系数据
+        hierarchicalData(jsonArr) {
+            var data = [];
+            // 遍历原数组
+            for(var i = 0; i < jsonArr.length; i++) {
+                // 向每一个json数组对象下添加 children 属性值
+                jsonArr[i].children = [];
+                // 若当前json对象下有父节点信息
+                if(jsonArr[i].parent) {
+                    // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
+                    for(var j = 0;j < jsonArr.length;j++) {
+                        if(jsonArr[j].label == jsonArr[i].parent) {
+                            jsonArr[j].children.push(jsonArr[i]);
+                            // console.log(jsonArr[j]);
+                        }
+                        // jsonArr[j].children.push(jsonArr[i]);
+                    }
+                }else {
+                    // 若没有父节点信息 则说明当前节点为根节点
+                    data.push(jsonArr[i]);
+                    jsonArr[i].children = [];
+                }
+            }
+            // 检查最终json数组下是否存在子节点为空的对象 将其 children 属性删除
+            var checkNull = data[0].children;
+            for(var k = 0; k < checkNull.length; k++) {
+                // console.log(checkNull[k].children.length == 0);
+                if(checkNull[k].children.length == 0) {
+                    delete checkNull[k].children;
+                }
+            }
+
+            console.log(data);
+            return data;
+        },
         // 调接口获取数据
         getNode(callback) {
             // 保存this指针
@@ -443,7 +478,7 @@ Vue.component("base-tree", {
                                 // loading消失
                                 that.loading = false;
                                 // console.log(_jsonObj);
-                                // console.log(that.treeNodes);
+                                console.log(that.treeNodes);
                                 // 回调
                                 if(callback) {
                                     callback(_jsonObj);
@@ -478,64 +513,77 @@ Vue.component("select-tree", {
     data() {
         return {
             url: "",
+            // 树节点数据
             treeNodes: [{
-                id: 1,
-                label: '一级 1',
+                id: 100,
+                label: "组织机构",
                 children: [{
-                    id: 4,
-                    label: '二级 1-1',
+                    id: 1,
+                    label: '一级 1',
                     children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
+                        id: 4,
+                        label: '一级 1-1'
                     }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                }]
-            }, {
-                id: 2,
-                label: '一级 2',
-                children: [{
-                    id: 5,
-                    label: '二级 2-1'
-                }, {
-                    id: 6,
-                    label: '二级 2-2'
-                }]
-            }, {
-                id: 3,
-                label: '一级 3',
-                children: [{
-                    id: 7,
-                    label: '二级 3-1'
-                }, {
-                    id:8,
-                    label: '二级 3-2',
-                    children: [{
-                        id:11,
-                        label: '三级 3-2-1'
-                    }, {
-                        id:12,
-                        label: '三级 3-2-2'
-                    }, {
-                        id:13,
-                        label: '三级 3-2-3'
+                        id: 5,
+                        label: '一级 1-2'
                     }]
                 }, {
-                    id: 14,
-                    label: '二级 3-3',
+                    id: 2,
+                    label: '二级 1',
                     children: [{
-                        id: 15,
-                        label: '三级 3-3-1'
+                        id: 6,
+                        label: '二级 2-1'
                     }, {
-                        id: 16,
-                        label: '三级 3-3-2'
+                        id: 7,
+                        label: '二级 2-2'
                     }, {
-                        id: 17,
-                        label: '三级 3-3-3'
+                        id: 8,
+                        label: '二级 2-3',
+                        children: [{
+                            id: 9,
+                            label: '二级 2-3-1'
+                        }, {
+                            id: 10,
+                            label: '二级 2-3-2'
+                        }, {
+                            id: 11,
+                            label: '二级 2-3-3'
+                        }]
+                    }]
+                }, {
+                    id: 3,
+                    label: '三级 1',
+                    children: [{
+                        id: 6,
+                        label: '三级 2-1'
+                    }, {
+                        id: 7,
+                        label: '三级 2-2',
+                        children: [{
+                            id: 12,
+                            label: '三级 2-2-1'
+                        }, {
+                            id: 13,
+                            label: '三级 2-2-2'
+                        }, {
+                            id: 14,
+                            label: '三级 2-2-3'
+                        }]
+                    }, {
+                        id: 8,
+                        label: '三级 2-3',
+                        children: [{
+                            id: 15,
+                            label: '三级 2-3-1'
+                        }, {
+                            id: 16,
+                            label: '三级 2-3-2'
+                        }]
                     }]
                 }]
             }],
+            // 节点 key
+            id: "",
             // 选中的检点
             select_node: "",
             // 是否显示复选框
@@ -548,7 +596,14 @@ Vue.component("select-tree", {
             defaultCheckedKeys: [],
             // 默认配置信息
             defaultProps: {
-                children: 'children'
+                children: 'children',
+                disabled: function(data, node) {
+                    // console.log(data);
+                    // console.log(node);
+                    if(node.level == "1") {
+                        return node.disabled = true;
+                    }
+                }
             },
             // 加载
             loading: true,
@@ -559,21 +614,37 @@ Vue.component("select-tree", {
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
         clickNode(obj, node, row) {
+            var label = this.defaultProps.label;
+            // console.log(obj);
             // console.log(node);
             // console.log(row);
-            // 选中的节点
-            this.middle = obj.label;
-            // 确认按钮可用
-            this.error = false;
-            // 向父组件传递方法和数据
-            this.$emit("click-node", obj);
+
+            // 若为根节点 确认那妞妞不可用
+            if(node.level == "1") {
+                // 确认按钮不可用
+                this.error = true;
+            }else {
+                // 选中的节点
+                this.middle = obj[label];
+                // 确认按钮可用
+                this.error = false;
+                // 向父组件传递方法和数据
+                this.$emit("click-node", obj);
+            }
         },
-        // 选择复选框 返回节点对应的对象 是否被选中 是否含有子节点
+        // 选择复选框 返回节点对应的对象 是否被选中 节点的子树中是否有被选中的节点
         checkNode(obj, checked, node) {
+            var label = this.defaultProps.label;
+            // console.log(obj);
             // console.log(checked);
+            // console.log(node);
+
             // 选中的节点
-            this.middle = obj.label;
-            // 确认按钮可用
+            this.middle = obj[label];
+            // 确认按钮状态
+            // if(this.$refs.selectTree.getCheckedNodes()) {
+            //     this.error = false;
+            // }else {}
             this.error = !checked;
             // 向父组件传递方法和数据
             this.$emit("checked-node", obj);
@@ -582,25 +653,23 @@ Vue.component("select-tree", {
             // 选中节点传递给中间变量
             this.select_node = this.middle;
         },
+        // 鼠标移入事件
         enter() {
-            // 鼠标移入事件
             if(this.select_node != "") {
                 // addClass
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('el-icon-circle-close');
             }
         },
+        // 鼠标移出事件
         out() {
-            // 鼠标移出事件
             if(this.select_node != "") {
                 // removeClass
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('el-icon-circle-close');
             }
         },
+        // 清除选择内容事件
         clear(ev) {
-            // 清除选择内容事件
             var isClose = $("#gmpDrop .el-input").find('.el-input__icon').hasClass("el-icon-circle-close");
-            // 确认按钮不可用
-            // this.error = true;
             // 若当前图标为关闭图标
             if(isClose) {
                 // 阻止事件冒泡
@@ -608,21 +677,104 @@ Vue.component("select-tree", {
                 // 清空数据
                 this.select_node = "";
                 // 清除选择项
-                if(this.checked) {
+                if(this.checkbox) {
                     this.$refs.selectTree.setCheckedKeys([]);
                 }
                 // 移除class
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('el-icon-circle-close');
             }
         },
+        // 下拉框展开事件
         expanded(bool) {
-            // 下拉框展开事件
             // console.log(this);
             if(bool) {
                 // 用Vue的方法写一个查找DOM和addClass的方法
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
             }else {
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
+            }
+        },
+        // 组织层级关系数据
+        hierarchicalData(jsonArr) {
+            var data = [];
+            var nodes = [];
+            // 获取配置信息
+            var parent = this.initial.defaultProps.parentId;
+            var self = this.initial.defaultProps.selfId;
+            // console.log(parent);
+            // console.log(self);
+            // 遍历原数组
+            for(var i = 0; i < jsonArr.length; i++) {
+                // 向每一个json数组对象下添加 children 属性值
+                jsonArr[i].children = [];
+                // 若当前json对象的节点信息为ROOT 说明其为根节点
+                if(jsonArr[i][self] == "ROOT") {
+                    // 将当前节点 push 到数据 data 中
+                    data.push(jsonArr[i]);
+                }
+            }
+
+            for(var i = 0; i < jsonArr.length; i++) {
+                // 向每一个json数组对象下添加 children 属性值
+                jsonArr[i].children = [];
+                // 若当前json对象下有父节点信息 且为二级根节点
+                if(jsonArr[i][self] != "ROOT") {
+                    // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
+                    for(var j = 0;j < jsonArr.length;j++) {
+                        if(jsonArr[j][parent] == jsonArr[i][self]) {
+                            jsonArr[i].children.push(jsonArr[j]);
+                        }
+                    }
+                }
+                // 当前节点为一级根节点
+                if(jsonArr[i][parent] == "ROOT") {
+                    // console.log(jsonArr[i]);
+                    // console.log(data[0]);
+                    nodes.push(jsonArr[i]);
+                }
+            }
+
+            // 将一级根节点插入根节点下
+            data[0].children = nodes;
+
+            // console.log(data);
+            return data;
+        },
+        // 调接口获取树形下拉框节点数据
+        getNode(callback) {
+            // 保存this指针
+            var that = this;
+            // 调用接口获取树节点
+            if(that.url != "") {
+                $.ajax({
+                    url:this.url,
+                    type:"get",
+                    data: "",
+                    dataType:"json",
+                    success:function(res) {
+                        if(res.resp.respCode == "000"){
+                            if(res.resp.content.state == "1") {
+                                var _jsonObj = res.resp.content.data.result;
+                                // 节点数据赋值
+                                that.treeNodes = that.hierarchicalData(_jsonObj);
+                                // loading消失
+                                that.loading = false;
+                                // console.log(_jsonObj);
+                                // console.log(that.treeNodes);
+                                // 回调
+                                if(callback) {
+                                    callback(_jsonObj);
+                                }
+                            }
+                        }
+                    },
+                    error:function() {
+                        // loading消失
+                        that.loading = false;
+                        // 弹出错误信息
+                        gmpPopup.throwMsg("查询失败！");
+                    }
+                });
             }
         }
     },
@@ -638,6 +790,12 @@ Vue.component("select-tree", {
             this.url = this.initial.url;
         }else {
             this.url = "";
+        }
+        // 树节点 key
+        if(this.initial.defaultProps.id) {
+            this.id = this.initial.defaultProps.id;
+        }else {
+            this.id = "";
         }
         // 获取默认展开节点
         if(this.initial.expanded) {
@@ -662,12 +820,15 @@ Vue.component("select-tree", {
             this.error = false;
         }
     },
+    mounted() {
+        this.getNode();
+    },
     template: `<el-dropdown id="gmpDrop" trigger="click" @visible-change="expanded">
                     <el-input v-model="select_node" :readonly="true" icon="caret-top" @mouseover.native="enter" @mouseout.native="out" :on-icon-click="clear" placeholder="请选择"></el-input>
                     <el-dropdown-menu slot="dropdown" id="select_tree">
                         <el-dropdown-item>
                             <div style="max-height: 320px;width: 100%;overflow-y: scroll;">
-                                <el-tree :data="treeNodes" :show-checkbox="checkbox" :check-strictly="true" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="selectTree" highlight-current :props="defaultProps"></el-tree>
+                                <el-tree :data="treeNodes" :show-checkbox="checkbox" :check-strictly="true" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" :node-key="id" ref="selectTree" highlight-current :props="defaultProps"></el-tree>
                             </div>
                         </el-dropdown-item>
                         <el-dropdown-item>
