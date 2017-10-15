@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
 
+import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
+
 /**
  * 用户信息业务层
  * Created by YoungerOu on 2017/10/10.
@@ -49,27 +51,36 @@ public class UserService extends BaseService<User> {
    */
   public ServerResult queryPage(String rowId, String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
-    Condition condition;
+    Condition condition = null;
     if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
     } else if (UtilsTool.isValid(search)) {//模糊查询
       condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or
+    }
+    if (UtilsTool.isValid(searchBy)) {
+      if (null != condition) {//精确查询
+        condition = new ConditionBuilder(User.class).and()
+            .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+            .or().addCondition(condition).endOr().endAnd().buildDone();
+      } else {
+        condition = new ConditionBuilder(User.class).and()
+            .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+            .endAnd().buildDone();
+      }
+    }
+    if (UtilsTool.isValid(rowId)) {
+      if (null != condition) {//根据组织机构查询
+        condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
+      } else {
+        condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).endAnd().buildDone();
+      }
+    }
+    if (null != condition) {
+      condition = new ConditionBuilder(User.class).and().addCondition(condition).or().isNull(User.class, "etc", "deleteFlag")
+          .notEqual(User.class, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
     } else {
-      condition = null;
-    }
-    if (null != condition && UtilsTool.isValid(searchBy)) {//精确查询
-      condition = new ConditionBuilder(User.class).and()
-          .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
-          .or().addCondition(condition).endOr().endAnd().buildDone();
-    } else if (null == condition && UtilsTool.isValid(searchBy)) {
-      condition = new ConditionBuilder(User.class).and()
-          .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
-          .endAnd().buildDone();
-    }
-    if (null != condition && UtilsTool.isValid(rowId)) {//根据组织机构查询
-      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
-    } else if (null == condition && UtilsTool.isValid(rowId)) {
-      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).endAnd().buildDone();
+      condition = new ConditionBuilder(User.class).and().or().isNull(User.class, "etc", "deleteFlag")
+          .notEqual(User.class, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
     }
 
     //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称

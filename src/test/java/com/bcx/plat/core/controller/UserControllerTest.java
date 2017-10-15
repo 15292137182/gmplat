@@ -14,7 +14,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testQueryPage() throws Exception {
     //准备参数
-    String search = "zhang";
+    String search = "df";
     String param = "{\"name\":\"joker\"}";
     String rowId = "2";
     String searchBy = "{\"status\":\"03\"}";
@@ -24,8 +24,8 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
             .accept(MediaType.APPLICATION_JSON)
 //            .param("search", search)
 //            .param("param", param)
-            .param("rowId", rowId)
-            .param("searchBy", searchBy)
+//            .param("rowId", rowId)
+//            .param("searchBy", searchBy)
 
     );
     //显示结果

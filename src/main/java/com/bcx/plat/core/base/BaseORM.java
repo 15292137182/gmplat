@@ -34,15 +34,15 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   private static MoreBatis MORE_BATIS;
   @IgnoredField
   @JsonIgnore
-  private static final Or NOT_DELETE_OR = getNoDeleteCondition();
-  
-  private static MoreBatis getMoreBatis(){
-    if (MORE_BATIS==null) {
+  private Or NOT_DELETE_OR = getNoDeleteCondition();
+
+  private static MoreBatis getMoreBatis() {
+    if (MORE_BATIS == null) {
       MORE_BATIS = (MoreBatis) SpringContextHolder.getBean("moreBatis");
     }
     return MORE_BATIS;
   }
-  
+
   /**
    * 插入数据方法
    *
@@ -348,8 +348,10 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
   }
 
-  private static Or getNoDeleteCondition() {
+  private Or getNoDeleteCondition() {
     FieldCondition isNull = new FieldCondition("deleteFlag", Operator.IS_NULL, null);
+//    Condition condition = new ConditionBuilder(getClass()).or().isNull(getClass(), "etc", "deleteFlag")
+//        .notEqual(getClass(), "etc", DELETE_FLAG).endOr().buildDone();
     FieldCondition notFlag = new FieldCondition("deleteFlag", Operator.EQUAL, DELETE_FLAG).not();
     return new Or(isNull, notFlag);
   }
