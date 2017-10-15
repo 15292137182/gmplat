@@ -1,35 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <script src="jquery.js"></script>
-  <script>
-
-//    $.ajax({
-//      url: 'http://localhost:8088/GMPlat/report/he/wo',
-//      type: 'get',
-//      data: 'str',
-//      dataType: "json",
-//      success: function (result) {
-//        console.log(result.功能)
-//      },
-//      error: function () {
-//        alert("提示错误");
-//      }
-//    });
-
-function oc(obj) {
-    var aa =  $("#myfile").val();
-    alert(aa);
-}
-
-alert(getRootPath());
-  </script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery.js"></script>
 </head>
 <body>
+<button id="AA">aa</button>
 <input type="file" id="myfile" onchange="oc(this)"/>
 
 <h1>hello</h1>
+
+<form id="fileUpload" action="http://192.168.100.50/gmplat/gmp/sys/core/excel/excelUpload" enctype="multipart/form-data"
+      method="post">
+    <input id="excelFile" name="file" type="file"/>
+    <input type="button" value="提交" onclick="submitExcel()"/>
+</form>
+
 </body>
+
+<script>
+
+    //    $.ajax({
+    //        url: 'http://192.168.100.50/gmplat/gmp/sys/core/excel/excelUpload',
+    //        type: 'get',
+    //        success: function (result) {
+    //            console.log(result.功能)
+    //        },
+    //        error: function () {
+    //            alert("提示错误");
+    //        }
+    //    });
+
+
+    $(function () {
+        $("#AA").click(function () {
+            console.log(111);
+            window.open("http://192.168.100.50/gmplat/gmp/sys/core/excel/exportModule?suffix=xls", "_self")
+        });
+        /** 验证文件是否导入成功  */
+        $("#fileUpload").ajaxForm(function (data) {
+            console.log(data);
+            if (data == "1") {
+                alert("提交成功！");
+            }
+        });
+    });
+
+//    function oc(obj) {
+//        var aa = $("#myfile").val();
+//        alert(aa);
+//    }
+//
+//
+//    function submitExcel() {
+//
+//        var excelFile = $("#excelFile").val();
+//        if (excelFile == '') {
+//            alert("请选择需上传的文件!");
+//            return false;
+//        }
+////        if (excelFile.indexOf('.xls') == -1) {
+////            alert("文件格式不正确，请选择正确的Excel文件(后缀名.xls)！");
+////            return false;
+////        }
+//        $("#fileUpload").submit();
+//
+//
+//
+//
+//    }
+
+    //alert(getRootPath());
+</script>
 </html>
