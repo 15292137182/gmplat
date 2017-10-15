@@ -30,15 +30,8 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    * 日志
    */
   private Logger logger = LoggerFactory.getLogger(getClass());
-  protected MoreBatis moreBatis;
-
-  public BaseService() {
-  }
-
   @Autowired
-  public BaseService(MoreBatis moreBatis) {
-    this.moreBatis = moreBatis;
-  }
+  protected MoreBatis moreBatis;
 
   /**
    * 操作成功

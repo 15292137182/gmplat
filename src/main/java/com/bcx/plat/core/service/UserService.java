@@ -2,19 +2,23 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.BaseOrg;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.command.QueryAction;
+import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.JoinTable;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.constant.JoinType;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 用户信息业务层
@@ -42,7 +46,7 @@ public class UserService extends BaseService<User> {
     if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
       condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
-//      QueryAction queryAction=moreBatis.selectStatement().select(moreBatis.getColumnByAlias())
+
     } else {
       if (UtilsTool.isValid(search)) {
         condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
@@ -57,11 +61,20 @@ public class UserService extends BaseService<User> {
         condition = null;
       }
     }
+    //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称
+    Collection<Field> fields = moreBatis.getColumns(User.class);
+    fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
+    QueryAction queryAction = moreBatis.selectStatement().select(fields)
+        .from(new JoinTable(moreBatis.getTable(User.class), JoinType.LEFT_JOIN, moreBatis.getTable(BaseOrg.class))
+            .on(new FieldCondition(moreBatis.getColumnByAlias(User.class, "belongOrg"),
+                Operator.EQUAL, moreBatis.getColumnByAlias(BaseOrg.class, "rowId"))))
+        .where(condition).orderBy(orders);
+
     PageResult<Map<String, Object>> users;
     if (UtilsTool.isValid(pageNum)) {//判断是否分页查询
-      users = selectPageMap(condition, orders, pageNum, pageSize);
+      users = queryAction.selectPage(pageNum, pageSize);
     } else {
-      users = new PageResult(selectMap(condition, orders));
+      users = new PageResult<>(queryAction.execute());
     }
     if (UtilsTool.isValid(null == users ? null : users.getResult())) {
       return new ServerResult<>(users);
