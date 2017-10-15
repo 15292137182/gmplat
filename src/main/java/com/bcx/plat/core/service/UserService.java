@@ -52,35 +52,33 @@ public class UserService extends BaseService<User> {
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
       condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
 //      QueryAction queryAction=moreBatis.selectStatement().select(moreBatis.getColumnByAlias())
-    } else {
-      if (UtilsTool.isValid(search)) {
-        condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
-        if (UtilsTool.isValid(searchBy)) {
-          condition = new ConditionBuilder(User.class)
-                  .and().addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
-                  .or().addCondition(condition).endOr().endAnd()
-                  .buildDone();
-        }
-        condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
-      } else {
-        condition = null;
+    } else if (UtilsTool.isValid(search)) {
+      condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+      if (UtilsTool.isValid(searchBy)) {
+        condition = new ConditionBuilder(User.class)
+            .and().addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+            .or().addCondition(condition).endOr().endAnd()
+            .buildDone();
       }
+      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
+    } else {
+      condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).endAnd().buildDone();
     }
 
     //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称
     Collection<Field> fields = moreBatis.getColumns(User.class);
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
     QueryAction queryAction = moreBatis.selectStatement().select(fields)
-            .from(new JoinTable(moreBatis.getTable(User.class), JoinType.LEFT_JOIN, moreBatis.getTable(BaseOrg.class))
-                    .on(new FieldCondition(moreBatis.getColumnByAlias(User.class, "belongOrg"),
-                            Operator.EQUAL, moreBatis.getColumnByAlias(BaseOrg.class, "rowId"))))
-            .where(condition).orderBy(orders);
+        .from(new JoinTable(moreBatis.getTable(User.class), JoinType.LEFT_JOIN, moreBatis.getTable(BaseOrg.class))
+            .on(new FieldCondition(moreBatis.getColumnByAlias(User.class, "belongOrg"),
+                Operator.EQUAL, moreBatis.getColumnByAlias(BaseOrg.class, "rowId"))))
+        .where(condition).orderBy(orders);
 
     PageResult<Map<String, Object>> users;
     if (UtilsTool.isValid(pageNum)) {//判断是否分页查询
-      users = selectPageMap(condition, orders, pageNum, pageSize);
+      users = queryAction.selectPage(pageNum, pageSize);
     } else {
-      users = new PageResult(selectMap(condition, orders));
+      users = new PageResult<>(queryAction.execute());
     }
     if (UtilsTool.isValid(null == users ? null : users.getResult())) {
       return new ServerResult<>(users);
@@ -107,7 +105,7 @@ public class UserService extends BaseService<User> {
 
   private static Map<String, String> fieldNames;
   protected static String[] defaultExportFields = new String[]{"id", "name", "nickname", "status", "belongOrg", "idCard", "mobilePhone",
-          "officePhone", "email", "gender", "job", "hiredate", "lastLoginTime", "description", "remarks"};
+      "officePhone", "email", "gender", "job", "hiredate", "lastLoginTime", "description", "remarks"};
   protected static List<String> lockedFields = Arrays.asList("password", "passwordUpdateTime", "accountLockedTime", "deleteFlag", "etc");
 
   /**
@@ -156,8 +154,8 @@ public class UserService extends BaseService<User> {
     List<Map> users;
     if (null != rowIds && rowIds.length != 0) {
       Condition condition = new ConditionBuilder(User.class)
-              .and().in("rowId", Arrays.asList(rowIds)).endAnd()
-              .buildDone();
+          .and().in("rowId", Arrays.asList(rowIds)).endAnd()
+          .buildDone();
       users = selectMap(condition);
     } else {
       users = selectAllMap();

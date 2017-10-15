@@ -22,10 +22,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryPage")
             .accept(MediaType.APPLICATION_JSON)
-            .param("search", search)
+//            .param("search", search)
 //            .param("param", param)
             .param("rowId", rowId)
-            .param("searchBy", searchBy)
+//            .param("searchBy", searchBy)
 
     );
     //显示结果
