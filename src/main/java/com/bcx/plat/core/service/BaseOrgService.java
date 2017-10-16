@@ -3,15 +3,14 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BaseOrg;
+import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Resource;
+import java.util.*;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -160,5 +159,21 @@ public class BaseOrgService extends BaseService<BaseOrg> {
     return false;
   }
 
+  @Resource
+  private UserService userService;
 
+  /**
+   * 查询组织机构下面的人员信息
+   *
+   * @param orgRowId 组织机构的rowId
+   * @return 返回人员列表
+   */
+  public List<Map> queryUserInOrg(String orgRowId) {
+    if (isValid(orgRowId)) {
+      Condition condition = new ConditionBuilder(User.class)
+              .and().equal("belongOrg", orgRowId).endAnd().buildDone();
+      return userService.selectMap(condition);
+    }
+    return new ArrayList<>();
+  }
 }
