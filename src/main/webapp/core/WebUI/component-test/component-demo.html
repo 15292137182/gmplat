@@ -30,7 +30,7 @@
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">树形下拉框</el-col>
             <el-col :span="10">
-                <select-tree :initial="config" @select-node="getNodes"></select-tree>
+                <select-tree :initial="config" @select-node="getNodes" @click-node="getNodes" @checked-node="getChecked"></select-tree>
             </el-col>
         </el-col>
         <el-col :span="24" class="com_block">
@@ -68,7 +68,7 @@
                         // 展开所有节点
                         expandedAll: true,
                         // 默认选中项 当 checkbox 为 true 时  编辑时可以用
-                        checked: [12],
+                        checked: [12, 21],
                         // 配置显示项 必须配置！
                         defaultProps: {
                             // 树节点显示文字

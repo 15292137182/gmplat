@@ -371,12 +371,14 @@ Vue.component("base-tree", {
                     // console.log(data);
                     // console.log(node);
                     if(data.orgId == "ROOT" && data.orgPid == "") {
-                        return node.disabled = true;
+                        // return node.disabled = true;
                     }
                 }
             },
             // 树节点 key
             id: "",
+            // 当前选中节点
+            currentCheckedNodes: [],
             // 加载
             loading: true
         }
@@ -424,7 +426,31 @@ Vue.component("base-tree", {
     mounted() {
         var self = this;
         // 调用接口获取树节点
-        this.getNode(function() {
+        this.getNode(function(data) {
+            var checkedKey = self.initial.checked;
+            // 选中节点数据
+            var checkedData = self.currentCheckedNodes;
+            // 若无指定选中项 默认选中根节点
+            if(checkedKey.length == 0) {
+                for(var i = 0;i < data.length;i++) {
+                    if(data[i].orgId == "ROOT" && data[i].orgPid == "") {
+                        self.setCheckedKeys([data[i].rowId]);
+                        // 获取当前选中节点
+                        checkedData.push(data[i]);
+                    }
+                }
+            }else if(checkedKey.length > 0) {
+                // 否则选中指定项
+                self.setCheckedKeys(checkedKey);
+                for(var i = 0;i < data.length;i++) {
+                    for(var j = 0;j < checkedKey.length;j++) {
+                        if(data[i].rowId == checkedKey[j]) {
+                            // 获取当前选中节点
+                            checkedData.push(data[i]);
+                        }
+                    }
+                }
+            }
             var _expanded = self.initial.expanded;
             var _checked = self.initial.checked;
             // 获取默认展开节点
@@ -441,6 +467,8 @@ Vue.component("base-tree", {
                 self.defaultCheckedKeys = [];
             }
         });
+
+        this.loadData();
     },
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
@@ -543,6 +571,14 @@ Vue.component("base-tree", {
         // 设置选择项
         setCheckedKeys(keys) {
             this.$refs.tree.setCheckedKeys(keys);
+        },
+        // 获取选中节点
+        loadData(callback) {
+            // 回掉函数
+            if(callback) {
+                callback(this.currentCheckedNodes);
+            }
+            // console.log(this.currentCheckedNodes);
         }
     },
     template: `<div>
@@ -630,14 +666,12 @@ Vue.component("select-tree", {
         checkNode(obj, checked, node) {
             var label = this.defaultProps.label;
             var _id = this.initial.defaultProps.id;
-            // console.log(obj);
-            // console.log(checked);
-            // console.log(node);
-
             // 选中的节点名称
             this.middle = obj[label];
             // 选中节点 id
             this.select_id = obj[_id];
+            // 返回数据增加节点选择标识
+            obj.selected = checked;
             // 确认按钮状态
             // if(this.$refs.selectTree.getCheckedNodes()) {
             //     this.error = false;
@@ -699,7 +733,7 @@ Vue.component("select-tree", {
                     this.defaultExpandedKeys = [];
                 }
                 // 下拉框展开 树结构选中配置节点
-                if(_checked && _checked.length > 0) {
+                if(_checked && _checked.length > 0 && this.select_node != "") {
                     // this.defaultCheckedKeys = this.initial.checked;
                     this.setCheckedKeys(this.initial.checked);
                     // 确认按钮可用
