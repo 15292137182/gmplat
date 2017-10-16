@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件示例</title>
+    <style>
+        #component {
+            padding-top: 20px;
+        }
+
+        .com_block {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            text-align: right;
+            padding-right: 14px;
+            color: #48576a;
+            line-height: 36px;
+            font-size: 14px;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <el-row id="component" v-cloak>
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">树形下拉框</el-col>
+            <el-col :span="10">
+                <select-tree :initial="config"></select-tree>
+            </el-col>
+        </el-col>
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">基本树结构</el-col>
+            <el-col :span="10">
+                <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+            </el-col>
+        </el-col>
+    </el-row>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script>
+        var component = new Vue({
+            el: "#component",
+            data() {
+                return {
+                    treeData: {
+                        // 是否显示checkbook 默认为不显示
+                        checkbox: true,
+                        // 获取树节点接口
+                        url: serverPath + "/userGroup/queryPage",
+                        // 设置参数 -- 树节点上显示的文字
+                        defaultProps: {
+                            children: 'children',
+                            label: 'groupName'
+                        }
+                    },
+                    config: {
+                        // 显示复选框
+                        checkbox: true,
+                        // 默认展开
+                        expanded: [324],
+                        // 配置显示项
+                        defaultProps: {
+                            // 树节点显示文字
+                            label: 'orgName',
+                            // 节点id
+                            id: "rowId",
+                            // 父节点信息
+                            parentId: "orgPid",
+                            // 当前节点信息
+                            selfId: "orgId"
+                        },
+                        // 获取数据接口
+                        url: serverPath + "/baseOrg/queryPage"
+                    }
+                }
+            },
+            methods: {
+                getNodes(data) {
+                    console.log(data);
+                },
+                getChecked(data) {
+                    console.log(data);
+                }
+            }
+        })
+    </script>
+</body>
+</html>

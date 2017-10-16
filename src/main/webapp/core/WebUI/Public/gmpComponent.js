@@ -355,7 +355,7 @@ Vue.component("base-tree", {
             // 过滤文本
             filterText: "",
             // 默认展开的节点
-            defaultExpandedKeys: [],
+            defaultExpandedKeys: [324],
             // 默认选中的节点
             defaultCheckedKeys: [],
             // 获取树数据接口
@@ -363,7 +363,18 @@ Vue.component("base-tree", {
             // 树数据
             treeNodes: [],
             // 配置选项
-            defaultProps: {},
+            defaultProps: {
+                children: 'children',
+                disabled: function(data, node) {
+                    // console.log(data);
+                    // console.log(node);
+                    if(node.level == "1") {
+                        return node.disabled = true;
+                    }
+                }
+            },
+            // 树节点 key
+            id: "",
             // 加载
             loading: true
         }
@@ -387,28 +398,41 @@ Vue.component("base-tree", {
         }else {
             this.isFilter = false;
         }
-        // 获取默认展开节点
-        if(this.initial.expanded) {
-            this.defaultExpandedKeys = this.initial.expanded;
+        // 获取配置树节点 key
+        if(this.initial.defaultProps.id) {
+            this.id = this.initial.defaultProps.id;
         }else {
-            this.defaultExpandedKeys = [];
-        }
-        // 获取配置选中节点
-        if(this.initial.checked) {
-            this.defaultCheckedKeys = this.initial.checked;
-        }else {
-            this.defaultCheckedKeys = [];
+            this.id = "";
         }
         // 获取defaultProps
-        if(this.initial.defaultProps) {
-            this.defaultProps = this.initial.defaultProps;
+        if(this.initial.defaultProps && this.initial.defaultProps.label) {
+            this.defaultProps.label = this.initial.defaultProps.label;
         }else {
-            this.defaultProps = {};
+            this.defaultProps = {
+                children: 'children'
+            };
         }
     },
     mounted() {
+        var self = this;
         // 调用接口获取树节点
-        this.getNode();
+        this.getNode(function() {
+            var _expanded = self.initial.expanded;
+            var _checked = self.initial.checked;
+            // 获取默认展开节点
+            if(_expanded && _expanded.length > 0) {
+                self.defaultExpandedKeys = self.initial.expanded;
+                console.log(self.defaultExpandedKeys);
+            }else {
+                self.defaultExpandedKeys = [];
+            }
+            // 获取配置选中节点
+            if(_checked && _checked.length > 0) {
+                self.defaultCheckedKeys = self.initial.checked;
+            }else {
+                self.defaultCheckedKeys = [];
+            }
+        });
     },
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
@@ -420,42 +444,54 @@ Vue.component("base-tree", {
             this.$emit("checked-node", obj);
         },
         filterNode(value, data) {
+            var label = this.initial.defaultProps.label;
             if (!value) return true;
-            return data.label.indexOf(value) !== -1;
+            return data[label].indexOf(value) !== -1;
         },
         // 组织层级关系数据
         hierarchicalData(jsonArr) {
             var data = [];
+            var nodes = [];
+            // 获取配置信息
+            var parent = this.initial.defaultProps.parentId;
+            var self = this.initial.defaultProps.selfId;
+            // console.log(parent);
+            // console.log(self);
             // 遍历原数组
             for(var i = 0; i < jsonArr.length; i++) {
                 // 向每一个json数组对象下添加 children 属性值
                 jsonArr[i].children = [];
-                // 若当前json对象下有父节点信息
-                if(jsonArr[i].parent) {
-                    // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
-                    for(var j = 0;j < jsonArr.length;j++) {
-                        if(jsonArr[j].label == jsonArr[i].parent) {
-                            jsonArr[j].children.push(jsonArr[i]);
-                            // console.log(jsonArr[j]);
-                        }
-                        // jsonArr[j].children.push(jsonArr[i]);
-                    }
-                }else {
-                    // 若没有父节点信息 则说明当前节点为根节点
+                // 若当前json对象的节点信息为ROOT 说明其为根节点
+                if(jsonArr[i][self] == "ROOT") {
+                    // 将当前节点 push 到数据 data 中
                     data.push(jsonArr[i]);
-                    jsonArr[i].children = [];
-                }
-            }
-            // 检查最终json数组下是否存在子节点为空的对象 将其 children 属性删除
-            var checkNull = data[0].children;
-            for(var k = 0; k < checkNull.length; k++) {
-                // console.log(checkNull[k].children.length == 0);
-                if(checkNull[k].children.length == 0) {
-                    delete checkNull[k].children;
                 }
             }
 
-            console.log(data);
+            for(var i = 0; i < jsonArr.length; i++) {
+                // 向每一个json数组对象下添加 children 属性值
+                jsonArr[i].children = [];
+                // 若当前json对象下有父节点信息 且为二级根节点
+                if(jsonArr[i][self] != "ROOT") {
+                    // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
+                    for(var j = 0;j < jsonArr.length;j++) {
+                        if(jsonArr[j][parent] == jsonArr[i][self]) {
+                            jsonArr[i].children.push(jsonArr[j]);
+                        }
+                    }
+                }
+                // 当前节点为一级根节点
+                if(jsonArr[i][parent] == "ROOT") {
+                    // console.log(jsonArr[i]);
+                    // console.log(data[0]);
+                    nodes.push(jsonArr[i]);
+                }
+            }
+
+            // 将一级根节点插入根节点下
+            data[0].children = nodes;
+
+            // console.log(data);
             return data;
         },
         // 调接口获取数据
@@ -473,12 +509,12 @@ Vue.component("base-tree", {
                         if(res.resp.respCode == "000"){
                             if(res.resp.content.state == "1") {
                                 var _jsonObj = res.resp.content.data.result;
-                                // 赋值options
-                                that.treeNodes = _jsonObj;
+                                // 节点数据赋值
+                                that.treeNodes = that.hierarchicalData(_jsonObj);
                                 // loading消失
                                 that.loading = false;
                                 // console.log(_jsonObj);
-                                console.log(that.treeNodes);
+                                // console.log(that.treeNodes);
                                 // 回调
                                 if(callback) {
                                     callback(_jsonObj);
@@ -498,7 +534,7 @@ Vue.component("base-tree", {
     },
     template: `<div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
-                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="checkbox" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="checkbox" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" :node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });
@@ -512,79 +548,13 @@ Vue.component("select-tree", {
     props: ["initial"],
     data() {
         return {
+            // 获取树节点接口
             url: "",
             // 树节点数据
-            treeNodes: [{
-                id: 100,
-                label: "组织机构",
-                children: [{
-                    id: 1,
-                    label: '一级 1',
-                    children: [{
-                        id: 4,
-                        label: '一级 1-1'
-                    }, {
-                        id: 5,
-                        label: '一级 1-2'
-                    }]
-                }, {
-                    id: 2,
-                    label: '二级 1',
-                    children: [{
-                        id: 6,
-                        label: '二级 2-1'
-                    }, {
-                        id: 7,
-                        label: '二级 2-2'
-                    }, {
-                        id: 8,
-                        label: '二级 2-3',
-                        children: [{
-                            id: 9,
-                            label: '二级 2-3-1'
-                        }, {
-                            id: 10,
-                            label: '二级 2-3-2'
-                        }, {
-                            id: 11,
-                            label: '二级 2-3-3'
-                        }]
-                    }]
-                }, {
-                    id: 3,
-                    label: '三级 1',
-                    children: [{
-                        id: 6,
-                        label: '三级 2-1'
-                    }, {
-                        id: 7,
-                        label: '三级 2-2',
-                        children: [{
-                            id: 12,
-                            label: '三级 2-2-1'
-                        }, {
-                            id: 13,
-                            label: '三级 2-2-2'
-                        }, {
-                            id: 14,
-                            label: '三级 2-2-3'
-                        }]
-                    }, {
-                        id: 8,
-                        label: '三级 2-3',
-                        children: [{
-                            id: 15,
-                            label: '三级 2-3-1'
-                        }, {
-                            id: 16,
-                            label: '三级 2-3-2'
-                        }]
-                    }]
-                }]
-            }],
+            treeNodes: [],
             // 节点 key
             id: "",
-            // 选中的检点
+            // 选中的节点
             select_node: "",
             // 是否显示复选框
             checkbox: "",
@@ -690,6 +660,18 @@ Vue.component("select-tree", {
             if(bool) {
                 // 用Vue的方法写一个查找DOM和addClass的方法
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
+                // 下拉框展开 树结构展开配置节点
+                if(this.initial.expanded) {
+                    this.defaultExpandedKeys = this.initial.expanded;
+                }else {
+                    this.defaultExpandedKeys = [];
+                }
+                // 下拉框展开 树结构选中配置节点
+                if(this.initial.checked) {
+                    this.defaultCheckedKeys = this.initial.checked;
+                }else {
+                    this.defaultCheckedKeys = [];
+                }
             }else {
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
             }
@@ -796,18 +778,6 @@ Vue.component("select-tree", {
             this.id = this.initial.defaultProps.id;
         }else {
             this.id = "";
-        }
-        // 获取默认展开节点
-        if(this.initial.expanded) {
-            this.defaultExpandedKeys = this.initial.expanded;
-        }else {
-            this.defaultExpandedKeys = [];
-        }
-        // 获取配置选中节点
-        if(this.initial.checked) {
-            this.defaultCheckedKeys = this.initial.checked;
-        }else {
-            this.defaultCheckedKeys = [];
         }
         // 获取defaultProps
         if(this.initial.defaultProps && this.initial.defaultProps.label) {

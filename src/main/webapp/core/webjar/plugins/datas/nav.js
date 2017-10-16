@@ -56,4 +56,13 @@
         "icon": "&#xe641;",
         "href": "core/WebUI/page-resources/page-resources.html"
     }]
+}, {
+    "title": "组件示例",
+    "icon": " fa-slack",
+    "spread": true,
+    "children": [{
+        "title": "封装组件示例",
+        "icon": " fa-html5",
+        "href": "core/WebUI/component-test/component-demo.html"
+    }]
 }];
