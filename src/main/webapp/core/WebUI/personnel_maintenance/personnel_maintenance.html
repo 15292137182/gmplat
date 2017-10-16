@@ -87,12 +87,7 @@
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                         <el-tab-pane label="组织机构查看" name="first">
                             <div style="padding:20px 20px" id="leftTree">
-                                <el-tree
-                                        :data="data"
-                                        :props="defaultProps"
-                                        accordion
-                                        @node-click="handleNodeClick">
-                                </el-tree>
+                                <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                             </div>
                         </el-tab-pane>
                         <el-tab-pane label=" 角色查看" name="second">
@@ -115,28 +110,28 @@
                 <el-col :span="15">
                     <div style="padding:20px 20px 10px 20px" >
                         <el-input placeholder="请输入内容" v-model="input">
-                            <el-select v-model="select" slot="prepend" placeholder="请选择查询类型">
-                                <el-option label="工号" value="1"></el-option>
-                                <el-option label="姓名" value="2"></el-option>
-                                <el-option label="昵称" value="3"></el-option>
-                                <el-option label="状态" value="4"></el-option>
-                                <el-option label="所属部门" value="5"></el-option>
-                                <el-option label="职务" value="6"></el-option>
+                            <el-select v-model="select" slot="prepend" placeholder="请选择查询类型" clearable>
+                                <el-option label="工号" value="id"></el-option>
+                                <el-option label="姓名" value="name"></el-option>
+                                <el-option label="昵称" value="nickname"></el-option>
+                                <el-option label="职务" value="job"></el-option>
                             </el-select>
                             <el-button slot="append" icon="search" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" @click.native="searchMore"></el-button>
                         </el-input>
                     </div>
                     <div  style="padding:5px 20px" v-show="couldLook">
                         <div class="extra" style="font-size:14px;">状态</div>
-                        <el-select  slot="prepend" placeholder="请选择状态" style="margin-left:-6px" class="extra1">
-                            <el-option label="生效" value="7"></el-option>
-                            <el-option label="失效" value="8"></el-option>
+                        <el-select v-model="chooseState" slot="prepend" placeholder="请选择状态" clearable style="margin-left:-6px" class="extra1">
+                            <el-option label="解锁" value="01"></el-option>
+                            <el-option label="锁定" value="02"></el-option>
+                            <el-option label="失效" value="03"></el-option>
+                            <el-option label="启用" value="04"></el-option>
                         </el-select>
-                        <div class="extra" style="width:60px;margin-left:30px;font-size:14px;">所属部门</div>
-                        <el-select  slot="prepend" placeholder="请选择状态" style="margin-left:-6px" class="extra1">
-                            <el-option label="生效" value="7"></el-option>
-                            <el-option label="失效" value="8"></el-option>
-                        </el-select>
+                        <!--<div class="extra" style="width:60px;margin-left:30px;font-size:14px;">所属部门</div>-->
+                        <!--<el-select  slot="prepend"  v-model="belongPart" placeholder="请选择状态" style="margin-left:-6px" class="extra1">-->
+                            <!--<el-option label="生效" value="7"></el-option>-->
+                            <!--<el-option label="失效" value="8"></el-option>-->
+                        <!--</el-select>-->
                     </div>
                 </el-col>
                 <ei-col :span="3">
@@ -161,12 +156,12 @@
                                     <el-row>
                                         <el-col :span="12">
                                             <el-form-item label="用户姓名">
-                                                <span>{{ props.row.employeeName }}</span>
+                                                <span>{{ props.row.name }}</span>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="12">
                                             <el-form-item label="用户昵称">
-                                                <span>{{ props.row.employeeNickname }}</span>
+                                                <span>{{ props.row.nickname }}</span>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -216,17 +211,16 @@
                                 </el-form>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="employeeNo" label="用户工号" sortable="custom" width="160"
+                        <el-table-column prop="id" label="用户工号" sortable="custom" width="160"
                                          show-overflow-tooltip></el-table-column>
                         <el-table-column prop="password" label="密码" sortable="custom" width="160"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="belongOrganization" label="所属部门" width="100"
+                        <el-table-column prop="orgName" label="所属部门" width="100"
                                          show-overflow-tooltip></el-table-column>
                         <el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="gender" label="性别" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="job" label="职务" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="" label="操作" width="100">
-                            <!--编辑，删除，解锁、锁定-->
                             <template scope="scope">
                                 <el-button @click.native="editProp" type="text" size="small" icon="edit"
                                            :disabled=scope.row.testDemo></el-button>

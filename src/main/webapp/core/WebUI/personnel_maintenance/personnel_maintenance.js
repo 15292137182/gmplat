@@ -5,8 +5,12 @@ var basTop;
 var left;
 var leftBottom;
 var right;
-//查询接口
+//右侧查询接口
 var searchMore=serverPath + "/user/queryPage";
+//左侧查右侧查询接口
+var searchLeftMore=serverPath + "/user/queryByOrg";
+
+
 
 
 
@@ -83,51 +87,30 @@ gmp_onload=function(){
     left=new Vue({
         el:'#left',
         data:getData.dataObj({
-            data: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }],
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label',
+            treeData: {
+                // 是否显示checkbook 默认为不显示
+                checkbox: false,
+                // 获取树节点接口
+                url: serverPath + "/baseOrg/queryPage",
+                // 设置参数 -- 树节点上显示的文字
+                defaultProps: {
+                    children: 'children',
+                    label: 'orgName'
+                }
             },
             activeName:'first',
         }),
         methods:{
-            handleNodeClick(data){
-                //console.log(data);
+            getNodes(data){
+                this.rowId=data.rowId;
+                right.searchMore();
+
+
             },
+            getChecked(){
+
+            },
+
             //tab页点击交换
             handleClick(){
 
@@ -203,11 +186,14 @@ gmp_onload=function(){
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
-            select: '',
-            couldLook:false,
+            select: '',//查询类
+            chooseState: '',//状态
+            couldLook:false,//状态能否被看见
         }),
         methods: {
-            headSort(){
+            headSort(column){
+                //列头排序
+                // pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.pageNum,column,this);
 
             },
             //点击这一行
@@ -236,19 +222,69 @@ gmp_onload=function(){
             },
             //查询
             searchMore(){
-                queryData.getData(searchMore,this.input,this,function(res){
-                    var data=res.resp.content.data.result;
-                    if(data!=null){
-                        //默认选中行
-                        //this.currentChange(this.tableData[0]);
+                if(this.select==''){//需要search
+                    var param={
+                        belongOrg:left.rowId
                     }
-                })
+                    if(this.chooseState==''){//不需要状态
+                        var params=JSON.stringify(param)
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    querySearch.needSearch(searchMore,this.input,params,this,function(res){
+                        var data=res.resp.content.data;
+                        console.log(data);
+                        if(data!=null){
+                            //默认选中行
+                            //this.currentChange(this.tableData[0]);
+                        }
+                    })
+                }else{  //不需要search
+                    var param={
+                        belongOrg:left.rowId
+                    }
+                    param[this.select] = this.input;
+                    if(this.chooseState==''){//不需要状态
+                        var params=JSON.stringify(param)
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    querySearch.uneedSearch(searchMore,params,this,function(res){
+                        var data=res.resp.content.data;
+                        console.log(data);
+                        if(data!=null){
+                            //默认选中行
+                            //this.currentChange(this.tableData[0]);
+                        }
+                    })
+                }
             },
             //默认选中变颜色
             FindRFirstDate(row){
                 // console.log(row)
                 this.$refs.tableData.setCurrentRow(row);
             },
+            //编辑
+            editProp(){
+                operate = 2;
+                var htmlUrl = 'personnel_add.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
+                    //调用接口
+                });
+            },
+            //删除
+            deleteProp(){
+                deleteObj.del(function(){
+                    var data={
+
+                    };
+                    gmpAjax.showAjax(data,function(res){
+
+                    })
+                });
+            }
 
         },
         created(){

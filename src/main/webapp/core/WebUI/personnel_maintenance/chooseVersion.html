@@ -35,22 +35,13 @@
         },
         methods:{
             conformEvent(){
-                $.ajax({
-                    url:conVersion,
-                    type:"get",
-                    data:{
-                        suffix:this.radio
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                       console.log(111)
-                    },
-                    error:function(){
-                        console.log(2222)
-                    }
-                })
-                ibcpLayer.Close(divIndex);
+                if(this.radio=='xls'){
+                    window.open(conVersion+"?suffix=xls","_self")
+                    ibcpLayer.Close(divIndex);
+                }else if(this.radio=='xlsx'){
+                    window.open(conVersion+"?suffix=xlsx", "_self")
+                    ibcpLayer.Close(divIndex);
+                }
             },
             cancel(){
                 ibcpLayer.Close(divIndex);

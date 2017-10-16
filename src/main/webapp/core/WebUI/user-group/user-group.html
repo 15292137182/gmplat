@@ -8,6 +8,9 @@
         .el-input {
             width: 185px;
         }
+        .el-tree {
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -21,14 +24,14 @@
     </el-row>
 </div>
 
-<el-col :span="4" id="left" style="margin-left:15px">
+<div id="left" style="margin-left:15px;width:150px;display: inline-block;position:absolute">
     <div class="allBorder">
         <el-row>
             <el-col>
                 <div class="bg-color">
-                    <span>树状结构检索</span>
+                    <span>用户组结构检索</span>
                 </div>
-                <div style="padding:20px 20px">
+                <div style="padding:5px 20px">
                     <el-col style="padding:10px 5px">
                         <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                     </el-col>
@@ -36,9 +39,9 @@
             </el-col>
         </el-row>
     </div>
-</el-col>
+</div>
 
-<el-col :span="19" id="right" style="margin-left:15px">
+<el-col :span="20" id="right" style="margin-left:15px" :push="3">
     <div class="allBorder">
         <el-row>
             <el-col>
@@ -90,7 +93,7 @@
     </div>
 </el-col>
 
-<el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:20px;">
+<el-col :span="20" id="rightBottom" style="margin-left:15px;margin-top:20px;" :push="3">
     <div class="allBorder">
         <el-row>
             <el-col>

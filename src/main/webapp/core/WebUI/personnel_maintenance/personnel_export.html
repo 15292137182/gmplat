@@ -40,9 +40,16 @@
         <el-radio class="radio" v-model="radio" label="1">2013版</el-radio>
         <el-radio class="radio" v-model="radio" label="2">2017版</el-radio>
     </div>
+    <div style="padding:15px 10px">
+        <el-radio class="radio" v-model="radio1" label="3">全部记录</el-radio>
+        <el-radio class="radio" v-model="radio1" label="4">所属记录</el-radio>
+    </div>
     <el-row>
-        <el-col :span="17" style="text-align: right" :offset="2">
-            <el-button type="primary" size="small" @click.native="cancel">确定</el-button>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
         </el-col>
     </el-row>
 </div>
@@ -51,6 +58,7 @@
         el:"#perExport",
         data:{
             radio:'1',
+            radio1:'3',
             useSex:'',
             employeeNo:true,
             employeeName:true,
@@ -69,7 +77,12 @@
             remarks:true,
         },
         methods:{
+            conformEvent(){
 
+            },
+            cancel(){
+
+            }
         }
     })
 </script>

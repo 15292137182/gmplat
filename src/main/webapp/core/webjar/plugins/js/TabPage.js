@@ -386,6 +386,90 @@ var queryData = (function(){
     }
 })()
 
+
+//ZYM  精确模糊查询分开刷新table跳转到第一页调该方法
+var querySearch = (function(){
+    //需要search
+    var needSearch = function(url,search,params,obj,callback){
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{
+                search:search,
+                param:params,
+                pageSize:obj.pageSize,
+                pageNum:1
+            },
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                obj.loading=false;
+                if(res.resp.respCode=="000"){
+                    if(res.resp.content.data!=null) {
+                        dataConversion.conversion(obj, res.resp.content.data.result);
+                        obj.tableData = res.resp.content.data.result;//数据源
+                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                        obj.pageNum = res.resp.content.data.pageNum;//当前页
+                    }else{
+                        obj.tableData = [];
+                    }
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                // alert("错误")
+            }
+        })
+    }
+    //不需要search
+    var uneedSearch = function(url,params,obj,callback){
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{
+                param:params,
+                pageSize:obj.pageSize,
+                pageNum:1
+            },
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                obj.loading=false;
+                if(res.resp.respCode=="000"){
+                    if(res.resp.content.data!=null){
+                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        obj.tableData = res.resp.content.data.result;//数据源
+                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                        obj.pageNum = res.resp.content.data.pageNum;//当前页
+                    }else{
+                        obj.tableData = [];
+                    }
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                // alert("错误")
+            }
+        })
+    }
+
+    return {
+        needSearch:needSearch,
+        uneedSearch:uneedSearch
+    }
+})()
+
+
 //删除确认框
 var deleteObj = (function(){
     var del = function(callback){

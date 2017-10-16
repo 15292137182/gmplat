@@ -39,7 +39,21 @@
             "href": "core/WebUI/template-objects/template-objects.html"
         }
     ]
-}, {
+},
+    {
+        "title": " 基础功能管理",
+        "icon": " fa-folder-o",
+        "spread": true,
+        "children": [{
+            "title": "用户",
+            "icon": " fa-navicon",
+            "href": "core/WebUI/personnel_maintenance/personnel_maintenance.html"
+        },{
+            "title": "用户组",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/user-group/user-group.html"
+        }]
+    },{
     "title": "动态模板",
     "icon": " fa-folder-o",
     "spread": true,
