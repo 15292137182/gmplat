@@ -48,6 +48,7 @@ var useAdd = new Vue({
         },
         getNodes(data) {
             console.log(data);
+            this.belongOrg=data;
         },
         getChecked(data) {
             console.log(data);
@@ -62,7 +63,7 @@ var useAdd = new Vue({
                             name:useAdd.name,//姓名
                             nickname:useAdd.nickname,//昵称
                             password :useAdd.password,//初始密码有默认值
-                            //belongOrg:useAdd.belongOrg,//所属部门
+                            belongOrg:useAdd.belongOrg,//所属部门
                             idCard:useAdd.idCard,//身份证
                             mobilePhone:useAdd.mobilePhone,//移动电话
                             officePhone:useAdd.officePhone,//办公电话

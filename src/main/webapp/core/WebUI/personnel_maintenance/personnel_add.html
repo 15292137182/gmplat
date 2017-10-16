@@ -88,7 +88,7 @@
             </el-col>
             <el-col :span="10">
                 <el-form-item label="所属部门" prop="belongOrg" class="demo-input-suffix">
-                    <select-tree :initial="belongOrg"></select-tree>
+                    <select-tree :initial="belongOrg" @select-node="getNodes"></select-tree>
                 </el-form-item>
             </el-col>
         </el-row>
