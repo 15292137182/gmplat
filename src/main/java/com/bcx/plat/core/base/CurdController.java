@@ -8,7 +8,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.SpringContextHolder;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,13 +73,15 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
    */
   @PostMapping("/add")
   public PlatResult addMenu(@RequestParam Map<String, Object> param) {
+    PlatResult platResult;
     E e = getInstance().buildCreateInfo().fromMap(param);
     int insert = e.insert();
     if (insert != -1) {
-      return successData(NEW_ADD_SUCCESS, getInstance());
+      platResult = successData(NEW_ADD_SUCCESS, getInstance());
     } else {
-      return fail(NEW_ADD_FAIL);
+      platResult = fail(NEW_ADD_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -91,17 +92,19 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
    */
   @PostMapping("/modify")
   public PlatResult modifyMenu(@RequestParam Map<String, Object> param) {
+    PlatResult platResult;
     if (UtilsTool.isValid(param.get("rowId"))) {
       E en = getInstance().buildModifyInfo().fromMap(param);
       int update = en.updateById();
       if (update != -1) {
-        return successData(UPDATE_SUCCESS, getInstance());
+        platResult = successData(UPDATE_SUCCESS, getInstance());
       } else {
-        return fail(UPDATE_FAIL);
+        platResult = fail(UPDATE_FAIL);
       }
     } else {
-      return fail(UPDATE_FAIL);
+      platResult = fail(UPDATE_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -113,17 +116,19 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
   @PostMapping("/delete")
   public PlatResult delete(String rowId) {
     Condition condition = new ConditionBuilder(getClassE()).and().equal("rowId", rowId).endAnd().buildDone();
+    PlatResult platResult;
     List<E> select = s.select(condition);
     if (UtilsTool.isValid(rowId)) {
       int del = getInstance().deleteById(rowId);
       if (del == -1) {
-        return fail(DELETE_FAIL);
+        platResult = fail(DELETE_FAIL);
       } else {
-        return successData(Message.DELETE_SUCCESS, select.size() > 0 ? select.get(0) : "");
+        platResult = successData(Message.DELETE_SUCCESS, select.size() > 0 ? select.get(0) : "");
       }
     } else {
-      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
   /**
@@ -139,6 +144,7 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
   @GetMapping("/queryPage")
   @SuppressWarnings("unchecked")
   public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    PlatResult platResult;
     LinkedList<Order> orders = dataSort(getClassE(), order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
@@ -154,10 +160,11 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
       result = new PageResult<>(s.selectMap(condition, orders));
     }
     if (isValid(result)) {
-      return result(new ServerResult<>(result));
+      platResult = result(new ServerResult<>(result));
     } else {
-      return fail(Message.QUERY_FAIL);
+      platResult = fail(Message.QUERY_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -168,10 +175,13 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
    */
   @GetMapping("/queryById")
   public PlatResult queryById(String rowId) {
+    PlatResult platResult;
     if (isValid(rowId)) {
-      return result(new ServerResult<>(getInstance().selectOneById(rowId)));
+      platResult = result(new ServerResult<>(getInstance().selectOneById(rowId)));
+    } else {
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
-    return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+    return platResult;
   }
 
 

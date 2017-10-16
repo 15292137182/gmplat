@@ -7,6 +7,7 @@
 </head>
 <body>
 <button id="AA">aa</button>
+<button id="BB">bb</button>
 <input type="file" id="myfile" onchange="oc(this)"/>
 
 <h1>hello</h1>
@@ -19,18 +20,24 @@
 
 </body>
 
+</html>
 <script>
 
-    //    $.ajax({
-    //        url: 'http://192.168.100.50/gmplat/gmp/sys/core/excel/excelUpload',
-    //        type: 'get',
-    //        success: function (result) {
-    //            console.log(result.功能)
-    //        },
-    //        error: function () {
-    //            alert("提示错误");
-    //        }
-    //    });
+
+    $("#BB").click(function () {
+        $.ajax({
+            url: 'http://192.168.100.50/gmplat/gmp/sys/core/sysSetting/getSettings',
+            type: 'post',
+            data:'',
+            dataType :'json',
+            success: function (result) {
+                console.log(result)
+            },
+            error: function () {
+                alert("提示错误");
+            }
+        });
+    });
 
 
     $(function () {
@@ -38,13 +45,13 @@
             console.log(111);
             window.open("http://192.168.100.50/gmplat/gmp/sys/core/excel/exportModule?suffix=xls", "_self")
         });
-        /** 验证文件是否导入成功  */
-        $("#fileUpload").ajaxForm(function (data) {
-            console.log(data);
-            if (data == "1") {
-                alert("提交成功！");
-            }
-        });
+//        /** 验证文件是否导入成功  */
+//        $("#fileUpload").ajaxForm(function (data) {
+//            console.log(data);
+//            if (data == "1") {
+//                alert("提交成功！");
+//            }
+//        });
     });
 
     function oc(obj) {
@@ -73,4 +80,3 @@
 
     //alert(getRootPath());
 </script>
-</html>
