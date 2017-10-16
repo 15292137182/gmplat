@@ -442,6 +442,7 @@ var querySearch = (function(){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.data!=null){
+                        console.log(res);
                         dataConversion.conversion(obj,res.resp.content.data.result);
                         obj.tableData = res.resp.content.data.result;//数据源
                         obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -583,6 +584,8 @@ var gmpAjax = (function(){
             type:"post",
             data:data.jsonData,
             xhrFields: {withCredentials: true},
+            traditional: true,
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             dataType:"json",
             success:function(res){
                 // console.log(res);

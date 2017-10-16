@@ -4,13 +4,22 @@
 var basTop;
 var left;
 var right;
+var rightBottom;
 
 //查用户组信息
 var Organization = serverPath + "/baseOrg/queryById";
+
 //查看组织机构下的人员信息
 var PersonnelInformationUrl = serverPath + "/user/queryByOrg"
+
 //查看组织机构下的角色信息
-var roleViewUrl = serverPath + "role/queryBySpecify"
+// var roleViewUrl = serverPath + "role/queryBySpecify"
+
+//组织机构编辑接口
+var modify = serverPath + "/baseOrg/modify";
+
+//组织机构删除接口
+var deleteUrl = serverPath + "/baseOrg/delete";
 
 gmp_onload=function(){
     basTop = new Vue({
@@ -29,16 +38,21 @@ gmp_onload=function(){
 
                 });
             },
-            //新增业务对象属性
-            addProp(){
-                operateOPr=1;
-                var htmlUrl = 'metadata-prop-add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {
-                    proEm.$refs.proType_1.setValue("base");  //属性类型
-                    proEm.proType_1.value='base';//不点击的时候直接把属性传过去
-                    proEm.addProForm.proType='base';//只是为了验证的时候判断是否为空
-
-                });
+            //删除组织机构
+            orgDelete(){
+                deleteObj.del(function(){
+                    left.rowIdArr.splice(0,1);
+                    console.log(left.rowIdArr);
+                    var data = {
+                        "url":deleteUrl,
+                        "jsonData":{rowIds:left.rowIdArr},
+                        "obj":basTop,
+                        "showMsg":true
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        // queryData.getData(dataBase.url,dataBase.input,dataBase)
+                    })
+                })
             },
             //生效
             affectProp(){
@@ -59,15 +73,22 @@ gmp_onload=function(){
         data:getData.dataObj({
             treeData: {
                 // 是否显示checkbook 默认为不显示
-                checkbox: false,
+                checkbox: true,
                 // 获取树节点接口
                 url: serverPath + "/baseOrg/queryPage",
                 // 设置参数 -- 树节点上显示的文字
                 defaultProps: {
-                    children: 'children',
-                    label: 'orgName'
+                    // 树节点显示文字
+                    label: 'orgName',
+                    // 节点id
+                    id: "rowId",
+                    // 父节点信息
+                    parentId: "orgPid",
+                    // 当前节点信息
+                    selfId: "orgId",
                 }
-            }
+            },
+            rowIdArr:[0],
         }),
         methods:{
             //点击左边的树得到数据
@@ -91,16 +112,35 @@ gmp_onload=function(){
                         right.fixedPhone=data.fixedPhone;
                         right.address=data.address;
                         right.desp=data.desp;
-                        rightBottom.PersonnelInformation(data.rowId);
-                        rightBottom.roleView(data.rowId);
+                        right.rowId = data.rowId;
+                        rightBottom.PersonnelInformation(right.rowId);
+                        // basRightTop.roleView(data.rowId);
                     },
                 })
             },
             //复选框选中得到得值
             getChecked(data) {
-                console.log(data);
+                var arr = this.rowIdArr;
+                for(var i=0;i<arr.length;i++){
+                        if(data.rowId != arr[i]){
+                            if(i==arr.length-1){
+                                arr.push(data.rowId);
+                                console.log(this.rowIdArr);
+                            }
+                        }
+                }
             }
         },
+        created(){
+            $(document).ready(function () {
+                var height = $(window).height()-50;
+                $("#allBorderHeight").height(height);
+            });
+            $(window).resize(function () {
+                var height1 = $(window).height()-50;
+                $("#allBorderHeight").height(height1);
+            });
+        }
     })
 
     right=new Vue({
@@ -113,10 +153,31 @@ gmp_onload=function(){
             fixedPhone:"",
             address:"",
             desp:"",
+            rowId:""
         }),
         methods: {
+            editTbleBase(rowId){
+                var data = {"url":modify,"jsonData":{
+                    rowId:rowId,
+                    orgPid:this.orgPid,
+                    orgId:this.orgId,
+                    orgName:this.orgName,
+                    orgSort:this.orgSort,
+                    fixedPhone:this.fixedPhone,
+                    address:this.address,
+                    desp:this.desp,
+                },
+                    "obj":right,
+                    "showMsg":true
+                }
+                gmpAjax.showAjax(data,function(res){
+                    console.log(res);
+                })
+            },
             addClick(){
-                alert("1");
+                editObj.editOk(function(){
+                    right.editTbleBase(right.rowId);
+                })
             }
         }
     })
@@ -124,47 +185,7 @@ gmp_onload=function(){
     rightBottom=new Vue({
         el:'#rightBottom',
         data:getData.dataObj({
-            data: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                        label: '三级 1-1-1'
-                    }]
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                        label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                        label: '三级 2-2-1'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }],
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label',
-            },
             activeName:'first',
-            tableDataTwo:[]
         }),
         methods:{
             //tab页点击交换
@@ -179,20 +200,57 @@ gmp_onload=function(){
             PersonnelInformation(rowId){
                 var strArr = '["'+rowId+'"]';
                 console.log(strArr);
-                $.ajax({
-                    url:PersonnelInformationUrl,
-                    type:"get",
-                    data:{
-                        param:strArr
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        console.log(res.resp.content.data)
-                        rightBottom.loading=false;
-                        rightBottom.tableData = res.resp.content.data;//数据源
-                    },
+                querySearch.uneedSearch(PersonnelInformationUrl,strArr,this,function(res){
+                    console.log(res);
                 })
+                // $.ajax({
+                //     url:PersonnelInformationUrl,
+                //     type:"get",
+                //     data:{
+                //         param:strArr
+                //     },
+                //     dataType:"json",
+                //     xhrFields: {withCredentials: true},
+                //     success:function(res){
+                //         console.log(res.resp.content)
+                //         rightBottom.loading=false;
+                //         rightBottom.tableData = res.resp.content.data;//数据源
+                //     },
+                // })
+            },
+            //点击
+            firstClick(){
+                alert("1");
+            },
+            //表点击
+            twoClick(){
+                alert("2");
+            },
+            //分页信息
+            handleSizeChange(val){
+                alert(val);
+            },
+            handleCurrentChange(val){
+                alert(val);
+            }
+        },
+        created(){
+            $(document).ready(function () {
+                rightBottom.leftHeight = $(window).height() - 430;
+            });
+            $(window).resize(function () {
+                rightBottom.leftHeight = $(window).height() - 430;
+            });
+        }
+    })
+    basRightTop = new Vue({
+        el:"#basRightTop",
+        template:'#tempBlock',
+        data:getData.dataObj({}),
+        methods:{
+            //点击行
+            twoClick(){
+                alert("1");
             },
             //角色查看
             roleView(rowId){
@@ -213,21 +271,20 @@ gmp_onload=function(){
                     },
                 })
             },
-            //点击
-            firstClick(){
-                alert("1");
+            //分页信息
+            handleSizeChange(){
+
             },
-            //表点击
-            twoClick(){
-                alert("2");
-            }
+            handleCurrentChange(){
+
+            },
         },
-        create(){
+        created(){
             $(document).ready(function () {
-                right.leftHeight = $(window).height() - 158;
+                basRightTop.leftHeight = $(window).height() - 430;
             });
             $(window).resize(function () {
-                right.leftHeight = $(window).height() - 158;
+                basRightTop.leftHeight = $(window).height() - 430;
             });
         }
     })

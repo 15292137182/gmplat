@@ -8,6 +8,9 @@
         .el-input {
             width: 300px;
         }
+        .el-icon-delete{
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -15,13 +18,13 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加组织机构</el-button>
-            <el-button type="danger" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">删除组织机构</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="addAttr">删除组织机构</el-button>
         </el-col>
     </el-row>
 </div>
 
-<el-col :span="4" id="left" style="margin-left:15px;" >
-    <div class="allBorder">
+<el-col :span="4" id="left" style="margin-left:15px;">
+    <div class="allBorder" id="allBorderHeight" style="height:500px">
         <el-row>
             <el-col>
                 <div class="bg-color">
@@ -129,24 +132,20 @@
                                     </el-table-column>
                                 </el-table>
                             </template>
+                            <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                                <el-pagination
+                                        @size-change="handleSizeChange"
+                                        @current-change="handleCurrentChange"
+                                        :current-page="pageNum"
+                                        :page-sizes="[5,10,20]"
+                                        :page-size="pageSize"
+                                        layout="total, sizes, prev, pager, next, jumper"
+                                        :total="allDate">
+                                </el-pagination>
+                            </el-row>
                         </el-tab-pane>
                         <el-tab-pane label=" 角色查看" name="second">
-                            <template>
-                                <el-table ref="myData"
-                                          :data="tableDataTwo"
-                                          @row-click="twoClick" border style="width: 100%"
-                                          :highlight-current-row="true"
-                                          :height="leftHeight"
-                                          v-loading="loading"
-                                          element-loading-text="加载中">
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="编号" width="250">
-                                    </el-table-column>
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="名称" width="250">
-                                    </el-table-column>
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
-                                    </el-table-column>
-                                </el-table>
-                            </template>
+                            <el-row id="basRightTop"></el-row>
                         </el-tab-pane>
                     </el-tabs>
                 </div>
@@ -155,6 +154,35 @@
     </div>
 </el-col>
 
+<template id="tempBlock">
+    <el-col  id="basRightTop">
+        <el-table ref="myData"
+                  :data="tableData"
+                  @row-click="twoClick" border style="width: 100%"
+                  :highlight-current-row="true"
+                  :height="leftHeight"
+                  v-loading="loading"
+                  element-loading-text="加载中">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="编号" width="250">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="名称" width="250">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
+            </el-table-column>
+        </el-table>
+        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageNum"
+                    :page-sizes="[5,10,20]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="allDate">
+            </el-pagination>
+        </el-row>
+    </el-col>
+</template>
 
 <script src="organizational-information.js"></script>
 </body>
