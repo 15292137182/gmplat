@@ -12,7 +12,8 @@ var em = new Vue({
                 reaTable:'',//关联表
                 reaTableObj:'',//关联模板对象
                 versionInput: '',//版本
-                system:''
+                system:'',
+                className:'',//实体类
             },
             disabledBool:true,
             value_1: "",
@@ -25,6 +26,10 @@ var em = new Vue({
                 reaTable: [
                     { required: true,trigger: 'blur',message: '请选择关联表'}
                 ],
+                className: [
+               { required: true,trigger: 'blur',message: '请输入实体类'}
+        ],
+
             },
             //关联表下拉框数据
             table_1: {
@@ -60,6 +65,7 @@ var em = new Vue({
                                 "url":addUrl,
                                 "jsonData":{objectName:em.ruleForm.nameInput,//名称
                                     relateTableRowId: em.table_1.value,//关联表
+                                    className: em.ruleForm.nameInput,//实体类
                                     relateTemplateObject: em.templateObj_1.value,//关联模板对象
                                     belongModule: em.belongModule_1.value,//所属模块
                                 },
@@ -83,6 +89,7 @@ var em = new Vue({
                                     rowId: basLeft.currentVal.rowId,//ID
                                     objectName:em.ruleForm.nameInput,//名称
                                     relateTableRowId: em.table_1.value,//关联表
+                                    className: em.ruleForm.className,//实体类
                                     relateTemplateObject: em.templateObj_1.value,//关联模板对象
                                     belongModule: em.belongModule_1.value,//所属模块
                                 },

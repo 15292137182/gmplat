@@ -14,10 +14,6 @@
         .el-select .el-input {
             width: 130px;
         }
-        /*下拉框在最上层*/
-        .el-select-dropdown {
-            z-index: 900000000 !important;
-        }
         /*弹出框的input长度*/
         form  .el-input input{
             width:165px;
@@ -29,15 +25,10 @@
         form .el-textarea textarea{
             width: 420px;
         }
-        /*日期控件显示最上层*/
-        .el-picker-panel.el-date-picker{
-            z-index: 9999999999 !important;
-        }
-        /*日期控件长度也为240*/
+        /*日期控件长度也为1650*/
         .el-date-editor.el-input.el-date-editor--date{
             width: 165px;
         }
-
         .extra{
             background-color: #fbfdff;
             color: #97a8be;
@@ -77,7 +68,7 @@
 </div>
 
 <el-col :span="6" id="left" style="margin-left:15px">
-    <div class="allBorder">
+    <div class="allBorder" id="treeLeft">
         <el-row>
             <el-col>
                 <div class="bg-color">
@@ -86,8 +77,8 @@
                 <div style="padding:20px 20px">
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                         <el-tab-pane label="组织机构查看" name="first">
-                            <div style="padding:20px 20px" id="leftTree">
-                                <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                            <div style="padding:5px 20px" id="leftTree">
+                                    <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                             </div>
                         </el-tab-pane>
                         <el-tab-pane label=" 角色查看" name="second">
@@ -108,7 +99,7 @@
                     <span>人员信息维护页面</span>
                 </div>
                 <el-col :span="15">
-                    <div style="padding:20px 20px 10px 20px" >
+                    <div style="padding:20px 0 20px 20px" >
                         <el-input placeholder="请输入内容" v-model="input">
                             <el-select v-model="select" slot="prepend" placeholder="请选择查询类型" clearable>
                                 <el-option label="工号" value="id"></el-option>
@@ -119,7 +110,12 @@
                             <el-button slot="append" icon="search" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" @click.native="searchMore"></el-button>
                         </el-input>
                     </div>
-                    <div  style="padding:5px 20px" v-show="couldLook">
+                </el-col>
+                <el-col :span="2" style="padding:20px 20px 20px 5px">
+                        <el-button @click.native="showMore" icon="arrow-right"></el-button>
+                </el-col>
+                <el-col :span="7">
+                    <div style="padding:20px 0px" v-show="couldLook">
                         <div class="extra" style="font-size:14px;">状态</div>
                         <el-select v-model="chooseState" slot="prepend" placeholder="请选择状态" clearable style="margin-left:-6px" class="extra1">
                             <el-option label="解锁" value="01"></el-option>
@@ -127,16 +123,8 @@
                             <el-option label="失效" value="03"></el-option>
                             <el-option label="启用" value="04"></el-option>
                         </el-select>
-                        <!--<div class="extra" style="width:60px;margin-left:30px;font-size:14px;">所属部门</div>-->
-                        <!--<el-select  slot="prepend"  v-model="belongPart" placeholder="请选择状态" style="margin-left:-6px" class="extra1">-->
-                            <!--<el-option label="生效" value="7"></el-option>-->
-                            <!--<el-option label="失效" value="8"></el-option>-->
-                        <!--</el-select>-->
                     </div>
                 </el-col>
-                <ei-col :span="3">
-                    <el-button slot="append" @click.native="showMore" icon="arrow-right" style="position: absolute; top:50px;right:327px;background-color: #fbfdff;border-top-left-radius: 0;border-bottom-left-radius: 0;margin-left:-5px;"></el-button>
-                </ei-col>
                 <div style="padding:0 20px">
                     <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
                               v-loading="loading"
@@ -222,9 +210,9 @@
                         <el-table-column prop="job" label="职务" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="" label="操作" width="100">
                             <template scope="scope">
-                                <el-button @click.native="editProp" type="text" size="small" icon="edit"
+                                <el-button @click.native="editEvent" type="text" size="small" icon="edit"
                                            :disabled=scope.row.testDemo></el-button>
-                                <el-button @click.native="deleteProp" type="text" size="small" icon="delete"
+                                <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"
                                            :disabled=scope.row.testDemo></el-button>
                             </template>
                         </el-table-column>

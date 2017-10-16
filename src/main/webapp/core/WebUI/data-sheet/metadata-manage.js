@@ -144,6 +144,7 @@ gmp_onload=function(){
                         console.log(data);
                         em.ruleForm.codeInput = data.objectCode;  //对象代码
                         em.ruleForm.nameInput =data.objectName;//对象名称
+                        em.ruleForm.className =data.className;//实体类
                         em.$refs.table_1.setValue(data.relateTableRowId);
                         em.$refs.templateObj_1.setValue(data.relateTemplateObject);//关联模板对象
                         //em.$refs.templateObj_1.setValue(data.relateTemplate);//关联模板对象

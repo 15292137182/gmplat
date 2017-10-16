@@ -26,6 +26,10 @@
             <single-selection @change-data="getTable_1" :initial="table_1" ref="table_1"></single-selection>
         </el-form-item>
 
+        <el-form-item label="实体类" prop="className">
+            <el-input  v-model="ruleForm.className"></el-input>
+        </el-form-item>
+
         <el-form-item label="关联模板对象" prop="reaTableObj">
              <single-selection @change-data="getTemplateObj_1" :initial="templateObj_1" ref="templateObj_1" ref="multiple">
              </single-selection>

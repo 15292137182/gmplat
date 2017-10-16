@@ -104,6 +104,7 @@ td.el-table__expanded-cell{
     /*width: 215px;*/
     max-height: 350px;
     overflow-y: scroll;
+    z-index: 99999999 !important;
 }
 
 ::-webkit-scrollbar {
@@ -140,4 +141,19 @@ td.el-table__expanded-cell{
 
 #select_tree li:last-child:hover {
     background-color: #fff;
+}
+
+
+/*日期控件显示最上层*/
+.el-picker-panel.el-date-picker{
+    z-index: 9999999999 !important;
+}
+
+/*下拉框在最上层*/
+.el-select-dropdown {
+    z-index: 900000000 !important;
+}
+/*tree的边框去掉*/
+.el-tree {
+    border: none;
 }

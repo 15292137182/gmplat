@@ -88,6 +88,13 @@
                                         </el-col>
                                     </el-row>
                                     <el-row>
+                                        <el-col :span="22">
+                                            <el-form-item label="实体类">
+                                                <span>{{props.row.className}}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
                                         <el-col :span="8">
                                             <el-form-item label="版本">
                                                 <span>{{ props.row.version }}</span>
@@ -100,13 +107,6 @@
                                         </el-col>
                                     </el-row>
                                     <el-row>
-
-
-                                        <!--<el-col :span="9">-->
-                                        <!--<el-form-item label="所属系统">-->
-                                        <!--<span>{{props.row.belongSystem}}</span>-->
-                                        <!--</el-form-item>-->
-                                        <!--</el-col>-->
                                     </el-row>
                                 </el-form>
                             </template>

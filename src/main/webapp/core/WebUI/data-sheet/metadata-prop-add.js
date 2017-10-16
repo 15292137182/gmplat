@@ -62,9 +62,6 @@ var proEm = new Vue({
                     proType: [
                         { required: true,trigger: 'blur',message: '请选择属性类型'}
                     ],
-                    fieldAliasInput: [
-                        { required: true,message: '请输入字段别名'}
-                    ],
                     typeInput: [
                         { required: true,trigger: 'blur',message: '请选择值类型'}
                     ],

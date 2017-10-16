@@ -10,11 +10,26 @@ var useAdd = new Vue({
                     return time.getTime() > Date.now();
                 }
             },
+            belongOrg: {
+                // 配置显示项
+                defaultProps: {
+                    // 树节点显示文字
+                    label: 'orgName',
+                    // 节点id
+                    id: "rowId",
+                    // 父节点信息
+                    parentId: "orgPid",
+                    // 当前节点信息
+                    selfId: "orgId"
+                },
+                // 获取数据接口
+                url: serverPath + "/baseOrg/queryPage",
+            },
             id:'',//工号
             name: '',//姓名
             nickname:'',//昵称
             password:'123456',//初始密码有默认值
-            belongOrg:'',//所属部门
+            //belongOrg:'',//所属部门
             idCard:'',//身份证
             mobilePhone:'',//移动电话
             officePhone:'',//办公电话
@@ -31,6 +46,12 @@ var useAdd = new Vue({
         getTime(date){
             this.hiredate = date;
         },
+        getNodes(data) {
+            console.log(data);
+        },
+        getChecked(data) {
+            console.log(data);
+        },
         conformEvent() {
             if(operate==1){
                 addObj.addOk(function(){
@@ -41,7 +62,7 @@ var useAdd = new Vue({
                             name:useAdd.name,//姓名
                             nickname:useAdd.nickname,//昵称
                             password :useAdd.password,//初始密码有默认值
-                            belongOrg:useAdd.belongOrg,//所属部门
+                            //belongOrg:useAdd.belongOrg,//所属部门
                             idCard:useAdd.idCard,//身份证
                             mobilePhone:useAdd.mobilePhone,//移动电话
                             officePhone:useAdd.officePhone,//办公电话
@@ -65,11 +86,8 @@ var useAdd = new Vue({
             }
             else if(operate==2){
                 editObj.editOk(function(){
-                    if( proEm.valueTypeOrigin_1.value==''){
-                        proEm.valueOriginContent_1.value=proEm.addProForm.comContent
-                    }
                     var data={
-                        "url":serverPath + "/businObjPro/modify",
+                        "url":serverPath + "/user/modify",
                         "jsonData":{
                             rowId: basRight.currentVal.rowId,//本生的ID
                             objRowId: basLeft.currentId,//左边表的ID
@@ -81,9 +99,8 @@ var useAdd = new Vue({
                             valueResourceContent: proEm.valueOriginContent_1.value,//值来源内容
                             fieldAlias: proEm.addProForm.fieldAliasInput, //拓展英文名
                             defaultValue: proEm.addProForm.defaultValue,//默认值
-
                         },
-                        "obj":basTop,
+                        "obj":useAdd,
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
