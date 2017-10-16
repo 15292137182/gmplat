@@ -12,18 +12,9 @@ import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -38,10 +29,10 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy: 2017/10/11  Wen TieHu Create </pre>
+ * <pre>Histroy: 2017/10/11  Wen TieHu Create </pre>
  */
 @RestController
-@RequestMapping(PLAT_SYS_PREFIX+"/core/userGroup")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/userGroup")
 public class UserGroupController extends BaseController {
 
   @Autowired
@@ -111,8 +102,8 @@ public class UserGroupController extends BaseController {
     Condition condition = new ConditionBuilder(UserGroup.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
-      Map<String,Object> map = new HashMap<>();
-      map.put("deleteFlag",TRUE_FLAG);
+      Map<String, Object> map = new HashMap<>();
+      map.put("deleteFlag", TRUE_FLAG);
       UserGroup userGroup = new UserGroup().buildModifyInfo().fromMap(map);
       int update = userGroup.updateById();
       if (update != -1) {
@@ -195,6 +186,23 @@ public class UserGroupController extends BaseController {
       return result(new ServerResult<>(new UserGroup().selectOneById(rowId)));
     } else {
       return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
+  /**
+   * 删除用户组下的用户信息
+   *
+   * @param userGroupRowId 用户组rowId
+   * @param userRowIds     用户rowId 集合
+   * @return 返回操作结果信息
+   */
+  @RequestMapping(value = "/deleteUsers")
+  public PlatResult deleteRoleUsers(String userGroupRowId, String[] userRowIds) {
+    boolean success = userGroupService.deleteUserInGroup(userGroupRowId, userRowIds);
+    if (success) {
+      return success(Message.DELETE_SUCCESS);
+    } else {
+      return fail(Message.INVALID_REQUEST);
     }
   }
 }
