@@ -146,7 +146,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
         if (orgs.size() != 1) {
           return false;
         } else {
-          pId = orgs.get(0).getOrgId();
+          pId = orgs.get(0).getOrgPid();
           if (pId.equals(id)) {
             return false;
           }
