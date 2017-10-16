@@ -15,7 +15,7 @@ var myInlayerButton = new Vue({
     },
     methods:{
         addInlayerTableBase(){
-            this.divIndex =  ibcpLayer.ShowDiv('add-inlayer-table.html','表字段','400px', '320px',function(){
+            this.divIndex =  ibcpLayer.ShowDiv('add-inlayer-table.html','表字段','400px', '400px',function(){
                 myInlayerButton.isEdit = false;
             })
         },

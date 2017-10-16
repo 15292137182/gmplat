@@ -49,17 +49,17 @@
                         <div>
                             <el-row :gutter="20">
                                 <el-col :span="8">
-                                    <el-input  v-model="groupName">
+                                    <el-input  v-model="orgPid">
                                         <template slot="prepend">上级机构</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input v-model="belongSector">
+                                    <el-input v-model="orgId">
                                         <template slot="prepend">机构编号</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input v-model="groupCategory">
+                                    <el-input v-model="orgName">
                                         <template slot="prepend">机构名称</template>
                                     </el-input>
                                 </el-col>
@@ -67,29 +67,29 @@
                             <br>
                             <el-row :gutter="20" style="margin-top:-10px ">
                                 <el-col :span="8">
-                                    <el-input  v-model="desc">
+                                    <el-input  v-model="orgSort">
                                         <template slot="prepend">排序</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input v-model="remarks">
+                                    <el-input v-model="fixedPhone">
                                         <template slot="prepend">固定电话</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-input  v-model="remarks">
+                                    <el-input  v-model="address">
                                         <template slot="prepend">机构地址</template>
                                     </el-input>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="20" style="margin-top:10px">
                                 <el-col :span="8">
-                                    <el-input v-model="remarks">
+                                    <el-input v-model="desp">
                                         <template slot="prepend">说明</template>
                                     </el-input>
                                 </el-col>
                                 <el-col :span="8" :offset="8">
-                                    <el-button type="primary">保存</el-button>
+                                    <el-button type="primary" @click="addClick">保存</el-button>
                                 </el-col>
                             </el-row>
                         </div>
@@ -110,7 +110,7 @@
                 </div>
                 <div style="padding:20px 20px">
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-                        <el-tab-pane label="组织机构查看" name="first">
+                        <el-tab-pane label="人员信息" name="first">
                             <template>
                                 <el-table ref="myData"
                                           :data="tableData"
@@ -133,7 +133,7 @@
                         <el-tab-pane label=" 角色查看" name="second">
                             <template>
                                 <el-table ref="myData"
-                                          :data="tableData"
+                                          :data="tableDataTwo"
                                           @row-click="twoClick" border style="width: 100%"
                                           :highlight-current-row="true"
                                           :height="leftHeight"

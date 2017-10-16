@@ -26,6 +26,13 @@
                 </el-form-item>
             </el-col>
         </el-row>
+        <el-row type="flex" class="row-bg" >
+            <el-col :span="21" :offset="1">
+                <el-form-item label="是否主键" prop="primaryKey">
+                    <el-checkbox v-model="Inlayer.primaryKey"></el-checkbox>
+                </el-form-item>
+            </el-col>
+        </el-row>
         <el-row type="flex" class="row-bg">
             <el-col :span="21" :offset="1">
                 <el-form-item label="说明" prop="desp">

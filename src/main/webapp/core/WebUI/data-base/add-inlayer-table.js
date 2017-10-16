@@ -8,7 +8,9 @@ var addInlayerData = new Vue({
         Inlayer:{
             Cname:'',
             Ename:'',
-            desp:''
+            primaryKey:"",
+            desp:'',
+            primaryKeyData:""
         },
         rules:{
             Cname:[{ required: true, message: '请输入表中文名', trigger: 'blur' },
@@ -22,12 +24,18 @@ var addInlayerData = new Vue({
     },
     methods:{
         addTable(){//新增
+            if(addInlayerData.Inlayer.primaryKey == "true"){
+                addInlayerData.Inlayer.primaryKeyData = true;
+            }else{
+                addInlayerData.Inlayer.primaryKeyData = false;
+            }
             var data = {
                 "url":addInlayerData.addUrl,
                 "jsonData":{
                     relateTableRowId:DatabaseDetails.Robj.rowId,
                     columnCname:addInlayerData.Inlayer.Cname,
                     columnEname:addInlayerData.Inlayer.Ename,
+                    isPk:addInlayerData.Inlayer.primaryKeyData,
                     desp:addInlayerData.Inlayer.desp,
                 },
                 "obj":myInlayerButton,
@@ -94,6 +102,7 @@ var addInlayerData = new Vue({
                 // }
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        console.log(addInlayerData.Inlayer.primaryKey);
                         addObj.addOk(function(){
                             addInlayerData.addTable();
                         })

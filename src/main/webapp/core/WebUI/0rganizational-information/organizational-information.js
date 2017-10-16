@@ -6,7 +6,11 @@ var left;
 var right;
 
 //查用户组信息
-// var searchGroup=serverPath + "/userGroup/queryById";
+var Organization = serverPath + "/baseOrg/queryById";
+//查看组织机构下的人员信息
+var PersonnelInformationUrl = serverPath + "/user/queryByOrg"
+//查看组织机构下的角色信息
+var roleViewUrl = serverPath + "role/queryBySpecify"
 
 gmp_onload=function(){
     basTop = new Vue({
@@ -57,11 +61,11 @@ gmp_onload=function(){
                 // 是否显示checkbook 默认为不显示
                 checkbox: false,
                 // 获取树节点接口
-                url: serverPath + "/userGroup/queryPage",
+                url: serverPath + "/baseOrg/queryPage",
                 // 设置参数 -- 树节点上显示的文字
                 defaultProps: {
                     children: 'children',
-                    label: 'groupName'
+                    label: 'orgName'
                 }
             }
         }),
@@ -70,7 +74,7 @@ gmp_onload=function(){
             getNodes(data) {
                 this.rowId=data.rowId
                 $.ajax({
-                    url:searchGroup,
+                    url:Organization,
                     type:"get",
                     data:{
                         rowId:this.rowId
@@ -79,11 +83,16 @@ gmp_onload=function(){
                     xhrFields: {withCredentials: true},
                     success:function(res){
                         var data=res.resp.content.data;
-                        right.groupName=data.groupName;
-                        right.belongSector=data.belongSector;
-                        right.groupCategory=data.groupCategory;
-                        right.desc=data.desc;
-                        right.remarks=data.remarks;
+                        console.log(data);
+                        right.orgPid=data.orgPid;
+                        right.orgId=data.orgId;
+                        right.orgName=data.orgName;
+                        right.orgSort=data.orgSort;
+                        right.fixedPhone=data.fixedPhone;
+                        right.address=data.address;
+                        right.desp=data.desp;
+                        rightBottom.PersonnelInformation(data.rowId);
+                        rightBottom.roleView(data.rowId);
                     },
                 })
             },
@@ -97,14 +106,18 @@ gmp_onload=function(){
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
-            groupName:'',
-            belongSector:'',
-            groupCategory:'',
-            desc:'',
-            remarks:'',
+            orgPid:"",
+            orgId:"",
+            orgName:"",
+            orgSort:"",
+            fixedPhone:"",
+            address:"",
+            desp:"",
         }),
         methods: {
-
+            addClick(){
+                alert("1");
+            }
         }
     })
 
@@ -151,11 +164,54 @@ gmp_onload=function(){
                 label: 'label',
             },
             activeName:'first',
+            tableDataTwo:[]
         }),
         methods:{
             //tab页点击交换
-            handleClick(){
-
+            handleClick(tablePageName){
+                if(tablePageName.index==0){
+                    console.log("人员查看");
+                }else{
+                    console.log("角色查看");
+                }
+            },
+            //人员信息查询
+            PersonnelInformation(rowId){
+                var strArr = '["'+rowId+'"]';
+                console.log(strArr);
+                $.ajax({
+                    url:PersonnelInformationUrl,
+                    type:"get",
+                    data:{
+                        param:strArr
+                    },
+                    dataType:"json",
+                    xhrFields: {withCredentials: true},
+                    success:function(res){
+                        console.log(res.resp.content.data)
+                        rightBottom.loading=false;
+                        rightBottom.tableData = res.resp.content.data;//数据源
+                    },
+                })
+            },
+            //角色查看
+            roleView(rowId){
+                var strArr = '["'+rowId+'"]';
+                console.log(strArr);
+                $.ajax({
+                    url:roleViewUrl,
+                    type:"get",
+                    data:{
+                        param:strArr
+                    },
+                    dataType:"json",
+                    xhrFields: {withCredentials: true},
+                    success:function(res){
+                        console.log(res.resp.content.data)
+                        rightBottom.loading=false;
+                        rightBottom.tableDataTwo = res.resp.content.data;//数据源
+                    },
+                })
             },
             //点击
             firstClick(){
