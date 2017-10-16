@@ -47,7 +47,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testQueryByOrg() throws Exception {
     //准备参数
-    String param = "[\"1\"]";
+    String param = "[\"2\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryByOrg")

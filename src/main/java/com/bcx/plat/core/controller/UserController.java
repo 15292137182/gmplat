@@ -63,10 +63,10 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryByOrg")
-  public PlatResult queryByOrg(String param) {
+  public PlatResult queryByOrg(String param,Integer pageNum,Integer pageSize) {
     if (UtilsTool.isValid(param)) {
       List list = UtilsTool.jsonToObj(param, List.class);
-      ServerResult serverResult = userService.queryByOrg(list);
+      ServerResult serverResult = userService.queryByOrg(list,pageNum,pageSize);
       return result(serverResult);
     } else {
       return fail(Message.QUERY_FAIL);

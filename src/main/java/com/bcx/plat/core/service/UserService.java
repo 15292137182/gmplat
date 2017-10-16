@@ -89,11 +89,17 @@ public class UserService extends BaseService<User> {
    * @param list 组织机构代码列表
    * @return ServerResult
    */
-  public ServerResult queryByOrg(List list) {
+  public ServerResult queryByOrg(List list, Integer pageNum, Integer pageSize) {
     Condition condition = new ConditionBuilder(User.class).and().in("belongOrg", list).endAnd().buildDone();
-    List<Map> employees = selectMap(condition);
-    if (!employees.isEmpty()) {
-      return successData(Message.QUERY_SUCCESS, employees);
+    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
+    PageResult result;
+    if (UtilsTool.isValid(pageNum)) {
+      result = selectPageMap(condition, null, pageNum, pageSize);
+    } else {
+      result = new PageResult<>(selectMap(condition));
+    }
+    if (UtilsTool.isValid(null == result ? null : result.getResult())) {
+      return successData(Message.QUERY_SUCCESS, result);
     } else {
       return fail(Message.QUERY_FAIL);
     }
