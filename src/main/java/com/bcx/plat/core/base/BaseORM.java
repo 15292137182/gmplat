@@ -378,6 +378,29 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   }
 
   /**
+   * 主从表关联分页查询数据
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param condition         过滤参数
+   * @param pageNum           页码
+   * @param pageSize          页面大小
+   * @return PageResult
+   */
+  public PageResult<Map<String, Object>> associationQueryPage(Class<? extends BeanInterface> primary,
+                                                              Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, Condition condition, int pageNum, int pageSize) {
+    PageResult<Map<String, Object>> execute;
+    if (condition != null) {
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).selectPage(pageNum, pageSize);
+    } else {
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).selectPage(pageNum, pageSize);
+    }
+    return execute;
+  }
+
+  /**
    * 提供关联查询时的过滤条件
    *
    * @param entityClass Class

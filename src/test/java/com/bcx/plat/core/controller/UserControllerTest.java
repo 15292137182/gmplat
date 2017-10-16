@@ -14,13 +14,13 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testQueryPage() throws Exception {
     //准备参数
-    String search = "j";
-    String param = "{\"status\":\"03\"}";
+//    String search = "j";
+    String param = "{\"status\":\"02\"}";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryPage")
             .accept(MediaType.APPLICATION_JSON)
-            .param("search", search)
+//            .param("search", search)
             .param("param", param)
 
     );

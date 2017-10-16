@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 import static java.time.LocalDateTime.now;
 
 /**
@@ -412,4 +413,22 @@ public class UtilsTool {
     return Compare / (24 * 60 * 60 * 1000);
   }
 
+  /**
+   * 为查询添加通用条件，判断该条数据未被逻辑删除
+   *
+   * @param condition   查询条件
+   * @param entityClass 实体类
+   * @return notDelete
+   */
+  public static Condition addNotDeleteCondition(Condition condition, Class<? extends BeanInterface> entityClass) {
+    Condition notDelete;
+    if (null != condition) {
+      notDelete = new ConditionBuilder(entityClass).and().addCondition(condition).or().isNull(entityClass, "etc", "deleteFlag")
+          .notEqual(entityClass, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
+    } else {
+      notDelete = new ConditionBuilder(entityClass).and().or().isNull(entityClass, "etc", "deleteFlag")
+          .notEqual(entityClass, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
+    }
+    return notDelete;
+  }
 }

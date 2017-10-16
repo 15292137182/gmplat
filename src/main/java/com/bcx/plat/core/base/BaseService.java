@@ -344,6 +344,27 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   }
 
   /**
+   * 主从表关联分页查询数据
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param condition         过滤参数
+   * @return PageResult
+   */
+  protected PageResult<Map<String, Object>> leftAssociationQueryPage(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                                     String relationPrimary, String relationSecondary,
+                                                                     Condition condition, int pageNum, int pageSize) {
+    try {
+      return getTClass().newInstance().associationQueryPage(primary, secondary, relationPrimary, relationSecondary, condition, pageNum, pageSize);
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
    * 提供关联查询时的过滤条件
    *
    * @param entityClass Class
