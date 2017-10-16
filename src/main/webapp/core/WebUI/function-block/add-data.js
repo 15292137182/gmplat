@@ -265,7 +265,7 @@ var em=new Vue({
                 em.formTable.Keyword1=data.keywordOne//关键字1
                 em.formTable.Keyword2=data.keywordTwo//关键字2
                 em.formTable.Keyword3=data.keywordThree//关键字3
-                em.isDisabled=true;
+                // em.isDisabled=true;
                 em.$refs.objPro_1.setDisabled(true);
                 if(data.wetherDisplay =="true"){
                     em.checked=true;//是否显示
