@@ -101,7 +101,7 @@ td.el-table__expanded-cell{
 
 /* 树形下拉框样式 */
 #select_tree {
-    width: 215px;
+    /*width: 215px;*/
     max-height: 350px;
     overflow-y: scroll;
 }
