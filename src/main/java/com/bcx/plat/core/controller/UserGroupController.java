@@ -2,19 +2,32 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserGroup;
+import com.bcx.plat.core.entity.UserRelateUserGroup;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserGroupService;
+import com.bcx.plat.core.service.UserRelateUserGroupService;
+import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -29,14 +42,18 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * @author Wen TieHu
  * @version 1.0
- * <pre>Histroy: 2017/10/11  Wen TieHu Create </pre>
+ *          <pre>Histroy: 2017/10/11  Wen TieHu Create </pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/userGroup")
 public class UserGroupController extends BaseController {
 
-  @Autowired
+  @Resource
   private UserGroupService userGroupService;
+  @Resource
+  private UserRelateUserGroupService userRelateUserGroupService;
+  @Resource
+  private UserService userService;
 
   protected List<String> blankSelectFields() {
     return Arrays.asList("groupNumber", "groupName", "belongSector", "groupCategory", "desc", "remarks");
@@ -51,18 +68,20 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/add")
   public PlatResult addUserGroup(@RequestParam Map<String, Object> param) {
+    PlatResult platResult;
     String groupName = String.valueOf(param.get("groupName"));
     if (isValid(groupName)) {
       UserGroup userGroup = new UserGroup().buildCreateInfo().fromMap(param);
       int insert = userGroup.insert();
       if (insert != -1) {
-        return successData(NEW_ADD_SUCCESS, userGroup);
+        platResult = successData(NEW_ADD_SUCCESS, userGroup);
       } else {
-        return fail(NEW_ADD_FAIL);
+        platResult = fail(NEW_ADD_FAIL);
       }
     } else {
-      return fail(DATA_CANNOT_BE_EMPTY);
+      platResult = fail(DATA_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
   /**
@@ -73,22 +92,24 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/modify")
   public PlatResult modifyUserGroup(@RequestParam Map<String, Object> param) {
+    PlatResult platResult;
     if (UtilsTool.isValid(param.get("rowId"))) {
       String groupName = String.valueOf(param.get("groupName"));
       if (isValid(groupName)) {
         UserGroup userGroup = new UserGroup().buildModifyInfo().fromMap(param);
         int update = userGroup.updateById();
         if (update != -1) {
-          return successData(NEW_ADD_SUCCESS, userGroup);
+          platResult = successData(NEW_ADD_SUCCESS, userGroup);
         } else {
-          return fail(UPDATE_FAIL);
+          platResult = fail(UPDATE_FAIL);
         }
       } else {
-        return fail(DATA_CANNOT_BE_EMPTY);
+        platResult = fail(DATA_CANNOT_BE_EMPTY);
       }
     } else {
-      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
   /**
@@ -99,6 +120,7 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/logicDelete")
   public PlatResult deleteLogic(String rowId) {
+    PlatResult platResult;
     Condition condition = new ConditionBuilder(UserGroup.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
@@ -107,13 +129,14 @@ public class UserGroupController extends BaseController {
       UserGroup userGroup = new UserGroup().buildModifyInfo().fromMap(map);
       int update = userGroup.updateById();
       if (update != -1) {
-        return successData(Message.DELETE_SUCCESS, userGroups);
+        platResult = successData(Message.DELETE_SUCCESS, userGroups);
       } else {
-        return fail(Message.DELETE_FAIL);
+        platResult = fail(Message.DELETE_FAIL);
       }
     } else {
-      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
 
@@ -125,19 +148,21 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/physicsDelete")
   public PlatResult deletePhysics(String rowId) {
+    PlatResult platResult;
     Condition condition = new ConditionBuilder(UserGroup.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
       UserGroup userGroup = new UserGroup();
       int del = userGroup.deleteById(rowId);
       if (del != -1) {
-        return successData(Message.DELETE_SUCCESS, userGroups);
+        platResult = successData(Message.DELETE_SUCCESS, userGroups);
       } else {
-        return fail(Message.DELETE_FAIL);
+        platResult = fail(Message.DELETE_FAIL);
       }
     } else {
-      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
   /**
@@ -153,6 +178,7 @@ public class UserGroupController extends BaseController {
   @GetMapping("/queryPage")
   @SuppressWarnings("unchecked")
   public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    PlatResult platResult;
     LinkedList<Order> orders = dataSort(UserGroup.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
@@ -168,10 +194,11 @@ public class UserGroupController extends BaseController {
       result = new PageResult<>(userGroupService.selectMap(condition, orders));
     }
     if (isValid(result)) {
-      return result(new ServerResult<>(result));
+      platResult = result(new ServerResult<>(result));
     } else {
-      return fail(Message.QUERY_FAIL);
+      platResult = fail(Message.QUERY_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -182,11 +209,42 @@ public class UserGroupController extends BaseController {
    */
   @GetMapping("/queryById")
   public PlatResult queryById(String rowId) {
+    PlatResult platResult;
     if (isValid(rowId)) {
-      return result(new ServerResult<>(new UserGroup().selectOneById(rowId)));
+      platResult = result(new ServerResult<>(new UserGroup().selectOneById(rowId)));
     } else {
-      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
+  }
+
+  /**
+   * 根据用户组查询用户信息
+   *
+   * @param userGroupRowId 用户组唯一标示
+   * @return 用户信息
+   */
+  @GetMapping("/queryUserGroupUser")
+  @SuppressWarnings("unchecked")
+  public PlatResult queryUserGroupUser(String userGroupRowId) {
+    PlatResult platResult;
+    List list = new ArrayList();
+    Condition condition = new ConditionBuilder(UserRelateUserGroup.class).and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
+    List<UserRelateUserGroup> userRelateUserGroups = userRelateUserGroupService.select(condition);
+    if (userRelateUserGroups != null && userRelateUserGroups.size() > 0) {
+      for (UserRelateUserGroup userGroup : userRelateUserGroups) {
+        String userRowId = userGroup.getUserRowId();
+        Condition buildDone = new ConditionBuilder(User.class).and().equal("rowId", userRowId).endAnd().buildDone();
+        List<User> users = userService.select(buildDone);
+        if (users != null && users.size() > 0) {
+          list.add(users);
+        }
+      }
+      platResult = successData(QUERY_SUCCESS, list);
+    } else {
+      platResult = fail(QUERY_FAIL);
+    }
+    return platResult;
   }
 
   /**
