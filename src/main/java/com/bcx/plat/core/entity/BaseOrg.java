@@ -40,11 +40,11 @@ public class BaseOrg extends BaseEntity<BaseOrg> {
     this.orgName = orgName;
   }
 
-  public int getOrgSort() {
+  public Integer getOrgSort() {
     return orgSort;
   }
 
-  public void setOrgSort(int orgSort) {
+  public void setOrgSort(Integer orgSort) {
     this.orgSort = orgSort;
   }
 
