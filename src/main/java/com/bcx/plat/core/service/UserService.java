@@ -40,39 +40,24 @@ public class UserService extends BaseService<User> {
   /**
    * 人员信息分页查询
    *
-   * @param rowId    所属部门id
    * @param search   按照空格查询
-   * @param searchBy 空格查询的精确查询（是不是很拗口？我也hin无奈啊）
    * @param param    按照指定字段查询
    * @param pageNum  页码
    * @param pageSize 页面大小
    * @param order    排序方式
    * @return ServerResult
    */
-  public ServerResult queryPage(String rowId, String search, String searchBy, String param, Integer pageNum, Integer pageSize, String order) {
+  public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(order);
-    Condition condition = null;
-    if (UtilsTool.isValid(param)) {//判断是否根据指定字段查询
-      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
-    } else if (UtilsTool.isValid(search)) {//模糊查询
-      condition = UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or
-    }
-    if (UtilsTool.isValid(searchBy)) {
-      if (null != condition) {//精确查询
-        condition = new ConditionBuilder(User.class).and()
-            .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
-            .or().addCondition(condition).endOr().endAnd().buildDone();
+    Condition condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or;
+    if (UtilsTool.isValid(param)) {//根据指定字段查询
+      if (null == condition) {
+        condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
       } else {
         condition = new ConditionBuilder(User.class).and()
-            .addCondition(UtilsTool.convertMapToAndCondition(User.class, UtilsTool.jsonToObj(searchBy, Map.class)))
+            .addCondition(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)))
+            .addCondition(condition)
             .endAnd().buildDone();
-      }
-    }
-    if (UtilsTool.isValid(rowId)) {
-      if (null != condition) {//根据组织机构查询
-        condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).addCondition(condition).endAnd().buildDone();
-      } else {
-        condition = new ConditionBuilder(User.class).and().equal("belongOrg", rowId).endAnd().buildDone();
       }
     }
     if (null != condition) {
