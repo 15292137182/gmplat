@@ -8,6 +8,7 @@ import com.bcx.plat.core.base.BaseEntity;
  * Created By YoungerOu at 2017/10/12
  */
 public class Role extends BaseEntity<Role> {
+
   private String roleId;//角色编号
   private String roleName;//角色名称
   private String roleType;//角色类型（S/U）

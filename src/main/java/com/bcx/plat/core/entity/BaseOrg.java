@@ -10,7 +10,7 @@ public class BaseOrg extends BaseEntity<BaseOrg> {
   private String orgPid;  // 组织机构父编号
   private String orgId; // 组织机构编号
   private String orgName; // 组织机构名称
-  private int orgSort;  // 组织机构序号
+  private Integer orgSort;  // 组织机构序号
   private String orgLevel;  // 组织机构等级
   private String fixedPhone;  // 固定电话
   private String address; // 地址
