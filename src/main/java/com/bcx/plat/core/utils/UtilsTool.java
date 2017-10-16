@@ -421,14 +421,13 @@ public class UtilsTool {
    * @return notDelete
    */
   public static Condition addNotDeleteCondition(Condition condition, Class<? extends BeanInterface> entityClass) {
-    Condition notDelete;
     if (null != condition) {
-      notDelete = new ConditionBuilder(entityClass).and().addCondition(condition).or().isNull(entityClass, "etc", "deleteFlag")
+      condition = new ConditionBuilder(entityClass).and().addCondition(condition).or().isNull(entityClass, "etc", "deleteFlag")
           .notEqual(entityClass, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
     } else {
-      notDelete = new ConditionBuilder(entityClass).and().or().isNull(entityClass, "etc", "deleteFlag")
+      condition = new ConditionBuilder(entityClass).and().or().isNull(entityClass, "etc", "deleteFlag")
           .notEqual(entityClass, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
     }
-    return notDelete;
+    return condition;
   }
 }

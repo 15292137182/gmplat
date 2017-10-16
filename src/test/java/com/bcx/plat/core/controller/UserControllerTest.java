@@ -48,11 +48,15 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   public void testQueryByOrg() throws Exception {
     //准备参数
     String param = "[\"2\"]";
+    String pageNum="1";
+    String pageSize="10";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryByOrg")
             .accept(MediaType.APPLICATION_JSON)
             .param("param", param)
+            .param("pageNum", pageNum)
+            .param("pageSize", pageSize)
     );
     //显示结果
     showResult(resultActions);

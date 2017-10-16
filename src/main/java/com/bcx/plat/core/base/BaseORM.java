@@ -357,7 +357,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   }
 
   /**
-   * 主从表关联查询数据
+   * 主从表关联查询数据 - 查询全列
    *
    * @param primary           主表Class
    * @param secondary         从表Class
@@ -378,24 +378,50 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   }
 
   /**
+   * 主从表关联查询数据 - 指定查询列
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param fields            指定查询列
+   * @param condition         过滤参数
+   * @return List
+   */
+  public List<Map<String, Object>> associationQuery(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                    String relationPrimary, String relationSecondary,
+                                                    Collection<Field> fields, Condition condition, List<Order> orders) {
+    List<Map<String, Object>> execute;
+    if (condition != null) {
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(condition).orderBy(orders).execute();
+    } else {
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).orderBy(orders).execute();
+    }
+    return execute;
+  }
+
+  /**
    * 主从表关联分页查询数据
    *
    * @param primary           主表Class
    * @param secondary         从表Class
    * @param relationPrimary   主表连接条件
    * @param relationSecondary 从表连接条件
+   * @param fields            指定查询列
    * @param condition         过滤参数
    * @param pageNum           页码
    * @param pageSize          页面大小
+   * @param orders            排序方式
    * @return PageResult
    */
-  public PageResult<Map<String, Object>> associationQueryPage(Class<? extends BeanInterface> primary,
-                                                              Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, Condition condition, int pageNum, int pageSize) {
+  public PageResult<Map<String, Object>> associationQueryPage(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                              String relationPrimary, String relationSecondary, Collection<Field> fields,
+                                                              Condition condition, int pageNum, int pageSize, List<Order> orders) {
     PageResult<Map<String, Object>> execute;
     if (condition != null) {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).selectPage(pageNum, pageSize);
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(condition).orderBy(orders).selectPage(pageNum, pageSize);
     } else {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).selectPage(pageNum, pageSize);
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).orderBy(orders).selectPage(pageNum, pageSize);
     }
     return execute;
   }

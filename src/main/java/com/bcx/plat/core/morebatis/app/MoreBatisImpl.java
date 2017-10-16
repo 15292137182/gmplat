@@ -1,17 +1,11 @@
 package com.bcx.plat.core.morebatis.app;
 
-import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
-
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.command.DeleteAction;
 import com.bcx.plat.core.morebatis.command.InsertAction;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
-import com.bcx.plat.core.morebatis.component.Field;
-import com.bcx.plat.core.morebatis.component.FieldCondition;
-import com.bcx.plat.core.morebatis.component.JoinTable;
-import com.bcx.plat.core.morebatis.component.SubAttribute;
-import com.bcx.plat.core.morebatis.component.Table;
+import com.bcx.plat.core.morebatis.component.*;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
@@ -24,14 +18,13 @@ import com.bcx.plat.core.morebatis.phantom.FieldSource;
 import com.bcx.plat.core.morebatis.phantom.SqlComponentTranslator;
 import com.bcx.plat.core.morebatis.phantom.TableSource;
 import com.bcx.plat.core.utils.UtilsTool;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.bcx.plat.core.utils.UtilsTool.underlineToCamel;
 
 @Component
 public class MoreBatisImpl implements MoreBatis {
@@ -47,7 +40,7 @@ public class MoreBatisImpl implements MoreBatis {
   private List<EntityEntriesBuilder> entityEntriesBuilders;
 
   public MoreBatisImpl(SuitMapper suitMapper, SqlComponentTranslator translator,
-      Collection entityEntries, String defaultMapColumnAlias) {
+                       Collection entityEntries, String defaultMapColumnAlias) {
 //    if (defaultMapColumnAlias==null)
     this.suitMapper = suitMapper;
     this.translator = translator;
@@ -55,31 +48,31 @@ public class MoreBatisImpl implements MoreBatis {
     entityPks = new HashMap<>();
     entityTables = new HashMap<>();
     aliasMap = new HashMap<>();
-    List<EntityEntriesBuilder> entriesBuilders=new LinkedList<>();
+    List<EntityEntriesBuilder> entriesBuilders = new LinkedList<>();
     for (Object entry : entityEntries) {
       EntityEntry entityEntry;
       if (entry instanceof EntityEntry) {
         entityEntry = (EntityEntry) entry;
       } else if (entry instanceof EntityEntryBuilder) {
         entityEntry = ((EntityEntryBuilder) entry).getEntry();
-      } else if (entry instanceof EntityEntriesBuilder){
+      } else if (entry instanceof EntityEntriesBuilder) {
         entriesBuilders.add((EntityEntriesBuilder) entry);
         continue;
-      }else{
+      } else {
         throw new UnsupportedOperationException("你输入的提供的实体类注册信息不正确");
       }
       registeEntityEntry(entityEntry);
     }
-    entityEntriesBuilders=entriesBuilders;
+    entityEntriesBuilders = entriesBuilders;
   }
 
-  public void init(){
+  public void init() {
     for (EntityEntriesBuilder entriesBuilder : entityEntriesBuilders) {
       for (EntityEntry entityEntry : entriesBuilder.getEntries(this)) {
         registeEntityEntry(entityEntry);
       }
     }
-    entityEntriesBuilders=null;
+    entityEntriesBuilders = null;
   }
 
   private void registeEntityEntry(EntityEntry entityEntry) {
@@ -145,7 +138,7 @@ public class MoreBatisImpl implements MoreBatis {
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    *
    * @param entityClass 实体类
-   * @param alias 实体类属性名称
+   * @param alias       实体类属性名称
    */
   public FieldSource getColumnOrEtcByAlias(Class entityClass, String alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
@@ -164,7 +157,7 @@ public class MoreBatisImpl implements MoreBatis {
    * 根据实体类的class对象与实体类属性名称获取对应字段对象
    *
    * @param entityClass 实体类
-   * @param alias 实体类属性名称
+   * @param alias       实体类属性名称
    */
   public List<Field> getColumnByAlias(Class entityClass, Collection<String> alias) {
     final Map<String, Field> entityColumn = aliasMap.get(entityClass);
@@ -321,29 +314,29 @@ public class MoreBatisImpl implements MoreBatis {
   /**
    * 两个表的inner join查询
    *
-   * @param primary 主表class对象
-   * @param secondary 从表class对象
-   * @param relationPrimary 主表中与从表关联的字段
+   * @param primary           主表class对象
+   * @param secondary         从表class对象
+   * @param relationPrimary   主表中与从表关联的字段
    * @param relationSecondary 从表中与主表关联的字段
    * @return 未设置条件的查询语句对象
    */
   public QueryAction select(Class primary,
-      Class secondary, String relationPrimary, String relationSecondary) {
+                            Class secondary, String relationPrimary, String relationSecondary) {
     return select(primary, secondary, relationPrimary, relationSecondary, JoinType.INNER_JOIN);
   }
 
   /**
-   * 两个表join查询
+   * 两个表join查询 - 查询全列
    *
-   * @param primary 主表class对象
-   * @param secondary 从表class对象
-   * @param relationPrimary 主表中与从表关联的字段
+   * @param primary           主表class对象
+   * @param secondary         从表class对象
+   * @param relationPrimary   主表中与从表关联的字段
    * @param relationSecondary 从表中与主表关联的字段
-   * @param joinType join类型
+   * @param joinType          join类型
    * @return 未设置条件的查询语句对象
    */
   public QueryAction select(Class primary,
-      Class secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
+                            Class secondary, String relationPrimary, String relationSecondary, JoinType joinType) {
     HashMap<String, Field> columns = new HashMap<>();
     for (Field Field : entityColumns.get(primary)) {
       columns.put(Field.getAlias(), Field);
@@ -355,6 +348,26 @@ public class MoreBatisImpl implements MoreBatis {
     Field secondaryField = getColumnByAlias(secondary, relationSecondary);
     final Collection values = columns.values();
     return selectStatement().select(values).from(
+        new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
+            .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
+  }
+
+  /**
+   * 两个表join查询 - 指定查询列
+   *
+   * @param primary           主表class对象
+   * @param secondary         从表class对象
+   * @param fields            指定查询列
+   * @param relationPrimary   主表中与从表关联的字段
+   * @param relationSecondary 从表中与主表关联的字段
+   * @param joinType          join类型
+   * @return 未设置条件的查询语句对象
+   */
+  public QueryAction select(Class primary,
+                            Class secondary, String relationPrimary, String relationSecondary, Collection<Field> fields, JoinType joinType) {
+    Field primaryField = getColumnByAlias(primary, relationPrimary);
+    Field secondaryField = getColumnByAlias(secondary, relationSecondary);
+    return selectStatement().select(fields).from(
         new JoinTable(entityTables.get(primary), joinType, entityTables.get(secondary))
             .on(new FieldCondition(primaryField, Operator.EQUAL, secondaryField)));
   }
@@ -374,7 +387,7 @@ public class MoreBatisImpl implements MoreBatis {
    * 更新操作（未设置条件）
    *
    * @param entity 实体类的对象
-   * @param value 要更新的值(支持null)
+   * @param value  要更新的值(支持null)
    */
   @SuppressWarnings("unchecked")
   public UpdateAction update(Class entity, Map<String, Object> value) {
@@ -399,7 +412,7 @@ public class MoreBatisImpl implements MoreBatis {
    * 单行插入
    *
    * @param entity 实体类的class
-   * @param value 插入数据库的单行数据
+   * @param value  插入数据库的单行数据
    * @return 未执行的插入语句对象
    */
   public InsertAction insert(Class entity, Map<String, Object> value) {

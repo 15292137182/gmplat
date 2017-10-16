@@ -120,7 +120,7 @@ public interface MoreBatis {
 
 
   /**
-   * 两个表join查询
+   * 两个表join查询 - 查询全列
    *
    * @param primary           主表class对象
    * @param secondary         从表class对象
@@ -131,6 +131,20 @@ public interface MoreBatis {
    */
   QueryAction select(Class primary,
                      Class secondary, String relationPrimary, String relationSecondary, JoinType joinType);
+
+  /**
+   * 两个表join查询 - 指定查询列
+   *
+   * @param primary           主表class对象
+   * @param secondary         从表class对象
+   * @param relationPrimary   主表中与从表关联的字段
+   * @param relationSecondary 从表中与主表关联的字段
+   * @param fields            指定查询列
+   * @param joinType          join类型
+   * @return 未设置条件的查询语句对象
+   */
+  QueryAction select(Class primary,
+                     Class secondary,  String relationPrimary, String relationSecondary,Collection<Field> fields, JoinType joinType);
 
   QueryAction selectStatement();
 
