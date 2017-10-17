@@ -97,7 +97,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testLock() throws Exception {
     //准备参数
-    String rowId = "123456789";
+    String rowId = "[\"123456789\",\"123456790\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/lock")
@@ -111,7 +111,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testUnLock() throws Exception {
     //准备参数
-    String rowId = "123456789";
+    String rowId = "[\"123456789\",\"123456790\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/unLock")
@@ -125,7 +125,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testInUse() throws Exception {
     //准备参数
-    String rowId = "123456789";
+    String rowId = "[\"123456789\",\"123456790\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/inUse")
@@ -139,10 +139,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testOutOfUse() throws Exception {
     //准备参数
-    String rowId = "123456789";
+    String rowId = "[\"123456789\",\"123456790\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/inUse")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/outOfUse")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
@@ -153,7 +153,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testResetPassword() throws Exception {
     //准备参数
-    String rowId = "123456789";
+    String rowId = "[\"123456789\",\"123456790\"]";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/resetPassword")
@@ -167,7 +167,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testAdd() throws Exception {
     //准备参数
-    String id = "004";
+    String id = "005";
     String name = "zhangsan";
     String password = "12345";
     String belongOrg = "2";
