@@ -55,21 +55,13 @@ public class UserService extends BaseService<User> {
     }
     condition = UtilsTool.addNotDeleteCondition(condition, User.class);
     //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称
-    Collection<Field> fields = moreBatis.getColumns(User.class);
+    Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
-//    QueryAction queryAction = moreBatis.selectStatement().select(fields)
-//        .from(new JoinTable(moreBatis.getTable(User.class), JoinType.LEFT_JOIN, moreBatis.getTable(BaseOrg.class))
-//            .on(new FieldCondition(moreBatis.getColumnByAlias(User.class, "belongOrg"),
-//                Operator.EQUAL, moreBatis.getColumnByAlias(BaseOrg.class, "rowId"))))
-//        .where(condition).orderBy(orders);
     PageResult<Map<String, Object>> users;
     if (UtilsTool.isValid(pageNum)) {//判断是否分页查询
-      //TODO 优化代码
       users = leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, pageNum, pageSize, orders);
-//      users = queryAction.selectPage(pageNum, pageSize);
     } else {
       users = new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, orders));
-//      users = new PageResult<>(queryAction.execute());
     }
     if (UtilsTool.isValid(null == users ? null : users.getResult())) {
       return new ServerResult<>(users);

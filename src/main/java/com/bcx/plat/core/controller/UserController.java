@@ -105,7 +105,7 @@ public class UserController extends BaseController {
     Object id = param.get("id");
     Object name = param.get("name");
     if (null != id && !"".equals(id.toString().trim())
-            && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
 
       //根据工号查询是否已存在该工号的记录
       Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
@@ -189,7 +189,7 @@ public class UserController extends BaseController {
       Object id = param.get("id");
       Object name = param.get("name");
       if (null != id && !"".equals(id.toString().trim())
-              && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
@@ -256,8 +256,16 @@ public class UserController extends BaseController {
   public PlatResult delete(String rowId) {
     if (UtilsTool.isValid(rowId)) {
       User user = new User().buildDeleteInfo();
-      if (user.logicalDeleteById(rowId) != -1) {
-        return successData(Message.DELETE_SUCCESS, user);
+      int delete;
+      if (rowId.startsWith("[") && rowId.endsWith("]")) {
+        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
+        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
+        delete = userService.update(user, condition);
+      } else {
+        delete = user.logicalDeleteById(rowId);
+      }
+      if (delete != -1) {
+        return success(Message.DELETE_SUCCESS);
       } else {
         return fail(Message.DELETE_FAIL);
       }
@@ -276,20 +284,11 @@ public class UserController extends BaseController {
   @PostMapping("/lock")
   public PlatResult lock(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, Object> map = new HashMap<>();
+      Map<String, String> map = new HashMap<>();
+      map.put("rowId", rowId);
       map.put("status", BaseConstants.LOCKED);
       map.put("accountLockedTime", UtilsTool.getDateTimeNow());
-      User user = new User().fromMap(map).buildModifyInfo();
-      int update;
-      if (rowId.startsWith("[") && rowId.endsWith("]")) {
-        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-        update = userService.update(user, condition);
-      } else {
-        user.setRowId(rowId);
-        update = user.updateById();
-      }
-      if (update != -1) {
+      if (updateByMap(map) != -1) {
         return success(Message.OPERATOR_SUCCESS);
       } else {
         return fail(Message.OPERATOR_FAIL);
@@ -308,20 +307,11 @@ public class UserController extends BaseController {
   @PostMapping("/unLock")
   public PlatResult unLock(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, Object> map = new HashMap<>();
+      Map<String, String> map = new HashMap<>();
+      map.put("rowId", rowId);
       map.put("status", BaseConstants.UNLOCK);
       map.put("accountLockedTime", "");
-      User user = new User().fromMap(map).buildModifyInfo();
-      int update;
-      if (rowId.startsWith("[") && rowId.endsWith("]")) {
-        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-        update = userService.update(user, condition);
-      } else {
-        user.setRowId(rowId);
-        update = user.updateById();
-      }
-      if (update != -1) {
+      if (updateByMap(map) != -1) {
         return success(Message.OPERATOR_SUCCESS);
       } else {
         return fail(Message.OPERATOR_FAIL);
@@ -329,6 +319,28 @@ public class UserController extends BaseController {
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+  }
+
+  /**
+   * 公用方法 - 修改状态
+   *
+   * @param map 放入状态相关信息
+   * @return update 更新条目数
+   */
+  private int updateByMap(Map<String, String> map) {
+    String rowId = map.get("rowId");
+    int update;
+    if (rowId.startsWith("[") && rowId.endsWith("]")) {
+      map.remove("rowId");
+      User user = new User().fromMap(map).buildModifyInfo();
+      List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
+      Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
+      update = userService.update(user, condition);
+    } else {
+      User user = new User().fromMap(map).buildModifyInfo();
+      update = user.updateById();
+    }
+    return update;
   }
 
   /**
@@ -340,19 +352,10 @@ public class UserController extends BaseController {
   @PostMapping("/inUse")
   public PlatResult inUse(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, Object> map = new HashMap<>();
+      Map<String, String> map = new HashMap<>();
+      map.put("rowId", rowId);
       map.put("status", BaseConstants.IN_USE);
-      User user = new User().fromMap(map).buildModifyInfo();
-      int update;
-      if (rowId.startsWith("[") && rowId.endsWith("]")) {
-        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-        update = userService.update(user, condition);
-      } else {
-        user.setRowId(rowId);
-        update = user.updateById();
-      }
-      if (update != -1) {
+      if (updateByMap(map) != -1) {
         return success(Message.OPERATOR_SUCCESS);
       } else {
         return fail(Message.OPERATOR_FAIL);
@@ -371,19 +374,10 @@ public class UserController extends BaseController {
   @PostMapping("/outOfUse")
   public PlatResult outOfUse(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, Object> map = new HashMap<>();
+      Map<String, String> map = new HashMap<>();
+      map.put("rowId", rowId);
       map.put("status", BaseConstants.OUT_OF_USE);
-      User user = new User().fromMap(map).buildModifyInfo();
-      int update;
-      if (rowId.startsWith("[") && rowId.endsWith("]")) {
-        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-        update = userService.update(user, condition);
-      } else {
-        user.setRowId(rowId);
-        update = user.updateById();
-      }
-      if (update != -1) {
+      if (updateByMap(map) != -1) {
         return success(Message.OPERATOR_SUCCESS);
       } else {
         return fail(Message.OPERATOR_FAIL);
@@ -403,19 +397,10 @@ public class UserController extends BaseController {
   public PlatResult resetPassword(String rowId) {
     if (UtilsTool.isValid(rowId)) {
       String defaultPassword = SystemSettingManager.getDefaultPwd();
-      Map<String, Object> map = new HashMap<>();
+      Map<String, String> map = new HashMap<>();
+      map.put("rowId", rowId);
       map.put("password", defaultPassword);
-      User user = new User().buildModifyInfo().fromMap(map);
-      int update = -1;
-      if (rowId.startsWith("[") && rowId.endsWith("]")) {
-        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-        update = userService.update(user, condition);
-      } else {
-        user.setRowId(rowId);
-        update = user.updateById();
-      }
-      if (update != -1) {
+      if (updateByMap(map) != -1) {
         return success(Message.OPERATOR_SUCCESS);
       } else {
         return fail(Message.OPERATOR_FAIL);
