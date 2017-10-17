@@ -495,38 +495,43 @@ Vue.component("base-tree", {
             // console.log(parent);
             // console.log(self);
             // 遍历原数组
-            for(var i = 0; i < jsonArr.length; i++) {
-                // 向每一个json数组对象下添加 children 属性值
-                jsonArr[i].children = [];
-                // 若当前json对象的节点信息为ROOT 说明其为根节点
-                if(jsonArr[i][self] == "ROOT") {
-                    // 将当前节点 push 到数据 data 中
-                    data.push(jsonArr[i]);
-                }
-            }
-
-            for(var i = 0; i < jsonArr.length; i++) {
-                // 向每一个json数组对象下添加 children 属性值
-                jsonArr[i].children = [];
-                // 若当前json对象下有父节点信息 且为二级根节点
-                if(jsonArr[i][self] != "ROOT") {
-                    // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
-                    for(var j = 0;j < jsonArr.length;j++) {
-                        if(jsonArr[j][parent] == jsonArr[i][self]) {
-                            jsonArr[i].children.push(jsonArr[j]);
-                        }
+            if(parent && self) {
+                for(var i = 0; i < jsonArr.length; i++) {
+                    // 向每一个json数组对象下添加 children 属性值
+                    jsonArr[i].children = [];
+                    // 若当前json对象的节点信息为ROOT 说明其为根节点
+                    if(jsonArr[i][self] == "ROOT" && jsonArr[i][parent] == "") {
+                        // 将当前节点 push 到数据 data 中
+                        data.push(jsonArr[i]);
                     }
                 }
-                // 当前节点为一级根节点
-                if(jsonArr[i][parent] == "ROOT") {
-                    // console.log(jsonArr[i]);
-                    // console.log(data[0]);
-                    nodes.push(jsonArr[i]);
-                }
-            }
 
-            // 将一级根节点插入根节点下
-            data[0].children = nodes;
+                for(var i = 0; i < jsonArr.length; i++) {
+                    // 向每一个json数组对象下添加 children 属性值
+                    jsonArr[i].children = [];
+                    // 若当前json对象下有父节点信息 且为二级根节点
+                    if(jsonArr[i][self] != "ROOT" && jsonArr[i][parent] != "") {
+                        // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
+                        for(var j = 0;j < jsonArr.length;j++) {
+                            if(jsonArr[j][parent] == jsonArr[i][self]) {
+                                jsonArr[i].children.push(jsonArr[j]);
+                            }
+                        }
+                    }
+                    // 当前节点为一级根节点
+                    if(jsonArr[i][parent] == "ROOT") {
+                        // console.log(jsonArr[i]);
+                        // console.log(data[0]);
+                        nodes.push(jsonArr[i]);
+                    }
+                }
+
+                // 将一级根节点插入根节点下
+                data[0].children = nodes;
+            }else {
+                // 如果没指定父节点信息 当前节点信息 说明当前树结构是一级树
+                data = jsonArr;
+            }
 
             // console.log(data);
             return data;
@@ -624,7 +629,7 @@ Vue.component("select-tree", {
                     // console.log(data);
                     // console.log(node);
                     if(data.orgId == "ROOT" && data.orgPid == "") {
-                        return node.disabled = true;
+                        // return node.disabled = true;
                     }
                 }
             },

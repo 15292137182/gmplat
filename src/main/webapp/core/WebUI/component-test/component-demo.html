@@ -27,14 +27,23 @@
 </head>
 <body>
     <el-row id="component" v-cloak>
+        <!-- 树形下拉框 -->
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">树形下拉框</el-col>
             <el-col :span="10">
                 <select-tree :initial="config" @select-node="getNodes" @click-node="getNodes" @checked-node="getChecked"></select-tree>
             </el-col>
         </el-col>
+        <!--一级树结构-->
         <el-col :span="24" class="com_block">
-            <el-col :span="4" class="label">基本树结构</el-col>
+            <el-col :span="4" class="label">一级树结构</el-col>
+            <el-col :span="10">
+                <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+            </el-col>
+        </el-col>
+        <!--层级树结构-->
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">层级树结构</el-col>
             <el-col :span="10">
                 <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
             </el-col>
@@ -47,17 +56,23 @@
             el: "#component",
             data() {
                 return {
+                    // 一级树结构配置
                     treeData: {
-                        // 是否显示checkbook 默认为不显示
+                        // 显示复选框
                         checkbox: true,
+                        // 默认选中项 当 checkbox 为 true 时  编辑时可以用
+                        checked: [3],
+                        // 配置显示项 必须配置！
+                        defaultProps: {
+                            // 树节点显示文字
+                            label: 'groupNumber',
+                            // 节点id
+                            id: "rowId"
+                        },
                         // 获取树节点接口
                         url: serverPath + "/userGroup/queryPage",
-                        // 设置参数 -- 树节点上显示的文字
-                        defaultProps: {
-                            children: 'children',
-                            label: 'groupName'
-                        }
                     },
+                    // 层级树结构配置
                     config: {
                         // 设置清空按钮
                         clearable: false,
