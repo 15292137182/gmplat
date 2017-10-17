@@ -5,18 +5,28 @@
     <title>组织机构信息</title>
     <script src="../Public/publicjs.js"></script>
     <style>
+        html{
+            overflow: hidden;
+        }
         .el-input {
             width: 300px;
         }
         .el-icon-delete{
             color: white;
         }
-        .el-input__inner{
+        #topInput .el-input__inner{
             width:200px;
             height:30px;
         }
-        .el-textarea__inner{
+        #topInput .el-textarea__inner{
             width:550px;
+        }
+        .spanFloat{
+            position: absolute;
+            top:-12px;
+            left:20px;
+            background: white;
+            font-weight:bold;
         }
     </style>
 </head>
@@ -29,185 +39,138 @@
         </el-col>
     </el-row>
 </div>
-
-<el-col :span="4" id="left" style="margin-left:15px;">
-    <div class="allBorder" id="allBorderHeight" style="height:500px">
-        <el-row>
-            <el-col>
-                <div class="bg-color">
-                    <span>树状结构检索</span>
-                </div>
-                <div style="padding:20px 20px">
-                    <el-col style="padding:10px 5px">
-                        <base-tree :initial="treeData" ref="org" @click-node="getNodes" @checked-node="getChecked"></base-tree>
-                    </el-col>
-                </div>
-            </el-col>
-        </el-row>
-    </div>
-</el-col>
-
-<el-col :span="19" id="right" style="margin-left:15px">
-    <div class="allBorder">
-        <el-row>
-            <el-col>
-                <div class="bg-color">
-                    <span>详细信息</span>
-                </div>
-                <el-col :span="24">
-                    <div style="padding:10px 20px 10px 20px" >
-                        <el-form :label-position="labelPosition" ref="formTable" label-width="70px" :model="formTable">
-                            <el-row type="flex" class="row-bg">
-                                <el-col :span="6">
-                                    <el-form-item label="上级机构" prop="orgPid">
-                                        <el-input placeholder="上级机构" v-model="formTable.orgPid" ref="orgPid"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6" :offset="2">
-                                    <el-form-item label="机构编号" prop="orgId">
-                                        <el-input placeholder="机构编号" v-model="formTable.orgId" ref="orgId"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6" :offset="2">
-                                    <el-form-item label="机构名称" prop="orgName">
-                                        <el-input placeholder="机构名称" v-model="formTable.orgName" ref="orgName"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                            <el-row type="flex" class="row-bg">
-                                <el-col :span="6">
-                                    <el-form-item label="排序" prop="orgSort">
-                                        <el-input placeholder="排序" v-model="formTable.orgSort" ref="orgSort"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6" :offset="2">
-                                    <el-form-item label="固定电话" prop="fixedPhone">
-                                        <el-input placeholder="固定电话" v-model="formTable.fixedPhone" ref="fixedPhone"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6" :offset="2">
-                                    <el-form-item label="机构地址" prop="address">
-                                        <el-input placeholder="机构地址" v-model="formTable.address" ref="address"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                            <el-row type="flex" class="row-bg">
-                                <el-col :span="6">
-                                    <el-form-item label="说明" prop="desp">
-                                        <el-input type="textarea" placeholder="说明" v-model="formTable.desp" ref="desp"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="2" :offset="13">
-                                    <el-form-item label="" prop="">
-                                        <el-button size="small" type="primary" @click="addClick">保存</el-button>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                        </el-form>
-                        <!--<div>-->
-                            <!--<el-row :gutter="20">-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input  v-model="orgPid">-->
-                                        <!--<template slot="prepend">上级机构</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input v-model="orgId">-->
-                                        <!--<template slot="prepend">机构编号</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input v-model="orgName">-->
-                                        <!--<template slot="prepend">机构名称</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                            <!--</el-row>-->
-                            <!--<br>-->
-                            <!--<el-row :gutter="20" style="margin-top:-10px ">-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input  v-model="orgSort">-->
-                                        <!--<template slot="prepend">排序</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input v-model="fixedPhone">-->
-                                        <!--<template slot="prepend">固定电话</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input  v-model="address">-->
-                                        <!--<template slot="prepend">机构地址</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                            <!--</el-row>-->
-                            <!--<el-row :gutter="20" style="margin-top:10px">-->
-                                <!--<el-col :span="8">-->
-                                    <!--<el-input v-model="desp">-->
-                                        <!--<template slot="prepend">说明</template>-->
-                                    <!--</el-input>-->
-                                <!--</el-col>-->
-                                <!--<el-col :span="8" :offset="8">-->
-                                    <!--<el-button type="primary" @click="addClick">保存</el-button>-->
-                                <!--</el-col>-->
-                            <!--</el-row>-->
-                        <!--</div>-->
+<div class="allBorder" style="float: left; padding:20px 10px 0 10px;">
+    <el-col :span="4" id="left" style="margin-left:15px;">
+        <div class="allBorder" id="allBorderHeight" style="height:500px; border:none">
+            <el-row>
+                <el-col>
+                    <div style="padding:0 20px">
+                        <el-col style="padding:10px 5px">
+                            <base-tree :initial="treeData" ref="org" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                        </el-col>
                     </div>
                 </el-col>
-            </el-col>
-        </el-row>
-        </el-row>
-    </div>
-</el-col>
+            </el-row>
+        </div>
+    </el-col>
 
-<el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:20px;">
-    <div class="allBorder">
-        <el-row>
-            <el-col>
-                <div class="bg-color">
-                    <span>关联其他信息</span>
-                </div>
-                <div style="padding:20px 20px">
-                    <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-                        <el-tab-pane label="人员信息" name="first">
-                            <template>
-                                <el-table ref="myData"
-                                          :data="tableData"
-                                          @row-click="firstClick" border style="width: 100%"
-                                          :highlight-current-row="true"
-                                          :height="leftHeight"
-                                          v-loading="loading"
-                                          element-loading-text="加载中">
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="id" label="工号" width="">
-                                    </el-table-column>
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="name" label="姓名" width="250">
-                                    </el-table-column>
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="nickname" label="昵称" width="250">
-                                    </el-table-column>
-                                    <el-table-column show-overflow-tooltip sortable="custom" prop="belongOrg" label="部门" width="250">
-                                    </el-table-column>
-                                </el-table>
-                            </template>
-                            <el-row type="flex" justify="end" style="padding-top:10px" class="block">
-                                <el-pagination
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page="pageNum"
-                                        :page-sizes="[5,10,20]"
-                                        :page-size="pageSize"
-                                        layout="total, sizes, prev, pager, next, jumper"
-                                        :total="allDate">
-                                </el-pagination>
-                            </el-row>
-                        </el-tab-pane>
-                        <el-tab-pane label=" 角色查看" name="second">
-                            <el-row id="basRightTop"></el-row>
-                        </el-tab-pane>
-                    </el-tabs>
-                </div>
-            </el-col>
-        </el-row>
-    </div>
-</el-col>
+    <el-col :span="19" id="right" style="margin-left:15px">
+        <div class="allBorder" style="border:1px solid #F2F2F2">
+            <el-row>
+                <el-col>
+                    <div>
+                        <span class="spanFloat">详细信息</span>
+                    </div>
+                    <el-col :span="24">
+                        <div id="topInput" style="padding:20px 20px 10px 10px">
+                            <el-form :label-position="labelPosition" ref="formTable" label-width="70px" :model="formTable">
+                                <el-row type="flex" class="row-bg">
+                                    <el-col :span="6">
+                                        <el-form-item label="上级机构" prop="orgPid">
+                                            <el-input placeholder="上级机构" v-model="formTable.orgPid" ref="orgPid"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6" :offset="2">
+                                        <el-form-item label="机构编号" prop="orgId">
+                                            <el-input placeholder="机构编号" v-model="formTable.orgId" ref="orgId"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6" :offset="2">
+                                        <el-form-item label="机构名称" prop="orgName">
+                                            <el-input placeholder="机构名称" v-model="formTable.orgName" ref="orgName"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row type="flex" class="row-bg">
+                                    <el-col :span="6">
+                                        <el-form-item label="排序" prop="orgSort">
+                                            <el-input placeholder="排序" v-model="formTable.orgSort" ref="orgSort"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6" :offset="2">
+                                        <el-form-item label="固定电话" prop="fixedPhone">
+                                            <el-input placeholder="固定电话" v-model="formTable.fixedPhone" ref="fixedPhone"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6" :offset="2">
+                                        <el-form-item label="机构地址" prop="address">
+                                            <el-input placeholder="机构地址" v-model="formTable.address" ref="address"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row type="flex" class="row-bg">
+                                    <el-col :span="6">
+                                        <el-form-item label="说明" prop="desp">
+                                            <el-input type="textarea" placeholder="说明" v-model="formTable.desp" ref="desp"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="2" :offset="21" style="margin-top: -10px; margin-bottom: -30px;">
+                                        <el-form-item label="" prop="">
+                                            <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </div>
+                    </el-col>
+                </el-col>
+            </el-row>
+            </el-row>
+        </div>
+    </el-col>
+
+    <el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:40px;">
+        <div class="allBorder" style="border:1px solid #F2F2F2">
+            <el-row>
+                <el-col>
+                    <div>
+                        <span class="spanFloat">关联其他信息</span>
+                    </div>
+                    <div style="padding:30px 20px">
+                        <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                            <el-tab-pane label="人员信息" name="first">
+                                <template>
+                                    <el-table ref="myData"
+                                              :data="tableData"
+                                              @row-click="firstClick" border style="width: 100%"
+                                              :highlight-current-row="true"
+                                              :height="leftHeight"
+                                              v-loading="loading"
+                                              element-loading-text="加载中">
+                                        <el-table-column show-overflow-tooltip sortable="custom" prop="id" label="工号" width="">
+                                        </el-table-column>
+                                        <el-table-column show-overflow-tooltip sortable="custom" prop="name" label="姓名" width="250">
+                                        </el-table-column>
+                                        <el-table-column show-overflow-tooltip sortable="custom" prop="nickname" label="昵称" width="250">
+                                        </el-table-column>
+                                        <el-table-column show-overflow-tooltip sortable="custom" prop="belongOrg" label="部门" width="250">
+                                        </el-table-column>
+                                    </el-table>
+                                </template>
+                                <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                                    <el-pagination
+                                            @size-change="handleSizeChange"
+                                            @current-change="handleCurrentChange"
+                                            :current-page="pageNum"
+                                            :page-sizes="[5,10,20]"
+                                            :page-size="pageSize"
+                                            layout="total, sizes, prev, pager, next, jumper"
+                                            :total="allDate">
+                                    </el-pagination>
+                                </el-row>
+                            </el-tab-pane>
+                            <el-tab-pane label=" 关联角色" name="second">
+                                <el-row id="basRightTop"></el-row>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </el-col>
+</div>
 
 <template id="tempBlock">
     <el-col  id="basRightTop">

@@ -138,11 +138,11 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                var height = $(window).height()-50;
+                var height = $(window).height()-70;
                 $("#allBorderHeight").height(height);
             });
             $(window).resize(function () {
-                var height1 = $(window).height()-50;
+                var height1 = $(window).height()-70;
                 $("#allBorderHeight").height(height1);
             });
         }
@@ -245,10 +245,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() - 490;
+                rightBottom.leftHeight = $(window).height() - 540;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() - 490;
+                rightBottom.leftHeight = $(window).height() - 540;
             });
         }
     })
@@ -290,10 +290,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                basRightTop.leftHeight = $(window).height() - 430;
+                basRightTop.leftHeight = $(window).height() - 540;
             });
             $(window).resize(function () {
-                basRightTop.leftHeight = $(window).height() - 430;
+                basRightTop.leftHeight = $(window).height() - 540;
             });
         }
     })
