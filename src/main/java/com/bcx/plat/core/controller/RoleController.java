@@ -3,7 +3,6 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.User;
-import com.bcx.plat.core.entity.UserRelateRole;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.service.RoleService;

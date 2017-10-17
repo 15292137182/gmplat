@@ -3,6 +3,7 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Role;
+import com.bcx.plat.core.entity.RoleRelatePermission;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserGroupRelateRole;
 import com.bcx.plat.core.entity.UserRelateRole;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,8 +35,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * 角色业务层
  *
  * @author YoungerOu
- * <p>
- * Created on 2017/10/13.
+ *         <p>
+ *         Created on 2017/10/13.
  */
 @Service
 public class RoleService extends BaseService<Role> {
@@ -166,14 +168,14 @@ public class RoleService extends BaseService<Role> {
   public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
-              .and().equal("roleRowId", rowId).endAnd().buildDone();
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
       List<UserRelateRole> relateRoles = new UserRelateRole().selectSimple(condition);
       if (!relateRoles.isEmpty()) {
         List<String> userRowIds = relateRoles.stream()
             .map(UserRelateRole::getUserRowId)
             .collect(Collectors.toList());
         Condition condition1 = new ConditionBuilder(User.class)
-                .and().in("rowId", userRowIds).endAnd().buildDone();
+            .and().in("rowId", userRowIds).endAnd().buildDone();
         return userService.selectPageMap(condition, orders, pageNum, pageSize);
       }
     }
@@ -192,7 +194,7 @@ public class RoleService extends BaseService<Role> {
   public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
-              .and().equal("roleId", roleId).endAnd().buildDone();
+          .and().equal("roleId", roleId).endAnd().buildDone();
       List<Role> roles = select(condition);
       if (!roles.isEmpty()) {
         return queryRoleUserByRowId(roles.get(0).getRowId(), orders, pageNum, pageSize);
@@ -230,10 +232,10 @@ public class RoleService extends BaseService<Role> {
     if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
       // 选择当前已被添加的权限
       Condition condition = new ConditionBuilder(RoleRelatePermission.class)
-              .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
-              .buildDone();
+          .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+          .buildDone();
       List<RoleRelatePermission> roleRelatePermissions =
-              new RoleRelatePermission().selectSimple(condition);
+          new RoleRelatePermission().selectSimple(condition);
       Set<String> strings = new HashSet<>();
       strings.addAll(Arrays.asList(permissionRowIds));
       if (!roleRelatePermissions.isEmpty()) {
@@ -262,8 +264,8 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteRolePermission(String roleRowId, String[] permissionRowIds) {
     if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
       Condition condition = new ConditionBuilder(RoleRelatePermission.class)
-              .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
-              .buildDone();
+          .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+          .buildDone();
       new RoleRelatePermission().delete(condition);
       return success(Message.DELETE_SUCCESS);
     }
@@ -318,14 +320,11 @@ public class RoleService extends BaseService<Role> {
   }
 
 
-
-
-
   /**
    * 用户组分配角色关联信息
    *
    * @param userGroupRwoId 用户rowId
-   * @param roleRowId 角色rowId
+   * @param roleRowId      角色rowId
    * @return ServerResult
    */
   public ServerResult addUserGroupRole(String userGroupRwoId, String[] roleRowId) {
@@ -347,12 +346,11 @@ public class RoleService extends BaseService<Role> {
   }
 
 
-
   /**
    * 用户删除角色关联信息
    *
    * @param userGroupRwoId 用户rowId
-   * @param roleRowId 角色rowId
+   * @param roleRowId      角色rowId
    * @return ServerResult
    */
   public ServerResult deleteUserGroupRole(String userGroupRwoId, String[] roleRowId) {
@@ -371,8 +369,6 @@ public class RoleService extends BaseService<Role> {
   }
 
 
-
-
   /**
    * 角色分配用户关联信息
    *
@@ -380,7 +376,7 @@ public class RoleService extends BaseService<Role> {
    * @param roleRowId 角色rowId
    * @return ServerResult
    */
-  public ServerResult addRoleUser(String roleRowId  , String[] userRwoId) {
+  public ServerResult addRoleUser(String roleRowId, String[] userRwoId) {
     ServerResult serverResult;
     Map<String, Object> map = new HashMap<>();
     map.put("roleRowId", roleRowId);
@@ -405,7 +401,7 @@ public class RoleService extends BaseService<Role> {
    * @param roleRowId 角色rowId
    * @return ServerResult
    */
-  public ServerResult deleteRoleUser(String roleRowId , String[] userRowId) {
+  public ServerResult deleteRoleUser(String roleRowId, String[] userRowId) {
     ServerResult serverResult;
     Condition condition = new ConditionBuilder(UserRelateRole.class)
         .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
@@ -420,17 +416,14 @@ public class RoleService extends BaseService<Role> {
   }
 
 
-
-
-
   /**
    * 角色分配用户组关联信息
    *
    * @param userGroupRwoId 用户rowId
-   * @param roleRowId 角色rowId
+   * @param roleRowId      角色rowId
    * @return ServerResult
    */
-  public ServerResult addRoleUserGroup(String roleRowId , String[] userGroupRwoId) {
+  public ServerResult addRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
     ServerResult serverResult;
     Map<String, Object> map = new HashMap<>();
     map.put("roleRowId", roleRowId);
@@ -449,15 +442,14 @@ public class RoleService extends BaseService<Role> {
   }
 
 
-
   /**
    * 角色删除用户组关联信息
    *
    * @param userGroupRwoId 用户rowId
-   * @param roleRowId 角色rowId
+   * @param roleRowId      角色rowId
    * @return ServerResult
    */
-  public ServerResult deleteRoleUserGroup(String roleRowId , String[] userGroupRwoId) {
+  public ServerResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
     ServerResult serverResult;
     Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
         .and().equal("roleRowId", roleRowId).in("userGroupRwoId", Arrays.asList(userGroupRwoId))
@@ -471,7 +463,6 @@ public class RoleService extends BaseService<Role> {
     }
     return serverResult;
   }
-
 
 
 }

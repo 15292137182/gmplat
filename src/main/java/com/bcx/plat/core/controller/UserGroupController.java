@@ -14,7 +14,11 @@ import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -45,8 +49,6 @@ public class UserGroupController extends BaseController {
 
   @Resource
   private UserGroupService userGroupService;
-  @Resource
-  private UserRelateUserGroupService userRelateUserGroupService;
   @Resource
   private UserService userService;
 
@@ -225,7 +227,7 @@ public class UserGroupController extends BaseController {
     PlatResult platResult;
     List list = new ArrayList();
     Condition condition = new ConditionBuilder(UserRelateUserGroup.class).and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
-    List<UserRelateUserGroup> userRelateUserGroups = userRelateUserGroupService.select(condition);
+    List<UserRelateUserGroup> userRelateUserGroups = new UserRelateUserGroup().selectList(condition,null,true);
     if (userRelateUserGroups != null && userRelateUserGroups.size() > 0) {
       for (UserRelateUserGroup userGroup : userRelateUserGroups) {
         String userRowId = userGroup.getUserRowId();
