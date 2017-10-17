@@ -53,17 +53,25 @@ gmp_onload=function(){
     left=new Vue({
         el:'#left',
         data:getData.dataObj({
-            treeData: {
-                // 是否显示checkbook 默认为不显示
+            config: {
+                // 显示复选框
                 checkbox: false,
-                // 获取树节点接口
-                url: serverPath + "/userGroup/queryPage",
-                // 设置参数 -- 树节点上显示的文字
+                // 默认展开  id
+                //expanded: [324],
+                // 配置显示项
                 defaultProps: {
-                    children: 'children',
-                    label: 'groupName'
-                }
-            }
+                    // 树节点显示文字
+                    label: 'groupName',
+                    // 节点id
+                    id: "rowId",
+                    // 父节点信息
+                    //parentId: "orgPid",
+                    // 当前节点信息
+                    selfId: "rowId"
+                },
+                // 获取数据接口
+                url: serverPath + "/userGroup/queryPage"
+            },
         }),
         methods:{
             //点击左边的树得到数据

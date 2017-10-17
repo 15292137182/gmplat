@@ -21,7 +21,7 @@
     </el-row>
 </div>
 
-<div id="left" style="margin-left:15px;width:150px;display: inline-block;position:absolute">
+<div id="left" style="margin-left:15px;width:200px;display: inline-block;position:absolute">
     <div class="allBorder">
         <el-row>
             <el-col>
@@ -30,7 +30,7 @@
                 </div>
                 <div style="padding:5px 20px">
                     <el-col style="padding:10px 5px">
-                        <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                        <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                     </el-col>
                 </div>
             </el-col>
@@ -38,7 +38,7 @@
     </div>
 </div>
 
-<el-col :span="20" id="right" style="margin-left:15px" :push="3">
+<el-col :span="19" id="right" style="margin-left:15px" :push="4">
     <div class="allBorder">
         <el-row>
             <el-col>
@@ -90,7 +90,7 @@
     </div>
 </el-col>
 
-<el-col :span="20" id="rightBottom" style="margin-left:15px;margin-top:20px;" :push="3">
+<el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:20px;" :push="4">
     <div class="allBorder">
         <el-row>
             <el-col>

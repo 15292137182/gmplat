@@ -28,7 +28,7 @@ gmp_onload=function(){
             addEvent() {
                 operate = 1;
                 var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '50%', '88%',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '50%', '98%',function(){
 
                 });
             },
@@ -206,7 +206,7 @@ gmp_onload=function(){
             },
             //点击这一行
             currentChange(row, event, column){
-                //console.log(row);
+                console.log(row);
                 this.rightRowId=row.rowId
             },
             //选择复选框
@@ -281,26 +281,47 @@ gmp_onload=function(){
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
                     //调用接口
                     var data={
-                        "url":editMore,
-                        "jsonData":{rowId:right.rightRowId},
+                        "url":"http://192.168.100.50/gmplat/gmp/sys/core/user/queryBySpecify",
+                        "jsonData":{rowId:"123456789"},
                         "obj":right,
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
                         console.log(res)
-                        //var data=res.data;
-                        //console.log(data);
-                        //em.ruleForm.codeInput = data.objectCode;  //对象代码
-                        //em.ruleForm.nameInput =data.objectName;//对象名称
-                        //em.ruleForm.className =data.className;//实体类
-                        //em.$refs.table_1.setValue(data.relateTableRowId);
-                        //em.$refs.templateObj_1.setValue(data.relateTemplateObject);//关联模板对象
-                        ////em.$refs.templateObj_1.setValue(data.relateTemplate);//关联模板对象
-                        //em.ruleForm.system=data.system;//所属系统
-                        //em.$refs.belongModule_1.setValue(data.belongModule);//所属模块
-                        //em.ruleForm.versionInput =data.etc.version;//版本
                     })
+                    //$.ajax({
+                    //    url:editMore,
+                    //    type:"get",
+                    //    data:{rowId:right.rightRowId},
+                    //    xhrFields: {withCredentials: true},
+                    //    dataType:"json",
+                    //    success:function(res){
+                    //         console.log(res);
+                    //        if(res.resp.respCode=='000'){
+                    //            if(res.resp.content.state==1){
+                    //                if (typeof callback == "function") {
+                    //                    // console.log(res);
+                    //                    callback(res.resp.content);
+                    //                    if(data.showMsg){
+                    //                        showMsg.MsgOk(data.obj,res.resp.content.msg);
+                    //                    }
+                    //                    // showMsg.MsgOk(data.obj,res.resp.content.msg);
+                    //                }
+                    //            }else{
+                    //                callback(res.resp.content);
+                    //                // showMsg.MsgOk(data.obj,res.resp.content.msg);
+                    //                data.obj.$message.error(res.resp.content.msg);
+                    //            }
+                    //        }else{
+                    //            data.obj.$message.error(res.resp.respMsg);
+                    //        }
+                    //    },
+                    //    error:function(res){
+                    //         console.log(res);
+                    //        //data.obj.$message.error("操作失败");
+                    //    }
+                    //})
                 });
             },
             //删除
