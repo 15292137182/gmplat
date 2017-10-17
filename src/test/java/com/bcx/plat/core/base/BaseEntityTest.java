@@ -34,5 +34,9 @@ public class BaseEntityTest extends BaseTest {
     map2.put("etc", map);
     entity1 = entity1.fromMap(map2);
     assert entity1.getEtc().size() == map.size();
+
+    entity1 = entity1.fromMap(entity1.fromMap(entity1.fromMap(entity1.fromMap(entity1.fromMap(entity1.toMap()).toMap()).toMap()).toMap()).toMap());
+
+    assert null != entity1;
   }
 }
