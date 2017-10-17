@@ -66,6 +66,10 @@ gmp_onload=function(){
                 //    basLeft.searchLeft();
                 //})
             },
+            //保存
+            addClick(){
+                right.addClick();
+            }
         }
     });
 
@@ -245,10 +249,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() - 540;
+                rightBottom.leftHeight = $(window).height() - 510;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() - 540;
+                rightBottom.leftHeight = $(window).height() - 510;
             });
         }
     })
@@ -290,10 +294,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                basRightTop.leftHeight = $(window).height() - 540;
+                basRightTop.leftHeight = $(window).height() - 510;
             });
             $(window).resize(function () {
-                basRightTop.leftHeight = $(window).height() - 540;
+                basRightTop.leftHeight = $(window).height() - 510;
             });
         }
     })

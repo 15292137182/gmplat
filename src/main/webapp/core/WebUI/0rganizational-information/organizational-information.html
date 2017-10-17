@@ -37,6 +37,7 @@
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加组织机构</el-button>
             <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="orgDeleteData">删除组织机构</el-button>
+            <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
         </el-col>
     </el-row>
 </div>
@@ -106,13 +107,13 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <el-row>
-                                    <el-col :span="2" :offset="21" style="margin-top: -10px; margin-bottom: -30px;">
-                                        <el-form-item label="" prop="">
-                                            <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
+                                <!--<el-row>-->
+                                    <!--<el-col :span="2" :offset="21" style="margin-top: -10px; margin-bottom: -30px;">-->
+                                        <!--<el-form-item label="" prop="">-->
+                                            <!--<el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>-->
+                                        <!--</el-form-item>-->
+                                    <!--</el-col>-->
+                                <!--</el-row>-->
                             </el-form>
                         </div>
                     </el-col>
