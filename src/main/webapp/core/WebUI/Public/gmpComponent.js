@@ -350,6 +350,8 @@ Vue.component("base-tree", {
         return {
             // 是否显示复选框
             checkbox: false,
+            // 父子节点级联
+            strictly: true,
             // 是否可过滤
             isFilter: false,
             // 过滤文本
@@ -422,6 +424,12 @@ Vue.component("base-tree", {
         }else {
             this.expandedAll = false;
         }
+        // 父子节点严格级联
+        if(this.initial.strictly) {
+            this.strictly = this.initial.strictly;
+        }else {
+            this.strictly = true;
+        }
     },
     mounted() {
         var self = this;
@@ -431,7 +439,7 @@ Vue.component("base-tree", {
             // 选中节点数据
             var checkedData = self.currentCheckedNodes;
             // 若无指定选中项 默认选中根节点
-            if(checkedKey.length == 0) {
+            if(checkedKey &&checkedKey.length == 0) {
                 for(var i = 0;i < data.length;i++) {
                     if(data[i].orgId == "ROOT" && data[i].orgPid == "") {
                         self.setCheckedKeys([data[i].rowId]);
@@ -439,7 +447,7 @@ Vue.component("base-tree", {
                         checkedData.push(data[i]);
                     }
                 }
-            }else if(checkedKey.length > 0) {
+            }else if(checkedKey && checkedKey.length > 0) {
                 // 否则选中指定项
                 self.setCheckedKeys(checkedKey);
                 for(var i = 0;i < data.length;i++) {
@@ -492,9 +500,7 @@ Vue.component("base-tree", {
             // 获取配置信息
             var parent = this.initial.defaultProps.parentId;
             var self = this.initial.defaultProps.selfId;
-            // console.log(parent);
-            // console.log(self);
-            // 遍历原数组
+            // 若指定父节点信息 遍历原数组
             if(parent && self) {
                 for(var i = 0; i < jsonArr.length; i++) {
                     // 向每一个json数组对象下添加 children 属性值
@@ -588,7 +594,7 @@ Vue.component("base-tree", {
     },
     template: `<div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
-                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="checkbox" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="strictly" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });
