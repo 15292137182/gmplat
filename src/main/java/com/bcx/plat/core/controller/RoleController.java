@@ -133,10 +133,24 @@ public class RoleController extends BaseController {
    *
    * @param roleRowId        角色主键
    * @param permissionRowIds 权限
-   * @return
+   * @return 返回
    */
+  @PostMapping("/addPermission")
   public PlatResult addRolePermission(String roleRowId, String[] permissionRowIds) {
     ServerResult success = roleService.addRolePermission(roleRowId, permissionRowIds);
+    return result(success);
+  }
+
+  /**
+   * 删除角色下的权限信息
+   *
+   * @param roleRowId        角色主键
+   * @param permissionRowIds 权限主键
+   * @return 返回
+   */
+  @PostMapping("/deletePermission")
+  public PlatResult deleteRolePermission(String roleRowId, String[] permissionRowIds) {
+    ServerResult success = roleService.deleteRolepermission(roleRowId, permissionRowIds);
     return result(success);
   }
 }

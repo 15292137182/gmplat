@@ -132,6 +132,10 @@
                       p:entityClass="com.bcx.plat.core.entity.UserRelateUserGroup"
                       p:tableName="t_user_relate_user_group"
                       p:pks="#{'rowId'}"/>
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.RoleRelatePermission"
+                      p:tableName="t_role_relate_permission"
+                      p:pks="#{'rowId'}"/>
             </list>
         </constructor-arg>
     </bean>

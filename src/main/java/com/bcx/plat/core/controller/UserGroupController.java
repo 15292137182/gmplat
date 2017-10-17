@@ -15,19 +15,10 @@ import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -255,7 +246,7 @@ public class UserGroupController extends BaseController {
    * @return 返回操作结果信息
    */
   @RequestMapping(value = "/deleteUsers")
-  public PlatResult deleteRoleUsers(String userGroupRowId, String[] userRowIds) {
+  public PlatResult deleteGroupUsers(String userGroupRowId, String[] userRowIds) {
     boolean success = userGroupService.deleteUserInGroup(userGroupRowId, userRowIds);
     if (success) {
       return success(Message.DELETE_SUCCESS);
@@ -263,4 +254,5 @@ public class UserGroupController extends BaseController {
       return fail(Message.INVALID_REQUEST);
     }
   }
+
 }

@@ -3,6 +3,7 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Role;
+import com.bcx.plat.core.entity.RoleRelatePermission;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserRelateRole;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -14,10 +15,7 @@ import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
@@ -212,8 +210,55 @@ public class RoleService extends BaseService<Role> {
     return fail(Message.INVALID_REQUEST);
   }
 
+  /**
+   * 添加权限到角色
+   *
+   * @param roleRowId        角色主键
+   * @param permissionRowIds 权限主键集合
+   * @return 返回操作结果信息
+   */
   public ServerResult addRolePermission(String roleRowId, String[] permissionRowIds) {
-    return null;
+    if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
+      // 选择当前已被添加的权限
+      Condition condition = new ConditionBuilder(RoleRelatePermission.class)
+              .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+              .buildDone();
+      List<RoleRelatePermission> roleRelatePermissions =
+              new RoleRelatePermission().selectSimple(condition);
+      Set<String> strings = new HashSet<>();
+      strings.addAll(Arrays.asList(permissionRowIds));
+      if (!roleRelatePermissions.isEmpty()) {
+        roleRelatePermissions.forEach(roleRelatePermission -> strings.remove(roleRelatePermission.getPermissionRowId()));
+      }
+      if (!strings.isEmpty()) {
+        strings.forEach(s -> {
+          RoleRelatePermission roleRelatePermission = new RoleRelatePermission();
+          roleRelatePermission.setRoleRowId(roleRowId);
+          roleRelatePermission.setPermissionRowId(s);
+          roleRelatePermission.buildCreateInfo().insert();
+        });
+      }
+      return success(Message.NEW_ADD_SUCCESS);
+    }
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
+   * 删除角色下的权限信息
+   *
+   * @param roleRowId        角色主键
+   * @param permissionRowIds 权限主键合集
+   * @return 返回
+   */
+  public ServerResult deleteRolepermission(String roleRowId, String[] permissionRowIds) {
+    if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
+      Condition condition = new ConditionBuilder(RoleRelatePermission.class)
+              .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+              .buildDone();
+      new RoleRelatePermission().delete(condition);
+      return success(Message.DELETE_SUCCESS);
+    }
+    return fail(Message.INVALID_REQUEST);
   }
 
 }
