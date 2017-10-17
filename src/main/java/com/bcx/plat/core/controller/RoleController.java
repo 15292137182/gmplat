@@ -106,7 +106,7 @@ public class RoleController extends BaseController {
     if (isValid(rowId)) {
       result = roleService.queryRoleUserByRowId(rowId, orders, pageNum, pageSize);
     } else if (isValid(roleId)) {
-      result = roleService.queryRoleuserByRoleId(roleId, orders, pageNum, pageSize);
+      result = roleService.queryRoleUserByRoleId(roleId, orders, pageNum, pageSize);
     }
     if (isValid(result)) {
       return result(new ServerResult<>(result));
@@ -150,7 +150,7 @@ public class RoleController extends BaseController {
    */
   @PostMapping("/deletePermission")
   public PlatResult deleteRolePermission(String roleRowId, String[] permissionRowIds) {
-    ServerResult success = roleService.deleteRolepermission(roleRowId, permissionRowIds);
+    ServerResult success = roleService.deleteRolePermission(roleRowId, permissionRowIds);
     return result(success);
   }
 }

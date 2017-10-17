@@ -165,7 +165,7 @@ public class RoleService extends BaseService<Role> {
                 .collect(Collectors.toList());
         Condition condition1 = new ConditionBuilder(User.class)
                 .and().in("rowId", userRowIds).endAnd().buildDone();
-        return userService.selectPageMap(condition, orders, pageNum, pageSize);
+        return userService.selectPageMap(condition1, orders, pageNum, pageSize);
       }
     }
     return null;
@@ -180,7 +180,7 @@ public class RoleService extends BaseService<Role> {
    * @param pageSize 页面大小
    * @return 返回查询结果
    */
-  public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
+  public PageResult<Map<String, Object>> queryRoleUserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
               .and().equal("roleId", roleId).endAnd().buildDone();
@@ -250,7 +250,7 @@ public class RoleService extends BaseService<Role> {
    * @param permissionRowIds 权限主键合集
    * @return 返回
    */
-  public ServerResult deleteRolepermission(String roleRowId, String[] permissionRowIds) {
+  public ServerResult deleteRolePermission(String roleRowId, String[] permissionRowIds) {
     if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
       Condition condition = new ConditionBuilder(RoleRelatePermission.class)
               .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
