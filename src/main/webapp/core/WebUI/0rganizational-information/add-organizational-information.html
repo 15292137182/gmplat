@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .el-input{
+            width:200px;
+        }
+        .el-textarea__inner{
+            width:200px;
+        }
+        .el-form-item__error{
+            width:100px;
+        }
+        .label {
+            text-align: right;
+            padding-right: 14px;
+            color: #48576a;
+            line-height: 36px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <el-row id="component" v-cloak style="margin-top:10px; margin-bottom: 10px;">
+    <!-- 树形下拉框 -->
+        <el-row>
+            <el-col :span="18" :offset="1" class="com_block">
+                <el-col :span="7" class="label" style="margin-top:7px; margin-left:7px;">上级机构</el-col>
+                <el-col :span="10">
+                    <select-tree :initial="config" @select-node="getNodes" @click-node="getNodes" @checked-node="getChecked" style="width:200px;"></select-tree>
+                </el-col>
+            </el-col>
+        </el-row>
+        <!--表单-->
+        <el-form :label-position="childLabelPosition" :rules="rules" ref="childFormTable" label-width="80px" :model="childFormTable">
+            <el-row type="flex" class="row-bg" style="margin-top:15px;">
+                <el-col :span="6" :offset="2">
+                    <el-form-item label="机构编号" prop="orgId">
+                        <el-input placeholder="机构编号" v-model="childFormTable.orgId" ref="orgId"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row type="flex" class="row-bg">
+                <el-col :span="6" :offset="2">
+                    <el-form-item label="机构名称" prop="orgName">
+                        <el-input placeholder="机构名称" v-model="childFormTable.orgName" ref="orgName"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row type="flex" class="row-bg">
+                <el-col :span="6" :offset="2">
+                    <el-form-item label="排序" prop="orgSort">
+                        <el-input placeholder="排序" v-model="childFormTable.orgSort" ref="orgSort"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row type="flex" class="row-bg">
+                <el-col :span="6" :offset="2">
+                    <el-form-item label="固定电话" prop="fixedPhone">
+                        <el-input placeholder="固定电话" v-model="childFormTable.fixedPhone" ref="fixedPhone"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row type="flex" class="row-bg">
+                <el-col :span="6" :offset="2">
+                    <el-form-item label="机构地址" prop="address">
+                        <el-input placeholder="机构地址" v-model="childFormTable.address" ref="address"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row type="flex" class="row-bg">
+                <el-col :span="6" :offset="2">
+                    <el-form-item label="说明" prop="desp">
+                        <el-input type="textarea" placeholder="说明" v-model="childFormTable.desp" ref="desp"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+        <el-row>
+            <el-col :span="11" style="text-align:right">
+                <el-button type="primary" @click="conformEvent('childFormTable')">保存</el-button>
+            </el-col>
+            <el-col :span="11" style="text-align: left" :offset="2">
+                <el-button type="primary" @click="cancel">取消</el-button>
+            </el-col>
+        </el-row>
+    </el-row>
+    <script>
+        //新增组织机构接口
+        var addOrgUrl = serverPath + "/baseOrg/add";
+
+        var component = new Vue({
+            el: "#component",
+            data() {
+                return {
+                    // 一级树结构配置
+                    treeData: {
+                        // 显示复选框
+                        checkbox: true,
+                        // 默认选中项 当 checkbox 为 true 时  编辑时可以用
+                        checked: [3],
+                        // 配置显示项 必须配置！
+                        defaultProps: {
+                            // 树节点显示文字
+                            label: 'groupNumber',
+                            // 节点id
+                            id: "rowId"
+                        },
+                        // 获取树节点接口
+                        url: serverPath + "/userGroup/queryPage",
+                    },
+                    // 层级树结构配置
+                    config: {
+                        // 设置清空按钮
+                        clearable: false,
+                        // 显示复选框
+                        checkbox: true,
+                        // 默认展开
+//                        expanded: [324],
+                        // 展开所有节点
+                        expandedAll: true,
+                        // 默认选中项 当 checkbox 为 true 时  编辑时可以用
+                        //checked: [12, 21],
+                        // 配置显示项 必须配置！
+                        defaultProps: {
+                            // 树节点显示文字
+                            label: 'orgName',
+                            // 节点id
+                            key: "orgId",
+                            // 父节点信息
+                            parent: "orgPid"
+                        },
+                        // 获取数据接口
+                        url: serverPath + "/baseOrg/queryPage"
+                    },
+                    childLabelPosition:"right",
+                    childFormTable:{
+                        orgId:"",
+                        orgName:"",
+                        orgSort:"",
+                        fixedPhone:"",
+                        address:"",
+                        desp:""
+                    },
+                    rules:{
+                        orgId:[{ required: true, message: '请输入机构编号', trigger: 'blur' }],
+                        orgName:[{ required: true, message: '请输入机构名称', trigger: 'blur' }]
+                    },
+                }
+            },
+            methods: {
+                //选择行
+                getNodes(data) {
+                    console.log("选择行数据-------------");
+                    this.orgPid = data.orgId;
+                    console.log(data);
+                    console.log(component.orgPid);
+                },
+                //选择复选框
+                getChecked(data) {
+                    console.log("选择复选框-------------");
+                    this.orgPid = data.orgId;
+                    console.log(data);
+                    console.log(component.orgPid);
+                },
+                //新增
+                addTableBase(){
+                    var data = {"url":addOrgUrl,"jsonData":{
+                        orgPid:this.orgPid,
+                        orgId:this.childFormTable.orgId,
+                        orgName:this.childFormTable.orgName,
+                        orgSort:Number(this.childFormTable.orgSort),
+                        fixedPhone:this.childFormTable.fixedPhone,
+                        address:this.childFormTable.address,
+                        desp:this.childFormTable.desp,
+                    },
+                        "obj":basTop,
+                        "showMsg":true
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        ibcpLayer.Close(basTop.divIndex);
+                        left.$refs.org.getNode();
+                    })
+                },
+                //确认按钮及验证
+                conformEvent(formName){
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            console.log("true");
+                            addObj.addOk(function(){
+                                component.addTableBase();
+                            })
+                        } else {
+                            return false;
+                        }
+                    })
+                },
+                cancel(){
+                    ibcpLayer.Close(basTop.divIndex);
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -643,7 +643,7 @@ var gmpAjax = (function(){
                             // showMsg.MsgOk(data.obj,res.resp.content.msg);
                         }
                     }else{
-                        callback(res.resp.content);
+                        // callback(res.resp.content);
                         // showMsg.MsgOk(data.obj,res.resp.content.msg);
                         data.obj.$message.error(res.resp.content.msg);
                     }

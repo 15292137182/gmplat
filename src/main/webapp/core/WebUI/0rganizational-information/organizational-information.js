@@ -28,13 +28,13 @@ gmp_onload=function(){
             addOpe: false,
             orgDeleteData: true,
             takeEffect: false,
+            divIndex:""
         },
         methods: {
             //新增人员信息
             addEvent() {
-                operate = 1;
-                var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '660px',function(){
+                var htmlUrl = 'add-organizational-information.html';
+                this.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 新增组织机构', '400px', '550px',function(){
 
                 });
             },
@@ -52,6 +52,7 @@ gmp_onload=function(){
                     gmpAjax.showAjax(data,function(res){
                         // queryData.getData(dataBase.url,dataBase.input,dataBase)
                         left.$refs.org.getNode();
+                        basTop.orgDeleteData = true;
                     })
                 })
             },
@@ -87,11 +88,11 @@ gmp_onload=function(){
                     // 树节点显示文字
                     label: 'orgName',
                     // 节点id
-                    id: "rowId",
+                    key: "orgId",
                     // 父节点信息
-                    parentId: "orgPid",
-                    // 当前节点信息
-                    selfId: "orgId",
+                    parent: "orgPid",
+                    // // 当前节点信息
+                    // selfId: "orgId",
                 }
             },
             rowIdArr:[0],
@@ -99,8 +100,9 @@ gmp_onload=function(){
         methods:{
             //点击左边的树得到数据
             getNodes(data) {
-                this.rowId=data.rowId
-                basTop.orgDeleteData = false;
+                console.log(data);
+                this.rowId=data.rowId;
+                // basTop.orgDeleteData = false;
                 $.ajax({
                     url:Organization,
                     type:"get",
@@ -169,12 +171,14 @@ gmp_onload=function(){
         }),
         methods: {
             editTbleBase(rowId){
+                var numberStr = parseInt(this.formTable.orgSort);
+                console.log(typeof numberStr);
                 var data = {"url":modify,"jsonData":{
                     rowId:rowId,
                     orgPid:this.formTable.orgPid,
                     orgId:this.formTable.orgId,
                     orgName:this.formTable.orgName,
-                    orgSort:this.formTable.orgSort,
+                    orgSort:numberStr,
                     fixedPhone:this.formTable.fixedPhone,
                     address:this.formTable.address,
                     desp:this.formTable.desp,
