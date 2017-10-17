@@ -15,7 +15,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   public void testQueryPage() throws Exception {
     //准备参数
 //    String search = "j";
-    String param = "{\"status\":\"02\"}";
+    String param = "{\"rowId\":\"123456789\"}";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryPage")
@@ -83,7 +83,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testDelete() throws Exception {
     //准备参数
-    String rowId = "123456789";
+    String rowId = "";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/delete")
@@ -97,10 +97,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testLock() throws Exception {
     //准备参数
-    String rowId = "[\"123456789\",\"123456790\"]";
+    String rowId = "123456789,123456790";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/lock")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/lockBatch")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
@@ -111,10 +111,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testUnLock() throws Exception {
     //准备参数
-    String rowId = "[\"123456789\",\"123456790\"]";
+    String rowId = "123456789,123456790";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/unLock")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/unLockBatch")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
@@ -125,10 +125,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testInUse() throws Exception {
     //准备参数
-    String rowId = "[\"123456789\",\"123456790\"]";
+    String rowId = "123456789,123456790";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/inUse")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/inUseBatch")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
@@ -139,10 +139,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testOutOfUse() throws Exception {
     //准备参数
-    String rowId = "[\"123456789\",\"123456790\"]";
+    String rowId = "123456789,123456790";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/outOfUse")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/outOfUseBatch")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
@@ -153,10 +153,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testResetPassword() throws Exception {
     //准备参数
-    String rowId = "[\"123456789\",\"123456790\"]";
+    String rowId = "123456789,123456790";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/resetPassword")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/resetPasswordBatch")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,15 +257,7 @@ public class UserController extends BaseController {
   public PlatResult delete(String rowId) {
     if (UtilsTool.isValid(rowId)) {
       User user = new User().buildDeleteInfo();
-      int delete;
-      if (rowId.startsWith("[") && rowId.endsWith("]")) {
-        List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-        delete = userService.update(user, condition);
-      } else {
-        delete = user.logicalDeleteById(rowId);
-      }
-      if (delete != -1) {
+      if (user.logicalDeleteById(rowId) != -1) {
         return success(Message.DELETE_SUCCESS);
       } else {
         return fail(Message.DELETE_FAIL);
@@ -273,6 +266,28 @@ public class UserController extends BaseController {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
+
+  /**
+   * 人员信息 - 批量删除
+   *
+   * @param rowId 唯一标识
+   * @return PlatResult
+   */
+  @PostMapping(value = "/deleteBatch")
+  public PlatResult deleteBatch(@RequestParam List<String> rowId) {
+    if (UtilsTool.isValid(rowId)) {
+      User user = new User().buildDeleteInfo();
+      Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowId).endAnd().buildDone();
+      if (userService.update(user, condition) != -1) {
+        return success(Message.DELETE_SUCCESS);
+      } else {
+        return fail(Message.DELETE_FAIL);
+      }
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
 
   /**
    * 人员信息 - 锁定账号
@@ -284,19 +299,24 @@ public class UserController extends BaseController {
   @PostMapping("/lock")
   public PlatResult lock(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, String> map = new HashMap<>();
-      map.put("rowId", rowId);
-      map.put("status", BaseConstants.LOCKED);
-      map.put("accountLockedTime", UtilsTool.getDateTimeNow());
-      if (updateByMap(map) != -1) {
-        return success(Message.OPERATOR_SUCCESS);
-      } else {
-        return fail(Message.OPERATOR_FAIL);
-      }
+      return updateBatch(Collections.singletonList(rowId), BaseConstants.LOCKED);
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
+
+  /**
+   * 人员信息 - 批量锁定账号
+   *
+   * @param rowId 唯一标识
+   *              状态（01：锁定，02：解锁，03：启用，04：失效）
+   * @return PlatResult
+   */
+  @PostMapping("/lockBatch")
+  public PlatResult lockBatch(@RequestParam List<String> rowId) {
+    return updateBatch(rowId, BaseConstants.LOCKED);
+  }
+
 
   /**
    * 人员信息 - 解锁账号
@@ -307,40 +327,21 @@ public class UserController extends BaseController {
   @PostMapping("/unLock")
   public PlatResult unLock(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, String> map = new HashMap<>();
-      map.put("rowId", rowId);
-      map.put("status", BaseConstants.UNLOCK);
-      map.put("accountLockedTime", "");
-      if (updateByMap(map) != -1) {
-        return success(Message.OPERATOR_SUCCESS);
-      } else {
-        return fail(Message.OPERATOR_FAIL);
-      }
+      return updateBatch(Collections.singletonList(rowId), BaseConstants.UNLOCK);
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
   /**
-   * 公用方法 - 修改状态
+   * 人员信息 - 批量解锁账号
    *
-   * @param map 放入状态相关信息
-   * @return update 更新条目数
+   * @param rowId 唯一标识
+   * @return PlatResult
    */
-  private int updateByMap(Map<String, String> map) {
-    String rowId = map.get("rowId");
-    int update;
-    if (rowId.startsWith("[") && rowId.endsWith("]")) {
-      map.remove("rowId");
-      User user = new User().fromMap(map).buildModifyInfo();
-      List<String> rowIds = UtilsTool.jsonToObj(rowId, List.class);
-      Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowIds).endAnd().buildDone();
-      update = userService.update(user, condition);
-    } else {
-      User user = new User().fromMap(map).buildModifyInfo();
-      update = user.updateById();
-    }
-    return update;
+  @PostMapping("/unLockBatch")
+  public PlatResult unLockBatch(@RequestParam List<String> rowId) {
+    return updateBatch(rowId, BaseConstants.UNLOCK);
   }
 
   /**
@@ -352,17 +353,21 @@ public class UserController extends BaseController {
   @PostMapping("/inUse")
   public PlatResult inUse(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, String> map = new HashMap<>();
-      map.put("rowId", rowId);
-      map.put("status", BaseConstants.IN_USE);
-      if (updateByMap(map) != -1) {
-        return success(Message.OPERATOR_SUCCESS);
-      } else {
-        return fail(Message.OPERATOR_FAIL);
-      }
+      return updateBatch(Collections.singletonList(rowId), BaseConstants.IN_USE);
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+  }
+
+  /**
+   * 人员信息 - 批量启用账号
+   *
+   * @param rowId 唯一标识
+   * @return PlatResult
+   */
+  @PostMapping("/inUseBatch")
+  public PlatResult inUseBatch(@RequestParam List<String> rowId) {
+    return updateBatch(rowId, BaseConstants.IN_USE);
   }
 
   /**
@@ -374,17 +379,21 @@ public class UserController extends BaseController {
   @PostMapping("/outOfUse")
   public PlatResult outOfUse(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, String> map = new HashMap<>();
-      map.put("rowId", rowId);
-      map.put("status", BaseConstants.OUT_OF_USE);
-      if (updateByMap(map) != -1) {
-        return success(Message.OPERATOR_SUCCESS);
-      } else {
-        return fail(Message.OPERATOR_FAIL);
-      }
+      return updateBatch(Collections.singletonList(rowId), BaseConstants.OUT_OF_USE);
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+  }
+
+  /**
+   * 人员信息 - 批量失效账号
+   *
+   * @param rowId 唯一标识
+   * @return PlatResult
+   */
+  @PostMapping("/outOfUseBatch")
+  public PlatResult outOfUseBatch(@RequestParam List<String> rowId) {
+    return updateBatch(rowId, BaseConstants.OUT_OF_USE);
   }
 
   /**
@@ -396,11 +405,56 @@ public class UserController extends BaseController {
   @PostMapping("/resetPassword")
   public PlatResult resetPassword(String rowId) {
     if (UtilsTool.isValid(rowId)) {
-      String defaultPassword = SystemSettingManager.getDefaultPwd();
+      return updateBatch(Collections.singletonList(rowId), "resetPassword");
+    } else {
+      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+  }
+
+  /**
+   * 人员信息 - 批量重置密码
+   *
+   * @param rowId 唯一标识
+   * @return PlatResult
+   */
+  @PostMapping("/resetPasswordBatch")
+  public PlatResult resetPasswordBatch(@RequestParam List<String> rowId) {
+    return updateBatch(rowId, "resetPassword");
+  }
+
+  /**
+   * 更改状态时进行批量操作
+   *
+   * @param rowId  唯一标识数组
+   * @param status 状态
+   * @return PlatResult
+   */
+  private PlatResult updateBatch(List<String> rowId, String status) {
+    if (UtilsTool.isValid(rowId)) {
       Map<String, String> map = new HashMap<>();
-      map.put("rowId", rowId);
-      map.put("password", defaultPassword);
-      if (updateByMap(map) != -1) {
+      switch (status) {
+        case BaseConstants.LOCKED:
+          map.put("status", BaseConstants.LOCKED);
+          map.put("accountLockedTime", UtilsTool.getDateTimeNow());
+          break;
+        case BaseConstants.UNLOCK:
+          map.put("status", BaseConstants.UNLOCK);
+          map.put("accountLockedTime", "");
+          break;
+        case BaseConstants.IN_USE:
+          map.put("status", BaseConstants.IN_USE);
+          break;
+        case BaseConstants.OUT_OF_USE:
+          map.put("status", BaseConstants.OUT_OF_USE);
+          break;
+        case "resetPassword":
+          map.put("password", SystemSettingManager.getDefaultPwd());
+          break;
+        default:
+      }
+      User user = new User().fromMap(map).buildModifyInfo();
+      Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowId).endAnd().buildDone();
+      if (userService.update(user, condition) != -1) {
         return success(Message.OPERATOR_SUCCESS);
       } else {
         return fail(Message.OPERATOR_FAIL);
