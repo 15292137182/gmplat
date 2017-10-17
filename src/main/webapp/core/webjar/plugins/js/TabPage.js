@@ -463,10 +463,53 @@ var querySearch = (function(){
             }
         })
     }
+    //左侧查右侧只需要一个rowId
+    var searchResource = function(url,rowId,pageSize,pageNum,obj,callback){//有依赖的分页查询
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{
+                rowId:rowId,
+                pageSize:pageSize,
+                pageNum:pageNum
+            },
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                console.log(res);
+                obj.loading=false;
+                if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }else if(res.resp.content.data==null){
+                        obj.tableData=[];
+                    }else{
+                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        obj.tableData = res.resp.content.data.result;//数据源
+                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                        obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
+                    }
 
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                // alert("错误")
+            }
+        })
+    }
     return {
         needSearch:needSearch,
-        uneedSearch:uneedSearch
+        uneedSearch:uneedSearch,
+        searchResource:searchResource
     }
 })()
 

@@ -15,16 +15,21 @@
         .demo_line{
             padding: 0 10px 0;
             margin: 14px 0 20px 0;
-            line-height: 1px;
-            border-left: 20px solid #ddd;
-            border-right: 440px solid #ddd;
-            text-align: left;
+            position: relative;
+        }
+        .demo_line hr{
+            width:83%;
+            position: absolute;
+            right:6%;
+            top:25%;
+            border:1px solid #ddd
         }
         .demo_line>span{
-            font-size:16px;
+            font-size:12px;
+            font-weight: bold;
         }
         .el-form-item__label{
-            font-size:13px;
+            font-size:12px;
         }
         form .el-input__inner{
             font-size:12px;
@@ -44,7 +49,10 @@
 <div id="addProEvent" style="margin-top:20px">
     <el-form  label-width="120px"
              style="padding:0 20px" class="demo-ruleForm">
-        <div class="demo_line"><span>基本信息</span></div>
+        <div class="demo_line">
+            <hr>
+            <span>基本信息</span>
+        </div>
         <el-row class="row-bg">
             <el-col :span="11">
                 <el-form-item label="用户姓名" prop="name">
@@ -79,7 +87,7 @@
                 </el-form-item>
             </el-col>
         </el-row>
-        <div class="demo_line"><span>账号信息</span></div>
+        <div class="demo_line"><hr><span>账号信息</span></div>
         <el-row class="row-bg">
             <el-col :span="11">
                 <el-form-item label="用户昵称" prop="nickname">
@@ -118,7 +126,7 @@
             </el-col>
         </el-row>
 
-        <div class="demo_line"><span>联系信息</span></div>
+        <div class="demo_line"><hr><span>联系信息</span></div>
         <el-row class="row-bg">
             <el-col :span="11">
                 <el-form-item label="移动电话" prop="mobilePhone">
@@ -132,7 +140,7 @@
             </el-col>
         </el-row>
 
-        <div class="demo_line"><span>其他信息</span></div>
+        <div class="demo_line"><hr><span>其他信息</span></div>
 
         <el-row class="row-bg">
             <el-col :span="24">

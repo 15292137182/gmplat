@@ -281,8 +281,8 @@ gmp_onload=function(){
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
                     //调用接口
                     var data={
-                        "url":"http://192.168.100.50/gmplat/gmp/sys/core/user/queryBySpecify",
-                        "jsonData":{rowId:"123456789"},
+                        "url":editMore,
+                        "jsonData":{rowId:left.rowId},
                         "obj":right,
                         "showMsg":true
                     };

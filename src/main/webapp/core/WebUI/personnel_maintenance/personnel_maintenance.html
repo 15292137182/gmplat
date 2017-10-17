@@ -55,14 +55,14 @@
 <div id="basTop">
     <el-row type="flex" justify="end">
         <el-col :span="24">
-            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加</el-button>
-            <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">批量删除</el-button>
-            <el-button type="warning" icon="star-off" size="small" @click.native="affectProp" v-bind:disabled="takeEffect">重置密码</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp" v-bind:disabled="change">失效</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp" v-bind:disabled="change">启用</el-button>
-            <el-button type="warning"  size="small" @click.native="chooseVersion">选择版本</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp" v-bind:disabled="change">导入</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="exportRow" v-bind:disabled="change">导出</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent">添加</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="deleteAll">批量删除</el-button>
+            <el-button type="warning" icon="star-off" size="small" @click.native="affectProp">重置密码</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp">失效</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp">启用</el-button>
+            <el-button type="warning"  size="small" @click.native="chooseVersion">下载模板</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="changeProp">导入</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="exportRow">导出</el-button>
         </el-col>
     </el-row>
 </div>

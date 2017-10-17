@@ -7,6 +7,8 @@ var right;
 
 //查用户组信息
 var searchGroup=serverPath + "/userGroup/queryById";
+//查用户组的用户信息
+var searchGroupUser=serverPath + "/userGroup/queryUserGroupUser";
 
 gmp_onload=function(){
     basTop = new Vue({
@@ -93,6 +95,9 @@ gmp_onload=function(){
                         right.desc=data.desc;
                         right.remarks=data.remarks;
                     },
+                })
+                querySearch.searchResource(searchGroupUser,this.rowId,rightBottom.pageSize,rightBottom.pageNum,this,function(res){
+
                 })
             },
             //复选框选中得到得值
