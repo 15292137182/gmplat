@@ -108,7 +108,7 @@ public class MoreBatisImpl implements MoreBatis {
    *
    * @param entityClass 实体类class
    */
-  public Collection<Field> getColumns(Class entityClass) {
+  public Collection<Field> getColumns(Class entityClass) {    ;
     return entityColumns.get(entityClass);
   }
 
@@ -177,7 +177,7 @@ public class MoreBatisImpl implements MoreBatis {
   }
 
   private Collection<Field> immute(Collection<Field> fields) {
-    return fields;
+    return Collections.unmodifiableList((List<Field>)fields);
 //    return fields.stream().map((column) -> {
 //      return new ImmuteField(column);
 //    }).collect(Collectors.toList());
