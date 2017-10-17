@@ -31,6 +31,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
   public ServerResult insertOrgMap(Map<String, Object> params) {
     if (null != params) {
       BaseOrg org = new BaseOrg().fromMap(params);
+      org.setOrgSort(Integer.valueOf(params.get("orgSort").toString()));
       if (!isValid(org.getOrgPid()) || ORG_ROOT_NODE_ID.equalsIgnoreCase(org.getOrgId())) {
         return fail("无效的组织机构编号！");
       }
@@ -56,6 +57,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
   public ServerResult updateOrgMap(Map<String, Object> params) {
     if (null != params) {
       BaseOrg org = new BaseOrg().fromMap(params);
+      org.setOrgSort(Integer.valueOf(params.get("orgSort").toString()));
       if (isValid(org.getRowId())) {
         if (!isValid(org.getOrgPid()) || ORG_ROOT_NODE_ID.equalsIgnoreCase(org.getOrgId())) {
           return fail("无效的组织机构编号！");
@@ -136,24 +138,16 @@ public class BaseOrgService extends BaseService<BaseOrg> {
       if (ORG_ROOT_NODE_ID.equalsIgnoreCase(pId)) {
         return true;
       }
-
-      while (!ORG_ROOT_NODE_ID.equalsIgnoreCase(pId)) {
-        // 查询 pid 的父节点
-        Condition condition = new ConditionBuilder(BaseOrg.class)
-                .and().equal("orgId", pId).endAnd()
-                .buildDone();
-        List<BaseOrg> orgs = select(condition);
-        if (orgs.size() != 1) {
-          return false;
-        } else {
-          pId = orgs.get(0).getOrgPid();
-          if (pId.equals(id)) {
-            return false;
-          }
-          if (ORG_ROOT_NODE_ID.equalsIgnoreCase(pId)) {
-            return true;
-          }
-        }
+      // 查询 pid 的父节点
+      Condition condition = new ConditionBuilder(BaseOrg.class)
+              .and().equal("orgId", pId).endAnd()
+              .buildDone();
+      List<BaseOrg> orgs = select(condition);
+      if (orgs.size() != 1) {
+        return false;
+      } else {
+        pId = orgs.get(0).getOrgPid();
+        return isPidLegal(id, pId);
       }
     }
     return false;
