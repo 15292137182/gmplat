@@ -124,11 +124,19 @@ public class RoleController extends BaseController {
    */
   @RequestMapping(value = "/deleteUsers")
   public PlatResult deleteRoleUsers(String roleRowId, String[] userRowIds) {
-    boolean success = roleService.deleteUserInRole(roleRowId, userRowIds);
-    if (success) {
-      return success(Message.DELETE_SUCCESS);
-    } else {
-      return fail(Message.INVALID_REQUEST);
-    }
+    ServerResult success = roleService.deleteUserInRole(roleRowId, userRowIds);
+    return result(success);
+  }
+
+  /**
+   * 将权限添加到角色
+   *
+   * @param roleRowId        角色主键
+   * @param permissionRowIds 权限
+   * @return
+   */
+  public PlatResult addRolePermission(String roleRowId, String[] permissionRowIds) {
+    ServerResult success = roleService.addRolePermission(roleRowId, permissionRowIds);
+    return result(success);
   }
 }

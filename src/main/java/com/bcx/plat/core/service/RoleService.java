@@ -201,15 +201,19 @@ public class RoleService extends BaseService<Role> {
    * @param userRowIds 用户rowId 集合
    * @return 返回结果
    */
-  public boolean deleteUserInRole(String roleRowId, String[] userRowIds) {
+  public ServerResult deleteUserInRole(String roleRowId, String[] userRowIds) {
     if (isValid(roleRowId) && null != userRowIds && userRowIds.length != 0) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
               .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
               .buildDone();
       new UserRelateRole().delete(condition);
-      return true;
+      return success(Message.DELETE_SUCCESS);
     }
-    return false;
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  public ServerResult addRolePermission(String roleRowId, String[] permissionRowIds) {
+    return null;
   }
 
 }

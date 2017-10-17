@@ -63,10 +63,10 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryByOrg")
-  public PlatResult queryByOrg(String param,Integer pageNum,Integer pageSize) {
+  public PlatResult queryByOrg(String param, Integer pageNum, Integer pageSize) {
     if (UtilsTool.isValid(param)) {
       List list = UtilsTool.jsonToObj(param, List.class);
-      ServerResult serverResult = userService.queryByOrg(list,pageNum,pageSize);
+      ServerResult serverResult = userService.queryByOrg(list, pageNum, pageSize);
       return result(serverResult);
     } else {
       return fail(Message.QUERY_FAIL);
@@ -105,13 +105,15 @@ public class UserController extends BaseController {
     Object id = param.get("id");
     Object name = param.get("name");
     if (null != id && !"".equals(id.toString().trim())
-        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+            && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+
       //根据工号查询是否已存在该工号的记录
       Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
       List<User> list = userService.select(validCondition);
       if (list.isEmpty()) {
         param.put("id", id.toString().trim());
         param.put("name", name.toString().trim());
+
         //从系统设置获取密码强度、长度校验的规则 进行校验
         String password = String.valueOf(param.get("password"));
         if (validPassword(password)) {
@@ -132,6 +134,7 @@ public class UserController extends BaseController {
     } else {
       return fail(Message.DATA_CANNOT_BE_EMPTY);
     }
+
   }
 
   /**
@@ -186,7 +189,7 @@ public class UserController extends BaseController {
       Object id = param.get("id");
       Object name = param.get("name");
       if (null != id && !"".equals(id.toString().trim())
-          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+              && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
