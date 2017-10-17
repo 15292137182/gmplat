@@ -650,7 +650,7 @@ Vue.component("select-tree", {
             var label = this.defaultProps.label;
             var parent = this.initial.defaultProps.parent;
             var id = this.initial.defaultProps.key;
-            console.log(obj);
+            // console.log(obj);
             // console.log(node);
             // console.log(row);
 
@@ -679,26 +679,54 @@ Vue.component("select-tree", {
             // console.log(checked);
             // console.log(node);
             // 选中的节点名称
-            if(checked) {
-                this.middle.push(obj[label]);
-            }
-            // 取消选中项 输入框删除相应内容
-            var target = this.select_node;
-            for(var k = 0;k < target.length;k++) {
-                if(obj[name] == target[k]) {}
+            if(!checked) {
+                // 取消选中项 输入框删除相应内容
+                var target = this.select_node;
+                // this.select_node = [];
+                for(var k = 0;k < target.length;k++) {
+                    // 若节点名称为当前点击节点名称
+                    if(obj[label] == target[k]) {
+                        var _index = target.indexOf(target[k]);
+                        target.splice(_index, 1);
+                    }
+                }
             }
             // 选中节点 id
             this.select_id = obj[_id];
-            // 确认按钮状态
-            this.error = !checked;
+            // 确认按钮状态 获取当前树选择节点
+            var currentSelect = this.$refs.selectTree.getCheckedKeys();
+            // 返回数组长度不为零 确认按钮可用
+            if(currentSelect.length > 0) {
+                this.error = false;
+            }else {
+                this.error = true;
+            }
             // 向父组件传递方法和数据
             this.$emit("checked-node", obj, obj[_id], obj[label], flag);
         },
         // 选中节点事件
         checked() {
-            // console.log(this.$refs.selectTree.getCheckedNodes());
-            // 选中节点传递给中间变量
-            this.select_node = this.middle;
+            // 若显示复选框
+            if(this.checkbox) {
+                // 获取配置信息 label
+                var label = this.initial.defaultProps.label;
+                // 获取当前选中节点
+                var checkedNodes = this.$refs.selectTree.getCheckedNodes();
+                // 节点名称数组
+                var nodesName = [];
+                // 循环遍历选中节点
+                for(var g = 0;g < checkedNodes.length;g++) {
+                    // 将节点名称push到数组中
+                    nodesName.push(checkedNodes[g][label]);
+                }
+                // 改变选中节点key为当前选中节点key
+                this.defaultCheckedKeys = this.$refs.selectTree.getCheckedKeys();;
+                // 显示节点名称
+                this.select_node = nodesName;
+            }else {
+                // 若不显示复选框
+                this.select_node = this.middle;
+            }
             // this.$emit("select-node", this.select_id);
         },
         // 鼠标移入事件
@@ -722,12 +750,16 @@ Vue.component("select-tree", {
             if(isClose && this.clearable) {
                 // 阻止事件冒泡
                 ev.stopPropagation();
-                // 清空数据
+                // 清空选中项名称
                 this.select_node = "";
+                // 清空选中项id
+                this.select_id = "";
                 // 清除选择项 仅当复选框配置的情况下
                 if(this.checkbox) {
                     this.setCheckedKeys([]);
                 }
+                // 传递清空后数据
+                this.$emit("clear", this.select_id, this.select_node)
                 // 移除class
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('el-icon-circle-close');
             }
@@ -737,9 +769,10 @@ Vue.component("select-tree", {
             // console.log(this);
             var _select = this.select_node;
             if(bool && this.clearable) {
+                // 获取配置展开项 选择项
                 var _expanded = this.initial.expanded;
-                var _checked = this.initial.checked;
-                // 用Vue的方法写一个查找DOM和addClass的方法
+                var _checked = this.defaultCheckedKeys;
+                // input添加类 然图标翻转
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
                 // 下拉框展开 树结构展开配置节点
                 if(_expanded && _expanded.length > 0) {
@@ -750,7 +783,7 @@ Vue.component("select-tree", {
                 // 下拉框展开 树结构选中配置节点
                 if(_checked && _checked.length > 0 &&  _select.length > 0) {
                     // this.defaultCheckedKeys = this.initial.checked;
-                    this.setCheckedKeys(this.initial.checked);
+                    this.setCheckedKeys(_checked);
                     // 确认按钮可用
                     this.error = false;
                 }else {
@@ -758,7 +791,6 @@ Vue.component("select-tree", {
                     // 确认按钮不可用
                     this.error = true;
                 }
-
             }else if(!bool  && this.clearable) {
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
                 if(_select.length == 0) {
@@ -941,6 +973,12 @@ Vue.component("select-tree", {
             this.expandedAll = this.initial.expandedAll;
         }else {
             this.expandedAll = false;
+        }
+        // 获取配置默认选择项
+        if(this.initial.checked) {
+            this.defaultCheckedKeys = this.initial.checked;
+        }else {
+            this.defaultCheckedKeys = [];
         }
     },
     mounted() {

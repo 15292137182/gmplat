@@ -31,7 +31,7 @@
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">树形下拉框</el-col>
             <el-col :span="10">
-                <select-tree :initial="config" @select-node="getNodes" @click-node="getNodes" @checked-node="getChecked"></select-tree>
+                <select-tree :initial="config" @select-node="getNodes" @click-node="getNodes" @checked-node="getChecked" @clear="clear"></select-tree>
             </el-col>
         </el-col>
         <!--一级树结构-->
@@ -83,7 +83,7 @@
                         // 展开所有节点
                         expandedAll: true,
                         // 默认选中项 当 checkbox 为 true 时  编辑时可以用
-//                        checked: [12, 21],
+                        checked: [12, 21],
                         // 配置显示项 必须配置！
                         defaultProps: {
                             // 树节点显示文字
@@ -109,6 +109,10 @@
                     console.log("选中节点名称为：" + name);
                     console.log("选中节点 id 为：" + id);
                     console.log("选中标识为：" + flag);
+                },
+                clear(id, name) {
+                    console.log(id);
+                    console.log(name);
                 }
             }
         })
