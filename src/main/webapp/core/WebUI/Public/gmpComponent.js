@@ -495,50 +495,57 @@ Vue.component("base-tree", {
         },
         // 组织层级关系数据
         hierarchicalData(jsonArr) {
+            // 保存 this 指针
+            var that = this;
+            // 组织数据
             var data = [];
+            // 根节点下二级节点数组
             var nodes = [];
+            // 根节点标识
+            var rootName;
+            // 后端数据指定 label
+            var baseLabel = that.initial.defaultProps.label;
             // 获取配置信息
-            var parent = this.initial.defaultProps.parentId;
-            var self = this.initial.defaultProps.selfId;
+            var parent = this.initial.defaultProps.parent;
+            // var self = this.initial.defaultProps.selfId;
             // 若指定父节点信息 遍历原数组
-            if(parent && self) {
+            if(parent) {
                 for(var i = 0; i < jsonArr.length; i++) {
                     // 向每一个json数组对象下添加 children 属性值
                     jsonArr[i].children = [];
-                    // 若当前json对象的节点信息为ROOT 说明其为根节点
-                    if(jsonArr[i][self] == "ROOT" && jsonArr[i][parent] == "") {
+                    // 若当前json对象没有父节点信息 说明其为根节点
+                    if(jsonArr[i][parent] == "") {
                         // 将当前节点 push 到数据 data 中
                         data.push(jsonArr[i]);
+                        // 缓存根节点信息
+                        rootName = jsonArr[i][baseLabel];
                     }
                 }
-
+                // 循环遍历除根节点之外的数据
                 for(var i = 0; i < jsonArr.length; i++) {
                     // 向每一个json数组对象下添加 children 属性值
                     jsonArr[i].children = [];
-                    // 若当前json对象下有父节点信息 且为二级根节点
-                    if(jsonArr[i][self] != "ROOT" && jsonArr[i][parent] != "") {
+                    // 若当前json对象下有父节点信息 且为子级根节点
+                    if(jsonArr[i][parent] != "") {
                         // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
                         for(var j = 0;j < jsonArr.length;j++) {
-                            if(jsonArr[j][parent] == jsonArr[i][self]) {
+                            if(jsonArr[j][parent] == jsonArr[i][baseLabel]) {
                                 jsonArr[i].children.push(jsonArr[j]);
                             }
                         }
                     }
                     // 当前节点为一级根节点
-                    if(jsonArr[i][parent] == "ROOT") {
-                        // console.log(jsonArr[i]);
-                        // console.log(data[0]);
+                    if(jsonArr[i][parent] == rootName) {
+                        // 将其子节点 push 到 children 下
                         nodes.push(jsonArr[i]);
                     }
                 }
-
                 // 将一级根节点插入根节点下
                 data[0].children = nodes;
             }else {
                 // 如果没指定父节点信息 当前节点信息 说明当前树结构是一级树
                 data = jsonArr;
             }
-
             // console.log(data);
             return data;
         },
@@ -615,13 +622,13 @@ Vue.component("select-tree", {
             // 节点 key
             id: "",
             // 选中的节点名称
-            select_node: "",
+            select_node: [],
             // 选中节点 id
             select_id: "",
             // 是否显示复选框
             checkbox: "",
             // 中间参数
-            middle: "",
+            middle: [],
             // 默认展开节点
             defaultExpandedKeys: [],
             // 展开所有节点
@@ -735,6 +742,7 @@ Vue.component("select-tree", {
             if(bool && this.clearable) {
                 var _expanded = this.initial.expanded;
                 var _checked = this.initial.checked;
+                var _select = this.select_node;
                 // 用Vue的方法写一个查找DOM和addClass的方法
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
                 // 下拉框展开 树结构展开配置节点
@@ -744,7 +752,7 @@ Vue.component("select-tree", {
                     this.defaultExpandedKeys = [];
                 }
                 // 下拉框展开 树结构选中配置节点
-                if(_checked && _checked.length > 0 && this.select_node != "") {
+                if(_checked && _checked.length > 0 &&  _select.length > 0) {
                     // this.defaultCheckedKeys = this.initial.checked;
                     this.setCheckedKeys(this.initial.checked);
                     // 确认按钮可用
@@ -769,7 +777,7 @@ Vue.component("select-tree", {
                 // 下拉框展开 树结构选中配置节点
                 if(_checked && _checked.length > 0) {
                     // this.defaultCheckedKeys = this.initial.checked;
-                    this.setCheckedKeys(JSON.parse(JSON.stringify(this.initial.checked)))
+                    this.setCheckedKeys(JSON.parse(JSON.stringify(this.initial.checked)));
                     // 确认按钮可用
                     this.error = false;
                 }else {
@@ -781,47 +789,57 @@ Vue.component("select-tree", {
         },
         // 组织层级关系数据
         hierarchicalData(jsonArr) {
+            // 保存 this 指针
+            var that = this;
+            // 组织数据
             var data = [];
+            // 根节点下二级节点数组
             var nodes = [];
+            // 根节点标识
+            var rootName;
+            // 后端数据指定 label
+            var baseLabel = that.initial.defaultProps.label;
             // 获取配置信息
-            var parent = this.initial.defaultProps.parentId;
-            var self = this.initial.defaultProps.selfId;
-            // console.log(parent);
-            // console.log(self);
-            // 遍历原数组
-            for(var i = 0; i < jsonArr.length; i++) {
-                // 向每一个json数组对象下添加 children 属性值
-                jsonArr[i].children = [];
-                // 若当前json对象的节点信息为ROOT 说明其为根节点
-                if(jsonArr[i][self] == "ROOT") {
-                    // 将当前节点 push 到数据 data 中
-                    data.push(jsonArr[i]);
-                }
-            }
-
-            for(var i = 0; i < jsonArr.length; i++) {
-                // 向每一个json数组对象下添加 children 属性值
-                jsonArr[i].children = [];
-                // 若当前json对象下有父节点信息 且为二级根节点
-                if(jsonArr[i][self] != "ROOT") {
-                    // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
-                    for(var j = 0;j < jsonArr.length;j++) {
-                        if(jsonArr[j][parent] == jsonArr[i][self]) {
-                            jsonArr[i].children.push(jsonArr[j]);
-                        }
+            var parent = this.initial.defaultProps.parent;
+            // var self = this.initial.defaultProps.selfId;
+            // 若指定父节点信息 遍历原数组
+            if(parent) {
+                for(var i = 0; i < jsonArr.length; i++) {
+                    // 向每一个json数组对象下添加 children 属性值
+                    jsonArr[i].children = [];
+                    // 若当前json对象没有父节点信息 说明其为根节点
+                    if(jsonArr[i][parent] == "") {
+                        // 将当前节点 push 到数据 data 中
+                        data.push(jsonArr[i]);
+                        // 缓存根节点信息
+                        rootName = jsonArr[i][baseLabel];
                     }
                 }
-                // 当前节点为一级根节点
-                if(jsonArr[i][parent] == "ROOT") {
-                    // console.log(jsonArr[i]);
-                    // console.log(data[0]);
-                    nodes.push(jsonArr[i]);
+                // 循环遍历除根节点之外的数据
+                for(var i = 0; i < jsonArr.length; i++) {
+                    // 向每一个json数组对象下添加 children 属性值
+                    jsonArr[i].children = [];
+                    // 若当前json对象下有父节点信息 且为子级根节点
+                    if(jsonArr[i][parent] != "") {
+                        // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
+                        for(var j = 0;j < jsonArr.length;j++) {
+                            if(jsonArr[j][parent] == jsonArr[i][baseLabel]) {
+                                jsonArr[i].children.push(jsonArr[j]);
+                            }
+                        }
+                    }
+                    // 当前节点为一级根节点
+                    if(jsonArr[i][parent] == rootName) {
+                        // 将其子节点 push 到 children 下
+                        nodes.push(jsonArr[i]);
+                    }
                 }
+                // 将一级根节点插入根节点下
+                data[0].children = nodes;
+            }else {
+                // 如果没指定父节点信息 当前节点信息 说明当前树结构是一级树
+                data = jsonArr;
             }
-
-            // 将一级根节点插入根节点下
-            data[0].children = nodes;
-
             // console.log(data);
             return data;
         },
@@ -917,13 +935,25 @@ Vue.component("select-tree", {
         var self = this;
         // 获取树节点数据
         this.getNode(function(data) {
+            // 获取配置信息默认选择项
             var _checked = self.initial.checked;
+            // 获取配置信息显示名称
+            var _name = self.initial.defaultProps.label;
+            // 选择节点信息
+            var _selectNode = [];
+            // 若配置信息中含有默认选择项
             if(_checked && _checked.length > 0) {
+                // 遍历后端数据
                 for(var i = 0;i < data.length;i++) {
-                    if(data[i].rowId == _checked) {
-                        self.select_node = data[i].orgName;
+                    // 后端数据中 id为配置id的项 push到数组中
+                    for(var j = 0;j < _checked.length;j++) {
+                        if(data[i].rowId == _checked[j]) {
+                            _selectNode.push(data[i][_name]);
+                        }
                     }
                 }
+                // 显示选中项名称
+                self.select_node = _selectNode;
             }
         });
         // 实例创建完成 设置下拉框宽度;
