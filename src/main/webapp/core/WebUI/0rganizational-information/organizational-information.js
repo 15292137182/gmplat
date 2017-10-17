@@ -26,7 +26,7 @@ gmp_onload=function(){
         el: '#basTop',
         data: {
             addOpe: false,
-            addAttr: false,
+            orgDeleteData: true,
             takeEffect: false,
         },
         methods: {
@@ -51,6 +51,7 @@ gmp_onload=function(){
                     }
                     gmpAjax.showAjax(data,function(res){
                         // queryData.getData(dataBase.url,dataBase.input,dataBase)
+                        left.$refs.org.getNode();
                     })
                 })
             },
@@ -74,6 +75,7 @@ gmp_onload=function(){
             treeData: {
                 // 是否显示checkbook 默认为不显示
                 checkbox: true,
+                expandedAll: true,
                 // 获取树节点接口
                 url: serverPath + "/baseOrg/queryPage",
                 // 设置参数 -- 树节点上显示的文字
@@ -94,6 +96,7 @@ gmp_onload=function(){
             //点击左边的树得到数据
             getNodes(data) {
                 this.rowId=data.rowId
+                basTop.orgDeleteData = false;
                 $.ajax({
                     url:Organization,
                     type:"get",
@@ -105,13 +108,13 @@ gmp_onload=function(){
                     success:function(res){
                         var data=res.resp.content.data;
                         console.log(data);
-                        right.orgPid=data.orgPid;
-                        right.orgId=data.orgId;
-                        right.orgName=data.orgName;
-                        right.orgSort=data.orgSort;
-                        right.fixedPhone=data.fixedPhone;
-                        right.address=data.address;
-                        right.desp=data.desp;
+                        right.formTable.orgPid=data.orgPid;
+                        right.formTable.orgId=data.orgId;
+                        right.formTable.orgName=data.orgName;
+                        right.formTable.orgSort=data.orgSort;
+                        right.formTable.fixedPhone=data.fixedPhone;
+                        right.formTable.address=data.address;
+                        right.formTable.desp=data.desp;
                         right.rowId = data.rowId;
                         rightBottom.PersonnelInformation(right.rowId);
                         // basRightTop.roleView(data.rowId);
@@ -120,6 +123,8 @@ gmp_onload=function(){
             },
             //复选框选中得到得值
             getChecked(data) {
+                console.log(data);
+                basTop.orgDeleteData = false;
                 var arr = this.rowIdArr;
                 for(var i=0;i<arr.length;i++){
                         if(data.rowId != arr[i]){
@@ -146,32 +151,36 @@ gmp_onload=function(){
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
-            orgPid:"",
-            orgId:"",
-            orgName:"",
-            orgSort:"",
-            fixedPhone:"",
-            address:"",
-            desp:"",
+            labelPosition:'right',
+            formTable:{
+                orgPid:"",
+                orgId:"",
+                orgName:"",
+                orgSort:"",
+                fixedPhone:"",
+                address:"",
+                desp:"",
+            },
             rowId:""
         }),
         methods: {
             editTbleBase(rowId){
                 var data = {"url":modify,"jsonData":{
                     rowId:rowId,
-                    orgPid:this.orgPid,
-                    orgId:this.orgId,
-                    orgName:this.orgName,
-                    orgSort:this.orgSort,
-                    fixedPhone:this.fixedPhone,
-                    address:this.address,
-                    desp:this.desp,
+                    orgPid:this.formTable.orgPid,
+                    orgId:this.formTable.orgId,
+                    orgName:this.formTable.orgName,
+                    orgSort:this.formTable.orgSort,
+                    fixedPhone:this.formTable.fixedPhone,
+                    address:this.formTable.address,
+                    desp:this.formTable.desp,
                 },
                     "obj":right,
                     "showMsg":true
                 }
                 gmpAjax.showAjax(data,function(res){
                     console.log(res);
+                    left.$refs.org.getNode();
                 })
             },
             addClick(){
@@ -236,10 +245,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() - 430;
+                rightBottom.leftHeight = $(window).height() - 490;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() - 430;
+                rightBottom.leftHeight = $(window).height() - 490;
             });
         }
     })
