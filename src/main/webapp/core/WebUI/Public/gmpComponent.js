@@ -368,17 +368,10 @@ Vue.component("base-tree", {
             treeNodes: [],
             // 配置选项
             defaultProps: {
-                children: 'children',
-                disabled: function(data, node) {
-                    // console.log(data);
-                    // console.log(node);
-                    if(data.orgId == "ROOT" && data.orgPid == "") {
-                        // return node.disabled = true;
-                    }
-                }
+                children: 'children'
             },
             // 树节点 key
-            id: "",
+            key: "",
             // 当前选中节点
             currentCheckedNodes: [],
             // 加载
@@ -405,14 +398,24 @@ Vue.component("base-tree", {
             this.isFilter = false;
         }
         // 获取配置树节点 key
-        if(this.initial.defaultProps.id) {
-            this.id = this.initial.defaultProps.id;
+        if(this.initial.defaultProps.key) {
+            this.key = this.initial.defaultProps.key;
         }else {
-            this.id = "";
+            this.key = "";
         }
         // 获取defaultProps
         if(this.initial.defaultProps && this.initial.defaultProps.label) {
             this.defaultProps.label = this.initial.defaultProps.label;
+            // 配置信息 key 父节点信息
+            var _key = this.initial.defaultProps.key;
+            var _parent = this.initial.defaultProps.parent;
+            this.defaultProps.disabled = function(data, node) {
+                // console.log(data);
+                // console.log(node);
+                if(data[_key] == "ROOT" && data[_parent] == "") {
+                    return node.disabled = true;
+                }
+            }
         }else {
             this.defaultProps = {
                 children: 'children'
@@ -495,30 +498,22 @@ Vue.component("base-tree", {
         },
         // 组织层级关系数据
         hierarchicalData(jsonArr) {
-            // 保存 this 指针
-            var that = this;
             // 组织数据
             var data = [];
             // 根节点下二级节点数组
             var nodes = [];
-            // 根节点标识
-            var rootName;
-            // 后端数据指定 label
-            var baseLabel = that.initial.defaultProps.label;
             // 获取配置信息
             var parent = this.initial.defaultProps.parent;
-            // var self = this.initial.defaultProps.selfId;
+            var self = this.initial.defaultProps.key;
             // 若指定父节点信息 遍历原数组
             if(parent) {
                 for(var i = 0; i < jsonArr.length; i++) {
                     // 向每一个json数组对象下添加 children 属性值
                     jsonArr[i].children = [];
                     // 若当前json对象没有父节点信息 说明其为根节点
-                    if(jsonArr[i][parent] == "") {
+                    if(jsonArr[i][parent] == "" && jsonArr[i][self] == "ROOT") {
                         // 将当前节点 push 到数据 data 中
                         data.push(jsonArr[i]);
-                        // 缓存根节点信息
-                        rootName = jsonArr[i][baseLabel];
                     }
                 }
                 // 循环遍历除根节点之外的数据
@@ -529,13 +524,13 @@ Vue.component("base-tree", {
                     if(jsonArr[i][parent] != "") {
                         // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
                         for(var j = 0;j < jsonArr.length;j++) {
-                            if(jsonArr[j][parent] == jsonArr[i][baseLabel]) {
+                            if(jsonArr[j][parent] == jsonArr[i][self]) {
                                 jsonArr[i].children.push(jsonArr[j]);
                             }
                         }
                     }
                     // 当前节点为一级根节点
-                    if(jsonArr[i][parent] == rootName) {
+                    if(jsonArr[i][parent] == "ROOT") {
                         // 将其子节点 push 到 children 下
                         nodes.push(jsonArr[i]);
                     }
@@ -601,7 +596,7 @@ Vue.component("base-tree", {
     },
     template: `<div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
-                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="strictly" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="id" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="strictly" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="key" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });
@@ -620,7 +615,7 @@ Vue.component("select-tree", {
             // 树节点数据
             treeNodes: [],
             // 节点 key
-            id: "",
+            key: "",
             // 选中的节点名称
             select_node: [],
             // 选中节点 id
@@ -637,14 +632,7 @@ Vue.component("select-tree", {
             defaultCheckedKeys: [],
             // 默认配置信息
             defaultProps: {
-                children: 'children',
-                disabled: function(data, node) {
-                    // console.log(data);
-                    // console.log(node);
-                    if(data.orgId == "ROOT" && data.orgPid == "") {
-                        // return node.disabled = true;
-                    }
-                }
+                children: 'children'
             },
             // 是否显示清空图标
             clearable: true,
@@ -660,13 +648,14 @@ Vue.component("select-tree", {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
         clickNode(obj, node, row) {
             var label = this.defaultProps.label;
-            var id = this.initial.defaultProps.id;
-            // console.log(obj);
+            var parent = this.initial.defaultProps.parent;
+            var id = this.initial.defaultProps.key;
+            console.log(obj);
             // console.log(node);
             // console.log(row);
 
             // 若为根节点 确认按钮不可用
-            if(obj.orgId == "ROOT" && obj.orgPid == "") {
+            if(obj[id] == "ROOT" && obj[parent] == "") {
                 // 确认按钮不可用
                 this.error = true;
             }else {
@@ -677,33 +666,40 @@ Vue.component("select-tree", {
                 // 确认按钮可用
                 this.error = false;
                 // 向父组件传递方法和数据
-                this.$emit("click-node", obj);
+                this.$emit("click-node", obj, obj[id], obj[label]);
             }
         },
         // 选择复选框 返回节点对应的对象 是否被选中 节点的子树中是否有被选中的节点
         checkNode(obj, checked, node) {
             var label = this.defaultProps.label;
-            var _id = this.initial.defaultProps.id;
+            var _id = this.initial.defaultProps.key;
+            // 返回数据增加节点选择标识
+            var flag = checked;
+            // console.log(obj);
+            // console.log(checked);
+            // console.log(node);
             // 选中的节点名称
-            this.middle = obj[label];
+            if(checked) {
+                this.middle.push(obj[label]);
+            }
+            // 取消选中项 输入框删除相应内容
+            var target = this.select_node;
+            for(var k = 0;k < target.length;k++) {
+                if(obj[name] == target[k]) {}
+            }
             // 选中节点 id
             this.select_id = obj[_id];
-            // 返回数据增加节点选择标识
-            obj.selected = checked;
             // 确认按钮状态
-            // if(this.$refs.selectTree.getCheckedNodes()) {
-            //     this.error = false;
-            // }else {}
             this.error = !checked;
             // 向父组件传递方法和数据
-            this.$emit("checked-node", obj);
+            this.$emit("checked-node", obj, obj[_id], obj[label], flag);
         },
         // 选中节点事件
         checked() {
             // console.log(this.$refs.selectTree.getCheckedNodes());
             // 选中节点传递给中间变量
             this.select_node = this.middle;
-            this.$emit("select-node", this.select_id);
+            // this.$emit("select-node", this.select_id);
         },
         // 鼠标移入事件
         enter() {
@@ -739,10 +735,10 @@ Vue.component("select-tree", {
         // 下拉框展开事件
         expanded(bool) {
             // console.log(this);
+            var _select = this.select_node;
             if(bool && this.clearable) {
                 var _expanded = this.initial.expanded;
                 var _checked = this.initial.checked;
-                var _select = this.select_node;
                 // 用Vue的方法写一个查找DOM和addClass的方法
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
                 // 下拉框展开 树结构展开配置节点
@@ -765,6 +761,12 @@ Vue.component("select-tree", {
 
             }else if(!bool  && this.clearable) {
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
+                if(_select.length == 0) {
+                    // 清空选中项
+                    this.setCheckedKeys([]);
+                    // 确认按钮不可用
+                    this.error = true;
+                }
             }else if(!this.clearable) {
                 var _expanded = this.initial.expanded;
                 var _checked = this.initial.checked;
@@ -785,34 +787,34 @@ Vue.component("select-tree", {
                     // 确认按钮不可用
                     this.error = true;
                 }
+            }else if(!bool && !this.clearable) {
+                // 若选中节点没有确认
+                if(_select.length == 0) {
+                    // 清空选中项
+                    this.setCheckedKeys([]);
+                    // 确认按钮不可用
+                    this.error = true;
+                }
             }
         },
         // 组织层级关系数据
         hierarchicalData(jsonArr) {
-            // 保存 this 指针
-            var that = this;
             // 组织数据
             var data = [];
             // 根节点下二级节点数组
             var nodes = [];
-            // 根节点标识
-            var rootName;
-            // 后端数据指定 label
-            var baseLabel = that.initial.defaultProps.label;
             // 获取配置信息
             var parent = this.initial.defaultProps.parent;
-            // var self = this.initial.defaultProps.selfId;
+            var self = this.initial.defaultProps.key;
             // 若指定父节点信息 遍历原数组
             if(parent) {
                 for(var i = 0; i < jsonArr.length; i++) {
                     // 向每一个json数组对象下添加 children 属性值
                     jsonArr[i].children = [];
                     // 若当前json对象没有父节点信息 说明其为根节点
-                    if(jsonArr[i][parent] == "") {
+                    if(jsonArr[i][parent] == "" && jsonArr[i][self] == "ROOT") {
                         // 将当前节点 push 到数据 data 中
                         data.push(jsonArr[i]);
-                        // 缓存根节点信息
-                        rootName = jsonArr[i][baseLabel];
                     }
                 }
                 // 循环遍历除根节点之外的数据
@@ -823,13 +825,13 @@ Vue.component("select-tree", {
                     if(jsonArr[i][parent] != "") {
                         // 遍历查找json数组里符合该父节点信息的所有对象 并将其添加到父节点的 children 树形下
                         for(var j = 0;j < jsonArr.length;j++) {
-                            if(jsonArr[j][parent] == jsonArr[i][baseLabel]) {
+                            if(jsonArr[j][parent] == jsonArr[i][self]) {
                                 jsonArr[i].children.push(jsonArr[j]);
                             }
                         }
                     }
                     // 当前节点为一级根节点
-                    if(jsonArr[i][parent] == rootName) {
+                    if(jsonArr[i][parent] == "ROOT") {
                         // 将其子节点 push 到 children 下
                         nodes.push(jsonArr[i]);
                     }
@@ -903,20 +905,30 @@ Vue.component("select-tree", {
             this.url = "";
         }
         // 树节点 key
-        if(this.initial.defaultProps.id) {
-            this.id = this.initial.defaultProps.id;
+        if(this.initial.defaultProps.key) {
+            this.key = this.initial.defaultProps.key;
         }else {
-            this.id = "";
+            this.key = "";
         }
         // 获取defaultProps
         if(this.initial.defaultProps && this.initial.defaultProps.label) {
             this.defaultProps.label = this.initial.defaultProps.label;
+            // 配置信息 key 父节点信息
+            var _key = this.initial.defaultProps.key;
+            var _parent = this.initial.defaultProps.parent;
+            this.defaultProps.disabled = function(data, node) {
+                // console.log(data);
+                // console.log(node);
+                if(data[_key] == "ROOT" && data[_parent] == "") {
+                    return node.disabled = true;
+                }
+            }
         }else {
             this.defaultProps = {
                 children: 'children'
             };
-            // 确认按钮可用
-            this.error = false;
+            // 确认按钮不可用
+            this.error = true;
         }
         // 获取配置是否显示清空内容图标
         if(this.initial.clearable) {
@@ -939,6 +951,7 @@ Vue.component("select-tree", {
             var _checked = self.initial.checked;
             // 获取配置信息显示名称
             var _name = self.initial.defaultProps.label;
+            var _key = self.initial.defaultProps.key;
             // 选择节点信息
             var _selectNode = [];
             // 若配置信息中含有默认选择项
@@ -947,7 +960,7 @@ Vue.component("select-tree", {
                 for(var i = 0;i < data.length;i++) {
                     // 后端数据中 id为配置id的项 push到数组中
                     for(var j = 0;j < _checked.length;j++) {
-                        if(data[i].rowId == _checked[j]) {
+                        if(data[i][_key] == _checked[j]) {
                             _selectNode.push(data[i][_name]);
                         }
                     }
@@ -966,7 +979,7 @@ Vue.component("select-tree", {
                     <el-dropdown-menu slot="dropdown" id="select_tree" :style="{width: dropWidth + 'px'}">
                         <el-dropdown-item>
                             <div style="max-height: 320px;width: 100%;overflow-y: scroll;">
-                                <el-tree :data="treeNodes" :show-checkbox="checkbox" :check-strictly="true" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="id" ref="selectTree" highlight-current :props="defaultProps"></el-tree>
+                                <el-tree :data="treeNodes" :show-checkbox="checkbox" :check-strictly="true" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="key" ref="selectTree" highlight-current :props="defaultProps"></el-tree>
                             </div>
                         </el-dropdown-item>
                         <el-dropdown-item>
