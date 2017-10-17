@@ -10,7 +10,6 @@ import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserGroupService;
-import com.bcx.plat.core.service.UserRelateUserGroupService;
 import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -18,7 +17,12 @@ import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -253,6 +257,29 @@ public class UserGroupController extends BaseController {
     } else {
       return fail(Message.INVALID_REQUEST);
     }
+  }
+
+  /**
+   * 新增用户组下用户
+   *
+   * @param param 接受新增参数
+   * @return platResult
+   */
+  @PostMapping("/addUserGroupUser")
+  public PlatResult addUserGroupUser(@RequestParam Map param) {
+    PlatResult platResult;
+    if (isValid(String.valueOf(param.get("userRowId")).trim()) && isValid(String.valueOf(param.get("userGroupRowId")).trim())) {
+      UserRelateUserGroup userGroup = new UserRelateUserGroup().buildCreateInfo().fromMap(param);
+      int insert = userGroup.insert();
+      if (insert != -1) {
+        platResult = successData(NEW_ADD_SUCCESS, userGroup);
+      } else {
+        platResult = fail(NEW_ADD_FAIL);
+      }
+    } else {
+      platResult = fail(DATA_CANNOT_BE_EMPTY);
+    }
+    return platResult;
   }
 
 }

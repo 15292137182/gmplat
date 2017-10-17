@@ -18,9 +18,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * @author Wen TieHu
  * @version 1.0
- * <pre>Histroy:
- *                2017/10/11  Wen TieHu Create
- *          </pre>
+ * <pre>History: 2017/10/11  Wen TieHu Create </pre>
  */
 @Service
 public class UserGroupService extends BaseService<UserGroup> {

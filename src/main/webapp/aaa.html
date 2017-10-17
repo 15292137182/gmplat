@@ -25,10 +25,12 @@
 
 
     $("#BB").click(function () {
+            var  str = [];
+            str.push("6281ff7c-d1a6-4b4d-a4de-71179641");
         $.ajax({
-            url: 'http://192.168.100.50/gmplat/gmp/sys/core/sysSetting/getSettings',
+            url: 'http://192.168.100.50/gmplat/gmp/sys/core/menu/queryById',
             type: 'post',
-            data:'',
+            data:{rowId:str},
             dataType :'json',
             success: function (result) {
                 console.log(result)

@@ -3,8 +3,8 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Role;
-import com.bcx.plat.core.entity.RoleRelatePermission;
 import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.entity.UserGroupRelateRole;
 import com.bcx.plat.core.entity.UserRelateRole;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -15,9 +15,18 @@ import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.bcx.plat.core.constants.Message.DELETE_FAIL;
+import static com.bcx.plat.core.constants.Message.DELETE_SUCCESS;
+import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
+import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
@@ -161,11 +170,11 @@ public class RoleService extends BaseService<Role> {
       List<UserRelateRole> relateRoles = new UserRelateRole().selectSimple(condition);
       if (!relateRoles.isEmpty()) {
         List<String> userRowIds = relateRoles.stream()
-                .map(UserRelateRole::getUserRowId)
-                .collect(Collectors.toList());
+            .map(UserRelateRole::getUserRowId)
+            .collect(Collectors.toList());
         Condition condition1 = new ConditionBuilder(User.class)
                 .and().in("rowId", userRowIds).endAnd().buildDone();
-        return userService.selectPageMap(condition1, orders, pageNum, pageSize);
+        return userService.selectPageMap(condition, orders, pageNum, pageSize);
       }
     }
     return null;
@@ -180,7 +189,7 @@ public class RoleService extends BaseService<Role> {
    * @param pageSize 页面大小
    * @return 返回查询结果
    */
-  public PageResult<Map<String, Object>> queryRoleUserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
+  public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
               .and().equal("roleId", roleId).endAnd().buildDone();
@@ -202,8 +211,8 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteUserInRole(String roleRowId, String[] userRowIds) {
     if (isValid(roleRowId) && null != userRowIds && userRowIds.length != 0) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
-              .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
-              .buildDone();
+          .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
+          .buildDone();
       new UserRelateRole().delete(condition);
       return success(Message.DELETE_SUCCESS);
     }
@@ -260,5 +269,209 @@ public class RoleService extends BaseService<Role> {
     }
     return fail(Message.INVALID_REQUEST);
   }
+
+
+  /**
+   * 用户分配角色关联信息
+   *
+   * @param userRwoId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult addUserRole(String userRwoId, String[] roleRowId) {
+    ServerResult serverResult;
+    Map<String, Object> map = new HashMap<>();
+    map.put("userRowId", userRwoId);
+    int insert = -1;
+    for (String role : roleRowId) {
+      map.put("roleRowId", role);
+      UserRelateRole userRelateRole = new UserRelateRole().fromMap(map);
+      insert = userRelateRole.insert();
+    }
+    if (insert == -1) {
+      serverResult = fail(NEW_ADD_FAIL);
+    } else {
+      serverResult = success(NEW_ADD_SUCCESS);
+    }
+    return serverResult;
+  }
+
+  /**
+   * 用户删除角色关联信息
+   *
+   * @param userRowId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult deleteUserRole(String userRowId, String[] roleRowId) {
+    ServerResult serverResult;
+    Condition condition = new ConditionBuilder(UserRelateRole.class)
+        .and().equal(userRowId, userRowId).in("roleRowId", Arrays.asList(roleRowId))
+        .endAnd().buildDone();
+    int delete = new UserRelateRole().delete(condition);
+    if (delete == -1) {
+      serverResult = success(DELETE_SUCCESS);
+    } else {
+      serverResult = success(DELETE_FAIL);
+    }
+    return serverResult;
+  }
+
+
+
+
+
+  /**
+   * 用户组分配角色关联信息
+   *
+   * @param userGroupRwoId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult addUserGroupRole(String userGroupRwoId, String[] roleRowId) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("userGroupRwoId", userGroupRwoId);
+    ServerResult serverResult;
+    int insert = -1;
+    for (String role : roleRowId) {
+      map.put("roleRowId", role);
+      UserGroupRelateRole userGroupRelateRole = new UserGroupRelateRole().fromMap(map);
+      insert = userGroupRelateRole.insert();
+    }
+    if (insert == -1) {
+      serverResult = fail(NEW_ADD_FAIL);
+    } else {
+      serverResult = success(NEW_ADD_SUCCESS);
+    }
+    return serverResult;
+  }
+
+
+
+  /**
+   * 用户删除角色关联信息
+   *
+   * @param userGroupRwoId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult deleteUserGroupRole(String userGroupRwoId, String[] roleRowId) {
+    Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
+        .and().equal("userGroupRwoId", userGroupRwoId).in("roleRowId", Arrays.asList(roleRowId))
+        .endAnd()
+        .buildDone();
+    ServerResult serverResult;
+    int delete = new UserGroupRelateRole().delete(condition);
+    if (delete == -1) {
+      serverResult = success(DELETE_SUCCESS);
+    } else {
+      serverResult = success(DELETE_FAIL);
+    }
+    return serverResult;
+  }
+
+
+
+
+  /**
+   * 角色分配用户关联信息
+   *
+   * @param userRwoId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult addRoleUser(String roleRowId  , String[] userRwoId) {
+    ServerResult serverResult;
+    Map<String, Object> map = new HashMap<>();
+    map.put("roleRowId", roleRowId);
+    int insert = -1;
+    for (String user : userRwoId) {
+      map.put("userRwoId", user);
+      UserRelateRole userRelateRole = new UserRelateRole().fromMap(map);
+      insert = userRelateRole.insert();
+    }
+    if (insert == -1) {
+      serverResult = fail(NEW_ADD_FAIL);
+    } else {
+      serverResult = success(NEW_ADD_SUCCESS);
+    }
+    return serverResult;
+  }
+
+  /**
+   * 角色删除用户关联信息
+   *
+   * @param userRowId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult deleteRoleUser(String roleRowId , String[] userRowId) {
+    ServerResult serverResult;
+    Condition condition = new ConditionBuilder(UserRelateRole.class)
+        .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
+        .endAnd().buildDone();
+    int delete = new UserRelateRole().delete(condition);
+    if (delete == -1) {
+      serverResult = success(DELETE_SUCCESS);
+    } else {
+      serverResult = success(DELETE_FAIL);
+    }
+    return serverResult;
+  }
+
+
+
+
+
+  /**
+   * 角色分配用户组关联信息
+   *
+   * @param userGroupRwoId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult addRoleUserGroup(String roleRowId , String[] userGroupRwoId) {
+    ServerResult serverResult;
+    Map<String, Object> map = new HashMap<>();
+    map.put("roleRowId", roleRowId);
+    int insert = -1;
+    for (String userGroup : userGroupRwoId) {
+      map.put("userGroupRwoId", userGroup);
+      UserGroupRelateRole userGroupRelateRole = new UserGroupRelateRole().fromMap(map);
+      insert = userGroupRelateRole.insert();
+    }
+    if (insert == -1) {
+      serverResult = fail(NEW_ADD_FAIL);
+    } else {
+      serverResult = success(NEW_ADD_SUCCESS);
+    }
+    return serverResult;
+  }
+
+
+
+  /**
+   * 角色删除用户组关联信息
+   *
+   * @param userGroupRwoId 用户rowId
+   * @param roleRowId 角色rowId
+   * @return ServerResult
+   */
+  public ServerResult deleteRoleUserGroup(String roleRowId , String[] userGroupRwoId) {
+    ServerResult serverResult;
+    Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
+        .and().equal("roleRowId", roleRowId).in("userGroupRwoId", Arrays.asList(userGroupRwoId))
+        .endAnd()
+        .buildDone();
+    int delete = new UserGroupRelateRole().delete(condition);
+    if (delete == -1) {
+      serverResult = success(DELETE_SUCCESS);
+    } else {
+      serverResult = success(DELETE_FAIL);
+    }
+    return serverResult;
+  }
+
+
 
 }

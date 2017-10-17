@@ -131,7 +131,7 @@ public class ExcelImportExport extends BaseController {
         for (Map li : data) {
           add = userController.add(li);
         }
-        return successData(Message.QUERY_SUCCESS, add);
+        return add;
       }
     } catch (Exception e) {
       e.printStackTrace();
