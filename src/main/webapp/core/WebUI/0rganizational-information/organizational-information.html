@@ -21,12 +21,13 @@
         #topInput .el-textarea__inner{
             width:550px;
         }
-        .spanFloat{
+        .spanPosition{
             position: absolute;
             top:-12px;
             left:20px;
             background: white;
             font-weight:bold;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -55,11 +56,11 @@
     </el-col>
 
     <el-col :span="19" id="right" style="margin-left:15px">
-        <div class="allBorder" style="border:1px solid #F2F2F2">
+        <div class="allBorder" style="border:1px solid #bccdc5">
             <el-row>
                 <el-col>
                     <div>
-                        <span class="spanFloat">详细信息</span>
+                        <span class="spanPosition">详细信息</span>
                     </div>
                     <el-col :span="24">
                         <div id="topInput" style="padding:20px 20px 10px 10px">
@@ -122,11 +123,11 @@
     </el-col>
 
     <el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:40px;">
-        <div class="allBorder" style="border:1px solid #F2F2F2">
+        <div class="allBorder" style="border:1px solid #bccdc5">
             <el-row>
                 <el-col>
                     <div>
-                        <span class="spanFloat">关联其他信息</span>
+                        <span class="spanPosition">关联其他信息</span>
                     </div>
                     <div style="padding:30px 20px">
                         <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
