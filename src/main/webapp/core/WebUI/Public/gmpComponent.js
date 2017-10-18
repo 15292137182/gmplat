@@ -54,6 +54,7 @@ Vue.component("single-selection", {
     data() {
         return {
             value: [],  // 下拉框选中绑定值
+            name: [],   // 显示名称
             isDisabled: false,  // 下拉框是否禁用
             options: [],    // 下拉框option
             url: "",    // 获取option接口
@@ -170,6 +171,30 @@ Vue.component("single-selection", {
                     }
                 });
             }
+        },
+        // 下拉框隐藏时回调
+        expanded(bool) {
+            var data = this.options;
+            var value = this.value;
+            var _name = this.name;
+            if(!bool) {
+                if(this.isMultiple) {
+                    for(var i = 0;i < data.length;i++) {
+                        for(var j = 0;j < value.length;j++) {
+                            if(data[i].value == value[j]) {
+                                _name.push(data[i].label);
+                            }
+                        }
+                    }
+                }else {
+                    for(var i = 0;i < data.length;i++) {
+                        if(data[i].value == value) {
+                            _name = data[i].label;
+                        }
+                    }
+                }
+                this.$emit("hide", _name);
+            }
         }
     },
     mounted() {
@@ -219,7 +244,7 @@ Vue.component("single-selection", {
     updated: function () {
         //
     },
-    template: `<el-select @change="changeSelect" v-model="value" :multiple="isMultiple" :disabled="isDisabled" clearable="true" placeholder="请选择">
+    template: `<el-select @change="changeSelect" @visible-change="expanded" v-model="value" :multiple="isMultiple" :disabled="isDisabled" clearable="true" placeholder="请选择">
 					<el-option
 						v-for="item in options"
 						:key="item.value"

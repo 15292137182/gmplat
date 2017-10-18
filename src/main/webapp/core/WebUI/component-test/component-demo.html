@@ -27,6 +27,13 @@
 </head>
 <body>
     <el-row id="component" v-cloak>
+        <!-- 基本下拉框 -->
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">基本下拉框</el-col>
+            <el-col :span="10">
+                <single-selection :initial="singleSelect" @hide="hide"></single-selection>
+            </el-col>
+        </el-col>
         <!-- 树形下拉框 -->
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">树形下拉框</el-col>
@@ -56,6 +63,12 @@
             el: "#component",
             data() {
                 return {
+                    // 下拉框配置
+                    singleSelect: {
+                        params: "functionBlockAlign",
+                        value: "",
+                        multiple: "true"
+                    },
                     // 一级树结构配置
                     treeData: {
                         // 显示复选框
@@ -99,6 +112,9 @@
                 }
             },
             methods: {
+                hide(data) {
+                    console.log(data);
+                },
                 getNodes(data, id, name) {
                     console.log(data);
                     console.log("选中行id为：" + id);
