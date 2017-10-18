@@ -2,6 +2,7 @@ package com.bcx.plat.core.base;
 
 import com.bcx.plat.core.base.support.BeanInterface;
 import com.bcx.plat.core.morebatis.app.MoreBatis;
+import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.command.QueryAction;
 import com.bcx.plat.core.morebatis.command.UpdateAction;
@@ -9,7 +10,6 @@ import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
-import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
@@ -34,7 +34,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   private static MoreBatis MORE_BATIS;
   @IgnoredField
   @JsonIgnore
-  private Or NOT_DELETE_OR = getNoDeleteCondition();
+  private Condition NOT_DELETE_OR = getNoDeleteCondition();
 
   private static MoreBatis getMoreBatis() {
     if (MORE_BATIS == null) {
@@ -348,12 +348,13 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
   }
 
-  private Or getNoDeleteCondition() {
-    FieldCondition isNull = new FieldCondition("deleteFlag", Operator.IS_NULL, null);
-//    Condition condition = new ConditionBuilder(getClass()).or().isNull(getClass(), "etc", "deleteFlag")
-//        .notEqual(getClass(), "etc", DELETE_FLAG).endOr().buildDone();
-    FieldCondition notFlag = new FieldCondition("deleteFlag", Operator.EQUAL, DELETE_FLAG).not();
-    return new Or(isNull, notFlag);
+  private Condition getNoDeleteCondition() {
+    Condition condition = new ConditionBuilder(getClass()).or().isNull(getClass(), "etc", "deleteFlag")
+        .notEqual(getClass(), "etc", "deleteFlag", DELETE_FLAG).endOr().buildDone();
+    return condition;
+//    FieldCondition isNull = new FieldCondition("deleteFlag", Operator.IS_NULL, null);
+//    FieldCondition notFlag = new FieldCondition("deleteFlag", Operator.EQUAL, DELETE_FLAG).not();
+//    return new Or(isNull,notFlag);
   }
 
   /**
