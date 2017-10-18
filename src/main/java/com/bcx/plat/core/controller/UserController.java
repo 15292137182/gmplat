@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * 用户信息controller层
@@ -106,7 +104,7 @@ public class UserController extends BaseController {
     Object id = param.get("id");
     Object name = param.get("name");
     if (null != id && !"".equals(id.toString().trim())
-        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+            && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
 
       //根据工号查询是否已存在该工号的记录
       Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
@@ -190,7 +188,7 @@ public class UserController extends BaseController {
       Object id = param.get("id");
       Object name = param.get("name");
       if (null != id && !"".equals(id.toString().trim())
-          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+              && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
@@ -486,22 +484,53 @@ public class UserController extends BaseController {
     return null;
   }
 
-  /**
-   * 下载用户信息
-   */
-  @RequestMapping(value = "/downloadExcel", method = {POST, GET})
-  public void downloadExcel(String fileName, String[] rowIds, String[] fields, HttpServletResponse response) {
+  @GetMapping(value = "/downloadExcel")
+  @SuppressWarnings("unchecked")
+  public void downloadExcel(String fileName, String rowIds, String fields, HttpServletResponse response) {
+    String[] _rowIds = null;
+    if (null != rowIds) {
+      List<String> strings = UtilsTool.jsonToObj(rowIds, List.class, String.class);
+      if (null != strings) {
+        _rowIds = writeListToArray(strings);
+      }
+    }
+
+    String[] _fields = null;
+    if (null != fields) {
+      List<String> strings = UtilsTool.jsonToObj(fields, List.class, String.class);
+      if (null != strings) {
+        _fields = writeListToArray(strings);
+      }
+    }
+
     // 获取 excel
-    HSSFWorkbook workbook = userService.exportToExcelByte(rowIds, fields);
+    HSSFWorkbook workbook = userService.exportToExcelByte(_rowIds, _fields);
     response.reset();
     response.setContentType("application/x-msdownload");
-    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+    response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xls");
     try {
       // 将数据写入到输出流
       workbook.write(response.getOutputStream());
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * 将 List 输出为数组
+   *
+   * @param list list
+   * @return 返回数组
+   */
+  private String[] writeListToArray(List<String> list) {
+    String[] strings = null;
+    if (null != list && !list.isEmpty()) {
+      strings = new String[list.size()];
+      for (int i = 0; i < list.size(); i++) {
+        strings[i] = list.get(i);
+      }
+    }
+    return strings;
   }
 
 }
