@@ -209,9 +209,6 @@ var em=new Vue({
         },
         addObjectProperties(formName){
             if(!window.parent.topButtonObj.isEdit){//新增
-                // addObj.addOk(function(){
-                //     em.newAttribute();
-                // })
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         if(em.formTable.tableInput.length == 0 && em.formTable.customField == ""){
@@ -230,14 +227,19 @@ var em=new Vue({
                     }
                 });
             }else{//编辑
-                // editObj.editOk(function(){
-                //     em.editAttribute();
-                // })
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        editObj.editOk(function(){
-                            em.editAttribute();
-                        })
+                        if(em.formTable.tableInput.length == 0 && em.formTable.customField == ""){
+                            ibcpLayer.ShowMsg("请选择关联对象属性或输入自定义字段");
+                            return false;
+                        }else if(em.formTable.tableInput.length != 0 && em.formTable.customField != ""){
+                            ibcpLayer.ShowMsg("请选择关联对象属性或输入自定义字段");
+                            return false;
+                        }else{
+                            editObj.editOk(function(){
+                                em.editAttribute();
+                            })
+                        }
                     } else {
                         return false;
                     }
@@ -260,7 +262,7 @@ var em=new Vue({
                 "obj":this
             }
             gmpAjax.showAjax(data,function(res){
-                // console.log(res);
+                console.log(res);
                 var data = res.data;
                 // console.log(window.parent.topButtonObj);
                 em.rowId=data.rowId;//新增成功后返回的ID
@@ -276,6 +278,7 @@ var em=new Vue({
                 em.formTable.Keyword1=data.keywordOne//关键字1
                 em.formTable.Keyword2=data.keywordTwo//关键字2
                 em.formTable.Keyword3=data.keywordThree//关键字3
+                em.formTable.customField=data.customField//自定义字段
                 // em.isDisabled=true;
                 em.$refs.objPro_1.setDisabled(true);
                 if(data.wetherDisplay =="true"){
