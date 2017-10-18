@@ -35,12 +35,12 @@ public class ExcelUtils {
    */
   private static String dataConvert(Cell cell) {
     String cellValue;
-    if (cell.getCellType() == cell.CELL_TYPE_BOOLEAN) {
+    if (cell != null && cell.getCellType() == cell.CELL_TYPE_BOOLEAN) {
       cellValue = String.valueOf(cell.getBooleanCellValue());
-    } else if (cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+    } else if (cell != null && cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
       cellValue = String.valueOf(cell.getNumericCellValue()).split("\\.")[0];
     } else {
-      cellValue = cell.getStringCellValue();
+      cellValue = cell == null ? "" : cell.getStringCellValue();
     }
     return cellValue;
   }
@@ -71,7 +71,7 @@ public class ExcelUtils {
         else {
           String of = String.valueOf(rowNum.get(j));
           String excelModuleVal = ExcelModule.getExcelModuleVal(of);
-          if (excelModuleVal ==null) {
+          if (excelModuleVal == null) {
             return list;
           }
           map.put(excelModuleVal, convert);
@@ -104,7 +104,6 @@ public class ExcelUtils {
   }
 
 
-
   /**
    * 创建Excel模板下拉框
    *
@@ -113,7 +112,7 @@ public class ExcelUtils {
    * @param sheetPage sheet名称
    */
   static Workbook ExportExcelList(String[] cells, Workbook workbook, String sheetPage) {
-    String [] list={"男","女"};
+    String[] list = {"男", "女"};
     // 在webbook中添加一个sheet,对应Excel文件中的sheet
     Sheet sheet = workbook.createSheet(sheetPage);
     // 在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
@@ -124,8 +123,8 @@ public class ExcelUtils {
       if (Objects.equals(cells[i], "性别")) {
         cell = row.createCell((short) i);
         cell.setCellValue(cells[i]);
-        createList(list,i,sheet);
-      }else if (!Objects.equals(cells[i], "性别")){
+        createList(list, i, sheet);
+      } else if (!Objects.equals(cells[i], "性别")) {
         cell = row.createCell((short) i);
         cell.setCellValue(cells[i]);
       }
@@ -136,9 +135,9 @@ public class ExcelUtils {
   /**
    * Excel下拉框封装
    *
-   * @param list 下拉框参数
+   * @param list   下拉框参数
    * @param rowCol 列号
-   * @param sheet sheet
+   * @param sheet  sheet
    */
   public static void createList(String[] list, int rowCol, Sheet sheet) {
     //生成下拉列表

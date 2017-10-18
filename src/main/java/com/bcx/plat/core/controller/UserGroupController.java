@@ -223,21 +223,33 @@ public class UserGroupController extends BaseController {
    */
   @GetMapping("/queryUserGroupUser")
   @SuppressWarnings("unchecked")
-  public PlatResult queryUserGroupUser(String userGroupRowId) {
+  public PlatResult queryUserGroupUser(String userGroupRowId, Integer pageNum, Integer pageSize, String order) {
     PlatResult platResult;
-    List list = new ArrayList();
+    int num = 0;
+    int sizes = 0;
+    long total = 0;
+//    LinkedList<Order> orders = dataSort(UserGroup.class, order);
+//    orders.remove("modifyTime");
     Condition condition = new ConditionBuilder(UserRelateUserGroup.class).and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
-    List<UserRelateUserGroup> userRelateUserGroups = new UserRelateUserGroup().selectList(condition,null,true);
+    List<UserRelateUserGroup> userRelateUserGroups = new UserRelateUserGroup().selectList(condition, null, true);
     if (userRelateUserGroups != null && userRelateUserGroups.size() > 0) {
+      List list = new ArrayList();
+      PageResult<User> users;
       for (UserRelateUserGroup userGroup : userRelateUserGroups) {
         String userRowId = userGroup.getUserRowId();
         Condition buildDone = new ConditionBuilder(User.class).and().equal("rowId", userRowId).endAnd().buildDone();
-        List<User> users = userService.select(buildDone);
-        if (users != null && users.size() > 0) {
-          list.add(users);
+        users = userService.selectPage(buildDone, null, pageNum, pageSize);
+        if (users != null && users.getResult().size() > 0) {
+          list.add(users.getResult().get(0));
+          num = users.getPageNum();
+          sizes = users.getPageSize();
+          total = users.getTotal();
         }
       }
-      platResult = successData(QUERY_SUCCESS, list);
+      PageResult pageResult = new PageResult(total, num, sizes, list);
+      ServerResult serverResult = new ServerResult();
+      serverResult.setData(pageResult);
+      platResult = successData(QUERY_SUCCESS, serverResult);
     } else {
       platResult = fail(QUERY_FAIL);
     }
