@@ -484,6 +484,14 @@ public class UserController extends BaseController {
     return null;
   }
 
+  /**
+   * 下载文件请求
+   *
+   * @param fileName 下载的文件名
+   * @param rowIds   下载内容的 rowIds
+   * @param fields   下载内容的列
+   * @param response 返回的数据内容
+   */
   @GetMapping(value = "/downloadExcel")
   @SuppressWarnings("unchecked")
   public void downloadExcel(String fileName, String rowIds, String fields, HttpServletResponse response) {
