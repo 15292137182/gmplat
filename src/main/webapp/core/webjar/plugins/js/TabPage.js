@@ -388,6 +388,7 @@ var queryData = (function(){
 
 
 //ZYM  精确模糊查询分开刷新table跳转到第一页调该方法
+//tsj 新增查询后不跳转第一页的方法
 var querySearch = (function(){
     //需要search
     var needSearch = function(url,search,params,obj,callback){
@@ -506,10 +507,48 @@ var querySearch = (function(){
             }
         })
     }
+    //不需要search
+    var jumpPage = function(url,params,obj,number,callback){
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{
+                param:params,
+                pageSize:obj.pageSize,
+                pageNum:number
+            },
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                obj.loading=false;
+                if(res.resp.respCode=="000"){
+                    if(res.resp.content.data!=null){
+                        console.log(res);
+                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        obj.tableData = res.resp.content.data.result;//数据源
+                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                        obj.pageNum = res.resp.content.data.pageNum;//当前页
+                    }else{
+                        obj.tableData = [];
+                    }
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                // alert("错误")
+            }
+        })
+    }
     return {
         needSearch:needSearch,
         uneedSearch:uneedSearch,
-        searchResource:searchResource
+        searchResource:searchResource,
+        jumpPage:jumpPage
     }
 })()
 

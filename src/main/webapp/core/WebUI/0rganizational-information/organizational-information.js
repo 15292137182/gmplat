@@ -237,18 +237,24 @@ gmp_onload=function(){
             },
             //点击
             firstClick(){
-                alert("1");
+
             },
             //表点击
             twoClick(){
-                alert("2");
+
             },
             //分页信息
             handleSizeChange(val){
-                alert(val);
+                //alert("点击每页显示多少条");
+                this.pageSize = val;
             },
             handleCurrentChange(val){
-                alert(val);
+                //alert("当前第几页");
+                var strArr = '["'+right.rowId+'"]';
+                console.log(strArr);
+                querySearch.jumpPage(PersonnelInformationUrl,strArr,this,val,function(res){
+                    console.log(res);
+                })
             }
         },
         created(){
