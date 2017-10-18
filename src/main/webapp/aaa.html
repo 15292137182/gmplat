@@ -32,15 +32,10 @@
 <script>
 
 
-
         $("#AA").click(function () {
             console.log(111);
             window.open("http://192.168.100.50/gmplat/gmp/sys/core/excel/exportModule?suffix=xls", "_self")
         });
-
-
-
-
 
         /** 验证文件是否导入成功  */
         $("#fileUpload").ajaxForm(function (data) {
@@ -125,55 +120,7 @@
 
     }
 
-        $.fn.ajaxForm = function (options, data, dataType, onSuccess) {
-            if (typeof options === 'string' || (options === false && arguments.length > 0)) {
-                options = {
-                    'url': options,
-                    'data': data,
-                    'dataType': dataType
-                };
 
-                if (typeof onSuccess === 'function') {
-                    options.success = onSuccess;
-                }
-            }
-
-            options = options || {};
-            options.delegation = options.delegation && $.isFunction($.fn.on);
-
-            // in jQuery 1.3+ we can fix mistakes with the ready state
-            if (!options.delegation && this.length === 0) {
-                var o = {s: this.selector, c: this.context};
-
-                if (!$.isReady && o.s) {
-                    log('DOM not ready, queuing ajaxForm');
-                    $(function () {
-                        $(o.s, o.c).ajaxForm(options);
-                    });
-
-                    return this;
-                }
-
-                // is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
-                log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
-
-                return this;
-            }
-
-            if (options.delegation) {
-                $(document)
-                    .off('submit.form-plugin', this.selector, doAjaxSubmit)
-                    .off('click.form-plugin', this.selector, captureSubmittingElement)
-                    .on('submit.form-plugin', this.selector, options, doAjaxSubmit)
-                    .on('click.form-plugin', this.selector, options, captureSubmittingElement);
-
-                return this;
-            }
-
-            return this.ajaxFormUnbind()
-                .on('submit.form-plugin', options, doAjaxSubmit)
-                .on('click.form-plugin', options, captureSubmittingElement);
-        };
 
 
         //alert(getRootPath());

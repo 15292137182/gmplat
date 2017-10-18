@@ -228,8 +228,7 @@ public class UserGroupController extends BaseController {
     int num = 0;
     int sizes = 0;
     long total = 0;
-//    LinkedList<Order> orders = dataSort(UserGroup.class, order);
-//    orders.remove("modifyTime");
+    LinkedList<Order> orders = dataSort(UserGroup.class, order);
     Condition condition = new ConditionBuilder(UserRelateUserGroup.class).and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
     List<UserRelateUserGroup> userRelateUserGroups = new UserRelateUserGroup().selectList(condition, null, true);
     if (userRelateUserGroups != null && userRelateUserGroups.size() > 0) {
@@ -238,7 +237,7 @@ public class UserGroupController extends BaseController {
       for (UserRelateUserGroup userGroup : userRelateUserGroups) {
         String userRowId = userGroup.getUserRowId();
         Condition buildDone = new ConditionBuilder(User.class).and().equal("rowId", userRowId).endAnd().buildDone();
-        users = userService.selectPage(buildDone, null, pageNum, pageSize);
+        users = userService.selectPage(buildDone, orders, pageNum, pageSize);
         if (users != null && users.getResult().size() > 0) {
           list.add(users.getResult().get(0));
           num = users.getPageNum();
@@ -249,7 +248,7 @@ public class UserGroupController extends BaseController {
       PageResult pageResult = new PageResult(total, num, sizes, list);
       ServerResult serverResult = new ServerResult();
       serverResult.setData(pageResult);
-      platResult = successData(QUERY_SUCCESS, serverResult);
+      platResult = result(serverResult);
     } else {
       platResult = fail(QUERY_FAIL);
     }

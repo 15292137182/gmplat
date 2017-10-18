@@ -53,19 +53,32 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
    */
   public ServerResult addFrontPro(Map<String, Object> paramEntity) {
     String relateBusiPro = String.valueOf(paramEntity.get("relateBusiPro"));//关联对象属性
-    List<Map> rowId = selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-    if (!isValid(rowId)) { // 如果没有关联对象属性，进行新增
-      //判断关联对象属性是属于基本属性还是模板属性
-      //从模板对象属性表中查询是否存在此属性，如果存在，则attrSource="module"，否则attrSource="base"
-      List<Map> templateObjectPros = templateObjectProService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-      if (isValid(templateObjectPros)) {
-        paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_MODULE);
-      } else {
-        paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_BASE);
+    String customField = String.valueOf(paramEntity.get("customField"));
+    if (!"null".equals(relateBusiPro.trim())) {
+      List<Map> rowId = selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+      if (!isValid(rowId)) { // 如果没有关联对象属性，进行新增
+        //判断关联对象属性是属于基本属性还是模板属性
+        //从模板对象属性表中查询是否存在此属性，如果存在，则attrSource="module"，否则attrSource="base"
+        List<Map> templateObjectPros = templateObjectProService.selectMap(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+        if (isValid(templateObjectPros)) {
+          paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_MODULE);
+        } else {
+          paramEntity.put("attrSource", BaseConstants.ATTRIBUTE_SOURCE_BASE);
+        }
+        // 进行新增
+        Integer sort = Integer.parseInt(String.valueOf(paramEntity.get("sort")));
+        paramEntity.put("sort", sort);
+        FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
+        int insert = frontFuncPro.insert();
+        if (insert == -1) {
+          return fail(Message.NEW_ADD_FAIL);
+        } else {
+          return successData(Message.NEW_ADD_SUCCESS, frontFuncPro);
+        }
+      } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
+        return fail(Message.DATA_QUOTE);
       }
-      // 进行新增
-      Integer sort = Integer.parseInt(String.valueOf(paramEntity.get("sort")));
-      paramEntity.put("sort",sort);
+    } else if (!"null".equals(customField.trim())) {
       FrontFuncPro frontFuncPro = new FrontFuncPro().buildCreateInfo().fromMap(paramEntity);
       int insert = frontFuncPro.insert();
       if (insert == -1) {
@@ -73,9 +86,8 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
       } else {
         return successData(Message.NEW_ADD_SUCCESS, frontFuncPro);
       }
-    } else {//如果已存在关联对象属性的rowId，则直接返回提示信息
-      return fail(Message.DATA_QUOTE);
     }
+    return null;
   }
 
   /**
@@ -97,18 +109,20 @@ public class FrontFuncProService extends BaseService<FrontFuncPro> {
           res.put("ename", pro.getEname());
         }
       } else if (attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_BASE) || attrSource.equals(BaseConstants.ATTRIBUTE_SOURCE_EXTEND)) {
-        String relateBusiPro = res.get("relateBusiPro").toString();
-        List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-        for (BusinessObjectPro relate : relateTableColumn) {
-          if (isValid(relate.getFieldAlias())) {
-            res.put("ename", relate.getFieldAlias());
-            res.put("propertyName", relate.getPropertyName());
-          } else {
-            String relateTableRowId = relate.getRelateTableColumn();
-            List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-            for (DBTableColumn row : rowId) {
-              res.put("ename", row.getColumnEname());
-              res.put("propertyName", row.getColumnCname());
+        String relateBusiPro = String.valueOf(res.get("relateBusiPro"));
+        if (!"null".equals(relateBusiPro)) {
+          List<BusinessObjectPro> relateTableColumn = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+          for (BusinessObjectPro relate : relateTableColumn) {
+            if (isValid(relate.getFieldAlias())) {
+              res.put("ename", relate.getFieldAlias());
+              res.put("propertyName", relate.getPropertyName());
+            } else {
+              String relateTableRowId = relate.getRelateTableColumn();
+              List<DBTableColumn> rowId = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+              for (DBTableColumn row : rowId) {
+                res.put("ename", row.getColumnEname());
+                res.put("propertyName", row.getColumnCname());
+              }
             }
           }
         }

@@ -52,9 +52,8 @@ public class FrontFuncService extends BaseService<FrontFunc> {
    * @return 返回操作信息
    */
   public ServerResult insertFront(Map<String, Object> param) {
-    ServerResult result = new ServerResult();
     String funcCode = String.valueOf(param.get("funcCode")).trim();
-    param.put("funcCode",funcCode);
+    param.put("funcCode", funcCode);
     if (!"".equals(funcCode)) {
       Condition condition = new ConditionBuilder(FrontFunc.class).and()
           .equal("funcCode", funcCode)
@@ -64,47 +63,48 @@ public class FrontFuncService extends BaseService<FrontFunc> {
         FrontFunc frontFunc = new FrontFunc().buildCreateInfo().fromMap(param);
         int insert = frontFunc.insert();
         if (insert != -1) {
-          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS, frontFunc);
+          return successData( Message.NEW_ADD_SUCCESS, frontFunc);
         } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL);
+          return fail(Message.NEW_ADD_FAIL);
+        }
+      } else {
+        return fail( Message.DATA_CANNOT_BE_DUPLICATED);
+      }
+    }
+    return fail( Message.DATA_CANNOT_BE_EMPTY);
+  }
+
+  /**
+   * 前端功能块修改数据
+   *
+   * @param param 接受需要修改的参数
+   * @return ServerResult
+   */
+  public ServerResult updateFront(Map<String, Object> param) {
+    ServerResult result = new ServerResult();
+    int update;
+    String funcCode = String.valueOf(param.get("funcCode")).trim();
+    param.remove("funcCode");
+    param.put("funcCode", funcCode);
+    if (!"".equals(funcCode)) {
+      Condition condition = new ConditionBuilder(FrontFunc.class).and()
+          .equal("funcCode", funcCode)
+          .endAnd().buildDone();
+      List<FrontFunc> select = select(condition);
+      if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
+        FrontFunc frontFunc = new FrontFunc();
+        FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
+        update = modify.updateById();
+        if (update != -1) {
+          return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify);
+        } else {
+          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
         }
       } else {
         return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
       }
     }
     return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
-  }
-
-  /**
-   * 前端功能块修改数据
-   * @param param 接受需要修改的参数
-   * @return ServerResult
-   */
-  public ServerResult updateFront(Map<String,Object> param){
-    ServerResult result = new ServerResult();
-    int update;
-    String funcCode = String.valueOf(param.get("funcCode")).trim();
-    param.remove("funcCode");
-    param.put("funcCode",funcCode);
-      if (!"".equals(funcCode)) {
-        Condition condition = new ConditionBuilder(FrontFunc.class).and()
-            .equal("funcCode", funcCode)
-            .endAnd().buildDone();
-        List<FrontFunc> select = select(condition);
-        if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
-          FrontFunc frontFunc = new FrontFunc();
-          FrontFunc modify = frontFunc.fromMap(param).buildModifyInfo();
-          update = modify.updateById();
-          if (update != -1) {
-            return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify);
-          } else {
-            return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL);
-          }
-        } else {
-          return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED);
-        }
-      }
-      return result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY);
   }
 
 
@@ -130,61 +130,66 @@ public class FrontFuncService extends BaseService<FrontFunc> {
           map.put("funcType", fronc.get("funcType").toString());
           String relateBusiPro = map.get("relateBusiPro").toString();
           String attrSource = map.get("attrSource").toString();
-          switch (attrSource) {
-            case BaseConstants.ATTRIBUTE_SOURCE_MODULE:
-              List<Map> proRowId = new TemplateObjectPro().selectSimpleMap(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
-              if (!UtilsTool.isValid(proRowId)) {
-                continue;
-              }
-              //拿到模板对象属性给功能块属性赋值
-              for (Map pro : proRowId) {
-                String cname = String.valueOf(pro.get("cname"));
-                String ename = String.valueOf(pro.get("ename"));
-                if (ename != null && ename.contains("_")) {
-                  ename = underlineToCamel(String.valueOf(pro.get("ename")), false);
-                }
-                map.put("propertyName", cname);
-                map.put("ename", ename);
-              }
-              break;
-            case BaseConstants.ATTRIBUTE_SOURCE_BASE: // 穿透↓
-            case BaseConstants.ATTRIBUTE_SOURCE_EXTEND:
-              List<BusinessObjectPro> businessObjectPros = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
-              if (!UtilsTool.isValid(businessObjectPros)) {
-                continue;
-              }
-              for (BusinessObjectPro relate : businessObjectPros) {
-                String keysetCode = "";
-                Condition buildDone = new ConditionBuilder(KeySet.class).and().equal("rowId", relate.getValueResourceContent()).endAnd().buildDone();
-                List<KeySet> keySets = keySetService.select(buildDone);
-                if (keySets.size() != 0) {
-                  keysetCode = keySets.get(0).getKeysetCode();
-                }
-                String fieldAlias = relate.getFieldAlias();
-                if (fieldAlias != null && relate.getFieldAlias().contains("_")) {
-                  fieldAlias = underlineToCamel(relate.getFieldAlias(), false);
-                }
-                map.put("ename", fieldAlias);
-                map.put("keysetCode", keysetCode);
-                map.put("valueResourceContent", relate.getValueResourceContent());
-                map.put("valueResourceType", relate.getValueResourceType());
-                map.put("valueType", relate.getValueType());
-                String relateTableRowId = relate.getRelateTableColumn();
-                List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
-                if (!UtilsTool.isValid(dbTableColumns)) {
+          String customField = String.valueOf(map.get("customField"));
+          if (!"null".equals(customField.trim())) {
+            map.put("ename", customField);
+          } else {
+            switch (attrSource) {
+              case BaseConstants.ATTRIBUTE_SOURCE_MODULE:
+                List<Map> proRowId = new TemplateObjectPro().selectSimpleMap(new FieldCondition("proRowId", Operator.EQUAL, relateBusiPro));
+                if (!UtilsTool.isValid(proRowId)) {
                   continue;
                 }
-                for (DBTableColumn row : dbTableColumns) {
-                  String columnEname = row.getColumnEname();
-                  if (row.getColumnEname() != null && row.getColumnEname().contains("_")) {
-                    columnEname = underlineToCamel(row.getColumnEname(), false);
+                //拿到模板对象属性给功能块属性赋值
+                for (Map pro : proRowId) {
+                  String cname = String.valueOf(pro.get("cname"));
+                  String ename = String.valueOf(pro.get("ename"));
+                  if (ename != null && ename.contains("_")) {
+                    ename = underlineToCamel(String.valueOf(pro.get("ename")), false);
                   }
-                  map.put("ename", columnEname);
+                  map.put("propertyName", cname);
+                  map.put("ename", ename);
                 }
-              }
-              break;
-            default:
-              return new ServerResult<>(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, linkedList);
+                break;
+              case BaseConstants.ATTRIBUTE_SOURCE_BASE: // 穿透↓
+              case BaseConstants.ATTRIBUTE_SOURCE_EXTEND:
+                List<BusinessObjectPro> businessObjectPros = businessObjectProService.select(new FieldCondition("rowId", Operator.EQUAL, relateBusiPro));
+                if (!UtilsTool.isValid(businessObjectPros)) {
+                  continue;
+                }
+                for (BusinessObjectPro relate : businessObjectPros) {
+                  String keysetCode = "";
+                  Condition buildDone = new ConditionBuilder(KeySet.class).and().equal("rowId", relate.getValueResourceContent()).endAnd().buildDone();
+                  List<KeySet> keySets = keySetService.select(buildDone);
+                  if (keySets.size() != 0) {
+                    keysetCode = keySets.get(0).getKeysetCode();
+                  }
+                  String fieldAlias = relate.getFieldAlias();
+                  if (fieldAlias != null && relate.getFieldAlias().contains("_")) {
+                    fieldAlias = underlineToCamel(relate.getFieldAlias(), false);
+                  }
+                  map.put("ename", fieldAlias);
+                  map.put("keysetCode", keysetCode);
+                  map.put("valueResourceContent", relate.getValueResourceContent());
+                  map.put("valueResourceType", relate.getValueResourceType());
+                  map.put("valueType", relate.getValueType());
+                  String relateTableRowId = relate.getRelateTableColumn();
+                  List<DBTableColumn> dbTableColumns = dbTableColumnService.select(new FieldCondition("rowId", Operator.EQUAL, relateTableRowId));
+                  if (!UtilsTool.isValid(dbTableColumns)) {
+                    continue;
+                  }
+                  for (DBTableColumn row : dbTableColumns) {
+                    String columnEname = row.getColumnEname();
+                    if (row.getColumnEname() != null && row.getColumnEname().contains("_")) {
+                      columnEname = underlineToCamel(row.getColumnEname(), false);
+                    }
+                    map.put("ename", columnEname);
+                  }
+                }
+                break;
+              default:
+                return new ServerResult<>(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL, linkedList);
+            }
           }
         }
       }

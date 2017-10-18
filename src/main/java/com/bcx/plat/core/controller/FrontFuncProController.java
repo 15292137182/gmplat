@@ -56,8 +56,7 @@ public class FrontFuncProController extends BaseController {
    */
   @PostMapping(value = "/add")
   public PlatResult insert(@RequestParam Map<String, Object> paramEntity) {
-    ServerResult serverResult = frontFuncProService.addFrontPro(paramEntity);
-    return result(serverResult);
+    return result(frontFuncProService.addFrontPro(paramEntity));
   }
 
   /**
@@ -69,19 +68,20 @@ public class FrontFuncProController extends BaseController {
    */
   @RequestMapping("/queryPro")
   public PlatResult singleQuery(String search, String rowId) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
       List<Map> frontFuncPros = frontFuncProService
           .selectMap(new And(new FieldCondition("funcRowId", Operator.EQUAL, rowId),
               UtilsTool.createBlankQuery(Arrays.asList("funcCode", "funcName"), UtilsTool.collectToSet(search))));
       if (frontFuncPros.size() == 0) {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        platResult = fail(Message.QUERY_FAIL);
       } else {
-        ServerResult serverResult = new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, frontFuncPros);
-        return result(serverResult);
+        platResult = successData(Message.QUERY_SUCCESS, frontFuncPros);
       }
+    } else {
+      platResult = fail(Message.QUERY_FAIL);
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    return platResult;
   }
 
 
@@ -98,12 +98,14 @@ public class FrontFuncProController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    ServerResult serverResult = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
       ServerResult result = frontFuncProService.queryProPage(rowId, search, param, pageNum, pageSize, order);
-      return result(result);
+      platResult = result(result);
+    } else {
+      platResult = fail(Message.QUERY_FAIL);
     }
-    return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    return platResult;
   }
 
 
@@ -115,20 +117,21 @@ public class FrontFuncProController extends BaseController {
    */
   @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
+    PlatResult platResult;
     Condition condition = new ConditionBuilder(FrontFuncPro.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<Map> frontFuncPros = frontFuncProService.selectMap(condition);
-    ServerResult result = new ServerResult();
     if (UtilsTool.isValid(rowId)) {
       FrontFuncPro frontFuncPro = new FrontFuncPro();
       int del = frontFuncPro.deleteById(rowId);
-      if (del != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, frontFuncPros));
+      if (del == -1) {
+        platResult = fail(Message.DELETE_FAIL);
       } else {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+        platResult = successData(Message.DELETE_SUCCESS, frontFuncPros);
       }
     } else {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
   /**
@@ -139,20 +142,22 @@ public class FrontFuncProController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(param.get("rowId"))) {
       FrontFuncPro frontFuncPro = new FrontFuncPro();
       FrontFuncPro modify = frontFuncPro.fromMap(param).buildModifyInfo();
       modify.setAttrSource(null);
       modify.setRelateBusiPro(null);
       int update = modify.updateById();
-      if (update != -1) {
-        return result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS, modify));
+      if (update == -1) {
+        platResult = fail(Message.UPDATE_FAIL);
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+        platResult = successData(Message.UPDATE_SUCCESS, modify);
       }
+    } else {
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    return platResult;
   }
 
   /**

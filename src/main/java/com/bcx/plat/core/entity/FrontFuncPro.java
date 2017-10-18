@@ -3,6 +3,7 @@ package com.bcx.plat.core.entity;
 import com.bcx.plat.core.base.BaseEntity;
 
 /**
+ * 功能块明细实体类
  * Created by Went on 2017/8/4.
  */
 public class FrontFuncPro extends BaseEntity<FrontFuncPro> {
@@ -26,6 +27,7 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro> {
   private String keywordOne;//关键字一
   private String keywordTwo;//关键字二
   private String keywordThree;//关键字三
+  private String customField;//自定义字段
 
   /**
    * 构建 - 创建信息
@@ -195,5 +197,13 @@ public class FrontFuncPro extends BaseEntity<FrontFuncPro> {
 
   public void setKeywordThree(String keywordThree) {
     this.keywordThree = keywordThree;
+  }
+
+  public String getCustomField() {
+    return customField;
+  }
+
+  public void setCustomField(String customField) {
+    this.customField = customField;
   }
 }
