@@ -515,7 +515,7 @@ public class UserController extends BaseController {
     HSSFWorkbook workbook = userService.exportToExcelByte(_rowIds, _fields);
     response.reset();
     response.setContentType("application/x-msdownload");
-    response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xls");
+    response.setHeader("Content-Disposition", String.format("attachment;filename=%s.xls", fileName));
     try {
       // 将数据写入到输出流
       workbook.write(response.getOutputStream());
