@@ -12,13 +12,13 @@
 <body>
 <div id="perExport" style="margin:20px 30px">
         <div>
-            <el-col :span="8" class="demo"><el-checkbox v-model="employeeNo" label="用户工号" border></el-checkbox></el-col>
-            <el-col :span="8" class="demo"><el-checkbox v-model="employeeName" label="用户姓名" border></el-checkbox></el-col>
-            <el-col :span="8" class="demo"><el-checkbox v-model="employeeNickname" label="用户昵称" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"><el-checkbox v-model="id" label="用户工号" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"><el-checkbox v-model="name" label="用户姓名" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"><el-checkbox v-model="nickname" label="用户昵称" border></el-checkbox></el-col>
         </div>
         <div>
             <el-col :span="8" class="demo"><el-checkbox v-model="password" label="密码" border></el-checkbox></el-col>
-            <el-col :span="8" class="demo"> <el-checkbox v-model="belongOrganization" label="所属部门" border></el-checkbox></el-col>
+            <el-col :span="8" class="demo"> <el-checkbox v-model="belongOrg" label="所属部门" border></el-checkbox></el-col>
             <el-col :span="8" class="demo">  <el-checkbox v-model="idCard" label="身份证" border></el-checkbox></el-col>
         </div>
         <div>
@@ -36,14 +36,19 @@
          <el-col :span="8" class="demo"> <el-checkbox v-model="description" label="说明" border></el-checkbox></el-col>
          <el-col :span="8" class="demo"><el-checkbox v-model="remarks" label="备注" border></el-checkbox></el-col>
     </div>
+    <!--<div style="padding:15px 10px">-->
+        <!--<el-radio class="radio" v-model="radio" label="1">2013版</el-radio>-->
+        <!--<el-radio class="radio" v-model="radio" label="2">2017版</el-radio>-->
+    <!--</div>-->
     <div style="padding:15px 10px">
-        <el-radio class="radio" v-model="radio" label="1">2013版</el-radio>
-        <el-radio class="radio" v-model="radio" label="2">2017版</el-radio>
+        <el-input placeholder="请输入内容" v-model="fileName">
+            <template slot="prepend">文件民称</template>
+        </el-input>
     </div>
-    <div style="padding:15px 10px">
-        <el-radio class="radio" v-model="radio1" label="3">全部记录</el-radio>
-        <el-radio class="radio" v-model="radio1" label="4">所属记录</el-radio>
-    </div>
+    <!--<div style="padding:15px 10px">-->
+        <!--<el-radio class="radio" v-model="radio1" label="3">全部记录</el-radio>-->
+        <!--<el-radio class="radio" v-model="radio1" label="4">所属记录</el-radio>-->
+    <!--</div>-->
     <el-row>
         <el-col :span="11" style="text-align:right">
             <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
@@ -57,31 +62,69 @@
     var personExport=new Vue({
         el:"#perExport",
         data:{
-            radio:'1',
-            radio1:'3',
-            useSex:'',
-            employeeNo:true,
-            employeeName:true,
-            employeeNickname:true,
-            status:true,
-            password:true,
-            belongOrganization:true,
-            idCard:true,
-            mobilePhone:true,
-            officePhone:true,
-            email:true,
-            gender:true,
-            job:true,
-            hiredate:true,
-            description:true,
-            remarks:true,
+            fileName:'',
+            id:true,//工号
+            name:true,//姓名
+            nickname:true,//昵称
+            password :true,//初始密码有默认值
+            belongOrg:true,//所属部门
+            idCard:true,//身份证
+            mobilePhone:true,//移动电话
+            officePhone:true,//办公电话
+            email:true,//邮箱
+            gender:true,//性别
+            status:true,//状态
+            job :true,//职务
+            hiredate:true,//入职日期
+            description:true,//说明
+            remarks:true,//备注
         },
         methods:{
             conformEvent(){
+                var arr={
+                    fileName:'',
+                    "id":this.id,
+                    'name':this.name,
+                    'nickname':this.nickname,
+                    'password':this.password,
+                    'belongOrg':this.belongOrg,
+                    'idCard':this.idCard,
+                    'mobilePhone':this.mobilePhone,
+                    'officePhone':this.officePhone,
+                    'email':this.email,
+                    'gender':this.gender,
+                    'status':this.status,
+                    'job':this.job,
+                    'hiredate':this.hiredate,
+                    'description':this.description,
+                    'remarks':this.remarks,
+                }
+                var arr1=[];
+                $.each(arr,function(i,item){
+                    if(item==true){
+                        arr1.push(i);
+                    }
+                })
+                var data={
+                    fileName:this.fileName,
+                    rowIds:right.userId,
+                    fields:arr1,
+                }
+                var param = [];
+                if(data.fileName){
+                    param.push("fileName=" + data.fileName);
+                }
+                if(data.rowIds){
+                    param.push("rowIds=" + encodeURI(JSON.stringify(data.rowIds)));
+                }
+                if(data.fields){
+                    param.push("fields=" + encodeURI(JSON.stringify(data.fields)));
+                }
 
+                window.open(serverPath+'/user/downloadExcel?'+param.join("&"));
             },
             cancel(){
-
+                ibcpLayer.Close(divIndex);
             }
         }
     })

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="importUser" style="padding:22px 20px">
+    <form id="fileUpload" action="" enctype="multipart/form-data" target="_self"
+          method="post">
+        <input id="excelFile" name="file" type="file"/>
+        <!--<input type="button" value="提交" onclick="submitExcel()"/>-->
+    </form>
+
+    <el-row style="padding:22px 20px">
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+<script>
+    //导入确定版本接口
+    var conVersion=serverPath + "/excel/excelUpload";
+
+    var importUser=new Vue({
+        el:'#importUser',
+        data:{
+
+        },
+        methods:{
+            conformEvent(){
+                var excelFile = $("#excelFile").val();
+                if (excelFile == '') {
+                    alert("请选择需上传的文件!");
+                    return false;
+                }
+                $("#fileUpload").attr('action',conVersion);
+                $("#fileUpload").submit();
+//                window.histrory.go(0);
+//                $.ajax({
+//                    url:serverPath + "/excel/excelUpload",
+//                    type:"post",
+//                    xhrFields: {withCredentials: true},
+//                    traditional: false,
+//                    contentType: 'multipart/form-data',
+//                    success:function(res){
+//                        console.log(222);
+//                        console.log(res);
+//                        ibcpLayer.Close(divIndex);
+//                    },
+//                    error:function(res){
+//                         console.log(res);
+//                         console.log(111);
+//                    }
+//                })
+
+            },
+            cancel(){
+                ibcpLayer.Close(divIndex);
+            }
+        }
+    })
+</script>
+</body>
+</html>

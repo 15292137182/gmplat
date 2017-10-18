@@ -97,7 +97,7 @@ gmp_onload=function(){
                     },
                 })
                 querySearch.searchResource(searchGroupUser,this.rowId,rightBottom.pageSize,rightBottom.pageNum,this,function(res){
-
+                    console.log(res);
                 })
             },
             //复选框选中得到得值

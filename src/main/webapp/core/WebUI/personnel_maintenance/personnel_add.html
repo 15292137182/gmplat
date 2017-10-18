@@ -14,7 +14,7 @@
         }
         .demo_line{
             padding: 0 10px 0;
-            margin: 14px 0 20px 0;
+            margin: 0 0 10px 0;
             position: relative;
         }
         .demo_line hr{
@@ -95,8 +95,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="10">
-                <el-form-item label="所属部门" prop="belongOrg" class="demo-input-suffix">
-                    <select-tree :initial="belongOrg" @select-node="getNodes"></select-tree>
+                <el-form-item label="所属部门" prop="belong" class="demo-input-suffix">
+                    <select-tree :initial="belong" @select-node="getNodes"></select-tree>
                 </el-form-item>
             </el-col>
         </el-row>

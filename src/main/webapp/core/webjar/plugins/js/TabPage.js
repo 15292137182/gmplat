@@ -470,7 +470,7 @@ var querySearch = (function(){
             url:url,
             type:"get",
             data:{
-                rowId:rowId,
+                userGroupRowId:rowId,
                 pageSize:pageSize,
                 pageNum:pageNum
             },
@@ -488,7 +488,7 @@ var querySearch = (function(){
                     }else if(res.resp.content.data==null){
                         obj.tableData=[];
                     }else{
-                        dataConversion.conversion(obj,res.resp.content.data.result);
+                        //dataConversion.conversion(obj,res.resp.content.data.result);
                         obj.tableData = res.resp.content.data.result;//数据源
                         obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
                         obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
@@ -544,6 +544,7 @@ var querySearch = (function(){
             }
         })
     }
+
     return {
         needSearch:needSearch,
         uneedSearch:uneedSearch,
@@ -552,6 +553,19 @@ var querySearch = (function(){
     }
 })()
 
+//重置密码
+var restartPassword = (function(){
+    var restartPassword = function(callback){
+        ibcpLayer.ShowConfirm("您确定重置密码吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        restartPassword:restartPassword
+    }
+})()
 
 //删除确认框
 var deleteObj = (function(){
@@ -578,6 +592,62 @@ var addObj = (function(){
     }
     return {
         addOk:addOk
+    }
+})()
+
+//失效确认框
+var Invalid = (function(){
+    var Invalid = function(callback){
+        ibcpLayer.ShowConfirm("您确定失效吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        Invalid:Invalid
+    }
+})()
+
+//启用确认框
+var Enable = (function(){
+    var Enable = function(callback){
+        ibcpLayer.ShowConfirm("您确定启用吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        Enable:Enable
+    }
+})()
+
+//解锁确认框
+var unlockEvent = (function(){
+    var unlockEvent = function(callback){
+        ibcpLayer.ShowConfirm("您确定启用吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        unlockEvent:unlockEvent
+    }
+})()
+
+//锁定确认框
+var lockEvent = (function(){
+    var lockEvent = function(callback){
+        ibcpLayer.ShowConfirm("您确定启用吗?",function(){
+            if(typeof callback =="function"){
+                callback();
+            }
+        })
+    }
+    return {
+        lockEvent:lockEvent
     }
 })()
 
@@ -661,6 +731,7 @@ var gmpAjax = (function(){
         // (url：接口地址,jsonData:后端请求数据，obj：需要弹出消息层的vue实例),
         // callbakc:成功后的回调函数
         var data = dataJson;
+        console.log(data.jsonData)
         $.ajax({
             url:data.url,
             type:"post",
@@ -670,7 +741,6 @@ var gmpAjax = (function(){
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             dataType:"json",
             success:function(res){
-                // console.log(res);
                 if(res.resp.respCode=='000'){
                     if(res.resp.content.state==1){
                         if (typeof callback == "function") {
@@ -691,7 +761,7 @@ var gmpAjax = (function(){
                 }
             },
             error:function(res){
-                // console.log(res);
+                 console.log(222);
                 data.obj.$message.error("操作失败");
             }
         })

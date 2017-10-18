@@ -8,11 +8,24 @@ var right;
 //右侧查询接口
 var searchMore=serverPath + "/user/queryPage";
 //左侧查右侧查询接口
-var searchLeftMore=serverPath + "/user/queryByOrg";
+//var searchLeftMore=serverPath + "/user/queryByOrg";
 //编辑查询
 var editMore=serverPath + "/user/queryBySpecify";
 //删除
 var deleteMore=serverPath + "/user/delete";
+//批量删除
+var deleteALL=serverPath + "/user/deleteBatch";
+//重置密码
+var resetPass=serverPath + "/user/resetPasswordBatch";
+
+//失效
+var invalidUser=serverPath + "/user/outOfUseBatch";
+//启用
+var enableUser=serverPath + "/user/inUseBatch";
+//解锁
+var unlockUser=serverPath + "/user/unLock";
+//锁定
+var lockUser=serverPath + "/user/lock";
 
 gmp_onload=function(){
     basTop = new Vue({
@@ -40,6 +53,13 @@ gmp_onload=function(){
                 });
 
             },
+            //导入
+            leadRow(){
+                var htmlUrl = 'import_user.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '导入页面', '500px', '500px',function(){
+
+                });
+            },
             //导出
             exportRow(){
                 var htmlUrl = 'personnel_export.html';
@@ -48,37 +68,66 @@ gmp_onload=function(){
 
                 });
             },
-            //新增业务对象属性
-            addProp(){
-                operateOPr=1;
-                var htmlUrl = 'metadata-prop-add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '新增对象属性', '800px', '400px', function () {
-                    proEm.$refs.proType_1.setValue("base");  //属性类型
-                    proEm.proType_1.value='base';//不点击的时候直接把属性传过去
-                    proEm.addProForm.proType='base';//只是为了验证的时候判断是否为空
-
-                });
-            },
-            //生效
-            affectProp(){
-                var data={
-                    "url":affectPropUrl,
-                    "jsonData":{rowId:basLeft.currentId},
-                    "obj":basTop,
-                };
-                gmpAjax.showAjax(data,function(res){
-                    basLeft.searchLeft();
+            //重置密码
+            resetPass(){
+                restartPassword.restartPassword(function(){
+                    var data={
+                        "url":resetPass,
+                        "jsonData":{rowId:right.userId},
+                        "obj":basTop,
+                        "showMsg":true
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        console.log(res);
+                        //分页跳回到第一页
+                        //basLeft.searchLeft();
+                    })
                 })
             },
-            //变更
-            changeProp(){
-                var data={
-                    "url":changeUrl,
-                    "jsonData":{rowId:basLeft.currentId},
-                    "obj":basTop
-                };
-                gmpAjax.showAjax(data,function(res){
-                    basLeft.searchLeft();
+            //批量删除
+            deleteAll(){
+                deleteObj.del(function(){
+                    var data={
+                        "url":deleteALL,
+                        "jsonData":{rowId:right.userId},
+                        "obj":basTop,
+                        "showMsg":true
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        //分页跳回到第一页
+                        console.log(res);
+                        //basLeft.searchLeft();
+                    })
+                })
+            },
+            //失效
+            Invalid(){
+                Invalid.Invalid(function(){
+                    var data={
+                        "url":invalidUser,
+                        "jsonData":{rowId:right.userId},
+                        "obj":basTop,
+                        "showMsg":true
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        console.log(res);
+                        //basLeft.searchLeft();
+                    })
+                })
+            },
+            //启用
+            Enable(){
+                Enable.Enable(function(){
+                    var data={
+                        "url":enableUser,
+                        "jsonData":{rowId:right.userId},
+                        "obj":basTop,
+                        "showMsg":true
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        //basLeft.searchLeft();
+                        console.log(res);
+                    })
                 })
             },
         }
@@ -211,14 +260,20 @@ gmp_onload=function(){
             },
             //选择复选框
             selectRow(selection, row){
-                //最后选择的这一行
-                console.log(row)
-                //已经选中的
                 console.log(selection)
+                right.userId=[];//多选的用户ID组
+                $.each(selection,function(i,item){
+                    right.userId.push(item.rowId)
+
+                })
+                console.log( right.userId)
             },
             //复选框全选
             selectAllRow(selection){
-                console.log(selection)
+                right.userId=[];//多选的用户ID组
+                $.each(selection,function(i,item){
+                    right.userId.push(item.rowId)
+                })
             },
             showMore(){
                 this.couldLook=true;
@@ -282,64 +337,74 @@ gmp_onload=function(){
                     //调用接口
                     var data={
                         "url":editMore,
-                        "jsonData":{rowId:left.rowId},
+                        "jsonData":{rowId:right.rightRowId},
                         "obj":right,
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
+                        var data=res.data[0];
                         console.log(res)
+                        useAdd.id=data.id;//工号
+                        useAdd.name=data.name;//姓名
+                        useAdd.nickname=data.nickname;//昵称
+                        useAdd.password=data.password;//初始密码有默认值
+                        useAdd.belong.checked=data.belongOrg;//所属部门
+                        useAdd.idCard=data.idCard;//身份证
+                        useAdd.mobilePhone=data.mobilePhone;//移动电话
+                        useAdd.officePhone=data.officePhone//办公电话
+                        useAdd.email=data.email;//邮箱
+                        useAdd.gender=data.gender;//性别
+                        useAdd.job=data.job;//职务
+                        useAdd.hiredate=data.hiredate;//入职日期
+                        useAdd.description=data.description;//说明
+                        useAdd.remarks=data.remarks;//备注
                     })
-                    //$.ajax({
-                    //    url:editMore,
-                    //    type:"get",
-                    //    data:{rowId:right.rightRowId},
-                    //    xhrFields: {withCredentials: true},
-                    //    dataType:"json",
-                    //    success:function(res){
-                    //         console.log(res);
-                    //        if(res.resp.respCode=='000'){
-                    //            if(res.resp.content.state==1){
-                    //                if (typeof callback == "function") {
-                    //                    // console.log(res);
-                    //                    callback(res.resp.content);
-                    //                    if(data.showMsg){
-                    //                        showMsg.MsgOk(data.obj,res.resp.content.msg);
-                    //                    }
-                    //                    // showMsg.MsgOk(data.obj,res.resp.content.msg);
-                    //                }
-                    //            }else{
-                    //                callback(res.resp.content);
-                    //                // showMsg.MsgOk(data.obj,res.resp.content.msg);
-                    //                data.obj.$message.error(res.resp.content.msg);
-                    //            }
-                    //        }else{
-                    //            data.obj.$message.error(res.resp.respMsg);
-                    //        }
-                    //    },
-                    //    error:function(res){
-                    //         console.log(res);
-                    //        //data.obj.$message.error("操作失败");
-                    //    }
-                    //})
                 });
             },
             //删除
-            deleteProp(){
+            deleteEvent(){
                 deleteObj.del(function(){
                     var data={
-                        //"url":deleteUrl,
-                        //"jsonData":{rowId:basLeft.currentVal.rowId},
-                        //"obj":basLeft,
-                        //"showMsg":true
+                        "url":deleteMore,
+                        "jsonData":{rowId:right.rightRowId},
+                        "obj":right,
+                        "showMsg":true
                     };
-                    //gmpAjax.showAjax(data,function(res){
-                    //    //分页跳回到第一页
-                    //    basLeft.searchLeft();
-                    //})
+                    gmpAjax.showAjax(data,function(res){
+                        //分页跳回到第一页
+                        //basLeft.searchLeft();
+                    })
+                })
+            },
+            //解锁
+            unlockEvent(){
+                unlockEvent.unlockEvent(function(){
+                    var data={
+                        "url":unlockUser,
+                        "jsonData":{rowId:right.rightRowId},
+                        "obj":basTop
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        //basLeft.searchLeft();
+                        console.log(res);
+                    })
+                })
+            },
+            //锁定
+            lockEvent(){
+                lockEvent.lockEvent(function(){
+                    var data={
+                        "url":lockUser,
+                        "jsonData":{rowId:right.rightRowId},
+                        "obj":basTop
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        //basLeft.searchLeft();
+                        console.log(res);
+                    })
                 })
             }
-
         },
         created(){
             $(document).ready(function () {
