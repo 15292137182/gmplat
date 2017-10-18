@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -515,7 +516,17 @@ public class UserController extends BaseController {
     HSSFWorkbook workbook = userService.exportToExcelByte(_rowIds, _fields);
     response.reset();
     response.setContentType("application/x-msdownload");
-    response.setHeader("Content-Disposition", String.format("attachment;filename=%s.xls", fileName));
+    response.setCharacterEncoding("UTF-8");
+
+    if (null == fileName) {
+      fileName = "download";
+    }
+    try {
+      response.setHeader("Content-Disposition", String.format("attachment;filename=%s.xls", new String(fileName.getBytes("UTF-8"), "ISO8859-1")));
+    } catch (UnsupportedEncodingException e) {
+      response.setHeader("Content-Disposition", String.format("attachment;filename=%s.xls", "download"));
+      e.printStackTrace();
+    }
     try {
       // 将数据写入到输出流
       workbook.write(response.getOutputStream());
