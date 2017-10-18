@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,10 +64,10 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryByOrg")
-  public PlatResult queryByOrg(String param, Integer pageNum, Integer pageSize) {
+  public PlatResult queryByOrg(String param, Integer pageNum, Integer pageSize, String order) {
     if (UtilsTool.isValid(param)) {
       List list = UtilsTool.jsonToObj(param, List.class);
-      ServerResult serverResult = userService.queryByOrg(list, pageNum, pageSize);
+      ServerResult serverResult = userService.queryByOrg(list, pageNum, pageSize, order);
       return result(serverResult);
     } else {
       return fail(Message.QUERY_FAIL);
@@ -105,7 +106,7 @@ public class UserController extends BaseController {
     Object id = param.get("id");
     Object name = param.get("name");
     if (null != id && !"".equals(id.toString().trim())
-            && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
 
       //根据工号查询是否已存在该工号的记录
       Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
@@ -189,7 +190,7 @@ public class UserController extends BaseController {
       Object id = param.get("id");
       Object name = param.get("name");
       if (null != id && !"".equals(id.toString().trim())
-              && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
@@ -273,11 +274,10 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping(value = "/deleteBatch")
-  public PlatResult deleteBatch(@RequestParam List<String> rowId) {
+  public PlatResult deleteBatch(@RequestParam List<Serializable> rowId) {
     if (UtilsTool.isValid(rowId)) {
       User user = new User().buildDeleteInfo();
-      Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowId).endAnd().buildDone();
-      if (userService.update(user, condition) != -1) {
+      if (user.logicalDeleteByIds(rowId) != -1) {
         return success(Message.DELETE_SUCCESS);
       } else {
         return fail(Message.DELETE_FAIL);
@@ -448,6 +448,7 @@ public class UserController extends BaseController {
           break;
         case "resetPassword":
           map.put("password", SystemSettingManager.getDefaultPwd());
+          map.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
           break;
         default:
       }

@@ -7,7 +7,10 @@ import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Field;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -41,19 +44,15 @@ public class UserService extends BaseService<User> {
    * @return ServerResult
    */
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
     Condition condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or;
     if (UtilsTool.isValid(param)) {//根据指定字段查询
       if (null == condition) {
         condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
       } else {
-        condition = new ConditionBuilder(User.class).and()
-            .addCondition(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)))
-            .addCondition(condition)
-            .endAnd().buildDone();
+        condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)), condition);
       }
     }
-    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
     //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称
     Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
@@ -76,14 +75,16 @@ public class UserService extends BaseService<User> {
    * @param list 组织机构代码列表
    * @return ServerResult
    */
-  public ServerResult queryByOrg(List list, Integer pageNum, Integer pageSize) {
-    Condition condition = new ConditionBuilder(User.class).and().in("belongOrg", list).endAnd().buildDone();
-    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
+  public ServerResult queryByOrg(List list, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
+    Condition condition = new FieldCondition("belongOrg", Operator.IN, list);
+    Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
+    fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
     PageResult result;
     if (UtilsTool.isValid(pageNum)) {
-      result = selectPageMap(condition, null, pageNum, pageSize);
+      result = leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, pageNum, pageSize, orders);
     } else {
-      result = new PageResult<>(selectMap(condition));
+      result = new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, orders));
     }
     if (UtilsTool.isValid(null == result ? null : result.getResult())) {
       return successData(Message.QUERY_SUCCESS, result);

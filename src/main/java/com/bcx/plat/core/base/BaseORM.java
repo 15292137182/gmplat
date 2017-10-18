@@ -344,8 +344,12 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     if (null == id) {
       return -1;
     } else {
-      return getMoreBatis().update(getClass(), this.toDbMap()).where(new FieldCondition("rowId", Operator.EQUAL, id)).execute();
+      return update(new FieldCondition("rowId", Operator.EQUAL, id));
     }
+  }
+
+  public int logicalDeleteByIds(Collection<Serializable> ids) {
+    return update(new FieldCondition("rowId", Operator.IN, ids));
   }
 
   private Condition getNoDeleteCondition() {
@@ -371,9 +375,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
                                                     Class<? extends BeanInterface> secondary, String relationPrimary, String relationSecondary, Condition condition) {
     List<Map<String, Object>> execute;
     if (condition != null) {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).execute();
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(new And(condition, getNoDeleteCondition())).execute();
     } else {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).execute();
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(getNoDeleteCondition()).execute();
     }
     return execute;
   }
@@ -394,9 +398,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
                                                     Collection<Field> fields, Condition condition, List<Order> orders) {
     List<Map<String, Object>> execute;
     if (condition != null) {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(condition).orderBy(orders).execute();
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(new And(condition, getNoDeleteCondition())).orderBy(orders).execute();
     } else {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).orderBy(orders).execute();
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(getNoDeleteCondition()).orderBy(orders).execute();
     }
     return execute;
   }
@@ -420,9 +424,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
                                                               Condition condition, int pageNum, int pageSize, List<Order> orders) {
     PageResult<Map<String, Object>> execute;
     if (condition != null) {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(condition).orderBy(orders).selectPage(pageNum, pageSize);
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(new And(condition, getNoDeleteCondition())).orderBy(orders).selectPage(pageNum, pageSize);
     } else {
-      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).orderBy(orders).selectPage(pageNum, pageSize);
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, fields, JoinType.LEFT_JOIN).where(getNoDeleteCondition()).orderBy(orders).selectPage(pageNum, pageSize);
     }
     return execute;
   }

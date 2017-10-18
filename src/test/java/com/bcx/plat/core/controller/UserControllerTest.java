@@ -47,7 +47,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testQueryByOrg() throws Exception {
     //准备参数
-    String param = "[\"2\"]";
+    String param = "[\"1\"]";
     String pageNum="1";
     String pageSize="10";
     //发送请求
@@ -83,10 +83,10 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
   @Test
   public void testDelete() throws Exception {
     //准备参数
-    String rowId = "";
+    String rowId = "123456789,123456790";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
-        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/delete")
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "user/deleteBatch")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
