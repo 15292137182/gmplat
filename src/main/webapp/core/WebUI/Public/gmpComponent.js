@@ -436,50 +436,44 @@ Vue.component("base-tree", {
     },
     mounted() {
         var self = this;
+        // 获取配置信息
+        var key = this.initial.defaultProps.key;
+        var parent = this.initial.defaultProps.parent;
         // 调用接口获取树节点
         this.getNode(function(data) {
-            var checkedKey = self.initial.checked;
-            // 选中节点数据
-            var checkedData = self.currentCheckedNodes;
-            // 若无指定选中项 默认选中根节点
-            if(checkedKey &&checkedKey.length == 0) {
-                for(var i = 0;i < data.length;i++) {
-                    if(data[i].orgId == "ROOT" && data[i].orgPid == "") {
-                        self.setCheckedKeys([data[i].rowId]);
-                        // 获取当前选中节点
-                        checkedData.push(data[i]);
-                    }
-                }
-            }else if(checkedKey && checkedKey.length > 0) {
-                // 否则选中指定项
-                self.setCheckedKeys(checkedKey);
-                for(var i = 0;i < data.length;i++) {
-                    for(var j = 0;j < checkedKey.length;j++) {
-                        if(data[i].rowId == checkedKey[j]) {
-                            // 获取当前选中节点
-                            checkedData.push(data[i]);
-                        }
-                    }
-                }
-            }
+            // 展开项配置
             var _expanded = self.initial.expanded;
-            var _checked = self.initial.checked;
+            // 选中项配置
+            var checkedKey = self.initial.checked;
+            // 复选框配置
+            var checkbox = self.initial.checkbox;
+            // 选中节点数据
+            // var checkedData = self.currentCheckedNodes;
+            // 若指定默认选中项
+            if(checkedKey && checkedKey.length > 0) {
+                // 如果显示复选框
+                if(checkbox) {
+                    // 设置选中项
+                    self.setCheckedKeys(checkedKey);
+                    // for(var i = 0;i < data.length;i++) {
+                    //     for(var j = 0;j < checkedKey.length;j++) {
+                    //         if(data[i][key] == checkedKey[j]) {
+                    //             // 获取当前选中节点
+                    //             checkedData.push(data[i]);
+                    //         }
+                    //     }
+                    // }
+                }else {}
+            }else {
+                self.setCheckedKeys([]);
+            }
             // 获取默认展开节点
             if(_expanded && _expanded.length > 0) {
                 self.defaultExpandedKeys = JSON.parse(JSON.stringify(self.initial.expanded));
             }else {
                 self.defaultExpandedKeys = [];
             }
-            // 获取配置选中节点
-            if(_checked && _checked.length > 0) {
-                // self.defaultCheckedKeys = self.initial.checked;
-                self.setCheckedKeys(self.initial.checked);
-            }else {
-                self.defaultCheckedKeys = [];
-            }
         });
-
-        this.loadData();
     },
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
@@ -591,7 +585,7 @@ Vue.component("base-tree", {
             if(callback) {
                 callback(this.currentCheckedNodes);
             }
-            // console.log(this.currentCheckedNodes);
+            console.log(this.treeData);
         }
     },
     template: `<div>
@@ -727,7 +721,8 @@ Vue.component("select-tree", {
                 // 若不显示复选框
                 this.select_node = this.middle;
             }
-            // this.$emit("select-node", this.select_id);
+            // 点击确认后传递当前选择id
+            this.$emit("select-node", this.select_id);
         },
         // 鼠标移入事件
         enter() {
@@ -766,8 +761,9 @@ Vue.component("select-tree", {
         },
         // 下拉框展开事件
         expanded(bool) {
-            // console.log(this);
+            // 当前选择节点信息
             var _select = this.select_node;
+            // bool = true 为展开  bool = false 为收缩
             if(bool && this.clearable) {
                 // 获取配置展开项 选择项
                 var _expanded = this.initial.expanded;
@@ -793,13 +789,15 @@ Vue.component("select-tree", {
                 }
             }else if(!bool  && this.clearable) {
                 $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
+                // 若选中节点没有确认
                 if(_select.length == 0) {
-                    // 清空选中项
+                    // 收缩下拉框 清空选中项
                     this.setCheckedKeys([]);
                     // 确认按钮不可用
                     this.error = true;
                 }
             }else if(!this.clearable) {
+                // 如果配置不显示关闭图标
                 var _expanded = this.initial.expanded;
                 var _checked = this.initial.checked;
                 // 下拉框展开 树结构展开配置节点
@@ -816,14 +814,6 @@ Vue.component("select-tree", {
                     this.error = false;
                 }else {
                     this.defaultCheckedKeys = [];
-                    // 确认按钮不可用
-                    this.error = true;
-                }
-            }else if(!bool && !this.clearable) {
-                // 若选中节点没有确认
-                if(_select.length == 0) {
-                    // 清空选中项
-                    this.setCheckedKeys([]);
                     // 确认按钮不可用
                     this.error = true;
                 }
@@ -993,7 +983,7 @@ Vue.component("select-tree", {
             // 选择节点信息
             var _selectNode = [];
             // 若配置信息中含有默认选择项
-            if(_checked && _checked.length > 0) {
+            if(_checked && _checked.length > 0 && self.checkbox) {
                 // 遍历后端数据
                 for(var i = 0;i < data.length;i++) {
                     // 后端数据中 id为配置id的项 push到数组中
@@ -1005,6 +995,16 @@ Vue.component("select-tree", {
                 }
                 // 显示选中项名称
                 self.select_node = _selectNode;
+            }else {
+                // 若不显示复选框 设置选中多节点 默认选中第一个配置节点
+                for(var i = 0;i < data.length;i++) {
+                    // 后端数据中 id为配置id的项 push到数组中
+                    if(data[i][_key] == _checked[0]) {
+                        _selectNode.push(data[i][_name]);
+                    }
+                }
+                self.select_node = _selectNode;
+                self.middle = _selectNode;
             }
         });
         // 实例创建完成 设置下拉框宽度;

@@ -31,7 +31,7 @@
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">树形下拉框</el-col>
             <el-col :span="10">
-                <select-tree :initial="config" @select-node="getNodes" @click-node="getNodes" @checked-node="getChecked" @clear="clear"></select-tree>
+                <select-tree :initial="config" @select-node="getNodeId" @click-node="getNodes" @checked-node="getChecked" @clear="clear"></select-tree>
             </el-col>
         </el-col>
         <!--一级树结构-->
@@ -103,6 +103,9 @@
                     console.log(data);
                     console.log("选中行id为：" + id);
                     console.log("选中行名称为：" + name);
+                },
+                getNodeId(id) {
+                    console.log("当前选中节点 id为：" + id);
                 },
                 getChecked(data, id, name, flag) {
                     console.log(data);
