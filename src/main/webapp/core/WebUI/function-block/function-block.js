@@ -380,7 +380,7 @@ gmp_onload = function(){
                     topButtonObj.KeywordTwoBottom = true;
                     topButtonObj.KeywordThreeBottom = true;
                     topButtonObj.alignBottom = true;
-                    height = "430px";
+                    height = "530px";
                 }
                 if(functionBlock.editObj.funcType=="查询"){//新增属性为查询块
                     topButtonObj.queryBottom = true;

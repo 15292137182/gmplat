@@ -11,6 +11,7 @@ var em=new Vue({
         labelPosition:'right',
         formTable:{
            tableInput:'',//关联对象属性
+            customField:"",//自定义字段
             nameTitle:'',//显示标题
             nameInput:'',//显示控件
             lengthSection:'',//长度区间
@@ -23,12 +24,12 @@ var em=new Vue({
             Keyword3:'',//关键字3
         },
         rules:{
-            tableInput:[{ required: true, message: '请选择关联对象属性', trigger: 'blur' }],
+            // tableInput:[{ required: true, message: '请选择关联对象属性', trigger: 'blur' }],
             nameTitle:[{ required: true, message: '请输入标题', trigger: 'blur' },
                 {max: 128, message: '长度在 1 到 64 个汉字', trigger: 'blur' }],
             nameInput:[{ required: true, message: '请选择显示控件', trigger: 'blur' }],
-            sortNumber:[{ required: true, message: '请输入排序序号', trigger: 'blur' },
-                {max: 32, message: '长度在 1 到 32 位数字', trigger: 'blur' }],
+            // sortNumber:[{ required: true, message: '请输入排序序号', trigger: 'blur' },
+            //     {max: 32, message: '长度在 1 到 32 位数字', trigger: 'blur' }],
         },
         funcRowId:'',//功能块ID
         dataId:'',//关联对象属性ID
@@ -211,9 +212,17 @@ var em=new Vue({
                 // })
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        addObj.addOk(function(){
-                            em.newAttribute();
-                        })
+                        if(em.formTable.tableInput.length == 0 && em.formTable.customField == ""){
+                            ibcpLayer.ShowMsg("请选择关联对象属性或输入自定义字段");
+                            return false;
+                        }else if(em.formTable.tableInput.length != 0 && em.formTable.customField != ""){
+                            ibcpLayer.ShowMsg("请选择关联对象属性或输入自定义字段");
+                            return false;
+                        }else{
+                            addObj.addOk(function(){
+                                em.newAttribute();
+                            })
+                        }
                     } else {
                         return false;
                     }
@@ -334,6 +343,10 @@ var em=new Vue({
         //点击对齐方式下拉框
         getAlign_1(datas){
             em.align_1.value=datas.value;
+        },
+        //获取下拉框选中值
+        getDataElement(data){
+            this.formTable.nameTitle = data;
         }
     },
     created(){
