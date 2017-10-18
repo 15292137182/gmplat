@@ -219,7 +219,7 @@ gmp_onload = function(){
                     topButtonObj.KeywordTwoBottom = true;
                     topButtonObj.KeywordThreeBottom = true;
                     topButtonObj.alignBottom = true;
-                    height = "495px";
+                    height = "580px";
                 }
                 if(functionBlock.editObj.funcType=="列表"){//新增属性为表格
                     topButtonObj.queryBottom = false;
@@ -235,7 +235,7 @@ gmp_onload = function(){
                     topButtonObj.KeywordTwoBottom = true;
                     topButtonObj.KeywordThreeBottom = true;
                     topButtonObj.alignBottom = true;
-                    height = "430px";
+                    height = "530px";
                 }
                 if(functionBlock.editObj.funcType=="查询"){//新增属性为查询块
                     topButtonObj.queryBottom = true;
@@ -364,7 +364,7 @@ gmp_onload = function(){
                     topButtonObj.KeywordTwoBottom = true;
                     topButtonObj.KeywordThreeBottom = true;
                     topButtonObj.alignBottom = true;
-                    height = "495px";
+                    height = "580px";
                 }
                 if(functionBlock.editObj.funcType=="列表"){//新增属性为表格
                     topButtonObj.queryBottom = false;

@@ -148,6 +148,7 @@ var em=new Vue({
                     keywordOne:em.formTable.Keyword1,//关键字1
                     keywordTwo:em.formTable.Keyword2,//关键字2
                     keywordThree:em.formTable.Keyword3,//关键字3
+                    customField:em.formTable.customField//自定义字段
                 },
                 "obj":window.parent.functionBlock,
                 "showMsg":true,
@@ -185,6 +186,7 @@ var em=new Vue({
               //      keywordOne:em.formTable.Keyword1,//关键字1
              //       keywordTwo:em.formTable.Keyword2,//关键字2
               //      keywordThree:em.formTable.Keyword3,//关键字3
+                    customField:em.formTable.customField//自定义字段
                 },
                 "obj":window.parent.functionBlock,
                 "showMsg":true
