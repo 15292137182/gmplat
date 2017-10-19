@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,15 +116,14 @@ public class UserGroupController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/logicDelete")
-  public PlatResult deleteLogic(String rowId) {
+  public PlatResult deleteLogic(@RequestParam List<String> rowId) {
     PlatResult platResult;
-    Condition condition = new ConditionBuilder(UserGroup.class).and().equal("rowId", rowId).endAnd().buildDone();
+    Condition condition = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("deleteFlag", TRUE_FLAG);
-      UserGroup userGroup = new UserGroup().buildModifyInfo().fromMap(map);
-      int update = userGroup.updateById();
+      UserGroup group = userGroups.get(0);
+      group.getBaseTemplateBean().setDeleteFlag(TRUE_FLAG);
+      int update = group.updateById();
       if (update != -1) {
         platResult = successData(Message.DELETE_SUCCESS, userGroups);
       } else {

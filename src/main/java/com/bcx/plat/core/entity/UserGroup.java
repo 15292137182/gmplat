@@ -2,6 +2,7 @@ package com.bcx.plat.core.entity;
 
 import com.bcx.plat.core.base.BaseEntity;
 import com.bcx.plat.core.manager.SequenceManager;
+import com.bcx.plat.core.utils.UtilsTool;
 
 import static com.bcx.plat.core.constants.CodeMessage.USER_GROUP_NUMBER;
 
@@ -35,7 +36,8 @@ public class UserGroup extends BaseEntity<UserGroup> {
    */
   @Override
   public UserGroup buildCreateInfo() {
-   this.groupNumber =  SequenceManager.getInstance().buildSequenceNo(USER_GROUP_NUMBER,null);
+    this.groupNumber = UtilsTool.lengthUUID(8);
+//   this.groupNumber =  SequenceManager.getInstance().buildSequenceNo(USER_GROUP_NUMBER,null);
     return super.buildCreateInfo();
   }
 
