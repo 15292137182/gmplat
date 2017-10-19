@@ -30,7 +30,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *
  * @author Wen TieHu
  * @version 1.0
- *          <pre>Histroy: 2017/10/12  Wen TieHu Create </pre>
+ * <pre>History: 2017/10/12  Wen TieHu Create </pre>
  */
 public abstract class CurdController<S extends BaseService<E>, E extends BaseEntity<E>> extends BaseController {
 
@@ -48,7 +48,6 @@ public abstract class CurdController<S extends BaseService<E>, E extends BaseEnt
   private Class<E> getClassE() {
     return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
   }
-
 
   /**
    * 获取class实例

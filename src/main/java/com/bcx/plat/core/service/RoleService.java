@@ -167,11 +167,11 @@ public class RoleService extends BaseService<Role> {
       }
     }
     if (isValid(search)) {
+      List<String> blankQuery = Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
       if (null != userCondition) {
-        userCondition = new And(userCondition, UtilsTool.createBlankQuery(userService.blankSelectFields(),
-            UtilsTool.collectToSet(search)));
+        userCondition = new And(userCondition, UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search)));
       } else {
-        userCondition = UtilsTool.createBlankQuery(userService.blankSelectFields(), UtilsTool.collectToSet(search));
+        userCondition = UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search));
       }
     }
     if (isValid(param)) {
@@ -200,10 +200,10 @@ public class RoleService extends BaseService<Role> {
    * @param pageSize 页面大小
    * @return 返回查询结果
    */
-  public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
+  public PageResult<Map<String, Object>> queryRoleUserByRoleId(String roleId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
-          .and().equal("roleId", roleId).endAnd().buildDone();
+              .and().equal("roleId", roleId).endAnd().buildDone();
       List<Role> roles = select(condition);
       if (!roles.isEmpty()) {
         return queryRoleUserByRowId(roles.get(0).getRowId(), search, param, orders, pageNum, pageSize);
@@ -222,8 +222,8 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteUserInRole(String roleRowId, String[] userRowIds) {
     if (isValid(roleRowId) && null != userRowIds && userRowIds.length != 0) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
-          .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
-          .buildDone();
+              .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
+              .buildDone();
       new UserRelateRole().delete(condition);
       return success(Message.DELETE_SUCCESS);
     }
@@ -241,10 +241,10 @@ public class RoleService extends BaseService<Role> {
     if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
       // 选择当前已被添加的权限
       Condition condition = new ConditionBuilder(RoleRelatePermission.class)
-          .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
-          .buildDone();
+              .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+              .buildDone();
       List<RoleRelatePermission> roleRelatePermissions =
-          new RoleRelatePermission().selectSimple(condition);
+              new RoleRelatePermission().selectSimple(condition);
       Set<String> strings = new HashSet<>();
       strings.addAll(Arrays.asList(permissionRowIds));
       if (!roleRelatePermissions.isEmpty()) {
@@ -273,9 +273,12 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteRolePermission(String roleRowId, String[] permissionRowIds) {
     if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
       Condition condition = new ConditionBuilder(RoleRelatePermission.class)
-          .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
-          .buildDone();
-      new RoleRelatePermission().delete(condition);
+              .and().equal("roleRowId", roleRowId)
+              .in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+              .buildDone();
+      RoleRelatePermission roleRelatePermission = new RoleRelatePermission();
+      roleRelatePermission.buildDeleteInfo();
+      roleRelatePermission.update(condition);
       return success(Message.DELETE_SUCCESS);
     }
     return fail(Message.INVALID_REQUEST);
@@ -317,8 +320,8 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteUserRole(String userRowId, String[] roleRowId) {
     ServerResult serverResult;
     Condition condition = new ConditionBuilder(UserRelateRole.class)
-        .and().equal(userRowId, userRowId).in("roleRowId", Arrays.asList(roleRowId))
-        .endAnd().buildDone();
+            .and().equal(userRowId, userRowId).in("roleRowId", Arrays.asList(roleRowId))
+            .endAnd().buildDone();
     int delete = new UserRelateRole().delete(condition);
     if (delete == -1) {
       serverResult = success(DELETE_SUCCESS);
@@ -364,9 +367,9 @@ public class RoleService extends BaseService<Role> {
    */
   public ServerResult deleteUserGroupRole(String userGroupRwoId, String[] roleRowId) {
     Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
-        .and().equal("userGroupRwoId", userGroupRwoId).in("roleRowId", Arrays.asList(roleRowId))
-        .endAnd()
-        .buildDone();
+            .and().equal("userGroupRwoId", userGroupRwoId).in("roleRowId", Arrays.asList(roleRowId))
+            .endAnd()
+            .buildDone();
     ServerResult serverResult;
     int delete = new UserGroupRelateRole().delete(condition);
     if (delete == -1) {
@@ -413,8 +416,8 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteRoleUser(String roleRowId, String[] userRowId) {
     ServerResult serverResult;
     Condition condition = new ConditionBuilder(UserRelateRole.class)
-        .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
-        .endAnd().buildDone();
+            .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
+            .endAnd().buildDone();
     int delete = new UserRelateRole().delete(condition);
     if (delete == -1) {
       serverResult = success(DELETE_SUCCESS);

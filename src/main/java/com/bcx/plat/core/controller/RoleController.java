@@ -104,11 +104,11 @@ public class RoleController extends BaseController {
   @RequestMapping(value = "/queryUsers")
   public PlatResult queryUsersByRowId(String rowId, String roleId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(User.class, order);
-    PageResult result;
-    if (isValid(roleId)) {
-      result = roleService.queryRoleuserByRoleId(roleId, search, param, orders, pageNum, pageSize);
-    } else {
+    PageResult result = null;
+    if (isValid(rowId)) {
       result = roleService.queryRoleUserByRowId(rowId, search, param, orders, pageNum, pageSize);
+    } else if (isValid(roleId)) {
+      result = roleService.queryRoleUserByRoleId(roleId, search, param, orders, pageNum, pageSize);
     }
     if (isValid(result)) {
       return result(new ServerResult<>(result));
