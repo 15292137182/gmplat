@@ -12,7 +12,7 @@ var basRight;
 var roleInformation = serverPath + "/permission/queryPage";
 
 //查看权限类型下的权限信息
-var permissionsInformation = serverPath + "/permission/queryById";
+var permissionsInformation = serverPath + "/permission/queryTypePermission";
 
 //查看权限类型下的角色信息
 var personnelInformationInterface = serverPath + "/role/queryUsers";
@@ -88,9 +88,9 @@ gmp_onload=function(){
                 // 设置参数 -- 树节点上显示的文字
                 defaultProps: {
                     // 树节点显示文字
-                    label: 'roleName',
+                    label: 'permissionName',
                     // 节点id
-                    key: "roleId",
+                    key: "rowId",
                     // 父节点信息
                     // parent: "orgPid",
                     // // 当前节点信息
@@ -107,27 +107,7 @@ gmp_onload=function(){
                 basTop.disabled = false;
                 rightBottom.disabled = false;
                 // basTop.orgDeleteData = false;
-                $.ajax({
-                    url:roleInformation,
-                    type:"get",
-                    data:{
-                        rowId:this.rowId
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        var data=(res.resp.content.data)[0];
-                        console.log(data);
-                        right.formTable.roleId=data.roleId;
-                        right.formTable.roleName=data.roleName;
-                        right.formTable.roleType=data.roleType;
-                        right.formTable.desc=data.desc;
-                        right.formTable.remarks=data.remarks;
-                        right.rowId = data.rowId;
-                        basRightTop.PersonnelInformation(right.rowId);
-                        // basRightTop.roleView(data.rowId);
-                    },
-                })
+                basRightTop.PersonnelInformation(data.permissionType);
             },
             //复选框选中得到得值
             getChecked(data) {
@@ -284,17 +264,17 @@ gmp_onload=function(){
                 this.PersonnelInformation(right.rowId,val);
             },
             //人员信息查询
-            PersonnelInformation(rowId,numberPage){
+            PersonnelInformation(permissionType,numberPage){
                 var page = 1;
                 if(numberPage){
                     page = numberPage;
                 }
-                var rowId = rowId;
-                console.log(rowId);
+                var type = permissionType;
+                console.log(type);
                 var data = {
-                    "rowId":rowId
+                    "permissionType":type
                 }
-                querySearch.getDataPage(personnelInformationInterface,data,this,page,function(res){
+                querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){
                     console.log(res);
                 })
             },
