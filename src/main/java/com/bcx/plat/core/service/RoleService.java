@@ -12,6 +12,7 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -460,7 +461,7 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
     ServerResult serverResult;
     Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
-        .and().equal("roleRowId", roleRowId).in("userGroupRwoId", Arrays.asList(userGroupRwoId))
+        .and().equal("roleRowId", roleRowId).in("userGroupRowId", Arrays.asList(userGroupRwoId))
         .endAnd()
         .buildDone();
     int delete = new UserGroupRelateRole().delete(condition);
@@ -472,5 +473,19 @@ public class RoleService extends BaseService<Role> {
     return serverResult;
   }
 
+  @Transactional
+  public ServerResult deleteRole(String rowId) {
+    //删除：逻辑删除；  与用户、用户组、组织机构、权限的关联关系同步逻辑删除
+    if (isValid(rowId)) {
+      deleteRoleUser(rowId, null);
+      deleteRoleUserGroup(rowId, null);
+      deleteRolePermission(rowId, null);
+      int delete = new Role().logicalDeleteById(rowId);
+      if (delete != -1) {
+        return success(DELETE_SUCCESS);
+      }
+    }
+    return fail(DELETE_FAIL);
+  }
 
 }

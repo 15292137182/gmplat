@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-import static com.bcx.plat.core.constants.Message.DATA_CANNOT_BE_EMPTY;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -91,6 +90,7 @@ public class RoleController extends BaseController {
     ServerResult result = roleService.queryBySpecify(param);
     return result(result);
   }
+
   /**
    * 分页查询数据
    *
@@ -116,6 +116,7 @@ public class RoleController extends BaseController {
       return fail(Message.QUERY_FAIL);
     }
   }
+
   /**
    * 删除角色下的用户信息
    *
@@ -155,5 +156,17 @@ public class RoleController extends BaseController {
   public PlatResult deleteRolePermission(String roleRowId, String[] permissionRowIds) {
     ServerResult success = roleService.deleteRolePermission(roleRowId, permissionRowIds);
     return result(success);
+  }
+
+  /**
+   * 角色 - 删除
+   *
+   * @param rowId 角色主键
+   * @return 返回
+   */
+  @PostMapping("/delete")
+  public PlatResult delete(String rowId) {
+    ServerResult result = roleService.deleteRole(rowId);
+    return result(result);
   }
 }
