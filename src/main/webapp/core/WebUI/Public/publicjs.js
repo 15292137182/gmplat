@@ -15,6 +15,8 @@ document.write('<script type="text/javascript" src="' + path + '/webjar/element-
 document.write('<script type="text/javascript" src="' + path + '/webjar/vue/vue-resource.js" charset="UTF-8"></script>');
 
 document.write('<script type="text/javascript" src="' + path + '/webjar/jquery/3.1.1/jquery.min.js" charset="UTF-8"></script>');
+//表单插件
+document.write('<script type="text/javascript" src="' + path + '/webjar/jquery/jquery.form.js" charset="UTF-8"></script>');
 document.write('<script type="text/javascript" src="' + path + '/webjar/plugins/js/TabPage.js" charset="UTF-8"></script>');
 
 

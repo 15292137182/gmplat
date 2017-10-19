@@ -138,19 +138,21 @@ gmp_onload=function(){
         data:getData.dataObj({
             config: {
                 // 显示复选框
-                checkbox: false,
-                // 默认展开  id
-                expanded: [324],
+                checkbox: true,
+                // 默认展开
+                 //expanded: [324],
+                // 展开所有节点
+                expandedAll: true,
+                // 默认选中项 当 checkbox 为 true 时  编辑时可以用
+                //checked: [12, 21],
                 // 配置显示项
                 defaultProps: {
                     // 树节点显示文字
                     label: 'orgName',
                     // 节点id
-                    id: "rowId",
+                    key: "orgId",
                     // 父节点信息
-                    parentId: "orgPid",
-                    // 当前节点信息
-                    selfId: "orgId"
+                    parent: "orgPid",
                 },
                 // 获取数据接口
                 url: serverPath + "/baseOrg/queryPage"
@@ -159,13 +161,13 @@ gmp_onload=function(){
         }),
         methods:{
             getNodes(data){
-                //console.log(data);
+                console.log(data);
                 this.rowId=data.rowId;
                 right.searchMore();
             },
             //复选框点击
             getChecked(){
-
+                console.log(data);
             },
 
             //tab页点击交换

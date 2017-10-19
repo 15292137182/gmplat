@@ -38,25 +38,14 @@
                     return false;
                 }
                 $("#fileUpload").attr('action',conVersion);
+                /** 验证文件是否导入成功  */
+                $("#fileUpload").ajaxForm(function (data) {
+                    console.log(data);
+                    if (data == "1") {
+                        alert("提交成功！");
+                    }
+                });
                 $("#fileUpload").submit();
-//                window.histrory.go(0);
-//                $.ajax({
-//                    url:serverPath + "/excel/excelUpload",
-//                    type:"post",
-//                    xhrFields: {withCredentials: true},
-//                    traditional: false,
-//                    contentType: 'multipart/form-data',
-//                    success:function(res){
-//                        console.log(222);
-//                        console.log(res);
-//                        ibcpLayer.Close(divIndex);
-//                    },
-//                    error:function(res){
-//                         console.log(res);
-//                         console.log(111);
-//                    }
-//                })
-
             },
             cancel(){
                 ibcpLayer.Close(divIndex);

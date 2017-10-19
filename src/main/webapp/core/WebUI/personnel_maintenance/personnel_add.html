@@ -96,7 +96,7 @@
             </el-col>
             <el-col :span="10">
                 <el-form-item label="所属部门" prop="belong" class="demo-input-suffix">
-                    <select-tree :initial="belong" @select-node="getNodes"></select-tree>
+                        <select-tree :initial="config" @select-node="getNodeId" @click-node="getNodes" @checked-node="getChecked" @clear="clear"></select-tree>
                 </el-form-item>
             </el-col>
         </el-row>

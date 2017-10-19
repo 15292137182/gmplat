@@ -22,8 +22,8 @@ gmp_onload=function(){
             //新增人员信息
             addEvent() {
                 operate = 1;
-                var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '660px',function(){
+                var htmlUrl = 'user-group-add.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加用户组信息', '600px', '660px',function(){
 
                 });
             },
@@ -57,19 +57,15 @@ gmp_onload=function(){
         data:getData.dataObj({
             config: {
                 // 显示复选框
-                checkbox: false,
+                checkbox: true,
                 // 默认展开  id
-                //expanded: [324],
+                expanded: [1],
                 // 配置显示项
                 defaultProps: {
                     // 树节点显示文字
                     label: 'groupName',
                     // 节点id
-                    id: "rowId",
-                    // 父节点信息
-                    //parentId: "orgPid",
-                    // 当前节点信息
-                    selfId: "rowId"
+                    key: "rowId",
                 },
                 // 获取数据接口
                 url: serverPath + "/userGroup/queryPage"

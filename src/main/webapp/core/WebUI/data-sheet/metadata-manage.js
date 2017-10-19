@@ -296,6 +296,7 @@ gmp_onload=function(){
             searchRightTable() {
                 pagingObj.Examples(qurProUrl,basLeft.currentId,this.input,this.pageSize,this.pageNum,this,function(res){
                     //有数据选中第一行
+                    console.log(res);
                     if(res.data!=null){
                         //按钮禁掉
                         $.each(res.data.result, function(index, item) {

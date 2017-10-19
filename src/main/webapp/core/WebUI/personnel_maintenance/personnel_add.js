@@ -10,7 +10,8 @@ var useAdd = new Vue({
                     return time.getTime() > Date.now();
                 }
             },
-            belong: {
+            config: {
+                checkbox: true,
                 // 配置显示项
                 checked: [],
                 defaultProps: {
@@ -47,12 +48,26 @@ var useAdd = new Vue({
         getTime(date){
             this.hiredate = date;
         },
-        getNodes(data) {
+        hide(data) {
             console.log(data);
-            this.belongOrg=data;
         },
-        getChecked(data) {
+        getNodes(data, id, name) {
             console.log(data);
+            console.log("选中行id为：" + id);
+            console.log("选中行名称为：" + name);
+        },
+        getNodeId(id) {
+            console.log("当前选中节点 id为：" + id);
+        },
+        getChecked(data, id, name, flag) {
+            console.log(data);
+            console.log("选中节点名称为：" + name);
+            console.log("选中节点 id 为：" + id);
+            console.log("选中标识为：" + flag);
+        },
+        clear(id, name) {
+            console.log(id);
+            console.log(name);
         },
         conformEvent() {
             if(operate==1){
