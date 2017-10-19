@@ -83,11 +83,14 @@ public class RoleControllerTest extends BaseControllerTest<RoleController> {
   public void testQueryUsers() throws Exception {
     //准备参数
     String rowId = "2a4b2c06-fe63-4c59-be33-6db965f2";
+    String search="1 2";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "role/queryUsers")
             .accept(MediaType.APPLICATION_JSON)
-            .param("rowId", rowId)
+//            .param("rowId", rowId)
+            .param("search", search)
+
     );
     //显示结果
     showResult(resultActions);

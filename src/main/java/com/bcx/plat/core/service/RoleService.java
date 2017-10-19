@@ -152,6 +152,7 @@ public class RoleService extends BaseService<Role> {
    * @return 返回分页查询结果
    */
   public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, String search, String param, List<Order> orders, Integer pageNum, Integer pageSize) {
+    Condition userCondition = null;
     if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
           .and().equal("roleRowId", rowId).endAnd().buildDone();
@@ -160,25 +161,33 @@ public class RoleService extends BaseService<Role> {
         List<String> userRowIds = relateRoles.stream()
             .map(UserRelateRole::getUserRowId)
             .collect(Collectors.toList());
-        Condition userCondition = new ConditionBuilder(User.class)
+        userCondition = new ConditionBuilder(User.class)
             .and().in("rowId", userRowIds).endAnd().buildDone();
-        if (isValid(search)) {
-          List<String> blankQuery = Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
-          userCondition = new And(userCondition, UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search)));
-        }
-        if (isValid(param)) {
-          userCondition = new And(userCondition, UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)));
-        }
-        userCondition = UtilsTool.addNotDeleteCondition(userCondition, User.class);
-        Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
-        fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
-        if (isValid(pageNum)) {
-          return leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, pageNum, pageSize, orders);
-        }
-        return new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, orders));
       }
     }
-    return null;
+    if (isValid(search)) {
+      List<String> blankQuery = Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
+      if (null != userCondition) {
+        userCondition = new And(userCondition, UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search)));
+      } else {
+        userCondition = UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search));
+      }
+    }
+    if (isValid(param)) {
+      if (null != userCondition) {
+        userCondition = new And(userCondition, UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)));
+      } else {
+        userCondition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
+      }
+    }
+    userCondition = UtilsTool.addNotDeleteCondition(userCondition, User.class);
+    Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
+    fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
+    if (isValid(pageNum)) {
+      return leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, pageNum, pageSize, orders);
+    }
+    return new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, orders));
+
   }
 
   /**
