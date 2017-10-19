@@ -230,17 +230,17 @@ public class RoleController extends BaseController {
    * @param roleRowId 角色rowId
    * @return PlatResult
    */
-  @PostMapping("/addRoleUser")
-  public PlatResult addRoleUser(String roleRowId, String[] userRwoId) {
-    PlatResult platResult;
-    if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addRoleUser(roleRowId, userRwoId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
+//  @PostMapping("/addRoleUser")
+//  public PlatResult addRoleUser(String roleRowId, String[] userRwoId) {
+//    PlatResult platResult;
+//    if (isValid(userRwoId) && isValid(roleRowId)) {
+//      ServerResult serverResult = roleService.addRoleUser(roleRowId, userRwoId);
+//      platResult = result(serverResult);
+//    } else {
+//      platResult = fail(DATA_CANNOT_BE_EMPTY);
+//    }
+//    return platResult;
+//  }
 
   /**
    * 用户分配角色关联信息
@@ -249,17 +249,17 @@ public class RoleController extends BaseController {
    * @param roleRowId 角色rowId
    * @return PlatResult
    */
-  @PostMapping("/deleteRoleUser")
-  public PlatResult deleteRoleUser(String roleRowId, String[] userRwoId) {
-    PlatResult platResult;
-    if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteRoleUser(roleRowId, userRwoId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
+//  @PostMapping("/deleteRoleUser")
+//  public PlatResult deleteRoleUser(String roleRowId, String[] userRwoId) {
+//    PlatResult platResult;
+//    if (isValid(userRwoId) && isValid(roleRowId)) {
+//      ServerResult serverResult = roleService.deleteRoleUser(roleRowId, userRwoId);
+//      platResult = result(serverResult);
+//    } else {
+//      platResult = fail(DATA_CANNOT_BE_EMPTY);
+//    }
+//    return platResult;
+//  }
 
 
   /**
@@ -269,17 +269,17 @@ public class RoleController extends BaseController {
    * @param roleRowId      角色rowId
    * @return PlatResult
    */
-  @PostMapping("/addRoleUserGroup")
-  public PlatResult addRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
-    PlatResult platResult;
-    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addRoleUserGroup(roleRowId, userGroupRwoId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
+//  @PostMapping("/addRoleUserGroup")
+//  public PlatResult addRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
+//    PlatResult platResult;
+//    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
+//      ServerResult serverResult = roleService.addRoleUserGroup(roleRowId, userGroupRwoId);
+//      platResult = result(serverResult);
+//    } else {
+//      platResult = fail(DATA_CANNOT_BE_EMPTY);
+//    }
+//    return platResult;
+//  }
 
 
   /**
@@ -289,17 +289,17 @@ public class RoleController extends BaseController {
    * @param roleRowId      角色rowId
    * @return PlatResult
    */
-  @PostMapping("/deleteRoleUserGroup")
-  public PlatResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
-    PlatResult platResult;
-    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteRoleUserGroup(roleRowId, userGroupRwoId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
+//  @PostMapping("/deleteRoleUserGroup")
+//  public PlatResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
+//    PlatResult platResult;
+//    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
+//      ServerResult serverResult = roleService.deleteRoleUserGroup(roleRowId, userGroupRwoId);
+//      platResult = result(serverResult);
+//    } else {
+//      platResult = fail(DATA_CANNOT_BE_EMPTY);
+//    }
+//    return platResult;
+//  }
 
 
 

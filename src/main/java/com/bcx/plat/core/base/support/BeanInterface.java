@@ -79,12 +79,9 @@ public interface BeanInterface<T extends BeanInterface> extends Serializable {
     return (T) this;
   }
 
-
   default Map<String, Object> toDbMap() {
     return toMap();
   }
-
-  ;
 
   default T fromDbMap(Map map) {
     return fromMap(map);
