@@ -72,6 +72,10 @@
             "title": "功能接口维护",
             "icon": "&#xe641;",
             "href": "core/WebUI/unction-interfaces/unction-interfaces.html"
+        },{
+            "title": "角色信息维护",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/role-information-maintenance/role-information-maintenance.html"
         }]
     },{
     "title": "动态模板",
