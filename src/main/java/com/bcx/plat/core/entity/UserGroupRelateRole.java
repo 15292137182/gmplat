@@ -18,4 +18,19 @@ public class UserGroupRelateRole extends BaseEntity<UserGroupRelateRole>{
   private String roleRowId;//角色唯一标识
 
 
+  public String getUserGroupRowId() {
+    return userGroupRowId;
+  }
+
+  public void setUserGroupRowId(String userGroupRowId) {
+    this.userGroupRowId = userGroupRowId;
+  }
+
+  public String getRoleRowId() {
+    return roleRowId;
+  }
+
+  public void setRoleRowId(String roleRowId) {
+    this.roleRowId = roleRowId;
+  }
 }

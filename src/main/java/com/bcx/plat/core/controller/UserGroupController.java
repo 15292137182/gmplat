@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -225,30 +227,26 @@ public class UserGroupController extends BaseController {
   @SuppressWarnings("unchecked")
   public PlatResult queryUserGroupUser(String userGroupRowId, Integer pageNum, Integer pageSize, String order) {
     PlatResult platResult;
-    int num = 0;
-    int sizes = 0;
-    long total = 0;
-    LinkedList<Order> orders = dataSort(UserGroup.class, order);
-    Condition condition = new ConditionBuilder(UserRelateUserGroup.class).and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
-    List<UserRelateUserGroup> userRelateUserGroups = new UserRelateUserGroup().selectList(condition, null, true);
+    LinkedList<Order> orders = dataSort(UserGroup.class, order == null ? "" : order);
+    Condition condition = new ConditionBuilder(UserRelateUserGroup.class)
+        .and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
+    List<UserRelateUserGroup> userRelateUserGroups =
+        new UserRelateUserGroup().selectList(condition, null, true);
     if (userRelateUserGroups != null && userRelateUserGroups.size() > 0) {
-      List list = new ArrayList();
-      PageResult<User> users;
-      for (UserRelateUserGroup userGroup : userRelateUserGroups) {
-        String userRowId = userGroup.getUserRowId();
-        Condition buildDone = new ConditionBuilder(User.class).and().equal("rowId", userRowId).endAnd().buildDone();
-        users = userService.selectPage(buildDone, orders, pageNum, pageSize);
-        if (users != null && users.getResult().size() > 0) {
-          list.add(users.getResult().get(0));
-          num = users.getPageNum();
-          sizes = users.getPageSize();
-          total = users.getTotal();
-        }
+      List<String> row = userRelateUserGroups
+          .stream()
+          .map(UserRelateUserGroup::getUserRowId)
+          .collect(Collectors.toList());
+      Condition buildDone =
+          new ConditionBuilder(User.class)
+              .and().in("rowId", row).endAnd().buildDone();
+      PageResult<User> users =
+          userService.selectPage(buildDone, orders, pageNum, pageSize);
+      if (users != null && users.getResult().size() > 0) {
+        platResult = successData(QUERY_SUCCESS, users);
+      } else {
+        platResult = fail(QUERY_FAIL);
       }
-      PageResult pageResult = new PageResult(total, num, sizes, list);
-      ServerResult serverResult = new ServerResult();
-      serverResult.setData(pageResult);
-      platResult = result(serverResult);
     } else {
       platResult = fail(QUERY_FAIL);
     }

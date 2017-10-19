@@ -95,21 +95,19 @@ public class RoleController extends BaseController {
   /**
    * 分页查询数据
    *
-   * @param rowId    角色rowId
-   * @param roleId   角色编号
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
    * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping(value = "/queryUsers")
-  public PlatResult queryUsersByRowId(String rowId, String roleId, String search, String param, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult queryUsersByRowId(String rowId, String roleId, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(User.class, order);
-    PageResult result;
-    if (isValid(roleId)) {
-      result = roleService.queryRoleuserByRoleId(roleId, search, param, orders, pageNum, pageSize);
-    } else {
-      result = roleService.queryRoleUserByRowId(rowId, search, param, orders, pageNum, pageSize);
+    PageResult result = null;
+    if (isValid(rowId)) {
+      result = roleService.queryRoleUserByRowId(rowId, orders, pageNum, pageSize);
+    } else if (isValid(roleId)) {
+      result = roleService.queryRoleuserByRoleId(roleId, orders, pageNum, pageSize);
     }
     if (isValid(result)) {
       return result(new ServerResult<>(result));
@@ -144,164 +142,6 @@ public class RoleController extends BaseController {
     ServerResult success = roleService.addRolePermission(roleRowId, permissionRowIds);
     return result(success);
   }
-
-
-  /**
-   * 用户分配角色关联信息
-   *
-   * @param userRwoId 用户rowId
-   * @param roleRowId 角色rowId
-   * @return PlatResult
-   */
-  @PostMapping("/addUserRole")
-  public PlatResult addUserRole(String userRwoId, String[] roleRowId) {
-    PlatResult platResult;
-    if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addUserRole(userRwoId, roleRowId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
-
-  /**
-   * 用户分配角色关联信息
-   *
-   * @param userRwoId 用户rowId
-   * @param roleRowId 角色rowId
-   * @return PlatResult
-   */
-  @PostMapping("/deleteUserRole")
-  public PlatResult deleteUserRole(String userRwoId, String[] roleRowId) {
-    PlatResult platResult;
-    if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteUserRole(userRwoId, roleRowId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
-
-
-  /**
-   * 用户组分配角色关联信息
-   *
-   * @param userGroupRwoId 用户rowId
-   * @param roleRowId      角色rowId
-   * @return PlatResult
-   */
-  @PostMapping("/addUserGroupRole")
-  public PlatResult addUserGroupRole(String userGroupRwoId, String[] roleRowId) {
-    PlatResult platResult;
-    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addUserGroupRole(userGroupRwoId, roleRowId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
-
-
-  /**
-   * 用户分配角色关联信息
-   *
-   * @param userGroupRwoId 用户rowId
-   * @param roleRowId      角色rowId
-   * @return PlatResult
-   */
-  @PostMapping("/deleteUserGroupRole")
-  public PlatResult deleteUserGroupRole(String userGroupRwoId, String[] roleRowId) {
-    PlatResult platResult;
-    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteUserGroupRole(userGroupRwoId, roleRowId);
-      platResult = result(serverResult);
-    } else {
-      platResult = fail(DATA_CANNOT_BE_EMPTY);
-    }
-    return platResult;
-  }
-
-
-  /**
-   * 用户分配角色关联信息
-   *
-   * @param userRwoId 用户rowId
-   * @param roleRowId 角色rowId
-   * @return PlatResult
-   */
-//  @PostMapping("/addRoleUser")
-//  public PlatResult addRoleUser(String roleRowId, String[] userRwoId) {
-//    PlatResult platResult;
-//    if (isValid(userRwoId) && isValid(roleRowId)) {
-//      ServerResult serverResult = roleService.addRoleUser(roleRowId, userRwoId);
-//      platResult = result(serverResult);
-//    } else {
-//      platResult = fail(DATA_CANNOT_BE_EMPTY);
-//    }
-//    return platResult;
-//  }
-
-  /**
-   * 用户分配角色关联信息
-   *
-   * @param userRwoId 用户rowId
-   * @param roleRowId 角色rowId
-   * @return PlatResult
-   */
-//  @PostMapping("/deleteRoleUser")
-//  public PlatResult deleteRoleUser(String roleRowId, String[] userRwoId) {
-//    PlatResult platResult;
-//    if (isValid(userRwoId) && isValid(roleRowId)) {
-//      ServerResult serverResult = roleService.deleteRoleUser(roleRowId, userRwoId);
-//      platResult = result(serverResult);
-//    } else {
-//      platResult = fail(DATA_CANNOT_BE_EMPTY);
-//    }
-//    return platResult;
-//  }
-
-
-  /**
-   * 用户组分配角色关联信息
-   *
-   * @param userGroupRwoId 用户rowId
-   * @param roleRowId      角色rowId
-   * @return PlatResult
-   */
-//  @PostMapping("/addRoleUserGroup")
-//  public PlatResult addRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
-//    PlatResult platResult;
-//    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-//      ServerResult serverResult = roleService.addRoleUserGroup(roleRowId, userGroupRwoId);
-//      platResult = result(serverResult);
-//    } else {
-//      platResult = fail(DATA_CANNOT_BE_EMPTY);
-//    }
-//    return platResult;
-//  }
-
-
-  /**
-   * 用户分配角色关联信息
-   *
-   * @param userGroupRwoId 用户rowId
-   * @param roleRowId      角色rowId
-   * @return PlatResult
-   */
-//  @PostMapping("/deleteRoleUserGroup")
-//  public PlatResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
-//    PlatResult platResult;
-//    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-//      ServerResult serverResult = roleService.deleteRoleUserGroup(roleRowId, userGroupRwoId);
-//      platResult = result(serverResult);
-//    } else {
-//      platResult = fail(DATA_CANNOT_BE_EMPTY);
-//    }
-//    return platResult;
-//  }
 
 
   /**
