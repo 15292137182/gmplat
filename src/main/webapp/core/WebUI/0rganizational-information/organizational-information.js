@@ -220,20 +220,6 @@ gmp_onload=function(){
                 querySearch.uneedSearch(PersonnelInformationUrl,strArr,this,function(res){
                     console.log(res);
                 })
-                // $.ajax({
-                //     url:PersonnelInformationUrl,
-                //     type:"get",
-                //     data:{
-                //         param:strArr
-                //     },
-                //     dataType:"json",
-                //     xhrFields: {withCredentials: true},
-                //     success:function(res){
-                //         console.log(res.resp.content)
-                //         rightBottom.loading=false;
-                //         rightBottom.tableData = res.resp.content.data;//数据源
-                //     },
-                // })
             },
             //点击
             firstClick(){
@@ -255,6 +241,10 @@ gmp_onload=function(){
                 querySearch.jumpPage(PersonnelInformationUrl,strArr,this,val,function(res){
                     console.log(res);
                 })
+            },
+            //刷新按钮
+            btnRefresh(){
+                this.PersonnelInformation(left.rowId);
             }
         },
         created(){
