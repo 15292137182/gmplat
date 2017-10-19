@@ -83,19 +83,14 @@
                       p:pks="#{'proRowId'}"/>
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.Menu"
-                      p:tableName="t_menu"
-                      p:pks="#{'rowId'}"/>
-
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserGroup"
                       p:tableName="t_user_group"
                       p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.Page"
-                      p:tableName="t_page"
-                      p:pks="#{'rowId'}"/>
+                <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
+                      <!--p:entityClass="com.bcx.plat.core.entity.Page"-->
+                      <!--p:tableName="t_page"-->
+                      <!--p:pks="#{'rowId'}"/>-->
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
@@ -118,10 +113,10 @@
                       p:tableName="t_base_org"
                       p:pks="#{'rowId'}"/>
 
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.Button"
-                      p:tableName="t_button"
-                      p:pks="#{'rowId'}"/>
+                <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
+                      <!--p:entityClass="com.bcx.plat.core.entity.Button"-->
+                      <!--p:tableName="t_button"-->
+                      <!--p:pks="#{'rowId'}"/>-->
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.FuncOperat"
