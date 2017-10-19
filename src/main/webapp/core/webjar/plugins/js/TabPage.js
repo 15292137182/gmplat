@@ -466,14 +466,14 @@ var querySearch = (function(){
         })
     }
     //左侧查右侧只需要一个rowId
-    var searchResource = function(url,rowId,pageSize,pageNum,obj,callback){//有依赖的分页查询
+    var searchResource = function(url,rowId,obj,callback){
         $.ajax({
             url:url,
             type:"get",
             data:{
                 userGroupRowId:rowId,
-                pageSize:pageSize,
-                pageNum:pageNum
+                pageSize:obj.pageSize,
+                pageNum:1
             },
             dataType:"json",
             xhrFields: {withCredentials: true},
@@ -481,20 +481,15 @@ var querySearch = (function(){
                 console.log(res);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
-                    if(res.resp.content.state==-1){
-                        obj.tableData = [];//数据源
-                        obj.allDate = 0;//总共多少条数据
-                        obj.pageNum = 1;//当前页
-                        return;
-                    }else if(res.resp.content.data==null){
-                        obj.tableData=[];
-                    }else{
-                        //dataConversion.conversion(obj,res.resp.content.data.result);
+                    if(res.resp.content.data!=null){
+                        console.log(res);
+                        dataConversion.conversion(obj,res.resp.content.data.result);
                         obj.tableData = res.resp.content.data.result;//数据源
                         obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
-                        obj.pageNum = res.resp.content.data.pageNum;//定位到当前页
+                        obj.pageNum = res.resp.content.data.pageNum;//当前页
+                    }else{
+                        obj.tableData = [];
                     }
-
                 }else{
                     obj.tableData = [];
                 }
@@ -508,7 +503,8 @@ var querySearch = (function(){
             }
         })
     }
-    //不需要search
+
+    //不需要search 不跳回第一页
     var jumpPage = function(url,params,obj,number,callback){
         $.ajax({
             url:url,

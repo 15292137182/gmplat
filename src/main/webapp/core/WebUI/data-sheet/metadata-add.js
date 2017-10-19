@@ -65,7 +65,7 @@ var em = new Vue({
                                 "url":addUrl,
                                 "jsonData":{objectName:em.ruleForm.nameInput,//名称
                                     relateTableRowId: em.table_1.value,//关联表
-                                    className: em.ruleForm.nameInput,//实体类
+                                    className: em.ruleForm.className,//实体类
                                     relateTemplateObject: em.templateObj_1.value,//关联模板对象
                                     belongModule: em.belongModule_1.value,//所属模块
                                 },

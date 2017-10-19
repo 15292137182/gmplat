@@ -169,7 +169,6 @@ gmp_onload=function(){
             getChecked(){
                 console.log(data);
             },
-
             //tab页点击交换
             handleClick(){
 
@@ -190,46 +189,27 @@ gmp_onload=function(){
         el:'#basRightTop',
         template:'#tempBlock',
         data:getData.dataObj({
-            data: [{
-                label: '一级 11',
-                children: [{
-                    label: '二级 11-11',
-                    children: [{
-                        label: '三级 11-11-11'
-                    }]
-                }]
-            }, {
-                label: '一级 22',
-                children: [{
-                    label: '二级 22-11',
-                    children: [{
-                        label: '三级 22-11-11'
-                    }]
-                }, {
-                    label: '二级 22-22',
-                    children: [{
-                        label: '三级 22-22-11'
-                    }]
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                        label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                        label: '三级 3-2-1'
-                    }]
-                }],
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
+            config1: {
+                // 显示复选框
+                checkbox:false,
+                // 默认展开
+                //expanded: [324],
+                // 展开所有节点
+                expandedAll: true,
+                // 默认选中项 当 checkbox 为 true 时  编辑时可以用
+                //checked: [12, 21],
+                // 配置显示项
+                defaultProps: {
+                    // 树节点显示文字
+                    label: 'orgName',
+                    // 节点id
+                    key: "orgId",
+                    // 父节点信息
+                    parent: "orgPid",
+                },
+                // 获取数据接口
+                url: serverPath + "/role/queryUsers"
             },
-            activeName:'first',
         }),
         methods:{
             handleNodeClick(data){
@@ -237,7 +217,16 @@ gmp_onload=function(){
             },
             handleClick(){
 
-            }
+            },
+            getNodes1(data){
+                console.log(data);
+                this.rowId=data.rowId;
+                right.searchMore();
+            },
+            //复选框点击
+            getChecked1(){
+                console.log(data);
+            },
 
         }
     })
@@ -413,21 +402,12 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                right.leftHeight = $(window).height() - 206;
+                right.leftHeight = $(window).height() - 210;
             });
             $(window).resize(function () {
-                right.leftHeight = $(window).height() - 206;
+                right.leftHeight = $(window).height() - 210;
             });
 
-            $(document).ready(function () {
-                var height = $(window).height()-50;
-                $("#treeLeft").height(height);
-
-            });
-            $(window).resize(function () {
-                var height1 = $(window).height()-50;
-                $("#treeLeft").height(height1);
-            });
         }
     })
 }
