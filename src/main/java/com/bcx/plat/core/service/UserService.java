@@ -29,7 +29,7 @@ import java.util.*;
  */
 @Service
 public class UserService extends BaseService<User> {
-  private List<String> blankSelectFields() {
+  protected List<String> blankSelectFields() {
     return Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
   }
 

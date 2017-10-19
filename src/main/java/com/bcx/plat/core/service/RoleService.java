@@ -167,11 +167,11 @@ public class RoleService extends BaseService<Role> {
       }
     }
     if (isValid(search)) {
-      List<String> blankQuery = Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
       if (null != userCondition) {
-        userCondition = new And(userCondition, UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search)));
+        userCondition = new And(userCondition, UtilsTool.createBlankQuery(userService.blankSelectFields(),
+            UtilsTool.collectToSet(search)));
       } else {
-        userCondition = UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search));
+        userCondition = UtilsTool.createBlankQuery(userService.blankSelectFields(), UtilsTool.collectToSet(search));
       }
     }
     if (isValid(param)) {
@@ -480,7 +480,7 @@ public class RoleService extends BaseService<Role> {
       deleteRoleUser(rowId, null);
       deleteRoleUserGroup(rowId, null);
       deleteRolePermission(rowId, null);
-      int delete = new Role().logicalDeleteById(rowId);
+      int delete = new Role().buildDeleteInfo().logicalDeleteById(rowId);
       if (delete != -1) {
         return success(DELETE_SUCCESS);
       }
