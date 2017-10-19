@@ -1,6 +1,7 @@
 /**
  * Created by andim on 2017/8/21.
  */
+
 var addInlayerData = new Vue({
     el:"#addInlayerData",
     data:{
@@ -20,14 +21,14 @@ var addInlayerData = new Vue({
             desp:[{max: 1024, message: '长度在 1 到 512个汉字', trigger: 'blur' }]
         },
         addUrl:serverPath+'/dbTableColumn/add',//新增表字段
-        editUrl:serverPath+'/dbTableColumn/modify'//编辑表字段
+        editUrl:serverPath+'/dbTableColumn/modify',//编辑表字段
     },
     methods:{
         addTable(){//新增
             if(addInlayerData.Inlayer.primaryKey == true){
-                addInlayerData.Inlayer.primaryKeyData = true;
+                addInlayerData.Inlayer.primaryKeyData = 1;
             }else{
-                addInlayerData.Inlayer.primaryKeyData = false;
+                addInlayerData.Inlayer.primaryKeyData = 0;
             }
             var data = {
                 "url":addInlayerData.addUrl,
@@ -48,9 +49,9 @@ var addInlayerData = new Vue({
         },
         editTable(){//编辑
             if(addInlayerData.Inlayer.primaryKey == true){
-                addInlayerData.Inlayer.primaryKeyData = true;
+                addInlayerData.Inlayer.primaryKeyData = 1;
             }else{
-                addInlayerData.Inlayer.primaryKeyData = false;
+                addInlayerData.Inlayer.primaryKeyData = 0;
             }
             var data = {
                 "url":addInlayerData.editUrl,

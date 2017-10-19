@@ -25,6 +25,7 @@ var myInlayerButton = new Vue({
 var DatabaseDetails = new Vue({
     el:'#right',
     data:getData.dataObj({
+            tableId:"fieldReplacement",
             Robj:'',
             rowObj:'',
             url:serverPath+'/dbTableColumn/queryTabById',
@@ -44,7 +45,8 @@ var DatabaseDetails = new Vue({
         editInlayerTableBase(){
             myInlayerButton.divIndex =  ibcpLayer.ShowDiv('add-inlayer-table.html','表字段','400px', '380px',function(){
                 myInlayerButton.isEdit = true;
-                if(DatabaseDetails.rowObj.isPk == "true"){
+                console.log(DatabaseDetails.rowObj);
+                if(DatabaseDetails.rowObj.isPk == "是"){
                     addInlayerData.Inlayer.primaryKey = true;
                 }else{
                     addInlayerData.Inlayer.primaryKey = false;

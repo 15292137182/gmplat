@@ -8,13 +8,13 @@ var rightBottom;
 var basRightTop;
 var basRight;
 
-//查角色信息查询接口
-var roleInformation = serverPath + "/role/queryBySpecify";
+//权限信息查询接口
+var roleInformation = serverPath + "/permission/queryPage";
 
-//查看角色下的权限信息
+//查看权限类型下的权限信息
 var permissionsInformation = serverPath + "/permission/queryById";
 
-//查看角色下的人员信息
+//查看权限类型下的角色信息
 var personnelInformationInterface = serverPath + "/role/queryUsers";
 
 //角色编辑接口
@@ -84,7 +84,7 @@ gmp_onload=function(){
                 checkbox: true,
                 expandedAll: true,
                 // 获取树节点接口
-                url: serverPath + "/role/queryPage",
+                url: roleInformation,
                 // 设置参数 -- 树节点上显示的文字
                 defaultProps: {
                     // 树节点显示文字
@@ -197,7 +197,7 @@ gmp_onload=function(){
         }
     })
 
-    //关联其他信息及权限信息
+    //详细信息
     rightBottom=new Vue({
         el:'#rightBottom',
         data:getData.dataObj({
@@ -237,15 +237,15 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() - 450;
+                rightBottom.leftHeight = $(window).height() - 235;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() - 450;
+                rightBottom.leftHeight = $(window).height() - 235;
             });
         }
     })
 
-    //人员信息
+    //角色信息
     basRightTop = new Vue({
         el:"#basRightTop",
         template:'#tempBlock',
@@ -253,7 +253,7 @@ gmp_onload=function(){
         methods:{
             //点击行
             twoClick(){
-                alert("1");
+
             },
             //角色查看
             roleView(rowId){
@@ -301,58 +301,12 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                basRightTop.leftHeight = $(window).height() - 450;
+                basRightTop.leftHeight = $(window).height() - 235;
             });
             $(window).resize(function () {
-                basRightTop.leftHeight = $(window).height() - 450;
+                basRightTop.leftHeight = $(window).height() - 235;
             });
         }
     })
 
-    //机构信息
-    basRight = new Vue({
-        el:"#basRight",
-        template:'#tempBlockThree',
-        data:getData.dataObj({}),
-        methods:{
-            //点击行
-            twoClick(){
-                alert("1");
-            },
-            //角色查看
-            roleView(rowId){
-                var strArr = '["'+rowId+'"]';
-                console.log(strArr);
-                $.ajax({
-                    url:roleViewUrl,
-                    type:"get",
-                    data:{
-                        param:strArr
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        console.log(res.resp.content.data)
-                        rightBottom.loading=false;
-                        rightBottom.tableDataTwo = res.resp.content.data;//数据源
-                    },
-                })
-            },
-            //分页信息
-            handleSizeChange(){
-
-            },
-            handleCurrentChange(){
-
-            },
-        },
-        created(){
-            $(document).ready(function () {
-                basRight.leftHeight = $(window).height() - 450;
-            });
-            $(window).resize(function () {
-                basRight.leftHeight = $(window).height() - 450;
-            });
-        }
-    })
 }

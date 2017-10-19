@@ -45,14 +45,13 @@
 <div id="basTop">
     <el-row type="flex" justify="end">
         <el-col :span="24">
-            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加角色信息</el-button>
-            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="disabled">删除角色信息</el-button>
-            <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加权限信息</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="disabled">删除权限信息</el-button>
         </el-col>
     </el-row>
 </div>
-<div class="allBorder" style="float: left; padding:20px 10px 0 10px;">
-    <el-col :span="4" id="left" style="margin-left:15px;">
+<div class="allBorder">
+    <el-col :span="4" id="left" style="">
         <div class="allBorder" id="allBorderHeight" style="height:500px; border:none">
             <el-row>
                 <el-col>
@@ -66,7 +65,7 @@
         </div>
     </el-col>
 
-    <el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:40px;">
+    <el-col :span="20" id="rightBottom" style="margin-top:20px;">
         <div class="allBorder" style="border:1px solid #bccdc5">
             <el-row>
                 <el-col>
@@ -109,11 +108,8 @@
                                     </el-pagination>
                                 </el-row>
                             </el-tab-pane>
-                            <el-tab-pane label=" 人员信息" name="second">
+                            <el-tab-pane label=" 角色信息" name="second">
                                 <el-row id="basRightTop"></el-row>
-                            </el-tab-pane>
-                            <el-tab-pane label=" 机构信息" name="Three">
-                                <el-row id="basRight"></el-row>
                             </el-tab-pane>
                         </el-tabs>
                     </div>
@@ -132,43 +128,15 @@
                   :height="leftHeight"
                   v-loading="loading"
                   element-loading-text="加载中">
-            <el-table-column show-overflow-tooltip sortable="custom" prop="id" label="工号" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="角色编号" width="250">
             </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="name" label="姓名" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="角色名称" width="250">
             </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="nickname" label="昵称" width="">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="orgName" label="部门" width="">
-            </el-table-column>
-        </el-table>
-        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="pageNum"
-                    :page-sizes="[5,10,20]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="allDate">
-            </el-pagination>
-        </el-row>
-    </el-col>
-</template>
-
-<template id="tempBlockThree">
-    <el-col  id="basRight">
-        <el-table ref="myData"
-                  :data="tableData"
-                  @row-click="twoClick" border style="width: 100%"
-                  :highlight-current-row="true"
-                  :height="leftHeight"
-                  v-loading="loading"
-                  element-loading-text="加载中">
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="编号" width="250">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="名称" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="roleType" label="角色类别" width="">
             </el-table-column>
             <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip sortable="custom" prop="remarks" label="备注" width="">
             </el-table-column>
         </el-table>
         <el-row type="flex" justify="end" style="padding-top:10px" class="block">

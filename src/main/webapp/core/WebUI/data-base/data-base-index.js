@@ -7,6 +7,15 @@
 
 var dataBase;
 var topButtonObj;
+
+function GlobalParameter(){
+    var args={"tableKeySet":{
+        "fieldReplacement":{isPk:"tureFalse"}
+        }
+    };
+    return args
+}
+
 gmp_onload=function(){
     dataBase = new Vue({
         el:"#app",
