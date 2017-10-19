@@ -2,41 +2,30 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.Role;
-import com.bcx.plat.core.entity.RoleRelatePermission;
-import com.bcx.plat.core.entity.User;
-import com.bcx.plat.core.entity.UserGroupRelateRole;
-import com.bcx.plat.core.entity.UserRelateRole;
+import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.bcx.plat.core.constants.Message.DELETE_FAIL;
-import static com.bcx.plat.core.constants.Message.DELETE_SUCCESS;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
+import static com.bcx.plat.core.constants.Message.*;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
  * 角色业务层
  *
  * @author YoungerOu
- *         <p>
- *         Created on 2017/10/13.
+ * <p>
+ * Created on 2017/10/13.
  */
 @Service
 public class RoleService extends BaseService<Role> {
@@ -116,7 +105,7 @@ public class RoleService extends BaseService<Role> {
    * @return ServerResult
    */
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(order);
+    LinkedList<Order> orders = UtilsTool.dataSort(Role.class, order);
     Condition condition;
     if (isValid(param)) {//判断是否根据指定字段查询
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(Role.class, UtilsTool.jsonToObj(param, Map.class));
@@ -148,12 +137,9 @@ public class RoleService extends BaseService<Role> {
       List<Map> select = selectMap(condition);
       if (!select.isEmpty()) {
         return successData(Message.QUERY_SUCCESS, select);
-      } else {
-        return fail(Message.QUERY_FAIL);
       }
-    } else {
-      return fail(Message.QUERY_FAIL);
     }
+    return fail(Message.QUERY_FAIL);
   }
 
   /**
@@ -165,7 +151,7 @@ public class RoleService extends BaseService<Role> {
    * @param pageSize 页面大小
    * @return 返回分页查询结果
    */
-  public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, List<Order> orders, int pageNum, int pageSize) {
+  public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, String search, String param, List<Order> orders, Integer pageNum, Integer pageSize) {
     if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
           .and().equal("roleRowId", rowId).endAnd().buildDone();
@@ -174,9 +160,22 @@ public class RoleService extends BaseService<Role> {
         List<String> userRowIds = relateRoles.stream()
             .map(UserRelateRole::getUserRowId)
             .collect(Collectors.toList());
-        Condition condition1 = new ConditionBuilder(User.class)
+        Condition userCondition = new ConditionBuilder(User.class)
             .and().in("rowId", userRowIds).endAnd().buildDone();
-        return userService.selectPageMap(condition, orders, pageNum, pageSize);
+        if (isValid(search)) {
+          List<String> blankQuery = Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
+          //TODO 写好后测试此处
+          userCondition = new And(userCondition, UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search)));
+        }
+        if (isValid(param)) {
+          userCondition = new And(userCondition, UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)));
+        }
+        Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
+        fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
+        if (isValid(pageNum)) {
+          return leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, pageNum, pageSize, orders);
+        }
+        return new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, orders));
       }
     }
     return null;
@@ -191,13 +190,13 @@ public class RoleService extends BaseService<Role> {
    * @param pageSize 页面大小
    * @return 返回查询结果
    */
-  public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, List<Order> orders, int pageNum, int pageSize) {
+  public PageResult<Map<String, Object>> queryRoleuserByRoleId(String roleId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
           .and().equal("roleId", roleId).endAnd().buildDone();
       List<Role> roles = select(condition);
       if (!roles.isEmpty()) {
-        return queryRoleUserByRowId(roles.get(0).getRowId(), orders, pageNum, pageSize);
+        return queryRoleUserByRowId(roles.get(0).getRowId(), search, param, orders, pageNum, pageSize);
       }
     }
     return null;
