@@ -9,6 +9,8 @@ var right;
 var searchGroup=serverPath + "/userGroup/queryById";
 //查用户组的用户信息
 var searchGroupUser=serverPath + "/userGroup/queryUserGroupUser";
+//修改用户组
+//var searchGroupUser=serverPath + "/userGroup/modify
 
 gmp_onload=function(){
     basTop = new Vue({
@@ -57,9 +59,9 @@ gmp_onload=function(){
         data:getData.dataObj({
             config: {
                 // 显示复选框
-                checkbox: true,
+                checkbox: false,
                 // 默认展开  id
-                expanded: [1],
+                //expanded: [1],
                 // 配置显示项
                 defaultProps: {
                     // 树节点显示文字
@@ -92,9 +94,7 @@ gmp_onload=function(){
                         right.remarks=data.remarks;
                     },
                 })
-                querySearch.searchResource(searchGroupUser,this.rowId,rightBottom.pageSize,rightBottom.pageNum,this,function(res){
-                    console.log(res);
-                })
+                rightBottom.searchMore();
             },
             //复选框选中得到得值
             getChecked(data) {
@@ -106,6 +106,7 @@ gmp_onload=function(){
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
+            labelPosition:'right',
             groupName:'',
             belongSector:'',
             groupCategory:'',
@@ -113,7 +114,9 @@ gmp_onload=function(){
             remarks:'',
         }),
         methods: {
+            addClick(){
 
+            }
         }
     })
 
@@ -128,7 +131,7 @@ gmp_onload=function(){
             },
             //点击这一行
             currentChange(row, event, column){
-                console.log(row)
+
             },
             showMore(){
                 this.couldLook=true;
@@ -139,9 +142,16 @@ gmp_onload=function(){
             handleCurrentChange(val){
                 this.pageNum=val;
             },
-            //查询
+            //查询 调回第一页
             searchMore(){
+                querySearch.searchResource(searchGroupUser,left.rowId,this,function(res){
+                    var data=res.resp.content.data.result;
+                    if(data!=null){
+                        //默认选中行
+                        //this.currentChange(this.tableData[0]);
+                    }
 
+                })
             },
             //默认选中变颜色
             FindRFirstDate(row){
@@ -151,10 +161,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() -335;
+                rightBottom.leftHeight = $(window).height() -380;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() -335;
+                rightBottom.leftHeight = $(window).height() -380;
             });
         }
     })
