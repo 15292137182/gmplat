@@ -91,23 +91,24 @@ public class RoleController extends BaseController {
     ServerResult result = roleService.queryBySpecify(param);
     return result(result);
   }
-
   /**
    * 分页查询数据
    *
+   * @param rowId    角色rowId
+   * @param roleId   角色编号
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
    * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping(value = "/queryUsers")
-  public PlatResult queryUsersByRowId(String rowId, String roleId, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult queryUsersByRowId(String rowId, String roleId, String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(User.class, order);
-    PageResult result = null;
-    if (isValid(rowId)) {
-      result = roleService.queryRoleUserByRowId(rowId, orders, pageNum, pageSize);
-    } else if (isValid(roleId)) {
-      result = roleService.queryRoleuserByRoleId(roleId, orders, pageNum, pageSize);
+    PageResult result;
+    if (isValid(roleId)) {
+      result = roleService.queryRoleuserByRoleId(roleId, search, param, orders, pageNum, pageSize);
+    } else {
+      result = roleService.queryRoleUserByRowId(rowId, search, param, orders, pageNum, pageSize);
     }
     if (isValid(result)) {
       return result(new ServerResult<>(result));
@@ -115,7 +116,6 @@ public class RoleController extends BaseController {
       return fail(Message.QUERY_FAIL);
     }
   }
-
   /**
    * 删除角色下的用户信息
    *
