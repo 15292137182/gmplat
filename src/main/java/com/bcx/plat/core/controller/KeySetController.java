@@ -1,6 +1,5 @@
 package com.bcx.plat.core.controller;
 
-import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.KeySet;
@@ -26,6 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
+import static com.bcx.plat.core.constants.Message.UPDATE_FAIL;
+import static com.bcx.plat.core.constants.Message.UPDATE_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -57,14 +58,15 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/queryKeySet")
   public PlatResult queryKeySet(String search) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(search)) {
       List list = UtilsTool.jsonToObj(search, List.class);
       ServerResult serverResult = keySetService.queryKeySet(list);
-      return result(serverResult);
+      platResult = result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      platResult = fail(Message.QUERY_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -76,15 +78,16 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/queryKeyCode")
   public PlatResult queryKeyCode(String keyCode, String rowId) {
+    PlatResult platResult;
     String row = String.valueOf(rowId);
     String keyCodes = String.valueOf(keyCode);
-    ServerResult result = new ServerResult();
     if (!Objects.equals(row, "null") || !Objects.equals(keyCode, "null")) {
       ServerResult serverResult = keySetService.queryKeyCode(keyCodes, row);
-      return result(serverResult);
+      platResult = result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      platResult = fail(Message.QUERY_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -95,13 +98,14 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/queryPro")
   public PlatResult queryPro(String rowId) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
       ServerResult<List<Map>> listServerResult = keySetService.queryPro(rowId);
-      return result(listServerResult);
+      platResult = result(listServerResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
 
@@ -118,14 +122,15 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/queryProPage")
   public PlatResult queryProPage(String rowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
       LinkedList<Order> orders = UtilsTool.dataSort(KeySetPro.class, order);
       ServerResult serverResult = keySetService.queryProPage(search, rowId, param, pageNum, pageSize, orders);
-      return result(serverResult);
+      platResult = result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
 
@@ -137,13 +142,14 @@ public class KeySetController extends BaseController {
    */
   @PostMapping(value = "/delete")
   public PlatResult delete(String rowId) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
       ServerResult serverResult = keySetService.deletePro(rowId);
-      return result(serverResult);
+      platResult = result(serverResult);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
   /**
@@ -154,7 +160,7 @@ public class KeySetController extends BaseController {
    */
   @PostMapping(value = "/add")
   public PlatResult insert(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     String keysetCode = String.valueOf(param.get("keysetCode")).trim();
     String keysetName = String.valueOf(param.get("keysetName")).trim();
     if (UtilsTool.isValid(keysetCode) && UtilsTool.isValid(keysetName)) {
@@ -163,16 +169,18 @@ public class KeySetController extends BaseController {
       List<KeySet> keySets = keySetService.select(condition);
       if (keySets.size() == 0) {
         KeySet keySet = new KeySet().buildCreateInfo().fromMap(param);
-        if (keySet.insert() != -1) {
-          return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS));
+        if (keySet.insert() == -1) {
+          platResult = fail(Message.NEW_ADD_FAIL);
         } else {
-          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.NEW_ADD_FAIL));
+          platResult = success(Message.NEW_ADD_SUCCESS);
         }
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+        platResult = fail(Message.DATA_CANNOT_BE_DUPLICATED);
       }
+    } else {
+      platResult = fail(Message.DATA_CANNOT_BE_EMPTY);
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
+    return platResult;
   }
 
   /**
@@ -183,14 +191,15 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/checkCode")
   public PlatResult checkCode(String keysetCode) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keysetCode).endAnd().buildDone();
     List<KeySet> keySets = keySetService.select(condition);
     if (keySets.size() == 0) {
-      return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.OPERATOR_SUCCESS));
+      platResult = success(Message.OPERATOR_SUCCESS);
     } else {
-      return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+      platResult = fail(Message.DATA_CANNOT_BE_DUPLICATED);
     }
+    return platResult;
   }
 
   /**
@@ -201,7 +210,7 @@ public class KeySetController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(param.get("rowId"))) {
       String keysetCode = String.valueOf(param.get("keysetCode")).trim();
       String keysetName = String.valueOf(param.get("keysetName")).trim();
@@ -212,19 +221,21 @@ public class KeySetController extends BaseController {
         if (keySets.size() == 0) {
           KeySet keySet = new KeySet();
           KeySet modify = keySet.fromMap(param).buildModifyInfo();
-          if (modify.updateById() != -1) {
-            return result(result.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.UPDATE_SUCCESS));
+          if (modify.updateById() == -1) {
+            platResult = fail(UPDATE_FAIL);
           } else {
-            return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.UPDATE_FAIL));
+            platResult = success(UPDATE_SUCCESS);
           }
         } else {
-          return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_DUPLICATED));
+          platResult = fail(Message.DATA_CANNOT_BE_DUPLICATED);
         }
       } else {
-        return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DATA_CANNOT_BE_EMPTY));
+        platResult = fail(Message.DATA_CANNOT_BE_EMPTY);
       }
+    } else {
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    return platResult;
   }
 
 
@@ -241,6 +252,7 @@ public class KeySetController extends BaseController {
   @RequestMapping("/queryPage")
   @SuppressWarnings("unchecked")
   public PlatResult singleInputSelect(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    PlatResult platResult;
     LinkedList<Order> orders = dataSort(KeySet.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否按照定字段查询
@@ -256,10 +268,11 @@ public class KeySetController extends BaseController {
       keySet = new PageResult(keySetService.selectMap(condition, orders));
     }
     if (isValid(keySet)) {
-      return result(new ServerResult<>(keySet));
-    }else{
-      return result(new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL,Message.QUERY_FAIL));
+      platResult = result(new ServerResult<>(keySet));
+    } else {
+      platResult = fail(Message.QUERY_FAIL);
     }
+    return platResult;
   }
 
   /**
@@ -270,17 +283,18 @@ public class KeySetController extends BaseController {
    */
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
-    ServerResult serverResult = new ServerResult();
+    PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
       Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = keySetService.selectMap(condition);
       if (select.size() == 0) {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+        platResult = fail(Message.QUERY_FAIL);
       } else {
-        return result(new ServerResult<>(select.get(0)));
+        platResult = result(new ServerResult<>(select.get(0)));
       }
     } else {
-      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 }

@@ -126,7 +126,7 @@ public class FrontFuncController extends BaseController {
    */
   @PostMapping("/delete")
   public PlatResult delete(String rowId) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     //根据传入的rowId查询当前数据
     Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<FrontFunc> frontFuncs = frontFuncService.select(condition);
@@ -147,13 +147,14 @@ public class FrontFuncController extends BaseController {
       FrontFunc frontFunc = new FrontFunc();
       int del = frontFunc.buildDeleteInfo().deleteById(rowId);
       if (del != -1) {
-        return super.result(new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS, frontFuncs));
+        platResult = successData(Message.DELETE_SUCCESS, frontFuncs);
       } else {
-        return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.DELETE_FAIL));
+        platResult = fail(Message.DELETE_FAIL);
       }
     } else {
-      return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 
 
@@ -165,13 +166,12 @@ public class FrontFuncController extends BaseController {
    */
   @RequestMapping("/queryFuncCode")
   public PlatResult queryFuncCode(String funcCode) {
-    ServerResult result = new ServerResult();
     if (isValid(funcCode)) {
       List list = UtilsTool.jsonToObj(funcCode, List.class);
-      ServerResult<LinkedList<Map<String, Object>>> linkedListServerResult = frontFuncService.queryFuncCode(list);
+      ServerResult linkedListServerResult = frontFuncService.queryFuncCode(list);
       return result(linkedListServerResult);
     }
-    return result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+    return fail(Message.QUERY_FAIL);
   }
 
 
@@ -195,12 +195,14 @@ public class FrontFuncController extends BaseController {
    */
   @PostMapping("/modify")
   public PlatResult update(@RequestParam Map<String, Object> param) {
-    ServerResult result = new ServerResult();
+    PlatResult platResult;
     if (isValid(param.get("rowId"))) {
       ServerResult serverResult = frontFuncService.updateFront(param);
-      return result(serverResult);
+      platResult = result(serverResult);
+    } else {
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
-    return super.result(result.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+    return platResult;
   }
 
   /**
@@ -211,16 +213,16 @@ public class FrontFuncController extends BaseController {
    */
   @RequestMapping("/queryById")
   public PlatResult queryById(String rowId) {
-    ServerResult serverResult = new ServerResult();
+    PlatResult platResult = null;
     if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(FrontFunc.class).and().equal("rowId", rowId).endAnd().buildDone();
       List<Map> select = frontFuncService.selectMap(condition);
-      if (select.size() == 0) {
-        return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL));
+      if (isValid(select)) {
+        platResult = result(new ServerResult<>(select.get(0)));
       }
-      return result(new ServerResult<>(select.get(0)));
     } else {
-      return result(serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.PRIMARY_KEY_CANNOT_BE_EMPTY));
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+    return platResult;
   }
 }

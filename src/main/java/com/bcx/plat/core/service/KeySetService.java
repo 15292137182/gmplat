@@ -67,6 +67,7 @@ public class KeySetService extends BaseService<KeySet> {
    * @param keyCodes 键值代码
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryKeyCode(String keyCodes, String row) {
     List<Map> relateKeysetRowId;
     if (!Objects.equals("null", keyCodes)) {
@@ -135,6 +136,7 @@ public class KeySetService extends BaseService<KeySet> {
    * @param orders   排序
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryProPage(String search, String rowId, String param, Integer pageNum, Integer pageSize, List<Order> orders) {
     Condition condition;
     if (UtilsTool.isValid(param)) { // 按照指定字段查询
@@ -159,9 +161,9 @@ public class KeySetService extends BaseService<KeySet> {
       result = new PageResult(keySetProService.selectMap(condition, orders));
     }
     if (result.getResult().size() == 0) {
-      return new ServerResult().setStateMessage(BaseConstants.STATUS_FAIL, Message.QUERY_FAIL);
+      return fail(Message.QUERY_FAIL);
     } else {
-      return new ServerResult<>(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS, result);
+      return successData(Message.QUERY_SUCCESS, result);
     }
   }
 
