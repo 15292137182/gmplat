@@ -60,7 +60,10 @@ public class UserController extends BaseController {
   /**
    * 人员信息 - 根据指定的一个或多个组织机构查询
    *
-   * @param param 组织机构参数，以数组的形式传入["1","2"]
+   * @param param    组织机构参数，以数组的形式传入["1","2"]
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
    * @return PlatResult
    */
   @RequestMapping("/queryByOrg")

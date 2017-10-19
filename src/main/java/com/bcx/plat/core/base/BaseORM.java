@@ -333,7 +333,9 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
   public int logicalDeleteById() {
     return logicalDeleteById(getPk());
   }
-
+  public int logicalDelete(Condition condition){
+    return update(condition);
+  }
   /**
    * 逻辑删除
    *

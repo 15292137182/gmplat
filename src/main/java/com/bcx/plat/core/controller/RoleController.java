@@ -96,6 +96,8 @@ public class RoleController extends BaseController {
    *
    * @param rowId    角色rowId
    * @param roleId   角色编号
+   * @param search   空格查询
+   * @param param    指定字段查询
    * @param pageNum  当前第几页
    * @param pageSize 一页显示多少条
    * @param order    排序方式
