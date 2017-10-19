@@ -138,7 +138,7 @@ gmp_onload=function(){
         data:getData.dataObj({
             config: {
                 // 显示复选框
-                checkbox: true,
+                checkbox:false,
                 // 默认展开
                  //expanded: [324],
                 // 展开所有节点
@@ -346,12 +346,13 @@ gmp_onload=function(){
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
                         var data=res.data[0];
-                        console.log(res)
+                        console.log(data)
                         useAdd.id=data.id;//工号
                         useAdd.name=data.name;//姓名
                         useAdd.nickname=data.nickname;//昵称
                         useAdd.password=data.password;//初始密码有默认值
-                        useAdd.belong.checked=data.belongOrg;//所属部门
+                        useAdd.config.checked=data.belongOrg;//所属部门
+                        useAdd.belongOrg=data.belongOrg;//所属部门 提交的时候要的
                         useAdd.idCard=data.idCard;//身份证
                         useAdd.mobilePhone=data.mobilePhone;//移动电话
                         useAdd.officePhone=data.officePhone//办公电话
@@ -361,6 +362,8 @@ gmp_onload=function(){
                         useAdd.hiredate=data.hiredate;//入职日期
                         useAdd.description=data.description;//说明
                         useAdd.remarks=data.remarks;//备注
+                        console.log( useAdd.config.checked)
+
                     })
                 });
             },

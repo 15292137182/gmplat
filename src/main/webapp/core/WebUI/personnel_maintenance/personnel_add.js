@@ -11,18 +11,23 @@ var useAdd = new Vue({
                 }
             },
             config: {
-                checkbox: true,
-                // 配置显示项
+                // 设置清空按钮
+                clearable: false,
+                // 显示复选框
+                checkbox: false,
+                // 默认展开
+//                  expanded: [324],
+                // 展开所有节点
+                expandedAll: true,
+                // 默认选中项 当 checkbox 为 true 时  编辑时可以用
                 checked: [],
                 defaultProps: {
                     // 树节点显示文字
                     label: 'orgName',
                     // 节点id
-                    id: "rowId",
+                    key: "orgId",
                     // 父节点信息
-                    parentId: "orgPid",
-                    // 当前节点信息
-                    selfId: "orgId"
+                    parent: "orgPid"
                 },
                 // 获取数据接口
                 url: serverPath + "/baseOrg/queryPage",
@@ -31,7 +36,7 @@ var useAdd = new Vue({
             name: '',//姓名
             nickname:'',//昵称
             password:'123456',//初始密码有默认值
-            //belongOrg:'',//所属部门
+            belongOrg:'',//所属部门
             idCard:'',//身份证
             mobilePhone:'',//移动电话
             officePhone:'',//办公电话
@@ -48,26 +53,27 @@ var useAdd = new Vue({
         getTime(date){
             this.hiredate = date;
         },
-        hide(data) {
-            console.log(data);
-        },
+        //点击他的时候
         getNodes(data, id, name) {
             console.log(data);
             console.log("选中行id为：" + id);
             console.log("选中行名称为：" + name);
         },
+        //确认这个节点的时候
         getNodeId(id) {
-            console.log("当前选中节点 id为：" + id);
+            //确认点击的这个ID
+            this.belongOrg=id;
         },
+        //复选框选中的时候
         getChecked(data, id, name, flag) {
             console.log(data);
             console.log("选中节点名称为：" + name);
             console.log("选中节点 id 为：" + id);
             console.log("选中标识为：" + flag);
         },
+        //清除框的时候
         clear(id, name) {
-            console.log(id);
-            console.log(name);
+            this.belongOrg=id;
         },
         conformEvent() {
             if(operate==1){
@@ -137,8 +143,10 @@ var useAdd = new Vue({
             ibcpLayer.Close(divIndex);
         },
     },
-    mounted(){
-
+    updated(){
+        //useAdd.config.checked=[1];
+//console.log(useAdd.config.checked)
+//      console.log(useAdd.config.checked)
     }
 
 })
