@@ -503,11 +503,22 @@ Vue.component("base-tree", {
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
         clickNode(obj, node, row) {
-            this.$emit("click-node", obj);
+            // 配置信息
+            var label = this.defaultProps.label;
+            var _id = this.initial.defaultProps.key;
+            // 向父组件传递数据
+            this.$emit("click-node", obj, obj[_id], obj[label]);
         },
         // 选择复选框 返回节点对应的对象 是否被选中 是否含有子节点
         checkNode(obj, checked, node) {
-            this.$emit("checked-node", obj);
+            var label = this.defaultProps.label;
+            var _id = this.initial.defaultProps.key;
+            // 返回数据增加节点选择标识
+            var flag = checked;
+            // 当前树选中节点集合
+            var currentSelect = this.$refs.tree.getCheckedKeys();
+            // 向父组件传递数据
+            this.$emit("checked-node", obj, obj[_id], currentSelect, obj[label], flag);
         },
         // 过滤数据
         filterNode(value, data) {
@@ -721,7 +732,7 @@ Vue.component("select-tree", {
                 this.error = true;
             }
             // 向父组件传递方法和数据
-            this.$emit("checked-node", obj, obj[_id], obj[label], flag);
+            this.$emit("checked-node", obj, obj[_id], currentSelect, obj[label], flag);
         },
         // 选中节点事件
         checked() {

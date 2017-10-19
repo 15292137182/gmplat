@@ -183,10 +183,12 @@
                 getNodeId(id) {
                     console.log("当前选中节点 id为：" + id);
                 },
-                getChecked(data, id, name, flag) {
+                getChecked(data, id, allChecked, name, flag) {
+                    // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
                     console.log(data);
                     console.log("选中节点名称为：" + name);
                     console.log("选中节点 id 为：" + id);
+                    console.log("当前树选中节点集合为：" + allChecked);
                     console.log("选中标识为：" + flag);
                 },
                 clear(id, name) {
