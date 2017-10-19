@@ -164,12 +164,12 @@ public class RoleService extends BaseService<Role> {
             .and().in("rowId", userRowIds).endAnd().buildDone();
         if (isValid(search)) {
           List<String> blankQuery = Arrays.asList("id", "name", "nickname", "belongOrg", "idCard", "job", "hiredate");
-          //TODO 写好后测试此处
           userCondition = new And(userCondition, UtilsTool.createBlankQuery(blankQuery, UtilsTool.collectToSet(search)));
         }
         if (isValid(param)) {
           userCondition = new And(userCondition, UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)));
         }
+        userCondition = UtilsTool.addNotDeleteCondition(userCondition, User.class);
         Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
         fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
         if (isValid(pageNum)) {

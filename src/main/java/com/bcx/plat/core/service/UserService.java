@@ -53,6 +53,7 @@ public class UserService extends BaseService<User> {
         condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)), condition);
       }
     }
+    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
     //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称
     Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));

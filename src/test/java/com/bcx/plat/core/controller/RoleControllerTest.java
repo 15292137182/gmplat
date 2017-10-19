@@ -9,9 +9,9 @@ public class RoleControllerTest extends BaseControllerTest<RoleController> {
   @Test
   public void testAdd() throws Exception {
     //准备参数
-    String roleId = "123456789";
-    String roleName = "权限名称";
-    String roleType = "权限类别";
+    String roleId = "123456791";
+    String roleName = "普通管理员";
+    String roleType = "类别";
     String desc = "说明";
     String remarks = "备注";
     //发送请求
@@ -73,6 +73,19 @@ public class RoleControllerTest extends BaseControllerTest<RoleController> {
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "role/queryBySpecify")
+            .accept(MediaType.APPLICATION_JSON)
+            .param("rowId", rowId)
+    );
+    //显示结果
+    showResult(resultActions);
+  }
+  @Test
+  public void testQueryUsers() throws Exception {
+    //准备参数
+    String rowId = "2a4b2c06-fe63-4c59-be33-6db965f2";
+    //发送请求
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "role/queryUsers")
             .accept(MediaType.APPLICATION_JSON)
             .param("rowId", rowId)
     );
