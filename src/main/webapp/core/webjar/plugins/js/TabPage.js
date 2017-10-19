@@ -527,6 +527,7 @@ var querySearch = (function(){
                         obj.pageNum = res.resp.content.data.pageNum;//当前页
                     }else{
                         obj.tableData = [];
+                        obj.allDate = 0;
                     }
                 }else{
                     obj.tableData = [];
@@ -563,6 +564,7 @@ var querySearch = (function(){
                         obj.pageNum = res.resp.content.data.pageNum;//当前页
                     }else{
                         obj.tableData = [];
+                        obj.allDate = 0;
                     }
                 }else{
                     obj.tableData = [];

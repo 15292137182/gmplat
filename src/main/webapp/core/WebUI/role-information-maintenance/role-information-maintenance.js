@@ -20,44 +20,42 @@ var permissionsInformation = serverPath + "/permission/queryById";
 //查看角色下的人员信息
 var personnelInformationInterface = serverPath + "/role/queryUsers";
 
-//组织机构编辑接口
-var modify = serverPath + "/baseOrg/modify";
+//角色编辑接口
+var modify = serverPath + "/role/modify";
 
-//组织机构删除接口
-var deleteUrl = serverPath + "/baseOrg/delete";
+//角色删除接口
+var deleteUrl = serverPath + "/role/delete";
 
 gmp_onload=function(){
     basTop = new Vue({
         el: '#basTop',
         data: {
             addOpe: false,
-            orgDeleteData: true,
             takeEffect: false,
-            divIndex:""
+            divIndex:"",
+            disabled:true
         },
         methods: {
             //新增人员信息
             addEvent() {
-                var htmlUrl = 'add-organizational-information.html';
-                this.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 新增组织机构', '400px', '550px',function(){
+                var htmlUrl = 'add-role-information-maintenance.html';
+                this.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 新增角色信息', '400px', '460px',function(){
 
                 });
             },
-            //删除组织机构
+            //删除角色信息
             orgDelete(){
                 deleteObj.del(function(){
-                    left.rowIdArr.splice(0,1);
-                    console.log(left.rowIdArr);
                     var data = {
                         "url":deleteUrl,
-                        "jsonData":{rowIds:left.rowIdArr},
+                        "jsonData":{rowId:left.rowId},
                         "obj":basTop,
                         "showMsg":true
                     }
                     gmpAjax.showAjax(data,function(res){
                         // queryData.getData(dataBase.url,dataBase.input,dataBase)
                         left.$refs.org.getNode();
-                        basTop.orgDeleteData = true;
+                        basTop.disabled = true;
                     })
                 })
             },
@@ -107,6 +105,7 @@ gmp_onload=function(){
             getNodes(data) {
                 console.log(data);
                 this.rowId=data.rowId;
+                basTop.disabled = false;
                 rightBottom.disabled = false;
                 // basTop.orgDeleteData = false;
                 $.ajax({
@@ -134,7 +133,8 @@ gmp_onload=function(){
             //复选框选中得到得值
             getChecked(data) {
                 console.log(data);
-                basTop.orgDeleteData = false;
+                basTop.disabled = false;
+                rightBottom.disabled = false;
                 var arr = this.rowIdArr;
                 for(var i=0;i<arr.length;i++){
                     if(data.rowId != arr[i]){
@@ -173,17 +173,13 @@ gmp_onload=function(){
         }),
         methods: {
             editTbleBase(rowId){
-                var numberStr = parseInt(this.formTable.orgSort);
-                console.log(typeof numberStr);
                 var data = {"url":modify,"jsonData":{
                     rowId:rowId,
-                    orgPid:this.formTable.orgPid,
-                    orgId:this.formTable.orgId,
-                    orgName:this.formTable.orgName,
-                    orgSort:numberStr,
-                    fixedPhone:this.formTable.fixedPhone,
-                    address:this.formTable.address,
-                    desp:this.formTable.desp,
+                    roleName:this.formTable.roleName,
+                    roleId:this.formTable.roleId,
+                    roleType:this.formTable.roleType,
+                    desc:this.formTable.desc,
+                    remarks:this.formTable.remarks,
                 },
                     "obj":right,
                     "showMsg":true
@@ -276,20 +272,26 @@ gmp_onload=function(){
                 })
             },
             //分页信息
-            handleSizeChange(){
-
+            handleSizeChange(val){
+                this.pageSize = val;
+                this.PersonnelInformation(right.rowId);
             },
-            handleCurrentChange(){
-
+            handleCurrentChange(val){
+                this.pageNum = val;
+                this.PersonnelInformation(right.rowId,val);
             },
             //人员信息查询
-            PersonnelInformation(rowId){
+            PersonnelInformation(rowId,numberPage){
+                var page = 1;
+                if(numberPage){
+                    page = numberPage;
+                }
                 var rowId = rowId;
                 console.log(rowId);
                 var data = {
                     "rowId":rowId
                 }
-                querySearch.getDataPage(personnelInformationInterface,data,this,1,function(res){
+                querySearch.getDataPage(personnelInformationInterface,data,this,page,function(res){
                     console.log(res);
                 })
             },

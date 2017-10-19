@@ -46,7 +46,7 @@
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加角色信息</el-button>
-            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="orgDeleteData">删除角色信息</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="disabled">删除角色信息</el-button>
             <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
         </el-col>
     </el-row>
@@ -187,11 +187,13 @@
                   :height="leftHeight"
                   v-loading="loading"
                   element-loading-text="加载中">
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="编号" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="id" label="工号" width="250">
             </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="名称" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="name" label="姓名" width="250">
             </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="nickname" label="昵称" width="">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip sortable="custom" prop="orgName" label="部门" width="">
             </el-table-column>
         </el-table>
         <el-row type="flex" justify="end" style="padding-top:10px" class="block">
