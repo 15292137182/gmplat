@@ -257,8 +257,8 @@ public class UserGroupController extends BaseController {
    * @param userRowIds     用户rowId 集合
    * @return 返回操作结果信息
    */
-  @RequestMapping(value = "/deleteUsers")
-  public PlatResult deleteGroupUsers(String userGroupRowId, String[] userRowIds) {
+  @PostMapping("/deleteGroupUsers")
+  public PlatResult deleteGroupUsers(String userGroupRowId, @RequestParam("userRowIds") List<String> userRowIds) {
     boolean success = userGroupService.deleteUserInGroup(userGroupRowId, userRowIds);
     if (success) {
       return success(Message.DELETE_SUCCESS);
@@ -268,21 +268,32 @@ public class UserGroupController extends BaseController {
   }
 
   /**
-   * 新增用户组下用户
+   * 给用户组下添加用户
    *
-   * @param param 接受新增参数
-   * @return platResult
+   * @param userGroupRowId 用户组rowId
+   * @param userRowIds      用户rowId
+   * @return 新增信息
    */
   @PostMapping("/addUserGroupUser")
-  public PlatResult addUserGroupUser(@RequestParam Map param) {
-    PlatResult platResult;
-    if (isValid(String.valueOf(param.get("userRowId")).trim()) && isValid(String.valueOf(param.get("userGroupRowId")).trim())) {
-      UserRelateUserGroup userGroup = new UserRelateUserGroup().buildCreateInfo().fromMap(param);
-      int insert = userGroup.insert();
-      if (insert != -1) {
-        platResult = successData(NEW_ADD_SUCCESS, userGroup);
-      } else {
-        platResult = fail(NEW_ADD_FAIL);
+  public PlatResult addUserGroupUser(@RequestParam("userRowIds") List<String> userRowIds, String userGroupRowId) {
+    PlatResult platResult = null;
+    Map<String, Object> map = new HashMap<>();
+    UserRelateUserGroup userGroup;
+    if (isValid(userRowIds) && isValid(userGroupRowId.trim())) {
+      for (String user : userRowIds) {
+        map.put("userGroupRowId", userGroupRowId);
+        map.put("userRowId", user);
+        userGroup = new UserRelateUserGroup().buildCreateInfo().fromMap(map);
+        if (isValid(userGroup)) {
+          int insert = userGroup.insert();
+          if (insert != -1) {
+            platResult = successData(NEW_ADD_SUCCESS, userGroup);
+          } else {
+            platResult = fail(NEW_ADD_FAIL);
+          }
+        } else {
+          platResult = fail(NEW_ADD_FAIL);
+        }
       }
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);

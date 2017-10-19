@@ -7,7 +7,7 @@ import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.List;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -30,10 +30,10 @@ public class UserGroupService extends BaseService<UserGroup> {
    * @param userRowIds 用户rowId 集合
    * @return 返回结果
    */
-  public boolean deleteUserInGroup(String groupRowId, String[] userRowIds) {
-    if (isValid(groupRowId) && null != userRowIds && userRowIds.length != 0) {
+  public boolean deleteUserInGroup(String groupRowId, List<String> userRowIds) {
+    if (isValid(groupRowId) && null != userRowIds && userRowIds.size() != 0) {
       Condition condition = new ConditionBuilder(UserRelateUserGroup.class)
-              .and().equal("userGroupRowId", groupRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
+              .and().equal("userGroupRowId", groupRowId).in("userRowId", userRowIds).endAnd()
               .buildDone();
       new UserRelateUserGroup().delete(condition);
       return true;
