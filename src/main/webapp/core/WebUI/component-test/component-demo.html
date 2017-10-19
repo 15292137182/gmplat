@@ -27,6 +27,7 @@
 </head>
 <body>
     <el-row id="component" v-cloak>
+
         <!-- 基本下拉框 -->
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">基本下拉框</el-col>
@@ -34,6 +35,7 @@
                 <single-selection :initial="singleSelect" @hide="hide"></single-selection>
             </el-col>
         </el-col>
+
         <!-- 树形下拉框 -->
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">树形下拉框</el-col>
@@ -41,6 +43,7 @@
                 <select-tree :initial="config" @select-node="getNodeId" @click-node="getNodes" @checked-node="getChecked" @clear="clear"></select-tree>
             </el-col>
         </el-col>
+
         <!--一级树结构-->
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">一级树结构</el-col>
@@ -48,11 +51,36 @@
                 <base-tree :initial="treeData" @click-node="getNodes" @checked-node="getChecked"></base-tree>
             </el-col>
         </el-col>
+
         <!--层级树结构-->
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">层级树结构</el-col>
             <el-col :span="10">
                 <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+            </el-col>
+        </el-col>
+
+        <!-- 日期时间 -->
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">日期时间</el-col>
+            <el-col :span="10">
+                <date-time-picker :initial="dateConfig"></date-time-picker>
+            </el-col>
+        </el-col>
+
+        <!-- 时间范围 -->
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">时间范围</el-col>
+            <el-col :span="10">
+                <date-time-picker :initial="timeConfig"></date-time-picker>
+            </el-col>
+        </el-col>
+
+        <!-- 其他日期单位 -->
+        <el-col :span="24" class="com_block">
+            <el-col :span="4" class="label">其他日期单位</el-col>
+            <el-col :span="10">
+                <date-time-picker :initial="otherConfig"></date-time-picker>
             </el-col>
         </el-col>
     </el-row>
@@ -69,6 +97,7 @@
                         value: "",
                         multiple: "true"
                     },
+
                     // 一级树结构配置
                     treeData: {
                         // 显示复选框
@@ -85,6 +114,7 @@
                         // 获取树节点接口
                         url: serverPath + "/userGroup/queryPage",
                     },
+
                     // 层级树结构配置
                     config: {
                         // 设置清空按钮
@@ -108,6 +138,36 @@
                         },
                         // 获取数据接口
                         url: serverPath + "/baseOrg/queryPage"
+                    },
+
+                    // 日期时间配置
+                    dateConfig: {
+                        // 控件类型
+                        type: "daterange",
+                        // 占位符文字
+                        placeholder: "请选择日期时间范围",
+                        // 日期格式化
+                        formatter: "yyyy/MM/dd"
+                    },
+
+                    // 日期时间配置
+                    timeConfig: {
+                        // 控件类型
+                        type: "datetimerange",
+                        // 占位符文字
+                        placeholder: "请选择时间范围",
+                        // 日期格式化
+                        formatter: "yyyy/MM/dd hh:mm:ss"
+                    },
+
+                    // 日期时间配置
+                    otherConfig: {
+                        // 控件类型
+                        type: "week",
+                        // 占位符文字
+                        placeholder: "请选择周",
+                        // 日期格式化
+                        formatter: "yyyy 年 第 WW 周"
                     }
                 }
             },

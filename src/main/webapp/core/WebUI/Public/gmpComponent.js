@@ -1083,10 +1083,72 @@ Vue.component("time-picker", {
  */
 Vue.component("date-time-picker", {
     // 控件类型(必选)  默认显示日期  快捷键选择值  输出格式化  是否只读  是否可用  是否禁用  是否可输入
-    props: ["pickerType", "initialDate", "pickerOptions", "formatter", "readOnly", "isDisabled", "editAble"],
+    // props: ["pickerType", "initialDate", "pickerOptions", "formatter", "readOnly", "isDisabled", "editAble"],
+    props: ["initial"],
     data() {
         return {
-            dateTimeVal: []
+            // 选择日期时间值
+            value: "",
+            // 控件类型
+            pickerType: "",
+            // 日期时间格式化
+            formatter: "",
+            // 是否显示清除图标
+            clearable: true,
+            // 是否禁用
+            disabled: false,
+            // 是否只读
+            readonly: false,
+            // 是否可手动输入日期
+            edit: false,
+            // 快捷键输入值
+            pickerOptions: "",
+            // 占位符文字
+            placeholder: "请选择日期时间"
+        }
+    },
+    beforeMount() {
+        // 获取配置项 -- 控件类型
+        if(this.initial.type) {
+            this.pickerType = this.initial.type;
+        }else {
+            this.pickerType = "date";
+        }
+        // 获取配置信息 -- 默认值
+        if(this.initial.value) {
+            this.value = this.initial.value;
+        }
+        // 获取配置信息 -- 日期时间格式化
+        if(this.initial.formatter) {
+            this.formatter = this.initial.formatter
+        }else {
+            this.formatter = "yyyy-MM-dd";
+        }
+        // 获取配置信息 -- 是否禁用
+        if(this.initial.disabled) {
+            this.disabled = this.initial.disabled;
+        }
+        // 获取配置信息 -- 是否只读
+        if(this.initial.readonly) {
+            this.readonly = this.initial.readonly;
+        }
+        // 获取配置信息 -- 是否可以首都输入日期
+        if(this.initial.edit) {
+            this.edit = this.initial.edit;
+        }
+        // 获取配置信息 -- 快捷键选择值
+        if(this.initial.pickerOptions) {
+            this.pickerOptions = this.initial.pickerOptions;
+        }else {
+            this.pickerOptions = "";
+        }
+        // 占位符文字配置
+        if(this.initial.placeholder) {
+            this.placeholder = this.initial.placeholder
+        }
+        // 清除图标配置
+        if(this.initial.clearable) {
+            this.clearable = this.initial.clearable;
         }
     },
     methods: {
@@ -1098,7 +1160,7 @@ Vue.component("date-time-picker", {
             this.$emit("selected-datetime", datetime);
         }
     },
-    template: `<el-date-picker @change="datetimeVal" v-model="dateTimeVal" :type="pickerType" :format="formatter" placeholder="选择日期时间范围" :picker-options="pickerOptions" :readonly="readOnly" :disabled="isDisabled" :editable="editAble">
+    template: `<el-date-picker @change="datetimeVal" v-model="value" :type="pickerType" :format="formatter" :placeholder="placeholder" :picker-options="pickerOptions" :readonly="readonly" :disabled="disabled" :editable="edit" :clearable="clearable">
                 </el-date-picker>`
 });
 
