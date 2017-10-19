@@ -5,8 +5,10 @@ var basTop;
 var left;
 var leftBottom;
 var right;
-//右侧查询接口
+//组织机构右侧查询接口
 var searchMore=serverPath + "/user/queryPage";
+//角色右侧查询接口
+var searchRole=serverPath + "/role/queryUsers";
 //左侧查右侧查询接口
 //var searchLeftMore=serverPath + "/user/queryByOrg";
 //编辑查询
@@ -171,7 +173,8 @@ gmp_onload=function(){
             },
             //tab页点击交换
             handleClick(){
-
+                //判断点击的是第一还是第二
+                console.log(left.activeName)
             }
 
         },
@@ -192,23 +195,15 @@ gmp_onload=function(){
             config1: {
                 // 显示复选框
                 checkbox:false,
-                // 默认展开
-                //expanded: [324],
-                // 展开所有节点
-                expandedAll: true,
-                // 默认选中项 当 checkbox 为 true 时  编辑时可以用
-                //checked: [12, 21],
                 // 配置显示项
                 defaultProps: {
                     // 树节点显示文字
-                    label: 'orgName',
+                    label: 'roleName',
                     // 节点id
-                    key: "orgId",
-                    // 父节点信息
-                    parent: "orgPid",
+                    key: "rowId",
                 },
                 // 获取数据接口
-                url: serverPath + "/role/queryUsers"
+                url: serverPath + "/role/queryPage"
             },
         }),
         methods:{
@@ -220,12 +215,12 @@ gmp_onload=function(){
             },
             getNodes1(data){
                 console.log(data);
-                this.rowId=data.rowId;
+                left.rowId=data.rowId;
                 right.searchMore();
             },
             //复选框点击
             getChecked1(){
-                console.log(data);
+
             },
 
         }

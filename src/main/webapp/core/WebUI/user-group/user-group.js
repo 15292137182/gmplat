@@ -55,7 +55,7 @@ gmp_onload=function(){
             //添加组人员
             addUserEvent(){
                 var htmlUrl = 'user-group-user.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加用户组下人员信息', '500px', '600px',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加用户组下人员信息', '800px', '600px',function(){
 
                 });
             },
@@ -78,7 +78,7 @@ gmp_onload=function(){
                 // 获取数据接口
                 url: serverPath + "/userGroup/queryPage"
             },
-            rowIds:[],
+            rowIds:[0],
         }),
         methods:{
             //点击左边的树得到数据
@@ -110,19 +110,17 @@ gmp_onload=function(){
             },
             //复选框选中得到得值
             getChecked(data) {
-                var arr = this.rowIdArr;
+                //console.log(data);
+                var arr = this.rowIds;
                 for(var i=0;i<arr.length;i++){
                     if(data.rowId != arr[i]){
                         if(i==arr.length-1){
                             arr.push(data.rowId);
-                            console.log(this.rowIdArr);
                         }
                     }
                 }
-                //left.arr=[];
-                //if(data.row!==''){
-                //    //left.arr.push(data.rowId);
-                //}
+                console.log(this.rowIds);
+
 
                 //console.log(left.arr);
             }

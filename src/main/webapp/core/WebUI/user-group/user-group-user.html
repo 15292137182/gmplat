@@ -3,11 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+       html{
+           overflow: scroll;
+       }
+    </style>
 </head>
 <body>
+        <el-row id="allDate">
+            <el-col>
+                <el-col :span="24">
+                    <div style="padding:4px 20px">
+                        <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                                  v-loading="loading"
+                                  element-loading-text="加载中" @sort-change="headSort"
+                                  @row-click="currentChange"
+                                  class="tableStyle"
+                                  @select="selectRow"
+                                  @select-all="selectAllRow"
+                                  style="width: 100%">
+                            <el-table-column
+                                    type="selection"
+                                    width="45">
+                            </el-table-column>
+                            <el-table-column type="expand">
+                                <template scope="props">
+                                    <el-form label-position="left" inline class="demo-table-expand">
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <el-form-item label="用户姓名">
+                                                    <span>{{ props.row.name }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <el-form-item label="用户昵称">
+                                                    <span>{{ props.row.nickname }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <el-form-item label="身份证">
+                                                    <span>{{ props.row.idCard }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <el-form-item label="移动电话">
+                                                    <span>{{ props.row.mobilePhone }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <el-form-item label="办公电话">
+                                                    <span>{{ props.row.officePhone }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <el-form-item label="邮箱">
+                                                    <span>{{ props.row.email }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <el-form-item label="入职日期">
+                                                    <span>{{ props.row.hiredate }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <el-form-item label="说明">
+                                                    <span>{{ props.row.description }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <el-form-item label="备注">
+                                                    <span>{{ props.row.remarks }}</span>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                    </el-form>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="id" label="用户工号" sortable="custom" width="160"
+                                             show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="password" label="密码" sortable="custom" width="160"
+                                             show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="orgName" label="所属部门" width="100"
+                                             show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="gender" label="性别" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="job" label="职务" show-overflow-tooltip></el-table-column>
+                        </el-table>
+                        <el-row type="flex" justify="end" style="padding-top: 10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page.sync="pageNum"
+                                    :page-sizes="[5,10,20]"
+                                    :page-size="pageSize"
+                                    layout="total, sizes, prev, pager, next"
+                                    :total="allDate">
+                            </el-pagination>
+                        </el-row>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <el-row>
+                        <el-col :span="11" style="text-align:right">
+                            <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
+                        </el-col>
+                        <el-col :span="11" style="text-align: left" :offset="2">
+                            <el-button type="primary" size="small" @click.native="cancel">取消</el-button>
+                        </el-col>
+                    </el-row>
+                </el-col>
 
-
-
+            </el-col>
+        </el-row>
+        </el-row>
 
 
 <script src="user-group-user.js"></script>
