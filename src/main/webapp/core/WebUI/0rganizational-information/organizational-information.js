@@ -102,6 +102,7 @@ gmp_onload=function(){
             getNodes(data) {
                 console.log(data);
                 this.rowId=data.rowId;
+                rightBottom.disabled = false;
                 // basTop.orgDeleteData = false;
                 $.ajax({
                     url:Organization,
@@ -203,6 +204,7 @@ gmp_onload=function(){
         el:'#rightBottom',
         data:getData.dataObj({
             activeName:'first',
+            disabled:true
         }),
         methods:{
             //tab页点击交换

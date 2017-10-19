@@ -139,7 +139,7 @@
                 <el-col>
                     <div>
                         <span class="spanPosition">关联其他信息</span>
-                        <el-button size="small" icon="check" type="primary" @click="btnRefresh"></el-button>
+                        <el-button size="small" icon="check" type="primary" :disabled="disabled" @click="btnRefresh"></el-button>
                     </div>
                     <div style="padding:30px 20px">
                         <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
