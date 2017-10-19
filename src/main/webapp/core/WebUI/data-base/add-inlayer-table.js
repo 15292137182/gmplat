@@ -24,7 +24,7 @@ var addInlayerData = new Vue({
     },
     methods:{
         addTable(){//新增
-            if(addInlayerData.Inlayer.primaryKey == "true"){
+            if(addInlayerData.Inlayer.primaryKey == true){
                 addInlayerData.Inlayer.primaryKeyData = true;
             }else{
                 addInlayerData.Inlayer.primaryKeyData = false;
@@ -47,6 +47,11 @@ var addInlayerData = new Vue({
             })
         },
         editTable(){//编辑
+            if(addInlayerData.Inlayer.primaryKey == true){
+                addInlayerData.Inlayer.primaryKeyData = true;
+            }else{
+                addInlayerData.Inlayer.primaryKeyData = false;
+            }
             var data = {
                 "url":addInlayerData.editUrl,
                 "jsonData":{
@@ -54,6 +59,7 @@ var addInlayerData = new Vue({
                     rowId:DatabaseDetails.rowObj.rowId,
                     columnCname:this.Inlayer.Cname,
                     columnEname:this.Inlayer.Ename,
+                    isPk:addInlayerData.Inlayer.primaryKeyData,
                     desp:this.Inlayer.desp,
                 },
                 "obj":myInlayerButton,

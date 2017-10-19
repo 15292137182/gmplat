@@ -1,9 +1,6 @@
 /**
  * Created by andim on 2017/10/19.
  */
-/**
- * Created by admin on 2017/10/12.
- */
 var basTop;
 var left;
 var right;

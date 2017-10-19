@@ -42,8 +42,13 @@ var DatabaseDetails = new Vue({
             this.rowObj = row;
         },
         editInlayerTableBase(){
-            myInlayerButton.divIndex =  ibcpLayer.ShowDiv('add-inlayer-table.html','表字段','400px', '320px',function(){
+            myInlayerButton.divIndex =  ibcpLayer.ShowDiv('add-inlayer-table.html','表字段','400px', '380px',function(){
                 myInlayerButton.isEdit = true;
+                if(DatabaseDetails.rowObj.isPk == "true"){
+                    addInlayerData.Inlayer.primaryKey = true;
+                }else{
+                    addInlayerData.Inlayer.primaryKey = false;
+                }
                 addInlayerData.Inlayer.Cname = DatabaseDetails.rowObj.columnCname;
                 addInlayerData.Inlayer.Ename = DatabaseDetails.rowObj.columnEname;
                 addInlayerData.Inlayer.desp = DatabaseDetails.rowObj.desp;
