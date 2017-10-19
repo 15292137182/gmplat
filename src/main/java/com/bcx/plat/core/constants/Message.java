@@ -17,6 +17,7 @@ public class Message {
   public static final String DELETE_SUCCESS = "DELETE_SUCCESS";
   public static final String DELETE_FAIL = "DELETE_FAIL";
   public static final String DATA_QUOTE = "DATA_QUOTE";
+  public static final String Class_Not_Found_Exception = "Class_Not_Found_Exception";
   public static final String PRIMARY_KEY_CANNOT_BE_EMPTY = "PRIMARY_KEY_CANNOT_BE_EMPTY";
   public static final String DATA_CANNOT_BE_DUPLICATED = "DATA_CANNOT_BE_DUPLICATED";
   public static final String DATA_CANNOT_BE_EMPTY = "DATA_CANNOT_BE_EMPTY";

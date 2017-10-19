@@ -137,6 +137,12 @@ public class BusinessObjectController extends BaseController {
    */
   @PostMapping(value = "/modify")
   public PlatResult update(@RequestParam Map<String, Object> paramEntity) {
+    String className = String.valueOf(paramEntity.get("className"));
+    try {
+      Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      return fail(Message.Class_Not_Found_Exception);
+    }
     String rowId = paramEntity.get("rowId").toString();
     if (UtilsTool.isValid(rowId)) {
       BusinessObject businessObject = new BusinessObject().fromMap(paramEntity);

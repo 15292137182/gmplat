@@ -66,6 +66,13 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @return ServerResult
    */
   public ServerResult addBusiness(Map<String, Object> param) {
+
+    String className = String.valueOf(param.get("className"));
+    try {
+      Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      return fail(Message.Class_Not_Found_Exception);
+    }
     //新增业务对象数据
     BusinessObject businessObject = new BusinessObject().fromMap(param).buildCreateInfo();
     //实例化业务对象关联模板对象
