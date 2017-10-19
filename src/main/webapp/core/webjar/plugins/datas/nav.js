@@ -52,6 +52,26 @@
             "title": "用户组",
             "icon": "&#xe641;",
             "href": "core/WebUI/user-group/user-group.html"
+        }, {
+            "title":"组织机构",
+            "icon":"&#xe641",
+            "href":"core/WebUI/0rganizational-information/organizational-information.html"
+        },{
+            "title": "菜单资源维护",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/menu-resource/menu-resource.html"
+        },{
+            "title": "页面资源维护",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/page-resources/page-resources.html"
+        },{
+            "title": "页面按钮维护",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/page-button/page-button.html"
+        },{
+            "title": "功能接口维护",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/unction-interfaces/unction-interfaces.html"
         }]
     },{
     "title": "动态模板",
@@ -61,14 +81,6 @@
         "title": "动态模板维护",
         "icon": " fa-navicon",
         "href": "core/WebUI/data-base/interactive.html"
-    },{
-        "title": "菜单资源维护",
-        "icon": "&#xe641;",
-        "href": "core/WebUI/menu-resource/menu-resource.html"
-    },{
-        "title": "页面资源维护",
-        "icon": "&#xe641;",
-        "href": "core/WebUI/page-resources/page-resources.html"
     }]
 }, {
     "title": "组件示例",
