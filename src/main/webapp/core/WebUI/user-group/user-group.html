@@ -13,7 +13,7 @@
             height:30px;
         }
         .el-input {
-            width: 300px;
+            width: 200px;
         }
         .el-icon-delete{
             color: white;
@@ -35,7 +35,24 @@
         }
         #rightBottom .el-button{
             position: absolute;
-            left: 110px;
+            left: 170px;
+            top: -15px;
+            border: none;
+            background: white;
+        }
+        #rightBottom .el-icon-check{
+            color: red;
+        }
+        /*#right .el-button{*/
+            /*position: absolute;*/
+            /*left: 110px;*/
+            /*top: -15px;*/
+            /*border: none;*/
+            /*background: white;*/
+        /*}*/
+        #rightBottom .el-button{
+            position: absolute;
+            left: 170px;
             top: -15px;
             border: none;
             background: white;
@@ -49,9 +66,9 @@
 <div id="basTop">
     <el-row type="flex" justify="end">
         <el-col :span="24">
-            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加用户组</el-button>
-            <el-button type="info" icon="plus" size="small" @click.native="addProp" v-bind:disabled="addAttr">删除用户组</el-button>
-            <el-button type="warning" icon="star-off" size="small" @click.native="affectProp" v-bind:disabled="takeEffect">添加组人员</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent">添加用户组</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="deleteEvent">删除用户组</el-button>
+            <el-button type="warning" icon="star-off" size="small" @click.native="addUserEvent">添加组人员</el-button>
         </el-col>
     </el-row>
 </div>
@@ -81,33 +98,43 @@
                             <el-form :label-position="labelPosition"  label-width="70px">
                                 <el-row type="flex" class="row-bg">
                                     <el-col :span="6">
+                                        <el-form-item label="编号" prop="groupNumber">
+                                            <el-input placeholder="编号" v-model="groupNumber" ref="groupNumber" disabled></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6" :offset="2">
                                         <el-form-item label="名称" prop="groupName">
                                             <el-input placeholder="名称" v-model="groupName" ref="groupName"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6" :offset="2">
                                         <el-form-item label="所属部门" prop="belongSector">
-                                            <el-input placeholder="所属部门" v-model="belongSector" ref="belongSector"></el-input>
+                                            <select-tree :initial="config1" @select-node="getNodeId1" @click-node="getNodes1" @checked-node="getChecked1" @clear="clear1"></select-tree>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row type="flex" class="row-bg">
+                                    <el-col :span="6">
+                                        <el-form-item label="备注" prop="remarks">
+                                            <el-input placeholder="备注" v-model="remarks" ref="remarks"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6" :offset="2">
                                         <el-form-item label="组类别" prop="groupCategory">
-                                            <el-input placeholder="组类别" v-model="groupCategory" ref="groupCategory"></el-input>
+                                            <el-select v-model="groupCategory" placeholder="请选择组类别" clearable >
+                                                <el-option value="系统" label="系统"></el-option>
+                                                <el-option value="用户" label="用户"></el-option>
+                                            </el-select>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row type="flex" class="row-bg">
                                     <el-col :span="6">
                                         <el-form-item label="描述" prop="desc">
-                                            <el-input placeholder="描述" v-model="desc" ref="desc"></el-input>
+                                            <el-input placeholder="描述" v-model="desc" ref="desc" type="textarea"></el-input>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="6" :offset="2">
-                                        <el-form-item label="备注" prop="remarks">
-                                            <el-input placeholder="备注" v-model="remarks" ref="remarks"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="6" :offset="2">
+                                    <el-col :span="6" :offset="3">
                                         <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
                                     </el-col>
                                 </el-row>
@@ -127,6 +154,7 @@
                 <el-col>
                     <div>
                         <span class="spanPosition">用户组下的用户信息</span>
+                        <el-button size="small" icon="check" type="primary"  @click="btnRefresh"></el-button>
                     </div>
                     <div style="padding:30px 20px">
                         <el-table :data="tableData" :height="leftHeight" border  highlight-current-row

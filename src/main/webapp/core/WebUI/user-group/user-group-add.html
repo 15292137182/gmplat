@@ -3,43 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .demo_line{
+            padding: 0 10px 0;
+            margin: 0 0 10px 0;
+            position: relative;
+        }
+        .demo_line hr{
+            width:80%;
+            position: absolute;
+            right:2%;
+            top:25%;
+            border:1px solid #ddd
+        }
+    </style>
 </head>
 <body>
 <div id="addDroupEvent" style="margin-top:20px">
     <el-form  label-width="120px"
               style="padding:0 20px" class="demo-ruleForm">
-        <div class="demo_line"><span>基本信息</span></div>
-        <el-row class="row-bg">
-            <el-col :span="11">
-                <el-form-item label="用户组编号姓名" prop="name">
-                    <el-input placeholder="请用户组编号自动生成" v-model="name" ref="name"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="10">
-                <el-form-item label="用户组名称" prop="name">
-                    <el-input placeholder="请输入用户组名称" v-model="name" ref="name"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row class="row-bg">
-            <el-col :span="11">
-                <el-form-item label="所属部门" prop="belongOrg" class="demo-input-suffix">
-                    <div class="demo-input-suffix">
-                        <el-input placeholder="请选择所属部门" suffix-icon="el-icon-date" v-model="belongOrg" ref="belongOrg"></el-input>
-                    </div>
-                </el-form-item>
-            </el-col>
-            <el-col :span="10">
-                <el-form-item label="组类别" prop="reaTable">
-                    <single-selection @change-data="getTable_1" :initial="table_1" ref="table_1"></single-selection>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <div class="demo_line"><span>其他信息</span></div>
+        <div class="demo_line">
+            <hr><span>基本信息</span></div>
         <el-row class="row-bg">
             <el-col :span="24">
-                <el-form-item label="描述" prop="description">
-                    <el-input type="textarea" :rows="1" placeholder="请输入描述" v-model="description" ref="description">
+                <el-form-item label="用户组编号" prop="groupNumber">
+                    <el-input placeholder="组编号自动生成" v-model="groupNumber" ref="groupNumber" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item label="用户组名称" prop="groupName">
+                    <el-input placeholder="请输入用户组名称" v-model="groupName" ref="groupName"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row class="row-bg">
+            <el-col :span="24">
+                <el-form-item label="所属部门" prop="belongSector" class="demo-input-suffix">
+                        <select-tree :initial="config" @select-node="getNodeId" @click-node="getNodes" @checked-node="getChecked" @clear="clear"></select-tree>
+                </el-form-item>
+            </el-col>
+            <el-col :span="24">
+                <el-form-item label="组类别" prop="groupCategory">
+                    <el-select v-model="groupCategory" placeholder="请选择组类别" clearable >
+                        <el-option value="系统" label="系统"></el-option>
+                        <el-option value="用户" label="用户"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <div class="demo_line">
+            <hr><span>其他信息</span></div>
+        <el-row class="row-bg">
+            <el-col :span="24">
+                <el-form-item label="描述" prop="desc">
+                    <el-input type="textarea" placeholder="请输入描述" v-model="desc" ref="desc">
                     </el-input>
                 </el-form-item>
             </el-col>
@@ -50,7 +67,6 @@
                 </el-form-item>
             </el-col>
         </el-row>
-
     </el-form>
     <el-row>
         <el-col :span="11" style="text-align:right">
@@ -61,7 +77,6 @@
         </el-col>
     </el-row>
 </div>
-
 <script src="user-group-add.js"></script>
 </body>
 </html>
