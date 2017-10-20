@@ -154,7 +154,7 @@ public class RoleController extends BaseController {
       result = roleService.queryRoleOrgByRoleId(roleId, orders, pageNum, pageSize);
     }
     if (isValid(result)) {
-      return result(new ServerResult(result));
+      return result(new ServerResult<>(result));
     }
     return fail(Message.QUERY_FAIL);
   }
@@ -174,6 +174,7 @@ public class RoleController extends BaseController {
     ServerResult result = roleService.queryRolePermissionByRowId(rowId, pageNum, pageSize, order);
     return result(result);
   }
+
   /**
    * 根据角色信息查询用户组
    *
@@ -185,10 +186,11 @@ public class RoleController extends BaseController {
    */
   @RequestMapping("/queryUserGroups")
   public PlatResult queryUserGroups(String rowId, @RequestParam(defaultValue = BaseConstants.PAGE_NUM) int pageNum,
-                                     @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
+                                    @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
     ServerResult result = roleService.queryRoleUserGroupByRowId(rowId, pageNum, pageSize, order);
     return result(result);
   }
+
   /**
    * 将权限添加到角色
    *

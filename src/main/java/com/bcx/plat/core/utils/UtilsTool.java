@@ -48,6 +48,12 @@ public class UtilsTool {
     return null != obj && !"".equals(obj.toString());
   }
 
+  /**
+   * 判断一组对象是否有效
+   *
+   * @param obj 对象
+   * @return 是否有效
+   */
   public static boolean isValidAll(Object... obj) {
     for (Object o : obj) {
       if (null != o && !"".equals(o.toString().trim())) {
@@ -371,6 +377,14 @@ public class UtilsTool {
     return orders;
   }
 
+  /**
+   * 数据排序
+   *
+   * @param entityClass 要排序的类
+   *                    "{\"str\":\"modifyTime\", \"num\":0}"
+   * @param order       接受两个参数 str为对应表字段信息  num对应为__1_为升序  __0__ 为降序
+   * @return 排序方式
+   */
   public static LinkedList<Order> dataSort(Class<? extends BeanInterface> entityClass, String order) {
     LinkedList<Order> orders = new LinkedList<>();
     if (order == null) {

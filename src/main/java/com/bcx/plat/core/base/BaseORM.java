@@ -330,14 +330,27 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
   }
 
+  /**
+   * 逻辑删除 - 根据主键
+   *
+   * @return 状态码
+   */
   public int logicalDeleteById() {
     return logicalDeleteById(getPk());
   }
-  public int logicalDelete(Condition condition){
+
+  /**
+   * 逻辑删除 - 根据条件
+   *
+   * @param condition 删除条件
+   * @return 状态码
+   */
+  public int logicalDelete(Condition condition) {
     return update(condition);
   }
+
   /**
-   * 逻辑删除
+   * 逻辑删除 - 根据主键
    *
    * @param id 主键
    * @return
@@ -350,10 +363,20 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
     }
   }
 
+  /**
+   * 逻辑删除 - 根据一组主键
+   *
+   * @param ids 主键集合
+   * @return
+   */
   public int logicalDeleteByIds(Collection<Serializable> ids) {
     return update(new FieldCondition("rowId", Operator.IN, ids));
   }
 
+  /**
+   * 获取 数据没有被逻辑删除 的条件
+   * @return 条件
+   */
   private Condition getNoDeleteCondition() {
     Condition condition = new ConditionBuilder(getClass()).or().isNull(getClass(), "etc", "deleteFlag")
         .notEqual(getClass(), "etc", "deleteFlag", DELETE_FLAG).endOr().buildDone();
