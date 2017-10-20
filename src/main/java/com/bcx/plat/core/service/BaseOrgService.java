@@ -42,10 +42,52 @@ public class BaseOrgService extends BaseService<BaseOrg> {
       if (!isPidLegal(org.getOrgId(), org.getOrgPid())) {
         return fail("无效的父组织机构！");
       }
-      org.buildCreateInfo().insert();
+      org.buildCreateInfo();
+      org.setRowId(makeOrgRowId(org.getOrgPid()));
+      org.insert();
       return success(Message.NEW_ADD_SUCCESS);
     }
     return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
+   * 构建 主键
+   *
+   * @param orgPid 父组织机构
+   * @return 返回主键
+   */
+  private String makeOrgRowId(String orgPid) {
+    // 当不是 ROOT 的时候转为 ROOT ，主要处理大小写的问题
+    if (ORG_ROOT_NODE_ID.equalsIgnoreCase(orgPid)) {
+      orgPid = ORG_ROOT_NODE_ID;
+    }
+    if (!isValid(orgPid)) {
+      orgPid = ORG_ROOT_NODE_ID;
+    }
+
+    Condition condition = new ConditionBuilder(BaseOrg.class)
+            .and().equal("orgPid", orgPid).endAnd().buildDone();
+    List<BaseOrg> orgList = select(condition);
+    if (orgList.isEmpty()) {
+      // 为空是说明没有数据
+      if (ORG_ROOT_NODE_ID.equals(orgPid)) {
+        return "001";
+      } else {
+        Condition condition1 = new ConditionBuilder(BaseOrg.class)
+                .and().equal("orgId", orgPid).endAnd().buildDone();
+        return select(condition).get(0).getRowId() + "001";
+      }
+    } else {
+      // 如果该组织机构下面有，找出最大的
+      String[] maxString = new String[]{""};
+      orgList.forEach(baseOrg -> {
+        if (baseOrg.getRowId().compareTo(maxString[0]) > 0) {
+          maxString[0] = baseOrg.getRowId();
+        }
+      });
+      int next = Integer.valueOf(maxString[0].substring(maxString[0].length() - 3)) + 1;
+      return maxString[0].substring(0, maxString[0].length() - 3) + next;
+    }
   }
 
   /**
