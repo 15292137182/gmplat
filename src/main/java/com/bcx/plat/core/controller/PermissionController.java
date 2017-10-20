@@ -4,6 +4,7 @@ import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Permission;
+import com.bcx.plat.core.entity.Role;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -171,7 +172,7 @@ public class PermissionController extends BaseController {
   public PlatResult queryRole(String rowId, String search, String param,
                               @RequestParam(defaultValue = BaseConstants.PAGE_NUM) int pageNum,
                               @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
-    LinkedList<Order> orders = dataSort(Permission.class, order);
+    LinkedList<Order> orders = dataSort(Role.class, order);
     return result(roleService.queryRoleContainsPermission(rowId, search, param, orders, pageNum, pageSize));
   }
 

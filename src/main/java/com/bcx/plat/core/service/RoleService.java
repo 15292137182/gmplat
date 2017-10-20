@@ -198,7 +198,6 @@ public class RoleService extends BaseService<Role> {
       return leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, pageNum, pageSize, orders);
     }
     return new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, userCondition, orders));
-
   }
 
   /**
@@ -570,7 +569,7 @@ public class RoleService extends BaseService<Role> {
         if (isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
           Map<String, Object> map = jsonToObj(param, Map.class);
           if (null != map) {
-            conditions.add(convertMapToAndConditionSeparatedByLike(Permission.class, map));
+            conditions.add(convertMapToAndConditionSeparatedByLike(Role.class, map));
           }
         }
 
