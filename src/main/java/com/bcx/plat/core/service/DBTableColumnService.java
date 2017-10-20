@@ -63,8 +63,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       if (select.size() == 0) {
         DBTableColumn dbTableColumn = new DBTableColumn().buildCreateInfo().fromMap(param);
         String isPk = String.valueOf(param.get("isPk"));
-        Integer pk = Integer.valueOf(isPk);
-        dbTableColumn.setPk(pk);
+        dbTableColumn.setPk(Integer.valueOf(isPk) == 1);
         int insert = dbTableColumn.insert();
         if (insert != -1) {
           return successData(Message.NEW_ADD_SUCCESS, dbTableColumn);
@@ -96,8 +95,7 @@ public class DBTableColumnService extends BaseService<DBTableColumn> {
       if (select.size() == 0 || select.get(0).getRowId().equals(param.get("rowId"))) {
         DBTableColumn dbTableColumn = new DBTableColumn().buildModifyInfo().fromMap(param);
         String isPk = String.valueOf(param.get("isPk"));
-        Integer pk = Integer.valueOf(isPk);
-        dbTableColumn.setPk(pk);
+        dbTableColumn.setPk(Integer.valueOf(isPk) == 1);
         int update = dbTableColumn.updateById();
         if (update != -1) {
           return successData(Message.UPDATE_SUCCESS, dbTableColumn);
