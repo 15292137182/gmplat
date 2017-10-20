@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BaseOrg;
@@ -156,6 +157,22 @@ public class RoleController extends BaseController {
       return result(new ServerResult(result));
     }
     return fail(Message.QUERY_FAIL);
+  }
+
+  /**
+   * 根据角色信息查询权限
+   *
+   * @param rowId    角色rowId
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
+   * @return PlatResult
+   */
+  @RequestMapping("/queryPermissions")
+  public PlatResult queryPermissions(String rowId, @RequestParam(defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                     @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
+    ServerResult result = roleService.queryRolePermissionByRowId(rowId, pageNum, pageSize, order);
+    return result(result);
   }
 
   /**

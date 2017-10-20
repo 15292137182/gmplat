@@ -1,7 +1,6 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseService;
-import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
@@ -10,7 +9,6 @@ import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +32,13 @@ public class RoleService extends BaseService<Role> {
 
   private UserService userService;
   private BaseOrgService baseOrgService;
+  private PermissionService permissionService;
 
   @Autowired
-  public RoleService(UserService userService, BaseOrgService baseOrgService) {
+  public RoleService(UserService userService, BaseOrgService baseOrgService, PermissionService permissionService) {
     this.userService = userService;
     this.baseOrgService = baseOrgService;
+    this.permissionService = permissionService;
   }
 
   private List<String> blankSelectFields() {
@@ -49,7 +49,7 @@ public class RoleService extends BaseService<Role> {
     Object roleId = param.get("roleId");
     Object roleName = param.get("roleName");
     Object roleType = param.get("roleType");
-    if (UtilsTool.isValidAll(roleId, roleName, roleType)) {//验证非空
+    if (isValidAll(roleId, roleName, roleType)) {//验证非空
       //角色编号唯一
       Condition condition = new ConditionBuilder(Role.class).and().equal("roleId", roleId).endAnd().buildDone();
       List<Role> list = select(condition);
@@ -59,15 +59,15 @@ public class RoleService extends BaseService<Role> {
         param.put("roleType", roleType.toString().trim());
         Role role = new Role().buildCreateInfo().fromMap(param);
         if (role.insert() != -1) {
-          return successData(Message.NEW_ADD_SUCCESS, role);
+          return successData(NEW_ADD_SUCCESS, role);
         } else {
-          return fail(Message.NEW_ADD_FAIL);
+          return fail(NEW_ADD_FAIL);
         }
       } else {
-        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(DATA_CANNOT_BE_DUPLICATED);
       }
     } else {
-      return fail(Message.DATA_CANNOT_BE_EMPTY);
+      return fail(DATA_CANNOT_BE_EMPTY);
     }
   }
 
@@ -77,7 +77,7 @@ public class RoleService extends BaseService<Role> {
     Object roleName = param.get("roleName");
     Object roleType = param.get("roleType");
     if (isValid(rowId)) {
-      if (UtilsTool.isValidAll(roleId, roleName, roleType)) {//验证非空
+      if (isValidAll(roleId, roleName, roleType)) {//验证非空
         //角色编号唯一
         Condition condition = new ConditionBuilder(Role.class).and().equal("roleId", roleId).endAnd().buildDone();
         List<Role> list = select(condition);
@@ -87,18 +87,18 @@ public class RoleService extends BaseService<Role> {
           param.put("roleType", roleType.toString().trim());
           Role role = new Role().buildModifyInfo().fromMap(param);
           if (role.updateById() != -1) {
-            return successData(Message.UPDATE_SUCCESS, role);
+            return successData(UPDATE_SUCCESS, role);
           } else {
-            return fail(Message.UPDATE_FAIL);
+            return fail(UPDATE_FAIL);
           }
         } else {
-          return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+          return fail(DATA_CANNOT_BE_DUPLICATED);
         }
       } else {
-        return fail(Message.DATA_CANNOT_BE_EMPTY);
+        return fail(DATA_CANNOT_BE_EMPTY);
       }
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -113,12 +113,12 @@ public class RoleService extends BaseService<Role> {
    * @return ServerResult
    */
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(Role.class, order);
+    LinkedList<Order> orders = dataSort(Role.class, order);
     Condition condition;
     if (isValid(param)) {//判断是否根据指定字段查询
-      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(Role.class, UtilsTool.jsonToObj(param, Map.class));
+      condition = convertMapToAndConditionSeparatedByLike(Role.class, jsonToObj(param, Map.class));
     } else {
-      condition = !isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+      condition = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));
     }
     PageResult<Map<String, Object>> roles;
     if (isValid(pageNum)) {//判断是否分页查询
@@ -129,7 +129,7 @@ public class RoleService extends BaseService<Role> {
     if (isValid(null == roles ? null : roles.getResult())) {
       return new ServerResult<>(roles);
     } else {
-      return fail(Message.QUERY_FAIL);
+      return fail(QUERY_FAIL);
     }
   }
 
@@ -141,13 +141,13 @@ public class RoleService extends BaseService<Role> {
    */
   public ServerResult queryBySpecify(Map<String, Object> param) {
     if (!param.isEmpty()) {
-      Condition condition = UtilsTool.convertMapToAndCondition(Role.class, param);
+      Condition condition = convertMapToAndCondition(Role.class, param);
       List<Map> select = selectMap(condition);
       if (!select.isEmpty()) {
-        return successData(Message.QUERY_SUCCESS, select);
+        return successData(QUERY_SUCCESS, select);
       }
     }
-    return fail(Message.QUERY_FAIL);
+    return fail(QUERY_FAIL);
   }
 
   /**
@@ -164,7 +164,7 @@ public class RoleService extends BaseService<Role> {
     List<UserRelateRole> relateRoles;
     if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
-              .and().equal("roleRowId", rowId).endAnd().buildDone();
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
       relateRoles = new UserRelateRole().selectSimple(condition);
 
     } else {//如果没有角色rowId，就查询所有有角色的用户
@@ -172,26 +172,26 @@ public class RoleService extends BaseService<Role> {
     }
     if (!relateRoles.isEmpty()) {
       List<String> userRowIds = relateRoles.stream()
-              .map(UserRelateRole::getUserRowId)
-              .collect(Collectors.toList());
+          .map(UserRelateRole::getUserRowId)
+          .collect(Collectors.toList());
       userCondition = new ConditionBuilder(User.class)
-              .and().in("rowId", userRowIds).endAnd().buildDone();
+          .and().in("rowId", userRowIds).endAnd().buildDone();
     }
     if (isValid(search)) {
       if (null != userCondition) {
-        userCondition = new And(userCondition, UtilsTool.createBlankQuery(userService.blankSelectFields(), UtilsTool.collectToSet(search)));
+        userCondition = new And(userCondition, createBlankQuery(userService.blankSelectFields(), collectToSet(search)));
       } else {
-        userCondition = UtilsTool.createBlankQuery(userService.blankSelectFields(), UtilsTool.collectToSet(search));
+        userCondition = createBlankQuery(userService.blankSelectFields(), collectToSet(search));
       }
     }
     if (isValid(param)) {
       if (null != userCondition) {
-        userCondition = new And(userCondition, UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)));
+        userCondition = new And(userCondition, convertMapToAndConditionSeparatedByLike(User.class, jsonToObj(param, Map.class)));
       } else {
-        userCondition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
+        userCondition = convertMapToAndConditionSeparatedByLike(User.class, jsonToObj(param, Map.class));
       }
     }
-    userCondition = UtilsTool.addNotDeleteCondition(userCondition, User.class);
+    userCondition = addNotDeleteCondition(userCondition, User.class);
     Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
     if (isValid(pageNum)) {
@@ -212,7 +212,7 @@ public class RoleService extends BaseService<Role> {
   public PageResult<Map<String, Object>> queryRoleUserByRoleId(String roleId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
-              .and().equal("roleId", roleId).endAnd().buildDone();
+          .and().equal("roleId", roleId).endAnd().buildDone();
       List<Role> roles = select(condition);
       if (!roles.isEmpty()) {
         return queryRoleUserByRowId(roles.get(0).getRowId(), search, param, orders, pageNum, pageSize);
@@ -231,12 +231,12 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteUserInRole(String roleRowId, String[] userRowIds) {
     if (isValid(roleRowId) && null != userRowIds && userRowIds.length != 0) {
       Condition condition = new ConditionBuilder(UserRelateRole.class)
-              .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
-              .buildDone();
+          .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowIds)).endAnd()
+          .buildDone();
       new UserRelateRole().delete(condition);
-      return success(Message.DELETE_SUCCESS);
+      return success(DELETE_SUCCESS);
     }
-    return fail(Message.INVALID_REQUEST);
+    return fail(INVALID_REQUEST);
   }
 
   /**
@@ -250,10 +250,10 @@ public class RoleService extends BaseService<Role> {
     if (null != roleRowId && null != permissionRowIds && permissionRowIds.length != 0) {
       // 选择当前已被添加的权限
       Condition condition = new ConditionBuilder(RoleRelatePermission.class)
-              .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
-              .buildDone();
+          .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+          .buildDone();
       List<RoleRelatePermission> roleRelatePermissions =
-              new RoleRelatePermission().selectSimple(condition);
+          new RoleRelatePermission().selectSimple(condition);
       Set<String> strings = new HashSet<>();
       strings.addAll(Arrays.asList(permissionRowIds));
       if (!roleRelatePermissions.isEmpty()) {
@@ -267,9 +267,9 @@ public class RoleService extends BaseService<Role> {
           roleRelatePermission.buildCreateInfo().insert();
         });
       }
-      return success(Message.NEW_ADD_SUCCESS);
+      return success(NEW_ADD_SUCCESS);
     }
-    return fail(Message.INVALID_REQUEST);
+    return fail(INVALID_REQUEST);
   }
 
   /**
@@ -283,10 +283,10 @@ public class RoleService extends BaseService<Role> {
     if (null != roleRowId && null != orgRowIds && orgRowIds.length != 0) {
       // 选择当前已被添加的权限
       Condition condition = new ConditionBuilder(BaseOrgRelateRole.class)
-              .and().equal("roleRowId", roleRowId).in("baseOrgRowId", Arrays.asList(orgRowIds)).endAnd()
-              .buildDone();
+          .and().equal("roleRowId", roleRowId).in("baseOrgRowId", Arrays.asList(orgRowIds)).endAnd()
+          .buildDone();
       List<BaseOrgRelateRole> baseOrgRelateRoles =
-              new BaseOrgRelateRole().selectSimple(condition);
+          new BaseOrgRelateRole().selectSimple(condition);
       Set<String> strings = new HashSet<>();
       strings.addAll(Arrays.asList(orgRowIds));
       if (!baseOrgRelateRoles.isEmpty()) {
@@ -300,9 +300,9 @@ public class RoleService extends BaseService<Role> {
           baseOrgRelateRole.buildCreateInfo().insert();
         });
       }
-      return success(Message.NEW_ADD_SUCCESS);
+      return success(NEW_ADD_SUCCESS);
     }
-    return fail(Message.INVALID_REQUEST);
+    return fail(INVALID_REQUEST);
   }
 
   /**
@@ -317,17 +317,17 @@ public class RoleService extends BaseService<Role> {
       Condition condition;
       if (null != permissionRowIds && permissionRowIds.length != 0) {
         condition = new ConditionBuilder(RoleRelatePermission.class)
-                .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
-                .buildDone();
+            .and().equal("roleRowId", roleRowId).in("permissionRowId", Arrays.asList(permissionRowIds)).endAnd()
+            .buildDone();
       } else {
         condition = new ConditionBuilder(RoleRelatePermission.class)
-                .and().equal("roleRowId", roleRowId).endAnd()
-                .buildDone();
+            .and().equal("roleRowId", roleRowId).endAnd()
+            .buildDone();
       }
       new RoleRelatePermission().delete(condition);
-      return success(Message.DELETE_SUCCESS);
+      return success(DELETE_SUCCESS);
     }
-    return fail(Message.INVALID_REQUEST);
+    return fail(INVALID_REQUEST);
   }
 
 
@@ -366,8 +366,8 @@ public class RoleService extends BaseService<Role> {
   public ServerResult deleteUserRole(String userRowId, String[] roleRowId) {
     ServerResult serverResult;
     Condition condition = new ConditionBuilder(UserRelateRole.class)
-            .and().equal(userRowId, userRowId).in("roleRowId", Arrays.asList(roleRowId))
-            .endAnd().buildDone();
+        .and().equal(userRowId, userRowId).in("roleRowId", Arrays.asList(roleRowId))
+        .endAnd().buildDone();
     int delete = new UserRelateRole().delete(condition);
     if (delete == -1) {
       serverResult = success(DELETE_SUCCESS);
@@ -413,9 +413,9 @@ public class RoleService extends BaseService<Role> {
    */
   public ServerResult deleteUserGroupRole(String userGroupRwoId, String[] roleRowId) {
     Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
-            .and().equal("userGroupRwoId", userGroupRwoId).in("roleRowId", Arrays.asList(roleRowId))
-            .endAnd()
-            .buildDone();
+        .and().equal("userGroupRwoId", userGroupRwoId).in("roleRowId", Arrays.asList(roleRowId))
+        .endAnd()
+        .buildDone();
     ServerResult serverResult;
     int delete = new UserGroupRelateRole().delete(condition);
     if (delete == -1) {
@@ -464,11 +464,11 @@ public class RoleService extends BaseService<Role> {
       Condition condition;
       if (null != userRowId && userRowId.length != 0) {
         condition = new ConditionBuilder(UserRelateRole.class)
-                .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
-                .endAnd().buildDone();
+            .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
+            .endAnd().buildDone();
       } else {
         condition = new ConditionBuilder(UserRelateRole.class)
-                .and().equal("roleRowId", roleRowId).endAnd().buildDone();
+            .and().equal("roleRowId", roleRowId).endAnd().buildDone();
       }
       int delete = new UserRelateRole().delete(condition);
       if (delete != -1) {
@@ -517,11 +517,11 @@ public class RoleService extends BaseService<Role> {
       Condition condition;
       if (null != userGroupRwoId && userGroupRwoId.length != 0) {
         condition = new ConditionBuilder(UserGroupRelateRole.class)
-                .and().equal("roleRowId", roleRowId).in("userGroupRowId", Arrays.asList(userGroupRwoId))
-                .endAnd().buildDone();
+            .and().equal("roleRowId", roleRowId).in("userGroupRowId", Arrays.asList(userGroupRwoId))
+            .endAnd().buildDone();
       } else {
         condition = new ConditionBuilder(UserGroupRelateRole.class)
-                .and().equal("roleRowId", roleRowId).endAnd().buildDone();
+            .and().equal("roleRowId", roleRowId).endAnd().buildDone();
       }
       int delete = new UserGroupRelateRole().delete(condition);
       if (delete != -1) {
@@ -555,14 +555,14 @@ public class RoleService extends BaseService<Role> {
   public ServerResult queryRoleContainsPermission(String permissionRowId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(permissionRowId)) {
       Condition relateCond = new ConditionBuilder(RoleRelatePermission.class)
-              .and().equal("permissionRowId", permissionRowId).endAnd().buildDone();
+          .and().equal("permissionRowId", permissionRowId).endAnd().buildDone();
       List<RoleRelatePermission> roleRelatePermissions = new RoleRelatePermission().selectSimple(relateCond);
 
       if (!roleRelatePermissions.isEmpty()) {
         List<String> roleRowIds = new ArrayList<>();
         roleRelatePermissions.forEach(roleRelatePermission -> roleRowIds.add(roleRelatePermission.getRoleRowId()));
         Condition roleCond = new ConditionBuilder(Role.class)
-                .and().in("rowId", roleRowIds).endAnd().buildDone();
+            .and().in("rowId", roleRowIds).endAnd().buildDone();
         List<Condition> conditions = new ArrayList<>();
         conditions.add(roleCond);
 
@@ -576,11 +576,11 @@ public class RoleService extends BaseService<Role> {
         if (isValid(search)) { // 如果没有param参数，则进行空格查询
           conditions.add(createBlankQuery(new Role().toMap().keySet(), collectToSet(search)));
         }
-        return successData(Message.QUERY_SUCCESS, selectPageMap(new And(conditions), orders, pageNum, pageSize));
+        return successData(QUERY_SUCCESS, selectPageMap(new And(conditions), orders, pageNum, pageSize));
       }
-      return successData(Message.QUERY_SUCCESS, new ArrayList<>());
+      return successData(QUERY_SUCCESS, new ArrayList<>());
     }
-    return fail(Message.INVALID_REQUEST);
+    return fail(INVALID_REQUEST);
   }
 
   public PageResult queryRoleOrgByRowId(String rowId, LinkedList<Order> orders, Integer pageNum, Integer pageSize) {
@@ -588,7 +588,7 @@ public class RoleService extends BaseService<Role> {
     List<BaseOrgRelateRole> baseOrgRelateRoles;
     if (isValid(rowId)) {
       Condition condition = new ConditionBuilder(BaseOrgRelateRole.class)
-              .and().equal("roleRowId", rowId).endAnd().buildDone();
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
       baseOrgRelateRoles = new BaseOrgRelateRole().selectSimple(condition);
 
     } else {//如果没有角色rowId，就查询所有有角色的部门
@@ -596,10 +596,10 @@ public class RoleService extends BaseService<Role> {
     }
     if (!baseOrgRelateRoles.isEmpty()) {
       List<String> baseOrgRowIds = baseOrgRelateRoles.stream()
-              .map(BaseOrgRelateRole::getBaseOrgRowId)
-              .collect(Collectors.toList());
+          .map(BaseOrgRelateRole::getBaseOrgRowId)
+          .collect(Collectors.toList());
       orgCondition = new ConditionBuilder(BaseOrg.class)
-              .and().in("rowId", baseOrgRowIds).endAnd().buildDone();
+          .and().in("rowId", baseOrgRowIds).endAnd().buildDone();
     }
     if (isValid(pageNum)) {
       return baseOrgService.selectPageMap(orgCondition, orders, pageNum, pageSize);
@@ -619,12 +619,43 @@ public class RoleService extends BaseService<Role> {
   public PageResult queryRoleOrgByRoleId(String roleId, LinkedList<Order> orders, Integer pageNum, Integer pageSize) {
     if (isValid(roleId)) {
       Condition condition = new ConditionBuilder(Role.class)
-              .and().equal("roleId", roleId).endAnd().buildDone();
+          .and().equal("roleId", roleId).endAnd().buildDone();
       List<Role> roles = select(condition);
       if (!roles.isEmpty()) {
         return queryRoleOrgByRowId(roles.get(0).getRowId(), orders, pageNum, pageSize);
       }
     }
     return null;
+  }
+
+  /**
+   * 根据角色查询权限
+   *
+   * @param rowId    角色rowId
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
+   * @return ServerResult
+   */
+  public ServerResult queryRolePermissionByRowId(String rowId, Integer pageNum, Integer pageSize, String order) {
+    if (isValid(rowId)) {
+      LinkedList<Order> orders = dataSort(Permission.class, order);
+      //从关联表里查出角色关联的权限rowId
+      Condition condition = new ConditionBuilder(RoleRelatePermission.class)
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
+      List<RoleRelatePermission> relateRoles = new RoleRelatePermission().selectSimple(condition);
+      if (null != relateRoles && !relateRoles.isEmpty()) {
+        List<String> permissionRowIds = relateRoles.stream()
+            .map(RoleRelatePermission::getRoleRowId)
+            .collect(Collectors.toList());
+        //根据权限rowId查出权限信息
+        Condition permissionCondition = new ConditionBuilder(Permission.class)
+            .and().in("rowId", permissionRowIds).endAnd()
+            .buildDone();
+        return new ServerResult(permissionService.selectPageMap(permissionCondition, orders, pageNum, pageSize));
+      }
+      return successData(QUERY_SUCCESS, new ArrayList<>());//没有该角色相关的权限
+    }
+    return fail(QUERY_FAIL);
   }
 }
