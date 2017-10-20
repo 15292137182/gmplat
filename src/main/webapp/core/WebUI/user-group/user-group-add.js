@@ -71,9 +71,8 @@ var addDroupEvent=new  Vue({
                     "showMsg":true
                 };
                 gmpAjax.showAjax(data,function(res){
-                    console.log(res);
                     //分页跳回到第一页
-                    //basRight.searchRight();
+                    left.getNewDate();
                     ibcpLayer.Close(divIndex);
                 })
             })

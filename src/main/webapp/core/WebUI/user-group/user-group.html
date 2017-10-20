@@ -68,7 +68,7 @@
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent">添加用户组</el-button>
             <el-button type="info" icon="plus" size="small" @click.native="deleteEvent">删除用户组</el-button>
-            <el-button type="warning" icon="star-off" size="small" @click.native="addUserEvent">添加组人员</el-button>
+            <el-button type="warning" icon="star-off" size="small" @click.native="toggleSelection(tableData)">添加组人员</el-button>
         </el-col>
     </el-row>
 </div>
@@ -79,7 +79,7 @@
                     <el-col>
                         <div style="padding:0 20px">
                             <el-col style="padding:10px 5px">
-                                <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                                <base-tree :initial="config" ref="leftTree" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                             </el-col>
                         </div>
                     </el-col>

@@ -165,7 +165,7 @@ gmp_onload=function(){
             getNodes(data){
                 console.log(data);
                 this.rowId=data.rowId;
-                right.searchMore();
+                right.searchUser();
             },
             //复选框点击
             getChecked(){
@@ -214,9 +214,8 @@ gmp_onload=function(){
 
             },
             getNodes1(data){
-                console.log(data);
-                left.rowId=data.rowId;
-                right.searchMore();
+                this.userRowId=data.rowId;
+                right.searchUser();
             },
             //复选框点击
             getChecked1(){
@@ -270,7 +269,14 @@ gmp_onload=function(){
             handleCurrentChange(val){
                 this.pageNum=val;
             },
-            //查询
+            searchUser(){
+                if(left.activeName=='first'){
+                    right.searchMore()
+                }else if(left.activeName=='second'){
+                    right.searchUserMore();
+                }
+            },
+            //查询组织机构下的用户  不跳回第一页
             searchMore(){
                 if(this.select==''){//需要search
                     var param={
@@ -282,12 +288,14 @@ gmp_onload=function(){
                         param["status"] = this.chooseState;
                         var params=JSON.stringify(param)
                     }
-                    querySearch.needSearch(searchMore,this.input,params,this,function(res){
-                        var data=res.resp.content.data;
-                        if(data!=null){
-                            //默认选中行
-                            //this.currentChange(this.tableData[0]);
-                        }
+
+                    var headDate={
+                        search:this.input,
+                        param:params,
+                    }
+
+                    querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
+
                     })
                 }else{  //不需要search
                     var param={
@@ -300,9 +308,55 @@ gmp_onload=function(){
                         param["status"] = this.chooseState;
                         var params=JSON.stringify(param)
                     }
-                    querySearch.uneedSearch(searchMore,params,this,function(res){
+
+                    var headDate={
+                        param:params,
+                    }
+                    querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
+
+                    })
+                }
+            },
+            //查找角色下的用户  不跳回第一页
+            searchUserMore(){
+                if(this.select==''){//需要search
+                   var param={};
+                    if(this.chooseState==''){//不需要状态
+                        params='';
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    var headDate={
+                        rowId:leftBottom.userRowId,
+                        search:this.input,
+                        param:params,
+                    }
+                    querySearch.searchResourceFirst(searchRole,headDate,this,function(res){
+                        console.log(res);
                         var data=res.resp.content.data;
-                        console.log(data);
+                        if(data!=null){
+                            //默认选中行
+                            //this.currentChange(this.tableData[0]);
+                        }
+                    })
+                }else{  //不需要search
+                   var param={};
+                    param[this.select] = this.input;
+                    if(this.chooseState==''){//不需要状态
+                        var params=JSON.stringify(param)
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    var headDate={
+                        rowId:leftBottom.userRowId,
+                        search:this.input,
+                        param:params,
+                    }
+                    querySearch.searchResourceFirst(searchRole,headDate,this,function(res){
+                        console.log(res);
+                        var data=res.resp.content.data;
                         if(data!=null){
                             //默认选中行
                             //this.currentChange(this.tableData[0]);

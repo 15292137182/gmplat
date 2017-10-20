@@ -47,13 +47,13 @@ gmp_onload=function(){
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页跳回到第一页
-                        console.log(res);
-                        //basLeft.searchLeft();
+                        //console.log(this.$refs.leftTree);
+                        //basTop.$refs.leftTree.loadData();
                     })
                 })
             },
             //添加组人员
-            addUserEvent(){
+            toggleSelection(row,selected){
                 var htmlUrl = 'user-group-user.html';
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加用户组下人员信息', '800px', '600px',function(){
 
@@ -88,7 +88,7 @@ gmp_onload=function(){
                     url:searchGroup,
                     type:"get",
                     data:{
-                        rowId:this.rowId
+                        rowId:left.rowId
                     },
                     dataType:"json",
                     xhrFields: {withCredentials: true},
@@ -98,15 +98,14 @@ gmp_onload=function(){
                         right.groupName=data.groupName;
                         right.groupNumber=data.groupNumber;
                         right.rowId=data.rowId;
-                        right.belongSector=data.belongSector;
-                        right.belongSector=data.belongSector;//所属部门 为了提交
                         right.config1.checked=data.belongSector;
+                        right.belongSector=data.belongSector;//所属部门 为了提交
                         right.groupCategory=data.groupCategory;
                         right.desc=data.desc;
                         right.remarks=data.remarks;
                     },
                 })
-                rightBottom.searchMore();
+                rightBottom.searchMoreFirst();
             },
             //复选框选中得到得值
             getChecked(data, id, allChecked, name, flag) {
@@ -132,21 +131,10 @@ gmp_onload=function(){
                 }
                 console.log(left.arr)
             },
-            //getChecked(data,flag) {
+            //刷新树
+            getNewDate(){
 
-                //for(var i=0;i<arr.length;i++){
-                //    if(data.rowId != arr[i]){
-                //        if(i==arr.length-1){
-                //            arr.push(data.rowId);
-                //        }
-                //    }
-                //}
-                //console.log(this.rowIds);
-                //console.log(flag);
-
-
-                //console.log(left.arr);
-            //}
+            }
         },
     })
 
@@ -184,6 +172,7 @@ gmp_onload=function(){
             },
         }),
         methods: {
+            //编辑用户组保存
             addClick(){
                 var data={
                     "url":modifyGroup,
@@ -229,26 +218,13 @@ gmp_onload=function(){
         }),
         methods: {
             headSort(column){
-                var data = {};
-                if(column.prop == null){
-                    //是否需要提示？？
-                    return;
-                }
-                if(column.order=="ascending"){
-                    data = {str:column.prop,num:1}
-                }else{
-                    data = {str:column.prop,num:0}
-                }
-                var datas = JSON.stringify(data);
-
                 var headDate={
                     userGroupRowId:left.rowId,
                     pageNum:this.pageNum,
                     pageSize:this.pageSize,
-                    order:datas
+                    order:'',
                 }
-                //querySearch.headSort(searchGroupUser,left.rowId,this.pageSize,this.pageNum,column,this);
-                querySearch.headSorts(searchGroupUser,headDate,this);
+                querySearch.headSorts(searchGroupUser,headDate,column,this);
             },
             //点击这一行
             currentChange(row, event, column){
@@ -259,13 +235,37 @@ gmp_onload=function(){
             },
             handleSizeChange(val){
                 this.pageSize=val;
+                this.searchMore();
             },
             handleCurrentChange(val){
                 this.pageNum=val;
+                this.searchMore();
             },
-            //查询 调回第一页
+            //查询跳回第一页
+            searchMoreFirst(){
+                var headDate={
+                    userGroupRowId:left.rowId,
+                    pageNum:1,
+                    pageSize:this.pageSize,
+                }
+                querySearch.searchResource(searchGroupUser,headDate,this,function(res){
+                    console.log(res);
+                    var data=res.resp.content.data;
+                    if(data!=null){
+                        //默认选中行
+                        //this.currentChange(this.tableData[0]);
+                    }
+
+                })
+            },
+            //查询不跳回第一页
             searchMore(){
-                querySearch.searchResource(searchGroupUser,left.rowId,this,function(res){
+                var headDate={
+                    userGroupRowId:left.rowId,
+                    pageNum:this.pageNum,
+                    pageSize:this.pageSize,
+                }
+                querySearch.searchResource(searchGroupUser,headDate,this,function(res){
                     console.log(res);
                     var data=res.resp.content.data;
                     if(data!=null){
