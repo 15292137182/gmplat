@@ -285,7 +285,7 @@ public class RoleService extends BaseService<Role> {
             .and().equal("roleRowId", roleRowId).endAnd()
             .buildDone();
       }
-      new RoleRelatePermission().buildDeleteInfo().logicalDelete(condition);
+      new RoleRelatePermission().delete(condition);
       return success(Message.DELETE_SUCCESS);
     }
     return fail(Message.INVALID_REQUEST);
@@ -421,17 +421,22 @@ public class RoleService extends BaseService<Role> {
    * @return ServerResult
    */
   public ServerResult deleteRoleUser(String roleRowId, String[] userRowId) {
-    ServerResult serverResult;
-    Condition condition = new ConditionBuilder(UserRelateRole.class)
-        .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
-        .endAnd().buildDone();
-    int delete = new UserRelateRole().delete(condition);
-    if (delete == -1) {
-      serverResult = success(DELETE_SUCCESS);
-    } else {
-      serverResult = success(DELETE_FAIL);
+    if (isValid(roleRowId)) {
+      Condition condition;
+      if (null != userRowId && userRowId.length != 0) {
+        condition = new ConditionBuilder(UserRelateRole.class)
+            .and().equal("roleRowId", roleRowId).in("userRowId", Arrays.asList(userRowId))
+            .endAnd().buildDone();
+      } else {
+        condition = new ConditionBuilder(UserRelateRole.class)
+            .and().equal("roleRowId", roleRowId).endAnd().buildDone();
+      }
+      int delete = new UserRelateRole().delete(condition);
+      if (delete != -1) {
+        return success(DELETE_SUCCESS);
+      }
     }
-    return serverResult;
+    return fail(DELETE_FAIL);
   }
 
 
@@ -469,18 +474,22 @@ public class RoleService extends BaseService<Role> {
    * @return ServerResult
    */
   public ServerResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
-    ServerResult serverResult;
-    Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
-        .and().equal("roleRowId", roleRowId).in("userGroupRowId", Arrays.asList(userGroupRwoId))
-        .endAnd()
-        .buildDone();
-    int delete = new UserGroupRelateRole().delete(condition);
-    if (delete == -1) {
-      serverResult = success(DELETE_SUCCESS);
-    } else {
-      serverResult = success(DELETE_FAIL);
+    if (isValid(roleRowId)) {
+      Condition condition;
+      if (null != userGroupRwoId && userGroupRwoId.length != 0) {
+        condition = new ConditionBuilder(UserGroupRelateRole.class)
+            .and().equal("roleRowId", roleRowId).in("userGroupRowId", Arrays.asList(userGroupRwoId))
+            .endAnd().buildDone();
+      } else {
+        condition = new ConditionBuilder(UserGroupRelateRole.class)
+            .and().equal("roleRowId", roleRowId).endAnd().buildDone();
+      }
+      int delete = new UserGroupRelateRole().delete(condition);
+      if (delete != -1) {
+        return success(DELETE_SUCCESS);
+      }
     }
-    return serverResult;
+    return fail(DELETE_FAIL);
   }
 
   @Transactional
@@ -490,7 +499,7 @@ public class RoleService extends BaseService<Role> {
       deleteRoleUser(rowId, null);
       deleteRoleUserGroup(rowId, null);
       deleteRolePermission(rowId, null);
-      int delete = new Role().buildDeleteInfo().logicalDeleteById(rowId);
+      int delete = new Role().deleteById(rowId);
       if (delete != -1) {
         return success(DELETE_SUCCESS);
       }
