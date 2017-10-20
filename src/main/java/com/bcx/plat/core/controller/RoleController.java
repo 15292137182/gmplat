@@ -2,6 +2,7 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
+import com.bcx.plat.core.entity.BaseOrg;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -132,6 +133,30 @@ public class RoleController extends BaseController {
     return result(success);
   }
 
+  /**
+   * 根据角色查询所属机构
+   *
+   * @param rowId    角色rowId
+   * @param roleId   角色编号
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
+   * @return PlatResult
+   */
+  @RequestMapping("/queryOrgs")
+  public PlatResult queryOrgs(String rowId, String roleId, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(BaseOrg.class, order);
+    PageResult result = null;
+    if (isValid(rowId)) {
+      result = roleService.queryRoleOrgByRowId(rowId, orders, pageNum, pageSize);
+    } else if (isValid(roleId)) {
+      result = roleService.queryRoleOrgByRoleId(roleId, orders, pageNum, pageSize);
+    }
+    if (isValid(result)) {
+      return result(new ServerResult(result));
+    }
+    return fail(Message.QUERY_FAIL);
+  }
 
   /**
    * 将权限添加到角色
@@ -151,7 +176,7 @@ public class RoleController extends BaseController {
    *
    * @param roleRowId 角色主键
    * @param orgRowIds 组织机构主键
-   * @return
+   * @return PlatResult
    */
   @PostMapping("/addOrg")
   public PlatResult addRoleOrg(String roleRowId, String[] orgRowIds) {

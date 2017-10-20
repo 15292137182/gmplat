@@ -11,10 +11,10 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,8 +31,15 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
 @Service
 public class RoleService extends BaseService<Role> {
 
-  @Resource
+
   private UserService userService;
+  private BaseOrgService baseOrgService;
+
+  @Autowired
+  public RoleService(UserService userService, BaseOrgService baseOrgService) {
+    this.userService = userService;
+    this.baseOrgService = baseOrgService;
+  }
 
   private List<String> blankSelectFields() {
     return Arrays.asList("roleId", "roleName", "roleType");
@@ -549,7 +556,7 @@ public class RoleService extends BaseService<Role> {
   public ServerResult queryRoleContainsPermission(String permissionRowId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(permissionRowId)) {
       Condition relateCond = new ConditionBuilder(RoleRelatePermission.class)
-              .and().equal("permissionRowId", permissionRowId).endAnd().buildDone();
+          .and().equal("permissionRowId", permissionRowId).endAnd().buildDone();
       List<RoleRelatePermission> roleRelatePermissions = new RoleRelatePermission().selectSimple(relateCond);
       List<Role> roles = new ArrayList<>();
 
@@ -557,7 +564,7 @@ public class RoleService extends BaseService<Role> {
         List<String> roleRowIds = new ArrayList<>();
         roleRelatePermissions.forEach(roleRelatePermission -> roleRowIds.add(roleRelatePermission.getRoleRowId()));
         Condition roleCond = new ConditionBuilder(Role.class)
-                .and().in("rowId", roleRowIds).endAnd().buildDone();
+            .and().in("rowId", roleRowIds).endAnd().buildDone();
         List<Condition> conditions = new ArrayList<>();
         conditions.add(roleCond);
 
@@ -578,4 +585,50 @@ public class RoleService extends BaseService<Role> {
     return fail(Message.INVALID_REQUEST);
   }
 
+  public PageResult queryRoleOrgByRowId(String rowId, LinkedList<Order> orders, Integer pageNum, Integer pageSize) {
+    Condition orgCondition = null;
+    List<BaseOrgRelateRole> baseOrgRelateRoles;
+    if (isValid(rowId)) {
+      Condition condition = new ConditionBuilder(BaseOrgRelateRole.class)
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
+      baseOrgRelateRoles = new BaseOrgRelateRole().selectSimple(condition);
+
+    } else {//如果没有角色rowId，就查询所有有角色的部门
+      baseOrgRelateRoles = new BaseOrgRelateRole().selectAll();
+    }
+    if (!baseOrgRelateRoles.isEmpty()) {
+      List<String> baseOrgRowIds = baseOrgRelateRoles.stream()
+          .map(BaseOrgRelateRole::getBaseOrgRowId)
+          .collect(Collectors.toList());
+      orgCondition = new ConditionBuilder(BaseOrg.class)
+          .and().in("rowId", baseOrgRowIds).endAnd().buildDone();
+    }
+    if (isValid(pageNum)) {
+      return baseOrgService.selectPageMap(orgCondition, orders, pageNum, pageSize);
+    }
+    return new PageResult<>(baseOrgService.selectMap(orgCondition, orders));
+  }
+
+  /**
+   * 根据角色编号查询部门
+   *
+   * @param roleId   角色编号
+   * @param search   空格查询
+   * @param param    指定字段查询
+   * @param orders   排序
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @return 返回查询结果
+   */
+  public PageResult queryRoleOrgByRoleId(String roleId, LinkedList<Order> orders, Integer pageNum, Integer pageSize) {
+    if (isValid(roleId)) {
+      Condition condition = new ConditionBuilder(Role.class)
+          .and().equal("roleId", roleId).endAnd().buildDone();
+      List<Role> roles = select(condition);
+      if (!roles.isEmpty()) {
+        return queryRoleOrgByRowId(roles.get(0).getRowId(), orders, pageNum, pageSize);
+      }
+    }
+    return null;
+  }
 }
