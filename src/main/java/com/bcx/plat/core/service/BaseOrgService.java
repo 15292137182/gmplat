@@ -57,7 +57,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
    * @return 返回主键
    */
   private String makeOrgRowId(String orgPid) {
-    // 当不是 ROOT 的时候转为 ROOT ，主要处理大小写的问题
+    // 当不是全大写 ROOT 的时候转为 ROOT ，主要处理大小写的问题
     if (ORG_ROOT_NODE_ID.equalsIgnoreCase(orgPid)) {
       orgPid = ORG_ROOT_NODE_ID;
     }
@@ -75,7 +75,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
       } else {
         Condition condition1 = new ConditionBuilder(BaseOrg.class)
                 .and().equal("orgId", orgPid).endAnd().buildDone();
-        return select(condition).get(0).getRowId() + "001";
+        return select(condition1).get(0).getRowId() + "001";
       }
     } else {
       // 如果该组织机构下面有，找出最大的
