@@ -1051,43 +1051,43 @@ Vue.component("select-tree", {
         window.addEventListener("resize", this.widthChange);
     },
     updated() {
-        var self = this;
-        // 获取树节点数据
-        this.getNode(function(data) {
-            // 获取配置信息默认选择项
-            var _checked = self.initial.checked;
-            // 获取配置信息显示名称
-            var _name = self.initial.defaultProps.label;
-            var _key = self.initial.defaultProps.key;
-            // 配置信息复选框
-            var _checkbox = self.checkbox;
-            // 选择节点信息
-            var _selectNode = [];
-            // 若配置信息中含有默认选择项
-            if(_checked && _checked.length > 0 && _checkbox) {
-                // 遍历后端数据
-                for(var i = 0;i < data.length;i++) {
-                    // 后端数据中 id为配置id的项 push到数组中
-                    for(var j = 0;j < _checked.length;j++) {
-                        if(data[i][_key] == _checked[j]) {
-                            _selectNode.push(data[i][_name]);
-                        }
-                    }
-                }
-                // 显示选中项名称
-                self.select_node = _selectNode;
-            }else if(_checked && _checked.length > 0 && !_checkbox) {
-                // 若不显示复选框 设置选中多节点 默认选中第一个配置节点
-                for(var i = 0;i < data.length;i++) {
-                    // 后端数据中 id为配置id的项 push到数组中
-                    if(data[i][_key] == _checked[0]) {
-                        _selectNode.push(data[i][_name]);
-                    }
-                }
-                self.select_node = _selectNode;
-                self.middle = _selectNode;
-            }
-        });
+        // var self = this;
+        // // 获取树节点数据
+        // this.getNode(function(data) {
+        //     // 获取配置信息默认选择项
+        //     var _checked = self.initial.checked;
+        //     // 获取配置信息显示名称
+        //     var _name = self.initial.defaultProps.label;
+        //     var _key = self.initial.defaultProps.key;
+        //     // 配置信息复选框
+        //     var _checkbox = self.checkbox;
+        //     // 选择节点信息
+        //     var _selectNode = [];
+        //     // 若配置信息中含有默认选择项
+        //     if(_checked && _checked.length > 0 && _checkbox) {
+        //         // 遍历后端数据
+        //         for(var i = 0;i < data.length;i++) {
+        //             // 后端数据中 id为配置id的项 push到数组中
+        //             for(var j = 0;j < _checked.length;j++) {
+        //                 if(data[i][_key] == _checked[j]) {
+        //                     _selectNode.push(data[i][_name]);
+        //                 }
+        //             }
+        //         }
+        //         // 显示选中项名称
+        //         self.select_node = _selectNode;
+        //     }else if(_checked && _checked.length > 0 && !_checkbox) {
+        //         // 若不显示复选框 设置选中多节点 默认选中第一个配置节点
+        //         for(var i = 0;i < data.length;i++) {
+        //             // 后端数据中 id为配置id的项 push到数组中
+        //             if(data[i][_key] == _checked[0]) {
+        //                 _selectNode.push(data[i][_name]);
+        //             }
+        //         }
+        //         self.select_node = _selectNode;
+        //         self.middle = _selectNode;
+        //     }
+        // });
     },
     template: `<el-dropdown id="gmpDrop" trigger="click" @visible-change="expanded">
                     <el-input v-model="select_node" :readonly="true" ref="treeInput" icon="caret-top" @mouseover.native="enter" @mouseout.native="out" :on-icon-click="clear" placeholder="请选择"></el-input>

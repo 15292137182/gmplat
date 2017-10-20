@@ -804,7 +804,7 @@ var gmpAjax = (function(){
         // (url：接口地址,jsonData:后端请求数据，obj：需要弹出消息层的vue实例),
         // callbakc:成功后的回调函数
         var data = dataJson;
-        console.log(data.jsonData)
+        // console.log(data.jsonData)
         $.ajax({
             url:data.url,
             type:"post",
@@ -834,7 +834,7 @@ var gmpAjax = (function(){
                 }
             },
             error:function(res){
-                 console.log(222);
+                 // console.log(222);
                 data.obj.$message.error("操作失败");
             }
         })
