@@ -42,11 +42,7 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  * Copyright: Shanghai BatchSight GMP Information of management platform, Inc. Copyright(c) 2017
  *
  * @author Wen TieHu
- *         <pre>History:
- *                                                           2017/8/28  Wen TieHu Create
- *                                                           2017/9/27  YoungerOu modified
- *                                                            before delete templateObject, delete templateObjectPro first.
- *                                                         </pre>
+ *         <pre>History: 2017/8/28  Wen TieHu Create , 2017/9/27  YoungerOu modified , before delete templateObject, delete templateObjectPro first.</pre>
  */
 @RestController
 @RequestMapping(PLAT_SYS_PREFIX + "/core/templateObj")

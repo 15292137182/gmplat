@@ -14,10 +14,15 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
@@ -32,26 +37,12 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
 public class BusinessObjectService extends BaseService<BusinessObject> {
 
 
-  @Autowired
+  @Resource
   private MaintDBTablesService maintDBTablesService;
-  @Autowired
+  @Resource
   private BusinessObjectProService businessObjectProService;
-  @Autowired
-  private DBTableColumnService dbTableColumnService;
-  @Autowired
-  private FrontFuncService frontFuncService;
-  @Autowired
-  private FrontFuncProService frontFuncProService;
-  @Autowired
-  private BusinessRelateTemplateService businessRelateTemplateService;
-  @Autowired
+  @Resource
   private TemplateObjectService templateObjectService;
-  @Autowired
-  private DataSetConfigService dataSetConfigService;
-  @Autowired
-  private KeySetService keySetService;
-  @Autowired
-  private SequenceRuleConfigService sequenceRuleConfigService;
 
 
   public List<String> blankSelectFields() {
@@ -336,7 +327,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       Condition condition = new ConditionBuilder(DBTableColumn.class)
           .and().equal("rowId", relateTableColumn)
           .endAnd().buildDone();
-      List<DBTableColumn> dbTableColumns = dbTableColumnService.select(condition);
+      List<DBTableColumn> dbTableColumns = new DBTableColumn().selectSimple(condition);
       if (isValid(dbTableColumns) && dbTableColumns.size() > 0) {
         for (DBTableColumn aMapList : dbTableColumns) {
           map.put(aMapList.getRowId(), aMapList.getColumnCname());
@@ -363,15 +354,15 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
       switch (valueResourceType) {
         case BaseConstants.KEY_SET:
           Condition condition = new ConditionBuilder(KeySet.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
-          List<KeySet> select = keySetService.select(condition);
-          if (isValid(select) && select.size() > 0) {
+          List<KeySet> keySets = new KeySet().selectSimple(condition);
+          if (isValid(keySets) && keySets.size() > 0) {
             rest.remove("valueResourceContent");
-            rest.put("valueResourceContent", select.get(0).getKeysetName());
+            rest.put("valueResourceContent", keySets.get(0).getKeysetName());
           }
           break;
         case BaseConstants.SEQUENCE_RULE:
           Condition conditions = new ConditionBuilder(SequenceRuleConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
-          List<SequenceRuleConfig> selects = sequenceRuleConfigService.select(conditions);
+          List<SequenceRuleConfig> selects = new SequenceRuleConfig().selectSimple(conditions);
           if (selects != null && selects.size() > 0) {
             rest.remove("valueResourceContent");
             rest.put("valueResourceContent", selects.get(0).getSeqName());
@@ -379,7 +370,7 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
           break;
         case BaseConstants.DATA_SET:
           Condition conditioned = new ConditionBuilder(DataSetConfig.class).and().equal("rowId", rest.get("valueResourceContent")).endAnd().buildDone();
-          List<DataSetConfig> selected = dataSetConfigService.select(conditioned);
+          List<DataSetConfig> selected = new DataSetConfig().selectSimple(conditioned);
           if (selected.size() > 0) {
             rest.remove("valueResourceContent");
             rest.put("valueResourceContent", selected.get(0).getDatasetName());
@@ -454,11 +445,11 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
     Condition buildDone = new ConditionBuilder(BusinessObject.class).and().equal("rowId", rowId).endAnd().buildDone();
     List<BusinessObject> select = select(buildDone);
 
-    List<FrontFunc> businObj = frontFuncService.select(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
+    List<FrontFunc> businObj = new FrontFunc().selectSimple(new FieldCondition("relateBusiObj", Operator.EQUAL, rowId));
     if (businObj.size() > 0) {
       for (FrontFunc busin : businObj) {
         String rowId1 = busin.getRowId();
-        List<FrontFuncPro> funcRowId = frontFuncProService.select(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
+        List<FrontFuncPro> funcRowId = new FrontFuncPro().selectSimple(new FieldCondition("funcRowId", Operator.EQUAL, rowId1));
         if (funcRowId.size() != 0) {
           return fail(Message.DATA_QUOTE);
         }
@@ -488,19 +479,23 @@ public class BusinessObjectService extends BaseService<BusinessObject> {
    * @param orders 排序
    * @return platResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryTemplatePro(String rowId, LinkedList<Order> orders) {
     List<Map<String, Object>> linkedList = new ArrayList<>();
-    List<BusinessRelateTemplate> businessRowId = businessRelateTemplateService.select(new FieldCondition("businessRowId", Operator.EQUAL, rowId), orders);
+    List<BusinessRelateTemplate> businessRowId = new BusinessRelateTemplate().selectList(new FieldCondition("businessRowId", Operator.EQUAL, rowId), orders, true);
     if (isValid(businessRowId) && businessRowId.size() > 0) {
       for (BusinessRelateTemplate bri : businessRowId) {
         String templateRowId = bri.getTemplateRowId();
         List<Map<String, Object>> result = singleSelect(TemplateObjectPro.class, new FieldCondition("templateObjRowId", Operator.EQUAL, templateRowId));
-
-        List<Map<String, Object>> list = underlineKeyMapListToCamel(result);
-        for (Map<String, Object> li : list) {
-          if (result.size() != 0) {
-            linkedList.add(li);
+        if (isValid(result)) {
+          List<Map<String, Object>> list = underlineKeyMapListToCamel(result);
+          for (Map<String, Object> li : list) {
+            if (result.size() != 0) {
+              linkedList.add(li);
+            }
           }
+        } else {
+          return fail(Message.QUERY_FAIL);
         }
       }
       return successData(Message.QUERY_SUCCESS, linkedList);

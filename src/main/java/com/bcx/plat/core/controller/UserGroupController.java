@@ -4,7 +4,6 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserGroup;
-import com.bcx.plat.core.entity.UserRelateUserGroup;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
@@ -22,11 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.base.BaseConstants.TRUE_FLAG;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
@@ -49,8 +46,6 @@ public class UserGroupController extends BaseController {
 
   @Resource
   private UserGroupService userGroupService;
-  @Resource
-  private UserService userService;
 
   protected List<String> blankSelectFields() {
     return Arrays.asList("groupNumber", "groupName", "belongSector", "groupCategory", "desc", "remarks");
@@ -117,17 +112,18 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/logicDelete")
   public PlatResult deleteLogic(@RequestParam List<String> rowId) {
-    PlatResult platResult;
+    PlatResult platResult =null;
     Condition condition = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
-      UserGroup group = userGroups.get(0);
-      group.getBaseTemplateBean().setDeleteFlag(TRUE_FLAG);
-      int update = group.updateById();
-      if (update != -1) {
-        platResult = successData(Message.DELETE_SUCCESS, userGroups);
-      } else {
-        platResult = fail(Message.DELETE_FAIL);
+      for (UserGroup group : userGroups){
+        group.getBaseTemplateBean().setDeleteFlag(TRUE_FLAG);
+        int update = group.updateById();
+        if (update != -1) {
+          platResult = successData(Message.DELETE_SUCCESS, userGroups);
+        } else {
+          platResult = fail(Message.DELETE_FAIL);
+        }
       }
     } else {
       platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
@@ -216,36 +212,22 @@ public class UserGroupController extends BaseController {
 
   /**
    * 根据用户组查询用户信息
-   *
    * @param userGroupRowId 用户组唯一标示
+   * @param pageNum 页码
+   * @param pageSize 一页显示条数
+   * @param order 排序 "{\"str\":\"rowId\", \"num\":1}"
    * @return 用户信息
    */
   @GetMapping("/queryUserGroupUser")
   @SuppressWarnings("unchecked")
   public PlatResult queryUserGroupUser(String userGroupRowId, Integer pageNum, Integer pageSize, String order) {
     PlatResult platResult;
-    LinkedList<Order> orders = dataSort(UserGroup.class, order == null ? "" : order);
-    Condition condition = new ConditionBuilder(UserRelateUserGroup.class)
-        .and().equal("userGroupRowId", userGroupRowId).endAnd().buildDone();
-    List<UserRelateUserGroup> userRelateUserGroups =
-        new UserRelateUserGroup().selectList(condition, null, true);
-    if (userRelateUserGroups != null && userRelateUserGroups.size() > 0) {
-      List<String> row = userRelateUserGroups
-          .stream()
-          .map(UserRelateUserGroup::getUserRowId)
-          .collect(Collectors.toList());
-      Condition buildDone =
-          new ConditionBuilder(User.class)
-              .and().in("rowId", row).endAnd().buildDone();
-      PageResult<User> users =
-          userService.selectPage(buildDone, orders, pageNum, pageSize);
-      if (users != null && users.getResult().size() > 0) {
-        platResult = successData(QUERY_SUCCESS, users);
-      } else {
-        platResult = fail(QUERY_FAIL);
-      }
-    } else {
-      platResult = fail(QUERY_FAIL);
+    LinkedList<Order> orders = dataSort(User.class, order == null ? "" : order);
+    if (isValid(userGroupRowId)) {
+      ServerResult serverResult = userGroupService.queryUserGroupUser(userGroupRowId, pageNum, pageSize, orders);
+      platResult= result(serverResult);
+    }else{
+      platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
     return platResult;
   }
@@ -276,25 +258,10 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/addUserGroupUser")
   public PlatResult addUserGroupUser(@RequestParam("userRowIds") List<String> userRowIds, String userGroupRowId) {
-    PlatResult platResult = null;
-    Map<String, Object> map = new HashMap<>();
-    UserRelateUserGroup userGroup;
+    PlatResult platResult ;
     if (isValid(userRowIds) && isValid(userGroupRowId.trim())) {
-      for (String user : userRowIds) {
-        map.put("userGroupRowId", userGroupRowId);
-        map.put("userRowId", user);
-        userGroup = new UserRelateUserGroup().buildCreateInfo().fromMap(map);
-        if (isValid(userGroup)) {
-          int insert = userGroup.insert();
-          if (insert != -1) {
-            platResult = successData(NEW_ADD_SUCCESS, userGroup);
-          } else {
-            platResult = fail(NEW_ADD_FAIL);
-          }
-        } else {
-          platResult = fail(NEW_ADD_FAIL);
-        }
-      }
+      ServerResult serverResult = userGroupService.addUserGroupUser(userRowIds, userGroupRowId);
+      platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
     }

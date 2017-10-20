@@ -9,12 +9,12 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.SysConfigService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +31,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/sysConfig")
 public class SysConfigController extends BaseController {
 
-  @Autowired
-  SysConfigService sysConfigService;
+  @Resource
+  private SysConfigService sysConfigService;
 
   protected List<String> blankSelectFields() {
     return Arrays.asList("confKey", "confValue");
