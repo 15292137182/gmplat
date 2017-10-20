@@ -8,36 +8,11 @@
         html{
             overflow: hidden;
         }
-        .el-input {
-            width: 300px;
-        }
         .el-icon-delete{
             color: white;
         }
-        #topInput .el-input__inner{
-            width:200px;
-            height:30px;
-        }
-        #topInput .el-textarea__inner{
-            width:400px;
-        }
-        .spanPosition{
-            position: absolute;
-            top:-12px;
-            left:20px;
-            background: white;
-            font-weight:bold;
-            font-size: 15px;
-        }
-        #rightBottom .el-button{
-            position: absolute;
-            left: 110px;
-            top: -15px;
-            border: none;
-            background: white;
-        }
-        #rightBottom .el-icon-check{
-            color: red;
+        .el-select{
+            width: 100px;
         }
     </style>
 </head>
@@ -51,12 +26,12 @@
     </el-row>
 </div>
 <div class="allBorder">
-    <el-col :span="4" id="left" style="">
-        <div class="allBorder" id="allBorderHeight" style="height:500px; border:none">
+    <el-col :span="2" id="left">
+        <div class="allBorder" id="allBorderHeight" style="height:500px; border:none;margin-left: -50px;">
             <el-row>
                 <el-col>
-                    <div style="padding:0 20px">
-                        <el-col style="padding:10px 5px">
+                    <div style="padding: 10px 0 10px 20px;">
+                        <el-col style="padding:10px 0">
                             <base-tree :initial="treeData" ref="org" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                         </el-col>
                     </div>
@@ -65,37 +40,52 @@
         </div>
     </el-col>
 
-    <el-col :span="20" id="rightBottom" style="margin-top:20px;">
-        <div class="allBorder" style="border:1px solid #bccdc5">
+    <el-col :span="22" id="rightBottom" style="margin-top:20px;padding-left: 25px;">
+        <div class="allBorder" style="border: none">
             <el-row>
                 <el-col>
-                    <div>
-                        <span class="spanPosition">详细信息</span>
-                        <el-button size="small" icon="check" type="primary" :disabled="disabled" @click="btnRefresh"></el-button>
-                    </div>
-                    <div style="padding:30px 20px">
+                    <div style="">
                         <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                             <el-tab-pane label="权限信息" name="first">
-                                <template>
-                                    <el-table ref="myData"
-                                              :data="tableData"
-                                              @row-click="firstClick" border style="width: 100%"
-                                              :highlight-current-row="true"
-                                              :height="leftHeight"
-                                              v-loading="loading"
-                                              element-loading-text="加载中">
-                                        <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="权限编号" width="">
-                                        </el-table-column>
-                                        <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="权限名称" width="250">
-                                        </el-table-column>
-                                        <el-table-column show-overflow-tooltip sortable="custom" prop="permissionType" label="权限类型" width="">
-                                        </el-table-column>
-                                        <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="250">
-                                        </el-table-column>
-                                        <el-table-column show-overflow-tooltip sortable="custom" prop="remarks" label="备注" width="250">
-                                        </el-table-column>
-                                    </el-table>
-                                </template>
+                                <div>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-row style="margin-bottom: 10px">
+                                                <el-col :span="8">
+                                                    <div>
+                                                        <el-input placeholder="请输入内容" v-model="searchInput">
+                                                            <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                                                <el-option label="编号" value="permissionId"></el-option>
+                                                                <el-option label="名称" value="permissionName"></el-option>
+                                                            </el-select>
+                                                            <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                                                        </el-input>
+                                                    </div>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-table ref="myData"
+                                                          :data="tableData"
+                                                          @row-click="firstClick" border style="width: 100%"
+                                                          :highlight-current-row="true"
+                                                          :height="leftHeight"
+                                                          v-loading="loading"
+                                                          element-loading-text="加载中">
+                                                    <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="权限编号" width="">
+                                                    </el-table-column>
+                                                    <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="权限名称" width="250">
+                                                    </el-table-column>
+                                                    <el-table-column show-overflow-tooltip sortable="custom" prop="permissionType" label="权限类型" width="">
+                                                    </el-table-column>
+                                                    <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="250">
+                                                    </el-table-column>
+                                                    <el-table-column show-overflow-tooltip sortable="custom" prop="remarks" label="备注" width="250">
+                                                    </el-table-column>
+                                                </el-table>
+                                            </el-row>
+                                        </el-col>
+                                    </el-row>
+                                </div>
                                 <el-row type="flex" justify="end" style="padding-top:10px" class="block">
                                     <el-pagination
                                             @size-change="handleSizeChange"
@@ -120,37 +110,57 @@
 </div>
 
 <template id="tempBlock">
-    <el-col  id="basRightTop">
-        <el-table ref="myData"
-                  :data="tableData"
-                  @row-click="twoClick" border style="width: 100%"
-                  :highlight-current-row="true"
-                  :height="leftHeight"
-                  v-loading="loading"
-                  element-loading-text="加载中">
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="角色编号" width="250">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="角色名称" width="250">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleType" label="角色类别" width="">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="remarks" label="备注" width="">
-            </el-table-column>
-        </el-table>
-        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="pageNum"
-                    :page-sizes="[5,10,20]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="allDate">
-            </el-pagination>
-        </el-row>
-    </el-col>
+    <el-row>
+        <el-col :span="24">
+            <el-row style="margin-bottom: 10px">
+                <el-col :span="8">
+                    <div>
+                        <el-input placeholder="请输入内容" v-model="searchInput">
+                            <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                <el-option label="编号" value="roleId"></el-option>
+                                <el-option label="名称" value="roleName"></el-option>
+                                <el-option label="类型" value="roleType"></el-option>
+                            </el-select>
+                            <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                        </el-input>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col  id="basRightTop">
+                    <el-table ref="myData"
+                              :data="tableData"
+                              @row-click="twoClick" border style="width: 100%"
+                              :highlight-current-row="true"
+                              :height="leftHeight"
+                              v-loading="loading"
+                              element-loading-text="加载中">
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="角色编号" width="250">
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="角色名称" width="250">
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="roleType" label="角色类别" width="">
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip sortable="custom" prop="remarks" label="备注" width="">
+                        </el-table-column>
+                    </el-table>
+                    <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="pageNum"
+                                :page-sizes="[5,10,20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="allDate">
+                        </el-pagination>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </el-col>
+    </el-row>
 </template>
 
 <script src="permissions-information.js"></script>

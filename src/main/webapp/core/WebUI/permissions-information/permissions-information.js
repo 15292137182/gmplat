@@ -11,11 +11,14 @@ var basRight;
 //权限信息查询接口
 var roleInformation = serverPath + "/permission/queryPage";
 
+//权限指定字段查询接口
+var selUrl = serverPath + "/permission/queryTypePermission";
+
 //查看权限类型下的权限信息
 var permissionsInformation = serverPath + "/permission/queryTypePermission";
 
 //查看权限类型下的角色信息
-var personnelInformationInterface = serverPath + "/role/queryUsers";
+var personnelInformationInterface = serverPath + "/permission/queryRole";
 
 //角色编辑接口
 var modify = serverPath + "/role/modify";
@@ -104,10 +107,12 @@ gmp_onload=function(){
             getNodes(data) {
                 console.log(data);
                 this.rowId=data.rowId;
+                rightBottom.permissionType = data.permissionType;
                 basTop.disabled = false;
                 rightBottom.disabled = false;
                 // basTop.orgDeleteData = false;
                 basRightTop.PersonnelInformation(data.permissionType);
+                basRightTop.roleInformation(data.rowId);
             },
             //复选框选中得到得值
             getChecked(data) {
@@ -182,9 +187,22 @@ gmp_onload=function(){
         el:'#rightBottom',
         data:getData.dataObj({
             activeName:'first',
-            disabled:true
+            disabled:true,
+            searchInput:"",
+            select:"",
+            permissionType:"",
         }),
         methods:{
+            //查询框点击
+            searchClick(){
+                if(this.select != ""){
+                    var param = {};
+                    param[this.select] = this.searchInput;
+                    basRightTop.PersonnelInformation(this.permissionType,1,null,param);
+                }else{
+                    basRightTop.PersonnelInformation(this.permissionType,1,this.select,null);
+                }
+            },
             //tab页点击交换
             handleClick(tablePageName){
 
@@ -210,10 +228,6 @@ gmp_onload=function(){
                     console.log(res);
                 })
             },
-            //刷新按钮
-            btnRefresh(){
-                basRightTop.PersonnelInformation(left.rowId);
-            }
         },
         created(){
             $(document).ready(function () {
@@ -229,7 +243,10 @@ gmp_onload=function(){
     basRightTop = new Vue({
         el:"#basRightTop",
         template:'#tempBlock',
-        data:getData.dataObj({}),
+        data:getData.dataObj({
+            searchInput:"",
+            select:"",
+        }),
         methods:{
             //点击行
             twoClick(){
@@ -263,21 +280,75 @@ gmp_onload=function(){
                 this.pageNum = val;
                 this.PersonnelInformation(right.rowId,val);
             },
-            //人员信息查询
-            PersonnelInformation(permissionType,numberPage){
+            //权限信息查询
+            PersonnelInformation(permissionType,numberPage,search,param){
                 var page = 1;
+                var data = null;
                 if(numberPage){
                     page = numberPage;
                 }
                 var type = permissionType;
-                console.log(type);
-                var data = {
-                    "permissionType":type
+                if(search != null){
+                    data = {
+                        "permissionType":type,
+                        "search":search,
+                    }
+                }else{
+                    data = {
+                        "permissionType":type
+                    }
+                }
+                if(param != null){
+                    var strParam = JSON.stringify(param);
+                    data = {
+                        "permissionType":type,
+                        "param":strParam,
+                    }
+                }else{
+                    data = {
+                        "permissionType":type
+                    }
                 }
                 querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){
                     console.log(res);
                 })
             },
+            //角色信息查询
+            roleInformation(rowId,numberPage,search,param){
+                var page = 1;
+                var data = {};
+                if(numberPage){
+                    page = numberPage;
+                }
+                if(search != null){
+                    data = {
+                        "rowId":rowId,
+                        "search":search
+                    }
+                }else{
+                    data = {
+                        "rowId":rowId
+                    }
+                }
+                if(param != null){
+                    var strParam = JSON.stringify(param);
+                    data = {
+                        "rowId":rowId,
+                        "param":strParam
+                    }
+                }else{
+                    data = {
+                        "rowId":rowId
+                    }
+                }
+                querySearch.getDataPage(personnelInformationInterface,data,basRightTop,page,function(res){
+                    console.log(res);
+                })
+            },
+            //角色信息查询按钮
+            searchClick(){
+                alert("in");
+            }
         },
         created(){
             $(document).ready(function () {
