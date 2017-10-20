@@ -77,7 +77,7 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
 //              moreBatis.getColumnByAlias(TemplateObjectPro.class, "templateObjRowId"), Operator.IN,
 //              templates)).execute();
       /***模板属性预备代码***/
-      objProps.stream().forEach(objProp -> {
+      objProps.forEach(objProp -> {
         final String columnRowId = (String) objProp.get("relateTableColumn");
         final Map<String, Object> column = columnMap.get(columnRowId);
         final String fieldName = (String) column.get("columnEname");
@@ -85,8 +85,9 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
         alias = alias != null ? alias : UtilsTool.underlineToCamel(fieldName, false);
         Field field = new Field(table, fieldName, alias);
         fields.add(field);
-        Integer isPkRaw = (Integer) column.get("isPk");
-        final boolean isPk = isPkRaw != null && isPkRaw == 1 ? true : false;
+//        Integer isPkRaw = (Integer) column.get("isPk");
+//        final boolean isPk = isPkRaw != null && isPkRaw == 1 ? true : false;
+        final Boolean isPk = (boolean) column.get("isPk");
         if (isPk) {
           pks.add(field);
         }
