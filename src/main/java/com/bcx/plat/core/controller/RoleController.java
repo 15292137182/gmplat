@@ -174,7 +174,21 @@ public class RoleController extends BaseController {
     ServerResult result = roleService.queryRolePermissionByRowId(rowId, pageNum, pageSize, order);
     return result(result);
   }
-
+  /**
+   * 根据角色信息查询用户组
+   *
+   * @param rowId    角色rowId
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
+   * @return PlatResult
+   */
+  @RequestMapping("/queryUserGroups")
+  public PlatResult queryUserGroups(String rowId, @RequestParam(defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                     @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
+    ServerResult result = roleService.queryRoleUserGroupByRowId(rowId, pageNum, pageSize, order);
+    return result(result);
+  }
   /**
    * 将权限添加到角色
    *

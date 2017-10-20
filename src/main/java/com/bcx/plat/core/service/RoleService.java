@@ -33,12 +33,15 @@ public class RoleService extends BaseService<Role> {
   private UserService userService;
   private BaseOrgService baseOrgService;
   private PermissionService permissionService;
+  private UserGroupService userGroupService;
 
   @Autowired
-  public RoleService(UserService userService, BaseOrgService baseOrgService, PermissionService permissionService) {
+  public RoleService(UserService userService, BaseOrgService baseOrgService, PermissionService permissionService,
+                     UserGroupService userGroupService) {
     this.userService = userService;
     this.baseOrgService = baseOrgService;
     this.permissionService = permissionService;
+    this.userGroupService = userGroupService;
   }
 
   private List<String> blankSelectFields() {
@@ -655,6 +658,37 @@ public class RoleService extends BaseService<Role> {
         return new ServerResult(permissionService.selectPageMap(permissionCondition, orders, pageNum, pageSize));
       }
       return successData(QUERY_SUCCESS, new ArrayList<>());//没有该角色相关的权限
+    }
+    return fail(QUERY_FAIL);
+  }
+
+  /**
+   * 根据角色查询用户组
+   *
+   * @param rowId    角色rowId
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序方式
+   * @return ServerResult
+   */
+  public ServerResult queryRoleUserGroupByRowId(String rowId, int pageNum, int pageSize, String order) {
+    if (isValid(rowId)) {
+      //从关联表中根据角色rowId查询用户组rowId
+      LinkedList<Order> orders = dataSort(UserGroup.class, order);
+      Condition condition = new ConditionBuilder(UserGroupRelateRole.class)
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
+      List<UserGroupRelateRole> relateRoles = new UserGroupRelateRole().selectSimple(condition);
+      if (null != relateRoles && !relateRoles.isEmpty()) {
+        List<String> userGroupRowIds = relateRoles.stream()
+            .map(UserGroupRelateRole::getRoleRowId)
+            .collect(Collectors.toList());
+        //根据用户组rowId查出用户组信息
+        Condition userGroupCondition = new ConditionBuilder(UserGroup.class)
+            .and().in("rowId", userGroupRowIds).endAnd()
+            .buildDone();
+        return new ServerResult(userGroupService.selectPageMap(userGroupCondition, orders, pageNum, pageSize));
+      }
+      return successData(QUERY_SUCCESS, new ArrayList<>());//没有该角色相关的用户组
     }
     return fail(QUERY_FAIL);
   }
