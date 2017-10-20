@@ -485,7 +485,6 @@ var querySearch = (function(){
             dataType:"json",
             xhrFields: {withCredentials: true},
             success:function(res){
-                console.log(res);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.data!=null){
@@ -510,49 +509,6 @@ var querySearch = (function(){
             }
         })
     }
-
-
-
-
-
-    //查询全部什么参数都不需要
-    var noParams = function(url,obj,callback){
-        $.ajax({
-            url:url,
-            type:"get",
-            data:{
-                pageSize:obj.pageSize,
-                pageNum:1
-            },
-            dataType:"json",
-            xhrFields: {withCredentials: true},
-            success:function(res){
-                obj.loading=false;
-                if(res.resp.respCode=="000"){
-                    if(res.resp.content.data!=null){
-                        console.log(res);
-                        dataConversion.conversion(obj,res.resp.content.data.result);
-                        obj.tableData = res.resp.content.data.result;//数据源
-                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
-                        obj.pageNum = res.resp.content.data.pageNum;//当前页
-                    }else{
-                        obj.tableData = [];
-                        obj.allDate = 0;
-                    }
-                }else{
-                    obj.tableData = [];
-                }
-                if(typeof callback =="function"){
-                    callback(res);
-                }
-            },
-            error:function(){
-                obj.loading=false;
-                // alert("错误")
-            }
-        })
-    }
-
 
 
     //不需要search 不跳回第一页
@@ -633,7 +589,6 @@ var querySearch = (function(){
     return {
         headSorts:headSorts,
         searchResourceFirst:searchResourceFirst,
-        noParams:noParams,
         searchResource:searchResource,
         jumpPage:jumpPage,
         getDataPage:getDataPage

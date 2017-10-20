@@ -33,39 +33,56 @@ var allDate=new Vue({
             console.log(allDate.userId)
         },
         handleSizeChange(val){
+            //每页几条
             this.pageSize=val;
+            //加载跳回第一页
+            this.searchMore();
         },
         handleCurrentChange(val){
             this.pageNum=val;
+            //加载 不跳回第一页
+            this.searchMore();
         },
         conformEvent(){
-            var data={
-                "url":serverPath + "/userGroup/addUserGroupUser",
-                "jsonData":{
-                    userRowIds:allDate.userId,
-                    userGroupRowId:left.rowId,
-                },
-                "obj":allDate,
-                "showMsg":true
-            };
-            gmpAjax.showAjax(data,function(res){
-                console.log(res);
-                //分页跳回到第一页
-                //basRight.searchRight();
-                ibcpLayer.Close(divIndex);
+            addObj.addOk(function() {
+                var data = {
+                    "url": serverPath + "/userGroup/addUserGroupUser",
+                    "jsonData": {
+                        userRowIds: allDate.userId,
+                        userGroupRowId: left.rowId,
+                    },
+                    "obj": allDate,
+                    "showMsg": true
+                };
+                gmpAjax.showAjax(data, function (res) {
+                    //刷新表
+                    rightBottom.searchMoreFirst();
+                    ibcpLayer.Close(divIndex);
+                })
             })
         },
         cancel(){
             ibcpLayer.Close(divIndex);
+        },
+        searchMoreFirst(){
+            //加载 跳回第一页
+            var headDate={
+                pageNum:1,
+                pageSize:this.pageSize,
+            }
+            querySearch.searchResourceFirst(searchMore,headDate,this,function(res){})
+        },
+        //不跳回第一页
+        searchMore(){
+            //加载 跳回第一页
+            var headDate={
+                pageNum:this.pageNum,
+                pageSize:this.pageSize,
+            }
+            querySearch.searchResource(searchMore,headDate,this,function(res){})
         }
     },
-    mounted(){
-        querySearch.noParams(searchMore,this,function(res){
-            //var data=res.resp.content.data;
-            //if(data!=null){
-                //默认选中行
-                //this.currentChange(this.tableData[0]);
-            //}
-        })
+    created(){
+     this.searchMoreFirst();
     }
 })

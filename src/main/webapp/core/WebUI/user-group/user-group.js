@@ -15,6 +15,8 @@ var addGroup=serverPath + "/userGroup/add";
 var modifyGroup=serverPath + "/userGroup/modify";
 //删除用户组
 var deleteGroup=serverPath + "/userGroup/logicDelete";
+//删除用户组下的人员
+var deleteGroupUser=serverPath + "/userGroup/deleteGroupUsers";
 //添加组人员
 //var addGroupUser=serverPath + "/userGroup/delete";
 
@@ -46,9 +48,7 @@ gmp_onload=function(){
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
-                        //分页跳回到第一页
-                        //console.log(this.$refs.leftTree);
-                        //basTop.$refs.leftTree.loadData();
+                        left.getNewDate();
                     })
                 })
             },
@@ -59,6 +59,21 @@ gmp_onload=function(){
 
                 });
             },
+            //删除组人员下的用户信息
+            deleteUser(){
+                deleteObj.del(function(){
+                    var data={
+                        "url":deleteGroupUser,
+                        "jsonData":{userGroupRowId:left.rowId,userRowIds:rightBottom.userId},
+                        "obj":basTop,
+                        "showMsg":true
+                    };
+                    gmpAjax.showAjax(data,function(res){
+                        //刷新表
+                        rightBottom.searchMoreFirst();
+                    })
+                })
+            }
         }
     });
 
@@ -95,14 +110,15 @@ gmp_onload=function(){
                     success:function(res){
                         var data=res.resp.content.data;
                         console.log(data);
+                        right.rowId=data.rowId;
                         right.groupName=data.groupName;
                         right.groupNumber=data.groupNumber;
-                        right.rowId=data.rowId;
                         right.config1.checked=data.belongSector;
                         right.belongSector=data.belongSector;//所属部门 为了提交
                         right.groupCategory=data.groupCategory;
                         right.desc=data.desc;
                         right.remarks=data.remarks;
+                        console.log(right.config1.checked);
                     },
                 })
                 rightBottom.searchMoreFirst();
@@ -133,7 +149,7 @@ gmp_onload=function(){
             },
             //刷新树
             getNewDate(){
-
+                left.$refs.groupTree.loadData();
             }
         },
     })
@@ -188,9 +204,7 @@ gmp_onload=function(){
                     "showMsg":true
                 };
                 gmpAjax.showAjax(data,function(res){
-                    console.log(res);
-                    //分页跳回到第一页
-                    //basRight.searchRight();
+                    left.getNewDate();
                 })
             },
             getNodes1(data, id, name) {
@@ -204,6 +218,7 @@ gmp_onload=function(){
             getChecked1(data, id, name, flag) {
 
             },
+
             //清除框的时候
             clear1(id, name) {
                 this.belongSector=id;
@@ -240,6 +255,21 @@ gmp_onload=function(){
             handleCurrentChange(val){
                 this.pageNum=val;
                 this.searchMore();
+            },
+            //选择复选框
+            selectRow(selection, row){
+                rightBottom.userId=[];//多选的用户ID组
+                $.each(selection,function(i,item){
+                    rightBottom.userId.push(item.rowId)
+
+                })
+            },
+            //复选框全选
+            selectAllRow(selection){
+                rightBottom.userId=[];//多选的用户ID组
+                $.each(selection,function(i,item){
+                    rightBottom.userId.push(item.rowId)
+                })
             },
             //查询跳回第一页
             searchMoreFirst(){

@@ -80,9 +80,12 @@ gmp_onload=function(){
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
-                        console.log(res);
                         //分页跳回到第一页
-                        //basLeft.searchLeft();
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        };
                     })
                 })
             },
@@ -97,8 +100,11 @@ gmp_onload=function(){
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页跳回到第一页
-                        console.log(res);
-                        //basLeft.searchLeft();
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                     })
                 })
             },
@@ -112,8 +118,11 @@ gmp_onload=function(){
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
-                        console.log(res);
-                        //basLeft.searchLeft();
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                     })
                 })
             },
@@ -127,8 +136,11 @@ gmp_onload=function(){
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
-                        //basLeft.searchLeft();
-                        console.log(res);
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                     })
                 })
             },
@@ -163,7 +175,7 @@ gmp_onload=function(){
         }),
         methods:{
             getNodes(data){
-                console.log(data);
+                //console.log(data);
                 this.rowId=data.rowId;
                 right.searchUser();
             },
@@ -174,7 +186,7 @@ gmp_onload=function(){
             //tab页点击交换
             handleClick(){
                 //判断点击的是第一还是第二
-                console.log(left.activeName)
+                //console.log(left.activeName)
             }
 
         },
@@ -225,6 +237,9 @@ gmp_onload=function(){
         }
     })
 
+
+
+
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
@@ -234,8 +249,82 @@ gmp_onload=function(){
         }),
         methods: {
             headSort(column){
-                //列头排序
-                // pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.pageNum,column,this);
+                if(left.activeName=='first'){
+                    if(this.select==''){//需要search
+                        var param={
+                            belongOrg:left.rowId
+                        }
+                        if(this.chooseState==''){//不需要状态
+                            var params=JSON.stringify(param)
+                        }else{//需要状态
+                            param["status"] = this.chooseState;
+                            var params=JSON.stringify(param)
+                        }
+                        var headDate={
+                            search:this.input,
+                            param:params,
+                            pageNum:this.pageNum,
+                            pageSize:this.pageSize,
+                            order:'',
+                        }
+                        querySearch.headSorts(searchMore,headDate,column,this);
+                    }else{  //不需要search
+                        var param={
+                            belongOrg:left.rowId
+                        }
+                        param[this.select] = this.input;
+                        if(this.chooseState==''){//不需要状态
+                            var params=JSON.stringify(param)
+                        }else{//需要状态
+                            param["status"] = this.chooseState;
+                            var params=JSON.stringify(param)
+                        }
+                        var headDate={
+                            param:params,
+                            pageNum:this.pageNum,
+                            pageSize:this.pageSize,
+                            order:'',
+                        }
+                        querySearch.headSorts(searchMore,headDate,column,this);
+                    }
+                }else if(left.activeName=='second'){
+                        if(this.select==''){//需要search
+                            var param={};
+                            if(this.chooseState==''){//不需要状态
+                                params='';
+                            }else{//需要状态
+                                param["status"] = this.chooseState;
+                                var params=JSON.stringify(param)
+                            }
+                            var headDate={
+                                rowId:leftBottom.userRowId,
+                                search:this.input,
+                                param:params,
+                                pageNum:this.pageNum,
+                                pageSize:this.pageSize,
+                                order:'',
+                            }
+                            querySearch.headSorts(searchMore,headDate,column,this);
+                        }else{  //不需要search
+                            var param={};
+                            param[this.select] = this.input;
+                            if(this.chooseState==''){//不需要状态
+                                var params=JSON.stringify(param)
+                            }else{//需要状态
+                                param["status"] = this.chooseState;
+                                var params=JSON.stringify(param)
+                            }
+                            var headDate={
+                                rowId:leftBottom.userRowId,
+                                search:this.input,
+                                param:params,
+                                pageNum:this.pageNum,
+                                pageSize:this.pageSize,
+                                order:'',
+                            }
+                            querySearch.headSorts(searchMore,headDate,column,this);
+                        }
+                }
 
             },
             //点击这一行
@@ -264,10 +353,22 @@ gmp_onload=function(){
                 this.couldLook=true;
             },
             handleSizeChange(val){
+                //不跳回第一页
                 this.pageSize=val;
+                if(left.activeName=='first'){
+                    right.searchMore()
+                }else if(left.activeName=='second'){
+                    right.searchUserMore();
+                }
             },
             handleCurrentChange(val){
                 this.pageNum=val;
+                //不跳回第一页
+                if(left.activeName=='first'){
+                    right.searchMoreFirst()
+                }else if(left.activeName=='second'){
+                    right.searchUserMoreFirst();
+                }
             },
             searchUser(){
                 if(left.activeName=='first'){
@@ -276,7 +377,7 @@ gmp_onload=function(){
                     right.searchUserMore();
                 }
             },
-            //查询组织机构下的用户  不跳回第一页
+            //查询组织机构下的用户  跳回第一页
             searchMore(){
                 if(this.select==''){//需要search
                     var param={
@@ -288,10 +389,11 @@ gmp_onload=function(){
                         param["status"] = this.chooseState;
                         var params=JSON.stringify(param)
                     }
-
                     var headDate={
                         search:this.input,
                         param:params,
+                        pageNum:1,
+                        pageSize:this.pageSize,
                     }
 
                     querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
@@ -311,13 +413,15 @@ gmp_onload=function(){
 
                     var headDate={
                         param:params,
+                        pageNum:1,
+                        pageSize:this.pageSize,
                     }
                     querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
 
                     })
                 }
             },
-            //查找角色下的用户  不跳回第一页
+            //查找角色下的用户  跳回第一页
             searchUserMore(){
                 if(this.select==''){//需要search
                    var param={};
@@ -331,6 +435,8 @@ gmp_onload=function(){
                         rowId:leftBottom.userRowId,
                         search:this.input,
                         param:params,
+                        pageNum:1,
+                        pageSize:this.pageSize,
                     }
                     querySearch.searchResourceFirst(searchRole,headDate,this,function(res){
                         console.log(res);
@@ -353,6 +459,103 @@ gmp_onload=function(){
                         rowId:leftBottom.userRowId,
                         search:this.input,
                         param:params,
+                        pageNum:1,
+                        pageSize:this.pageSize,
+                    }
+                    querySearch.searchResourceFirst(searchRole,headDate,this,function(res){
+                        console.log(res);
+                        var data=res.resp.content.data;
+                        if(data!=null){
+                            //默认选中行
+                            //this.currentChange(this.tableData[0]);
+                        }
+                    })
+                }
+            },
+            //查询组织机构下的用户  不跳回第一页
+            searchMoreFirst(){
+                if(this.select==''){//需要search
+                    var param={
+                        belongOrg:left.rowId
+                    }
+                    if(this.chooseState==''){//不需要状态
+                        var params=JSON.stringify(param)
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    var headDate={
+                        search:this.input,
+                        param:params,
+                        pageNum:this.pageNum,
+                        pageSize:this.pageSize,
+                    }
+
+                    querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
+
+                    })
+                }else{  //不需要search
+                    var param={
+                        belongOrg:left.rowId
+                    }
+                    param[this.select] = this.input;
+                    if(this.chooseState==''){//不需要状态
+                        var params=JSON.stringify(param)
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+
+                    var headDate={
+                        param:params,
+                        pageNum:1,
+                        pageSize:this.pageSize,
+                    }
+                    querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
+
+                    })
+                }
+            },
+            //查找角色下的用户  不跳回第一页
+            searchUserMoreFirst(){
+                if(this.select==''){//需要search
+                    var param={};
+                    if(this.chooseState==''){//不需要状态
+                        params='';
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    var headDate={
+                        rowId:leftBottom.userRowId,
+                        search:this.input,
+                        param:params,
+                        pageNum:this.pageNum,
+                        pageSize:this.pageSize,
+                    }
+                    querySearch.searchResourceFirst(searchRole,headDate,this,function(res){
+                        console.log(res);
+                        var data=res.resp.content.data;
+                        if(data!=null){
+                            //默认选中行
+                            //this.currentChange(this.tableData[0]);
+                        }
+                    })
+                }else{  //不需要search
+                    var param={};
+                    param[this.select] = this.input;
+                    if(this.chooseState==''){//不需要状态
+                        var params=JSON.stringify(param)
+                    }else{//需要状态
+                        param["status"] = this.chooseState;
+                        var params=JSON.stringify(param)
+                    }
+                    var headDate={
+                        rowId:leftBottom.userRowId,
+                        search:this.input,
+                        param:params,
+                        pageNum:1,
+                        pageSize:this.pageSize,
                     }
                     querySearch.searchResourceFirst(searchRole,headDate,this,function(res){
                         console.log(res);
@@ -385,6 +588,7 @@ gmp_onload=function(){
                         //编辑拿到的数据
                         var data=res.data[0];
                         console.log(data)
+                        right.userowId=data.rowId;//用户的ID号码
                         useAdd.id=data.id;//工号
                         useAdd.name=data.name;//姓名
                         useAdd.nickname=data.nickname;//昵称
@@ -416,7 +620,11 @@ gmp_onload=function(){
                     };
                     gmpAjax.showAjax(data,function(res){
                         //分页跳回到第一页
-                        //basLeft.searchLeft();
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                     })
                 })
             },
@@ -429,8 +637,11 @@ gmp_onload=function(){
                         "obj":basTop
                     };
                     gmpAjax.showAjax(data,function(res){
-                        //basLeft.searchLeft();
-                        console.log(res);
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                     })
                 })
             },
@@ -443,8 +654,11 @@ gmp_onload=function(){
                         "obj":basTop
                     };
                     gmpAjax.showAjax(data,function(res){
-                        //basLeft.searchLeft();
-                        console.log(res);
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                     })
                 })
             }

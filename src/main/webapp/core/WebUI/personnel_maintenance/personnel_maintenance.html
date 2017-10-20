@@ -87,7 +87,7 @@
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                         <el-tab-pane label="组织机构查看" name="first">
                             <div style="padding:5px 20px">
-                                <base-tree :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                                <base-tree ref="organsizeTree" :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
                             </div>
                         </el-tab-pane>
                         <el-tab-pane label=" 角色查看" name="second">
@@ -254,7 +254,7 @@
 <template id="tempBlock">
     <el-col id="basRightTop">
         <div style="padding:20px 20px">
-            <base-tree :initial="config1" @click-node="getNodes1" @checked-node="getChecked1"></base-tree>
+            <base-tree ref="roleTree" :initial="config1" @click-node="getNodes1" @checked-node="getChecked1"></base-tree>
         </div>
     </el-col>
 </template>

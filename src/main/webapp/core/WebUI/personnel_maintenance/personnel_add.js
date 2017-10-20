@@ -101,17 +101,23 @@ var useAdd = new Vue({
                     };
                     gmpAjax.showAjax(data,function(res){
                         console.log(res);
-                        //分页跳回到第一页
-                        //basRight.searchRight();
+                        //刷新树节点
+                        if(left.activeName=='first'){
+                            left.$refs.organsizeTree.loadData();
+                        }else if(left.activeName=='second'){
+                            leftBottom.$refs.roleTree.loadData();
+                        }
                         ibcpLayer.Close(divIndex);
                     })
                 })
             }
             else if(operate==2){
                 editObj.editOk(function(){
+                    console.log(right.userowId)
                     var data={
                         "url":serverPath + "/user/modify",
                         "jsonData":{
+                            rowId:right.userowId,
                             id:useAdd.id,//工号
                             name:useAdd.name,//姓名
                             nickname:useAdd.nickname,//昵称
@@ -131,9 +137,12 @@ var useAdd = new Vue({
                         "showMsg":true
                     };
                     gmpAjax.showAjax(data,function(res){
-                        console.log(res);
-                        //分页跳回到第一页
-                        //basRight.searchRight();
+                        //刷新这个节点 跳回第一页
+                        if(left.activeName=='first'){
+                            right.searchMore()
+                        }else if(left.activeName=='second'){
+                            right.searchUserMore();
+                        }
                         ibcpLayer.Close(divIndex);
                     })
                 });
@@ -144,9 +153,7 @@ var useAdd = new Vue({
         },
     },
     updated(){
-        //useAdd.config.checked=[1];
-//console.log(useAdd.config.checked)
-//      console.log(useAdd.config.checked)
+
     }
 
 })
