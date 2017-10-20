@@ -419,9 +419,9 @@ public class RoleService extends BaseService<Role> {
     ServerResult serverResult;
     int delete = new UserGroupRelateRole().delete(condition);
     if (delete == -1) {
-      serverResult = success(DELETE_SUCCESS);
+      serverResult = fail(DELETE_FAIL);
     } else {
-      serverResult = success(DELETE_FAIL);
+      serverResult = success(DELETE_SUCCESS);
     }
     return serverResult;
   }

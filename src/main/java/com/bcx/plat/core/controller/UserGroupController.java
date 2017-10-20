@@ -250,7 +250,7 @@ public class UserGroupController extends BaseController {
   }
 
   /**
-   * 给用户组下添加用户
+   * 给用户组下添加用户或删除用户
    *
    * @param userGroupRowId 用户组rowId
    * @param userRowIds      用户rowId

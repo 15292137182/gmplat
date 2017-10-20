@@ -60,7 +60,7 @@ public class PageController extends BaseController {
   public PlatResult addPage(@RequestParam Map<String, Object> param) {
     String pageNumber = String.valueOf(param.get("pageNumber")).trim();
     param.put("pageNumber", pageNumber);
-    if (!"".equals(pageNumber)) {
+    if (!"null".equals(pageNumber)) {
       Condition condition = new ConditionBuilder(Page.class).and()
           .equal("pageNumber", pageNumber)
           .endAnd().buildDone();
@@ -68,10 +68,10 @@ public class PageController extends BaseController {
       if (select.size() == 0) {
         Page page = new Page().buildCreateInfo().fromMap(param);
         int insert = page.insert();
-        if (insert != -1) {
-          return successData(NEW_ADD_SUCCESS, page);
-        } else {
+        if (insert == -1) {
           return fail(NEW_ADD_FAIL);
+        } else {
+          return successData(NEW_ADD_SUCCESS, page);
         }
       } else {
         return fail(Message.DATA_CANNOT_BE_DUPLICATED);
@@ -92,10 +92,10 @@ public class PageController extends BaseController {
     if (UtilsTool.isValid(param.get("rowId"))) {
       Page page = new Page().buildModifyInfo().fromMap(param);
       int update = page.updateById();
-      if (update != -1) {
-        return successData(UPDATE_SUCCESS, page);
-      } else {
+      if (update == -1) {
         return fail(UPDATE_FAIL);
+      } else {
+        return successData(UPDATE_SUCCESS, page);
       }
     } else {
       return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);

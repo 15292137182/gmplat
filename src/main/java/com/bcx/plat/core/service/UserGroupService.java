@@ -11,6 +11,7 @@ import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
 import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
+import static com.bcx.plat.core.constants.Message.OPERATOR_FAIL;
 import static com.bcx.plat.core.constants.Message.QUERY_FAIL;
 import static com.bcx.plat.core.constants.Message.QUERY_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
@@ -91,7 +93,7 @@ public class UserGroupService extends BaseService<UserGroup> {
 
 
   /**
-   * 给用户组下添加用户
+   * 给用户组下添加用户或删除用户
    *
    * @param userGroupRowId 用户组rowId
    * @param userRowIds     用户rowId
@@ -100,11 +102,15 @@ public class UserGroupService extends BaseService<UserGroup> {
   public ServerResult addUserGroupUser(List<String> userRowIds, String userGroupRowId) {
     ServerResult serverResult = null;
     Map<String, Object> map = new HashMap<>();
-    UserRelateUserGroup userGroup;
+    Condition condition = new ConditionBuilder(UserRelateUserGroup.class).and().equal("userGroupRowId",userGroupRowId).endAnd().buildDone();
+    int delete = new UserRelateUserGroup().delete(condition);
+    if (-1 ==delete) {
+      serverResult =fail(OPERATOR_FAIL);
+    }
     for (String user : userRowIds) {
       map.put("userGroupRowId", userGroupRowId);
       map.put("userRowId", user);
-      userGroup = new UserRelateUserGroup().buildCreateInfo().fromMap(map);
+      UserRelateUserGroup userGroup = new UserRelateUserGroup().buildCreateInfo().fromMap(map);
       if (isValid(userGroup)) {
         int insert = userGroup.insert();
         if (insert != -1) {
