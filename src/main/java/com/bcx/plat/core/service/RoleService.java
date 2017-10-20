@@ -267,6 +267,39 @@ public class RoleService extends BaseService<Role> {
   }
 
   /**
+   * 添加组织机构到角色
+   *
+   * @param roleRowId 角色主键
+   * @param orgRowIds
+   * @return
+   */
+  public ServerResult addRoleOrg(String roleRowId, String[] orgRowIds) {
+    if (null != roleRowId && null != orgRowIds && orgRowIds.length != 0) {
+      // 选择当前已被添加的权限
+      Condition condition = new ConditionBuilder(BaseOrgRelateRole.class)
+          .and().equal("roleRowId", roleRowId).in("baseOrgRowId", Arrays.asList(orgRowIds)).endAnd()
+          .buildDone();
+      List<BaseOrgRelateRole> baseOrgRelateRoles =
+          new BaseOrgRelateRole().selectSimple(condition);
+      Set<String> strings = new HashSet<>();
+      strings.addAll(Arrays.asList(orgRowIds));
+      if (!baseOrgRelateRoles.isEmpty()) {
+        baseOrgRelateRoles.forEach(baseOrgRelateRole -> strings.remove(baseOrgRelateRole.getBaseOrgRowId()));
+      }
+      if (!strings.isEmpty()) {
+        strings.forEach(s -> {
+          BaseOrgRelateRole baseOrgRelateRole = new BaseOrgRelateRole();
+          baseOrgRelateRole.setRoleRowId(roleRowId);
+          baseOrgRelateRole.setBaseOrgRowId(s);
+          baseOrgRelateRole.buildCreateInfo().insert();
+        });
+      }
+      return success(Message.NEW_ADD_SUCCESS);
+    }
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
    * 删除角色下的权限信息
    *
    * @param roleRowId        角色主键

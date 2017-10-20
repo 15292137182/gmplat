@@ -146,6 +146,18 @@ public class RoleController extends BaseController {
     return result(success);
   }
 
+  /**
+   * 将组织机构添加到角色
+   *
+   * @param roleRowId 角色主键
+   * @param orgRowIds 组织机构主键
+   * @return
+   */
+  @PostMapping("/addOrg")
+  public PlatResult addRoleOrg(String roleRowId, String[] orgRowIds) {
+    ServerResult success = roleService.addRoleOrg(roleRowId, orgRowIds);
+    return result(success);
+  }
 
   /**
    * 删除角色下的权限信息

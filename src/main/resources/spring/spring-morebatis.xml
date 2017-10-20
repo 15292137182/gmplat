@@ -88,9 +88,9 @@
                       p:pks="#{'rowId'}"/>
 
                 <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
-                      <!--p:entityClass="com.bcx.plat.core.entity.Page"-->
-                      <!--p:tableName="t_page"-->
-                      <!--p:pks="#{'rowId'}"/>-->
+                <!--p:entityClass="com.bcx.plat.core.entity.Page"-->
+                <!--p:tableName="t_page"-->
+                <!--p:pks="#{'rowId'}"/>-->
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
@@ -114,9 +114,9 @@
                       p:pks="#{'rowId'}"/>
 
                 <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
-                      <!--p:entityClass="com.bcx.plat.core.entity.Button"-->
-                      <!--p:tableName="t_button"-->
-                      <!--p:pks="#{'rowId'}"/>-->
+                <!--p:entityClass="com.bcx.plat.core.entity.Button"-->
+                <!--p:tableName="t_button"-->
+                <!--p:pks="#{'rowId'}"/>-->
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.FuncOperat"
@@ -130,6 +130,10 @@
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserRelateRole"
                       p:tableName="t_user_relate_role"
+                      p:pks="#{'rowId'}"/>
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.BaseOrgRelateRole"
+                      p:tableName="t_base_org_relate_role"
                       p:pks="#{'rowId'}"/>
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserGroupRelateRole"
