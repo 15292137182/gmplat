@@ -41,7 +41,7 @@ gmp_onload=function(){
                 deleteObj.del(function(){
                     var data={
                         "url":deleteGroup,
-                        "jsonData":{rowId:right.rowId},
+                        "jsonData":{rowId:left.arr},
                         "obj":basTop,
                         "showMsg":true
                     };
@@ -78,7 +78,7 @@ gmp_onload=function(){
                 // 获取数据接口
                 url: serverPath + "/userGroup/queryPage"
             },
-            rowIds:[0],
+            arr:[],
         }),
         methods:{
             //点击左边的树得到数据
@@ -109,21 +109,44 @@ gmp_onload=function(){
                 rightBottom.searchMore();
             },
             //复选框选中得到得值
-            getChecked(data) {
-                //console.log(data);
-                var arr = this.rowIds;
-                for(var i=0;i<arr.length;i++){
-                    if(data.rowId != arr[i]){
-                        if(i==arr.length-1){
-                            arr.push(data.rowId);
-                        }
+            getChecked(data, id, allChecked, name, flag) {
+                // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
+
+                Array.prototype.indexOf = function(val) {
+                    for (var i = 0; i < this.length; i++) {
+                        if (this[i] == val) return i;
                     }
+                    return -1;
+                };
+                Array.prototype.remove = function(val) {
+                    var index = this.indexOf(val);
+                    if (index > -1) {
+                        this.splice(index, 1);
+                    }
+                };
+
+                if(flag==true){
+                    this.arr.push(data.rowId);
+                }else{
+                    this.arr.remove(data.rowId);
                 }
-                console.log(this.rowIds);
+                console.log(left.arr)
+            },
+            //getChecked(data,flag) {
+
+                //for(var i=0;i<arr.length;i++){
+                //    if(data.rowId != arr[i]){
+                //        if(i==arr.length-1){
+                //            arr.push(data.rowId);
+                //        }
+                //    }
+                //}
+                //console.log(this.rowIds);
+                //console.log(flag);
 
 
                 //console.log(left.arr);
-            }
+            //}
         },
     })
 
@@ -205,8 +228,27 @@ gmp_onload=function(){
 
         }),
         methods: {
-            headSort(){
+            headSort(column){
+                var data = {};
+                if(column.prop == null){
+                    //是否需要提示？？
+                    return;
+                }
+                if(column.order=="ascending"){
+                    data = {str:column.prop,num:1}
+                }else{
+                    data = {str:column.prop,num:0}
+                }
+                var datas = JSON.stringify(data);
 
+                var headDate={
+                    userGroupRowId:left.rowId,
+                    pageNum:this.pageNum,
+                    pageSize:this.pageSize,
+                    order:datas
+                }
+                //querySearch.headSort(searchGroupUser,left.rowId,this.pageSize,this.pageNum,column,this);
+                querySearch.headSorts(searchGroupUser,headDate,this);
             },
             //点击这一行
             currentChange(row, event, column){

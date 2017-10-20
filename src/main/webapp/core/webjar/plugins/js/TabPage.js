@@ -390,6 +390,99 @@ var queryData = (function(){
 //ZYM  精确模糊查询分开刷新table跳转到第一页调该方法
 //tsj 新增查询后不跳转第一页的方法
 var querySearch = (function(){
+
+    //列头排序
+    var headSort = function(url,userGroupRowId,pageSize,pageNum,column,obj,callback){
+        //column：el函数当前列信息，obj:当前vue实例对象（this）,callback:成功后的回调函数
+        var data = {};
+        if(column.prop == null){
+            //是否需要提示？？
+            return;
+        }
+        if(column.order=="ascending"){
+            data = {str:column.prop,num:1}
+        }else{
+            data = {str:column.prop,num:0}
+        }
+        var datas = JSON.stringify(data);
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{
+                userGroupRowId:userGroupRowId,
+                pageSize:pageSize,
+                pageNum:pageNum,
+                order:datas
+            },
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                obj.loading=false;
+                if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                    obj.pageNum = 1;//定位到第一页
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                // alert("错误111")
+            }
+        })
+    }
+
+    //列头排序
+    var headSorts = function(url,headDate,obj,callback){
+        //column：el函数当前列信息，obj:当前vue实例对象（this）,callback:成功后的回调函数
+        $.ajax({
+            url:url,
+            type:"get",
+            data:headDate,
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                obj.loading=false;
+                if(res.resp.respCode=="000"){
+                    if(res.resp.content.state==-1){
+                        obj.tableData = [];//数据源
+                        obj.allDate = 0;//总共多少条数据
+                        obj.pageNum = 1;//当前页
+                        return;
+                    }
+                    dataConversion.conversion(obj,res.resp.content.data.result);
+                    obj.tableData = res.resp.content.data.result;//数据源
+                    obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                    obj.pageNum = 1;//定位到第一页
+                }else{
+                    obj.tableData = [];
+                }
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                obj.loading=false;
+                // alert("错误111")
+            }
+        })
+    }
+
+
+
+
+
     //查询全部什么参数都不需要
     var noParams = function(url,obj,callback){
         $.ajax({
@@ -540,7 +633,6 @@ var querySearch = (function(){
             }
         })
     }
-
     //不需要search 不跳回第一页
     var jumpPage = function(url,params,obj,number,callback){
         $.ajax({
@@ -617,6 +709,8 @@ var querySearch = (function(){
         })
     }
     return {
+        headSort:headSort,
+        headSorts:headSorts,
         noParams:noParams,
         needSearch:needSearch,
         uneedSearch:uneedSearch,
