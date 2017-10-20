@@ -174,4 +174,5 @@ public class PermissionController extends BaseController {
     LinkedList<Order> orders = dataSort(Permission.class, order);
     return result(roleService.queryRoleContainsPermission(rowId, search, param, orders, pageNum, pageSize));
   }
+
 }
