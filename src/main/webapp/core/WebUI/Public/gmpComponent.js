@@ -621,7 +621,8 @@ Vue.component("base-tree", {
             if(callback) {
                 callback(this.currentCheckedNodes);
             }
-            console.log(this.treeData);
+            // 刷新树结构
+            this.getNode();
         }
     },
     template: `<div>
