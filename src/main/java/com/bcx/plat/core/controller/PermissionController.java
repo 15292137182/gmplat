@@ -1,5 +1,6 @@
 package com.bcx.plat.core.controller;
 
+import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.Permission;
@@ -7,6 +8,7 @@ import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.PermissionService;
+import com.bcx.plat.core.service.RoleService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -24,6 +26,7 @@ import java.util.Map;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.constants.Message.PRIMARY_KEY_CANNOT_BE_EMPTY;
 import static com.bcx.plat.core.utils.UtilsTool.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -102,6 +105,29 @@ public class PermissionController extends BaseController {
   }
 
   /**
+   * 根据权限类型查询
+   *
+   * @param permissionType 权限类型
+   * @param search         空白查询
+   * @param param          参数
+   * @param pageNum        页面号
+   * @param pageSize       页面大小
+   * @param order          排序
+   * @return 返回操作结果
+   */
+  @RequestMapping(value = "/queryTypePermission")
+  public PlatResult queryPermissionByType(String permissionType, String search, String param,
+                                          @RequestParam(defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                                          @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
+    LinkedList<Order> orders = dataSort(Permission.class, order);
+    if (isValid(permissionType)) {
+      return successData(Message.QUERY_SUCCESS,
+              permissionService.queryPermissionByType(permissionType, search, param, orders, pageNum, pageSize));
+    }
+    return fail(Message.INVALID_REQUEST);
+  }
+
+  /**
    * 修改菜单
    *
    * @param param 接受实体参数
@@ -125,5 +151,27 @@ public class PermissionController extends BaseController {
     } else {
       return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
+  }
+
+  @Resource
+  private RoleService roleService;
+
+  /**
+   * 查询包含权限的角色
+   *
+   * @param rowId    权限 rowId
+   * @param search   空白查询
+   * @param param    参数
+   * @param pageNum  页码
+   * @param pageSize 页面大小
+   * @param order    排序字段
+   * @return 返回操作结果
+   */
+  @RequestMapping(value = "/queryRole", method = {GET, POST})
+  public PlatResult queryRole(String rowId, String search, String param,
+                              @RequestParam(defaultValue = BaseConstants.PAGE_NUM) int pageNum,
+                              @RequestParam(defaultValue = BaseConstants.PAGE_SIZE) int pageSize, String order) {
+    LinkedList<Order> orders = dataSort(Permission.class, order);
+    return result(roleService.queryRoleContainsPermission(rowId, search, param, orders, pageNum, pageSize));
   }
 }

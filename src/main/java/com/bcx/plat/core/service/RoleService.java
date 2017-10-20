@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Message.*;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 角色业务层
@@ -505,6 +505,44 @@ public class RoleService extends BaseService<Role> {
       }
     }
     return fail(DELETE_FAIL);
+  }
+
+  /**
+   * 查询包含权限的角色
+   *
+   * @param permissionRowId 权限主键
+   * @return 返回操作结果
+   */
+  public ServerResult queryRoleContainsPermission(String permissionRowId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
+    if (isValid(permissionRowId)) {
+      Condition relateCond = new ConditionBuilder(RoleRelatePermission.class)
+              .and().equal("permissionRowId", permissionRowId).endAnd().buildDone();
+      List<RoleRelatePermission> roleRelatePermissions = new RoleRelatePermission().selectSimple(relateCond);
+      List<Role> roles = new ArrayList<>();
+
+      if (!roleRelatePermissions.isEmpty()) {
+        List<String> roleRowIds = new ArrayList<>();
+        roleRelatePermissions.forEach(roleRelatePermission -> roleRowIds.add(roleRelatePermission.getRoleRowId()));
+        Condition roleCond = new ConditionBuilder(Role.class)
+                .and().in("rowId", roleRowIds).endAnd().buildDone();
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(roleCond);
+
+        if (isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+          Map<String, Object> map = jsonToObj(param, Map.class);
+          if (null != map) {
+            conditions.add(convertMapToAndConditionSeparatedByLike(Permission.class, map));
+          }
+        }
+
+        if (isValid(search)) { // 如果没有param参数，则进行空格查询
+          conditions.add(createBlankQuery(new Role().toMap().keySet(), collectToSet(search)));
+        }
+
+        return successData(Message.QUERY_SUCCESS, selectPageMap(new And(conditions), orders, pageNum, pageSize));
+      }
+    }
+    return fail(Message.INVALID_REQUEST);
   }
 
 }
