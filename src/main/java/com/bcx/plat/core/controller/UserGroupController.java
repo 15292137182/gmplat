@@ -4,12 +4,12 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserGroup;
+import com.bcx.plat.core.entity.UserRelateUserGroup;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserGroupService;
-import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -112,11 +112,11 @@ public class UserGroupController extends BaseController {
    */
   @PostMapping("/logicDelete")
   public PlatResult deleteLogic(@RequestParam List<String> rowId) {
-    PlatResult platResult =null;
+    PlatResult platResult = null;
     Condition condition = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
-      for (UserGroup group : userGroups){
+      for (UserGroup group : userGroups) {
         group.getBaseTemplateBean().setDeleteFlag(TRUE_FLAG);
         int update = group.updateById();
         if (update != -1) {
@@ -139,17 +139,19 @@ public class UserGroupController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/physicsDelete")
-  public PlatResult deletePhysics(String rowId) {
+  public PlatResult deletePhysics(@RequestParam List<String> rowId) {
     PlatResult platResult;
-    Condition condition = new ConditionBuilder(UserGroup.class).and().equal("rowId", rowId).endAnd().buildDone();
-    List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
-      UserGroup userGroup = new UserGroup();
-      int del = userGroup.deleteById(rowId);
-      if (del != -1) {
-        platResult = successData(Message.DELETE_SUCCESS, userGroups);
-      } else {
+      Condition condition = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
+      List<UserGroup> userGroups = userGroupService.select(condition);
+      Condition groupRowId = new ConditionBuilder(UserRelateUserGroup.class).and().in("userGroupRowId", rowId).endAnd().buildDone();
+      int delete = new UserRelateUserGroup().delete(groupRowId);
+      Condition done = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
+      int deleteUserGroup = new UserGroup().delete(done);
+      if (deleteUserGroup == -1 && delete == -1) {
         platResult = fail(Message.DELETE_FAIL);
+      } else {
+        platResult = successData(Message.DELETE_SUCCESS, userGroups);
       }
     } else {
       platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
@@ -212,10 +214,11 @@ public class UserGroupController extends BaseController {
 
   /**
    * 根据用户组查询用户信息
+   *
    * @param userGroupRowId 用户组唯一标示
-   * @param pageNum 页码
-   * @param pageSize 一页显示条数
-   * @param order 排序 "{\"str\":\"rowId\", \"num\":1}"
+   * @param pageNum        页码
+   * @param pageSize       一页显示条数
+   * @param order          排序 "{\"str\":\"rowId\", \"num\":1}"
    * @return 用户信息
    */
   @GetMapping("/queryUserGroupUser")
@@ -225,8 +228,8 @@ public class UserGroupController extends BaseController {
     LinkedList<Order> orders = dataSort(User.class, order == null ? "" : order);
     if (isValid(userGroupRowId)) {
       ServerResult serverResult = userGroupService.queryUserGroupUser(userGroupRowId, pageNum, pageSize, orders);
-      platResult= result(serverResult);
-    }else{
+      platResult = result(serverResult);
+    } else {
       platResult = fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
     return platResult;
@@ -253,12 +256,12 @@ public class UserGroupController extends BaseController {
    * 给用户组下添加用户或删除用户
    *
    * @param userGroupRowId 用户组rowId
-   * @param userRowIds      用户rowId
+   * @param userRowIds     用户rowId
    * @return 新增信息
    */
   @PostMapping("/addUserGroupUser")
   public PlatResult addUserGroupUser(@RequestParam("userRowIds") List<String> userRowIds, String userGroupRowId) {
-    PlatResult platResult ;
+    PlatResult platResult;
     if (isValid(userRowIds) && isValid(userGroupRowId.trim())) {
       ServerResult serverResult = userGroupService.addUserGroupUser(userRowIds, userGroupRowId);
       platResult = result(serverResult);
@@ -268,4 +271,29 @@ public class UserGroupController extends BaseController {
     return platResult;
   }
 
+  /**
+   * 查询用户组下的用户信息,添加到用户组的数据不返回
+   *
+   * @param userGroupRowId 用户组rowId
+   * @param search         模糊搜索条件
+   * @param param          精确搜索条件
+   * @param pageNum        一页显示条数
+   * @param pageSize       页码
+   * @param order          排序
+   * @return platResult
+   * @Author wenTieHu
+   * @Date 2017/10/21
+   */
+  @GetMapping("/queryUserInfo")
+  public PlatResult queryUserInfo(String userGroupRowId, String search, String param, Integer pageNum, Integer pageSize, String order) {
+    PlatResult platResult;
+    LinkedList<Order> orders = dataSort(order);
+    if (isValid(userGroupRowId)) {
+      ServerResult serverResult = userGroupService.queryUserInfo(userGroupRowId, search, param, pageNum, pageSize, orders);
+      platResult = result(serverResult);
+    } else {
+      platResult = fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
+    }
+    return platResult;
+  }
 }
