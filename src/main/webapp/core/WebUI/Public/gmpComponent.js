@@ -729,7 +729,11 @@ Vue.component("select-tree", {
                 // 获取配置信息默认选择项
                 var _checked = [];
                 // 获取选中节点
-                _checked.push(val);
+                if(typeof val == "string") {
+                    _checked.push(val);
+                }else {
+                    _checked = val;
+                }
                 // 获取配置信息显示名称
                 var _name = that.initial.defaultProps.label;
                 var _key = that.initial.defaultProps.key;
