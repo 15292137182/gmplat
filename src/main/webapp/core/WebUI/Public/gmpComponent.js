@@ -420,7 +420,7 @@ Vue.component("base-tree", {
         }
         // 获取树结构参数
         if(this.initial.params) {
-            this.params = this.initial.params;
+            this.params = 'search=["' + this.initial.params + '"]';
         }else {
             this.params = "";
         }
@@ -589,14 +589,20 @@ Vue.component("base-tree", {
             // 调用接口获取树节点
             if(that.url != "") {
                 $.ajax({
-                    url:this.url,
-                    type:"get",
-                    data: self.params,
-                    dataType:"json",
-                    success:function(res) {
+                    url: this.url,
+                    type: "get",
+                    data: this.params,
+                    dataType: "json",
+                    success: function(res) {
                         if(res.resp.respCode == "000"){
                             if(res.resp.content.state == "1") {
                                 var _jsonObj = res.resp.content.data.result;
+                                // 专门查keySet的数据
+                                if(!_jsonObj) {
+                                    var newData = res.resp.content.data;
+                                    var resArr = JSON.parse(newData);
+                                    _jsonObj = resArr[that.initial.params];
+                                }
                                 // 节点数据赋值
                                 that.treeNodes = that.hierarchicalData(_jsonObj);
                                 // loading消失
@@ -610,7 +616,7 @@ Vue.component("base-tree", {
                             }
                         }
                     },
-                    error:function() {
+                    error: function() {
                         // loading消失
                         that.loading = false;
                         // 弹出错误信息
