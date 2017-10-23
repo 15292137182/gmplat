@@ -4,7 +4,9 @@ import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BaseOrg;
 import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.morebatis.builder.AndConditionSequenceBuilder;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.builder.OrConditionSequenceBuilder;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.FieldCondition;
@@ -46,20 +48,35 @@ public class UserService extends BaseService<User> {
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
     Condition condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or;
-    Map<String, Object> paramMap = UtilsTool.jsonToObj(param, Map.class);
-    String belongOrg = (String) paramMap.remove("belongOrg");
-    if (UtilsTool.isValid(belongOrg)) {
-      if (null == condition) {
-        condition = new ConditionBuilder(User.class).and().startWith("belongOrg", belongOrg).endAnd().buildDone();
-      } else {
-        condition = new And(new ConditionBuilder(User.class).and().startWith("belongOrg", belongOrg).endAnd().buildDone(), condition);
+    if (UtilsTool.isValid(param)) {
+      Map paramMap = UtilsTool.jsonToObj(param, Map.class);
+      assert paramMap != null;
+      //取出所属部门进行判断，支持单参数和多参数
+      Object belongOrg = paramMap.remove("belongOrg");
+      List<String> orgList = null;
+      if (null != belongOrg) {
+        if (belongOrg instanceof String) {
+          orgList = new ArrayList<>();
+          orgList.add(belongOrg.toString());
+        } else {
+          orgList = (List) belongOrg;
+        }
       }
-    }
-    if (!paramMap.isEmpty()) {//根据指定字段查询
-      if (null == condition) {
-        condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap);
-      } else {
-        condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap), condition);
+      if (UtilsTool.isValid(orgList)) {
+        OrConditionSequenceBuilder<AndConditionSequenceBuilder<ConditionBuilder>> halfCondition = new ConditionBuilder(User.class).and().or();
+        orgList.forEach(str -> halfCondition.startWith("belongOrg", str));
+        if (null == condition) {
+          condition = halfCondition.endOr().endAnd().buildDone();
+        } else {
+          condition = new And(halfCondition.endOr().endAnd().buildDone(), condition);
+        }
+      }
+      if (!paramMap.isEmpty()) {//根据指定字段查询
+        if (null == condition) {
+          condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap);
+        } else {
+          condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap), condition);
+        }
       }
     }
     condition = UtilsTool.addNotDeleteCondition(condition, User.class);
