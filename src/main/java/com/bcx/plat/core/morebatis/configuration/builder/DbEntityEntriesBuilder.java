@@ -14,10 +14,10 @@ import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.EntityEntry;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.UtilsTool;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import com.bcx.plat.core.entity.*; //这个导入不可以删除
 import java.util.stream.Collectors;
 
 public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
@@ -28,9 +28,9 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
 //    Condition condition = conditionBuilder.and()
 //        .notEqual("className", null).endAnd().buildDone();
     Condition condition = new FieldCondition("className", Operator.IS_NULL, null).not();
-    condition = new And(condition,new FieldCondition("className", Operator.EQUAL, "").not());
+    condition = new And(condition, new FieldCondition("className", Operator.EQUAL, "").not());
     List<Map<String, Object>> businessObjects = moreBatis.select(BusinessObject.class)
-        .where(condition).execute();
+            .where(condition).execute();
     List<String> tableRowIds = businessObjects.stream().map(map -> {
       return (String) map.get("relateTableRowId");
     }).collect(Collectors.toList());
@@ -38,34 +38,34 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
       return (String) map.get("rowId");
     }).collect(Collectors.toList());
     List<Map<String, Object>> tables = moreBatis.select(MaintDBTables.class)
-        .where(new FieldCondition("rowId", Operator.IN, tableRowIds)).execute();
+            .where(new FieldCondition("rowId", Operator.IN, tableRowIds)).execute();
     Map<String, Map<String, Object>> tablesMap = tables.stream().collect(Collectors.toMap(table -> {
       return (String) table.get("rowId");
     }, table -> {
       return table;
     }));
     List<Map<String, Object>> props = moreBatis.select(BusinessObjectPro.class)
-        .where(new FieldCondition("objRowId", Operator.IN, objRowIds)).execute();
+            .where(new FieldCondition("objRowId", Operator.IN, objRowIds)).execute();
     List<String> columnsRowId = props.stream().map(map -> {
       return (String) map.get("relateTableColumn");
     }).collect(Collectors.toList());
     List<Map<String, Object>> columns = moreBatis.select(DBTableColumn.class)
-        .where(new FieldCondition("rowId", Operator.IN, columnsRowId)).execute();
+            .where(new FieldCondition("rowId", Operator.IN, columnsRowId)).execute();
     Map<String, Map<String, Object>> columnMap = columns.stream().collect(Collectors.toMap(map -> {
       return (String) map.get("rowId");
     }, map -> {
       return map;
     }));
     Map<String, List<Map<String, Object>>> propsMap = props.stream()
-        .collect(Collectors.groupingBy(map -> {
-          return (String) map.get("objRowId");
-        }));
+            .collect(Collectors.groupingBy(map -> {
+              return (String) map.get("objRowId");
+            }));
     List<EntityEntry> entries = businessObjects.stream().map(businessObject -> {
       final String objRowId = (String) businessObject.get("rowId");
       List<Map<String, Object>> objProps = propsMap.get(objRowId);
       final Map<String, Object> tableMap = tablesMap.get(businessObject.get("relateTableRowId"));
       final Table table = new Table((String) tableMap.get("tableSchema"),
-          (String) tableMap.get("tableEname"));
+              (String) tableMap.get("tableEname"));
       final List<Field> fields = new LinkedList<>();
       final List<Field> pks = new LinkedList<>();
       /***模板属性预备代码***/
@@ -87,15 +87,13 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
         fields.add(field);
 //        Integer isPkRaw = (Integer) column.get("isPk");
 //        final boolean isPk = isPkRaw != null && isPkRaw == 1 ? true : false;
-        Boolean isPk=false;
+        Boolean isPk = false;
         Object pk = column.get("isPk");
-        if (pk!=null){
-          if (pk instanceof Integer) {
-            isPk=1==(Integer) pk;
-          }else if (pk instanceof Long) {
-            isPk=1==(Long) pk;
-          }else if (pk instanceof Boolean){
-            isPk=(Boolean)pk;
+        if (pk != null) {
+          if (pk instanceof Number) {
+            isPk = 1 == (Integer) pk;
+          } else if (pk instanceof Boolean) {
+            isPk = (Boolean) pk;
           }
         }
         if (isPk) {
@@ -104,7 +102,7 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
       });
       try {
         return new EntityEntry((Class<? extends BeanInterface>) Class
-            .forName((String) businessObject.get("className")), table, fields, pks);
+                .forName((String) businessObject.get("className")), table, fields, pks);
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
         return null;

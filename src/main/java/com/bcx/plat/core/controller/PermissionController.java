@@ -49,7 +49,7 @@ public class PermissionController extends BaseController {
    * @return 返回操作信息
    */
   @RequestMapping(value = "/add", method = POST)
-  public PlatResult insertOrg(@RequestParam Map<String, Object> entity) {
+  public PlatResult insertPermission(@RequestParam Map<String, Object> entity) {
     return PlatResult.success(permissionService.insertPermissionMap(entity));
   }
 
@@ -68,7 +68,7 @@ public class PermissionController extends BaseController {
    * @return 空白查询的字段
    */
   protected List<String> blankSelectFields() {
-    return Arrays.asList("permission_id", "permission_name", "permission_type", "desc", "remarks");
+    return Arrays.asList("permissionId", "permissionName", "permissionType", "desc", "remarks");
   }
 
   /**
