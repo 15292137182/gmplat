@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息维护页面</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .label {
+            text-align: right;
+            padding-right: 14px;
+            color: #48576a;
+            line-height: 36px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <el-row id="per_info" class="allBorder" style="margin-top: 10px;" v-cloak>
+        <el-form :model="personalRule" :rules="rules" ref="personalForm" style="padding: 8px;">
+            <el-col :span="24">
+                <el-col :span="12">
+                    <el-form-item label="访问超时设置：" prop="overtime">
+                        <single-selection :initial="overtime" ref="overtime"></single-selection>
+                        <span class="label">后无操作需要重新登录</span>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="密码定期更改：" prop="regular">
+                        <single-selection :initial="regular"></single-selection>
+                        <span class="label">超过期限后 &nbsp;&nbsp;需要更换密码才能正常使用</span>
+                    </el-form-item>
+                </el-col>
+            </el-col>
+            <el-col :span="24">
+                <el-col :span="12">
+                    <el-form-item label="锁定账号登录：" prop="locking">
+                        <span class="label" style="padding-right: 0;">连续</span>
+                        <single-selection :initial="locking"></single-selection>
+                        <span class="label">密码输入错误后将锁定账号禁止其登录(当天)</span>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="登录密码验证：" prop="validate">
+                        <single-selection :initial="validate"></single-selection>
+                    </el-form-item>
+                </el-col>
+            </el-col>
+            <el-col :span="24">
+                <el-col :span="12">
+                    <el-form-item label="密码强度设置：" prop="strength">
+                        <el-checkbox-group v-model="personalRule.strength">
+                            <span class="label">必须含有</span>
+                            <el-checkbox label="数字" name="strength"></el-checkbox>
+                            <el-checkbox label="小写字母" name="strength"></el-checkbox>
+                            <el-checkbox label="大写字母" name="strength"></el-checkbox>
+                            <el-checkbox label="特殊字符" name="strength"></el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="密码长度设置：" prop="pswlength">
+                        <el-col span="7">
+                            <el-input v-model="minLength"></el-input>
+                        </el-col>
+                        <el-col span="1" style="text-align: center;">~</el-col>
+                        <el-col span="7">
+                            <el-input v-model="maxLength"></el-input>
+                        </el-col>
+                        <span class="label"> &nbsp;&nbsp;(6位~15位之间)</span>
+                    </el-form-item>
+                </el-col>
+            </el-col>
+            <el-col :span="24">
+                <el-col :span="12">
+                    <el-form-item label="上传设置：" prop="upload">
+                        <single-selection :initial="upload"></single-selection>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12"></el-col>
+            </el-col>
+            <el-col :span="6" style="margin-bottom: 8px;">
+                <el-button type="primary" @click="submitForm('personalForm')">保存</el-button>
+            </el-col>
+        </el-form>
+    </el-row>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script type="text/javascript" src="personal-information.js"></script>
+</body>
+</html>

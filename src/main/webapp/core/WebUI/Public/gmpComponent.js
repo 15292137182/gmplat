@@ -389,6 +389,8 @@ Vue.component("base-tree", {
             expandedAll: false,
             // 获取树数据接口
             url: "",
+            // 接口参数
+            params: "",
             // 树数据
             treeNodes: [],
             // 配置选项
@@ -415,6 +417,12 @@ Vue.component("base-tree", {
             this.url = this.initial.url;
         }else {
             this.url = "";
+        }
+        // 获取树结构参数
+        if(this.initial.params) {
+            this.params = this.initial.params;
+        }else {
+            this.params = "";
         }
         // 获取配置过滤Boolean值
         if(this.initial.filter) {
@@ -583,7 +591,7 @@ Vue.component("base-tree", {
                 $.ajax({
                     url:this.url,
                     type:"get",
-                    data: "",
+                    data: self.params,
                     dataType:"json",
                     success:function(res) {
                         if(res.resp.respCode == "000"){
