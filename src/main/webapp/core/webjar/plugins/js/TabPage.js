@@ -563,14 +563,16 @@ var querySearch = (function(){
             success:function(res){
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
-                    if(res.resp.content.data!= 0){
-                        dataConversion.conversion(obj,res.resp.content.data.result);
-                        obj.tableData = res.resp.content.data.result;//数据源
-                        obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
-                        obj.pageNum = res.resp.content.data.pageNum;//当前页
-                    }else{
-                        obj.tableData = [];
-                        obj.allDate = 0;
+                    if(res.resp.content.data != null){
+                        if(res.resp.content.data!= 0){
+                            dataConversion.conversion(obj,res.resp.content.data.result);
+                            obj.tableData = res.resp.content.data.result;//数据源
+                            obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
+                            obj.pageNum = res.resp.content.data.pageNum;//当前页
+                        }else{
+                            obj.tableData = [];
+                            obj.allDate = 0;
+                        }
                     }
                 }else{
                     obj.tableData = [];

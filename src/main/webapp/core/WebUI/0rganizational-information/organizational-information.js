@@ -13,7 +13,7 @@ var Organization = serverPath + "/baseOrg/queryById";
 var PersonnelInformationUrl = serverPath + "/user/queryByOrg"
 
 //查看组织机构下的角色信息
-// var roleViewUrl = serverPath + "role/queryBySpecify"
+var roleViewUrl = serverPath + "/baseOrg/queryOrgUser"
 
 //组织机构编辑接口
 var modify = serverPath + "/baseOrg/modify";
@@ -124,7 +124,7 @@ gmp_onload=function(){
                         right.formTable.desp=data.desp;
                         right.rowId = data.rowId;
                         rightBottom.PersonnelInformation(right.rowId);
-                        // basRightTop.roleView(data.rowId);
+                        basRightTop.roleView(data.rowId);
                     },
                 })
             },
@@ -218,8 +218,9 @@ gmp_onload=function(){
             //人员信息查询
             PersonnelInformation(rowId){
                 var strArr = '["'+rowId+'"]';
+                var data = {param:strArr};
                 console.log(strArr);
-                querySearch.uneedSearch(PersonnelInformationUrl,strArr,this,function(res){
+                querySearch.getDataPage(PersonnelInformationUrl,data,this,function(res){
                     console.log(res);
                 })
             },
@@ -269,21 +270,9 @@ gmp_onload=function(){
             },
             //角色查看
             roleView(rowId){
-                var strArr = '["'+rowId+'"]';
-                console.log(strArr);
-                $.ajax({
-                    url:roleViewUrl,
-                    type:"get",
-                    data:{
-                        param:strArr
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        console.log(res.resp.content.data)
-                        rightBottom.loading=false;
-                        rightBottom.tableDataTwo = res.resp.content.data;//数据源
-                    },
+                var data = {rowId:rowId};
+                querySearch.getDataPage(roleViewUrl,data,basRightTop,1,function(res){
+                    console.log(res);
                 })
             },
             //分页信息
