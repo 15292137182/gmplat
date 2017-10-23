@@ -16,17 +16,20 @@ var roleInformation = serverPath + "/permission/queryPage";
 //权限指定字段查询接口
 var selUrl = serverPath + "/permission/queryTypePermission";
 
+//查询指定rowId的详细信息
+var selRowId = serverPath + "/permission/queryById"
+
 //查看权限类型下的权限信息
 var permissionsInformation = serverPath + "/permission/queryTypePermission";
 
 //查看权限类型下的角色信息
 var personnelInformationInterface = serverPath + "/permission/queryRole";
 
-//角色编辑接口
-var modify = serverPath + "/role/modify";
+//权限编辑接口
+var modify = serverPath + "/permission/modify";
 
-//角色删除接口
-var deleteUrl = serverPath + "/role/delete";
+//权限删除接口
+var deleteUrl = serverPath + "/permission/delete";
 
 function GlobalParameter(){
     var args={"tableKeySet":{
@@ -59,14 +62,14 @@ gmp_onload=function(){
                 deleteObj.del(function(){
                     var data = {
                         "url":deleteUrl,
-                        "jsonData":{rowId:left.rowId},
+                        "jsonData":{rowIds:rightBottom.deleteIds},
                         "obj":basTop,
                         "showMsg":true
                     }
                     gmpAjax.showAjax(data,function(res){
-                        // queryData.getData(dataBase.url,dataBase.input,dataBase)
                         left.$refs.org.getNode();
-                        //basTop.disabled = true;
+                        basTop.disabled = true;
+                        basRightTop.PersonnelInformation(rightBottom.permissionType);
                     })
                 })
             }
@@ -83,6 +86,8 @@ gmp_onload=function(){
                 expandedAll: true,
                 // 获取树节点接口
                 url: roleInformation,
+                //传递参数
+                params:{search:"privilegeType"},
                 // 设置参数 -- 树节点上显示的文字
                 defaultProps: {
                     // 树节点显示文字
@@ -166,6 +171,8 @@ gmp_onload=function(){
             permissionType:"",
             tableId:'Block',
             edit:"",
+            selRowId:"",
+            deleteIds:[],
         }),
         methods:{
             //查询框点击
@@ -183,11 +190,21 @@ gmp_onload=function(){
 
             },
             //点击
-            firstClick(){
-
+            firstClick(row){
+                if(row.permissionType == "接口资源"){
+                    this.permissionType = "interfaceResources";
+                }else if(row.permissionType == "页面按钮"){
+                    this.permissionType = "pageButoon";
+                }else if(row.permissionType == "页面资源"){
+                    this.permissionType = "pageResources";
+                }else if(row.permissionType == "菜单资源"){
+                    this.permissionType = "menuResource";
+                }
+                this.selRowId = row.rowId;
+                this.deleteIds.push(this.selRowId);
             },
             //表点击
-            twoClick(){
+            twoClick(row){
 
             },
             //分页信息
@@ -208,18 +225,44 @@ gmp_onload=function(){
                 this.edit = true;
                 var htmlUrl = 'add-permissions-information.html';
                 basTop.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑权限信息', '400px', '460px',function(){
-                    
+                    $.ajax({
+                        url:selRowId,
+                        type:"get",
+                        data:{rowId:rightBottom.selRowId},
+                        success:function(res){
+                            console.log(res.resp.content.data);
+                            var data = res.resp.content.data;
+                            component.childFormTable.permissionId = data.permissionId;
+                            component.childFormTable.permissionName = data.permissionName;
+                            component.$refs.jurisdictionType.setValue(data.permissionType);
+                            component.childFormTable.remarks = data.remarks;
+                            component.childFormTable.desc = data.desc;
+                            component.rowId = data.rowId;
+                        }
+                    })
                 });
             },
             //删除
             del(){
-                alert("1");
+                var data = {
+                    "url":deleteUrl,
+                    "jsonData":{
+                        rowIds:rightBottom.deleteIds
+                    },
+                    "obj":rightBottom,
+                    "showMsg":true,
+                }
+                deleteObj.del(function(){
+                    gmpAjax.showAjax(data,function(res){
+                        basRightTop.PersonnelInformation(rightBottom.permissionType);
+                    })
+                })
             },
             //选中checkbox
             selectRow(selection,row){
-                console.log("选中");
+
                 console.log(selection);
-                console.log("----------");
+
                 console.log(row);
             },
             //全选
@@ -234,8 +277,10 @@ gmp_onload=function(){
                 }else{
                     basTop.disabled = true;
                 }
-                console.log("改变");
-                console.log(selection);
+                for(var i=0;i<selection.length;i++){
+                    console.log(selection[i]);
+                    this.deleteIds.push(selection[i].rowId);
+                }
             },
         },
         created(){

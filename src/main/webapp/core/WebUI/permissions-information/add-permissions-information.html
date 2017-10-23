@@ -82,6 +82,7 @@
         el: "#component",
         data() {
             return {
+                rowId:"",
                 childLabelPosition:"right",
                 childFormTable:{
                     permissionId:"",
@@ -119,6 +120,26 @@
                 gmpAjax.showAjax(data,function(res){
                     ibcpLayer.Close(basTop.divIndex);
                     left.$refs.org.getNode();
+                    basRightTop.PersonnelInformation(rightBottom.permissionType);
+                })
+            },
+            //编辑
+            editBlock(){
+                var data = {"url":modify,"jsonData":{
+                    rowId:this.rowId,
+                    permissionId:this.childFormTable.permissionId,
+                    permissionName:this.childFormTable.permissionName,
+                    permissionType:this.childFormTable.permissionType,
+                    desc:this.childFormTable.desc,
+                    remarks:this.childFormTable.remarks,
+                },
+                    "obj":basTop,
+                    "showMsg":true
+                }
+                gmpAjax.showAjax(data,function(res){
+                    ibcpLayer.Close(basTop.divIndex);
+                    left.$refs.org.getNode();
+                    basRightTop.PersonnelInformation(rightBottom.permissionType);
                 })
             },
             getJurisdictionType(datas){
@@ -129,9 +150,16 @@
             conformEvent(formName){
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        addObj.addOk(function(){
-                            component.addTableBase();
-                        })
+                        if(rightBottom.edit){
+                            //编辑
+                            editObj.editOk(function(){
+                                component.editBlock();
+                            })
+                        }else{
+                            addObj.addOk(function(){
+                                component.addTableBase();
+                            })
+                        }
                     } else {
                         return false;
                     }
