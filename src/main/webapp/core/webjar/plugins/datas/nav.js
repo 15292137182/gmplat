@@ -76,6 +76,10 @@
             "title": "角色信息维护",
             "icon": "&#xe641;",
             "href": "core/WebUI/role-information-maintenance/role-information-maintenance.html"
+        },{
+            "title": "权限信息维护",
+            "icon": "&#xe641;",
+            "href": "core/WebUI/permissions-information/permissions-information.html"
         }]
     },{
     "title": "动态模板",
