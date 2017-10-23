@@ -1,7 +1,7 @@
 /**
  * Created by admin on 2017/10/19.
  */
-var searchMore=serverPath + "/user/queryPage";
+var searchMore=serverPath + "/userGroup/queryUserInfo";
 var allDate=new Vue({
     el:'#allDate',
     data:getData.dataObj({
@@ -10,7 +10,12 @@ var allDate=new Vue({
     methods:{
         headSort(column){
             //列头排序
-             pagingObj.headSort(qurUrl,this.resInput,this.pageSize,this.pageNum,column,this);
+            var headDate={
+                pageNum:this.pageNum,
+                pageSize:this.pageSize,
+                order:'',
+            }
+            querySearch.headSorts(searchMore,headDate,column,this);
 
         },
         currentChange(){
@@ -67,6 +72,7 @@ var allDate=new Vue({
         searchMoreFirst(){
             //加载 跳回第一页
             var headDate={
+                userGroupRowId: left.rowId,
                 pageNum:1,
                 pageSize:this.pageSize,
             }
@@ -76,6 +82,7 @@ var allDate=new Vue({
         searchMore(){
             //加载 跳回第一页
             var headDate={
+                userGroupRowId: left.rowId,
                 pageNum:this.pageNum,
                 pageSize:this.pageSize,
             }
@@ -83,6 +90,6 @@ var allDate=new Vue({
         }
     },
     created(){
-     this.searchMoreFirst();
+       this.searchMoreFirst();
     }
 })

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        /*tab页的行高*/
+        .el-tabs__item{
+            line-height:24px;
+            height:24px;
+        }
+        /*查询区域左侧的长度*/
+        .el-select .el-input {
+            width: 130px;
+        }
+        #select_tree {
+         width: 215px;
+        }
+        /*弹出框的input长度*/
+        form  .el-input input{
+            width:165px;
+        }
+        /*弹出框的选择框的长度*/
+        form  .el-select .el-input {
+            width: 165px;
+        }
+        form .el-textarea textarea{
+            width: 420px;
+        }
+        .spanPosition{
+            position: absolute;
+            top:-12px;
+            left:20px;
+            background: white;
+            font-weight:bold;
+            font-size: 15px;
+        }
+        .extra{
+            background-color: #fbfdff;
+            color: #97a8be;
+            vertical-align: middle;
+            display: inline-block;
+            border: 1px solid #bfcbd9;
+            border-radius: 4px;
+            padding: 0 10px;
+            width: 40px;
+            white-space: nowrap;
+            line-height: 35px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .extra1 input{
+            border-top-left-radius: 0 ;
+            border-bottom-left-radius: 0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="allBorder" style="float: left; padding:20px 10px 0 10px;margin:15px 0">
+    <el-col :span="3" id="left" style="height:500px; border:none">
+        <el-row>
+            <el-col>
+                <div style="padding:0 20px">
+                    <el-col style="padding:10px 5px">
+                        <div>
+                            <el-radio class="radio" v-model="radio" label="1">用户分配</el-radio><br><br>
+                            <el-radio class="radio" v-model="radio" label="2">角色分配</el-radio>
+                        </div>
+                        </el-radio-group>
+                    </el-col>
+                </div>
+            </el-col>
+        </el-row>
+    </el-col>
+
+    <el-col :span="20" id="right" style="margin-left:15px">
+        <div class="allBorder" style="border:1px solid #bccdc5;padding:2px 0 ">
+            <el-row>
+                <!--用户用户组角色分配-->
+                <el-col>
+                        <span class="spanPosition">用户、用户组角色分配</span>
+                    <div>
+                        <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="padding:20px 20px">
+                            <el-tab-pane label="用户分配" name="first">
+                                <el-col :span="15">
+                                    <div style="padding:20px 0 20px 20px" >
+                                        <el-input placeholder="请输入内容" v-model="input">
+                                            <el-select v-model="select" slot="prepend" placeholder="请选择查询类型" clearable>
+                                                <el-option label=" 用户工号" value="id"></el-option>
+                                                <el-option label="用户姓名" value="name"></el-option>
+                                            </el-select>
+                                            <el-button slot="append" icon="search" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" @click.native="searchUser"></el-button>
+                                        </el-input>
+                                    </div>
+                                </el-col>
+                                <el-col :span="2" style="padding:20px 20px 20px 5px">
+                                    <el-button @click.native="showMore" icon="arrow-right"></el-button>
+                                </el-col>
+                                <el-col :span="7">
+                                    <div style="padding:20px 0" v-show="couldLook">
+                                        <div class="extra" style="font-size:14px;">部门</div>
+                                        <select-tree :initial="srarchDepart" @select-node="getNodeId"  @clear="clear"></select-tree>
+                                    </div>
+                                </el-col>
+                                <el-col :span="24">
+                                    <div style="padding:4px 20px">
+                                        <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                                                  v-loading="loading"
+                                                  element-loading-text="加载中" @sort-change="headSort"
+                                                  @row-click="currentChange"
+                                                  class="tableStyle"
+                                                  @select="selectRow"
+                                                  @select-all="selectAllRow"
+                                                  style="width: 100%">
+                                            <el-table-column
+                                                    type="selection"
+                                                    width="45">
+                                            </el-table-column>
+                                            <el-table-column type="expand">
+                                                <template scope="props">
+                                                    <el-form label-position="left" inline class="demo-table-expand">
+                                                        <el-row>
+                                                            <el-col :span="12">
+                                                                <el-form-item label="备注">
+                                                                    <span>{{ props.row.remarks }}</span>
+                                                                </el-form-item>
+                                                            </el-col>
+                                                        </el-row>
+                                                    </el-form>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="id" label="用户工号" sortable="custom" width="160"
+                                                             show-overflow-tooltip></el-table-column>
+                                            <el-table-column prop="password" label="用户姓名" width="160"
+                                                             show-overflow-tooltip></el-table-column>
+                                            <el-table-column prop="orgName" label="拥有的权限"
+                                                             show-overflow-tooltip></el-table-column>
+                                            <el-table-column prop="" label="操作" width="160">
+                                                <template scope="scope">
+                                                    <el-button @click.native="editEvent" type="text" size="small" icon="edit"
+                                                               :disabled=scope.row.testDemo></el-button>
+                                                    <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"
+                                                               :disabled=scope.row.testDemo></el-button>
+                                                    <el-button @click.native="unlockEvent" type="text" size="small" icon="check"
+                                                               :disabled=scope.row.testDemo></el-button>
+                                                    <el-button @click.native="lockEvent" type="text" size="small" icon="information"
+                                                               :disabled=scope.row.testDemo></el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                        <el-row type="flex" justify="end" style="padding-top: 10px">
+                                            <el-pagination
+                                                    @size-change="handleSizeChange"
+                                                    @current-change="handleCurrentChange"
+                                                    :current-page.sync="pageNum"
+                                                    :page-sizes="[5,10,20]"
+                                                    :page-size="pageSize"
+                                                    layout="total, sizes, prev, pager, next"
+                                                    :total="allDate">
+                                            </el-pagination>
+                                        </el-row>
+                                    </div>
+                                </el-col>
+                            </el-tab-pane>
+                            <el-tab-pane label="用户组分配" name="second">
+                                <el-row id="rightBlock"></el-row>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </el-col>
+                <!--角色分配用户用户组-->
+                <div id="distributeUser"></div>
+            </el-row>
+            </el-row>
+        </div>
+    </el-col>
+</div>
+<template id="tempBlock">
+    <el-col id="rightBlock">
+        <div>
+            <el-col :span="15">
+                <div style="padding:20px 0 20px 20px" >
+                    <el-input placeholder="请输入内容" v-model="input">
+                        <el-select v-model="select" slot="prepend" placeholder="请选择查询类型" clearable>
+                            <el-option label=" 用户工号" value="id"></el-option>
+                            <el-option label="用户姓名" value="name"></el-option>
+                        </el-select>
+                        <el-button slot="append" icon="search" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" @click.native="searchUser"></el-button>
+                    </el-input>
+                </div>
+            </el-col>
+            <el-col :span="2" style="padding:20px 20px 20px 5px">
+                <el-button @click.native="showMore" icon="arrow-right"></el-button>
+            </el-col>
+            <el-col :span="7">
+                <div style="padding:20px 0" v-show="couldLook">
+                    <div class="extra" style="font-size:14px;">部门</div>
+                    <select-tree :initial="srarchDepart" @select-node="getNodeId"  @clear="clear"></select-tree>
+                </div>
+            </el-col>
+            <el-col :span="24">
+                <div style="padding:4px 20px">
+                    <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                              v-loading="loading"
+                              element-loading-text="加载中" @sort-change="headSort"
+                              @row-click="currentChange"
+                              class="tableStyle"
+                              @select="selectRow"
+                              @select-all="selectAllRow"
+                              style="width: 100%">
+                        <el-table-column
+                                type="selection"
+                                width="45">
+                        </el-table-column>
+                        <el-table-column type="expand">
+                            <template scope="props">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="备注">
+                                                <span>{{ props.row.remarks }}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="id" label="用户工号" sortable="custom" width="160"
+                                         show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="password" label="用户姓名" width="160"
+                                         show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="orgName" label="拥有的权限"
+                                         show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="" label="操作" width="160">
+                            <template scope="scope">
+                                <el-button @click.native="editEvent" type="text" size="small" icon="edit"
+                                           :disabled=scope.row.testDemo></el-button>
+                                <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"
+                                           :disabled=scope.row.testDemo></el-button>
+                                <el-button @click.native="unlockEvent" type="text" size="small" icon="check"
+                                           :disabled=scope.row.testDemo></el-button>
+                                <el-button @click.native="lockEvent" type="text" size="small" icon="information"
+                                           :disabled=scope.row.testDemo></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-row type="flex" justify="end" style="padding-top: 10px">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page.sync="pageNum"
+                                :page-sizes="[5,10,20]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next"
+                                :total="allDate">
+                        </el-pagination>
+                    </el-row>
+                </div>
+            </el-col>
+        </div>
+    </el-col>
+</template>
+
+
+<template id="distribute">
+    <el-col id="distributeUser">
+            <span class="spanPosition">用户、用户组角色分配</span>
+            <div>
+                <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="padding:20px 20px">
+                    <el-tab-pane label="用户分配" name="first">
+                        <el-col :span="15">
+                            <div style="padding:20px 0 20px 20px" >
+                                <el-input placeholder="请输入内容" v-model="input">
+                                    <el-select v-model="select" slot="prepend" placeholder="请选择查询类型" clearable>
+                                        <el-option label=" 用户工号" value="id"></el-option>
+                                        <el-option label="用户姓名" value="name"></el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="search" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" @click.native="searchUser"></el-button>
+                                </el-input>
+                            </div>
+                        </el-col>
+                        <el-col :span="2" style="padding:20px 20px 20px 5px">
+                            <el-button @click.native="showMore" icon="arrow-right"></el-button>
+                        </el-col>
+                        <el-col :span="7">
+                            <div style="padding:20px 0" v-show="couldLook">
+                                <div class="extra" style="font-size:14px;">部门</div>
+                                <select-tree :initial="srarchDepart" @select-node="getNodeId"  @clear="clear"></select-tree>
+                            </div>
+                        </el-col>
+                        <el-col :span="24">
+                            <div style="padding:4px 20px">
+                                <el-table :data="tableData" :height="leftHeight" border ref="tableData" highlight-current-row
+                                          v-loading="loading"
+                                          element-loading-text="加载中" @sort-change="headSort"
+                                          @row-click="currentChange"
+                                          class="tableStyle"
+                                          @select="selectRow"
+                                          @select-all="selectAllRow"
+                                          style="width: 100%">
+                                    <el-table-column
+                                            type="selection"
+                                            width="45">
+                                    </el-table-column>
+                                    <el-table-column type="expand">
+                                        <template scope="props">
+                                            <el-form label-position="left" inline class="demo-table-expand">
+                                                <el-row>
+                                                    <el-col :span="12">
+                                                        <el-form-item label="备注">
+                                                            <span>{{ props.row.remarks }}</span>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </el-row>
+                                            </el-form>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="id" label="用户工号" sortable="custom" width="160"
+                                                     show-overflow-tooltip></el-table-column>
+                                    <el-table-column prop="password" label="用户姓名" width="160"
+                                                     show-overflow-tooltip></el-table-column>
+                                    <el-table-column prop="orgName" label="拥有的权限"
+                                                     show-overflow-tooltip></el-table-column>
+                                    <el-table-column prop="" label="操作" width="160">
+                                        <template scope="scope">
+                                            <el-button @click.native="editEvent" type="text" size="small" icon="edit"
+                                                       :disabled=scope.row.testDemo></el-button>
+                                            <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"
+                                                       :disabled=scope.row.testDemo></el-button>
+                                            <el-button @click.native="unlockEvent" type="text" size="small" icon="check"
+                                                       :disabled=scope.row.testDemo></el-button>
+                                            <el-button @click.native="lockEvent" type="text" size="small" icon="information"
+                                                       :disabled=scope.row.testDemo></el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <el-row type="flex" justify="end" style="padding-top: 10px">
+                                    <el-pagination
+                                            @size-change="handleSizeChange"
+                                            @current-change="handleCurrentChange"
+                                            :current-page.sync="pageNum"
+                                            :page-sizes="[5,10,20]"
+                                            :page-size="pageSize"
+                                            layout="total, sizes, prev, pager, next"
+                                            :total="allDate">
+                                    </el-pagination>
+                                </el-row>
+                            </div>
+                        </el-col>
+                    </el-tab-pane>
+                    <el-tab-pane label="用户组分配" name="second">
+                        <el-row id="rightBlock"></el-row>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-col>
+</template>
+
+
+<script src="user-role-assignment.js"></script>
+</body>
+</html>
