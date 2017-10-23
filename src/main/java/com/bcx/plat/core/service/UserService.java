@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用户信息业务层
@@ -46,11 +47,26 @@ public class UserService extends BaseService<User> {
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
     Condition condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or;
-    if (UtilsTool.isValid(param)) {//根据指定字段查询
+    Map<String, Object> paramMap = UtilsTool.jsonToObj(param, Map.class);
+    String belongOrg = (String) paramMap.remove("belongOrg");
+    if (UtilsTool.isValid(belongOrg)) {
+      //查出部门下的所有部门rowId
+      Condition orgCondition = new ConditionBuilder(BaseOrg.class).and().startWith("rowId", belongOrg).endAnd().buildDone();
+      List<BaseOrg> orgs = new BaseOrg().selectSimple(orgCondition);
+      if (!orgs.isEmpty()) {
+        List<String> orgRowIds = orgs.stream().map(BaseOrg::getRowId).collect(Collectors.toList());
+        if (null == condition) {
+          condition = new ConditionBuilder(User.class).and().in("belongOrg", orgRowIds).endAnd().buildDone();
+        } else {
+          condition = new And(new ConditionBuilder(User.class).and().in("belongOrg", orgRowIds).endAnd().buildDone(), condition);
+        }
+      }
+    }
+    if (!paramMap.isEmpty()) {//根据指定字段查询
       if (null == condition) {
-        condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class));
+        condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap);
       } else {
-        condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, UtilsTool.jsonToObj(param, Map.class)), condition);
+        condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap), condition);
       }
     }
     condition = UtilsTool.addNotDeleteCondition(condition, User.class);
