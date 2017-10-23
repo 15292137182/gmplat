@@ -8,9 +8,9 @@ import java.util.Arrays;
 
 /**
  * 加密工具
- *
+ * <p>
  * Create By HCL at 2017/8/17
- *
+ * <p>
  * Author wzp
  */
 public class HexUtil {
@@ -68,7 +68,7 @@ public class HexUtil {
   /**
    * 密码验证
    *
-   * @param pwd 用户输入密码
+   * @param pwd   用户输入密码
    * @param dbPWD 数据库保存的密码
    */
   public static boolean validPassword(String pwd, String dbPWD) {
@@ -103,19 +103,25 @@ public class HexUtil {
    * @param pwd 用户输入密码字符
    * @return String md5加密后密码字符
    */
-  public static String getEncryptedPwd(String pwd)
-      throws NoSuchAlgorithmException, UnsupportedEncodingException {
+  public static String getEncryptedPwd(String pwd) {
     //拿到一个随机数组，作为盐
     byte[] _pwd;
     SecureRandom sc = new SecureRandom();
     byte[] salt = new byte[SALT_LENGTH];
     sc.nextBytes(salt);
+    byte[] digest = new byte[0];
 
-    //声明摘要对象，并生成
-    MessageDigest md = MessageDigest.getInstance("MD5");
-    md.update(salt);
-    md.update(pwd.getBytes("UTF-8"));
-    byte[] digest = md.digest();
+    try {
+      //声明摘要对象，并生成
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      md.update(salt);
+      md.update(pwd.getBytes("UTF-8"));
+      digest = md.digest();
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
 
     _pwd = new byte[salt.length + digest.length];
     System.arraycopy(salt, 0, _pwd, 0, SALT_LENGTH);

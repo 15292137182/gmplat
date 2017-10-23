@@ -8,6 +8,7 @@ import com.bcx.plat.core.manager.SystemSettingManager;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserService;
+import com.bcx.plat.core.utils.HexUtil;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
@@ -106,24 +107,20 @@ public class UserController extends BaseController {
    */
   @PostMapping("/add")
   public PlatResult add(@RequestParam Map<String, Object> param) {
-    Object id = param.get("id");
-    Object name = param.get("name");
-    if (null != id && !"".equals(id.toString().trim())
-        && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
-
+    String id = (String) param.get("id");
+    String name = (String) param.get("name");
+    if (UtilsTool.isValidAll(id, name)) {//工号和姓名不能为空
       //根据工号查询是否已存在该工号的记录
-      Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id.toString().trim()).endAnd().buildDone();
+      Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
       List<User> list = userService.select(validCondition);
       if (list.isEmpty()) {
-        param.put("id", id.toString().trim());
-        param.put("name", name.toString().trim());
-
         //从系统设置获取密码强度、长度校验的规则 进行校验
-        String password = String.valueOf(param.get("password"));
+        String password = (String) (param.get("password"));
         if (validPassword(password)) {
+          param.put("password", HexUtil.getEncryptedPwd(password));
           param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
           param.put("status", BaseConstants.IN_USE);
-          User user = new User().buildCreateInfo().fromMap(param);
+          User user = new User().fromMap(param).buildCreateInfo();
           if (user.insert() != -1) {
             return successData(Message.NEW_ADD_SUCCESS, user);
           } else {
@@ -189,17 +186,16 @@ public class UserController extends BaseController {
    */
   @PostMapping("/modify")
   public PlatResult modify(@RequestParam Map<String, Object> param) {
-    if (UtilsTool.isValid(param.get("rowId"))) {
-      Object id = param.get("id");
-      Object name = param.get("name");
-      if (null != id && !"".equals(id.toString().trim())
-          && null != name && !"".equals(name.toString().trim())) {//工号和姓名不能为空
+    String rowId = (String) param.get("rowId");
+    if (UtilsTool.isValid(rowId)) {
+      String id = (String) param.get("id");
+      String name = (String) param.get("name");
+      if (UtilsTool.isValidAll(id, name)) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
-        if (users.isEmpty()) {
-          param.put("id", id.toString().trim());
-          param.put("name", name.toString().trim());
+        if (users.isEmpty() || (users.size() == 1 && rowId.equals(users.get(0).getRowId()))) {
+          param.remove("password");//修改人员信息时，不允许修改密码
           User user = new User();
           User modify = user.fromMap(param).buildModifyInfo();
           if (modify.updateById() != -1) {
@@ -226,24 +222,30 @@ public class UserController extends BaseController {
    */
   @PostMapping("/modifyPassword")
   public PlatResult modifyPassword(@RequestParam Map<String, Object> param) {
-    if (UtilsTool.isValid(param.get("rowId"))) {
+    String rowId = (String) param.get("rowId");
+    if (UtilsTool.isValid(rowId)) {
       //查询原密码
-      Condition condition = new ConditionBuilder(User.class).and().equal("rowId", param.get("rowId")).endAnd().buildDone();
-      List oldOne = userService.singleSelect(User.class, condition);
-      String oldPwd = ((Map) oldOne.get(0)).get("password").toString();//数据库中的原密码
-      String oldPassword = String.valueOf(param.get("oldPassword"));//用户输入的原密码
-      String password = String.valueOf(param.get("password"));
-      if (oldPwd.equals(oldPassword) && validPassword(password)) {//校验密码
-        param.remove("oldPassword");
-        param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
-        User user = new User().buildModifyInfo().fromMap(param);
-        if (user.updateById() != -1) {
-          return success(Message.UPDATE_SUCCESS);
+      String oldPassword = (String) param.get("oldPassword");//用户输入的原密码
+      String password = (String) param.get("password");//用户输入的新密码
+      if (UtilsTool.isValidAll(oldPassword, password)) {
+        Condition condition = new ConditionBuilder(User.class).and().equal("rowId", rowId).endAnd().buildDone();
+        List<User> oldOne = userService.select(condition);
+        String oldPwd = oldOne.get(0).getPassword();//数据库中的原密码
+        if (HexUtil.validPassword(oldPassword, oldPwd) && validPassword(password)) {//校验密码
+          param.remove("oldPassword");
+          param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+          param.put("password", HexUtil.getEncryptedPwd(password));
+          User user = new User().fromMap(param).buildModifyInfo();
+          if (user.updateById() != -1) {
+            return success(Message.UPDATE_SUCCESS);
+          } else {
+            return fail(Message.UPDATE_FAIL);
+          }
         } else {
           return fail(Message.UPDATE_FAIL);
         }
       } else {
-        return fail(Message.UPDATE_FAIL);
+        return fail(Message.DATA_CANNOT_BE_EMPTY);
       }
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
@@ -450,7 +452,7 @@ public class UserController extends BaseController {
           map.put("status", BaseConstants.OUT_OF_USE);
           break;
         case "resetPassword":
-          map.put("password", SystemSettingManager.getDefaultPwd());
+          map.put("password", HexUtil.getEncryptedPwd(SystemSettingManager.getDefaultPwd()));
           map.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
           break;
         default:
