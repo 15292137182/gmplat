@@ -3,6 +3,8 @@ package com.bcx.plat.core.controller;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BaseOrg;
+import com.bcx.plat.core.entity.Role;
+import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -131,8 +133,17 @@ public class BaseOrgController extends BaseController {
    * @return 响应结果
    */
   @RequestMapping(value = "/queryOrgUser")
-  public PlatResult queryUserInOrg(String orgRowId) {
-    return PlatResult.success(new ServerResult<>(baseOrgService.queryUserInOrg(orgRowId)));
+  public PlatResult queryUserInOrg(String orgRowId,
+                                   String search, String param, Integer pageNum, Integer pageSize, String order) {
+    Condition condition;
+    if (isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+      Map<String, Object> map = jsonToObj(param, Map.class);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, map);
+    } else { // 如果没有param参数，则进行空格查询
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+    LinkedList<Order> orders = dataSort(User.class, order);
+    return PlatResult.success(new ServerResult<>(baseOrgService.queryUserInOrg(orgRowId, condition, orders, pageNum, pageSize)));
   }
 
   /**
@@ -140,8 +151,17 @@ public class BaseOrgController extends BaseController {
    * @return 响应结果
    */
   @RequestMapping(value = "/queryOrgRole")
-  public PlatResult queryRoleInOrg(String orgRowId) {
-    return PlatResult.success(new ServerResult<>(baseOrgService.queryRoleInOrg(orgRowId)));
+  public PlatResult queryRoleInOrg(String orgRowId,
+                                   String search, String param, Integer pageNum, Integer pageSize, String order) {
+    Condition condition;
+    if (isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+      Map<String, Object> map = jsonToObj(param, Map.class);
+      condition = UtilsTool.convertMapToAndConditionSeparatedByLike(Role.class, map);
+    } else { // 如果没有param参数，则进行空格查询
+      condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
+    }
+    LinkedList<Order> orders = dataSort(Role.class, order);
+    return PlatResult.success(new ServerResult<>(baseOrgService.queryRoleInOrg(orgRowId, condition, orders, pageNum, pageSize)));
   }
 
 }

@@ -7,6 +7,9 @@ import com.bcx.plat.core.entity.BaseOrgRelateRole;
 import com.bcx.plat.core.entity.Role;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
@@ -209,11 +212,14 @@ public class BaseOrgService extends BaseService<BaseOrg> {
    * @param orgRowId 组织机构的rowId
    * @return 返回人员列表
    */
-  public List<Map> queryUserInOrg(String orgRowId) {
+  public PageResult<Map<String, Object>> queryUserInOrg(String orgRowId, Condition condition, List<Order> orders, Integer pageNum, Integer pageSize) {
     if (isValid(orgRowId)) {
-      Condition condition = new ConditionBuilder(User.class)
+      Condition and = new ConditionBuilder(User.class)
               .and().equal("belongOrg", orgRowId).endAnd().buildDone();
-      return userService.selectMap(condition);
+      if (null != condition) {
+        and = new And(and, condition);
+      }
+      return userService.selectPageMap(and, orders, pageNum, pageSize);
     }
     return null;
   }
@@ -227,17 +233,20 @@ public class BaseOrgService extends BaseService<BaseOrg> {
    * @param orgRowId 部门主键
    * @return 返回查询结果
    */
-  public List<Map> queryRoleInOrg(String orgRowId) {
+  public PageResult<Map<String, Object>> queryRoleInOrg(String orgRowId, Condition condition, List<Order> orders, Integer pageNum, Integer pageSize) {
     if (isValid(orgRowId)) {
-      Condition condition = new ConditionBuilder(BaseOrgRelateRole.class)
+      Condition temp = new ConditionBuilder(BaseOrgRelateRole.class)
               .and().equal("orgRowId", orgRowId).endAnd().buildDone();
-      List<BaseOrgRelateRole> relateRoles = new BaseOrgRelateRole().selectSimple(condition);
+      List<BaseOrgRelateRole> relateRoles = new BaseOrgRelateRole().selectSimple(temp);
       if (!relateRoles.isEmpty()) {
         Set<String> roleRowId = new HashSet<>();
         relateRoles.forEach(baseOrgRelateRole -> roleRowId.add(baseOrgRelateRole.getRoleRowId()));
         Condition condition1 = new ConditionBuilder(Role.class)
                 .and().in("rowId", roleRowId).endAnd().buildDone();
-        return roleService.selectMap(condition);
+        if (null != condition1) {
+          condition1 = new And(condition, condition1);
+        }
+        return roleService.selectPageMap(condition1, orders, pageNum, pageSize);
       }
     }
     return null;
