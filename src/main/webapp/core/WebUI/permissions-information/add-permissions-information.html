@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .el-input{
+            width:200px;
+        }
+        .el-textarea__inner{
+            width:200px;
+        }
+        .el-form-item__error{
+            width:100px;
+        }
+        .label {
+            text-align: right;
+            padding-right: 14px;
+            color: #48576a;
+            line-height: 36px;
+            font-size: 14px;
+        }
+        .el-scrollbar{
+            width:200px;
+        }
+    </style>
+</head>
+<body>
+<el-row id="component" v-cloak style="margin-top:10px; margin-bottom: 10px;">
+    <!--表单-->
+    <el-form :label-position="childLabelPosition" :rules="rules" ref="childFormTable" label-width="80px" :model="childFormTable">
+        <el-row type="flex" class="row-bg" style="margin-top:15px;">
+            <el-col :span="6" :offset="2">
+                <el-form-item label="权限编号" prop="permissionId">
+                    <el-input placeholder="权限编号" v-model="childFormTable.permissionId" ref="permissionId"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="6" :offset="2">
+                <el-form-item label="权限名称" prop="permissionName">
+                    <el-input placeholder="权限名称" v-model="childFormTable.permissionName" ref="permissionName"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="6" :offset="2">
+                <el-form-item label="权限类型" prop="permissionType">
+                    <single-selection @change-data="getJurisdictionType" :initial="jurisdictionType" ref="jurisdictionType"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="6" :offset="2">
+                <el-form-item label="描述" prop="desc">
+                    <el-input type="textarea" placeholder="描述" v-model="childFormTable.desc" ref="desc"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="6" :offset="2">
+                <el-form-item label="备注" prop="remarks">
+                    <el-input type="textarea" placeholder="备注" v-model="childFormTable.remarks" ref="remarks"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align:right">
+            <el-button type="primary" @click="conformEvent('childFormTable')">保存</el-button>
+        </el-col>
+        <el-col :span="11" style="text-align: left" :offset="2">
+            <el-button type="primary" @click="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</el-row>
+<script>
+    //新增权限接口
+    var addPermissionUrl = serverPath + "/permission/add";
+
+    var component = new Vue({
+        el: "#component",
+        data() {
+            return {
+                childLabelPosition:"right",
+                childFormTable:{
+                    permissionId:"",
+                    permissionName:"",
+                    permissionType:"",
+                    desc:"",
+                    remarks:"",
+                },
+                rules:{
+                    permissionId:[{ required: true, message: '请输入权限编号', trigger: 'blur' }],
+                    permissionName:[{ required: true, message: '请输入权限名称', trigger: 'blur' }],
+                    permissionType:[{ required: true, message: '请输入权限类别', trigger: 'blur' }],
+                },
+                //类型下拉框数据
+                jurisdictionType:{
+                    params:'privilegeType',
+                    value:'',
+                    disabled:"false"
+                },
+            }
+        },
+        methods: {
+            //新增
+            addTableBase(){
+                var data = {"url":addPermissionUrl,"jsonData":{
+                    permissionId:this.childFormTable.permissionId,
+                    permissionName:this.childFormTable.permissionName,
+                    permissionType:this.childFormTable.permissionType,
+                    desc:this.childFormTable.desc,
+                    remarks:this.childFormTable.remarks,
+                },
+                    "obj":basTop,
+                    "showMsg":true
+                }
+                gmpAjax.showAjax(data,function(res){
+                    ibcpLayer.Close(basTop.divIndex);
+                    left.$refs.org.getNode();
+                })
+            },
+            getJurisdictionType(datas){
+                this.jurisdictionType.value = datas.value;
+                this.childFormTable.permissionType = datas.value;
+            },
+            //确认按钮及验证
+            conformEvent(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        addObj.addOk(function(){
+                            component.addTableBase();
+                        })
+                    } else {
+                        return false;
+                    }
+                })
+            },
+            cancel(){
+                ibcpLayer.Close(basTop.divIndex);
+            }
+        },
+        created(){
+
+        }
+    })
+</script>
+</body>
+</html>

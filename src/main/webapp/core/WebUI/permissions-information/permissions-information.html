@@ -8,7 +8,7 @@
         html{
             overflow: hidden;
         }
-        .el-icon-delete{
+        #basTop .el-icon-delete{
             color: white;
         }
         .el-select{
@@ -20,8 +20,8 @@
 <div id="basTop">
     <el-row type="flex" justify="end">
         <el-col :span="24">
-            <el-button type="info" icon="plus" size="small" @click.native="addEvent" v-bind:disabled="addOpe">添加权限信息</el-button>
-            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" v-bind:disabled="disabled">删除权限信息</el-button>
+            <el-button type="info" icon="plus" size="small" @click.native="addEvent" :disabled="addOpe">添加权限信息</el-button>
+            <el-button type="danger" icon="delete" size="small" @click.native="orgDelete" :disabled="disabled">删除权限信息</el-button>
         </el-col>
     </el-row>
 </div>
@@ -70,7 +70,14 @@
                                                           :highlight-current-row="true"
                                                           :height="leftHeight"
                                                           v-loading="loading"
-                                                          element-loading-text="加载中">
+                                                          element-loading-text="加载中"
+                                                          @select="selectRow"
+                                                          @select-all="selectAllRow"
+                                                          @selection-change = "selectChange">
+                                                    <el-table-column
+                                                            type="selection"
+                                                            width="55">
+                                                    </el-table-column>
                                                     <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="权限编号" width="">
                                                     </el-table-column>
                                                     <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="权限名称" width="250">
@@ -80,6 +87,12 @@
                                                     <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="250">
                                                     </el-table-column>
                                                     <el-table-column show-overflow-tooltip sortable="custom" prop="remarks" label="备注" width="250">
+                                                    </el-table-column>
+                                                    <el-table-column  label="操作" width="80">
+                                                        <template scope="scope">
+                                                            <el-button @click="editBlock" type="text" size="small" icon="edit"></el-button>
+                                                            <el-button @click="del" type="text" size="small" icon="delete"></el-button>
+                                                        </template>
                                                     </el-table-column>
                                                 </el-table>
                                             </el-row>
@@ -98,7 +111,7 @@
                                     </el-pagination>
                                 </el-row>
                             </el-tab-pane>
-                            <el-tab-pane label=" 角色信息" name="second">
+                            <el-tab-pane label=" 关联角色信息" name="second">
                                 <el-row id="basRightTop"></el-row>
                             </el-tab-pane>
                         </el-tabs>
