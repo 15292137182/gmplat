@@ -86,8 +86,7 @@ public class PermissionService extends BaseService<Permission> {
       List<String> rowIdList = Arrays.asList(rowIds);
       Condition condition = new ConditionBuilder(Permission.class)
               .and().in("rowId", rowIdList).endAnd().buildDone();
-      delete(condition);
-      return success(String.format("成功删除了 %d 数据！", rowIdList.size()));
+      return success(String.format("成功删除了 %d 条数据！", delete(condition)));
     }
     return fail(Message.INVALID_REQUEST);
   }

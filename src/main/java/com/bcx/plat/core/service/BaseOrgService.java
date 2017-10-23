@@ -3,6 +3,8 @@ package com.bcx.plat.core.service;
 import com.bcx.plat.core.base.BaseService;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BaseOrg;
+import com.bcx.plat.core.entity.BaseOrgRelateRole;
+import com.bcx.plat.core.entity.Role;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -10,7 +12,10 @@ import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -210,7 +215,32 @@ public class BaseOrgService extends BaseService<BaseOrg> {
               .and().equal("belongOrg", orgRowId).endAnd().buildDone();
       return userService.selectMap(condition);
     }
-    return new ArrayList<>();
+    return null;
+  }
+
+  @Resource
+  private RoleService roleService;
+
+  /**
+   * 查询组织部门下的组织机构，传入部门编号无效返回 null
+   *
+   * @param orgRowId 部门主键
+   * @return 返回查询结果
+   */
+  public List<Map> queryRoleInOrg(String orgRowId) {
+    if (isValid(orgRowId)) {
+      Condition condition = new ConditionBuilder(BaseOrgRelateRole.class)
+              .and().equal("orgRowId", orgRowId).endAnd().buildDone();
+      List<BaseOrgRelateRole> relateRoles = new BaseOrgRelateRole().selectSimple(condition);
+      if (!relateRoles.isEmpty()) {
+        Set<String> roleRowId = new HashSet<>();
+        relateRoles.forEach(baseOrgRelateRole -> roleRowId.add(baseOrgRelateRole.getRoleRowId()));
+        Condition condition1 = new ConditionBuilder(Role.class)
+                .and().in("rowId", roleRowId).endAnd().buildDone();
+        return roleService.selectMap(condition);
+      }
+    }
+    return null;
   }
 
 }

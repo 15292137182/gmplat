@@ -135,4 +135,13 @@ public class BaseOrgController extends BaseController {
     return PlatResult.success(new ServerResult<>(baseOrgService.queryUserInOrg(orgRowId)));
   }
 
+  /**
+   * @param orgRowId 部门 rowId
+   * @return 响应结果
+   */
+  @RequestMapping(value = "/queryOrgRole")
+  public PlatResult queryRoleInOrg(String orgRowId) {
+    return PlatResult.success(new ServerResult<>(baseOrgService.queryRoleInOrg(orgRowId)));
+  }
+
 }
