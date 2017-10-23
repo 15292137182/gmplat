@@ -87,7 +87,17 @@ public class DbEntityEntriesBuilder implements EntityEntriesBuilder {
         fields.add(field);
 //        Integer isPkRaw = (Integer) column.get("isPk");
 //        final boolean isPk = isPkRaw != null && isPkRaw == 1 ? true : false;
-        final Boolean isPk = (boolean) column.get("isPk");
+        Boolean isPk=false;
+        Object pk = column.get("isPk");
+        if (pk!=null){
+          if (pk instanceof Integer) {
+            isPk=1==(Integer) pk;
+          }else if (pk instanceof Long) {
+            isPk=1==(Long) pk;
+          }else if (pk instanceof Boolean){
+            isPk=(Boolean)pk;
+          }
+        }
         if (isPk) {
           pks.add(field);
         }
