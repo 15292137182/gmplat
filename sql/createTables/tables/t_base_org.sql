@@ -13,6 +13,6 @@ CREATE TABLE t_base_org (
 
   etc         JSONB DEFAULT '{}',
   delete_flag VARCHAR(4)   NULL
-
 );
+
 COMMENT ON TABLE t_base_org IS '组织机构';

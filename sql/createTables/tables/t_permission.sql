@@ -5,7 +5,7 @@ CREATE TABLE public.t_permission (
 
   permission_id   VARCHAR(32) NOT NULL,
   permission_name VARCHAR(64),
-  permission_type VARCHAR(4),
+  permission_type VARCHAR(32),
   "desc"          TEXT  DEFAULT '',
   remarks         TEXT,
 
