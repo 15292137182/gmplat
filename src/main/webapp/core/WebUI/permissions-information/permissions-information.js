@@ -10,8 +10,8 @@ var basRight;
 var rightTable;
 
 //权限类型信息查询接口
-// var roleInformation = serverPath + "/keySet/queryKeySet";
-var roleInformation = serverPath + "/permission/queryPage";
+var roleInformation = serverPath + "/keySet/queryKeySet";
+// var roleInformation = serverPath + "/permission/queryPage";
 
 //权限指定字段查询接口
 var selUrl = serverPath + "/permission/queryTypePermission";
@@ -87,11 +87,11 @@ gmp_onload=function(){
                 // 获取树节点接口
                 url: roleInformation,
                 //传递参数
-                params:{search:"privilegeType"},
+                params:"privilegeType",
                 // 设置参数 -- 树节点上显示的文字
                 defaultProps: {
                     // 树节点显示文字
-                    label: 'permissionName',
+                    label: 'confValue',
                     // 节点id
                     key: "rowId",
                     // 父节点信息
@@ -107,10 +107,10 @@ gmp_onload=function(){
             getNodes(data) {
                 console.log(data);
                 this.rowId=data.rowId;
-                rightBottom.permissionType = data.permissionType;
+                rightBottom.permissionType = data.confKey;
                 // basTop.disabled = false;
                 basTop.addOpe = false;
-                basRightTop.PersonnelInformation(data.permissionType);
+                basRightTop.PersonnelInformation(data.confKey);
                 basRightTop.roleInformation(data.rowId);
             },
             //复选框选中得到得值
