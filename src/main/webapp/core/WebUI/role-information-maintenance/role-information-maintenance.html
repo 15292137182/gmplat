@@ -219,11 +219,13 @@
                   :height="leftHeight"
                   v-loading="loading"
                   element-loading-text="加载中">
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleId" label="编号" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="orgId" label="机构编号" width="250">
             </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="roleName" label="名称" width="250">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="orgName" label="机构名称" width="250">
             </el-table-column>
-            <el-table-column show-overflow-tooltip sortable="custom" prop="desc" label="描述" width="">
+            <el-table-column show-overflow-tooltip sortable="custom" prop="fixedPhone" label="固定电话" width="">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip sortable="custom" prop="address" label="机构地址" width="">
             </el-table-column>
         </el-table>
         <el-row type="flex" justify="end" style="padding-top:10px" class="block">

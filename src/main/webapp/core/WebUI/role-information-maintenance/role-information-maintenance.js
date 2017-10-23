@@ -11,14 +11,18 @@ var rightBottom;
 var basRightTop;
 var basRight;
 
-//查角色信息查询接口
+//查角色详细信息查询接口
 var roleInformation = serverPath + "/role/queryBySpecify";
 
 //查看角色下的权限信息
-var permissionsInformation = serverPath + "/permission/queryById";
+var permissionsInformation = serverPath + "/role/queryPermissions";
 
 //查看角色下的人员信息
 var personnelInformationInterface = serverPath + "/role/queryUsers";
+
+//查看角色下的组织机构信息
+var selOrganization = serverPath + "/role/queryOrgs";
+
 
 //角色编辑接口
 var modify = serverPath + "/role/modify";
@@ -110,27 +114,9 @@ gmp_onload=function(){
                 basTop.disabled = false;
                 rightBottom.disabled = false;
                 // basTop.orgDeleteData = false;
-                $.ajax({
-                    url:roleInformation,
-                    type:"get",
-                    data:{
-                        rowId:this.rowId
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        var data=(res.resp.content.data)[0];
-                        console.log(data);
-                        right.formTable.roleId=data.roleId;
-                        right.formTable.roleName=data.roleName;
-                        right.formTable.roleType=data.roleType;
-                        right.formTable.desc=data.desc;
-                        right.formTable.remarks=data.remarks;
-                        right.rowId = data.rowId;
-                        basRightTop.PersonnelInformation(right.rowId);
-                        // basRightTop.roleView(data.rowId);
-                    },
-                })
+                this.selRole(this.rowId);
+                basRightTop.selQueryPermissions(this.rowId);
+                basRight.selOrganization(this.rowId);
             },
             //复选框选中得到得值
             getChecked(data) {
@@ -146,7 +132,31 @@ gmp_onload=function(){
                         }
                     }
                 }
-            }
+            },
+
+            //查角色下的详细信息及人员表格赋值
+            selRole(rowId){
+                $.ajax({
+                    url:roleInformation,
+                    type:"get",
+                    data:{
+                        rowId:rowId
+                    },
+                    dataType:"json",
+                    xhrFields: {withCredentials: true},
+                    success:function(res){
+                        var data=(res.resp.content.data)[0];
+                        console.log(data);
+                        right.formTable.roleId=data.roleId;
+                        right.formTable.roleName=data.roleName;
+                        right.formTable.roleType=data.roleType;
+                        right.formTable.desc=data.desc;
+                        right.formTable.remarks=data.remarks;
+                        right.rowId = data.rowId;
+                        basRightTop.PersonnelInformation(right.rowId);
+                    },
+                })
+            },
         },
         created(){
             $(document).ready(function () {
@@ -222,16 +232,12 @@ gmp_onload=function(){
             },
             //分页信息
             handleSizeChange(val){
-                //alert("点击每页显示多少条");
                 this.pageSize = val;
+                basRightTop.selQueryPermissions(left.rowId);
             },
             handleCurrentChange(val){
-                //alert("当前第几页");
-                var strArr = '["'+right.rowId+'"]';
-                console.log(strArr);
-                querySearch.jumpPage(PersonnelInformationUrl,strArr,this,val,function(res){
-                    console.log(res);
-                })
+                this.pageNum = val;
+                basRightTop.selQueryPermissions(left.rowId,val);
             },
             //刷新按钮
             btnRefresh(){
@@ -258,33 +264,14 @@ gmp_onload=function(){
             twoClick(){
                 alert("1");
             },
-            //角色查看
-            roleView(rowId){
-                var strArr = '["'+rowId+'"]';
-                console.log(strArr);
-                $.ajax({
-                    url:roleViewUrl,
-                    type:"get",
-                    data:{
-                        param:strArr
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        console.log(res.resp.content.data)
-                        rightBottom.loading=false;
-                        rightBottom.tableDataTwo = res.resp.content.data;//数据源
-                    },
-                })
-            },
             //分页信息
             handleSizeChange(val){
                 this.pageSize = val;
-                this.PersonnelInformation(right.rowId);
+                this.PersonnelInformation(left.rowId);
             },
             handleCurrentChange(val){
                 this.pageNum = val;
-                this.PersonnelInformation(right.rowId,val);
+                this.PersonnelInformation(left.rowId,val);
             },
             //人员信息查询
             PersonnelInformation(rowId,numberPage){
@@ -297,9 +284,25 @@ gmp_onload=function(){
                 var data = {
                     "rowId":rowId
                 }
-                querySearch.getDataPage(personnelInformationInterface,data,this,page,function(res){
+                querySearch.getDataPage(personnelInformationInterface,data,basRightTop,page,function(res){
                     console.log(res);
                 })
+            },
+
+            //查角色下的权限信息
+            selQueryPermissions(rowId,numberPage){
+                var page = 1;
+                if(numberPage){
+                    page = numberPage;
+                }
+                var rowId = rowId;
+                console.log(rowId);
+                var data = {
+                    "rowId":rowId
+                }
+                querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){
+                    console.log(res);
+                });
             },
         },
         created(){
@@ -316,37 +319,39 @@ gmp_onload=function(){
     basRight = new Vue({
         el:"#basRight",
         template:'#tempBlockThree',
-        data:getData.dataObj({}),
+        data:getData.dataObj({
+
+        }),
         methods:{
             //点击行
             twoClick(){
                 alert("1");
             },
-            //角色查看
-            roleView(rowId){
-                var strArr = '["'+rowId+'"]';
-                console.log(strArr);
-                $.ajax({
-                    url:roleViewUrl,
-                    type:"get",
-                    data:{
-                        param:strArr
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        console.log(res.resp.content.data)
-                        rightBottom.loading=false;
-                        rightBottom.tableDataTwo = res.resp.content.data;//数据源
-                    },
-                })
-            },
             //分页信息
-            handleSizeChange(){
-
+            handleSizeChange(val){
+                //一页显示多少条
+                this.pageSize = val;
+                this.selOrganization(left.rowId);
             },
-            handleCurrentChange(){
-
+            handleCurrentChange(val){
+                //当前第几页
+                this.pageNum = val;
+                this.selOrganization(left.rowId,val);
+            },
+            //组织机构
+            selOrganization(rowId,numberPage){
+                var page = 1;
+                if(numberPage){
+                    page = numberPage;
+                }
+                var rowId = rowId;
+                console.log(rowId);
+                var data = {
+                    "rowId":rowId
+                }
+                querySearch.getDataPage(selOrganization,data,basRight,page,function(res){
+                    console.log(res);
+                });
             },
         },
         created(){
