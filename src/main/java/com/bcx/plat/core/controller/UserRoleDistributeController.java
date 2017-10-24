@@ -4,10 +4,7 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.Role;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserGroup;
-import com.bcx.plat.core.entity.UserRelateRole;
-import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.component.Order;
-import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserRoleDistributeService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
@@ -19,12 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.constants.Message.DATA_CANNOT_BE_EMPTY;
-import static com.bcx.plat.core.constants.Message.QUERY_FAIL;
-import static com.bcx.plat.core.constants.Message.QUERY_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
@@ -105,33 +99,21 @@ public class UserRoleDistributeController extends BaseController {
 
 
   /**
-   * 查询角色及其用户
+   * 查询角色关联的用户信息
    *
-   * @return PlatResult
+   * @param search   模糊搜索条件
+   * @param param    精确查询
+   * @param pageNum  一页显示条数
+   * @param pageSize 页码
+   * @param order    排序
+   * @Author wenTieu
+   * @Date 2017/10/24
    */
   @GetMapping("/queryRoleUserInfo")
-  public PlatResult queryRoleUserInfo() {
-    PlatResult platResult;
-    //查询全部角色信息
-    List<Role> roles = new Role().selectAll();
-    if (isValid(roles)) {
-      //获取角色信息的rowId
-      List<String> collect = roles.stream().map(Role::getRowId).collect(Collectors.toList());
-      //通过获取角色的rowId来查询关联表中信息
-      Condition roleRowId = new ConditionBuilder(UserRelateRole.class).and().in("roleRowId", collect).endAnd().buildDone();
-      List<UserRelateRole> userRelateRoles = new UserRelateRole().selectSimple(roleRowId);
-      if (isValid(userRelateRoles)) {
-        List<String> userRowId = userRelateRoles.stream().map(UserRelateRole::getUserRowId).collect(Collectors.toList());
-        Condition condition = new ConditionBuilder(User.class).and().in("rowId", userRowId).endAnd().buildDone();
-        List list = new User().selectList(condition, null, true);
-        platResult = successData(QUERY_SUCCESS, list);
-      } else {
-        platResult = fail(QUERY_FAIL);
-      }
-    } else {
-      platResult = fail(QUERY_FAIL);
-    }
-    return platResult;
+  public PlatResult queryRoleUserInfo(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(Role.class, order);
+    ServerResult serverResult = userRoleDistributeService.queryRoleUserInfo(search, param, pageNum, pageSize, orders);
+    return result(serverResult);
   }
 
 
@@ -152,6 +134,26 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult queryUserGroupRole(String search, String param, String belongOrg, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(UserGroup.class, order);
     ServerResult serverResult = userRoleDistributeService.queryUserGroupRole(search, param, belongOrg, pageNum, pageSize, orders);
+    return result(serverResult);
+  }
+
+
+  /**
+   * 查询所有用户组信息获取关联角色的信息
+   *
+   * @param search   模糊搜索条件
+   * @param param    精确查询
+   * @param pageNum  一页显示条数
+   * @param pageSize 页码
+   * @param order    排序
+   * @return 查询角色信息
+   * @Author wenTieHu
+   * @Date 2017/10/24
+   */
+  @GetMapping("/queryRoleUserGroup")
+  public PlatResult queryRoleUserGroup(String search, String param, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(Role.class, order);
+    ServerResult serverResult = userRoleDistributeService.queryRoleUserGroup(search, param, pageNum, pageSize, orders);
     return result(serverResult);
   }
 
