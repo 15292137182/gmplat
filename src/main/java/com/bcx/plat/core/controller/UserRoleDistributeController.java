@@ -4,11 +4,11 @@ import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.entity.Role;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.entity.UserGroup;
-import com.bcx.plat.core.entity.UserGroupRelateRole;
 import com.bcx.plat.core.entity.UserRelateRole;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.service.RoleService;
+import com.bcx.plat.core.service.UserRoleDistributeService;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.constants.Message.DATA_CANNOT_BE_EMPTY;
 import static com.bcx.plat.core.constants.Message.QUERY_FAIL;
 import static com.bcx.plat.core.constants.Message.QUERY_SUCCESS;
+import static com.bcx.plat.core.utils.UtilsTool.dataSort;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
 
 /**
@@ -36,12 +38,11 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  *          <pre>History: 2017/10/19  Wen TieHu Create </pre>
  */
 @RestController
-@RequestMapping(PLAT_SYS_PREFIX + "/core/RoleDistribute")
+@RequestMapping(PLAT_SYS_PREFIX + "/core/roleDistribute")
 public class UserRoleDistributeController extends BaseController {
 
-
   @Resource
-  private RoleService roleService;
+  private UserRoleDistributeService userRoleDistributeService;
 
   /**
    * 用户分配角色关联信息
@@ -51,10 +52,10 @@ public class UserRoleDistributeController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/addUserRole")
-  public PlatResult addUserRole(String userRwoId, String[] roleRowId) {
+  public PlatResult addUserRole(String userRwoId, List<String> roleRowId) {
     PlatResult platResult;
     if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addUserRole(userRwoId, roleRowId);
+      ServerResult serverResult = userRoleDistributeService.addUserRole(userRwoId, roleRowId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -73,7 +74,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult deleteUserRole(String userRwoId, String[] roleRowId) {
     PlatResult platResult;
     if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteUserRole(userRwoId, roleRowId);
+      ServerResult serverResult = userRoleDistributeService.deleteUserRole(userRwoId, roleRowId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -85,36 +86,21 @@ public class UserRoleDistributeController extends BaseController {
   /**
    * 查询所有用户信息获取关联角色的信息
    *
+   * @param search    模糊搜索条件
+   * @param param     精确查询
+   * @param belongOrg 查询部门
+   * @param pageNum   一页显示条数
+   * @param pageSize  页码
+   * @param order     排序
    * @return 查询角色信息
+   * @Author wenTieHu
+   * @Date 2017/10/23
    */
   @GetMapping("/queryUserRole")
-  public PlatResult queryUserRole() {
-    PlatResult platResult;
-    List<User> users = new User().selectAll();
-    if (isValid(users)) {
-      List<String> userRowId = users.stream().map(User::getRowId).collect(Collectors.toList());
-      if (isValid(userRowId)) {
-        Condition userRelateRole = new ConditionBuilder(UserRelateRole.class).and().in("userRowId", userRowId).endAnd().buildDone();
-        List<UserRelateRole> userRelateRoles = new UserRelateRole().selectSimple(userRelateRole);
-        if (isValid(userRelateRoles)) {
-          List<String> roleRowId = userRelateRoles.stream().map(UserRelateRole::getRoleRowId).collect(Collectors.toList());//获取角色rowId
-          Condition condition = new ConditionBuilder(Role.class).and().in("rowId", roleRowId).endAnd().buildDone();
-          List<Role> select = roleService.select(condition);
-          if (isValid(select)) {
-            platResult = successData(QUERY_SUCCESS, select);
-          } else {
-            platResult = fail(QUERY_FAIL);
-          }
-        } else {
-          platResult = fail(QUERY_FAIL);
-        }
-      } else {
-        platResult = fail(QUERY_FAIL);
-      }
-    } else {
-      platResult = fail(QUERY_FAIL);
-    }
-    return platResult;
+  public PlatResult queryUserRole(String search, String param, String belongOrg, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(User.class, order);
+    ServerResult serverResult = userRoleDistributeService.queryUserRole(search, param, belongOrg, pageNum, pageSize, orders);
+    return result(serverResult);
   }
 
 
@@ -125,7 +111,7 @@ public class UserRoleDistributeController extends BaseController {
    */
   @GetMapping("/queryRoleUserInfo")
   public PlatResult queryRoleUserInfo() {
-    PlatResult platResult ;
+    PlatResult platResult;
     //查询全部角色信息
     List<Role> roles = new Role().selectAll();
     if (isValid(roles)) {
@@ -138,7 +124,7 @@ public class UserRoleDistributeController extends BaseController {
         List<String> userRowId = userRelateRoles.stream().map(UserRelateRole::getUserRowId).collect(Collectors.toList());
         Condition condition = new ConditionBuilder(User.class).and().in("rowId", userRowId).endAnd().buildDone();
         List list = new User().selectList(condition, null, true);
-        platResult =successData(QUERY_SUCCESS,list);
+        platResult = successData(QUERY_SUCCESS, list);
       } else {
         platResult = fail(QUERY_FAIL);
       }
@@ -152,36 +138,21 @@ public class UserRoleDistributeController extends BaseController {
   /**
    * 查询所有用户组信息获取关联角色的信息
    *
+   * @param search    模糊搜索条件
+   * @param param     精确查询
+   * @param belongOrg 查询部门
+   * @param pageNum   一页显示条数
+   * @param pageSize  页码
+   * @param order     排序
    * @return 查询角色信息
+   * @Author wenTieHu
+   * @Date 2017/10/23
    */
   @GetMapping("/queryUserGroupRole")
-  public PlatResult queryUserGroupRole() {
-    PlatResult platResult;
-    List<UserGroup> usersGroup = new UserGroup().selectAll();
-    if (isValid(usersGroup)) {
-      List<String> usersGroupRowId = usersGroup.stream().map(UserGroup::getRowId).collect(Collectors.toList());
-      if (isValid(usersGroupRowId)) {
-        Condition userRelateRole = new ConditionBuilder(UserGroupRelateRole.class).and().in("userGroupRowId", usersGroupRowId).endAnd().buildDone();
-        List<UserGroupRelateRole> userGroupRelateRoles = new UserGroupRelateRole().selectSimple(userRelateRole);
-        if (isValid(userGroupRelateRoles)) {
-          List<String> roleRowId = userGroupRelateRoles.stream().map(UserGroupRelateRole::getRoleRowId).collect(Collectors.toList());//获取角色rowId
-          Condition condition = new ConditionBuilder(Role.class).and().in("rowId", roleRowId).endAnd().buildDone();
-          List<Role> select = roleService.select(condition);
-          if (isValid(select)) {
-            platResult = successData(QUERY_SUCCESS, select);
-          } else {
-            platResult = fail(QUERY_FAIL);
-          }
-        } else {
-          platResult = fail(QUERY_FAIL);
-        }
-      } else {
-        platResult = fail(QUERY_FAIL);
-      }
-    } else {
-      platResult = fail(QUERY_FAIL);
-    }
-    return platResult;
+  public PlatResult queryUserGroupRole(String search, String param, String belongOrg, Integer pageNum, Integer pageSize, String order) {
+    LinkedList<Order> orders = dataSort(UserGroup.class, order);
+    ServerResult serverResult = userRoleDistributeService.queryUserGroupRole(search, param, belongOrg, pageNum, pageSize, orders);
+    return result(serverResult);
   }
 
 
@@ -196,7 +167,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult addUserGroupRole(String userGroupRwoId, String[] roleRowIds) {
     PlatResult platResult;
     if (isValid(userGroupRwoId) && isValid(roleRowIds)) {
-      ServerResult serverResult = roleService.addUserGroupRole(userGroupRwoId, roleRowIds);
+      ServerResult serverResult = userRoleDistributeService.addUserGroupRole(userGroupRwoId, roleRowIds);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -216,7 +187,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult deleteUserGroupRole(String userGroupRwoId, String[] roleRowId) {
     PlatResult platResult;
     if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteUserGroupRole(userGroupRwoId, roleRowId);
+      ServerResult serverResult = userRoleDistributeService.deleteUserGroupRole(userGroupRwoId, roleRowId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -236,7 +207,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult addRoleUser(String roleRowId, String[] userRwoId) {
     PlatResult platResult;
     if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addRoleUser(roleRowId, userRwoId);
+      ServerResult serverResult = userRoleDistributeService.addRoleUser(roleRowId, userRwoId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -255,7 +226,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult deleteRoleUser(String roleRowId, String[] userRwoId) {
     PlatResult platResult;
     if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteRoleUser(roleRowId, userRwoId);
+      ServerResult serverResult = userRoleDistributeService.deleteRoleUser(roleRowId, userRwoId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -275,7 +246,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult addRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
     PlatResult platResult;
     if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.addRoleUserGroup(roleRowId, userGroupRwoId);
+      ServerResult serverResult = userRoleDistributeService.addRoleUserGroup(roleRowId, userGroupRwoId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -295,7 +266,7 @@ public class UserRoleDistributeController extends BaseController {
   public PlatResult deleteRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
     PlatResult platResult;
     if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = roleService.deleteRoleUserGroup(roleRowId, userGroupRwoId);
+      ServerResult serverResult = userRoleDistributeService.deleteRoleUserGroup(roleRowId, userGroupRwoId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);

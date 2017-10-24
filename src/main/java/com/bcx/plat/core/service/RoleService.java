@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,9 @@ public class RoleService extends BaseService<Role> {
     this.permissionService = permissionService;
     this.userGroupService = userGroupService;
   }
+
+  @Resource
+  private UserRoleDistributeService userRoleDistributeService;
 
   private List<String> blankSelectFields() {
     return Arrays.asList("roleId", "roleName", "roleType");
@@ -285,8 +289,8 @@ public class RoleService extends BaseService<Role> {
    * 添加组织机构到角色
    *
    * @param roleRowId 角色主键
-   * @param orgRowIds 组织机构rowId数组
-   * @return ServerResult
+   * @param orgRowIds
+   * @return
    */
   public ServerResult addRoleOrg(String roleRowId, String[] orgRowIds) {
     if (null != roleRowId && null != orgRowIds && orgRowIds.length != 0) {
@@ -313,6 +317,23 @@ public class RoleService extends BaseService<Role> {
     }
     return fail(INVALID_REQUEST);
   }
+
+
+  @Transactional
+  public ServerResult deleteRole(String rowId) {
+    //删除：逻辑删除；  与用户、用户组、组织机构、权限的关联关系同步逻辑删除
+    if (isValid(rowId)) {
+      userRoleDistributeService.deleteRoleUser(rowId, null);
+      userRoleDistributeService.deleteRoleUserGroup(rowId, null);
+      deleteRolePermission(rowId, null);
+      int delete = new Role().deleteById(rowId);
+      if (delete != -1) {
+        return success(DELETE_SUCCESS);
+      }
+    }
+    return fail(DELETE_FAIL);
+  }
+
 
   /**
    * 删除角色下的权限信息
@@ -540,12 +561,6 @@ public class RoleService extends BaseService<Role> {
     return fail(DELETE_FAIL);
   }
 
-  /**
-   * 删除角色
-   *
-   * @param rowId 角色唯一标识
-   * @return ServerResult
-   */
   @Transactional
   public ServerResult deleteRole(String rowId) {
     //删除：逻辑删除；  与用户、用户组、组织机构、权限的关联关系同步逻辑删除
