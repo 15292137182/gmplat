@@ -107,6 +107,9 @@ public class UserController extends BaseController {
    */
   @PostMapping("/add")
   public PlatResult add(@RequestParam Map<String, Object> param) {
+    if (!UtilsTool.isValid(param.get("password"))) {//如果密码为空，则置为初始密码
+      param.put("password", SystemSettingManager.getDefaultPwd());
+    }
     String id = (String) param.get("id");
     String name = (String) param.get("name");
     if (UtilsTool.isValidAll(id, name)) {//工号和姓名不能为空

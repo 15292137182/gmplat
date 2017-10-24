@@ -3,9 +3,9 @@ package com.bcx.plat.core.entity;
 import com.bcx.plat.core.base.BaseEntity;
 
 /**
- * 权限实体类
+ * 角色实体类
  * <p>
- * Created By YoungerOu at 2017/10/12
+ * Created By YoungerOu on 2017/10/12
  */
 public class Role extends BaseEntity<Role> {
 
