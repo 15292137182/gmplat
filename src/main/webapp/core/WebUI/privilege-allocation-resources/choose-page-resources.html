@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <el-col :span="24" id="pageResources" style="margin-top:20px;padding-left: 20px;">
+    <div>
+        <el-row>
+            <el-col :span="24">
+                <el-row style="margin-bottom: 10px">
+                    <el-col :span="12">
+                        <div>
+                            <el-input placeholder="请输入内容" v-model="searchInput">
+                                <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                    <el-option label="编号" value="permissionId"></el-option>
+                                    <el-option label="名称" value="permissionName"></el-option>
+                                </el-select>
+                                <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                            </el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-table ref="myData"
+                      :data="tableData"
+                      @row-click="click" border style="width: 100%"
+                      :highlight-current-row="true"
+                      :height="leftHeight"
+                      v-loading="loading"
+                      element-loading-text="加载中">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="operatNumber" label="资源编号" width="">
+                </el-table-column>
+                <el-table-column show-overflow-tooltip sortable="custom" prop="operatName" label="资源名称" width="120">
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="desc" label="备注" width="">
+                </el-table-column>
+                <el-table-column  label="操作" width="80">
+                    <template scope="scope">
+                        <el-button @click="details" type="text" size="small" icon="search"></el-button>
+                        <el-button @click="del" type="text" size="small" icon="delete"></el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-row>
+        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageNum"
+                    :page-sizes="[5,10,]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="allDate">
+            </el-pagination>
+        </el-row>
+        <el-row style="position: absolute; top: 500px; left: 320px;">
+            <el-col :span="8" style="text-align:right">
+                <el-button type="primary" @click="conformEvent">保存</el-button>
+            </el-col>
+            <el-col :span="8" style="text-align: left; margin-left: 50px;" :offset="2">
+                <el-button type="primary" @click="cancel">取消</el-button>
+            </el-col>
+        </el-row>
+    </div>
+</el-col>
+</body>
+<script>
+    var pageResources = new Vue({
+        el:"#pageResources",
+        data:getData.dataObj({
+            searchInput:"",
+            select:"",
+            row:"",
+        }),
+        methods:{
+            searchClick(){},
+            click(row){
+                this.row = row;
+            },
+            details(){},
+            del(){},
+            handleSizeChange(){},
+            handleCurrentChange(){},
+            conformEvent(){
+                right.chooseData = this.row;
+                this.cancel();
+            },
+            cancel(){
+                ibcpLayer.Close(rightBottom.divIndex);
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>权限分配资源</title>
+    <script src="../Public/publicjs.js"></script>
+    <style>
+        html{
+            overflow: hidden;
+        }
+        #basTop .el-icon-delete{
+            color: white;
+        }
+        .el-select{
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+<div style="float: left;border: 1px solid #d1ddf9; width: 100%;margin-top: 10px;">
+    <el-col :span="2" id="left">
+        <div class="allBorder" id="allBorderHeight" style="height:500px; border:none;margin-left: -20px;">
+            <el-row>
+                <el-col>
+                    <div style="padding: 10px 0 10px 20px;">
+                        <el-col style="padding:10px 0">
+                            <base-tree :initial="treeData" ref="org" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                        </el-col>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </el-col>
+
+    <el-col :span="14" id="rightBottom" style="margin-top:20px;">
+        <div class="allBorder" style="border: none">
+            <el-row>
+                <el-col>
+                    <div style="">
+                        <div>
+                            <el-row>
+                                <el-col :span="24">
+                                    <el-row style="margin-bottom: 10px">
+                                        <el-col :span="12">
+                                            <div>
+                                                <el-input placeholder="请输入内容" v-model="searchInput">
+                                                    <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                                        <el-option label="编号" value="permissionId"></el-option>
+                                                        <el-option label="名称" value="permissionName"></el-option>
+                                                    </el-select>
+                                                    <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                                                </el-input>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-table ref="myData"
+                                          :data="tableData"
+                                          @row-click="firstClick" border style="width: 100%"
+                                          :highlight-current-row="true"
+                                          :height="leftHeight"
+                                          v-loading="loading"
+                                          element-loading-text="加载中">
+                                    <el-table-column type="expand">
+                                        <template scope="props">
+                                            <el-form label-position="left" inline class="block-table-expand">
+                                                <el-row>
+                                                    <el-col :span="24">
+                                                        <el-form-item label="描述">
+                                                            <span>{{ props.row.desc }}</span>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                    <el-col :span="24">
+                                                        <el-form-item label="备注">
+                                                            <span>{{ props.row.remarks }}</span>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </el-row>
+                                            </el-form>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="权限编号" width="">
+                                    </el-table-column>
+                                    <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="权限名称" width="">
+                                    </el-table-column>
+                                    <el-table-column show-overflow-tooltip sortable="custom" prop="permissionType" label="权限类型" width="140">
+                                    </el-table-column>
+                                    <el-table-column  label="操作" width="80">
+                                        <template scope="scope">
+                                            <el-button @click="distribution" type="text" size="small" icon="share"></el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </el-row>
+                        </div>
+                        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                                    <el-pagination
+                                            @size-change="handleSizeChange"
+                                            @current-change="handleCurrentChange"
+                                            :current-page="pageNum"
+                                            :page-sizes="[5,10,20]"
+                                            :page-size="pageSize"
+                                            layout="total, sizes, prev, pager, next, jumper"
+                                            :total="allDate">
+                                    </el-pagination>
+                                </el-row>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </el-col>
+
+    <el-col :span="8" id="right" style="margin-top:20px;padding-left: 20px;">
+        <div>
+        <el-row>
+            <el-col :span="24">
+                <el-row style="margin-bottom: 10px">
+                    <el-col :span="20">
+                        <div>
+                            <el-input placeholder="请输入内容" v-model="searchInput">
+                                <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                    <el-option label="编号" value="permissionId"></el-option>
+                                    <el-option label="名称" value="permissionName"></el-option>
+                                </el-select>
+                                <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                            </el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-table ref="myData"
+                      :data="tableData"
+                      @row-click="firstClick" border style="width: 100%"
+                      :highlight-current-row="true"
+                      :height="leftHeight"
+                      v-loading="loading"
+                      element-loading-text="加载中">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="资源编号" width="">
+                </el-table-column>
+                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="资源名称" width="120">
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
+                </el-table-column>
+                <el-table-column  label="操作" width="80">
+                    <template scope="scope">
+                        <el-button @click="editBlock" type="text" size="small" icon="search"></el-button>
+                        <el-button @click="del" type="text" size="small" icon="delete"></el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-row>
+        </div>
+    </el-col>
+</div>
+
+<script src="privilege-allocation-resources.js"></script>
+</body>
+</html>
