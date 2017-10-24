@@ -107,9 +107,9 @@ gmp_onload=function(){
             //点击这一行
             currentChange(row, event, column){
                 console.log(row);
-                console.log(row.roleRowId);
                //获得所属角色的key
-                this.rightRowId=row.roleRowId
+                this.rightRowId=row.roleRowIds
+                console.log( this.rightRowId)
             },
             handleSizeChange(val){
                 //不跳回第一页

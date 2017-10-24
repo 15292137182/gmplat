@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
 </head>
 <body>
 <div id="aaa" style="margin:10px 10px">
@@ -20,7 +21,12 @@
     //用户分配角色
     if(operate==1){
         res=right.allRoleData;
-        resId=right.rightRowId;
+        if(right.rightRowId!=undefined){
+            resId=right.rightRowId;
+            resIds=resId.split(",");
+        }else{
+            resIds=[];
+        }
     }
     var vm=new Vue({
         el:'#aaa',
@@ -42,7 +48,7 @@
             return {
                 data: generateData(res),
                 //绑定到目标标示上的数据
-                value1: [resId]
+                value1: resIds
             };
         },
         methods:{

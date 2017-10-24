@@ -317,10 +317,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() -440;
+                rightBottom.leftHeight = $(window).height() -455;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() -440;
+                rightBottom.leftHeight = $(window).height() -455;
             });
         }
     })

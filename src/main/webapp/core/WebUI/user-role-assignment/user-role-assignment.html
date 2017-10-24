@@ -54,6 +54,9 @@
             border-top-left-radius: 0 ;
             border-bottom-left-radius: 0;
         }
+        .el-dropdown{
+            width:200px !important;
+        }
 
     </style>
 </head>
@@ -84,7 +87,7 @@
                     <div>
                         <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="padding:20px 20px">
                             <el-tab-pane label="用户分配" name="first">
-                                <el-col :span="7">
+                                <el-col :span="8">
                                     <div style="padding:20px 0">
                                         <div class="extra" style="font-size:14px;">部门</div>
                                         <select-tree :initial="searchDepart" @click-node="getNodes"  @clear="clear"></select-tree>
@@ -154,7 +157,7 @@
 <template id="tempBlock">
     <el-col id="rightBlock">
         <div>
-            <el-col :span="7" :push="1">
+            <el-col :span="8" :push="1">
                 <div style="padding:20px 0">
                     <div class="extra" style="font-size:14px;">部门</div>
                     <select-tree :initial="searchDepart" @click-node="getNodes"  @clear="clear"></select-tree>

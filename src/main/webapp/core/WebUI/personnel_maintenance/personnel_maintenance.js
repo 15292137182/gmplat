@@ -43,7 +43,7 @@ gmp_onload=function(){
             addEvent() {
                 operate = 1;
                 var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '50%', '98%',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '700px',function(){
 
                 });
             },
@@ -152,7 +152,7 @@ gmp_onload=function(){
         data:getData.dataObj({
             config: {
                 // 显示复选框
-                checkbox:false,
+                checkbox:true,
                 // 默认展开
                  //expanded: [324],
                 // 展开所有节点
@@ -172,23 +172,42 @@ gmp_onload=function(){
                 url: serverPath + "/baseOrg/queryPage"
             },
             activeName:'first',
+            arr:[],
         }),
         methods:{
-            getNodes(data){
-                //console.log(data);
-                this.rowId=data.rowId;
-                right.searchUser();
+            getNodes(data,id,name){
+                //this.rowId=data.rowId;
+                //right.searchUser();
             },
             //复选框点击
-            getChecked(){
-                console.log(data);
+            getChecked(data, id, allChecked, name, flag) {
+                // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
+
+                Array.prototype.indexOf = function(val) {
+                    for (var i = 0; i < this.length; i++) {
+                        if (this[i] == val) return i;
+                    }
+                    return -1;
+                };
+                Array.prototype.remove = function(val) {
+                    var index = this.indexOf(val);
+                    if (index > -1) {
+                        this.splice(index, 1);
+                    }
+                };
+                if(flag==true){
+                    this.arr.push(data.rowId);
+                }else{
+                    this.arr.remove(data.rowId);
+                }
+                this.rowId=left.arr;
+                right.searchUser();
             },
             //tab页点击交换
             handleClick(){
                 //判断点击的是第一还是第二
                 //console.log(left.activeName)
             }
-
         },
         create(){
             $(document).ready(function () {
@@ -237,15 +256,11 @@ gmp_onload=function(){
         }
     })
 
-
-
-
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
             select: '',//查询类
             chooseState: '',//状态
-            couldLook:false,//状态能否被看见
         }),
         methods: {
             headSort(column){
@@ -348,9 +363,6 @@ gmp_onload=function(){
                 $.each(selection,function(i,item){
                     right.userId.push(item.rowId)
                 })
-            },
-            showMore(){
-                this.couldLook=true;
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -665,10 +677,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                right.leftHeight = $(window).height() - 210;
+                right.leftHeight = $(window).height() - 235;
             });
             $(window).resize(function () {
-                right.leftHeight = $(window).height() - 210;
+                right.leftHeight = $(window).height() - 235;
             });
 
         }

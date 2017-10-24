@@ -57,10 +57,6 @@
             /*border-top-right-radius: 0 ;*/
             /*border-bottom-right-radius: 0;*/
         }
-
-
-
-
     </style>
 </head>
 <body>
@@ -79,8 +75,8 @@
     </el-row>
 </div>
 
-<div class="allBorder" style="float: left; padding:20px 10px 0 10px;">
-    <el-col :span="5" id="left" style="margin-left:15px">
+<div class="allBorder" style="margin-top:10px">
+    <el-col :span="5" id="left">
         <el-row>
             <el-col>
                 <div style="padding:20px 20px">
@@ -99,14 +95,25 @@
         </el-row>
     </el-col>
 
-    <el-col :span="18" id="right" style="margin-left:15px">
-        <div class="allBorder" style="border:1px solid #bccdc5;padding:2px 0 ">
+    <el-col :span="18" id="right" :push="1" style="margin-top:25px">
+        <div class="allBorder">
             <el-row>
                 <el-col>
                     <div>
                         <span class="spanPosition">人员信息维护页面</span>
                     </div>
-                    <el-col :span="15">
+                    <el-col :span="6" style="margin-left:20px">
+                        <div style="padding:20px 0">
+                            <div class="extra" style="font-size:14px;">状态</div>
+                            <el-select v-model="chooseState" slot="prepend" placeholder="请选择状态" clearable style="margin-left:-6px" class="extra1">
+                                <el-option label="锁定" value="01"></el-option>
+                                <el-option label="解锁" value="02"></el-option>
+                                <el-option label="启用" value="03"></el-option>
+                                <el-option label="失效" value="04"></el-option>
+                            </el-select>
+                        </div>
+                    </el-col>
+                    <el-col :span="12">
                         <div style="padding:20px 0 20px 20px" >
                             <el-input placeholder="请输入内容" v-model="input">
                                 <el-select v-model="select" slot="prepend" placeholder="请选择查询类型" clearable>
@@ -117,20 +124,6 @@
                                 </el-select>
                                 <el-button slot="append" icon="search" style="border-top-right-radius: 0;border-bottom-right-radius: 0;" @click.native="searchUser"></el-button>
                             </el-input>
-                        </div>
-                    </el-col>
-                    <el-col :span="2" style="padding:20px 20px 20px 5px">
-                        <el-button @click.native="showMore" icon="arrow-right"></el-button>
-                    </el-col>
-                    <el-col :span="7">
-                        <div style="padding:20px 0" v-show="couldLook">
-                            <div class="extra" style="font-size:14px;">状态</div>
-                            <el-select v-model="chooseState" slot="prepend" placeholder="请选择状态" clearable style="margin-left:-6px" class="extra1">
-                                <el-option label="锁定" value="01"></el-option>
-                                <el-option label="解锁" value="02"></el-option>
-                                <el-option label="启用" value="03"></el-option>
-                                <el-option label="失效" value="04"></el-option>
-                            </el-select>
                         </div>
                     </el-col>
                     <el-col :span="24">

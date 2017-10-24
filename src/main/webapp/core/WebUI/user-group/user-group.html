@@ -40,6 +40,9 @@
         #rightBottom .el-icon-check{
             color: red;
         }
+        .el-textarea{
+            width:400px;
+        }
     </style>
 </head>
 <body>
@@ -54,8 +57,8 @@
     </el-row>
 </div>
 
-<div class="allBorder" style="float: left; padding:20px 10px 0 10px;">
-    <el-col :span="4" id="left" style="height:500px; border:none">
+<div class="allBorder" style="margin-top:10px">
+    <el-col :span="4" id="left">
                 <el-row>
                     <el-col>
                         <div style="padding:0 20px">
@@ -67,7 +70,7 @@
                 </el-row>
         </el-col>
 
-    <el-col :span="19" id="right" style="margin-left:15px">
+    <el-col :span="19" id="right" :push="1" style="margin-top:25px">
         <div class="allBorder">
             <el-row>
                 <el-col>
@@ -108,15 +111,15 @@
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
+                                    <el-col :span="6" :offset="2">
+                                        <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
+                                    </el-col>
                                 </el-row>
                                 <el-row type="flex" class="row-bg">
                                     <el-col :span="6">
                                         <el-form-item label="描述" prop="desc">
                                             <el-input placeholder="描述" v-model="desc" ref="desc" type="textarea"></el-input>
                                         </el-form-item>
-                                    </el-col>
-                                    <el-col :span="6" :offset="3">
-                                        <el-button size="small" icon="check" type="primary" @click="addClick">保存</el-button>
                                     </el-col>
                                 </el-row>
                             </el-form>
@@ -129,7 +132,7 @@
         </div>
     </el-col>
 
-    <el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:40px;">
+    <el-col :span="19" :push="5" id="rightBottom" style="margin-top:40px;">
         <div class="allBorder" style="border:1px solid #bccdc5">
             <el-row>
                 <el-col>
