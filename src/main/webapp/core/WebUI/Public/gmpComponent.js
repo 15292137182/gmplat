@@ -498,7 +498,23 @@ Vue.component("base-tree", {
                     // }
                 }else {}
             }else {
-                self.setCheckedKeys([]);
+                // 若不配置选中项
+                var defaultChecked;
+                if(parent) {
+                    // 层级关系树 默认选中根节点
+                    for(var k = 0;k < data.length;k++) {
+                        if(data[k][parent] == "") {
+                            defaultChecked = data[k][key];
+                        }
+                    }
+                }else {
+                    // 一级树默认选中第一项
+                    defaultChecked = data[0][key];
+                }
+
+                if(defaultChecked) {
+                    self.setCheckedKeys([defaultChecked]);
+                }
             }
             // 获取默认展开节点
             if(_expanded && _expanded.length > 0) {
@@ -664,7 +680,7 @@ Vue.component("select-tree", {
             // 选中的节点名称
             select_node: [],
             // 选中节点 id
-            select_id: "",
+            select_id: [],
             // 是否显示复选框
             checkbox: "",
             // 中间参数
@@ -858,7 +874,7 @@ Vue.component("select-tree", {
                     nodesName.push(checkedNodes[g][label]);
                 }
                 // 改变选中节点key为当前选中节点key
-                this.defaultCheckedKeys = this.$refs.selectTree.getCheckedKeys();;
+                this.select_id = this.$refs.selectTree.getCheckedKeys();
                 // 显示节点名称
                 this.select_node = nodesName;
             }else {
@@ -913,7 +929,7 @@ Vue.component("select-tree", {
             if(bool && this.clearable && _checkbox) {
                 // 获取配置展开项 选择项
                 var _expanded = this.initial.expanded;
-                var _checked = this.defaultCheckedKeys;
+                var _checked = this.select_id;
                 // input添加类 然图标翻转
                 $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
                 // 下拉框展开 树结构展开配置节点
@@ -1164,7 +1180,10 @@ Vue.component("select-tree", {
         window.addEventListener("resize", this.widthChange);
     },
     beforeUpdate() {
-        this.defaultCheckedKeys = this.initial.checked;
+        var updatedChecked = this.initial.checked;
+        if(updatedChecked && updatedChecked.length > 0) {
+            this.defaultCheckedKeys = this.initial.checked;
+        }
         // var self = this;
         // // 获取树节点数据
         // this.getNode(function(data) {
