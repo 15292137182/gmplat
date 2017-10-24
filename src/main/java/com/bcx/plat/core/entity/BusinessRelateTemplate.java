@@ -16,8 +16,8 @@ import com.bcx.plat.core.utils.UtilsTool;
  */
 public class BusinessRelateTemplate extends BaseEntity<BusinessRelateTemplate> {
 
-  private String businessRowId;//关联业务对象
-  private String templateRowId;//关联模板对象
+  private String businessRowId; //关联业务对象
+  private String templateRowId; //关联模板对象
 
   /**
    * 构建 - 创建信息

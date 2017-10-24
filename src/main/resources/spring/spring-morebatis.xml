@@ -142,6 +142,22 @@
                       p:entityClass="com.bcx.plat.core.entity.Permission"
                       p:tableName="t_permission"
                       p:pks="#{'rowId'}"/>
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.MenuRelatePermission"
+                      p:tableName="t_menu_relate_permission"
+                      p:pks="#{'rowId'}"/>
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.PageRelatePermission"
+                      p:tableName="t_page_relate_permission"
+                      p:pks="#{'rowId'}"/>
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.ButtonRelatePermission"
+                      p:tableName="t_button_relate_permission"
+                      p:pks="#{'rowId'}"/>
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.OperateRelatePermission"
+                      p:tableName="t_operate_relate_permission"
+                      p:pks="#{'rowId'}"/>
             </list>
         </constructor-arg>
     </bean>
