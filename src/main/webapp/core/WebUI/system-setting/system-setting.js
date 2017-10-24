@@ -2,7 +2,7 @@
  * Created by liyuanquan on 2017/10/23.
  */
 var app = new Vue({
-    el: "#per_info",
+    el: "#sys_set",
     data() {
         return {
             // 超时设置
@@ -20,7 +20,7 @@ var app = new Vue({
             // 上传设置
             upload: "",
             // 页面验证
-            personalRule: {
+            systemRule: {
                 overtime: "",
                 regular: "",
                 locking: "",

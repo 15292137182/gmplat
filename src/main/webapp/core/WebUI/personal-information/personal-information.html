@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息维护</title>
+    <style>
+        .demo_line {
+            padding: 0 10px 0;
+            margin: 0 0 10px 0;
+            position: relative;
+        }
+
+        .demo_line hr {
+            width: 93%;
+            position: absolute;
+            right: 5px;
+            top: 25%;
+            border: 1px solid #ddd
+        }
+
+        .demo_line span {
+            font-size:13px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <el-row id="per_info">
+        <el-col :span="24">
+            <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="个人信息" name="info">
+                    <component :is="info" :detail="info_detail"></component>
+                </el-tab-pane>
+                <el-tab-pane label="密码修改" name="psw">
+                    <component :is="psw" :modify="psw_modify"></component>
+                </el-tab-pane>
+            </el-tabs>
+        </el-col>
+    </el-row>
+
+    <script type="text/javascript" src="../Public/publicjs.js"></script>
+    <script type="text/javascript" src="personal-information.js"></script>
+</body>
+</html>

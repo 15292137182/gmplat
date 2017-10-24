@@ -979,8 +979,14 @@ Vue.component("select-tree", {
                     // 确认按钮不可用
                     this.error = true;
                 }
-            }else if(!_checkbox) {
+            }else if(!_checkbox && bool) {
+                // 配置不显示复选框 下拉框显示时
                 this.error = false;
+                // input添加类 然图标翻转
+                $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
+            }else if(!_checkbox && !bool) {
+                // 配置不显示复选框 下拉框隐藏时
+                $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
             }
         },
         // 组织层级关系数据
@@ -1222,7 +1228,7 @@ Vue.component("select-tree", {
         //     }
         // });
     },
-    template: `<el-dropdown id="gmpDrop" trigger="click" @visible-change="expanded">
+    template: `<el-dropdown id="gmpDrop" trigger="click" @visible-change="expanded" style="width: 100%;">
                     <el-input v-model="select_node" :readonly="true" ref="treeInput" icon="caret-top" @mouseover.native="enter" @mouseout.native="out" :on-icon-click="clear" placeholder="请选择"></el-input>
                     <el-dropdown-menu slot="dropdown" id="select_tree" :style="{width: dropWidth + 'px'}">
                         <el-dropdown-item>
@@ -1345,7 +1351,7 @@ Vue.component("date-time-picker", {
             this.$emit("selected-datetime", datetime);
         }
     },
-    template: `<el-date-picker @change="datetimeVal" v-model="value" :type="pickerType" :format="formatter" :placeholder="placeholder" :picker-options="pickerOptions" :readonly="readonly" :disabled="disabled" :editable="edit" :clearable="clearable">
+    template: `<el-date-picker @change="datetimeVal" v-model="value" :type="pickerType" :format="formatter" :placeholder="placeholder" :picker-options="pickerOptions" :readonly="readonly" :disabled="disabled" :editable="edit" :clearable="clearable" style="width: 100%;">
                 </el-date-picker>`
 });
 
