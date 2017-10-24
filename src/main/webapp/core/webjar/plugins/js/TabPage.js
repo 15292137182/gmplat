@@ -450,11 +450,9 @@ var querySearch = (function(){
             dataType:"json",
             xhrFields: {withCredentials: true},
             success:function(res){
-                console.log(res);
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.data!=null){
-                        console.log(res);
                         dataConversion.conversion(obj,res.resp.content.data.result);
                         obj.tableData = res.resp.content.data.result;//数据源
                         obj.allDate = Number(res.resp.content.data.total);//总共多少条数据
@@ -506,6 +504,25 @@ var querySearch = (function(){
             error:function(){
                 obj.loading=false;
                 // alert("错误")
+            }
+        })
+    }
+
+    //不传任何参数 非表查询
+
+    var easySearch=function(url,callback){
+        $.ajax({
+            url:url,
+            type:"get",
+            dataType:"json",
+            xhrFields: {withCredentials: true},
+            success:function(res){
+                if(typeof callback =="function"){
+                    callback(res);
+                }
+            },
+            error:function(){
+                alert("查询错误")
             }
         })
     }
@@ -591,6 +608,7 @@ var querySearch = (function(){
         headSorts:headSorts,
         searchResourceFirst:searchResourceFirst,
         searchResource:searchResource,
+        easySearch:easySearch,
         jumpPage:jumpPage,
         getDataPage:getDataPage
     }
