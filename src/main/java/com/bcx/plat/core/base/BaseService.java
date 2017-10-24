@@ -15,7 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.bcx.plat.core.utils.UtilsTool.createBlankQuery;
 
@@ -356,14 +360,41 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    */
   protected List<Map<String, Object>> leftAssociationQuery(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
                                                            String relationPrimary, String relationSecondary,
-                                                           Collection<Field> fields, Condition condition,List<Order>orders) {
+                                                           Collection<Field> fields, Condition condition, List<Order> orders) {
     try {
-      return getTClass().newInstance().associationQuery(primary, secondary, relationPrimary, relationSecondary, fields, condition,orders);
+      return getTClass().newInstance().associationQuery(primary, secondary, relationPrimary, relationSecondary, fields, condition, orders);
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
     }
     return null;
   }
+
+
+  /**
+   * 主从表关联分页查询数据
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param condition         过滤参数
+   * @param pageNum           页码
+   * @param pageSize          页面大小
+   * @param orders            排序方式
+   * @return PageResult
+   */
+  @SuppressWarnings("unchecked")
+  protected PageResult<Map<String, Object>> leftAssociationQueryPage(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                                     String relationPrimary, String relationSecondary, Condition condition,
+                                                                     int pageNum, int pageSize, List<Order> orders) {
+    try {
+      return getTClass().newInstance().associationQueryPage(primary, secondary, relationPrimary, relationSecondary, condition, pageNum, pageSize, orders);
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
 
   /**
    * 主从表关联分页查询数据

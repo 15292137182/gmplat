@@ -375,6 +375,7 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
 
   /**
    * 获取 数据没有被逻辑删除 的条件
+   *
    * @return 条件
    */
   private Condition getNoDeleteCondition() {
@@ -403,6 +404,32 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
       execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).execute();
     } else {
       execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).execute();
+    }
+    return execute;
+  }
+
+
+  /**
+   * 主从表关联查询数据 - 查询全列
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param condition         过滤参数
+   * @param num               一页显示条数
+   * @param size              页码
+   * @param orders            排序
+   * @return PageResult
+   */
+  public PageResult<Map<String, Object>> associationQueryPage(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                              String relationPrimary, String relationSecondary,
+                                                              Condition condition, int num, int size, List<Order> orders) {
+    PageResult<Map<String, Object>> execute;
+    if (condition != null) {
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).orderBy(orders).selectPage(num, size);
+    } else {
+      execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).orderBy(orders).selectPage(num, size);
     }
     return execute;
   }
