@@ -82,7 +82,7 @@ gmp_onload=function(){
         data:getData.dataObj({
             treeData: {
                 // 是否显示checkbook 默认为不显示
-                checkbox: true,
+                checkbox: false,
                 expandedAll: true,
                 // 获取树节点接口
                 url: roleInformation,
