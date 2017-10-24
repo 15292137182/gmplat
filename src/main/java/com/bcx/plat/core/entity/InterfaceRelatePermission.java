@@ -5,10 +5,10 @@ import com.bcx.plat.core.base.BaseEntity;
 /**
  * Create By HCL at 2017/10/24
  */
-public class OperateRelatePermission extends BaseEntity<OperateRelatePermission> {
+public class InterfaceRelatePermission extends BaseEntity<InterfaceRelatePermission> {
 
   private String permissionRowId;
-  private String operateRowId;
+  private String interfaceRowId;
 
   public String getPermissionRowId() {
     return permissionRowId;
@@ -18,11 +18,11 @@ public class OperateRelatePermission extends BaseEntity<OperateRelatePermission>
     this.permissionRowId = permissionRowId;
   }
 
-  public String getOperateRowId() {
-    return operateRowId;
+  public String getInterfaceRowId() {
+    return interfaceRowId;
   }
 
-  public void setOperateRowId(String operateRowId) {
-    this.operateRowId = operateRowId;
+  public void setInterfaceRowId(String interfaceRowId) {
+    this.interfaceRowId = interfaceRowId;
   }
 }

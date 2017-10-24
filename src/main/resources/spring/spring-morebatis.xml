@@ -155,8 +155,8 @@
                       p:tableName="t_button_relate_permission"
                       p:pks="#{'rowId'}"/>
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.OperateRelatePermission"
-                      p:tableName="t_operate_relate_permission"
+                      p:entityClass="com.bcx.plat.core.entity.InterfaceRelatePermission"
+                      p:tableName="t_interface_relate_permission"
                       p:pks="#{'rowId'}"/>
             </list>
         </constructor-arg>
