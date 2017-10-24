@@ -206,14 +206,14 @@ Vue.component("single-selection", {
         }
 
         // 获取禁用标记
-        if(this.initial.disabled == "false" || this.initial.disabled == "" || this.initial.disabled == undefined) {
+        if(!this.initial.disabled || this.initial.disabled == "" || this.initial.disabled == undefined) {
             this.isDisabled = false;
         }else {
             this.isDisabled = true;
         }
 
         // 获取多选配置
-        if(this.initial.multiple == "false" || this.initial.multiple == "" || this.initial.multiple == undefined) {
+        if(!this.initial.multiple || this.initial.multiple == "" || this.initial.multiple == undefined) {
             this.isMultiple = false;
         }else {
             this.isMultiple = true;

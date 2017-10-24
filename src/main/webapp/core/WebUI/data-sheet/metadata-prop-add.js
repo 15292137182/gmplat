@@ -14,33 +14,33 @@ var proEm = new Vue({
                 proType_1:{
                     params: "proType",
                     value: "",
-                    disabled: "false"
+                    disabled: false
                 },
                 //关联表字段
                 tableField_1:{
                     url: conChildTable+"?rowId="+basLeft.relateTableRowId,
                     key:'{"label":"columnEname","value":"rowId"}',
                     value: "",
-                    disabled: "false"
+                    disabled: false
                 },
                 //值类型
                 valueType_1:{
                     params:"valueType",
                     value:"",
-                    disabled:"false"
+                    disabled:false
                 },
                 //值类型来源
                 valueTypeOrigin_1:{
                     params:"valueTypeOrigin",
                     value:"",
-                    disabled:"false"
+                    disabled:false
                 },
                 //值来源内容
                 valueOriginContent_1:{
                     url:keySetPageUrl,
                     key:'',
                     value:"",
-                    disabled:"false"
+                    disabled:false
                 },
                 addProForm: {
                     codeProInput: '',//代码

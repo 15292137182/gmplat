@@ -70,20 +70,20 @@ var em=new Vue({
             url:serverPath + "/businObj/queryProPage?rowId="+window.parent.functionBlock.relateBusiObj,
             key:'{"label":"propertyName","value":"rowId"}',
             value:"",
-            disabled:"false"
+            disabled:false
         },
         //显示控件下拉框
         showControl_1:{
             params:"showControl",
             value:"",
-            disabled:"false",
+            disabled:false,
         },
 
         //对齐方式下拉框
         align_1:{
             params:"functionBlockAlign",
             value:"",
-            disabled:"false",
+            disabled:false,
         }
     },
     methods:{

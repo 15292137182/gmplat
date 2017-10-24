@@ -35,7 +35,7 @@ var em=new Vue({
         functionBlockType_1:{
             params:'functionBlockType',
             value:'',
-            disabled:"false"
+            disabled:false
         },
 
         //关联对象下拉框数据
@@ -43,14 +43,14 @@ var em=new Vue({
             url:businObjPageUrl,
             key:'{"label":"objectName","value":"rowId"}',
             value:'',
-            disabled:"false"
+            disabled:false
         },
 
         //所属模块
         belongModule_1:{
             params:'belongModule',
             value:'',
-            disabled:"false"
+            disabled:false
         }
     },
     methods:{

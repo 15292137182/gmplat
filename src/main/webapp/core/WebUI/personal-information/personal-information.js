@@ -97,7 +97,7 @@ var app = new Vue({
                                 <el-row class="row-bg">
                                     <el-col :span="11">
                                         <el-form-item label="身份证" prop="idCard">
-                                            <el-input placeholder="请输入身份证" v-model="detail.idCard" ref="idCard"></el-input>
+                                            <el-input v-model="detail.idCard" ref="idCard" :readonly="detail.readonly"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="10">
@@ -122,7 +122,7 @@ var app = new Vue({
                                 <el-row class="row-bg">
                                     <el-col :span="11">
                                         <el-form-item label="用户工号" prop="id">
-                                            <el-input placeholder="请输入用户工号" v-model="detail.id" ref="id" :readonly="detail.readonly"></el-input>
+                                            <el-input v-model="detail.id" ref="id" :readonly="detail.readonly"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="10">
@@ -183,10 +183,10 @@ var app = new Vue({
                                         <el-input v-model="modify.password" ref="" :readonly="modify.readonly"></el-input>
                                     </el-form-item>
                                     <el-form-item label="密码" prop="">
-                                        <el-input v-model="modify.newPassword" ref=""></el-input>
+                                        <el-input v-model="modify.newPassword" placeholder="请输入新密码" ref=""></el-input>
                                     </el-form-item>
                                     <el-form-item label="请重复密码" prop="">
-                                        <el-input v-model="modify.repeatPassword" ref=""></el-input>
+                                        <el-input v-model="modify.repeatPassword" placeholder="请再次输入新密码" ref=""></el-input>
                                     </el-form-item>
                                     <el-form-item>
                                         <el-button type="primary">保存</el-button>

@@ -8,20 +8,17 @@ var app = new Vue({
             // 超时设置
             overtime: {
                 params: "overTime",
-                value: "30",
-                time: "30分钟"
+                value: "30"
             },
             // 定期更改设置
             regular: {
                 params: "regularReplacement",
-                value: "15",
-                day: "15天"
+                value: "15"
             },
             // 锁定账号设置
             locking: {
                 params: "lockAccount",
-                value: "4",
-                count: "4次"
+                value: "4"
             },
             // 密码验证
             validate: {},
@@ -72,15 +69,15 @@ var app = new Vue({
         },
         // 获取超时时间
         getOverTime(time) {
-            this.overtime.time = time;
+            this.systemRule.overtime = time.confValue;
         },
         // 定期更换密码
         regularDay(day) {
-            this.regular.day = day;
+            this.systemRule.regular = day.confValue;
         },
         // 连续输入错误密码锁定账户
         lockAccount(count) {
-            this.locking.count = count;
+            this.systemRule.locking = count.confValue;
         }
     }
 });

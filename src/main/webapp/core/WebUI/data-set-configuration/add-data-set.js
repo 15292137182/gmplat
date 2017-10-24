@@ -38,13 +38,13 @@ var addDataSet = new Vue({
         dataSetType_1:{
             params:'dataSetConfigType',
             value:'',
-            disabled:'false',
+            disabled:false,
         },
         //所属模块下拉框
         belongModule_1:{
             params:'belongModule',
             value:'',
-            disabled:'false',
+            disabled:false,
         }
     },
     methods:{

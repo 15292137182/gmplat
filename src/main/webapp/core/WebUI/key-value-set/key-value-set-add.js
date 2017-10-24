@@ -37,7 +37,7 @@ var keyValueSetAdd = new Vue({
         belongModule_1:{
             params:'belongModule',
             value:'',
-            disabled:'false',
+            disabled:false,
         }
     },
     methods: {

@@ -36,22 +36,22 @@ var em = new Vue({
                 url: conTable,
                 key:'{"label":"tableCname","value":"rowId"}',
                 value: "",
-                disabled: "false"
+                disabled: false
             },
 
             templateObj_1:{
                 url: serverPath + "/templateObj/queryPage",
                 key:'{"label":"templateName","value":"rowId"}',
                 value: "",
-                disabled: "false",
-                multiple: "true"
+                disabled: false,
+                multiple: true
             },
 
             //所属模块下拉框
             belongModule_1:{
                 params: "belongModule",
                 value: "",
-                disabled: "false"
+                disabled: false
             }
         }
     },
