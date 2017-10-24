@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<el-col :span="24" id="pageResources" style="margin-top:20px;padding-left: 20px;">
+    <el-col :span="24" id="pageResources" style="margin-top:20px;padding-left: 20px;">
     <div>
         <el-row>
             <el-col :span="24">
@@ -14,8 +14,8 @@
                         <div>
                             <el-input placeholder="请输入内容" v-model="searchInput">
                                 <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
-                                    <el-option label="编号" value="pageNumber"></el-option>
-                                    <el-option label="名称" value="pageName"></el-option>
+                                    <el-option label="编号" value="operatNumber"></el-option>
+                                    <el-option label="名称" value="operatName"></el-option>
                                 </el-select>
                                 <el-button slot="append" icon="search" @click="searchClick"></el-button>
                             </el-input>
@@ -32,11 +32,11 @@
                       :height="leftHeight"
                       v-loading="loading"
                       element-loading-text="加载中">
-                <el-table-column show-overflow-tooltip sortable="custom" prop="pageNumber" label="页面编号" width="">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="operatNumber" label="接口编号" width="">
                 </el-table-column>
-                <el-table-column show-overflow-tooltip sortable="custom" prop="pageName" label="页面名称" width="120">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="operatName" label="接口名称" width="120">
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
+                <el-table-column show-overflow-tooltip prop="desc" label="备注" width="">
                 </el-table-column>
             </el-table>
         </el-row>
@@ -63,15 +63,15 @@
 </el-col>
 </body>
 <script>
-    var addUrl = serverPath + "/permissionResource/insertPermissionPage";
-    var selUrl = serverPath + '/page/queryPage';
+    var addUrl = serverPath + "/permissionResource/insertPermissionInterface";
+    var selUrl = serverPath + '/funcOperat/queryPage';
     var pageResources = new Vue({
         el:"#pageResources",
         data:getData.dataObj({
             searchInput:"",
             select:"",
             row:"",
-            rowIds:[],
+            rowIds:[],//资源ID集合
         }),
         methods:{
             PersonnelInformation(numberPage,search,param){
@@ -115,15 +115,13 @@
             click(row){
                 this.row = row;
             },
-            details(){},
-            del(){},
             handleSizeChange(){},
             handleCurrentChange(){},
             //新增
-            addPage(){
+            addInterface(){
                 var data = {"url":addUrl,"jsonData":{
                     permissionRowId:rightBottom.rowId,
-                    pageRowIds:pageResources.rowIds
+                    interfaceRowIds:pageResources.rowIds
                 },
                     "obj":rightBottom,
                     "showMsg":true
@@ -137,7 +135,7 @@
             conformEvent(){
                 right.chooseData = this.row;
                 this.rowIds.push(this.row.rowId);
-                this.addPage();
+                this.addInterface();
             },
             cancel(){
                 ibcpLayer.Close(rightBottom.divIndex);

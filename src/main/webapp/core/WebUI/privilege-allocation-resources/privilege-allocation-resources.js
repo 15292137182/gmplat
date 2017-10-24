@@ -32,6 +32,15 @@ var deleteUrl = serverPath + "/permission/delete";
 //接口资源查询
 var funcOperat = serverPath + '/funcOperat/queryPage';
 
+//页面资源查询
+var page =  serverPath + '/page/queryPage';
+
+//按钮资源查询
+var selButton =  serverPath + '/button/queryPage';
+
+//菜单资源查询
+var menu = serverPath + '/menu/queryPage';
+
 function GlobalParameter(){
     var args={"tableKeySet":{
         "Block":{permissionType:"privilegeType"}
@@ -131,6 +140,9 @@ gmp_onload=function(){
             selRowId:"",
             deleteIds:[],
             divIndex:"",
+            htmlUrl:"",//弹出页面地址
+            url:"",//查询接口地址
+            rowId:"",//权限Id
         }),
         methods:{
             //查询框点击
@@ -178,12 +190,27 @@ gmp_onload=function(){
                     console.log(res);
                 })
             },
-            //分配
-            distribution(){
-                var htmlUrl = 'choose-page-resources.html';
+            //分配资源按钮
+            distribution(row){
+                this.rowId = row.rowId;
+                if(row.permissionType == "接口资源"){
+                    this.htmlUrl = "choose-funcOperat-resources.html";
+                    this.url = funcOperat;
+                }else if(row.permissionType == "页面按钮"){
+                    this.htmlUrl = "choose-pageButton-resources.html";
+                    this.url = selButton;
+                }else if(row.permissionType == "页面资源"){
+                    this.htmlUrl = "choose-page-resources.html";
+                    this.url = page;
+                }else if(row.permissionType == "菜单资源"){
+                    this.htmlUrl = "choose-menu-resources.html";
+                    this.url = menu;
+                }
+                var htmlUrl = this.htmlUrl;
+                var selUrl = this.url;
                 rightBottom.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 资源信息', '800px', '600px',function(){
                     var data = {search:"",};
-                    querySearch.getDataPage(funcOperat,data,pageResources,1,function(res){
+                    querySearch.getDataPage(selUrl,data,pageResources,1,function(res){
                         console.log(res);
                     })
                 });
@@ -321,16 +348,49 @@ gmp_onload=function(){
 
                 })
             },
-            //角色信息查询按钮
+            //权限信息查询按钮
             searchClick(){
                 if(this.select != ""){
                     var param = {};
                     param[this.select] = this.searchInput;
-                    basRightTop.roleInformation(left.rowId,1,null,param);
+                    this.PersonnelInformation(this.permissionType,1,null,param);
                 }else{
-                    basRightTop.roleInformation(left.rowId,1,this.select,null);
+                    this.PersonnelInformation(this.permissionType,1,this.select,null);
                 }
-            }
+            },
+            //权限信息查询方法
+            PersonnelInformation(permissionType,numberPage,search,param){
+                var page = 1;
+                var data = null;
+                if(numberPage){
+                    page = numberPage;
+                }
+                var type = permissionType;
+                if(search != null){
+                    data = {
+                        "permissionType":type,
+                        "search":search,
+                    }
+                }else{
+                    data = {
+                        "permissionType":type
+                    }
+                }
+                if(param != null){
+                    var strParam = JSON.stringify(param);
+                    data = {
+                        "permissionType":type,
+                        "param":strParam,
+                    }
+                }else{
+                    data = {
+                        "permissionType":type
+                    }
+                }
+                querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){
+
+                })
+            },
         },
         created(){
             $(document).ready(function () {

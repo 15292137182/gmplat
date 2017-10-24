@@ -14,8 +14,8 @@
                         <div>
                             <el-input placeholder="请输入内容" v-model="searchInput">
                                 <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
-                                    <el-option label="编号" value="pageNumber"></el-option>
-                                    <el-option label="名称" value="pageName"></el-option>
+                                    <el-option label="编号" value="buttonNumber"></el-option>
+                                    <el-option label="名称" value="buttonName"></el-option>
                                 </el-select>
                                 <el-button slot="append" icon="search" @click="searchClick"></el-button>
                             </el-input>
@@ -32,9 +32,9 @@
                       :height="leftHeight"
                       v-loading="loading"
                       element-loading-text="加载中">
-                <el-table-column show-overflow-tooltip sortable="custom" prop="pageNumber" label="页面编号" width="">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="buttonNumber" label="按钮编号" width="">
                 </el-table-column>
-                <el-table-column show-overflow-tooltip sortable="custom" prop="pageName" label="页面名称" width="120">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="buttonName" label="按钮名称" width="120">
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
                 </el-table-column>
@@ -63,8 +63,8 @@
 </el-col>
 </body>
 <script>
-    var addUrl = serverPath + "/permissionResource/insertPermissionPage";
-    var selUrl = serverPath + '/page/queryPage';
+    var addUrl = serverPath + "/permissionResource/insertPermissionButton";
+    var selUrl = serverPath + '/button/queryPage';
     var pageResources = new Vue({
         el:"#pageResources",
         data:getData.dataObj({
@@ -120,10 +120,10 @@
             handleSizeChange(){},
             handleCurrentChange(){},
             //新增
-            addPage(){
+            addButton(){
                 var data = {"url":addUrl,"jsonData":{
                     permissionRowId:rightBottom.rowId,
-                    pageRowIds:pageResources.rowIds
+                    buttonRowIds:pageResources.rowIds
                 },
                     "obj":rightBottom,
                     "showMsg":true
@@ -137,7 +137,7 @@
             conformEvent(){
                 right.chooseData = this.row;
                 this.rowIds.push(this.row.rowId);
-                this.addPage();
+                this.addButton();
             },
             cancel(){
                 ibcpLayer.Close(rightBottom.divIndex);
