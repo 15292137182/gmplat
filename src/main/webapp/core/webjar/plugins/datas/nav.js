@@ -38,10 +38,10 @@
     ]},
     {
         "title": " 基础功能管理",
-        "icon": " fa-folder-o",
+        "icon": " fa-window-restore",
         "spread": true,
         "children": [{
-            "title": "用户",
+            "title": " 用户",
             "icon": "fa-user",
             "href": "core/WebUI/personnel_maintenance/personnel_maintenance.html"
         }, {
@@ -80,7 +80,7 @@
     },
     {
         "title": "系统管理",
-        "icon": "fa-wrench",
+        "icon": "fa-desktop",
         "spread": true,
         "children": [{
             "title": "系统设置",

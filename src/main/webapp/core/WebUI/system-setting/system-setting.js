@@ -6,11 +6,23 @@ var app = new Vue({
     data() {
         return {
             // 超时设置
-            overtime: {},
+            overtime: {
+                params: "overTime",
+                value: "30",
+                time: "30分钟"
+            },
             // 定期更改设置
-            regular: {},
+            regular: {
+                params: "regularReplacement",
+                value: "15",
+                day: "15天"
+            },
             // 锁定账号设置
-            locking: {},
+            locking: {
+                params: "lockAccount",
+                value: "4",
+                count: "4次"
+            },
             // 密码验证
             validate: {},
             // 最短密码长度设置
@@ -26,7 +38,7 @@ var app = new Vue({
                 locking: "",
                 validate: "",
                 // 密码强度设置
-                strength: [],
+                strength: ["小写字母"],
                 // 密码长度设置
                 pswlength: [],
                 // 上传设置
@@ -58,5 +70,17 @@ var app = new Vue({
                 }
             });
         },
+        // 获取超时时间
+        getOverTime(time) {
+            this.overtime.time = time;
+        },
+        // 定期更换密码
+        regularDay(day) {
+            this.regular.day = day;
+        },
+        // 连续输入错误密码锁定账户
+        lockAccount(count) {
+            this.locking.count = count;
+        }
     }
 });
