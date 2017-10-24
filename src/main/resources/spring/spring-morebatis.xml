@@ -87,11 +87,6 @@
                       p:tableName="t_user_group"
                       p:pks="#{'rowId'}"/>
 
-                <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
-                <!--p:entityClass="com.bcx.plat.core.entity.Page"-->
-                <!--p:tableName="t_page"-->
-                <!--p:pks="#{'rowId'}"/>-->
-
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.BusinessRelateTemplate"
                       p:tableName="t_business_relate_template" p:pks="#{'rowId'}"/>
@@ -113,28 +108,21 @@
                       p:tableName="t_base_org"
                       p:pks="#{'rowId'}"/>
 
-                <!--<bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"-->
-                <!--p:entityClass="com.bcx.plat.core.entity.Button"-->
-                <!--p:tableName="t_button"-->
-                <!--p:pks="#{'rowId'}"/>-->
-
-                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
-                      p:entityClass="com.bcx.plat.core.entity.FuncOperat"
-                      p:tableName="t_func_operat"
-                      p:pks="#{'rowId'}"/>
-
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserRelateUserGroup"
                       p:tableName="t_user_relate_user_group"
                       p:pks="#{'rowId'}"/>
+
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserRelateRole"
                       p:tableName="t_user_relate_role"
                       p:pks="#{'rowId'}"/>
+
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.BaseOrgRelateRole"
                       p:tableName="t_base_org_relate_role"
                       p:pks="#{'rowId'}"/>
+
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserGroupRelateRole"
                       p:tableName="t_user_group_relate_role"
@@ -149,6 +137,7 @@
                       p:entityClass="com.bcx.plat.core.entity.UserRelateRole"
                       p:tableName="t_user_relate_role"
                       p:pks="#{'rowId'}"/>
+
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.Permission"
                       p:tableName="t_permission"
