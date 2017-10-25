@@ -13,13 +13,13 @@
         .demo_line hr {
             width: 93%;
             position: absolute;
-            right: 5px;
+            left: 90px;
             top: 25%;
             border: 1px solid #ddd
         }
 
         .demo_line span {
-            font-size:13px;
+            font-size: 13px;
             font-weight: bold;
         }
     </style>
@@ -29,7 +29,11 @@
         <el-col :span="24">
             <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="个人信息" name="info">
-                    <component :is="info" :detail="info_detail"></component>
+                    <el-row>
+                        <el-col :span="18" :offset="3">
+                            <component :is="info" :detail="info_detail"></component>
+                        </el-col>
+                    </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="密码修改" name="psw">
                     <component :is="psw" :modify="psw_modify"></component>

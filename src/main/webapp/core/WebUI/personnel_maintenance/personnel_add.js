@@ -20,7 +20,7 @@ var useAdd = new Vue({
                 // 展开所有节点
                 expandedAll: true,
                 // 默认选中项 当 checkbox 为 true 时  编辑时可以用
-                checked: [11],
+                // checked: [11],
                 defaultProps: {
                     // 树节点显示文字
                     label: 'orgName',

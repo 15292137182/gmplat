@@ -754,13 +754,17 @@ var showMsg = (function(){
         //msg：ajax成功后返回的res
         obj.$message({
             message: msg,
-            type: 'success'
+            type: 'success',
+            customClass: "gmpMessage"
         });
     }
 
     var MsgError = function(obj){
         //ajax相应失败
-        obj.$message.error("请求失败！");
+        obj.$message.error({
+            message: "请求失败！",
+            customClass: "gmpMessage"
+        });
     }
 
     return {
@@ -840,17 +844,26 @@ var gmpAjax = (function(){
                     }else{
                         // callback(res.resp.content);
                         // showMsg.MsgOk(data.obj,res.resp.content.msg);
-                        data.obj.$message.error(res.resp.content.msg);
+                        data.obj.$message.error({
+                            message: res.resp.content.msg,
+                            customClass: "gmpMessage"
+                        });
                     }
                 }else{
                     getData.dataObj.loading = false;
-                    data.obj.$message.error(res.resp.respMsg);
+                    data.obj.$message.error({
+                        message: res.resp.respMsg,
+                        customClass: "gmpMessage"
+                    });
                 }
             },
             error:function(res){
                 getData.dataObj.loading = false;
                  // console.log(222);
-                data.obj.$message.error("操作失败");
+                data.obj.$message.error({
+                    message: "操作失败",
+                    customClass: "gmpMessage"
+                });
             }
         })
     }
