@@ -76,6 +76,10 @@
             "title": " 权限信息维护",
             "icon": "fa-lock",
             "href": "core/WebUI/permissions-information/permissions-information.html"
+        }, {
+            "title": " 权限分配资源",
+            "icon": "fa-lock",
+            "href": "core/WebUI/privilege-allocation-resources/privilege-allocation-resources.html"
         }]
     },
     {
