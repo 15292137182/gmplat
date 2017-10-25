@@ -321,17 +321,43 @@ public class RoleService extends BaseService<Role> {
 
   @Transactional
   public ServerResult deleteRole(String rowId) {
-    //删除：逻辑删除；  与用户、用户组、组织机构、权限的关联关系同步逻辑删除
+
     if (isValid(rowId)) {
       userRoleDistributeService.deleteRoleUser(rowId, null);
       userRoleDistributeService.deleteRoleUserGroup(rowId, null);
       deleteRolePermission(rowId, null);
+      deleteRoleOrg(rowId, null);
       int delete = new Role().deleteById(rowId);
       if (delete != -1) {
         return success(DELETE_SUCCESS);
       }
     }
     return fail(DELETE_FAIL);
+  }
+
+  /**
+   * 删除角色关联的组织机构
+   *
+   * @param roleRowId 角色rowId
+   * @param orgRowIds 一组组织机构rowId
+   * @return ServerResult
+   */
+  public ServerResult deleteRoleOrg(String roleRowId, String[] orgRowIds) {
+    if (null != roleRowId) {
+      Condition condition;
+      if (null != orgRowIds && orgRowIds.length != 0) {
+        condition = new ConditionBuilder(BaseOrgRelateRole.class)
+            .and().equal("roleRowId", roleRowId).in("baseOrgRowId", Arrays.asList(orgRowIds)).endAnd()
+            .buildDone();
+      } else {
+        condition = new ConditionBuilder(BaseOrgRelateRole.class)
+            .and().equal("roleRowId", roleRowId).endAnd()
+            .buildDone();
+      }
+      new BaseOrgRelateRole().delete(condition);
+      return success(DELETE_SUCCESS);
+    }
+    return fail(INVALID_REQUEST);
   }
 
 
