@@ -608,6 +608,9 @@ var querySearch = (function(){
                             obj.tableData = [];
                             obj.allDate = 0;
                         }
+                    }else{
+                        obj.tableData = [];
+                        obj.allDate = 0;
                     }
                 }else{
                     obj.tableData = [];

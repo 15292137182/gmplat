@@ -113,7 +113,8 @@
     </el-col>
 
     <el-col :span="8" id="right" style="margin-top:20px;padding-left: 20px;">
-        <div>
+        <!--接口资源表-->
+        <div v-if="left.keyName == 'interfaceResources'">
         <el-row>
             <el-col :span="24">
                 <el-row style="margin-bottom: 10px">
@@ -139,20 +140,149 @@
                       :height="leftHeight"
                       v-loading="loading"
                       element-loading-text="加载中">
-                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="资源编号" width="">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="operatNumber" label="接口编号" width="">
                 </el-table-column>
-                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="资源名称" width="120">
+                <el-table-column show-overflow-tooltip sortable="custom" prop="operatName" label="接口名称" width="120">
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
+                <el-table-column show-overflow-tooltip prop="desc" label="备注" width="">
                 </el-table-column>
                 <el-table-column  label="操作" width="80">
                     <template scope="scope">
-                        <el-button @click="editBlock" type="text" size="small" icon="search"></el-button>
-                        <el-button @click="del" type="text" size="small" icon="delete"></el-button>
+                        <el-button @click="searchDetails" type="text" size="small" icon="search"></el-button>
+                        <el-button @click="del(scope.row)" type="text" size="small" icon="delete"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </el-row>
+        </div>
+
+        <!--菜单资源表-->
+        <div v-if="left.keyName == 'menuResources'">
+            <el-row>
+                <el-col :span="24">
+                    <el-row style="margin-bottom: 10px">
+                        <el-col :span="20">
+                            <div>
+                                <el-input placeholder="请输入内容" v-model="searchInput">
+                                    <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                        <el-option label="编号" value="permissionId"></el-option>
+                                        <el-option label="名称" value="permissionName"></el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                                </el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-table ref="myData"
+                          :data="tableData"
+                          @row-click="firstClick" border style="width: 100%"
+                          :highlight-current-row="true"
+                          :height="leftHeight"
+                          v-loading="loading"
+                          element-loading-text="加载中">
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="number" label="菜单编号" width="">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="name" label="菜单名称" width="120">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
+                    </el-table-column>
+                    <el-table-column  label="操作" width="80">
+                        <template scope="scope">
+                            <el-button @click="searchDetails" type="text" size="small" icon="search"></el-button>
+                            <el-button @click="del(scope.row)" type="text" size="small" icon="delete"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
+        </div>
+
+        <!--页面按钮表-->
+        <div v-if="left.keyName == 'pageButton'">
+            <el-row>
+                <el-col :span="24">
+                    <el-row style="margin-bottom: 10px">
+                        <el-col :span="20">
+                            <div>
+                                <el-input placeholder="请输入内容" v-model="searchInput">
+                                    <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                        <el-option label="编号" value="permissionId"></el-option>
+                                        <el-option label="名称" value="permissionName"></el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                                </el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-table ref="myData"
+                          :data="tableData"
+                          @row-click="firstClick" border style="width: 100%"
+                          :highlight-current-row="true"
+                          :height="leftHeight"
+                          v-loading="loading"
+                          element-loading-text="加载中">
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="buttonNumber" label="按钮编号" width="">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="buttonName" label="按钮名称" width="120">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
+                    </el-table-column>
+                    <el-table-column  label="操作" width="80">
+                        <template scope="scope">
+                            <el-button @click="searchDetails" type="text" size="small" icon="search"></el-button>
+                            <el-button @click="del(scope.row)" type="text" size="small" icon="delete"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
+        </div>
+
+        <!--页面资源表-->
+        <div v-if="left.keyName == 'pageResources'">
+            <el-row>
+                <el-col :span="24">
+                    <el-row style="margin-bottom: 10px">
+                        <el-col :span="20">
+                            <div>
+                                <el-input placeholder="请输入内容" v-model="searchInput">
+                                    <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                        <el-option label="编号" value="permissionId"></el-option>
+                                        <el-option label="名称" value="permissionName"></el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                                </el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-table ref="myData"
+                          :data="tableData"
+                          @row-click="firstClick" border style="width: 100%"
+                          :highlight-current-row="true"
+                          :height="leftHeight"
+                          v-loading="loading"
+                          element-loading-text="加载中">
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="pageNumber" label="页面编号" width="">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="pageName" label="页面名称" width="120">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="remarks" label="备注" width="">
+                    </el-table-column>
+                    <el-table-column  label="操作" width="80">
+                        <template scope="scope">
+                            <el-button @click="searchDetails" type="text" size="small" icon="search"></el-button>
+                            <el-button @click="del(scope.row)" type="text" size="small" icon="delete"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
         </div>
     </el-col>
 </div>

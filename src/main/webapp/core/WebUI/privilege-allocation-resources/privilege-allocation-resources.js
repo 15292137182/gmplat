@@ -11,23 +11,14 @@ var rightTable;
 //权限类型信息查询接口
 var roleInformation = serverPath + "/keySet/queryKeySet";
 
-//权限指定字段查询接口
+//权限类型查询接口
 var selUrl = serverPath + "/permission/queryTypePermission";
-
-//查询指定rowId的详细信息
-var selRowId = serverPath + "/permission/queryById"
 
 //查看权限类型下的权限信息
 var permissionsInformation = serverPath + "/permission/queryTypePermission";
 
-//查看权限类型下的角色信息
-var personnelInformationInterface = serverPath + "/permission/queryRole";
-
-//权限编辑接口
-var modify = serverPath + "/permission/modify";
-
-//权限删除接口
-var deleteUrl = serverPath + "/permission/delete";
+//资源删除接口
+var deleteUrl = serverPath + "/permissionResource/deleteResource";
 
 //接口资源查询
 var funcOperat = serverPath + '/funcOperat/queryPage';
@@ -40,6 +31,9 @@ var selButton =  serverPath + '/button/queryPage';
 
 //菜单资源查询
 var menu = serverPath + '/menu/queryPage';
+
+//权限查询资源
+var queryResource = serverPath + "/permissionResource/queryResource";
 
 function GlobalParameter(){
     var args={"tableKeySet":{
@@ -76,6 +70,7 @@ gmp_onload=function(){
                 }
             },
             rowIdArr:[0],
+            keyName:"",
         }),
         methods:{
             //点击左边的树得到数据
@@ -84,7 +79,7 @@ gmp_onload=function(){
                 this.rowId=data.rowId;
                 rightBottom.permissionType = data.confKey;
                 basRightTop.PersonnelInformation(data.confKey);
-                basRightTop.roleInformation(data.rowId);
+                this.keyName = data.confKey;
             },
             //复选框选中得到得值
             getChecked(data) {
@@ -124,6 +119,57 @@ gmp_onload=function(){
         methods: {
             firstClick(){},
             searchClick(){},
+            searchDetails(){},
+            del(row){
+                var rowIdArr = [];
+                rowIdArr.push(row.rowId);
+                deleteObj.del(function(){
+                    var data = {
+                        "url":deleteUrl,
+                        "jsonData":{
+                            permissionRowId:rightBottom.selRightRowId.rowId,
+                            sourceRowIds:rowIdArr
+                                    },
+                        "obj":right,
+                        "showMsg":true
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        right.refreshTable(rightBottom.selRightRowId.rowId);
+                    })
+                })
+            },
+            refreshTable(permissionRowId,numberPage,search,param){
+                var page = 1;
+                var data = null;
+                if(numberPage){
+                    page = numberPage;
+                }
+                var rowId = permissionRowId;
+                if(search != null){
+                    data = {
+                        "permissionRowId":rowId,
+                        "search":search,
+                    }
+                }else{
+                    data = {
+                        "permissionRowId":rowId,
+                    }
+                }
+                if(param != null){
+                    var strParam = JSON.stringify(param);
+                    data = {
+                        "permissionRowId":rowId,
+                        "param":strParam,
+                    }
+                }else{
+                    data = {
+                        "permissionRowId":rowId,
+                    }
+                }
+                querySearch.getDataPage(queryResource,data,right,page,function(res){
+
+                })
+            },
         }
     })
 
@@ -138,11 +184,11 @@ gmp_onload=function(){
             permissionType:"",
             tableId:'Block',
             selRowId:"",
-            deleteIds:[],
             divIndex:"",
             htmlUrl:"",//弹出页面地址
             url:"",//查询接口地址
             rowId:"",//权限Id
+            selRightRowId:"",
         }),
         methods:{
             //查询框点击
@@ -161,17 +207,19 @@ gmp_onload=function(){
             },
             //点击
             firstClick(row){
+                console.log(row.rowId);
                 if(row.permissionType == "接口资源"){
                     this.permissionType = "interfaceResources";
                 }else if(row.permissionType == "页面按钮"){
-                    this.permissionType = "pageButoon";
+                    this.permissionType = "pageButton";
                 }else if(row.permissionType == "页面资源"){
                     this.permissionType = "pageResources";
                 }else if(row.permissionType == "菜单资源"){
-                    this.permissionType = "menuResource";
+                    this.permissionType = "menuResources";
                 }
                 this.selRowId = row.rowId;
-                this.deleteIds.push(this.selRowId);
+                rightBottom.selRightRowId = row;
+                right.refreshTable(rightBottom.selRightRowId.rowId);
             },
             //表点击
             twoClick(row){
@@ -193,6 +241,7 @@ gmp_onload=function(){
             //分配资源按钮
             distribution(row){
                 this.rowId = row.rowId;
+                rightBottom.selRightRowId = row;
                 if(row.permissionType == "接口资源"){
                     this.htmlUrl = "choose-funcOperat-resources.html";
                     this.url = funcOperat;
@@ -214,22 +263,6 @@ gmp_onload=function(){
                         console.log(res);
                     })
                 });
-            },
-            //删除
-            del(){
-                var data = {
-                    "url":deleteUrl,
-                    "jsonData":{
-                        rowIds:rightBottom.deleteIds
-                    },
-                    "obj":rightBottom,
-                    "showMsg":true,
-                }
-                deleteObj.del(function(){
-                    gmpAjax.showAjax(data,function(res){
-                        basRightTop.PersonnelInformation(rightBottom.permissionType);
-                    })
-                })
             },
         },
         created(){
@@ -254,25 +287,6 @@ gmp_onload=function(){
             //点击行
             twoClick(){
 
-            },
-            //角色查看
-            roleView(rowId){
-                var strArr = '["'+rowId+'"]';
-                console.log(strArr);
-                $.ajax({
-                    url:roleViewUrl,
-                    type:"get",
-                    data:{
-                        param:strArr
-                    },
-                    dataType:"json",
-                    xhrFields: {withCredentials: true},
-                    success:function(res){
-                        console.log(res.resp.content.data)
-                        rightBottom.loading=false;
-                        rightBottom.tableDataTwo = res.resp.content.data;//数据源
-                    },
-                })
             },
             //分页信息
             handleSizeChange(val){
@@ -313,39 +327,9 @@ gmp_onload=function(){
                     }
                 }
                 querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){
-
-                })
-            },
-            //角色信息查询
-            roleInformation(rowId,numberPage,search,param){
-                var page = 1;
-                var data = {};
-                if(numberPage){
-                    page = numberPage;
-                }
-                if(search != null){
-                    data = {
-                        "rowId":rowId,
-                        "search":search
-                    }
-                }else{
-                    data = {
-                        "rowId":rowId
-                    }
-                }
-                if(param != null){
-                    var strParam = JSON.stringify(param);
-                    data = {
-                        "rowId":rowId,
-                        "param":strParam
-                    }
-                }else{
-                    data = {
-                        "rowId":rowId
-                    }
-                }
-                querySearch.getDataPage(personnelInformationInterface,data,basRightTop,page,function(res){
-
+                    rightBottom.selRightRowId = rightBottom.tableData[0];
+                    right.refreshTable(rightBottom.selRightRowId.rowId);
+                    console.log(rightBottom.tableData[0].rowId);
                 })
             },
             //权限信息查询按钮
@@ -357,39 +341,6 @@ gmp_onload=function(){
                 }else{
                     this.PersonnelInformation(this.permissionType,1,this.select,null);
                 }
-            },
-            //权限信息查询方法
-            PersonnelInformation(permissionType,numberPage,search,param){
-                var page = 1;
-                var data = null;
-                if(numberPage){
-                    page = numberPage;
-                }
-                var type = permissionType;
-                if(search != null){
-                    data = {
-                        "permissionType":type,
-                        "search":search,
-                    }
-                }else{
-                    data = {
-                        "permissionType":type
-                    }
-                }
-                if(param != null){
-                    var strParam = JSON.stringify(param);
-                    data = {
-                        "permissionType":type,
-                        "param":strParam,
-                    }
-                }else{
-                    data = {
-                        "permissionType":type
-                    }
-                }
-                querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){
-
-                })
             },
         },
         created(){

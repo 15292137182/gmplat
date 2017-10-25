@@ -129,8 +129,7 @@
                     "showMsg":true
                 }
                 gmpAjax.showAjax(data,function(res){
-                    console.log("success");
-                    console.log(res);
+                    right.refreshTable(rightBottom.selRightRowId.rowId);
                     pageResources.cancel();
                 })
             },

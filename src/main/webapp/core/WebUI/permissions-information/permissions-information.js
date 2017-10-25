@@ -194,11 +194,11 @@ gmp_onload=function(){
                 if(row.permissionType == "接口资源"){
                     this.permissionType = "interfaceResources";
                 }else if(row.permissionType == "页面按钮"){
-                    this.permissionType = "pageButoon";
+                    this.permissionType = "pageButton";
                 }else if(row.permissionType == "页面资源"){
                     this.permissionType = "pageResources";
                 }else if(row.permissionType == "菜单资源"){
-                    this.permissionType = "menuResource";
+                    this.permissionType = "menuResources";
                 }
                 this.selRowId = row.rowId;
                 this.deleteIds.push(this.selRowId);
