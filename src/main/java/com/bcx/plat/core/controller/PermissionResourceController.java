@@ -25,6 +25,16 @@ public class PermissionResourceController extends BaseController {
   private PermissionResourceService permissionResourceService;
 
   /**
+   * @param permissionRowId 权限主键
+   * @param sourceRowIds    资源主键
+   * @return 删除资源
+   */
+  @RequestMapping(value = "/deleteResource")
+  public PlatResult deleteResource(String permissionRowId, String[] sourceRowIds) {
+    return PlatResult.success(permissionResourceService.deletePermissionResource(permissionRowId, sourceRowIds));
+  }
+
+  /**
    * 查询权限下对应的资源信息
    *
    * @param permissionRowId 权限主键
@@ -62,7 +72,7 @@ public class PermissionResourceController extends BaseController {
    */
   @RequestMapping(value = "/insertPermissionInterface")
   public PlatResult insertPermissionInterface(String permissionRowId, String[] interfaceRowIds) {
-    return insertPermissionRelate(PermissionService.PERMISSION_TYPE_MENU, permissionRowId, interfaceRowIds);
+    return insertPermissionRelate(PermissionService.PERMISSION_TYPE_INTERFACE, permissionRowId, interfaceRowIds);
   }
 
   /**
@@ -74,7 +84,7 @@ public class PermissionResourceController extends BaseController {
    */
   @RequestMapping(value = "/insertPermissionPage")
   public PlatResult insertPermissionPage(String permissionRowId, String[] pageRowIds) {
-    return insertPermissionRelate(PermissionService.PERMISSION_TYPE_MENU, permissionRowId, pageRowIds);
+    return insertPermissionRelate(PermissionService.PERMISSION_TYPE_PAGE, permissionRowId, pageRowIds);
   }
 
   /**
@@ -86,7 +96,7 @@ public class PermissionResourceController extends BaseController {
    */
   @RequestMapping(value = "/insertPermissionButton")
   public PlatResult insertPermissionButton(String permissionRowId, String[] buttonRowIds) {
-    return insertPermissionRelate(PermissionService.PERMISSION_TYPE_MENU, permissionRowId, buttonRowIds);
+    return insertPermissionRelate(PermissionService.PERMISSION_TYPE_BUTTON, permissionRowId, buttonRowIds);
   }
 
   /**

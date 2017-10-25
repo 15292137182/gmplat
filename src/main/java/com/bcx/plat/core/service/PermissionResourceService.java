@@ -23,6 +23,45 @@ import static com.bcx.plat.core.utils.UtilsTool.*;
 @Service
 public class PermissionResourceService {
 
+  public ServerResult deletePermissionResource(String permissionRowId, String[] resourceRowIds) {
+    ServerResult<PageResult> serverResult = new ServerResult<>();
+    if (isValid(permissionRowId) && null != resourceRowIds && resourceRowIds.length != 0) {
+      Permission permission = new Permission().selectOneById(permissionRowId);
+      Condition condition;
+      String key = getValidResourceKey(permission.getPermissionType());
+      switch (permission.getPermissionType()) {
+        case PermissionService.PERMISSION_TYPE_MENU:
+          condition = new ConditionBuilder(MenuRelatePermission.class)
+                  .and().equal("permissionRowId", permissionRowId).in(key, Arrays.asList(resourceRowIds)).endAnd()
+                  .buildDone();
+          new MenuRelatePermission().delete(condition);
+          break;
+        case PermissionService.PERMISSION_TYPE_PAGE:
+          condition = new ConditionBuilder(PageRelatePermission.class)
+                  .and().equal("permissionRowId", permissionRowId).in(key, Arrays.asList(resourceRowIds)).endAnd()
+                  .buildDone();
+          new PageRelatePermission().delete(condition);
+          break;
+        case PermissionService.PERMISSION_TYPE_BUTTON:
+          condition = new ConditionBuilder(ButtonRelatePermission.class)
+                  .and().equal("permissionRowId", permissionRowId).in(key, Arrays.asList(resourceRowIds)).endAnd()
+                  .buildDone();
+          new ButtonRelatePermission().delete(condition);
+          break;
+        case PermissionService.PERMISSION_TYPE_INTERFACE:
+          condition = new ConditionBuilder(InterfaceRelatePermission.class)
+                  .and().equal("permissionRowId", permissionRowId).in(key, Arrays.asList(resourceRowIds)).endAnd()
+                  .buildDone();
+          new InterfaceRelatePermission().delete(condition);
+          break;
+      }
+      serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.DELETE_SUCCESS);
+      return serverResult;
+    }
+    serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.INVALID_REQUEST);
+    return serverResult;
+  }
+
   /**
    * @param permissionRowId 权限编号
    * @return 返回查询结果
@@ -33,6 +72,7 @@ public class PermissionResourceService {
     if (isValid(permissionRowId)) {
       Permission permission = new Permission().selectOneById(permissionRowId);
       List<String> resourceRowIds = getResourceRowIds(permission.getPermissionType(), permissionRowId);
+      serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS);
       if (!resourceRowIds.isEmpty()) {
         Condition condition = null;
         List<Order> orders = new ArrayList<>();
@@ -61,12 +101,13 @@ public class PermissionResourceService {
         if (null != condition) {
           condition = new And(condition,
                   new FieldCondition("rowId", Operator.IN, resourceRowIds));
-          PageResult pageResult = queryData(permission.getPermissionType(), condition, orders, pageNum, pageSize);
-          serverResult.setData(pageResult);
-          serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS);
-          return serverResult;
+        } else {
+          condition = new FieldCondition("rowId", Operator.IN, resourceRowIds);
         }
+        PageResult pageResult = queryData(permission.getPermissionType(), condition, orders, pageNum, pageSize);
+        serverResult.setData(pageResult);
       }
+      return serverResult;
     }
     serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.INVALID_REQUEST);
     return serverResult;
@@ -107,15 +148,19 @@ public class PermissionResourceService {
       case PermissionService.PERMISSION_TYPE_MENU:
         List<MenuRelatePermission> menuRelatePermissions = new MenuRelatePermission().selectSimple(temp);
         menuRelatePermissions.forEach(menuRelatePermission -> resourceRowIds.add(menuRelatePermission.getMenuRowId()));
+        break;
       case PermissionService.PERMISSION_TYPE_PAGE:
         List<PageRelatePermission> pageRelatePermissions = new PageRelatePermission().selectSimple(temp);
         pageRelatePermissions.forEach(pageRelatePermission -> resourceRowIds.add(pageRelatePermission.getPageRowId()));
+        break;
       case PermissionService.PERMISSION_TYPE_BUTTON:
         List<ButtonRelatePermission> buttonRelatePermissions = new ButtonRelatePermission().selectSimple(temp);
         buttonRelatePermissions.forEach(buttonRelatePermission -> resourceRowIds.add(buttonRelatePermission.getButtonRowId()));
+        break;
       case PermissionService.PERMISSION_TYPE_INTERFACE:
         List<InterfaceRelatePermission> interfaceRelatePermissions = new InterfaceRelatePermission().selectSimple(temp);
         interfaceRelatePermissions.forEach(interfaceRelatePermission -> resourceRowIds.add(interfaceRelatePermission.getInterfaceRowId()));
+        break;
     }
     return resourceRowIds;
   }
@@ -198,6 +243,7 @@ public class PermissionResourceService {
           menuRelatePermission.setPermissionRowId(permissionRowId);
           menuRelatePermission.buildCreateInfo().insert();
         });
+        break;
       case PermissionService.PERMISSION_TYPE_PAGE:
         set.forEach(s -> {
           PageRelatePermission pageRelatePermission = new PageRelatePermission();
@@ -205,6 +251,7 @@ public class PermissionResourceService {
           pageRelatePermission.setPermissionRowId(permissionRowId);
           pageRelatePermission.buildCreateInfo().insert();
         });
+        break;
       case PermissionService.PERMISSION_TYPE_BUTTON:
         set.forEach(s -> {
           ButtonRelatePermission buttonRelatePermission = new ButtonRelatePermission();
@@ -212,6 +259,7 @@ public class PermissionResourceService {
           buttonRelatePermission.setButtonRowId(s);
           buttonRelatePermission.buildCreateInfo().insert();
         });
+        break;
       case PermissionService.PERMISSION_TYPE_INTERFACE:
         set.forEach(s -> {
           InterfaceRelatePermission interfaceRelatePermission = new InterfaceRelatePermission();
@@ -219,6 +267,7 @@ public class PermissionResourceService {
           interfaceRelatePermission.setPermissionRowId(permissionRowId);
           interfaceRelatePermission.buildCreateInfo().insert();
         });
+        break;
     }
   }
 
@@ -239,6 +288,7 @@ public class PermissionResourceService {
         if (!menuRelatePermissions.isEmpty()) {
           menuRelatePermissions.forEach(menuRelatePermission -> set.remove(menuRelatePermission.getMenuRowId()));
         }
+        break;
       case PermissionService.PERMISSION_TYPE_PAGE:
         condition = new ConditionBuilder(PageRelatePermission.class)
                 .and().in(getValidResourceKey(type), set).equal("permissionRowId", permissionRowId).endAnd()
@@ -248,6 +298,7 @@ public class PermissionResourceService {
         if (!pageRelatePermissions.isEmpty()) {
           pageRelatePermissions.forEach(menuRelatePermission -> set.remove(menuRelatePermission.getPageRowId()));
         }
+        break;
       case PermissionService.PERMISSION_TYPE_BUTTON:
         condition = new ConditionBuilder(ButtonRelatePermission.class)
                 .and().in(getValidResourceKey(type), set).equal("permissionRowId", permissionRowId).endAnd()
@@ -257,6 +308,7 @@ public class PermissionResourceService {
         if (!buttonRelatePermissions.isEmpty()) {
           buttonRelatePermissions.forEach(buttonRelatePermission -> set.remove(buttonRelatePermission.getButtonRowId()));
         }
+        break;
       case PermissionService.PERMISSION_TYPE_INTERFACE:
         condition = new ConditionBuilder(InterfaceRelatePermission.class)
                 .and().in(getValidResourceKey(type), set).equal("permissionRowId", permissionRowId).endAnd()
@@ -266,6 +318,7 @@ public class PermissionResourceService {
         if (!interfaceRelatePermissions.isEmpty()) {
           interfaceRelatePermissions.forEach(interfaceRelatePermission -> set.remove(interfaceRelatePermission.getInterfaceRowId()));
         }
+        break;
     }
     return set;
   }

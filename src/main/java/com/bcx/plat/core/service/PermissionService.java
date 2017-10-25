@@ -29,8 +29,8 @@ public class PermissionService extends BaseService<Permission> {
 
   public static final String PERMISSION_TYPE_INTERFACE = "interfaceResources";
   public static final String PERMISSION_TYPE_BUTTON = "pageButton";
-  public static final String PERMISSION_TYPE_PAGE = "pageResource";
-  public static final String PERMISSION_TYPE_MENU = "menuResource";
+  public static final String PERMISSION_TYPE_PAGE = "pageResources";
+  public static final String PERMISSION_TYPE_MENU = "menuResources";
 
   /**
    * 插入数据，数据来自 map
