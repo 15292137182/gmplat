@@ -2,21 +2,20 @@ package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.constants.Message;
-import com.bcx.plat.core.entity.ButtonRelatePermission;
-import com.bcx.plat.core.entity.InterfaceRelatePermission;
-import com.bcx.plat.core.entity.MenuRelatePermission;
-import com.bcx.plat.core.entity.PageRelatePermission;
+import com.bcx.plat.core.entity.*;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.cctv1.PageResult;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.Order;
+import com.bcx.plat.core.morebatis.component.condition.And;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * Create By HCL at 2017/10/24
@@ -28,10 +27,116 @@ public class PermissionResourceService {
    * @param permissionRowId 权限编号
    * @return 返回查询结果
    */
-  public ServerResult queryResource(String permissionRowId) {
-    ServerResult serverResult = new ServerResult();
+  public ServerResult<PageResult> queryResource(String permissionRowId
+          , String search, String param, Integer pageNum, Integer pageSize, String order) {
+    ServerResult<PageResult> serverResult = new ServerResult<>();
+    if (isValid(permissionRowId)) {
+      Permission permission = new Permission().selectOneById(permissionRowId);
+      List<String> resourceRowIds = getResourceRowIds(permission.getPermissionType(), permissionRowId);
+      if (!resourceRowIds.isEmpty()) {
+        Condition condition = null;
+        List<Order> orders = new ArrayList<>();
+        if (isValid(param)) {//判断是否根据指定字段查询
+          switch (permission.getPermissionType()) {
+            case PermissionService.PERMISSION_TYPE_MENU:
+              condition = convertMapToAndConditionSeparatedByLike(Menu.class, jsonToObj(param, Map.class));
+              orders = dataSort(Menu.class, order);
+              break;
+            case PermissionService.PERMISSION_TYPE_PAGE:
+              condition = convertMapToAndConditionSeparatedByLike(Page.class, jsonToObj(param, Map.class));
+              orders = dataSort(Page.class, order);
+              break;
+            case PermissionService.PERMISSION_TYPE_BUTTON:
+              condition = convertMapToAndConditionSeparatedByLike(Button.class, jsonToObj(param, Map.class));
+              orders = dataSort(Button.class, order);
+          /*case PermissionService.PERMISSION_TYPE_INTERFACE:
+            condition = convertMapToAndConditionSeparatedByLike(Role.class, jsonToObj(param, Map.class));*/
+          }
+        } else {
+          condition = !isValid(search) ? null : createBlankQuery(getBlankSelectFields(permission.getPermissionType()), collectToSet(search));
+        }
+        if (null != condition) {
+          condition = new And(condition,
+                  new FieldCondition(getValidResourceKey(permission.getPermissionType()), Operator.IN, resourceRowIds));
+          PageResult pageResult = queryData(permission.getPermissionType(), condition, orders, pageNum, pageSize);
+          serverResult.setData(pageResult);
+          serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS);
+          return serverResult;
+        }
+      }
+    }
     serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.INVALID_REQUEST);
     return serverResult;
+  }
+
+  /**
+   * @param type      权限类型
+   * @param condition 条件
+   * @param orders    排序
+   * @param pageNum   页面号
+   * @param pageSize  页面大小
+   * @return 返回查询结果
+   */
+  private PageResult queryData(String type, Condition condition, List<Order> orders, Integer pageNum, Integer pageSize) {
+    switch (type) {
+      case PermissionService.PERMISSION_TYPE_MENU:
+        return new Menu().selectPageMap(condition, pageNum, pageSize, orders);
+      case PermissionService.PERMISSION_TYPE_PAGE:
+        return new Page().selectPageMap(condition, pageNum, pageSize, orders);
+      case PermissionService.PERMISSION_TYPE_BUTTON:
+        return new Button().selectPageMap(condition, pageNum, pageSize, orders);
+      /*case PermissionService.PERMISSION_TYPE_INTERFACE:
+        return "interfaceRowId";*/
+    }
+    return null;
+  }
+
+  /**
+   * @param type            权限类型
+   * @param permissionRowId 权限主键
+   * @return 返回资源主键集合
+   */
+  private List<String> getResourceRowIds(String type, String permissionRowId) {
+    // 查询资源 rowId
+    Condition temp = new FieldCondition("permissionRowId", Operator.EQUAL, permissionRowId);
+    List<String> resourceRowIds = new ArrayList<>();
+    switch (type) {
+      case PermissionService.PERMISSION_TYPE_MENU:
+        List<MenuRelatePermission> menuRelatePermissions = new MenuRelatePermission().selectSimple(temp);
+        menuRelatePermissions.forEach(menuRelatePermission -> resourceRowIds.add(menuRelatePermission.getMenuRowId()));
+      case PermissionService.PERMISSION_TYPE_PAGE:
+        List<PageRelatePermission> pageRelatePermissions = new PageRelatePermission().selectSimple(temp);
+        pageRelatePermissions.forEach(pageRelatePermission -> resourceRowIds.add(pageRelatePermission.getPageRowId()));
+      case PermissionService.PERMISSION_TYPE_BUTTON:
+        List<ButtonRelatePermission> buttonRelatePermissions = new ButtonRelatePermission().selectSimple(temp);
+        buttonRelatePermissions.forEach(buttonRelatePermission -> resourceRowIds.add(buttonRelatePermission.getButtonRowId()));
+      case PermissionService.PERMISSION_TYPE_INTERFACE:
+        List<InterfaceRelatePermission> interfaceRelatePermissions = new InterfaceRelatePermission().selectSimple(temp);
+        interfaceRelatePermissions.forEach(interfaceRelatePermission -> resourceRowIds.add(interfaceRelatePermission.getInterfaceRowId()));
+    }
+    return resourceRowIds;
+  }
+
+  private static final Set<String> MENU_FIELD_SET = new Menu().toMap().keySet();
+  private static final Set<String> PAGE_FIELD_SET = new Page().toMap().keySet();
+  private static final Set<String> BUTTON_FIELD_SET = new Button().toMap().keySet();
+
+  /**
+   * @param type 类型
+   * @return 获取空白查询的字段
+   */
+  private Set<String> getBlankSelectFields(String type) {
+    switch (type) {
+      case PermissionService.PERMISSION_TYPE_MENU:
+        return MENU_FIELD_SET;
+      case PermissionService.PERMISSION_TYPE_PAGE:
+        return PAGE_FIELD_SET;
+      case PermissionService.PERMISSION_TYPE_BUTTON:
+        return BUTTON_FIELD_SET;
+//      case PermissionService.PERMISSION_TYPE_INTERFACE:
+//        return "interfaceRowId";
+    }
+    return null;
   }
 
   /**
@@ -160,6 +265,6 @@ public class PermissionResourceService {
       case PermissionService.PERMISSION_TYPE_INTERFACE:
         return "interfaceRowId";
     }
-    return "";
+    return null;
   }
 }

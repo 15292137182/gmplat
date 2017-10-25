@@ -95,6 +95,7 @@ public class BaseOrgService extends BaseService<BaseOrg> {
       });
       int next = Integer.valueOf(maxString[0].substring(maxString[0].length() - 3)) + 1;
       StringBuilder nextStr = new StringBuilder(next);
+      // 补全 rowId 的字符串位数
       while (nextStr.length() < 3) {
         nextStr.insert(0, 0);
       }

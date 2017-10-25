@@ -25,6 +25,23 @@ public class PermissionResourceController extends BaseController {
   private PermissionResourceService permissionResourceService;
 
   /**
+   * 查询权限下对应的资源信息
+   *
+   * @param permissionRowId 权限主键
+   * @param search          空白查询字段
+   * @param param           参数
+   * @param pageNum         页面号
+   * @param pageSize        页面大小
+   * @param order           排序字段
+   * @return 返回平台响应结果
+   */
+  @RequestMapping(value = "/queryResource")
+  public PlatResult queryResource(String permissionRowId
+          , String search, String param, Integer pageNum, Integer pageSize, String order) {
+    return PlatResult.success(permissionResourceService.queryResource(permissionRowId, search, param, pageNum, pageSize, order));
+  }
+
+  /**
    * 新建菜单关联
    *
    * @param permissionRowId 权限主键
