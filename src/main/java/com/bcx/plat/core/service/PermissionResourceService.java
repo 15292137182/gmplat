@@ -25,6 +25,16 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 public class PermissionResourceService {
 
   /**
+   * @param permissionRowId 权限编号
+   * @return 返回查询结果
+   */
+  public ServerResult queryResource(String permissionRowId) {
+    ServerResult serverResult = new ServerResult();
+    serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.INVALID_REQUEST);
+    return serverResult;
+  }
+
+  /**
    * 新建资源关联事件
    *
    * @param type            类型
@@ -40,6 +50,8 @@ public class PermissionResourceService {
       resourceRowIdSet.addAll(Arrays.asList(resourceRowIds));
       Set<String> validRowIds = getValidKeys(type, permissionRowId, resourceRowIdSet);
       insertResource(type, permissionRowId, validRowIds);
+      serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.NEW_ADD_SUCCESS);
+      return serverResult;
     }
     serverResult.setStateMessage(BaseConstants.STATUS_FAIL, Message.INVALID_REQUEST);
     return serverResult;
@@ -59,28 +71,28 @@ public class PermissionResourceService {
           MenuRelatePermission menuRelatePermission = new MenuRelatePermission();
           menuRelatePermission.setMenuRowId(s);
           menuRelatePermission.setPermissionRowId(permissionRowId);
-          menuRelatePermission.insert();
+          menuRelatePermission.buildCreateInfo().insert();
         });
       case PermissionService.PERMISSION_TYPE_PAGE:
         set.forEach(s -> {
           PageRelatePermission pageRelatePermission = new PageRelatePermission();
           pageRelatePermission.setPageRowId(s);
           pageRelatePermission.setPermissionRowId(permissionRowId);
-          pageRelatePermission.insert();
+          pageRelatePermission.buildCreateInfo().insert();
         });
       case PermissionService.PERMISSION_TYPE_BUTTON:
         set.forEach(s -> {
           ButtonRelatePermission buttonRelatePermission = new ButtonRelatePermission();
           buttonRelatePermission.setPermissionRowId(permissionRowId);
           buttonRelatePermission.setButtonRowId(s);
-          buttonRelatePermission.insert();
+          buttonRelatePermission.buildCreateInfo().insert();
         });
       case PermissionService.PERMISSION_TYPE_INTERFACE:
         set.forEach(s -> {
           InterfaceRelatePermission interfaceRelatePermission = new InterfaceRelatePermission();
           interfaceRelatePermission.setInterfaceRowId(s);
           interfaceRelatePermission.setPermissionRowId(permissionRowId);
-          interfaceRelatePermission.insert();
+          interfaceRelatePermission.buildCreateInfo().insert();
         });
     }
   }

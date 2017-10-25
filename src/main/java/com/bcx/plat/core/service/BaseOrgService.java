@@ -94,7 +94,11 @@ public class BaseOrgService extends BaseService<BaseOrg> {
         }
       });
       int next = Integer.valueOf(maxString[0].substring(maxString[0].length() - 3)) + 1;
-      return maxString[0].substring(0, maxString[0].length() - 3) + next;
+      StringBuilder nextStr = new StringBuilder(next);
+      while (nextStr.length() < 3) {
+        nextStr.insert(0, 0);
+      }
+      return maxString[0].substring(0, maxString[0].length() - 3) + nextStr;
     }
   }
 
