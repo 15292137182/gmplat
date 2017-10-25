@@ -117,15 +117,28 @@ public class PermissionResourceService {
     return resourceRowIds;
   }
 
-  private static final Set<String> MENU_FIELD_SET = new Menu().toMap().keySet();
-  private static final Set<String> PAGE_FIELD_SET = new Page().toMap().keySet();
-  private static final Set<String> BUTTON_FIELD_SET = new Button().toMap().keySet();
+  private Set<String> MENU_FIELD_SET = null;
+  private Set<String> PAGE_FIELD_SET = null;
+  private Set<String> BUTTON_FIELD_SET = null;
+
+  private void refreshSet() {
+    if (null == MENU_FIELD_SET) {
+      MENU_FIELD_SET = new Menu().toMap().keySet();
+    }
+    if (null == PAGE_FIELD_SET) {
+      PAGE_FIELD_SET = new Page().toMap().keySet();
+    }
+    if (null == BUTTON_FIELD_SET) {
+      BUTTON_FIELD_SET = new Button().toMap().keySet();
+    }
+  }
 
   /**
    * @param type 类型
    * @return 获取空白查询的字段
    */
   private Set<String> getBlankSelectFields(String type) {
+    refreshSet();
     switch (type) {
       case PermissionService.PERMISSION_TYPE_MENU:
         return MENU_FIELD_SET;
