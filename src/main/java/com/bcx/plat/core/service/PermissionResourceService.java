@@ -49,15 +49,18 @@ public class PermissionResourceService {
             case PermissionService.PERMISSION_TYPE_BUTTON:
               condition = convertMapToAndConditionSeparatedByLike(Button.class, jsonToObj(param, Map.class));
               orders = dataSort(Button.class, order);
-          /*case PermissionService.PERMISSION_TYPE_INTERFACE:
-            condition = convertMapToAndConditionSeparatedByLike(Role.class, jsonToObj(param, Map.class));*/
+              break;
+            case PermissionService.PERMISSION_TYPE_INTERFACE:
+              condition = convertMapToAndConditionSeparatedByLike(FuncOperat.class, jsonToObj(param, Map.class));
+              orders = dataSort(FuncOperat.class, order);
+              break;
           }
         } else {
           condition = !isValid(search) ? null : createBlankQuery(getBlankSelectFields(permission.getPermissionType()), collectToSet(search));
         }
         if (null != condition) {
           condition = new And(condition,
-                  new FieldCondition(getValidResourceKey(permission.getPermissionType()), Operator.IN, resourceRowIds));
+                  new FieldCondition("rowId", Operator.IN, resourceRowIds));
           PageResult pageResult = queryData(permission.getPermissionType(), condition, orders, pageNum, pageSize);
           serverResult.setData(pageResult);
           serverResult.setStateMessage(BaseConstants.STATUS_SUCCESS, Message.QUERY_SUCCESS);
@@ -85,8 +88,8 @@ public class PermissionResourceService {
         return new Page().selectPageMap(condition, pageNum, pageSize, orders);
       case PermissionService.PERMISSION_TYPE_BUTTON:
         return new Button().selectPageMap(condition, pageNum, pageSize, orders);
-      /*case PermissionService.PERMISSION_TYPE_INTERFACE:
-        return "interfaceRowId";*/
+      case PermissionService.PERMISSION_TYPE_INTERFACE:
+        return new FuncOperat().selectPageMap(condition, pageNum, pageSize, orders);
     }
     return null;
   }
@@ -117,9 +120,10 @@ public class PermissionResourceService {
     return resourceRowIds;
   }
 
-  private Set<String> MENU_FIELD_SET = null;
-  private Set<String> PAGE_FIELD_SET = null;
-  private Set<String> BUTTON_FIELD_SET = null;
+  private static Set<String> MENU_FIELD_SET = null;
+  private static Set<String> PAGE_FIELD_SET = null;
+  private static Set<String> BUTTON_FIELD_SET = null;
+  private static Set<String> FUNC_FIELD_SET = null;
 
   private void refreshSet() {
     if (null == MENU_FIELD_SET) {
@@ -130,6 +134,9 @@ public class PermissionResourceService {
     }
     if (null == BUTTON_FIELD_SET) {
       BUTTON_FIELD_SET = new Button().toMap().keySet();
+    }
+    if (null == FUNC_FIELD_SET) {
+      FUNC_FIELD_SET = new FuncOperat().toMap().keySet();
     }
   }
 
@@ -146,8 +153,8 @@ public class PermissionResourceService {
         return PAGE_FIELD_SET;
       case PermissionService.PERMISSION_TYPE_BUTTON:
         return BUTTON_FIELD_SET;
-//      case PermissionService.PERMISSION_TYPE_INTERFACE:
-//        return "interfaceRowId";
+      case PermissionService.PERMISSION_TYPE_INTERFACE:
+        return FUNC_FIELD_SET;
     }
     return null;
   }
