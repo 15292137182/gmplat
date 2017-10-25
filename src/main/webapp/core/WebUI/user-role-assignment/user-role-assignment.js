@@ -15,6 +15,9 @@ var searchRoleUserGroup=serverPath+"/roleDistribute/queryRoleUserGroup";
 //查看所有权限
 var allRole=serverPath+"/role/queryPage";
 
+//用户分配角色
+userDeverRole=serverPath+"/roleDistribute/addUserRole";
+
 
 gmp_onload=function(){
     //左边单选框
@@ -68,6 +71,7 @@ gmp_onload=function(){
             },
             //确认这个节点的时候
             getNodes(data){
+                console.log(111)
                 this.belongOrg=data.rowId;
             },
             //清除框的时候
@@ -107,8 +111,11 @@ gmp_onload=function(){
             //点击这一行
             currentChange(row, event, column){
                 console.log(row);
+                //这一行的ID数据
+                this.userRowId=row.rowId
                //获得所属角色的key
                 this.rightRowId=row.roleRowIds
+                console.log(  this.userRowId)
                 console.log( this.rightRowId)
             },
             handleSizeChange(val){
