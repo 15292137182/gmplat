@@ -60,7 +60,7 @@
     </style>
 </head>
 <body>
-<div id="basTop">
+<div id="basTop" v-cloak>
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent">添加</el-button>
@@ -76,7 +76,7 @@
 </div>
 
 <div class="allBorder" style="margin-top:10px">
-    <el-col :span="5" id="left">
+    <el-col :span="5" id="left" v-cloak>
         <el-row>
             <el-col>
                 <div style="padding:20px 20px">
@@ -95,7 +95,7 @@
         </el-row>
     </el-col>
 
-    <el-col :span="18" id="right" :push="1" style="margin-top:25px">
+    <el-col :span="18" id="right" :push="1" v-cloak style="margin-top:25px">
         <div class="allBorder">
             <el-row>
                 <el-col>

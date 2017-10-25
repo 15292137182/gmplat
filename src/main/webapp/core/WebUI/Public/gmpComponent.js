@@ -681,6 +681,8 @@ Vue.component("select-tree", {
             select_node: [],
             // 选中节点 id
             select_id: [],
+            // 选择行数据
+            getClickNode: "",
             // 是否显示复选框
             checkbox: "",
             // 中间参数
@@ -813,6 +815,9 @@ Vue.component("select-tree", {
                 // 确认按钮不可用
                 this.error = true;
             }else {
+                // 节点数据
+                this.getClickNode = obj;
+                console.log(this.getClickNode);
                 // 选中的节点名称
                 this.middle = obj[label];
                 // 选中节点 id
@@ -877,12 +882,14 @@ Vue.component("select-tree", {
                 this.select_id = this.$refs.selectTree.getCheckedKeys();
                 // 显示节点名称
                 this.select_node = nodesName;
+                // 点击确认后传递当前选择id
+                this.$emit("select-node", this.select_id);
             }else {
                 // 若不显示复选框
                 this.select_node = this.middle;
+                // 点击确认后传递当前选择id
+                this.$emit("select-node", this.getClickNode, this.select_node);
             }
-            // 点击确认后传递当前选择id
-            this.$emit("select-node", this.select_id);
         },
         // 鼠标移入事件
         enter() {

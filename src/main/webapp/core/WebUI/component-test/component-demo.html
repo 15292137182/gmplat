@@ -122,7 +122,7 @@
                         // 设置清空按钮
                         clearable: false,
                         // 显示复选框
-                        checkbox: true,
+                        checkbox: false,
                         // 默认展开
 //                        expanded: [324],
                         // 展开所有节点
@@ -183,7 +183,8 @@
                     console.log("选中行名称为：" + name);
                 },
                 getNodeId(id) {
-                    console.log("当前选中节点 id为：" + id);
+                    console.log(id);
+//                    console.log("当前选中节点 id为：" + id);
                 },
                 getChecked(data, id, allChecked, name, flag) {
                     // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识

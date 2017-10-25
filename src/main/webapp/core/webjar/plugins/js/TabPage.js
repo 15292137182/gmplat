@@ -444,7 +444,10 @@ var querySearch = (function(){
     }
 
     //左侧查右侧 跳回第一页
-    var searchResourceFirst = function(url,headDate,obj,callback){
+    var searchResourceFirst = function(url,headDate,obj,callback) {
+        // 数据请求时显示loading状态
+        obj.loading = true;
+        // 数据请求
         $.ajax({
             url:url,
             type:"get",
@@ -452,6 +455,7 @@ var querySearch = (function(){
             dataType:"json",
             xhrFields: {withCredentials: true},
             success:function(res){
+                // 数据请求成功 loading状态消失
                 obj.loading=false;
                 if(res.resp.respCode=="000"){
                     if(res.resp.content.data!=null){
@@ -479,7 +483,10 @@ var querySearch = (function(){
     }
 
     //左侧查右侧 不跳回第一页
-    var searchResource = function(url,headDate,obj,callback){
+    var searchResource = function(url,headDate,obj,callback) {
+        // 数据请求时显示loading状态
+        obj.loading = true;
+        // 数据请求
         $.ajax({
             url:url,
             type:"get",
@@ -534,7 +541,10 @@ var querySearch = (function(){
 
 
     //不需要search 不跳回第一页
-    var jumpPage = function(url,params,obj,number,callback){
+    var jumpPage = function(url,params,obj,number,callback) {
+        // 数据请求时显示loading状态
+        obj.loading = true;
+        // 数据请求
         $.ajax({
             url:url,
             type:"get",
@@ -572,7 +582,10 @@ var querySearch = (function(){
         })
     }
     //接收参数名分页的方法
-    var getDataPage = function(url,params,obj,number,callback){
+    var getDataPage = function(url,params,obj,number,callback) {
+        // 数据请求时显示loading状态
+        obj.loading = true;
+        // 数据请求
         var data = params;
         data.pageSize = obj.pageSize;
         data.pageNum = number;
@@ -736,43 +749,43 @@ var showMsg = (function(){
     var MsgOk = function(obj,msg){
         //obj：需要弹出消息页面的Vue实例对象
         //msg：ajax成功后返回的res
-            obj.$message({
-                message: msg,
-                type: 'success'
-            })
+        obj.$message({
+            message: msg,
+            type: 'success'
+        });
     }
+
     var MsgError = function(obj){
         //ajax相应失败
         obj.$message.error("请求失败！");
     }
+
     return {
         MsgOk:MsgOk,
         MsgError:MsgError
     }
-})()
-
+})();
 
 /*
 * Vue实例抽出data，ajax
 * */
-
 var getData = (function(){
     var dataObj = function(json){
         //需要自定义的data数据，格式json（"key":"value"） data:getData.dataObj(json)
         //不需要自定义不用传参数！！！data:getData.dataObj()
         var data = {};
-        if(json){
+        if(json) {
             data = json;
-            data.loading=true;
+            data.loading=false;
             data.input='';
             data.tableData=[];
             data.leftHeight='';
             data.pageSize=10;
             data.pageNum=1;
             data.allDate=0;
-        }else{
+        }else {
              data = {
-                loading:true,//加载提示效果
+                loading:false,//加载提示效果
                 input:'',//输入框
                 tableData:[],//table数据
                 leftHeight:'',//左边表格高度
@@ -781,12 +794,13 @@ var getData = (function(){
                 allDate:0//共多少条
             }
         }
+
         return data
     }
     return {
         dataObj:dataObj
     }
-})()
+})();
 
 var gmpAjax = (function(){
     /**
@@ -797,7 +811,8 @@ var gmpAjax = (function(){
         // (url：接口地址,jsonData:后端请求数据，obj：需要弹出消息层的vue实例),
         // callbakc:成功后的回调函数
         var data = dataJson;
-        // console.log(data.jsonData)
+        // 异步请求显示loading状态
+        getData.dataObj.loading = true;
         $.ajax({
             url:data.url,
             type:"post",
@@ -807,8 +822,10 @@ var gmpAjax = (function(){
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             dataType:"json",
             success:function(res){
-                if(res.resp.respCode=='000'){
-                    if(res.resp.content.state==1){
+                if(res.resp.respCode=='000') {
+                    if(res.resp.content.state==1) {
+                        // 请求成功 loading状态消失
+                        getData.dataObj.loading = false;
                         if (typeof callback == "function") {
                             // console.log(res);
                             callback(res.resp.content);
@@ -823,10 +840,12 @@ var gmpAjax = (function(){
                         data.obj.$message.error(res.resp.content.msg);
                     }
                 }else{
+                    getData.dataObj.loading = false;
                     data.obj.$message.error(res.resp.respMsg);
                 }
             },
             error:function(res){
+                getData.dataObj.loading = false;
                  // console.log(222);
                 data.obj.$message.error("操作失败");
             }

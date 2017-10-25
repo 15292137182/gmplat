@@ -157,3 +157,8 @@ td.el-table__expanded-cell{
 .el-tree {
     border: none;
 }
+
+/* 防止页面加载时间过长 页面渲染样式丢失 */
+[v-cloak] {
+    display: none;
+}

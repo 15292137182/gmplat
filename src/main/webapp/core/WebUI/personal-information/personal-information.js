@@ -106,7 +106,10 @@ var app = new Vue({
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <div class="demo_line"><hr><span>账号信息</span></div>
+                                <div class="demo_line">
+                                    <hr>
+                                    <span>账号信息</span>
+                                </div>
                                 <el-row class="row-bg">
                                     <el-col :span="11">
                                         <el-form-item label="职务" prop="post">
@@ -138,7 +141,10 @@ var app = new Vue({
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <div class="demo_line"><hr><span>联系信息</span></div>
+                                <div class="demo_line">
+                                    <hr>
+                                    <span>联系信息</span>
+                                </div>
                                 <el-row class="row-bg">
                                     <el-col :span="11">
                                         <el-form-item label="移动电话" prop="mobilePhone">
@@ -151,7 +157,10 @@ var app = new Vue({
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <div class="demo_line"><hr><span>其他信息</span></div>
+                                <div class="demo_line">
+                                    <hr>
+                                    <span>其他信息</span>
+                                </div>
                                 <el-row class="row-bg">
                                     <el-col :span="24">
                                         <el-form-item label="说明" prop="description">
@@ -180,7 +189,7 @@ var app = new Vue({
                                         <el-input v-model="modify.name" ref="" :readonly="modify.readonly"></el-input>
                                     </el-form-item>
                                     <el-form-item label="初始密码" prop="">
-                                        <el-input v-model="modify.password" ref="" :readonly="modify.readonly"></el-input>
+                                        <el-input v-model="modify.password" ref="" placeholder="请输入初始密码"></el-input>
                                     </el-form-item>
                                     <el-form-item label="密码" prop="">
                                         <el-input v-model="modify.newPassword" placeholder="请输入新密码" ref=""></el-input>

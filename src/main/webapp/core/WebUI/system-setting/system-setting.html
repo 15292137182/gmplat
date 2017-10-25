@@ -53,11 +53,11 @@
                     <span class="label">连续输入错误密码 <span class="warning">{{systemRule.locking}}</span> 后将锁定账号禁止其登录(当天)</span>
                 </el-form-item>
             </el-col>
-            <el-col :span="24">
-                <el-form-item label="登录密码验证" prop="validate">
-                    <single-selection :initial="validate"></single-selection>
-                </el-form-item>
-            </el-col>
+            <!--<el-col :span="24">-->
+                <!--<el-form-item label="登录密码验证" prop="validate">-->
+                    <!--<single-selection :initial="validate"></single-selection>-->
+                <!--</el-form-item>-->
+            <!--</el-col>-->
             <el-col :span="24">
                 <el-form-item label="密码强度设置" prop="strength">
                     <el-checkbox-group v-model="systemRule.strength">
@@ -71,11 +71,11 @@
             </el-col>
             <el-col :span="24">
                 <el-form-item label="密码长度设置" prop="pswlength">
-                    <el-col span="7">
+                    <el-col span="3">
                         <el-input v-model="minLength"></el-input>
                     </el-col>
                     <el-col span="1" style="text-align: center;">-</el-col>
-                    <el-col span="7">
+                    <el-col span="3">
                         <el-input v-model="maxLength"></el-input>
                     </el-col>
                     <span class="label"> &nbsp;&nbsp;(6位~15位之间)</span>
