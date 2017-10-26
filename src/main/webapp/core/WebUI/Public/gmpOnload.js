@@ -340,8 +340,8 @@ var getOptions = (function() {
             data:  "",
             dataType: "json",
             success:function(res) {
-                if(res.resp.respCode == "000"){
-                    if(res.resp.content.state == "1"){
+                if(res.resp.respCode == "000") {
+                    if(res.resp.content.state == "1") {
                         var _jsonObj = res.resp.content.data.result;
                         // 循环配置value-label
                         for(var i = 0;i < _jsonObj.length;i++) {

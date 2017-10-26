@@ -100,7 +100,7 @@ td.el-table__expanded-cell{
 }
 
 /* 树形下拉框样式 */
-#select_tree {
+.current__select .el-dropdown-menu {
     /*width: 215px;*/
     max-height: 350px;
     overflow-y: scroll;
@@ -111,36 +111,44 @@ td.el-table__expanded-cell{
     width: 0;
 }
 
-#select_tree .el-tree {
+.current__select .el-dropdown-menu .el-tree {
     border: none;
 }
 
-#gmpDrop .el-input .el-input__icon {
+.gmp_select_tree .el-input .el-input__icon {
     transform: rotateZ(180deg);
 }
 
-#gmpDrop .el-input .is-reverse {
+.current__select .el-input .is-reverse {
     transition: transform .3s;
     transform: rotateZ(360deg);
 }
 
-#gmpDrop .el-icon-circle-close {
+.current__select .el-icon-circle-close {
     opacity: 1;
     transition: opacity .3s;
 }
 
-#select_tree li {
+.gmp-dropdown-menu li {
     padding: 0;
     position: relative;
 }
 
-#select_tree li:last-child {
+.gmp-dropdown-menu li .el-tree {
+    border: none !important;
+}
+
+.gmp-dropdown-menu li:last-child {
     padding-right: 7px;
     text-align: right;
 }
 
-#select_tree li:last-child:hover {
+.gmp-dropdown-menu li:last-child:hover {
     background-color: #fff;
+}
+
+.gmp-dropdown-menu .el-dropdown-menu__item:hover {
+    background-color: transparent;
 }
 
 
@@ -154,8 +162,8 @@ td.el-table__expanded-cell{
     z-index: 900000000 !important;
 }
 /*tree的边框去掉*/
-.el-tree {
-    border: none;
+.treeBorder {
+    border: none !important;
 }
 
 .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {

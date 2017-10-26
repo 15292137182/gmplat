@@ -95,11 +95,13 @@
                     singleSelect: {
                         params: "functionBlockAlign",
                         value: "",
-                        multiple: true
+                        multiple: false
                     },
 
                     // 一级树结构配置
                     treeData: {
+                        // 过滤器配置
+//                        filter: true,
                         // 显示复选框
                         checkbox: true,
                         // 默认选中项 当 checkbox 为 true 时  编辑时可以用
@@ -114,13 +116,19 @@
                         // 获取树节点接口
                         url: serverPath + "/keySet/queryKeySet",
                         // 传参
-                        params: "privilegeType"
+                        params: "privilegeType",
+                        // 显示边框
+//                        border: true
                     },
 
                     // 层级树结构配置
                     config: {
+                        // 点击行展开节点
+//                        clickToExpand: true,
+                        // 过滤器配置
+                        filter: true,
                         // 设置清空按钮
-                        clearable: false,
+                        clearable: true,
                         // 显示复选框
                         checkbox: false,
                         // 默认展开
@@ -139,7 +147,9 @@
                             parent: "orgPid"
                         },
                         // 获取数据接口
-                        url: serverPath + "/baseOrg/queryPage"
+                        url: serverPath + "/baseOrg/queryPage",
+                        // 显示边框
+//                        border: false
                     },
 
                     // 日期时间配置

@@ -373,6 +373,8 @@ Vue.component("base-tree", {
     },
     data() {
         return {
+            // 点击行展开节点
+            clickToExpand: false,
             // 是否显示复选框
             checkbox: false,
             // 父子节点级联
@@ -401,8 +403,12 @@ Vue.component("base-tree", {
             key: "",
             // 当前选中节点
             currentCheckedNodes: [],
-            // 加载
-            loading: true
+            // 加载状态图标
+            loading: true,
+            // 树结构边框
+            hasBorder: true,
+            // 过滤器显示清空按钮
+            clearable: true
         }
     },
     beforeMount() {
@@ -411,6 +417,12 @@ Vue.component("base-tree", {
             this.checkbox = true;
         }else {
             this.checkbox = false;
+        }
+        // 获取点击行展开节点配置
+        if(this.initial.clickToExpand) {
+            this.clickToExpand = this.initial.clickToExpand;
+        }else {
+            this.clickToExpand = false;
         }
         // 获取配置接口
         if(this.initial.url) {
@@ -465,6 +477,12 @@ Vue.component("base-tree", {
             this.strictly = this.initial.strictly;
         }else {
             this.strictly = true;
+        }
+        // 获取配置信息树结构边框
+        if(this.initial.border) {
+            this.hasBorder = !this.initial.border;
+        }else {
+            this.hasBorder = true;
         }
     },
     mounted() {
@@ -523,6 +541,10 @@ Vue.component("base-tree", {
                 self.defaultExpandedKeys = [];
             }
         });
+        // 取消过滤框按钮
+        if(this.initial.filter) {
+            this.removeClass("el-icon-search")
+        }
     },
     methods: {
         // 点击节点 返回该节点对应的对象 对应的节点 节点本身
@@ -653,11 +675,61 @@ Vue.component("base-tree", {
             }
             // 刷新树结构
             this.getNode();
+        },
+        // 添加className
+        addClass(name) {
+            var targetElement = this.$el.firstChild.children[0].className;
+            var newStr = targetElement + " " + name;
+            this.$el.firstChild.children[0].className = newStr;
+        },
+        // 移除className
+        removeClass(name) {
+            var optionElement = this.$el.firstChild.children[0].className;
+            var newClass = optionElement.replace(name, "");
+            this.$el.firstChild.children[0].className = newClass;
+        },
+        // className查找
+        hasClass(name) {
+            var currentClass = this.$el.firstChild.children[0].className;
+            var foundClass = currentClass.indexOf(name);
+            if(foundClass > 0) {
+                return true;
+            }
+            if(foundClass < 0) {
+                return false;
+            }
+        },
+        // 鼠标移入事件
+        enter() {
+            if(this.filterText != "" && this.clearable) {
+                // addClass
+                this.addClass("el-icon-circle-close");
+            }
+        },
+        // 鼠标移出事件
+        out() {
+            if(this.filterText != "" && this.clearable) {
+                // removeClass
+                this.removeClass("el-icon-circle-close");
+            }
+        },
+        // 清除选择内容事件
+        clear(ev) {
+            var isClose = this.hasClass("el-icon-circle-close");
+            // 若当前图标为关闭图标
+            if(isClose && this.clearable) {
+                // 阻止事件冒泡
+                ev.stopPropagation();
+                // 清空输入内容
+                this.filterText = "";
+                // 移除class
+                this.removeClass("el-icon-circle-close");
+            }
         }
     },
     template: `<div>
-                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" style="margin-bottom: 5px;"></el-input>
-                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :check-strictly="strictly" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="key" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
+                    <el-input placeholder="输入关键字进行过滤" v-model="filterText" v-show="isFilter" icon="search" @mouseover.native="enter" @mouseout.native="out" :on-icon-click="clear" style="margin-bottom: 5px;"></el-input>
+                    <el-tree v-loading.body="loading" element-loading-text="拼命加载中" :expand-on-click-node="clickToExpand" :class="{treeBorder: hasBorder}" :check-strictly="strictly" :data="treeNodes" :show-checkbox="checkbox" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="key" ref="tree" highlight-current :props="defaultProps" :filter-node-method="filterNode">
                     </el-tree>
                 </div>`
 });
@@ -671,6 +743,12 @@ Vue.component("select-tree", {
     props: ["initial"],
     data() {
         return {
+            // 点击行展开节点
+            clickToExpand: false,
+            // 显示过滤器
+            isFilter: false,
+            // 过滤文本
+            filterText: "",
             // 获取树节点接口
             url: "",
             // 树节点数据
@@ -710,6 +788,9 @@ Vue.component("select-tree", {
         }
     },
     watch: {
+        filterText(val) {
+            this.$refs.selectTree.filter(val);
+        },
         sycnData: function(val, oldVal) {
             // console.log(val);
             // console.log(oldVal);
@@ -753,7 +834,7 @@ Vue.component("select-tree", {
             // });
         },
         defaultCheckedKeys(val, oldVal) {
-            console.log(val);
+            // console.log(val);
             // console.log(oldVal);
             var that = this;
             // 获取树节点数据
@@ -779,7 +860,7 @@ Vue.component("select-tree", {
                     for(var i = 0;i < data.length;i++) {
                         // 后端数据中 id为配置id的项 push到数组中
                         for(var j = 0;j < _checked.length;j++) {
-                            if(data[i].rowId == _checked[j]) {
+                            if(data[i].rowId == _checked[j] || data[i][_key] == _checked[0]) {
                                 _selectNode.push(data[i][_name]);
                             }
                         }
@@ -790,7 +871,7 @@ Vue.component("select-tree", {
                     // 若不显示复选框 设置选中多节点 默认选中第一个配置节点
                     for(var i = 0;i < data.length;i++) {
                         // 后端数据中 id为配置id的项 push到数组中
-                        if(data[i].rowId == _checked[0]) {
+                        if(data[i].rowId == _checked[0] || data[i][_key] == _checked[0]) {
                             _selectNode.push(data[i][_name]);
                         }
                     }
@@ -817,7 +898,7 @@ Vue.component("select-tree", {
             }else {
                 // 节点数据
                 this.getClickNode = obj;
-                console.log(this.getClickNode);
+                // console.log(this.getClickNode);
                 // 选中的节点名称
                 this.middle = obj[label];
                 // 选中节点 id
@@ -863,6 +944,12 @@ Vue.component("select-tree", {
             // 向父组件传递方法和数据
             this.$emit("checked-node", obj, obj[_id], currentSelect, obj[label], flag);
         },
+        // 过滤数据
+        filterNode(value, data) {
+            var label = this.initial.defaultProps.label;
+            if (!value) return true;
+            return data[label].indexOf(value) !== -1;
+        },
         // 选中节点事件
         checked() {
             // 若显示复选框
@@ -891,23 +978,131 @@ Vue.component("select-tree", {
                 this.$emit("select-node", this.getClickNode, this.select_node);
             }
         },
+        // 添加className
+        addClass(_obj, name) {
+            var targetElement,
+                newStr;
+            // 对象判断
+            if(_obj == this) {
+                targetElement = _obj.$el.firstChild.children[0].className;
+                // 拼接className字符串
+                newStr = targetElement + " " + name;
+                // 目标对象赋值
+                _obj.$el.firstChild.children[0].className = newStr;
+            }else {
+                targetElement = _obj.$el.children[0].className;
+                // 拼接className字符串
+                newStr = targetElement + " " + name;
+                // 目标对象赋值
+                _obj.$el.children[0].className = newStr;
+            }
+        },
+        // 移除className
+        removeClass(_obj, name) {
+            var optionElement,
+                _remove_index,
+                newClass;
+            if(_obj == this) {
+                // 目标对象className
+                optionElement = _obj.$el.firstChild.children[0].className;
+                // 字符串转成数组
+                var arr = optionElement.split(" ");
+                // 循环遍历当前数组
+                for(var i = 0;i < arr.length;i++) {
+                    if(arr[i] == name) {
+                        // 审查当前className数组是否含有传入值
+                        _remove_index = arr.indexOf(name);
+                        if(_remove_index > 0) {
+                            // 若存在将传入值从className数组中移除
+                            arr.splice(_remove_index, 1);
+                            // 数组转为字符串
+                            newClass = arr.toString();
+                            // 空格代替逗号
+                            for(var j = 0;j < arr.length;j++) {
+                                newClass = newClass.replace(",", " ");
+                            }
+                        }
+                    }else {
+                        // 若传入值不存在于className数组中 直接返回className数组
+                        newClass = arr.toString();
+                        newClass = newClass.replace(",", " ");
+                    }
+                }
+                // 将新值赋予目标元素class
+                _obj.$el.firstChild.children[0].className = newClass;
+            }else {
+                // 目标对象className
+                optionElement = _obj.$el.children[0].className;
+                // 字符串转成数组
+                var arr = optionElement.split(" ");
+                // 循环遍历当前数组
+                for(var i = 0;i < arr.length;i++) {
+                    if(arr[i] == name) {
+                        // 审查当前className数组是否含有传入值
+                        _remove_index = arr.indexOf(name);
+                        if(_remove_index > 0) {
+                            // 若存在将传入值从className数组中移除
+                            arr.splice(_remove_index, 1);
+                            // 数组转为字符串
+                            newClass = arr.toString();
+                            // 空格代替逗号
+                            for(var j = 0;j < arr.length;j++) {
+                                newClass = newClass.replace(",", " ");
+                            }
+                        }
+                    }else {
+                        // 若传入值不存在于className数组中 直接返回className数组
+                        newClass = arr.toString();
+                        newClass = newClass.replace(",", " ");
+                    }
+                }
+                // 将新值赋予目标元素class
+                _obj.$el.children[0].className = newClass;
+            }
+        },
+        // className查找
+        hasClass(_obj, name) {
+            var currentClass;
+            // 传入对象判断
+            if(_obj == this) {
+                currentClass = _obj.$el.firstChild.children[0].className;
+            }else {
+                currentClass = _obj.$el.children[0].className;
+            }
+            // 检查当前className是否含有传入值
+            var foundClass = currentClass.indexOf(name);
+            if(foundClass > 0) {
+                return true;
+            }
+            if(foundClass < 0) {
+                return false;
+            }
+        },
         // 鼠标移入事件
         enter() {
+            var optionSelectTree = this.$el.className;
+            // 目标索引判断
+            var _index = optionSelectTree.indexOf("current__select");
+            if(_index < 0) {
+                // 当前对象添加className
+                this.$el.className = optionSelectTree + " " + "current__select";
+            }
+            // 若输入框值为空并且配置清空按钮
             if(this.select_node != "" && this.clearable) {
                 // addClass
-                $("#gmpDrop .el-input").find('.el-input__icon').addClass('el-icon-circle-close');
+                this.addClass(this, "el-icon-circle-close");
             }
         },
         // 鼠标移出事件
         out() {
             if(this.select_node != "" && this.clearable) {
                 // removeClass
-                $("#gmpDrop .el-input").find('.el-input__icon').removeClass('el-icon-circle-close');
+                this.removeClass(this, "el-icon-circle-close");
             }
         },
         // 清除选择内容事件
         clear(ev) {
-            var isClose = $("#gmpDrop .el-input").find('.el-input__icon').hasClass("el-icon-circle-close");
+            var isClose = this.hasClass(this, "el-icon-circle-close");
             // 若当前图标为关闭图标
             if(isClose && this.clearable) {
                 // 阻止事件冒泡
@@ -921,10 +1116,43 @@ Vue.component("select-tree", {
                     this.setCheckedKeys([]);
                 }
                 // 传递清空后数据
-                this.$emit("clear", this.select_id, this.select_node)
+                this.$emit("clear", this.select_id, this.select_node);
                 // 移除class
-                $("#gmpDrop .el-input").find('.el-input__icon').removeClass('el-icon-circle-close');
+                this.removeClass(this, "el-icon-circle-close");
             }
+        },
+        // 过滤器输入框鼠标移入事件
+        filter_enter() {
+            if(this.filterText != "" && this.clearable) {
+                // addClass
+                this.addClass(this.$refs.filter, "el-icon-circle-close");
+            }
+        },
+        // 过滤器输入框鼠标移出事件
+        filter_out() {
+            if(this.filterText != "" && this.clearable) {
+                // removeClass
+                this.removeClass(this.$refs.filter, "el-icon-circle-close");
+            }
+        },
+        // 过滤器输入框清除选择内容事件
+        filter_clear(ev) {
+            // 判断当前输入框icon是否是关闭按钮
+            var isClose = this.hasClass(this.$refs.filter, "el-icon-circle-close");
+            // 若当前图标为关闭图标
+            if(isClose && this.clearable) {
+                // 阻止事件冒泡
+                ev.stopPropagation();
+                // 清空输入内容
+                this.filterText = "";
+                // 移除class
+                this.removeClass(this.$refs.filter, "el-icon-circle-close");
+            }
+        },
+        // 点击过滤输入框阻止事件冒泡
+        stopPropa(ev) {
+            // 阻止事件冒泡
+            ev.stopPropagation();
         },
         // 下拉框展开事件
         expanded(bool) {
@@ -933,12 +1161,21 @@ Vue.component("select-tree", {
             // 配置信息checkbox
             var _checkbox = this.initial.checkbox;
             // bool = true 为展开  bool = false 为收缩
+            if(bool) {
+                // input添加类 然图标翻转
+                this.addClass(this, "is-reverse");
+                // 移除过滤器图标
+                if(this.initial.filter) {
+                    this.removeClass(this.$refs.filter, "el-icon-search");
+                }
+            }else if(!bool) {
+                this.removeClass(this, "is-reverse");
+            }
+
             if(bool && this.clearable && _checkbox) {
                 // 获取配置展开项 选择项
                 var _expanded = this.initial.expanded;
                 var _checked = this.select_id;
-                // input添加类 然图标翻转
-                $("#gmpDrop .el-input").find('.el-input__icon').addClass('is-reverse');
                 // 下拉框展开 树结构展开配置节点
                 if(_expanded && _expanded.length > 0) {
                     this.defaultExpandedKeys = this.initial.expanded;
@@ -957,7 +1194,6 @@ Vue.component("select-tree", {
                     this.error = true;
                 }
             }else if(!bool && this.clearable && _checkbox) {
-                $("#gmpDrop .el-input").find('.el-input__icon').removeClass('is-reverse');
                 // 若选中节点没有确认
                 if(_select.length == 0) {
                     // 收缩下拉框 清空选中项
@@ -1092,6 +1328,18 @@ Vue.component("select-tree", {
     },
     beforeMount() {
         this.sycnData = this.initial;
+        // 获取配置信息手否显示过滤器
+        if(this.initial.filter) {
+            this.isFilter = this.initial.filter;
+        }else {
+            this.isFilter = false;
+        }
+        // 获取点击行展开节点配置
+        if(this.initial.clickToExpand) {
+            this.clickToExpand = this.initial.clickToExpand;
+        }else {
+            this.clickToExpand = false;
+        }
         // 获取复选框显示配置
         if(this.initial.checkbox) {
             this.checkbox = true;
@@ -1235,12 +1483,13 @@ Vue.component("select-tree", {
         //     }
         // });
     },
-    template: `<el-dropdown id="gmpDrop" trigger="click" @visible-change="expanded" style="width: 100%;">
+    template: `<el-dropdown class="gmp_select_tree" trigger="click" @visible-change="expanded" style="width: 100%;">
                     <el-input v-model="select_node" :readonly="true" ref="treeInput" icon="caret-top" @mouseover.native="enter" @mouseout.native="out" :on-icon-click="clear" placeholder="请选择"></el-input>
-                    <el-dropdown-menu slot="dropdown" id="select_tree" :style="{width: dropWidth + 'px'}">
+                    <el-dropdown-menu slot="dropdown" class="gmp-dropdown-menu" :style="{width: dropWidth + 'px'}">
                         <el-dropdown-item>
                             <div style="max-height: 320px;width: 100%;overflow-y: scroll;">
-                                <el-tree :data="treeNodes" :show-checkbox="checkbox" :check-strictly="true" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="key" ref="selectTree" highlight-current :props="defaultProps"></el-tree>
+                                <el-input placeholder="输入关键字进行过滤" ref="filter" v-model="filterText" v-show="isFilter" @click.native="stopPropa" @mouseover.native="filter_enter" @mouseout.native="filter_out" :on-icon-click="filter_clear" icon="search" style="padding: 0 5px;margin-bottom: 8px;" :style="{width: dropWidth - 10 + 'px'}"></el-input>
+                                <el-tree :data="treeNodes" :show-checkbox="checkbox" :expand-on-click-node="clickToExpand" :check-strictly="true" @node-click="clickNode" @check-change="checkNode" :default-expanded-keys="defaultExpandedKeys" :default-expand-all="expandedAll" :node-key="key" ref="selectTree" highlight-current :props="defaultProps" :filter-node-method="filterNode"></el-tree>
                             </div>
                         </el-dropdown-item>
                         <el-dropdown-item>

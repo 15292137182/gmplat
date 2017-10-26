@@ -534,7 +534,7 @@ var querySearch = (function(){
                 }
             },
             error:function(){
-                alert("查询错误")
+                gmpPopup.throwMsg("查询错误！")
             }
         })
     }
@@ -760,6 +760,7 @@ var showMsg = (function(){
         obj.$message({
             message: msg,
             type: 'success',
+            duration: 1500,
             customClass: "gmpMessage"
         });
     }
@@ -768,6 +769,7 @@ var showMsg = (function(){
         //ajax相应失败
         obj.$message.error({
             message: "请求失败！",
+            duration: 1500,
             customClass: "gmpMessage"
         });
     }
@@ -851,6 +853,7 @@ var gmpAjax = (function(){
                         // showMsg.MsgOk(data.obj,res.resp.content.msg);
                         data.obj.$message.error({
                             message: res.resp.content.msg,
+                            duration: 1500,
                             customClass: "gmpMessage"
                         });
                     }
@@ -858,6 +861,7 @@ var gmpAjax = (function(){
                     getData.dataObj.loading = false;
                     data.obj.$message.error({
                         message: res.resp.respMsg,
+                        duration: 1500,
                         customClass: "gmpMessage"
                     });
                 }
@@ -866,7 +870,8 @@ var gmpAjax = (function(){
                 getData.dataObj.loading = false;
                  // console.log(222);
                 data.obj.$message.error({
-                    message: "操作失败",
+                    message: "获取数据失败！",
+                    duration: 1500,
                     customClass: "gmpMessage"
                 });
             }
