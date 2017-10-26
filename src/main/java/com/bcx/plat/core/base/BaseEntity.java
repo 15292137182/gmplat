@@ -115,6 +115,9 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
         }
       }
     }
+    if (map.containsKey("etc")) {
+      map.remove("etc");
+    }
     return map;
   }
 
@@ -135,8 +138,8 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
       Method[] methods = current.getDeclaredMethods();
       for (Method method : methods) {
         if (method.getName().startsWith("set")
-            && method.getAnnotationsByType(JsonIgnore.class).length == 0
-            && method.getParameterCount() == 1) {
+                && method.getAnnotationsByType(JsonIgnore.class).length == 0
+                && method.getParameterCount() == 1) {
           String _fieldName = method.getName().substring(3, method.getName().length());
           String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
           Object value = map.get(fieldName);
@@ -243,8 +246,8 @@ public class BaseEntity<T extends BaseORM> extends BaseORM<T> implements BeanInt
       Method[] methods = current.getDeclaredMethods();
       for (Method method : methods) {
         if (method.getName().startsWith("set")
-            && method.getAnnotationsByType(JsonIgnore.class).length == 0
-            && method.getParameterCount() == 1) {
+                && method.getAnnotationsByType(JsonIgnore.class).length == 0
+                && method.getParameterCount() == 1) {
           String _fieldName = method.getName().substring(3, method.getName().length());
           String fieldName = _fieldName.substring(0, 1).toLowerCase() + _fieldName.substring(1, _fieldName.length());
           Object value = map.get(fieldName);
