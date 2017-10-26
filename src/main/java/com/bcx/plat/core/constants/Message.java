@@ -25,6 +25,7 @@ public class Message {
   public static final String INVALID_REQUEST = "INVALID_REQUEST";
   public static final String REGULAR_REPLACE = "REGULAR_REPLACE";
   public static final String PARSING_EXCEL_FAIL = "PARSING_EXCEL_FAIL";
+  public static final String PLEASE_ENTER_THE_CORRECT_FORMAT = "PLEASE_ENTER_THE_CORRECT_FORMAT";
 
 
 }

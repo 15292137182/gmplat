@@ -97,9 +97,10 @@ public class ExcelImportExport extends BaseController {
    */
   @PostMapping("/excelUpload")
   @ResponseBody
+  @SuppressWarnings("unchecked")
   public PlatResult excelUpload(HttpServletRequest request) {
     try {
-      List<Map> data = null;
+      List<Map> data;
       FileItemFactory factory = new DiskFileItemFactory();
       ServletFileUpload upload = new ServletFileUpload(factory);
       FileItemIterator itemIterator = upload.getItemIterator(request);
@@ -111,6 +112,8 @@ public class ExcelImportExport extends BaseController {
         data = ExcelUtils.ExcelVerConvert(new HSSFWorkbook(inputStream));
       } else if ("xlsx".equals(suffix)) {
         data = ExcelUtils.ExcelVerConvert(new XSSFWorkbook(inputStream));
+      } else {
+        return fail(Message.PLEASE_ENTER_THE_CORRECT_FORMAT);
       }
       if (data != null && data.size() == 0) {
         return fail(Message.PARSING_EXCEL_FAIL);
@@ -131,10 +134,10 @@ public class ExcelImportExport extends BaseController {
         PlatResult add = null;
         for (Map li : data) {
           List<BaseOrg> list = new BaseOrg().selectAll();
-          for (BaseOrg baseOrg :list){
+          for (BaseOrg baseOrg : list) {
             if (baseOrg.getOrgName().equals(li.get("belongOrg"))) {
               String rowId = baseOrg.getRowId();
-              li.put("belongOrg",rowId);
+              li.put("belongOrg", rowId);
             }
           }
           add = userController.add(li);
