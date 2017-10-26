@@ -1,6 +1,10 @@
 package com.bcx.plat.core.utils;
 
+import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
+import static java.time.LocalDateTime.now;
+
 import com.bcx.plat.core.base.support.BeanInterface;
+import com.bcx.plat.core.morebatis.app.MoreBatis;
 import com.bcx.plat.core.morebatis.builder.AndConditionSequenceBuilder;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.builder.OrderBuilder;
@@ -12,18 +16,24 @@ import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
-import static java.time.LocalDateTime.now;
 
 /**
  * 基本工具类 Created by hcl at 2017/07/28
@@ -31,6 +41,8 @@ import static java.time.LocalDateTime.now;
 public class UtilsTool {
 
   private static JacksonAdapter objectMapper;
+
+  private static MoreBatis morebatis;
 
   /**
    * 禁止使用 new 的方法构造该类
@@ -135,7 +147,7 @@ public class UtilsTool {
    * json 转换为 Object
    *
    * @param json json
-   * @param <T>  类型
+   * @param <T> 类型
    * @return 返回类型
    */
   @SuppressWarnings("unchecked")
@@ -152,9 +164,7 @@ public class UtilsTool {
   }
 
   /**
-   * 反序列化复杂Collection如List<Bean>
-   * <p>
-   * jsonToObj(json, List.class, Bean.class)
+   * 反序列化复杂Collection如List<Bean> <p> jsonToObj(json, List.class, Bean.class)
    */
   @SuppressWarnings("unchecked")
   public static <T> T jsonToObj(String json, Class<T> clazz, Class<?>... elements) {
@@ -181,9 +191,7 @@ public class UtilsTool {
   }
 
   /**
-   * 将字符串从 指定字符 分割，返回为 Set 自带去重功能
-   * <p>
-   * 自指定字符包括： 空白，（圆角和半角）逗号，句号
+   * 将字符串从 指定字符 分割，返回为 Set 自带去重功能 <p> 自指定字符包括： 空白，（圆角和半角）逗号，句号
    *
    * @param str 字符串
    * @return 返回 list
@@ -201,7 +209,7 @@ public class UtilsTool {
    * 获取 class 内带有某注解的字段名称
    *
    * @param clazz class
-   * @param anno  注解 class
+   * @param anno 注解 class
    * @return 返回list
    */
   public static List<String> getAnnoFieldName(Class<?> clazz, Class<? extends Annotation> anno) {
@@ -224,7 +232,7 @@ public class UtilsTool {
    * 下划线转驼峰
    *
    * @param underline 下划线字符串
-   * @param bigCamel  是否大驼峰
+   * @param bigCamel 是否大驼峰
    * @return 返回字符串
    */
   public static String underlineToCamel(String underline, boolean bigCamel) {
@@ -264,7 +272,7 @@ public class UtilsTool {
   /**
    * java 中的 join 函数
    *
-   * @param strings   对象数组
+   * @param strings 对象数组
    * @param connector 链接符
    * @return 返回处理后的字符串
    */
@@ -281,13 +289,11 @@ public class UtilsTool {
 
   /**
    * map转换为对应的由=组成的and条件
-   *
-   * @param entityClass
-   * @param args
-   * @return
    */
-  public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
-    AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+  public static And convertMapToAndCondition(Class<? extends BeanInterface> entityClass,
+      Map<String, Object> args) {
+    AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(
+        entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       final Object value = entry.getValue();
       if (value instanceof Collection) {
@@ -301,13 +307,11 @@ public class UtilsTool {
 
   /**
    * map转换为对应的由like组成的and条件
-   *
-   * @param entityClass
-   * @param args
-   * @return
    */
-  public static And convertMapToAndConditionSeparatedByLike(Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
-    AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(entityClass).and();
+  public static And convertMapToAndConditionSeparatedByLike(
+      Class<? extends BeanInterface> entityClass, Map<String, Object> args) {
+    AndConditionSequenceBuilder<ConditionBuilder> conditionBuilder = new ConditionBuilder(
+        entityClass).and();
     for (Map.Entry<String, Object> entry : args.entrySet()) {
       final Object value = entry.getValue();
       conditionBuilder.like(entry.getKey(), (String) value);
@@ -319,22 +323,58 @@ public class UtilsTool {
    * 创建空格查询的查询条件
    *
    * @param columns 列
-   * @param values  关键字
+   * @param values 关键字
    * @return 返回
    */
+  //用Class clz, Collection<String> columns,Collection<String> values的版本替代
+  @Deprecated
   public static Or createBlankQuery(Collection<String> columns, Collection<String> values) {
     List<Condition> conditions = new LinkedList<>();
-    columns.forEach(column -> values.forEach(value -> conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value))));
+    columns.forEach(column -> values
+        .forEach(value -> conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value))));
     return new Or(conditions);
   }
+
+  /**
+   * 创建空格查询的查询条件
+   *
+   * @param columns 列
+   * @param values 关键字
+   * @return 返回
+   */
+  public static Or createBlankQuery(Class clz, Collection<String> columns,
+      Collection<String> values) {
+    List<Condition> conditions = new LinkedList<>();
+    columns.forEach(column -> values
+        .forEach(value -> conditions.add(
+            new FieldCondition(getMorebatis().getColumnOrEtcByAlias(clz, column),
+                Operator.LIKE_FULL, value))));
+    return new Or(conditions);
+  }
+
+  /**
+   * 创建空格查询的查询条件
+   *
+   * @param columns 列
+   * @param values 关键字
+   * @return 返回
+   */
+  public static Or createBlankQueryByColumns(
+      Collection<com.bcx.plat.core.morebatis.component.Field> columns, Collection<String> values) {
+    List<Condition> conditions = new LinkedList<>();
+    columns.forEach(column -> values
+        .forEach(value -> conditions.add(new FieldCondition(column, Operator.LIKE_FULL, value))));
+    return new Or(conditions);
+  }
+
 
   /**
    * 将下划线风格key的map转换为驼峰法则key的map
    *
    * @param origin 输入的PageResult
-   * @return
    */
-  public static PageResult<Map<String, Object>> underlineKeyMapListToCamel(PageResult<Map<String, Object>> origin) {
+  public static PageResult<Map<String, Object>> underlineKeyMapListToCamel(
+      PageResult<Map<String, Object>> origin) {
     origin.setResult(underlineKeyMapListToCamel(origin.getResult()));
     return origin;
   }
@@ -343,9 +383,9 @@ public class UtilsTool {
    * 将下划线风格key的map转换为驼峰法则key的map
    *
    * @param origin 输入MapList
-   * @return
    */
-  public static List<Map<String, Object>> underlineKeyMapListToCamel(List<Map<String, Object>> origin) {
+  public static List<Map<String, Object>> underlineKeyMapListToCamel(
+      List<Map<String, Object>> origin) {
     return origin.stream().map((row) -> {
       HashMap<String, Object> out = new HashMap<>();
       for (Map.Entry<String, Object> entry : row.entrySet()) {
@@ -356,8 +396,7 @@ public class UtilsTool {
   }
 
   /**
-   * 数据排序
-   * "{\"field\":\"rowId\", \"sort\":1}"
+   * 数据排序 "{\"field\":\"rowId\", \"sort\":1}"
    *
    * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为正序  __0__ 为倒序
    * @return linkedList参数
@@ -380,12 +419,12 @@ public class UtilsTool {
   /**
    * 数据排序
    *
-   * @param entityClass 要排序的类
-   *                    "{\"str\":\"modifyTime\", \"num\":0}"
-   * @param order       接受两个参数 str为对应表字段信息  num对应为__1_为升序  __0__ 为降序
+   * @param entityClass 要排序的类 "{\"str\":\"modifyTime\", \"num\":0}"
+   * @param order 接受两个参数 str为对应表字段信息  num对应为__1_为升序  __0__ 为降序
    * @return 排序方式
    */
-  public static LinkedList<Order> dataSort(Class<? extends BeanInterface> entityClass, String order) {
+  public static LinkedList<Order> dataSort(Class<? extends BeanInterface> entityClass,
+      String order) {
     LinkedList<Order> orders = new LinkedList<>();
     if (order == null) {
       order = "{\"str\":\"modifyTime\", \"num\":0}"; // 默认按照修改时间排序
@@ -430,18 +469,28 @@ public class UtilsTool {
   /**
    * 为查询添加通用条件，判断该条数据未被逻辑删除
    *
-   * @param condition   查询条件
+   * @param condition 查询条件
    * @param entityClass 实体类
    * @return notDelete
    */
-  public static Condition addNotDeleteCondition(Condition condition, Class<? extends BeanInterface> entityClass) {
+  public static Condition addNotDeleteCondition(Condition condition,
+      Class<? extends BeanInterface> entityClass) {
     if (null != condition) {
-      condition = new ConditionBuilder(entityClass).and().addCondition(condition).or().isNull(entityClass, "etc", "deleteFlag")
+      condition = new ConditionBuilder(entityClass).and().addCondition(condition).or()
+          .isNull(entityClass, "etc", "deleteFlag")
           .notEqual(entityClass, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
     } else {
-      condition = new ConditionBuilder(entityClass).and().or().isNull(entityClass, "etc", "deleteFlag")
+      condition = new ConditionBuilder(entityClass).and().or()
+          .isNull(entityClass, "etc", "deleteFlag")
           .notEqual(entityClass, "etc", "deleteFlag", DELETE_FLAG).endOr().endAnd().buildDone();
     }
     return condition;
+  }
+
+  private static MoreBatis getMorebatis() {
+    if (morebatis == null) {
+      morebatis = SpringContextHolder.getBean("moreBatis");
+    }
+    return morebatis;
   }
 }
