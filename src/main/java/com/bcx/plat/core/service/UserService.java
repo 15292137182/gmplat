@@ -105,6 +105,7 @@ public class UserService extends BaseService<User> {
   public ServerResult queryByOrg(List list, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
     Condition condition = new FieldCondition("belongOrg", Operator.IN, list);
+    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
     Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
     PageResult result;
