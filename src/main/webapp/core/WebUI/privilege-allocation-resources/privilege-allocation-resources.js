@@ -114,12 +114,61 @@ gmp_onload=function(){
         data: getData.dataObj({
             searchInput:"",
             select:"",
-            chooseData:""
+            chooseData:"",
+            divIndex:""
         }),
         methods: {
-            firstClick(){},
+            firstClick(row){
+
+            },
             searchClick(){},
-            searchDetails(){},
+            searchDetails(row){
+                //接口资源
+                if(left.keyName == 'interfaceResources'){
+                    console.log(row);
+                   var htmlUrl = "see-funcOperat-resources.html";
+                    right.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 接口详细信息', '400px', '260px',function(){
+                        funcOperat.$refs.avail.setValue(row.avail);
+                        funcOperat.formTable.interceptUrl = row.interceptUrl;
+                    })
+                }
+                //页面资源
+                if(left.keyName == 'pageResources'){
+                    console.log(row);
+                    var htmlUrl = "see-page-resources.html";
+                    right.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 页面详细信息', '400px', '300px',function(){
+                        page.$refs.grantAuth.setValue(row.grantAuth);
+                        page.$refs.belongModule.setValue(row.belongModule);
+                        page.formTable.pageUrl = row.pageUrl;
+                    })
+                }
+                //菜单资源
+                if(left.keyName == 'menuResources'){
+                    console.log(row);
+                    var htmlUrl = "see-menu-resources.html";
+                    right.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 菜单详细信息', '400px', '540px',function(){
+                        menuRes.$refs.grantAuth.setValue(row.grantAuth);
+                        menuRes.$refs.avail.setValue(row.avail);
+                        menuRes.$refs.category.setValue(row.category);
+                        menuRes.formTable.url = row.url;
+                        menuRes.formTable.parentNumber = row.parentNumber;
+                        menuRes.formTable.sort = row.sort;
+                        menuRes.formTable.icon = row.icon;
+                    })
+                }
+                //按钮资源
+                if(left.keyName == 'pageButton'){
+                    console.log(row);
+                    var htmlUrl = "see-button-resources.html";
+                    right.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 菜单详细信息', '400px', '420px',function(){
+                        button.$refs.grantAuth.setValue(row.grantAuth);
+                        button.$refs.avail.setValue(row.avail);
+                        button.$refs.pageIdent.setValue(row.pageIdent);
+                        button.formTable.customStyle = row.customStyle;
+                        button.formTable.sort = row.sort;
+                    })
+                }
+            },
             del(row){
                 var rowIdArr = [];
                 rowIdArr.push(row.rowId);

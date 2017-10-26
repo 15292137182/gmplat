@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>接口资源相信</title>
+    <style>
+        #addDataSet .el-row {
+            margin-top: 20px;
+        }
+        .el-select {
+            width: 232px;
+        }
+    </style>
+</head>
+<body>
+<div id="button" style="margin-top:20px">
+    <el-form :label-position="labelPosition" ref="formTable" label-width="100px" :model="formTable">
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="是否授权" prop="grantAuth">
+                    <single-selection :initial="grantAuth" ref="grantAuth"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="是否可用" prop="avail">
+                    <single-selection :initial="avail" ref="avail"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="页面标识" prop="pageIdent">
+                    <single-selection :initial="pageIdent" ref="pageIdent"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="排序" prop="sort">
+                    <el-input disabled="" v-model="formTable.sort" ref="sort"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="样式" prop="customStyle">
+                    <el-input disabled="" v-model="formTable.customStyle" ref="customStyle"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align: left" :offset="11">
+            <el-button type="primary" @click="cancel">关闭</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+    var button = new Vue({
+        el:"#button",
+        data:{
+            labelPosition:'right',
+            formTable:{
+                sort:'',
+                customStyle:"",
+            },
+            grantAuth: {
+                params: "menuResourceSelect",
+                value: "",
+                disabled:true
+            },
+            avail: {
+                params: "menuResourceSelect",
+                value: "",
+                disabled:true
+            },
+            pageIdent: {
+                url:serverPath + "/page/queryPage",
+                key:'{"label":"pageName","value":"rowId"}',
+                value:"",
+                disabled:true
+            }
+        },
+        methods:{
+            cancel(){//关闭按钮
+                ibcpLayer.Close(right.divIndex);
+            }
+        }
+    })
+</script>
+</html>

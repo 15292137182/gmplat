@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>接口资源相信</title>
+    <style>
+        #addDataSet .el-row {
+            margin-top: 20px;
+        }
+        .el-select {
+            width: 232px;
+        }
+    </style>
+</head>
+<body>
+<div id="menu" style="margin-top:20px">
+    <el-form :label-position="labelPosition" ref="formTable" label-width="100px" :model="formTable">
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="是否授权" prop="grantAuth">
+                    <single-selection :initial="grantAuth" ref="grantAuth"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="是否可用" prop="avail">
+                    <single-selection :initial="avail" ref="avail"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="类别" prop="category">
+                    <single-selection :initial="category" ref="category"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="菜单地址" prop="url">
+                    <el-input disabled="" v-model="formTable.url" ref="url"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="父编号" prop="parentNumber">
+                    <el-input disabled="" v-model="formTable.parentNumber" ref="parentNumber"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="排序" prop="sort">
+                    <el-input disabled="" v-model="formTable.sort" ref="sort"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="图标" prop="icon">
+                    <el-input disabled="" v-model="formTable.icon" ref="icon"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align: left" :offset="11">
+            <el-button type="primary" @click="cancel">关闭</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+    var menuRes = new Vue({
+        el:"#menu",
+        data:{
+            labelPosition:'right',
+            formTable:{
+                url:'',
+                parentNumber:'',
+                sort:'',
+                icon:'',
+            },
+            grantAuth: {
+                params: "menuResourceSelect",
+                value: "",
+                disabled:true
+            },
+            avail: {
+                params: "menuResourceSelect",
+                value: "",
+                disabled:true
+            },
+            category: {
+                params: "menuResourceType",
+                value: "",
+                disabled:true
+            }
+        },
+        methods:{
+            cancel(){//关闭按钮
+                ibcpLayer.Close(right.divIndex);
+            }
+        }
+    })
+</script>
+</html>

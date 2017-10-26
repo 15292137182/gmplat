@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>接口资源相信</title>
+    <style>
+        #addDataSet .el-row {
+            margin-top: 20px;
+        }
+        .el-select {
+            width: 232px;
+        }
+    </style>
+</head>
+<body>
+<div id="funcOperat" style="margin-top:20px">
+    <el-form :label-position="labelPosition" ref="formTable" label-width="100px" :model="formTable">
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="是否可用" prop="avail">
+                    <single-selection :initial="avail" ref="avail"></single-selection>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row type="flex" class="row-bg">
+            <el-col :span="20" :offset="1">
+                <el-form-item label="接口url" prop="interceptUrl">
+                    <el-input disabled="" v-model="formTable.interceptUrl" ref="interceptUrl"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row>
+        <el-col :span="11" style="text-align: left" :offset="11">
+            <el-button type="primary" @click="cancel">关闭</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+    var funcOperat = new Vue({
+        el:"#funcOperat",
+        data:{
+            labelPosition:'right',
+            formTable:{
+                interceptUrl:'',
+            },
+            avail: {
+                params: "menuResourceSelect",
+                value: "",
+                disabled:true
+            }
+        },
+        methods:{
+            cancel(){//关闭按钮
+                ibcpLayer.Close(right.divIndex);
+            }
+        }
+    })
+</script>
+</html>
