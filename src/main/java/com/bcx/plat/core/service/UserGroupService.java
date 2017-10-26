@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.bcx.plat.core.constants.Message.NEW_ADD_FAIL;
-import static com.bcx.plat.core.constants.Message.NEW_ADD_SUCCESS;
+import static com.bcx.plat.core.constants.Message.OPERATOR_FAIL;
+import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 import static com.bcx.plat.core.constants.Message.QUERY_FAIL;
 import static com.bcx.plat.core.constants.Message.QUERY_SUCCESS;
 import static com.bcx.plat.core.utils.UtilsTool.isValid;
@@ -109,12 +109,12 @@ public class UserGroupService extends BaseService<UserGroup> {
       if (isValid(userGroup)) {
         int insert = userGroup.insert();
         if (insert != -1) {
-          serverResult = successData(NEW_ADD_SUCCESS, userGroup);
+          serverResult = successData(OPERATOR_SUCCESS, userGroup);
         } else {
-          serverResult = fail(NEW_ADD_FAIL);
+          serverResult = fail(OPERATOR_FAIL);
         }
       } else {
-        serverResult = fail(NEW_ADD_FAIL);
+        serverResult = fail(OPERATOR_FAIL);
       }
     }
     return serverResult;
@@ -177,7 +177,8 @@ public class UserGroupService extends BaseService<UserGroup> {
         serverResult = fail(QUERY_FAIL);
       }
     } else {
-      serverResult = fail(QUERY_FAIL);
+      PageResult<User> userPageResult = new User().selectPage(null, pageNum, pageSize, orders);
+      serverResult = successData(QUERY_SUCCESS, userPageResult);
     }
     return serverResult;
   }

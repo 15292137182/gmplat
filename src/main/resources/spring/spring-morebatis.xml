@@ -119,6 +119,11 @@
                       p:pks="#{'rowId'}"/>
 
                 <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
+                      p:entityClass="com.bcx.plat.core.entity.UserRelateRole"
+                      p:tableName="t_user_relate_role"
+                      p:pks="#{'rowId'}"/>
+
+                <bean class="com.bcx.plat.core.morebatis.configuration.builder.DefaultEntryBuilder"
                       p:entityClass="com.bcx.plat.core.entity.UserGroupRelateRole"
                       p:tableName="t_user_group_relate_role"
                       p:pks="#{'rowId'}"/>

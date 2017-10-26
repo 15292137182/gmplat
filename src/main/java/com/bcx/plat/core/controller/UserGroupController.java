@@ -90,10 +90,10 @@ public class UserGroupController extends BaseController {
       if (isValid(groupName)) {
         UserGroup userGroup = new UserGroup().buildModifyInfo().fromMap(param);
         int update = userGroup.updateById();
-        if (update != -1) {
-          platResult = successData(NEW_ADD_SUCCESS, userGroup);
+        if (update == -1) {
+          platResult = fail(OPERATOR_FAIL);
         } else {
-          platResult = fail(UPDATE_FAIL);
+          platResult = successData(OPERATOR_SUCCESS, userGroup);
         }
       } else {
         platResult = fail(DATA_CANNOT_BE_EMPTY);
