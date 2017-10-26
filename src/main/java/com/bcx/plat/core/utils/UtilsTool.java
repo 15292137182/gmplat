@@ -327,7 +327,6 @@ public class UtilsTool {
    * @return 返回
    */
   //用Class clz, Collection<String> columns,Collection<String> values的版本替代
-  @Deprecated
   public static Or createBlankQuery(Collection<String> columns, Collection<String> values) {
     List<Condition> conditions = new LinkedList<>();
     columns.forEach(column -> values
@@ -342,8 +341,7 @@ public class UtilsTool {
    * @param values 关键字
    * @return 返回
    */
-  public static Or createBlankQuery(Class clz, Collection<String> columns,
-      Collection<String> values) {
+  public static Or createBlankQuery(Class clz, Collection<String> columns,Collection<String> values) {
     List<Condition> conditions = new LinkedList<>();
     columns.forEach(column -> values
         .forEach(value -> conditions.add(
