@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
 import com.bcx.plat.core.morebatis.phantom.Aliased;
 import com.bcx.plat.core.morebatis.phantom.Condition;
-import com.bcx.plat.core.morebatis.phantom.FieldAlias;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
@@ -398,7 +397,6 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   }
 
 
-
   /**
    * 主从表关联分页查询数据
    *
@@ -414,19 +412,15 @@ public abstract class BaseService<T extends BaseEntity<T>> {
    */
   @SuppressWarnings("unchecked")
   protected PageResult<Map<String, Object>> leftAssociationQueryPageAlias(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
-                                                                     String relationPrimary, String relationSecondary, Condition condition,
-                                                                     int pageNum, int pageSize, List<Order> orders, Aliased aliased) {
+                                                                          String relationPrimary, String relationSecondary, Condition condition,
+                                                                          int pageNum, int pageSize, List<Order> orders, Aliased aliased) {
     try {
-      return getTClass().newInstance().associationQueryPageAlias(primary, secondary, relationPrimary, relationSecondary, condition,pageNum, pageSize, orders,aliased);
+      return getTClass().newInstance().associationQueryPageAlias(primary, secondary, relationPrimary, relationSecondary, condition, pageNum, pageSize, orders, aliased);
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
     }
     return null;
   }
-
-
-
-
 
 
   /**
