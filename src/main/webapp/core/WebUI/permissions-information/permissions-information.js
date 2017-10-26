@@ -22,7 +22,7 @@ var selRowId = serverPath + "/permission/queryById"
 //查看权限类型下的权限信息
 var permissionsInformation = serverPath + "/permission/queryTypePermission";
 
-//查看权限类型下的角色信息
+//查看权限下的角色信息
 var personnelInformationInterface = serverPath + "/permission/queryRole";
 
 //权限编辑接口
@@ -54,7 +54,7 @@ gmp_onload=function(){
             addEvent() {
                 var htmlUrl = 'add-permissions-information.html';
                 this.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 新增权限信息', '400px', '460px',function(){
-
+                    component.$refs.jurisdictionType.setDisabled(false);
                 });
             },
             //删除权限信息
@@ -111,7 +111,7 @@ gmp_onload=function(){
                 // basTop.disabled = false;
                 basTop.addOpe = false;
                 basRightTop.PersonnelInformation(data.confKey);
-                basRightTop.roleInformation(data.rowId);
+                // basRightTop.roleInformation(data.rowId);
             },
             //复选框选中得到得值
             getChecked(data) {
@@ -202,6 +202,7 @@ gmp_onload=function(){
                 }
                 this.selRowId = row.rowId;
                 this.deleteIds.push(this.selRowId);
+                basRightTop.roleInformation(row.rowId);
             },
             //表点击
             twoClick(row){
@@ -235,6 +236,7 @@ gmp_onload=function(){
                             component.childFormTable.permissionId = data.permissionId;
                             component.childFormTable.permissionName = data.permissionName;
                             component.$refs.jurisdictionType.setValue(data.permissionType);
+                            component.$refs.jurisdictionType.setDisabled(true);
                             component.childFormTable.remarks = data.remarks;
                             component.childFormTable.desc = data.desc;
                             component.rowId = data.rowId;

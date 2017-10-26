@@ -13,7 +13,7 @@ var Organization = serverPath + "/baseOrg/queryById";
 var PersonnelInformationUrl = serverPath + "/user/queryByOrg"
 
 //查看组织机构下的角色信息
-var roleViewUrl = serverPath + "/baseOrg/queryOrgUser"
+var roleViewUrl = serverPath + "/baseOrg/queryOrgRole"
 
 //组织机构编辑接口
 var modify = serverPath + "/baseOrg/modify";
@@ -270,7 +270,7 @@ gmp_onload=function(){
             },
             //角色查看
             roleView(rowId){
-                var data = {rowId:rowId};
+                var data = {orgRowId:rowId};
                 querySearch.getDataPage(roleViewUrl,data,basRightTop,1,function(res){
                     console.log(res);
                 })
