@@ -85,8 +85,8 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @RequestMapping("/queryBySpecify")
-  public PlatResult queryBySpecify(@RequestParam Map<String, Object> param) {
-    if (!param.isEmpty()) {
+  public PlatResult queryBySpecify(@RequestParam(required = false) Map<String, Object> param) {
+    if (null != param && !param.isEmpty()) {
       Condition condition = UtilsTool.convertMapToAndCondition(User.class, param);
       List<Map> select = userService.selectMap(condition);
       if (!select.isEmpty()) {
@@ -152,7 +152,7 @@ public class UserController extends BaseController {
     int maxPwdLength = Integer.parseInt(SystemSettingManager.getSettingValue(SystemSettingManager.MAX_PWD_LENGTH).toString());
     if (password.length() >= minPwdLength && password.length() <= maxPwdLength) {//密码长度符合要求
       //验证密码强度
-      String pwdRequirements = SystemSettingManager.getSettingValue("pwdRequirements").toString();
+      String pwdRequirements = SystemSettingManager.getSettingValue(SystemSettingManager.PWD_REQUIREMENTS).toString();
       if (!pwdRequirements.equals("0000")) {
         String upperCase = pwdRequirements.substring(0, 1);
         String lowercase = pwdRequirements.substring(1, 2);
@@ -282,7 +282,7 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping(value = "/deleteBatch")
-  public PlatResult deleteBatch(@RequestParam List<Serializable> rowId) {
+  public PlatResult deleteBatch(@RequestParam(required = false) List<Serializable> rowId) {
     if (UtilsTool.isValid(rowId)) {
       User user = new User().buildDeleteInfo();
       if (user.logicalDeleteByIds(rowId) != -1) {
@@ -320,7 +320,7 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/lockBatch")
-  public PlatResult lockBatch(@RequestParam List<String> rowId) {
+  public PlatResult lockBatch(@RequestParam(required = false) List<String> rowId) {
     return updateBatch(rowId, BaseConstants.LOCKED);
   }
 
@@ -347,7 +347,7 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/unLockBatch")
-  public PlatResult unLockBatch(@RequestParam List<String> rowId) {
+  public PlatResult unLockBatch(@RequestParam(required = false) List<String> rowId) {
     return updateBatch(rowId, BaseConstants.UNLOCK);
   }
 
@@ -373,7 +373,7 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/inUseBatch")
-  public PlatResult inUseBatch(@RequestParam List<String> rowId) {
+  public PlatResult inUseBatch(@RequestParam(required = false) List<String> rowId) {
     return updateBatch(rowId, BaseConstants.IN_USE);
   }
 
@@ -399,7 +399,7 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/outOfUseBatch")
-  public PlatResult outOfUseBatch(@RequestParam List<String> rowId) {
+  public PlatResult outOfUseBatch(@RequestParam(required = false) List<String> rowId) {
     return updateBatch(rowId, BaseConstants.OUT_OF_USE);
   }
 
@@ -425,7 +425,7 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   @PostMapping("/resetPasswordBatch")
-  public PlatResult resetPasswordBatch(@RequestParam List<String> rowId) {
+  public PlatResult resetPasswordBatch(@RequestParam(required = false) List<String> rowId) {
     return updateBatch(rowId, "resetPassword");
   }
 
