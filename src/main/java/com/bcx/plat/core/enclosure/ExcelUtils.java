@@ -1,5 +1,7 @@
 package com.bcx.plat.core.enclosure;
 
+import com.bcx.plat.core.entity.BaseOrg;
+import com.bcx.plat.core.entity.User;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -118,6 +120,14 @@ public class ExcelUtils {
    */
   static Workbook ExportExcelList(String[] cells, Workbook workbook, String sheetPage) {
     String[] list = {"男", "女"};
+    List<String> baseOrg = new ArrayList<>();
+    List<BaseOrg> baseOrgs = new BaseOrg().selectAll();
+    for (BaseOrg org : baseOrgs) {
+      if (org.getOrgPid().equals("ROOT")) {
+        baseOrg.add(org.getOrgName());
+      }
+    }
+    String[] belongOrg = baseOrg.toArray(new String[0]);
     // 在webbook中添加一个sheet,对应Excel文件中的sheet
     Sheet sheet = workbook.createSheet(sheetPage);
     // 在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
@@ -129,6 +139,13 @@ public class ExcelUtils {
         cell = row.createCell((short) i);
         cell.setCellValue(cells[i]);
         createList(list, i, sheet);
+      } else if (Objects.equals(cells[i], "所属部门")) {
+        cell = row.createCell((short) i);
+        cell.setCellValue(cells[i]);
+        createList(belongOrg, i, sheet);
+      } else if (!Objects.equals(cells[i], "所属部门")) {
+        cell = row.createCell((short) i);
+        cell.setCellValue(cells[i]);
       } else if (!Objects.equals(cells[i], "性别")) {
         cell = row.createCell((short) i);
         cell.setCellValue(cells[i]);
@@ -137,13 +154,14 @@ public class ExcelUtils {
     return workbook;
   }
 
-  /**
-   * Excel下拉框封装
-   *
-   * @param list   下拉框参数
-   * @param rowCol 列号
-   * @param sheet  sheet
-   */
+    /**
+     * Excel下拉框封装
+     *
+     * @param list   下拉框参数
+     * @param rowCol 列号
+     * @param sheet  sheet
+     */
+
   private static void createList(String[] list, int rowCol, Sheet sheet) {
     //绑定下拉框和作用区域
     CellRangeAddressList regions = new CellRangeAddressList(1, 65535, rowCol, rowCol);

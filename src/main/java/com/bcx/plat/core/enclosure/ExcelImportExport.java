@@ -3,6 +3,7 @@ package com.bcx.plat.core.enclosure;
 import com.bcx.plat.core.base.BaseController;
 import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.controller.UserController;
+import com.bcx.plat.core.entity.BaseOrg;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
 import com.bcx.plat.core.morebatis.phantom.Condition;
@@ -129,6 +130,13 @@ public class ExcelImportExport extends BaseController {
         }
         PlatResult add = null;
         for (Map li : data) {
+          List<BaseOrg> list = new BaseOrg().selectAll();
+          for (BaseOrg baseOrg :list){
+            if (baseOrg.getOrgName().equals(li.get("belongOrg"))) {
+              String rowId = baseOrg.getRowId();
+              li.put("belongOrg",rowId);
+            }
+          }
           add = userController.add(li);
         }
         return add;
