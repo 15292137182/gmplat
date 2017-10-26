@@ -2,6 +2,7 @@ package com.bcx.plat.core.enclosure;
 
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.Row;
@@ -139,14 +140,18 @@ public class ExcelUtils {
    * @param rowCol 列号
    * @param sheet  sheet
    */
-  public static void createList(String[] list, int rowCol, Sheet sheet) {
-    //生成下拉列表
-    CellRangeAddressList regions = new CellRangeAddressList(1, 100, rowCol, rowCol);
-    //生成下拉框内容
-    DVConstraint constraint = DVConstraint.createExplicitListConstraint(list);
-    //绑定下拉框和作用区域
-    DataValidation data_validation = new HSSFDataValidation(regions, constraint);
-    //对sheet页生效
-    sheet.addValidationData(data_validation);
+  private static void createList(String[] list, int rowCol, Sheet sheet) {
+
+    if (sheet instanceof HSSFSheet) {
+      //绑定下拉框和作用区域
+      CellRangeAddressList regions = new CellRangeAddressList(1, 100, rowCol, rowCol);
+      //生成下拉列表
+      DVConstraint constraint = DVConstraint.createExplicitListConstraint(list);
+      //生成下拉框内容
+      DataValidation validation = new HSSFDataValidation(regions, constraint);
+      //对sheet页生效
+      sheet.addValidationData(validation);
+    }
+
   }
 }
