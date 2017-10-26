@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #add .el-tree{
+            margin-left: -40px;
+        }
+    </style>
+</head>
+<body>
+<div class="allBorder" style="float: left;border: none; padding:20px 10px 0 10px; width: 100%;">
+    <el-col :span="2" id="add" style="">
+        <div class="allBorder" style="height:380px;border:none;margin-right: -25px;">
+            <el-row>
+                <el-col>
+                    <div style="padding:0 20px">
+                        <el-col>
+                            <base-tree :initial="treeData" ref="org" @click-node="getNodes"></base-tree>
+                        </el-col>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </el-col>
+    <el-col :span="22" id="table" style="">
+        <div class="allBorder" style="border:none;">
+            <el-row>
+                <el-col>
+                    <div style="padding:10px 20px">
+                        <template>
+                            <el-table ref="myData"
+                                      :data="tableData"
+                                      @row-click="firstClick" border style="width: 100%"
+                                      :highlight-current-row="true"
+                                      :height="leftHeight"
+                                      v-loading="loading"
+                                      element-loading-text="加载中">
+                                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionId" label="权限编号" width="">
+                                </el-table-column>
+                                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionName" label="权限名称" width="">
+                                </el-table-column>
+                                <el-table-column show-overflow-tooltip sortable="custom" prop="permissionType" label="权限类型" width="">
+                                </el-table-column>
+                                <el-table-column prop="desc" label="描述" width="">
+                                </el-table-column>
+                                <el-table-column prop="remarks" label="备注" width="">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                        <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="pageNum"
+                                    :page-sizes="[5,10,20]"
+                                    :page-size="pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="allDate">
+                            </el-pagination>
+                        </el-row>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </el-col>
+</div>
+<div id="button" style="float: left;margin-left: 350px">
+    <el-row>
+        <el-col :span="8" style="text-align:right">
+            <el-button type="primary" @click="conformEvent">保存</el-button>
+        </el-col>
+        <el-col :span="8" style="text-align: left; margin-left: 50px;" :offset="2">
+            <el-button type="primary" @click="cancel">取消</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+    //查看权限类型下的权限信息
+    var permissionsInformation = serverPath + "/permission/queryTypePermission";
+    var add=new Vue({
+        el:'#add',
+        data:getData.dataObj({
+            treeData: {
+                // 是否显示checkbook 默认为不显示
+                checkbox: false,
+                //展开所有节点
+                expandedAll: true,
+                // 获取树节点接口
+                url: serverPath + "/keySet/queryKeySet",
+                //传递参数
+                params:"privilegeType",
+                // 设置参数 -- 树节点上显示的文字
+                defaultProps: {
+                    // 树节点显示文字
+                    label: 'confValue',
+                    // 节点id
+                    key: "rowId",
+                }
+            },
+            rowIdArr:[0],
+            permissionType:"",
+            rowId:"",
+            keyName:"",
+            selRightRowId:"",
+        }),
+        methods:{
+            //点击左边的树得到数据
+            getNodes(data) {
+                console.log(data);
+                this.rowId=data.rowId;
+                this.permissionType = data.confKey;
+                this.PersonnelInformation(data.confKey);
+                this.keyName = data.confKey;
+            },
+            //权限信息查询
+            PersonnelInformation(permissionType,numberPage,search,param){
+                var page = 1;
+                var data = null;
+                if(numberPage){
+                    page = numberPage;
+                }
+                var type = permissionType;
+                if(search != null){
+                    data = {
+                        "permissionType":type,
+                        "search":search,
+                    }
+                }else{
+                    data = {
+                        "permissionType":type
+                    }
+                }
+                if(param != null){
+                    var strParam = JSON.stringify(param);
+                    data = {
+                        "permissionType":type,
+                        "param":strParam,
+                    }
+                }else{
+                    data = {
+                        "permissionType":type,
+                        "search":search,
+                    }
+                }
+                querySearch.getDataPage(permissionsInformation,data,table,page,function(res){
+                    this.selRightRowId = table.tableData[0];
+//                    right.refreshTable(rightBottom.selRightRowId.rowId);
+                    console.log(table.tableData[0].rowId);
+                })
+            },
+        },
+        created(){
+
+        }
+    })
+    var table=new Vue({
+        el:'#table',
+        data:getData.dataObj({
+
+        }),
+        methods:{
+            firstClick(row){
+                console.log(row);
+            },
+            handleSizeChange(){},
+            handleCurrentChange(){},
+        },
+        created(){
+
+        }
+    })
+    var button = new Vue({
+        el:"#button",
+        data:{},
+        methods:{
+            conformEvent(){},
+            cancel(){
+                ibcpLayer.Close(basTop.divIndex);
+            }
+        }
+    })
+</script>
+</html>
