@@ -495,7 +495,7 @@ public class RoleService extends BaseService<Role> {
             .buildDone();
         return new ServerResult(permissionService.selectPageMap(permissionCondition, orders, pageNum, pageSize));
       }
-      return successData(QUERY_SUCCESS, new ArrayList<>());//没有该角色相关的权限
+      return successData(QUERY_SUCCESS, new PageResult(0, pageNum, pageSize, null));//没有该角色相关的权限
     }
     return fail(QUERY_FAIL);
   }
@@ -526,7 +526,7 @@ public class RoleService extends BaseService<Role> {
             .buildDone();
         return new ServerResult(userGroupService.selectPageMap(userGroupCondition, orders, pageNum, pageSize));
       }
-      return successData(QUERY_SUCCESS, new ArrayList<>());//没有该角色相关的用户组
+      return successData(QUERY_SUCCESS, new PageResult(0, pageNum, pageSize, null));//没有该角色相关的用户组
     }
     return fail(QUERY_FAIL);
   }

@@ -17,7 +17,7 @@ public class UserControllerTest extends BaseControllerTest<UserController> {
 //    String search = "j";
 //    String param = "{\"rowId\":\"123456789\"}";
 //    String param = "{\"belongOrg\":[\"001\",\"003\"],\"status\":\"03\"}";
-    String param = "{\"belongOrg\":\"003001\",\"status\":\"03\"}";
+    String param = "{\"belongOrg\":\"003009\",\"status\":\"03\"}";
     //发送请求
     ResultActions resultActions = this.mockMvc.perform(
         MockMvcRequestBuilders.post(URL_TEMPLATE + "user/queryPage")

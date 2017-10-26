@@ -108,4 +108,17 @@ public class RoleControllerTest extends BaseControllerTest<RoleController> {
     //显示结果
     showResult(resultActions);
   }
+  @Test
+  public void testQueryPermissions() throws Exception {
+    //准备参数
+    String rowId = "12b024d1-b7fd-4329-a79c-34523453";
+    //发送请求
+    ResultActions resultActions = this.mockMvc.perform(
+        MockMvcRequestBuilders.post(URL_TEMPLATE + "role/queryPermissions")
+            .accept(MediaType.APPLICATION_JSON)
+            .param("rowId", rowId)
+    );
+    //显示结果
+    showResult(resultActions);
+  }
 }
