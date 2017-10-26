@@ -121,7 +121,15 @@ gmp_onload=function(){
             firstClick(row){
 
             },
-            searchClick(){},
+            searchClick(){
+                if(this.select != ""){
+                    var param = {};
+                    param[this.select] = this.searchInput;
+                    right.refreshTable(rightBottom.selRightRowId.rowId,1,null,param);
+                }else{
+                    right.refreshTable(rightBottom.selRightRowId.rowId,1,this.searchInput,null);
+                }
+            },
             searchDetails(row){
                 //接口资源
                 if(left.keyName == 'interfaceResources'){
@@ -160,7 +168,7 @@ gmp_onload=function(){
                 if(left.keyName == 'pageButton'){
                     console.log(row);
                     var htmlUrl = "see-button-resources.html";
-                    right.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 菜单详细信息', '400px', '420px',function(){
+                    right.divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 按钮详细信息', '400px', '420px',function(){
                         button.$refs.grantAuth.setValue(row.grantAuth);
                         button.$refs.avail.setValue(row.avail);
                         button.$refs.pageIdent.setValue(row.pageIdent);
@@ -213,12 +221,42 @@ gmp_onload=function(){
                 }else{
                     data = {
                         "permissionRowId":rowId,
+                        "search":search,
                     }
                 }
                 querySearch.getDataPage(queryResource,data,right,page,function(res){
 
                 })
             },
+            handleSizeChange(val){
+                //当前每页显示多少条
+                this.pageSize = val;
+                if(this.select != ""){
+                    var param = {};
+                    param[this.select] = this.searchInput;
+                    right.refreshTable(rightBottom.selRightRowId.rowId,1,null,param);
+                }else{
+                    right.refreshTable(rightBottom.selRightRowId.rowId,1,this.searchInput,null);
+                }
+            },
+            handleCurrentChange(val){
+                this.pageNum = val;
+                if(this.select != ""){
+                    var param = {};
+                    param[this.select] = this.searchInput;
+                    right.refreshTable(rightBottom.selRightRowId.rowId,val,null,param);
+                }else{
+                    right.refreshTable(rightBottom.selRightRowId.rowId,val,this.searchInput,null);
+                }
+            },
+        },
+        created(){
+            $(document).ready(function () {
+                right.leftHeight = $(window).height() - 140;
+            });
+            $(window).resize(function () {
+                right.leftHeight = $(window).height() - 140;
+            });
         }
     })
 
@@ -247,12 +285,8 @@ gmp_onload=function(){
                     param[this.select] = this.searchInput;
                     basRightTop.PersonnelInformation(this.permissionType,1,null,param);
                 }else{
-                    basRightTop.PersonnelInformation(this.permissionType,1,this.select,null);
+                    basRightTop.PersonnelInformation(this.permissionType,1,this.searchInput,null);
                 }
-            },
-            //tab页点击交换
-            handleClick(tablePageName){
-
             },
             //点击
             firstClick(row){
@@ -278,14 +312,23 @@ gmp_onload=function(){
             handleSizeChange(val){
                 //alert("点击每页显示多少条");
                 this.pageSize = val;
+                if(this.select != ""){
+                    var param = {};
+                    param[this.select] = this.searchInput;
+                    basRightTop.PersonnelInformation(this.permissionType,1,null,param);
+                }else{
+                    basRightTop.PersonnelInformation(this.permissionType,1,this.searchInput,null);
+                }
             },
             handleCurrentChange(val){
                 //alert("当前第几页");
-                var strArr = '["'+right.rowId+'"]';
-                console.log(strArr);
-                querySearch.jumpPage(PersonnelInformationUrl,strArr,this,val,function(res){
-                    console.log(res);
-                })
+                if(this.select != ""){
+                    var param = {};
+                    param[this.select] = this.searchInput;
+                    basRightTop.PersonnelInformation(this.permissionType,val,null,param);
+                }else{
+                    basRightTop.PersonnelInformation(this.permissionType,val,this.searchInput,null);
+                }
             },
             //分配资源按钮
             distribution(row){
@@ -316,10 +359,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() - 235;
+                rightBottom.leftHeight = $(window).height() - 140;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() - 235;
+                rightBottom.leftHeight = $(window).height() - 140;
             });
         }
     })
@@ -372,7 +415,8 @@ gmp_onload=function(){
                     }
                 }else{
                     data = {
-                        "permissionType":type
+                        "permissionType":type,
+                        "search":search,
                     }
                 }
                 querySearch.getDataPage(permissionsInformation,data,rightBottom,page,function(res){

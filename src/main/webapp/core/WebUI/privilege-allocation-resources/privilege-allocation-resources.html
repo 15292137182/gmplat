@@ -96,16 +96,16 @@
                             </el-row>
                         </div>
                         <el-row type="flex" justify="end" style="padding-top:10px" class="block">
-                                    <el-pagination
-                                            @size-change="handleSizeChange"
-                                            @current-change="handleCurrentChange"
-                                            :current-page="pageNum"
-                                            :page-sizes="[5,10,20]"
-                                            :page-size="pageSize"
-                                            layout="total, sizes, prev, pager, next, jumper"
-                                            :total="allDate">
-                                    </el-pagination>
-                                </el-row>
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="pageNum"
+                                    :page-sizes="[5,10,20]"
+                                    :page-size="pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="allDate">
+                            </el-pagination>
+                        </el-row>
                     </div>
                 </el-col>
             </el-row>
@@ -115,45 +115,56 @@
     <el-col :span="8" id="right" style="margin-top:20px;padding-left: 20px;">
         <!--接口资源表-->
         <div v-if="left.keyName == 'interfaceResources'">
-        <el-row>
-            <el-col :span="24">
-                <el-row style="margin-bottom: 10px">
-                    <el-col :span="20">
-                        <div>
-                            <el-input placeholder="请输入内容" v-model="searchInput">
-                                <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
-                                    <el-option label="编号" value="permissionId"></el-option>
-                                    <el-option label="名称" value="permissionName"></el-option>
-                                </el-select>
-                                <el-button slot="append" icon="search" @click="searchClick"></el-button>
-                            </el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-table ref="myData"
-                      :data="tableData"
-                      @row-click="firstClick" border style="width: 100%"
-                      :highlight-current-row="true"
-                      :height="leftHeight"
-                      v-loading="loading"
-                      element-loading-text="加载中">
-                <el-table-column show-overflow-tooltip sortable="custom" prop="operatNumber" label="接口编号" width="">
-                </el-table-column>
-                <el-table-column show-overflow-tooltip sortable="custom" prop="operatName" label="接口名称" width="120">
-                </el-table-column>
-                <el-table-column show-overflow-tooltip prop="desc" label="备注" width="">
-                </el-table-column>
-                <el-table-column  label="操作" width="80">
-                    <template scope="scope">
-                        <el-button @click="searchDetails(scope.row)" title="查看详情" type="text" size="small" icon="search"></el-button>
-                        <el-button @click="del(scope.row)" type="text" size="small" icon="delete"></el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-row>
+            <el-row>
+                <el-col :span="24">
+                    <el-row style="margin-bottom: 10px">
+                        <el-col :span="20">
+                            <div>
+                                <el-input placeholder="请输入内容" v-model="searchInput">
+                                    <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
+                                        <el-option label="编号" value="operatNumber"></el-option>
+                                        <el-option label="名称" value="operatName"></el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="search" @click="searchClick"></el-button>
+                                </el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-table ref="myData"
+                          :data="tableData"
+                          @row-click="firstClick" border style="width: 100%"
+                          :highlight-current-row="true"
+                          :height="leftHeight"
+                          v-loading="loading"
+                          element-loading-text="加载中">
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="operatNumber" label="接口编号" width="">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip sortable="custom" prop="operatName" label="接口名称" width="120">
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip prop="desc" label="备注" width="">
+                    </el-table-column>
+                    <el-table-column  label="操作" width="80">
+                        <template scope="scope">
+                            <el-button @click="searchDetails(scope.row)" title="查看详情" type="text" size="small" icon="search"></el-button>
+                            <el-button @click="del(scope.row)" type="text" size="small" icon="delete"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
+            <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="pageNum"
+                        :page-sizes="[5,10,20]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="allDate">
+                </el-pagination>
+            </el-row>
         </div>
 
         <!--菜单资源表-->
@@ -165,8 +176,8 @@
                             <div>
                                 <el-input placeholder="请输入内容" v-model="searchInput">
                                     <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
-                                        <el-option label="编号" value="permissionId"></el-option>
-                                        <el-option label="名称" value="permissionName"></el-option>
+                                        <el-option label="编号" value="number"></el-option>
+                                        <el-option label="名称" value="name"></el-option>
                                     </el-select>
                                     <el-button slot="append" icon="search" @click="searchClick"></el-button>
                                 </el-input>
@@ -197,6 +208,17 @@
                     </el-table-column>
                 </el-table>
             </el-row>
+            <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="pageNum"
+                        :page-sizes="[5,10,20]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="allDate">
+                </el-pagination>
+            </el-row>
         </div>
 
         <!--页面按钮表-->
@@ -208,8 +230,8 @@
                             <div>
                                 <el-input placeholder="请输入内容" v-model="searchInput">
                                     <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
-                                        <el-option label="编号" value="permissionId"></el-option>
-                                        <el-option label="名称" value="permissionName"></el-option>
+                                        <el-option label="编号" value="buttonNumber"></el-option>
+                                        <el-option label="名称" value="buttonName"></el-option>
                                     </el-select>
                                     <el-button slot="append" icon="search" @click="searchClick"></el-button>
                                 </el-input>
@@ -240,6 +262,17 @@
                     </el-table-column>
                 </el-table>
             </el-row>
+            <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="pageNum"
+                        :page-sizes="[5,10,20]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="allDate">
+                </el-pagination>
+            </el-row>
         </div>
 
         <!--页面资源表-->
@@ -251,8 +284,8 @@
                             <div>
                                 <el-input placeholder="请输入内容" v-model="searchInput">
                                     <el-select clearable slot="prepend" placeholder="请选择" v-model="select">
-                                        <el-option label="编号" value="permissionId"></el-option>
-                                        <el-option label="名称" value="permissionName"></el-option>
+                                        <el-option label="编号" value="pageNumber"></el-option>
+                                        <el-option label="名称" value="pageName"></el-option>
                                     </el-select>
                                     <el-button slot="append" icon="search" @click="searchClick"></el-button>
                                 </el-input>
@@ -282,6 +315,17 @@
                         </template>
                     </el-table-column>
                 </el-table>
+            </el-row>
+            <el-row type="flex" justify="end" style="padding-top:10px" class="block">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="pageNum"
+                        :page-sizes="[5,10,20]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="allDate">
+                </el-pagination>
             </el-row>
         </div>
     </el-col>
