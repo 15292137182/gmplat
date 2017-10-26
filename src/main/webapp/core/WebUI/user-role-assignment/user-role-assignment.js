@@ -12,14 +12,26 @@ var searchRoleUser=serverPath+"/roleDistribute/queryRoleUserInfo";
 //角色组查看用户
 var searchRoleUserGroup=serverPath+"/roleDistribute/queryRoleUserGroup";
 
-//查看所有权限
+//查看所有角色
 var allRole=serverPath+"/role/queryPage";
+
+//查看所有用户
+var allUser=serverPath+"/user/queryPage";
+
+//查看所有用户组
+var allUserGroup=serverPath+"/userGroup/queryPage";
 
 //用户分配角色
 userDeverRole=serverPath+"/roleDistribute/addUserRole";
 
 //用户组分配角色
 userGroupDeverRole=serverPath+"/roleDistribute/addUserGroupRole";
+
+//角色分配用户
+roleDeverUser=serverPath+"/roleDistribute/addRoleUser";
+
+//角色分配用户组
+roleDeverUserGroup=serverPath+"/roleDistribute/addRoleUserGroup";
 
 
 gmp_onload=function(){
@@ -426,7 +438,7 @@ gmp_onload=function(){
                 console.log(row);
                 this.userRowId=row.rowIds
                 //获得所属角色的key
-                this.rightRowId=row.roleRowIds
+                this.rightRowId=row.userRowIds
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -447,9 +459,7 @@ gmp_onload=function(){
                         pageNum:1,
                         pageSize:this.pageSize,
                     }
-                    querySearch.searchResourceFirst(searchRoleUser,headDate,this,function(res){
-                        console.log(res);
-                    })
+                    querySearch.searchResourceFirst(searchRoleUser,headDate,this,function(res){})
                 }else{  //不需要search
                     var param={};
                     param[rightBlock.select] = rightBlock.input;
@@ -502,8 +512,9 @@ gmp_onload=function(){
                 distributeUser.leftHeight = $(window).height() - 270;
             });
             this.searchRoleUserFirst();
-            querySearch.easySearch(allRole,function(res){
-                right.allRoleData=res.resp.content.data.result;
+            querySearch.easySearch(allUser,function(res){
+                console.log(res);
+                distributeUser.allRoleData=res.resp.content.data.result;
             })
         }
     })
@@ -555,7 +566,7 @@ gmp_onload=function(){
                 console.log(row);
                 this.userRowId=row.rowIds
                 //获得所属角色的key
-                this.rightRowId=row.roleRowIds
+                this.rightRowId=row.userGroupRowIds
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -623,8 +634,9 @@ gmp_onload=function(){
                 rightUserBlockRole.leftHeight = $(window).height() - 270;
             });
             this.searchRoleUserGroupFirst();
-            querySearch.easySearch(allRole,function(res){
-                right.allRoleData=res.resp.content.data.result;
+            querySearch.easySearch(allUserGroup,function(res){
+                console.log(res);
+                rightUserBlockRole.allRoleData=res.resp.content.data.result;
             })
         }
     })

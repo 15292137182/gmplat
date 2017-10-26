@@ -15,8 +15,6 @@ var useAdd = new Vue({
                 clearable: false,
                 // 显示复选框
                 checkbox: false,
-                // 默认展开
-//                  expanded: [324],
                 // 展开所有节点
                 expandedAll: true,
                 // 默认选中项 当 checkbox 为 true 时  编辑时可以用
@@ -95,11 +93,12 @@ var useAdd = new Vue({
                     };
                     gmpAjax.showAjax(data,function(res){
                         console.log(res);
+                        //left.$refs.organsizeTree.loadData();刷新树
                         //刷新树节点
                         if(left.activeName=='first'){
-                            left.$refs.organsizeTree.loadData();
+                            right.searchMore()
                         }else if(left.activeName=='second'){
-                            leftBottom.$refs.roleTree.loadData();
+                            right.searchUserMore();
                         }
                         ibcpLayer.Close(divIndex);
                     })
@@ -144,6 +143,7 @@ var useAdd = new Vue({
         },
         cancel() {
             ibcpLayer.Close(divIndex);
+
         },
     },
     updated(){

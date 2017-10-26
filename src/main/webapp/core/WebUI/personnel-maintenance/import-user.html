@@ -6,13 +6,14 @@
 </head>
 <body>
 <div id="importUser" style="padding:22px 20px">
-    <form id="fileUpload" action="" enctype="multipart/form-data" target="_self"
-          method="post">
-        <input id="excelFile" name="file" type="file"/>
-        <!--<input type="button" value="提交" onclick="submitExcel()"/>-->
-    </form>
-
-    <el-row style="padding:22px 20px">
+    <!--<el-col :span="24" style="text-align:center">-->
+        <form id="fileUpload" action="" enctype="multipart/form-data" target="_self"
+              method="post">
+            <input id="excelFile" name="file" type="file"/>
+            <!--<input type="button" value="提交" onclick="submitExcel()"/>-->
+        </form>
+    <!--</el-col>-->
+    <el-row style="padding:40px 20px">
         <el-col :span="11" style="text-align:right">
             <el-button type="primary" size="small" @click.native="conformEvent">保存</el-button>
         </el-col>

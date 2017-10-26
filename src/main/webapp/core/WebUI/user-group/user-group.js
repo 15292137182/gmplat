@@ -34,7 +34,7 @@ gmp_onload=function(){
             addEvent() {
                 operate = 1;
                 var htmlUrl = 'user-group-add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加用户组信息', '500px', '600px',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加用户组信息', '440px', '600px',function(){
 
                 });
             },
@@ -108,11 +108,13 @@ gmp_onload=function(){
                     dataType:"json",
                     xhrFields: {withCredentials: true},
                     success:function(res){
+                        console.log(res);
                         var data=res.resp.content.data;
-                        console.log(data);
+                        //console.log(data);
                         right.rowId=data.rowId;
                         right.groupName=data.groupName;
                         right.groupNumber=data.groupNumber;
+                        //useAdd.config.checked=data.belongOrg;//所属部门
                         right.config1.checked=data.belongSector;
                         right.belongSector=data.belongSector;//所属部门 为了提交
                         right.groupCategory=data.groupCategory;
@@ -169,12 +171,10 @@ gmp_onload=function(){
                 clearable: false,
                 // 显示复选框
                 checkbox: false,
-                // 默认展开
-//                  expanded: [324],
                 // 展开所有节点
                 expandedAll: true,
                 // 默认选中项 当 checkbox 为 true 时  编辑时可以用
-                checked: [],
+                checked: [1],
                 defaultProps: {
                     // 树节点显示文字
                     label: 'orgName',
@@ -279,7 +279,7 @@ gmp_onload=function(){
                     pageSize:this.pageSize,
                 }
                 querySearch.searchResource(searchGroupUser,headDate,this,function(res){
-                    console.log(res);
+                    //console.log(res);
                     var data=res.resp.content.data;
                     if(data!=null){
                         //默认选中行

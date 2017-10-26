@@ -61,8 +61,8 @@
     </style>
 </head>
 <body>
-<div class="allBorder" style="float: left; padding:20px 10px 0 10px;margin:15px 0">
-    <el-col :span="2" id="left" style="height:500px; border:none">
+<div  style="margin-top:10px">
+    <el-col :span="2" id="left" v-cloak>
         <el-row>
             <el-col>
                 <div style="padding:0 10px">
@@ -78,8 +78,8 @@
         </el-row>
     </el-col>
     <!--用户分配角色-->
-    <el-col :span="21" id="right" style="margin-left:15px">
-        <div class="allBorder" style="border:1px solid #bccdc5;padding:2px 0 ">
+    <el-col :span="21" id="right" style="margin-top:15px" :push="1"  v-cloak>
+        <div class="allBorder">
             <el-row>
                 <!--用户用户组角色分配-->
                 <el-col v-show="useLook">
@@ -154,8 +154,8 @@
     </el-col>
 </div>
 <!--用户组分配角色-->
-<template id="tempBlock">
-    <el-col id="rightBlock">
+<template id="tempBlock" >
+    <el-col id="rightBlock"  v-cloak>
         <div>
             <el-col :span="8" :push="1">
                 <div style="padding:20px 0">
@@ -214,7 +214,7 @@
 </template>
 <!--角色分配用户-->
 <template id="distribute">
-    <el-col id="distributeUser" v-show="roleCould">
+    <el-col id="distributeUser" v-show="roleCould"  v-cloak>
             <span class="spanPosition">角色分配人员</span>
             <div>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="padding:20px 20px">
@@ -242,7 +242,7 @@
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="roleName" label="角色名称" width="160"
                                                      show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="userName" label="拥有的用户"
+                                    <el-table-column prop="userNames" label="拥有的用户"
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="" label="操作" width="80">
                                         <template scope="scope">
@@ -273,7 +273,7 @@
 </template>
 <!--角色分配用户组-->
 <template id="rightUserBlockRole">
-    <el-col id="rightBlockRole">
+    <el-col id="rightBlockRole"  v-cloak>
         <div>
             <el-col :span="15">
                 <div style="padding:20px 0 20px 20px" >
@@ -298,7 +298,7 @@
                                          show-overflow-tooltip></el-table-column>
                         <el-table-column prop="roleName" label="角色名称" width="160"
                                          show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="userGroupName" label="拥有的用户组"
+                        <el-table-column prop="userGroupNames" label="拥有的用户组"
                                          show-overflow-tooltip></el-table-column>
                         <el-table-column prop="" label="操作" width="80">
                             <template scope="scope">

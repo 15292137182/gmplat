@@ -30,45 +30,37 @@ var unlockUser=serverPath + "/user/unLock";
 var lockUser=serverPath + "/user/lock";
 
 gmp_onload=function(){
+    //上层按钮事件
     basTop = new Vue({
         el: '#basTop',
         data: {
-            addOpe: false,
-            addAttr: false,
-            takeEffect: false,
-            change: false,
+            batchRemove: true,//批量删除
+            resetPassword: true,//重置密码
+            loseEfficacy: true,//失效
+            startUsing: true,//生效
+            exportTemplate: true,//导出模板
         },
         methods: {
             //新增人员信息
             addEvent() {
                 operate = 1;
-                var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '95%',function(){
-
-                });
+                var htmlUrl = 'personnel-add.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '90%',function(){});
             },
             //导出选择版本
             chooseVersion(){
-                var htmlUrl = 'chooseVersion.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '选择版本', '300px', '200px',function(){
-
-                });
-
+                var htmlUrl = 'choose-version.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '选择版本', '300px', '200px',function(){});
             },
             //导入
             leadRow(){
-                var htmlUrl = 'import_user.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '导入页面', '500px', '500px',function(){
-
-                });
+                var htmlUrl = 'import-user.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '导入页面', '300px', '200px',function(){});
             },
             //导出
             exportRow(){
-                var htmlUrl = 'personnel_export.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '导出Excel', '800px', '400px', function () {
-
-
-                });
+                var htmlUrl = 'personnel-export.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '导出Excel', '800px', '400px', function () {});
             },
             //重置密码
             resetPass(){
@@ -146,7 +138,7 @@ gmp_onload=function(){
             },
         }
     });
-
+    //左边的树组织机构
     left=new Vue({
         el:'#left',
         data:getData.dataObj({
@@ -175,15 +167,10 @@ gmp_onload=function(){
             arr:[],
         }),
         methods:{
-            getNodes(data,id,name){
-                //this.rowId=data.rowId;
-                //right.searchUser();
-            },
             //复选框点击
             getChecked(data, id, allChecked, name, flag) {
                 console.log(data);
                 // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
-
                 Array.prototype.indexOf = function(val) {
                     for (var i = 0; i < this.length; i++) {
                         if (this[i] == val) return i;
@@ -219,7 +206,7 @@ gmp_onload=function(){
             });
         }
     })
-
+    //左边的树角色查看
     leftBottom=new Vue({
         el:'#basRightTop',
         template:'#tempBlock',
@@ -256,7 +243,7 @@ gmp_onload=function(){
 
         }
     })
-
+    //右边的人员信息
     right=new Vue({
         "el": "#right",
         data: getData.dataObj({
@@ -348,22 +335,29 @@ gmp_onload=function(){
                 console.log(row);
                 this.rightRowId=row.rowId
             },
-            //选择复选框
-            selectRow(selection, row){
+            //复选框改变
+            selectRow(selection){
                 console.log(selection)
                 right.userId=[];//多选的用户ID组
                 $.each(selection,function(i,item){
                     right.userId.push(item.rowId)
+                })
+                //当选中数据时 按钮放开来
 
-                })
+                if(right.userId!=''){
+                    basTop.batchRemove=false;//批量删除
+                    basTop.resetPassword=false;//重置密码
+                    basTop.loseEfficacy=false;//失效
+                    basTop.startUsing=false;//生效
+                    basTop.exportTemplate=false;//导出模板
+                }else{
+                    basTop.batchRemove=true;//批量删除
+                    basTop.resetPassword=true;//重置密码
+                    basTop.loseEfficacy=true;//失效
+                    basTop.startUsing=true;//生效
+                    basTop.exportTemplate=true;//导出模板
+                }
                 console.log( right.userId)
-            },
-            //复选框全选
-            selectAllRow(selection){
-                right.userId=[];//多选的用户ID组
-                $.each(selection,function(i,item){
-                    right.userId.push(item.rowId)
-                })
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -588,7 +582,7 @@ gmp_onload=function(){
             //编辑
             editEvent(){
                 operate = 2;
-                var htmlUrl = 'personnel_add.html';
+                var htmlUrl = 'personnel-add.html';
                 divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
                     //调用接口
                     var data={

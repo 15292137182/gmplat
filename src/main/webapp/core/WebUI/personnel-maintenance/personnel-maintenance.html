@@ -63,30 +63,32 @@
     </style>
 </head>
 <body>
+<!--上层按钮-->
 <div id="basTop" v-cloak>
     <el-row type="flex" justify="end">
         <el-col :span="24">
             <el-button type="info" icon="plus" size="small" @click.native="addEvent">添加</el-button>
-            <el-button type="info" icon="plus" size="small" @click.native="deleteAll">批量删除</el-button>
-            <el-button type="warning" icon="star-off" size="small" @click.native="resetPass">重置密码</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="Invalid">失效</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="Enable">启用</el-button>
-            <el-button type="warning"  size="small" @click.native="chooseVersion">下载模板</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="leadRow">导入</el-button>
-            <el-button type="warning" icon="caret-right" size="small" @click.native="exportRow">导出</el-button>
+            <el-button type="info"  size="small" @click.native="chooseVersion">下载模板</el-button>
+            <el-button type="info" icon="caret-right" size="small" @click.native="leadRow">导入</el-button>
+            <el-button type="danger" icon="plus" size="small" @click.native="deleteAll" :disabled="batchRemove">批量删除</el-button>
+            <el-button type="warning" icon="star-off" size="small" @click.native="resetPass" :disabled="resetPassword">重置密码</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="Invalid" :disabled="loseEfficacy">失效</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="Enable" :disabled="startUsing">启用</el-button>
+            <el-button type="warning" icon="caret-right" size="small" @click.native="exportRow" :disabled="exportTemplate">导出</el-button>
         </el-col>
     </el-row>
 </div>
 
 <div class="allBorder" style="margin-top:10px">
+    <!--左边的树组织机构-->
     <el-col :span="5" id="left" v-cloak>
         <el-row>
             <el-col>
-                <div style="padding:20px 20px">
+                <div style="padding:15px 10px">
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                         <el-tab-pane label="组织机构查看" name="first">
                             <div style="padding:5px 20px">
-                                <base-tree ref="organsizeTree" :initial="config" @click-node="getNodes" @checked-node="getChecked"></base-tree>
+                                <base-tree ref="organsizeTree" :initial="config"  @checked-node="getChecked"></base-tree>
                             </div>
                         </el-tab-pane>
                         <el-tab-pane label=" 角色查看" name="second">
@@ -97,8 +99,8 @@
             </el-col>
         </el-row>
     </el-col>
-
-    <el-col :span="18" id="right" :push="1" v-cloak style="margin-top:25px">
+    <!--左边的树角色查看-->
+    <el-col :span="18" id="right" :push="1" style="margin-top:25px" v-cloak>
         <div class="allBorder">
             <el-row>
                 <el-col>
@@ -136,8 +138,7 @@
                                       element-loading-text="加载中" @sort-change="headSort"
                                       @row-click="currentChange"
                                       class="tableStyle"
-                                      @select="selectRow"
-                                      @select-all="selectAllRow"
+                                      @selection-change="selectRow"
                                       style="width: 100%">
                                 <el-table-column
                                         type="selection"
@@ -206,8 +207,6 @@
                                 </el-table-column>
                                 <el-table-column prop="id" label="用户工号" sortable="custom" width="160"
                                                  show-overflow-tooltip></el-table-column>
-                                <el-table-column prop="password" label="密码" width="160"
-                                                 show-overflow-tooltip></el-table-column>
                                 <el-table-column prop="orgName" label="所属部门" width="100"
                                                  show-overflow-tooltip></el-table-column>
                                 <el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
@@ -220,9 +219,9 @@
                                         <el-button @click.native="deleteEvent" type="text" size="small" icon="delete"
                                                    :disabled=scope.row.testDemo></el-button>
                                         <el-button @click.native="unlockEvent" type="text" size="small" icon="check"
-                                                   :disabled=scope.row.testDemo></el-button>
+                                                   :disabled=scope.row.testDemo title="解锁"></el-button>
                                         <el-button @click.native="lockEvent" type="text" size="small" icon="information"
-                                                   :disabled=scope.row.testDemo></el-button>
+                                                   :disabled=scope.row.testDemo title="锁定"></el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -246,15 +245,15 @@
         </div>
     </el-col>
 </div>
-
+<!--右边的人员信息-->
 <template id="tempBlock">
-    <el-col id="basRightTop">
+    <el-col id="basRightTop" v-cloak>
         <div style="padding:20px 20px">
             <base-tree ref="roleTree" :initial="config1" @click-node="getNodes1" @checked-node="getChecked1"></base-tree>
         </div>
     </el-col>
 </template>
 
-<script src="personnel_maintenance.js"></script>
+<script src="personnel-maintenance.js"></script>
 </body>
 </html>

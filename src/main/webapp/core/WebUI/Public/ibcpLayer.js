@@ -61,7 +61,7 @@ var ibcpLayer = (function () {
         //找出当前layer弹出层的div对象 作为 容器
         var div = layero.find(".layui-layer-content");
         div.attr("layerIndex", index);
-        div.css("overflow", 'hidden');
+        div.css("overflow-y", 'scroll');
         div.load(divHtmlUrl, function () {
           //取消父页面的焦点
           var aaa = layero.find(

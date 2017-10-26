@@ -76,7 +76,9 @@ var allDate=new Vue({
                 pageNum:1,
                 pageSize:this.pageSize,
             }
-            querySearch.searchResourceFirst(searchMore,headDate,this,function(res){})
+            querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
+                console.log(res)
+            })
         },
         //不跳回第一页
         searchMore(){
@@ -90,6 +92,7 @@ var allDate=new Vue({
         }
     },
     created(){
+        console.log(111)
        this.searchMoreFirst();
     }
 })

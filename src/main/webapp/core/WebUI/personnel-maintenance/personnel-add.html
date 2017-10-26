@@ -144,14 +144,14 @@
 
         <el-row class="row-bg">
             <el-col :span="24">
-                <el-form-item label="说明" prop="description">
-                    <el-input type="textarea" :rows="1" placeholder="请输入说明" v-model="description" ref="description">
+                <el-form-item label="备注" prop="remarks">
+                    <el-input type="textarea" :rows="1" placeholder="请输入备注" v-model="remarks" ref="remarks">
                     </el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
-                <el-form-item label="备注" prop="remarks">
-                    <el-input type="textarea" :rows="1" placeholder="请输入备注" v-model="remarks" ref="remarks">
+                <el-form-item label="说明" prop="description">
+                    <el-input type="textarea" :rows="2" placeholder="请输入说明" v-model="description" ref="description">
                     </el-input>
                 </el-form-item>
             </el-col>
@@ -167,6 +167,6 @@
         </el-col>
     </el-row>
 </div>
-<script src="personnel_add.js"></script>
+<script src="personnel-add.js"></script>
 </body>
 </html>

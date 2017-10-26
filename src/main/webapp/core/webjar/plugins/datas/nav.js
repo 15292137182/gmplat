@@ -43,11 +43,16 @@
         "children": [{
             "title": " 用户",
             "icon": "fa-user",
-            "href": "core/WebUI/personnel_maintenance/personnel_maintenance.html"
+            "href": "core/WebUI/personnel-maintenance/personnel-maintenance.html"
         }, {
             "title": "用户组",
             "icon": "fa-users",
             "href": "core/WebUI/user-group/user-group.html"
+        },
+        {
+            "title": "用户角色分配",
+            "icon": "fa-users",
+            "href": "core/WebUI/user-role-assignment/user-role-assignment.html"
         }, {
             "title":"组织机构",
             "icon":"fa-sitemap",

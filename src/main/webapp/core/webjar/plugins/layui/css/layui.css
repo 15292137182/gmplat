@@ -40,9 +40,15 @@ height: 50px;
 .layui-tab-title {
     height: 30px;
 }
+.layui-tab-more {
+    height: auto;
+}
 .layui-tab-title li {
     line-height: 30px;
 }
 .layui-tab-title li cite{
     font-size:12px;
+}
+.layui-tab-bar .layui-icon {
+    top: -3px;
 }
