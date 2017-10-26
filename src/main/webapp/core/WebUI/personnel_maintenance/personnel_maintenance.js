@@ -43,7 +43,7 @@ gmp_onload=function(){
             addEvent() {
                 operate = 1;
                 var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '700px',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 添加人员信息', '600px', '95%',function(){
 
                 });
             },
@@ -181,6 +181,7 @@ gmp_onload=function(){
             },
             //复选框点击
             getChecked(data, id, allChecked, name, flag) {
+                console.log(data);
                 // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
 
                 Array.prototype.indexOf = function(val) {
@@ -617,7 +618,6 @@ gmp_onload=function(){
                         useAdd.description=data.description;//说明
                         useAdd.remarks=data.remarks;//备注
                         console.log( useAdd.config.checked)
-
                     })
                 });
             },

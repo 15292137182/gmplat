@@ -20,7 +20,7 @@ var useAdd = new Vue({
                 // 展开所有节点
                 expandedAll: true,
                 // 默认选中项 当 checkbox 为 true 时  编辑时可以用
-                // checked: [11],
+                checked: [],
                 defaultProps: {
                     // 树节点显示文字
                     label: 'orgName',
@@ -55,21 +55,15 @@ var useAdd = new Vue({
         },
         //点击他的时候
         getNodes(data, id, name) {
-            console.log(data);
-            console.log("选中行id为：" + id);
-            console.log("选中行名称为：" + name);
         },
         //确认这个节点的时候
-        getNodeId(id) {
+        getNodeId(data) {
+            console.log(data);
             //确认点击的这个ID
-            this.belongOrg=id;
+            this.belongOrg=data.rowId;
         },
         //复选框选中的时候
         getChecked(data, id, name, flag) {
-            console.log(data);
-            console.log("选中节点名称为：" + name);
-            console.log("选中节点 id 为：" + id);
-            console.log("选中标识为：" + flag);
         },
         //清除框的时候
         clear(id, name) {

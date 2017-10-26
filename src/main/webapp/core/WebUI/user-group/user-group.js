@@ -43,7 +43,7 @@ gmp_onload=function(){
                 deleteObj.del(function(){
                     var data={
                         "url":deleteGroup,
-                        "jsonData":{rowId:left.arr},
+                        "jsonData":{rowId:left.rowId},
                         "obj":basTop,
                         "showMsg":true
                     };
@@ -82,7 +82,7 @@ gmp_onload=function(){
         data:getData.dataObj({
             config: {
                 // 显示复选框
-                checkbox: true,
+                checkbox: false,
                 // 配置显示项
                 defaultProps: {
                     // 树节点显示文字

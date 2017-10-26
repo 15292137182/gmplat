@@ -6,7 +6,7 @@
 
 </head>
 <body>
-<div id="aaa" style="margin:10px 10px">
+<div id="depart" style="margin:10px 10px">
     <el-transfer v-model="value1" :data="data"></el-transfer>
     <el-row style="padding:30px 20px">
         <el-col :span="11" style="text-align:right">
@@ -17,69 +17,6 @@
         </el-col>
     </el-row>
 </div>
-<script>
-    //用户分配角色
-    if(operate==1){
-        res=right.allRoleData;
-        if(right.rightRowId!=undefined){
-            resId=right.rightRowId;
-            resIds=resId.split(",");
-        }else{
-            resIds=[];
-        }
-    }
-    var vm=new Vue({
-        el:'#aaa',
-        data(){
-            var generateData=function(res){
-                const data = [];
-                for (let i = 0; i <res.length; i++) {
-                    data.push({
-                        // 唯一标示
-                        key: res[i].rowId,
-                       //显示文字
-                        label: res[i].roleName,
-                      //是否可点击
-                     //disabled: i % 4 === 0
-                    });
-                }
-                return data;
-            };
-            return {
-                data: generateData(res),
-                //绑定到目标标示上的数据
-                value1: resIds
-            };
-        },
-        methods:{
-            conformEvent(){
-                if(operate==1){
-                    console.log(this.value1);
-                    addObj.addOk(function(){
-                        var data={
-                            "url":userDeverRole,
-                            "jsonData":{
-                                userRowId:right.userRowId,//这一条的ID
-                                roleRowId:vm.value1,//拥有角色的数组
-                            },
-                            "obj":vm,
-                            "showMsg":true
-                        };
-                        gmpAjax.showAjax(data,function(res){
-                            console.log(res);
-                            //分页跳回到第一页
-                            right.searchUserRoleFirst();
-                            ibcpLayer.Close(divIndex);
-                        })
-                    })
-                }
-
-            },
-            cancel(){
-                ibcpLayer.Close(divIndex);
-            }
-        },
-    })
-</script>
+<script src="assigment-add.js"></script>
 </body>
 </html>

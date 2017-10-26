@@ -45,9 +45,9 @@ var addDroupEvent=new  Vue({
 
         },
         //确认这个节点的时候
-        getNodeId(id) {
+        getNodeId(data) {
             //确认点击的这个ID
-            this.belongSector=id;
+            this.belongSector=data.rowId;
         },
         //复选框选中的时候
         getChecked(data, id, name, flag) {

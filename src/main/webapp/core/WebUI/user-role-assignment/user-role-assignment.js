@@ -18,6 +18,9 @@ var allRole=serverPath+"/role/queryPage";
 //用户分配角色
 userDeverRole=serverPath+"/roleDistribute/addUserRole";
 
+//用户组分配角色
+userGroupDeverRole=serverPath+"/roleDistribute/addUserGroupRole";
+
 
 gmp_onload=function(){
     //左边单选框
@@ -70,8 +73,9 @@ gmp_onload=function(){
                 right.searchUserRoleFirst()
             },
             //确认这个节点的时候
-            getNodes(data){
-                console.log(111)
+            getNodeId(data) {
+                console.log(data);
+                //确认点击的这个ID
                 this.belongOrg=data.rowId;
             },
             //清除框的时候
@@ -112,11 +116,9 @@ gmp_onload=function(){
             currentChange(row, event, column){
                 console.log(row);
                 //这一行的ID数据
-                this.userRowId=row.rowId
+                this.userRowId=row.rowIds
                //获得所属角色的key
                 this.rightRowId=row.roleRowIds
-                console.log(  this.userRowId)
-                console.log( this.rightRowId)
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -242,7 +244,9 @@ gmp_onload=function(){
                 rightBlock.searchUserGroupRoleFirst();
             },
             //确认这个节点的时候
-            getNodes(data){
+            getNodeId(data) {
+                console.log(data);
+                //确认点击的这个ID
                 this.belongOrg=data.rowId;
             },
             //清除框的时候
@@ -282,7 +286,10 @@ gmp_onload=function(){
             //点击这一行
             currentChange(row, event, column){
                 console.log(row);
-                //this.rightRowId=row.rowId
+                //这一行的ID数据
+                this.userRowId=row.rowIds
+                //获得所属角色的key
+                this.rightRowId=row.roleRowIds
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -351,41 +358,12 @@ gmp_onload=function(){
                     querySearch.searchResourceFirst(searchUserRole,headDate,this,function(res){})
                 }
             },
-            //编辑
+            //查看
             searchEvent(){
                 operate = 2;
-                var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
-                    //调用接口
-                    var data={
-                        "url":editMore,
-                        "jsonData":{rowId:right.rightRowId},
-                        "obj":right,
-                        "showMsg":true
-                    };
-                    gmpAjax.showAjax(data,function(res){
-                        //编辑拿到的数据
-                        var data=res.data[0];
-                        console.log(data)
-                        right.userowId=data.rowId;//用户的ID号码
-                        useAdd.id=data.id;//工号
-                        useAdd.name=data.name;//姓名
-                        useAdd.nickname=data.nickname;//昵称
-                        useAdd.password=data.password;//初始密码有默认值
-                        useAdd.config.checked=data.belongOrg;//所属部门
-                        useAdd.belongOrg=data.belongOrg;//所属部门 提交的时候要的
-                        useAdd.idCard=data.idCard;//身份证
-                        useAdd.mobilePhone=data.mobilePhone;//移动电话
-                        useAdd.officePhone=data.officePhone//办公电话
-                        useAdd.email=data.email;//邮箱
-                        useAdd.gender=data.gender;//性别
-                        useAdd.job=data.job;//职务
-                        useAdd.hiredate=data.hiredate;//入职日期
-                        useAdd.description=data.description;//说明
-                        useAdd.remarks=data.remarks;//备注
-                        console.log( useAdd.config.checked)
+                var htmlUrl = 'assigment-add.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '查看权限', '480px', '480px',function(){
 
-                    })
                 });
             },
         },
@@ -397,6 +375,10 @@ gmp_onload=function(){
                 rightBlock.leftHeight = $(window).height() - 270;
             });
             this.searchUserGroupRoleFirst();
+            //一加载就查询所有角色
+            querySearch.easySearch(allRole,function(res){
+                rightBlock.allRoleData=res.resp.content.data.result;
+            })
         }
     })
     //角色分配用户
@@ -442,7 +424,9 @@ gmp_onload=function(){
             //点击这一行
             currentChange(row, event, column){
                 console.log(row);
-                //this.rightRowId=row.rowId
+                this.userRowId=row.rowIds
+                //获得所属角色的key
+                this.rightRowId=row.roleRowIds
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -501,41 +485,12 @@ gmp_onload=function(){
                     querySearch.searchResourceFirst(searchRoleUser,headDate,this,function(res){})
                 }
             },
-            //编辑
+            //查看
             searchEvent(){
-                operate = 2;
-                var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
-                    //调用接口
-                    var data={
-                        "url":editMore,
-                        "jsonData":{rowId:right.rightRowId},
-                        "obj":right,
-                        "showMsg":true
-                    };
-                    gmpAjax.showAjax(data,function(res){
-                        //编辑拿到的数据
-                        var data=res.data[0];
-                        console.log(data)
-                        right.userowId=data.rowId;//用户的ID号码
-                        useAdd.id=data.id;//工号
-                        useAdd.name=data.name;//姓名
-                        useAdd.nickname=data.nickname;//昵称
-                        useAdd.password=data.password;//初始密码有默认值
-                        useAdd.config.checked=data.belongOrg;//所属部门
-                        useAdd.belongOrg=data.belongOrg;//所属部门 提交的时候要的
-                        useAdd.idCard=data.idCard;//身份证
-                        useAdd.mobilePhone=data.mobilePhone;//移动电话
-                        useAdd.officePhone=data.officePhone//办公电话
-                        useAdd.email=data.email;//邮箱
-                        useAdd.gender=data.gender;//性别
-                        useAdd.job=data.job;//职务
-                        useAdd.hiredate=data.hiredate;//入职日期
-                        useAdd.description=data.description;//说明
-                        useAdd.remarks=data.remarks;//备注
-                        console.log( useAdd.config.checked)
+                operate = 3;
+                var htmlUrl = 'assigment-add.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '查看权限', '480px', '480px',function(){
 
-                    })
                 });
             },
         },
@@ -547,10 +502,12 @@ gmp_onload=function(){
                 distributeUser.leftHeight = $(window).height() - 270;
             });
             this.searchRoleUserFirst();
+            querySearch.easySearch(allRole,function(res){
+                right.allRoleData=res.resp.content.data.result;
+            })
         }
     })
     //角色分配用户组
-
     rightUserBlockRole=new Vue({
         el:'#rightBlockRole',
         template:'#rightUserBlockRole',
@@ -596,8 +553,9 @@ gmp_onload=function(){
             //点击这一行
             currentChange(row, event, column){
                 console.log(row);
-
-                //this.rightRowId=row.rowId
+                this.userRowId=row.rowIds
+                //获得所属角色的key
+                this.rightRowId=row.roleRowIds
             },
             handleSizeChange(val){
                 //不跳回第一页
@@ -638,9 +596,7 @@ gmp_onload=function(){
                         pageNum:this.pageNum,
                         pageSize:this.pageSize,
                     }
-                    querySearch.searchResourceFirst(searchRoleUserGroup,headDate,this,function(res){
-
-                    })
+                    querySearch.searchResourceFirst(searchRoleUserGroup,headDate,this,function(res){})
                 }else{  //不需要search
                     var param={};
                     param[distributeUser.select] = distributeUser.input;
@@ -652,14 +608,11 @@ gmp_onload=function(){
                     }
                     querySearch.searchResourceFirst(searchRoleUserGroup,headDate,this,function(res){})
                 }
-            },
-            //
+            },  //查看
             searchEvent(){
-                operate = 2;
-                var htmlUrl = 'personnel_add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
-
-                });
+                operate = 4;
+                var htmlUrl = 'assigment-add.html';
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '查看权限', '480px', '480px',function(){});
             },
         },
         created(){
@@ -670,6 +623,9 @@ gmp_onload=function(){
                 rightUserBlockRole.leftHeight = $(window).height() - 270;
             });
             this.searchRoleUserGroupFirst();
+            querySearch.easySearch(allRole,function(res){
+                right.allRoleData=res.resp.content.data.result;
+            })
         }
     })
 
