@@ -7,7 +7,9 @@ import com.bcx.plat.core.morebatis.component.Field;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.condition.Or;
+import com.bcx.plat.core.morebatis.phantom.Aliased;
 import com.bcx.plat.core.morebatis.phantom.Condition;
+import com.bcx.plat.core.morebatis.phantom.FieldAlias;
 import com.bcx.plat.core.utils.ServerResult;
 import com.bcx.plat.core.utils.UtilsTool;
 import org.slf4j.Logger;
@@ -394,6 +396,37 @@ public abstract class BaseService<T extends BaseEntity<T>> {
     }
     return null;
   }
+
+
+
+  /**
+   * 主从表关联分页查询数据
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param condition         过滤参数
+   * @param pageNum           页码
+   * @param pageSize          页面大小
+   * @param orders            排序方式
+   * @return PageResult
+   */
+  @SuppressWarnings("unchecked")
+  protected PageResult<Map<String, Object>> leftAssociationQueryPageAlias(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                                     String relationPrimary, String relationSecondary, Condition condition,
+                                                                     int pageNum, int pageSize, List<Order> orders, Aliased aliased) {
+    try {
+      return getTClass().newInstance().associationQueryPageAlias(primary, secondary, relationPrimary, relationSecondary, condition,pageNum, pageSize, orders,aliased);
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+
+
+
 
 
   /**

@@ -13,12 +13,19 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.JoinType;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.configuration.annotation.IgnoredField;
+import com.bcx.plat.core.morebatis.phantom.Aliased;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.SpringContextHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.bcx.plat.core.base.BaseConstants.DELETE_FLAG;
 
@@ -430,6 +437,38 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
       execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).where(condition).orderBy(orders).selectPage(num, size);
     } else {
       execute = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN).orderBy(orders).selectPage(num, size);
+    }
+    return execute;
+  }
+
+
+  /**
+   * 主从表关联查询数据 - 查询全列
+   *
+   * @param primary           主表Class
+   * @param secondary         从表Class
+   * @param relationPrimary   主表连接条件
+   * @param relationSecondary 从表连接条件
+   * @param condition         过滤参数
+   * @param num               一页显示条数
+   * @param size              页码
+   * @param orders            排序
+   * @return PageResult
+   */
+  PageResult<Map<String, Object>> associationQueryPageAlias(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
+                                                            String relationPrimary, String relationSecondary,
+                                                            Condition condition, int num, int size, List<Order> orders, Aliased aliased) {
+    PageResult<Map<String, Object>> execute;
+    if (condition != null) {
+      QueryAction queryAction = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN);
+      queryAction.setAliasedColumns(new LinkedList<>(queryAction.getAliasedColumns()));
+      queryAction.getAliasedColumns().add(aliased);
+      execute = queryAction.where(condition).orderBy(orders).selectPage(num, size);
+    } else {
+      QueryAction queryAction = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN);
+      queryAction.setAliasedColumns(new LinkedList<>(queryAction.getAliasedColumns()));
+      queryAction.getAliasedColumns().add(aliased);
+      execute = queryAction.orderBy(orders).selectPage(num, size);
     }
     return execute;
   }
