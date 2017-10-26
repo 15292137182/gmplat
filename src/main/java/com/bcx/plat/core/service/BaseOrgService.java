@@ -241,14 +241,14 @@ public class BaseOrgService extends BaseService<BaseOrg> {
   public PageResult<Map<String, Object>> queryRoleInOrg(String orgRowId, Condition condition, List<Order> orders, Integer pageNum, Integer pageSize) {
     if (isValid(orgRowId)) {
       Condition temp = new ConditionBuilder(BaseOrgRelateRole.class)
-              .and().equal("orgRowId", orgRowId).endAnd().buildDone();
+              .and().equal("baseOrgRowId", orgRowId).endAnd().buildDone();
       List<BaseOrgRelateRole> relateRoles = new BaseOrgRelateRole().selectSimple(temp);
       if (!relateRoles.isEmpty()) {
         Set<String> roleRowId = new HashSet<>();
         relateRoles.forEach(baseOrgRelateRole -> roleRowId.add(baseOrgRelateRole.getRoleRowId()));
         Condition condition1 = new ConditionBuilder(Role.class)
                 .and().in("rowId", roleRowId).endAnd().buildDone();
-        if (null != condition1) {
+        if (null != condition) {
           condition1 = new And(condition, condition1);
         }
         return roleService.selectPageMap(condition1, orders, pageNum, pageSize);
