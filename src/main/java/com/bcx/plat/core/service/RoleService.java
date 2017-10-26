@@ -125,6 +125,7 @@ public class RoleService extends BaseService<Role> {
    * @param order    排序方式
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(Role.class, order);
     Condition condition;
@@ -172,6 +173,7 @@ public class RoleService extends BaseService<Role> {
    * @param pageSize 页面大小
    * @return 返回分页查询结果
    */
+  @SuppressWarnings("unchecked")
   public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, String search, String param, List<Order> orders, Integer pageNum, Integer pageSize) {
     Condition userCondition = null;
     List<UserRelateRole> relateRoles;
@@ -289,8 +291,8 @@ public class RoleService extends BaseService<Role> {
    * 添加组织机构到角色
    *
    * @param roleRowId 角色主键
-   * @param orgRowIds
-   * @return
+   * @param orgRowIds 一组部门主键
+   * @return ServerResult
    */
   public ServerResult addRoleOrg(String roleRowId, String[] orgRowIds) {
     if (null != roleRowId && null != orgRowIds && orgRowIds.length != 0) {
@@ -342,6 +344,7 @@ public class RoleService extends BaseService<Role> {
    * @param orgRowIds 一组组织机构rowId
    * @return ServerResult
    */
+  @SuppressWarnings("all")
   public ServerResult deleteRoleOrg(String roleRowId, String[] orgRowIds) {
     if (null != roleRowId) {
       Condition condition;
@@ -393,6 +396,7 @@ public class RoleService extends BaseService<Role> {
    * @param permissionRowId 权限主键
    * @return 返回操作结果
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryRoleContainsPermission(String permissionRowId, String search, String param, List<Order> orders, int pageNum, int pageSize) {
     if (isValid(permissionRowId)) {
       Condition relateCond = new ConditionBuilder(RoleRelatePermission.class)
@@ -478,6 +482,7 @@ public class RoleService extends BaseService<Role> {
    * @param order    排序方式
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryRolePermissionByRowId(String rowId, Integer pageNum, Integer pageSize, String order) {
     if (isValid(rowId)) {
       LinkedList<Order> orders = dataSort(Permission.class, order);
@@ -487,7 +492,7 @@ public class RoleService extends BaseService<Role> {
       List<RoleRelatePermission> relateRoles = new RoleRelatePermission().selectSimple(condition);
       if (null != relateRoles && !relateRoles.isEmpty()) {
         List<String> permissionRowIds = relateRoles.stream()
-            .map(RoleRelatePermission::getRoleRowId)
+            .map(RoleRelatePermission::getPermissionRowId)
             .collect(Collectors.toList());
         //根据权限rowId查出权限信息
         Condition permissionCondition = new ConditionBuilder(Permission.class)
@@ -509,6 +514,7 @@ public class RoleService extends BaseService<Role> {
    * @param order    排序方式
    * @return ServerResult
    */
+  @SuppressWarnings("unchecked")
   public ServerResult queryRoleUserGroupByRowId(String rowId, int pageNum, int pageSize, String order) {
     if (isValid(rowId)) {
       //从关联表中根据角色rowId查询用户组rowId
