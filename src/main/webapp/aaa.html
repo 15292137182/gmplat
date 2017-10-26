@@ -21,7 +21,8 @@
 
 <br/>
 
-<form id="form2" action="http://192.168.100.50/gmplat/gmp/sys/core/excel/excelUpload" method="post" enctype="multipart/form-data">
+<form id="form2" action="http://192.168.100.50/gmplat/gmp/sys/core/excel/excelUpload" method="post"
+      enctype="multipart/form-data">
     <input type="file" class="file1" name="file1"/>
     <button type="submit" class="but1">上传1</button>
 </form>
@@ -31,20 +32,35 @@
 </html>
 <script>
 
-
-        $("#AA").click(function () {
-            console.log(111);
-            window.open("http://192.168.100.50/gmplat/gmp/sys/core/excel/exportModule?suffix=xls", "_self")
-        });
-
-        /** 验证文件是否导入成功  */
-        $("#fileUpload").ajaxForm(function (data) {
-            console.log(data);
-            if (data == "1") {
-                alert("提交成功！");
+    Array.prototype.remove = function (dx) {
+        if (isNaN(dx) || dx > this.length) {
+            return false;
+        }
+        for (var i = 0, n = 0; i < this.length; i++) {
+            if (this[i] != this[dx]) {
+                this[n++] = this[i]
             }
-        });
+        }
+        this.length -= 1
+    }
 
+    a = [1, 2, 3, 5];
+    a.remove(1);
+    console.log("1111111111111" + a);
+
+
+    $("#AA").click(function () {
+        console.log(111);
+        window.open("http://192.168.100.50/gmplat/gmp/sys/core/excel/exportModule?suffix=xls", "_self")
+    });
+
+    /** 验证文件是否导入成功  */
+    $("#fileUpload").ajaxForm(function (data) {
+        console.log(data);
+        if (data == "1") {
+            alert("提交成功！");
+        }
+    });
 
 
     //    $(function(){
@@ -57,12 +73,12 @@
     //    });
 
 
-//    $(document).ready(function () {
-//        $("#fileUpload").ajaxForm(function (data) {
-//            alert("post success." + data);
-//            //Alert("post success.");
-//        });
-//    });
+    //    $(document).ready(function () {
+    //        $("#fileUpload").ajaxForm(function (data) {
+    //            alert("post success." + data);
+    //            //Alert("post success.");
+    //        });
+    //    });
 
 
     $("#BB").click(function () {
@@ -121,7 +137,5 @@
     }
 
 
-
-
-        //alert(getRootPath());
+    //alert(getRootPath());
 </script>

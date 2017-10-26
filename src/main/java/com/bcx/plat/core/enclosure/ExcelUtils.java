@@ -5,10 +5,14 @@ import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,17 +145,28 @@ public class ExcelUtils {
    * @param sheet  sheet
    */
   private static void createList(String[] list, int rowCol, Sheet sheet) {
-
+    //绑定下拉框和作用区域
+    CellRangeAddressList regions = new CellRangeAddressList(1, 65535, rowCol, rowCol);
     if (sheet instanceof HSSFSheet) {
-      //绑定下拉框和作用区域
-      CellRangeAddressList regions = new CellRangeAddressList(1, 100, rowCol, rowCol);
       //生成下拉列表
       DVConstraint constraint = DVConstraint.createExplicitListConstraint(list);
       //生成下拉框内容
       DataValidation validation = new HSSFDataValidation(regions, constraint);
+      //设置压制下拉箭头
+      validation.setSuppressDropDownArrow(false);
       //对sheet页生效
       sheet.addValidationData(validation);
+    } else if (sheet instanceof XSSFSheet) {
+      DataValidationHelper helper = sheet.getDataValidationHelper();
+      //设置下拉框数据
+      DataValidationConstraint constraint = helper.createExplicitListConstraint(list);
+      DataValidation dataValidation = helper.createValidation(constraint, regions);
+      //设置压制下拉箭头
+      dataValidation.setSuppressDropDownArrow(true);
+      //设置显示错误框
+      dataValidation.setShowErrorBox(true);
+      //对sheet页生效
+      sheet.addValidationData(dataValidation);
     }
-
   }
 }
