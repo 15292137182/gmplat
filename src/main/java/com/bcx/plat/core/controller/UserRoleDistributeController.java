@@ -11,6 +11,7 @@ import com.bcx.plat.core.utils.ServerResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -41,15 +42,15 @@ public class UserRoleDistributeController extends BaseController {
   /**
    * 用户分配角色关联信息
    *
-   * @param userRwoId 用户rowId
+   * @param userRowId 用户rowId
    * @param roleRowId 角色rowId
    * @return PlatResult
    */
   @PostMapping("/addUserRole")
-  public PlatResult addUserRole(String userRwoId, List<String> roleRowId) {
+  public PlatResult addUserRole(String userRowId, @RequestParam("roleRowId") List<String> roleRowId) {
     PlatResult platResult;
-    if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = userRoleDistributeService.addUserRole(userRwoId, roleRowId);
+    if (isValid(userRowId)) {
+      ServerResult serverResult = userRoleDistributeService.addUserRole(userRowId, roleRowId);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -106,7 +107,7 @@ public class UserRoleDistributeController extends BaseController {
    * @param pageNum  一页显示条数
    * @param pageSize 页码
    * @param order    排序
-   * @Author wenTieu
+   * @Author wenTieHu
    * @Date 2017/10/24
    */
   @GetMapping("/queryRoleUserInfo")
@@ -161,15 +162,15 @@ public class UserRoleDistributeController extends BaseController {
   /**
    * 用户组分配角色关联信息
    *
-   * @param userGroupRwoId 用户rowId
+   * @param userGroupRowId 用户rowId
    * @param roleRowIds     角色rowId
    * @return PlatResult
    */
   @PostMapping("/addUserGroupRole")
-  public PlatResult addUserGroupRole(String userGroupRwoId, String[] roleRowIds) {
+  public PlatResult addUserGroupRole(String userGroupRowId, @RequestParam("roleRowIds") List<String> roleRowIds) {
     PlatResult platResult;
-    if (isValid(userGroupRwoId) && isValid(roleRowIds)) {
-      ServerResult serverResult = userRoleDistributeService.addUserGroupRole(userGroupRwoId, roleRowIds);
+    if (isValid(userGroupRowId)) {
+      ServerResult serverResult = userRoleDistributeService.addUserGroupRole(userGroupRowId, roleRowIds);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -201,15 +202,15 @@ public class UserRoleDistributeController extends BaseController {
   /**
    * 用户分配角色关联信息
    *
-   * @param userRwoId 用户rowId
-   * @param roleRowId 角色rowId
+   * @param userRowIds 用户rowId
+   * @param roleRowId  角色rowId
    * @return PlatResult
    */
   @PostMapping("/addRoleUser")
-  public PlatResult addRoleUser(String roleRowId, String[] userRwoId) {
+  public PlatResult addRoleUser(String roleRowId, @RequestParam("userRowIds") List<String> userRowIds) {
     PlatResult platResult;
-    if (isValid(userRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = userRoleDistributeService.addRoleUser(roleRowId, userRwoId);
+    if (isValid(roleRowId)) {
+      ServerResult serverResult = userRoleDistributeService.addRoleUser(roleRowId, userRowIds);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
@@ -240,15 +241,15 @@ public class UserRoleDistributeController extends BaseController {
   /**
    * 用户组分配角色关联信息
    *
-   * @param userGroupRwoId 用户rowId
-   * @param roleRowId      角色rowId
+   * @param userGroupRowIds 用户rowId
+   * @param roleRowId       角色rowId
    * @return PlatResult
    */
   @PostMapping("/addRoleUserGroup")
-  public PlatResult addRoleUserGroup(String roleRowId, String[] userGroupRwoId) {
+  public PlatResult addRoleUserGroup(String roleRowId, @RequestParam("userGroupRowIds") List<String> userGroupRowIds) {
     PlatResult platResult;
-    if (isValid(userGroupRwoId) && isValid(roleRowId)) {
-      ServerResult serverResult = userRoleDistributeService.addRoleUserGroup(roleRowId, userGroupRwoId);
+    if (isValid(roleRowId)) {
+      ServerResult serverResult = userRoleDistributeService.addRoleUserGroup(roleRowId, userGroupRowIds);
       platResult = result(serverResult);
     } else {
       platResult = fail(DATA_CANNOT_BE_EMPTY);
