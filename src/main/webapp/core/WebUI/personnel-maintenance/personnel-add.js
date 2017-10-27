@@ -10,6 +10,12 @@ var useAdd = new Vue({
                     return time.getTime() > Date.now();
                 }
             },
+            // 性别
+            singleSelect: {
+                params: "gender",
+                value: "",
+                multiple: false
+            },
             config: {
                 // 设置清空按钮
                 clearable: false,
@@ -48,6 +54,10 @@ var useAdd = new Vue({
         }
     },
     methods: {
+        //点击选择性别的下拉框
+        hide(data){
+           console.log(data);
+        },
         getTime(date){
             this.hiredate = date;
         },

@@ -61,10 +61,11 @@
             </el-col>
             <el-col :span="10">
                 <el-form-item label="性别" prop="gender">
-                    <el-select v-model="gender" placeholder="请选择性别" clearable >
-                        <el-option value="男" label="男"></el-option>
-                        <el-option value="女" label="女"></el-option>
-                    </el-select>
+                    <single-selection :initial="singleSelect" @hide="hide"></single-selection>
+                    <!--<el-select v-model="gender" placeholder="请选择性别" clearable >-->
+                        <!--<el-option value="男" label="男"></el-option>-->
+                        <!--<el-option value="女" label="女"></el-option>-->
+                    <!--</el-select>-->
                 </el-form-item>
             </el-col>
         </el-row>
