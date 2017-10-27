@@ -30,6 +30,14 @@ var modify = serverPath + "/role/modify";
 //角色删除接口
 var deleteUrl = serverPath + "/role/delete";
 
+function GlobalParameter(){
+    var args={"tableKeySet":{
+        "Block":{permissionType:"privilegeType"}
+    }
+    };
+    return args
+}
+
 gmp_onload=function(){
     //顶部按钮
     basTop = new Vue({
@@ -215,7 +223,8 @@ gmp_onload=function(){
         el:'#rightBottom',
         data:getData.dataObj({
             activeName:'first',
-            disabled:true
+            disabled:true,
+            tableId:'Block',
         }),
         methods:{
             //tab页点击交换

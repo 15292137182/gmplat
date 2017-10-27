@@ -85,7 +85,11 @@
             "title": " 权限分配资源",
             "icon": "fa-lock",
             "href": "core/WebUI/privilege-allocation-resources/privilege-allocation-resources.html"
-        }]
+        }, {
+                "title": " 角色分配权限",
+                "icon": "fa-lock",
+                "href": "core/WebUI/role-allocation-authority/role-allocation-authority.html"
+            }]
     },
     {
         "title": "系统管理",

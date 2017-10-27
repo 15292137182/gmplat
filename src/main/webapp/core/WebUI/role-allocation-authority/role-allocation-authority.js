@@ -12,9 +12,6 @@ var Organization = serverPath + "/role/queryBySpecify";
 //查角色下的权限信息
 var queryPermission = serverPath + "/role/queryPermissions";
 
-//查看组织机构下的人员信息
-var PersonnelInformationUrl = serverPath + "/user/queryByOrg";
-
 //角色权限删除接口
 var deleteUrl = serverPath + "/role/deletePermission";
 
