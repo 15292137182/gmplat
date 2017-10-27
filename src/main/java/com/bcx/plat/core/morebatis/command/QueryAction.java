@@ -25,7 +25,7 @@ public class QueryAction {
   private List<FieldSource> group;
   private SqlComponentTranslator translator;
   private MoreBatis app;
-  private Boolean distinct;
+  private Boolean distinct =false;
 
   public QueryAction(MoreBatis app, SqlComponentTranslator translator) {
     this.app = app;
