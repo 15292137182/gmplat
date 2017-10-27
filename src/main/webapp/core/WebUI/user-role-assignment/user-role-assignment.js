@@ -210,7 +210,7 @@ gmp_onload=function(){
             searchEvent(){
                 operate = 1;
                 var htmlUrl = 'assigment-add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, '查看权限', '480px', '480px',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, '查看权限', '480px', '90%',function(){
 
                 });
             },

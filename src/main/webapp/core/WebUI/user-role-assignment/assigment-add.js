@@ -13,6 +13,7 @@ switch(operate){
         }else{
             resIds=[];
         }
+        resName=['所有角色', '已有角色'];
     break;
         //用户组分配角色
     case 2:
@@ -23,6 +24,7 @@ switch(operate){
         }else{
             resIds=[];
         }
+        resName=['所有角色', '已有角色'];
     break;
         //角色分配用户
     case 3:
@@ -33,6 +35,7 @@ switch(operate){
         }else{
             resIds=[];
         }
+        resName=['所有用户', '已有用户'];
     break;
     //角色分配用户组
     case 4:
@@ -43,6 +46,7 @@ switch(operate){
         }else{
             resIds=[];
         }
+        resName=['所有用户', '已有用户组'];
     break;
 }
 var vm=new Vue({
@@ -85,11 +89,17 @@ var vm=new Vue({
                 }
                 return data;
             };
+            var getName=function(res){
+                return res;
+            };
             return {
                 data: generateData(res),
                 //绑定到目标标示上的数据
-                value1: resIds
+                value1: resIds,
+
+                allName:getName(resName),
             };
+
         },
         methods:{
             conformEvent(){
@@ -166,5 +176,5 @@ var vm=new Vue({
             cancel(){
                 ibcpLayer.Close(divIndex);
             }
-        },
+        }
     })

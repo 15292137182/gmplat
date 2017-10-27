@@ -54,9 +54,10 @@ var useAdd = new Vue({
         }
     },
     methods: {
-        //点击选择性别的下拉框
-        hide(data){
-           console.log(data);
+        //选择性别事件
+        changeData(data){
+            //console.log(data);
+            this.gender=data.value;
         },
         getTime(date){
             this.hiredate = date;
@@ -66,7 +67,7 @@ var useAdd = new Vue({
         },
         //确认这个节点的时候
         getNodeId(data) {
-            console.log(data);
+            //console.log(data);
             //确认点击的这个ID
             this.belongOrg=data.rowId;
         },

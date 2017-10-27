@@ -29,6 +29,14 @@ var unlockUser=serverPath + "/user/unLock";
 //锁定
 var lockUser=serverPath + "/user/lock";
 
+function GlobalParameter(){
+    var args={"tableKeySet":{
+        "Block":{status:"status"}
+    }
+    };
+    return args
+}
+
 gmp_onload=function(){
     //上层按钮事件
     basTop = new Vue({
@@ -169,7 +177,7 @@ gmp_onload=function(){
         methods:{
             //复选框点击
             getChecked(data, id, allChecked, name, flag) {
-                console.log(data);
+                //console.log(data);
                 // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
                 Array.prototype.indexOf = function(val) {
                     for (var i = 0; i < this.length; i++) {
@@ -249,8 +257,20 @@ gmp_onload=function(){
         data: getData.dataObj({
             select: '',//查询类
             chooseState: '',//状态
+            // 状态
+            singleSelect: {
+                params: "status",
+                value: "",
+                multiple: false
+            },
+            //table的ID
+            tableId:"Block"
         }),
         methods: {
+            //清除状态
+            changeData(data){
+                this.chooseState=data.value;
+            },
             headSort(column){
                 if(left.activeName=='first'){
                     if(this.select==''){//需要search
@@ -332,7 +352,7 @@ gmp_onload=function(){
             },
             //点击这一行
             currentChange(row, event, column){
-                console.log(row);
+                //console.log(row);
                 this.rightRowId=row.rowId
             },
             //复选框改变
@@ -343,7 +363,6 @@ gmp_onload=function(){
                     right.userId.push(item.rowId)
                 })
                 //当选中数据时 按钮放开来
-
                 if(right.userId!=''){
                     basTop.batchRemove=false;//批量删除
                     basTop.resetPassword=false;//重置密码
@@ -356,6 +375,9 @@ gmp_onload=function(){
                     basTop.loseEfficacy=true;//失效
                     basTop.startUsing=true;//生效
                     basTop.exportTemplate=true;//导出模板
+                }
+                if(right.userId!=''){
+                    console.log(1111)
                 }
                 console.log( right.userId)
             },
@@ -414,22 +436,22 @@ gmp_onload=function(){
                         // 循环遍历tableData
                         for(var i = 0;i < userData.length;i++) {
                             // 判断状态
-                            if(userData[i].status == "01") {
+                            if(userData[i].status == "锁定") {
                                 base = false;
                                 unlock = false;
                                 lock = true;
                             }
-                            if(userData[i].status == "02") {
+                            if(userData[i].status == "解锁") {
                                 base = false;
                                 unlock = true;
                                 lock = false;
                             }
-                            if(userData[i].status == "03") {
+                            if(userData[i].status == "启用") {
                                 base = false;
                                 unlock = false;
                                 lock = false;
                             }
-                            if(userData[i].status == "04") {
+                            if(userData[i].status == "失效") {
                                 base = true;
                                 unlock = true;
                                 lock = true;
@@ -617,7 +639,7 @@ gmp_onload=function(){
             editEvent(){
                 operate = 2;
                 var htmlUrl = 'personnel-add.html';
-                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '660px',function(){
+                divIndex = ibcpLayer.ShowDiv(htmlUrl, ' 编辑人员信息', '600px', '90%',function(){
                     //调用接口
                     var data={
                         "url":editMore,
@@ -628,7 +650,7 @@ gmp_onload=function(){
                     gmpAjax.showAjax(data,function(res){
                         //编辑拿到的数据
                         var data=res.data[0];
-                        console.log(data)
+                        //console.log(data)
                         right.userowId=data.rowId;//用户的ID号码
                         useAdd.id=data.id;//工号
                         useAdd.name=data.name;//姓名
@@ -640,12 +662,11 @@ gmp_onload=function(){
                         useAdd.mobilePhone=data.mobilePhone;//移动电话
                         useAdd.officePhone=data.officePhone//办公电话
                         useAdd.email=data.email;//邮箱
-                        useAdd.gender=data.gender;//性别
+                        useAdd.$refs.singleSelect.setValue(data.gender);//性别
                         useAdd.job=data.job;//职务
                         useAdd.hiredate=data.hiredate;//入职日期
                         useAdd.description=data.description;//说明
                         useAdd.remarks=data.remarks;//备注
-                        console.log( useAdd.config.checked)
                     })
                 });
             },

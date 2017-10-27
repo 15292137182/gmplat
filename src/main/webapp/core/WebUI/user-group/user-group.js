@@ -73,7 +73,26 @@ gmp_onload=function(){
                         rightBottom.searchMoreFirst();
                     })
                 })
-            }
+            },
+            //编辑用户组保存
+            addClick(){
+                var data={
+                    "url":modifyGroup,
+                    "jsonData":{
+                        rowId:right.rowId,
+                        groupName:right.groupName,//组名称
+                        belongSector:right.belongSector,//所属部门
+                        groupCategory:right.groupCategory,//组类别
+                        desc:right.desc,//描述
+                        remarks:right.remarks//描述
+                    },
+                    "obj":basTop,
+                    "showMsg":true
+                };
+                gmpAjax.showAjax(data,function(res){
+                    left.getNewDate();
+                })
+            },
         }
     });
 
@@ -188,25 +207,6 @@ gmp_onload=function(){
             },
         }),
         methods: {
-            //编辑用户组保存
-            addClick(){
-                var data={
-                    "url":modifyGroup,
-                    "jsonData":{
-                        rowId:right.rowId,
-                        groupName:right.groupName,//组名称
-                        belongSector:right.belongSector,//所属部门
-                        groupCategory:right.groupCategory,//组类别
-                        desc:right.desc,//描述
-                        remarks:right.remarks//描述
-                    },
-                    "obj":right,
-                    "showMsg":true
-                };
-                gmpAjax.showAjax(data,function(res){
-                    left.getNewDate();
-                })
-            },
             getNodes1(data, id, name) {
             },
             //确认这个节点的时候

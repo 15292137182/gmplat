@@ -110,12 +110,7 @@
                     <el-col :span="6" style="margin-left:20px">
                         <div style="padding:20px 0">
                             <div class="extra" style="font-size:14px;">状态</div>
-                            <el-select v-model="chooseState" slot="prepend" placeholder="请选择状态" clearable style="margin-left:-6px" class="extra1">
-                                <el-option label="锁定" value="01"></el-option>
-                                <el-option label="解锁" value="02"></el-option>
-                                <el-option label="启用" value="03"></el-option>
-                                <el-option label="失效" value="04"></el-option>
-                            </el-select>
+                            <single-selection :initial="singleSelect" @change-data="changeData"></single-selection>
                         </div>
                     </el-col>
                     <el-col :span="12">
