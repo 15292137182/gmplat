@@ -4,6 +4,7 @@ import com.bcx.plat.core.morebatis.cctv1.SqlSegment;
 
 public class SqlTokens {
   protected static final SqlSegment SELECT = new SqlSegment("SELECT");
+  protected static final SqlSegment DISTINCT = new SqlSegment("DISTINCT");
   protected static final SqlSegment DELETE = new SqlSegment("DELETE");
   protected static final SqlSegment INSERT_INTO = new SqlSegment("INSERT INTO");
   protected static final SqlSegment UPDATE = new SqlSegment("UPDATE");

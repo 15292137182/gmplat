@@ -25,6 +25,7 @@ public class QueryAction {
   private List<FieldSource> group;
   private SqlComponentTranslator translator;
   private MoreBatis app;
+  private Boolean distinct;
 
   public QueryAction(MoreBatis app, SqlComponentTranslator translator) {
     this.app = app;
@@ -70,6 +71,16 @@ public class QueryAction {
 
   public QueryAction where(Condition condition) {
     setWhere(condition);
+    return this;
+  }
+
+  public QueryAction distinct(){
+    setDistinct(Boolean.TRUE);
+    return this;
+  }
+
+  public QueryAction distinct(boolean distinct){
+    setDistinct(distinct);
     return this;
   }
 
@@ -123,6 +134,14 @@ public class QueryAction {
     pageResult.setPageNum(pageInfo.getPageNum());
     pageResult.setPageSize(pageInfo.getPageSize());
     return pageResult;
+  }
+
+  public Boolean getDistinct() {
+    return distinct;
+  }
+
+  public void setDistinct(Boolean distinct) {
+    this.distinct = distinct;
   }
 
   public List<Map<String, Object>> execute() {

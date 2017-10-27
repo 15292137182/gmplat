@@ -54,6 +54,9 @@ public class Translator implements SqlComponentTranslator {
 
   public LinkedList translateQueryAction(QueryAction queryAction, LinkedList linkedList) {
     appendSql(SqlTokens.SELECT, linkedList);
+    if (queryAction.getDistinct()==true) {
+      appendSql(SqlTokens.DISTINCT, linkedList);
+    }
     translateColumns(queryAction, linkedList);
     final TableSource tableSource = queryAction.getTableSource();
     if (tableSource==null) {
