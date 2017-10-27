@@ -71,6 +71,11 @@ public class KeySetService extends BaseService<KeySet> {
   public ServerResult queryKeyCode(String keyCodes, String row) {
     List<Map> relateKeysetRowId;
     if (!Objects.equals("null", keyCodes)) {
+      Condition condition = new ConditionBuilder(KeySet.class).and().equal("keysetCode", keyCodes).endAnd().buildDone();
+      List<KeySet> select = select(condition);
+      if (select.size()==0) {
+        return fail(Message.PLEASE_ENTER_THE_CORRECT_FORMAT);
+      }
       relateKeysetRowId = keySetCode(keyCodes);
       for (Map relate : relateKeysetRowId) {
         relate.put("value", relate.get("confKey"));

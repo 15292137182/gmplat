@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 
@@ -99,8 +101,9 @@ public class ExcelImportExport extends BaseController {
   @ResponseBody
   @SuppressWarnings("unchecked")
   public PlatResult excelUpload(HttpServletRequest request) {
+    PlatResult platResult = null;
     try {
-      List<Map> data;
+      List<Map> data = null;
       FileItemFactory factory = new DiskFileItemFactory();
       ServletFileUpload upload = new ServletFileUpload(factory);
       FileItemIterator itemIterator = upload.getItemIterator(request);
@@ -113,10 +116,10 @@ public class ExcelImportExport extends BaseController {
       } else if ("xlsx".equals(suffix)) {
         data = ExcelUtils.ExcelVerConvert(new XSSFWorkbook(inputStream));
       } else {
-        return fail(Message.PLEASE_ENTER_THE_CORRECT_FORMAT);
+        platResult = fail(Message.PLEASE_ENTER_THE_CORRECT_FORMAT);
       }
       if (data != null && data.size() == 0) {
-        return fail(Message.PARSING_EXCEL_FAIL);
+        platResult = fail(Message.PARSING_EXCEL_FAIL);
       } else if (data != null) {
         for (Map li : data) {
           String id = String.valueOf(li.get("id"));
@@ -128,26 +131,39 @@ public class ExcelImportExport extends BaseController {
             List<User> list = userService.select(validCondition);
             if (list.size() != 0) return fail(Message.DATA_CANNOT_BE_DUPLICATED);
           } else {
-            return fail(Message.DATA_CANNOT_BE_EMPTY);
+            platResult = fail(Message.DATA_CANNOT_BE_EMPTY);
           }
         }
         PlatResult add = null;
         for (Map li : data) {
+          String belongOrg = String.valueOf(li.get("belongOrg"));
           List<BaseOrg> list = new BaseOrg().selectAll();
           for (BaseOrg baseOrg : list) {
-            if (baseOrg.getOrgName().equals(li.get("belongOrg"))) {
-              String rowId = baseOrg.getRowId();
-              li.put("belongOrg", rowId);
+            if (belongOrg.contains("，")) {
+              String s = belongOrg.split("，")[1];
+              if (baseOrg.getOrgId().equals(s)) {
+                String rowId = baseOrg.getRowId();
+                li.put("belongOrg", rowId);
+              }else{
+                platResult = fail(Message.OPERATOR_FAIL);
+              }
+            }else {
+              if (baseOrg.getOrgId().equals(belongOrg)) {
+                String rowId = baseOrg.getRowId();
+                li.put("belongOrg", rowId);
+              }else{
+                platResult = fail(Message.OPERATOR_FAIL);
+              }
             }
           }
           add = userController.add(li);
         }
-        return add;
+        platResult = add;
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return null;
+    return platResult;
   }
 
 

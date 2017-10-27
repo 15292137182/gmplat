@@ -1,7 +1,10 @@
 package com.bcx.plat.core.enclosure;
 
 import com.bcx.plat.core.entity.BaseOrg;
-import com.bcx.plat.core.entity.User;
+import com.bcx.plat.core.service.KeySetService;
+import com.bcx.plat.core.utils.ServerResult;
+import com.bcx.plat.core.utils.SpringContextHolder;
+import com.bcx.plat.core.utils.UtilsTool;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13,7 +16,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.ArrayList;
@@ -42,9 +44,9 @@ public class ExcelUtils {
    */
   private static String dataConvert(Cell cell) {
     String cellValue;
-    if (cell != null && cell.getCellType() == cell.CELL_TYPE_BOOLEAN) {
+    if (cell != null && cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
       cellValue = String.valueOf(cell.getBooleanCellValue());
-    } else if (cell != null && cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+    } else if (cell != null && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
       cellValue = String.valueOf(cell.getNumericCellValue()).split("\\.")[0];
     } else {
       cellValue = cell == null ? "" : cell.getStringCellValue();
@@ -59,6 +61,7 @@ public class ExcelUtils {
    * @param workbook 工作薄
    * @return List
    */
+  @SuppressWarnings("unchecked")
   static List<Map> ExcelVerConvert(Workbook workbook) {
     List<Map> list = new ArrayList<>();
     List rowNum = new LinkedList();
@@ -110,7 +113,6 @@ public class ExcelUtils {
     return workbook;
   }
 
-
   /**
    * 创建Excel模板下拉框
    *
@@ -118,19 +120,31 @@ public class ExcelUtils {
    * @param workbook  工作薄
    * @param sheetPage sheet名称
    */
+  @SuppressWarnings("unchecked")
   static Workbook ExportExcelList(String[] cells, Workbook workbook, String sheetPage) {
-    String[] list = {"男", "女"};
+    KeySetService keySetService = SpringContextHolder.getBean("keySetService");
+    ServerResult serverResult = keySetService.queryKeyCode("genders", "null");
+    String[] list = new String[5];
+    if (UtilsTool.isValid(serverResult.getData())) {
+      List<Map> ketSetPro = (List<Map>) serverResult.getData();
+      for (int i = 0; i < ketSetPro.size(); i++) {
+        list[i] = String.valueOf(ketSetPro.get(i).get("confValue"));
+      }
+    }
+    if (list[0] == null) {
+      list = new String[]{"男", "女"};
+    }
     List<String> baseOrg = new ArrayList<>();
     List<BaseOrg> baseOrgs = new BaseOrg().selectAll();
     for (BaseOrg org : baseOrgs) {
       if (org.getOrgPid().equals("ROOT")) {
-        baseOrg.add(org.getOrgName());
+        baseOrg.add(org.getOrgName() + "，" + org.getOrgId());
       }
     }
     String[] belongOrg = baseOrg.toArray(new String[0]);
     // 在webbook中添加一个sheet,对应Excel文件中的sheet
     Sheet sheet = workbook.createSheet(sheetPage);
-    // 在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+    // 在sheet中添加表头第0行,
     Row row = sheet.createRow(0);
     // 创建单元格
     Cell cell;
@@ -143,24 +157,37 @@ public class ExcelUtils {
         cell = row.createCell((short) i);
         cell.setCellValue(cells[i]);
         createList(belongOrg, i, sheet);
-      } else if (!Objects.equals(cells[i], "所属部门")) {
-        cell = row.createCell((short) i);
-        cell.setCellValue(cells[i]);
-      } else if (!Objects.equals(cells[i], "性别")) {
+      } else {
         cell = row.createCell((short) i);
         cell.setCellValue(cells[i]);
       }
     }
+
+    Sheet sheets = workbook.createSheet("模板用例");
+    // 在sheet中添加表头第0行,
+    Cell cel;
+    Row rows = sheets.createRow(0);
+    Row ro = sheets.createRow(1);
+    for (int i = 0; i < cells.length; i++) {
+      cel = rows.createCell((short) i);
+      cel.setCellValue(cells[i]);
+    }
+    String[] data = {"2017XXXX", "张三", "张三", "男", "请正确输入部门编号，如:00005", "320120XXXXX", "13700XXXX", "021-1231XXX"
+        , "batchXX@XX.com", "工程师", "2018-01-01 12:00:00", "XXXX", "XXXX"};
+    for (int i = 0; i < data.length; i++) {
+      cel = ro.createCell((short) i);
+      cel.setCellValue(data[i]);
+    }
     return workbook;
   }
 
-    /**
-     * Excel下拉框封装
-     *
-     * @param list   下拉框参数
-     * @param rowCol 列号
-     * @param sheet  sheet
-     */
+  /**
+   * Excel下拉框封装
+   *
+   * @param list   下拉框参数
+   * @param rowCol 列号
+   * @param sheet  sheet
+   */
 
   private static void createList(String[] list, int rowCol, Sheet sheet) {
     //绑定下拉框和作用区域
@@ -170,8 +197,8 @@ public class ExcelUtils {
       DVConstraint constraint = DVConstraint.createExplicitListConstraint(list);
       //生成下拉框内容
       DataValidation validation = new HSSFDataValidation(regions, constraint);
-      //设置压制下拉箭头
-      validation.setSuppressDropDownArrow(false);
+      //设置显示错误框
+      validation.setShowErrorBox(false);
       //对sheet页生效
       sheet.addValidationData(validation);
     } else if (sheet instanceof XSSFSheet) {
@@ -179,10 +206,8 @@ public class ExcelUtils {
       //设置下拉框数据
       DataValidationConstraint constraint = helper.createExplicitListConstraint(list);
       DataValidation dataValidation = helper.createValidation(constraint, regions);
-      //设置压制下拉箭头
-      dataValidation.setSuppressDropDownArrow(true);
       //设置显示错误框
-      dataValidation.setShowErrorBox(true);
+      dataValidation.setShowErrorBox(false);
       //对sheet页生效
       sheet.addValidationData(dataValidation);
     }
