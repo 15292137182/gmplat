@@ -252,10 +252,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                rightBottom.leftHeight = $(window).height() - 510;
+                rightBottom.leftHeight = $(window).height() - 470;
             });
             $(window).resize(function () {
-                rightBottom.leftHeight = $(window).height() - 510;
+                rightBottom.leftHeight = $(window).height() - 470;
             });
         }
     })
@@ -285,10 +285,10 @@ gmp_onload=function(){
         },
         created(){
             $(document).ready(function () {
-                basRightTop.leftHeight = $(window).height() - 510;
+                basRightTop.leftHeight = $(window).height() - 470;
             });
             $(window).resize(function () {
-                basRightTop.leftHeight = $(window).height() - 510;
+                basRightTop.leftHeight = $(window).height() - 470;
             });
         }
     })

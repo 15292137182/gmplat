@@ -133,7 +133,7 @@
         </div>
     </el-col>
 
-    <el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:40px;">
+    <el-col :span="19" id="rightBottom" style="margin-left:15px;margin-top:20px;">
         <div class="allBorder" style="border:1px solid #bccdc5">
             <el-row>
                 <el-col>
@@ -142,7 +142,7 @@
                         <el-button size="small" icon="check" type="primary" :disabled="disabled" @click="btnRefresh"></el-button>
                     </div>
                     <div style="padding:30px 20px">
-                        <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                        <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="margin-top: -20px;">
                             <el-tab-pane label="人员信息" name="first">
                                 <template>
                                     <el-table ref="myData"
