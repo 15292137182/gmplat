@@ -28,6 +28,7 @@ import java.util.Map;
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
 import static com.bcx.plat.core.constants.Message.*;
 import static com.bcx.plat.core.utils.UtilsTool.*;
+
 /**
  * 用户信息controller层
  * Created by YoungerOu on 2017/10/10.

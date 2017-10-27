@@ -176,21 +176,43 @@ public class RoleService extends BaseService<Role> {
   @SuppressWarnings("unchecked")
   public PageResult<Map<String, Object>> queryRoleUserByRowId(String rowId, String search, String param, List<Order> orders, Integer pageNum, Integer pageSize) {
     Condition userCondition = null;
-    List<UserRelateRole> relateRoles;
-    if (isValid(rowId)) {
-      Condition condition = new ConditionBuilder(UserRelateRole.class)
-          .and().equal("roleRowId", rowId).endAnd().buildDone();
-      relateRoles = new UserRelateRole().selectSimple(condition);
 
-    } else {//如果没有角色rowId，就查询所有有角色的用户
-      relateRoles = new UserRelateRole().selectAll();
+    //查询出角色关联的用户组下面的用户
+    List<String> userRowIds1 = new ArrayList<>();//角色关联的用户组下面的用户
+    List<String> userRowIds2 = new ArrayList<>();//角色关联的用户
+    if (isValid(rowId)) {
+      Condition userGroupRelateRoleCondition = new ConditionBuilder(UserGroupRelateRole.class)
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
+      List<UserGroupRelateRole> userGroupRelateRoles = new UserGroupRelateRole().selectSimple(userGroupRelateRoleCondition);
+      if (isValid(userGroupRelateRoles)) {
+        List<String> userGroupRowIds = userGroupRelateRoles.stream().map(UserGroupRelateRole::getUserGroupRowId).collect(Collectors.toList());
+        //通过用户组rowId查询出用户组下的用户rowId
+        Condition userRelateUserGroupCondition = new ConditionBuilder(UserRelateUserGroup.class).and().in("userGroupRowId", userGroupRowIds).endAnd().buildDone();
+        List<UserRelateUserGroup> userRelateUserGroups = new UserRelateUserGroup().selectSimple(userRelateUserGroupCondition);
+        if (isValid(userRelateUserGroups)) {
+          //查出用户rowId
+          userRowIds1 = userRelateUserGroups.stream().map(UserRelateUserGroup::getUserRowId).collect(Collectors.toList());
+        }
+      }
+      //查询出角色关联的用户
+      Condition userRelateRoleCondition = new ConditionBuilder(UserRelateRole.class)
+          .and().equal("roleRowId", rowId).endAnd().buildDone();
+      List<UserRelateRole> userRelateRoles = new UserRelateRole().selectSimple(userRelateRoleCondition);
+      if (isValid(userRelateRoles)) {
+        userRowIds2 = userRelateRoles.stream()
+            .map(UserRelateRole::getUserRowId)
+            .collect(Collectors.toList());
+      }
     }
-    if (!relateRoles.isEmpty()) {
-      List<String> userRowIds = relateRoles.stream()
-          .map(UserRelateRole::getUserRowId)
-          .collect(Collectors.toList());
+//    else {//如果没有角色rowId，就查询所有有角色的用户
+//      userRelateRoles = new UserRelateRole().selectAll();
+//    }
+
+    //将两个List中的用户rowId结合起来,然后通过LinkedHashSet去重
+    userRowIds1.addAll(userRowIds2);
+    if (isValid(userRowIds1)) {
       userCondition = new ConditionBuilder(User.class)
-          .and().in("rowId", userRowIds).endAnd().buildDone();
+          .and().in("rowId", new LinkedHashSet(userRowIds1)).endAnd().buildDone();
     }
     if (isValid(search)) {
       if (null != userCondition) {
