@@ -2,7 +2,6 @@ package com.bcx.plat.core.controller;
 
 import com.bcx.plat.core.base.BaseConstants;
 import com.bcx.plat.core.base.BaseController;
-import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.manager.SystemSettingManager;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
@@ -13,7 +12,6 @@ import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.HexUtil;
 import com.bcx.plat.core.utils.PlatResult;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bcx.plat.core.constants.Global.PLAT_SYS_PREFIX;
-
+import static com.bcx.plat.core.constants.Message.*;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 /**
  * 用户信息controller层
  * Created by YoungerOu on 2017/10/10.
@@ -71,12 +70,12 @@ public class UserController extends BaseController {
    */
   @RequestMapping("/queryByOrg")
   public PlatResult queryByOrg(String param, Integer pageNum, Integer pageSize, String order) {
-    if (UtilsTool.isValid(param)) {
-      List list = UtilsTool.jsonToObj(param, List.class);
+    if (isValid(param)) {
+      List list = jsonToObj(param, List.class);
       ServerResult serverResult = userService.queryByOrg(list, pageNum, pageSize, order);
       return result(serverResult);
     } else {
-      return fail(Message.QUERY_FAIL);
+      return fail(QUERY_FAIL);
     }
   }
 
@@ -89,15 +88,15 @@ public class UserController extends BaseController {
   @RequestMapping("/queryBySpecify")
   public PlatResult queryBySpecify(@RequestParam(required = false) Map<String, Object> param) {
     if (null != param && !param.isEmpty()) {
-      Condition condition = UtilsTool.convertMapToAndCondition(User.class, param);
+      Condition condition = convertMapToAndCondition(User.class, param);
       List<Map> select = userService.selectMap(condition);
       if (!select.isEmpty()) {
-        return successData(Message.QUERY_SUCCESS, select);
+        return successData(QUERY_SUCCESS, select);
       } else {
-        return fail(Message.QUERY_FAIL);
+        return fail(QUERY_FAIL);
       }
     } else {
-      return fail(Message.QUERY_FAIL);
+      return fail(QUERY_FAIL);
     }
   }
 
@@ -109,12 +108,12 @@ public class UserController extends BaseController {
    */
   @PostMapping("/add")
   public PlatResult add(@RequestParam Map<String, Object> param) {
-    if (!UtilsTool.isValid(param.get("password"))) {//如果密码为空，则置为初始密码
+    if (!isValid(param.get("password"))) {//如果密码为空，则置为初始密码
       param.put("password", SystemSettingManager.getDefaultPwd());
     }
     String id = (String) param.get("id");
     String name = (String) param.get("name");
-    if (UtilsTool.isValidAll(id, name)) {//工号和姓名不能为空
+    if (isValidAll(id, name)) {//工号和姓名不能为空
       //根据工号查询是否已存在该工号的记录
       Condition validCondition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
       List<User> list = userService.select(validCondition);
@@ -123,22 +122,19 @@ public class UserController extends BaseController {
         String password = (String) (param.get("password"));
         if (validPassword(password)) {
           param.put("password", HexUtil.getEncryptedPwd(password));
-          param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+          param.put("passwordUpdateTime", getDateTimeNow());
           param.put("status", BaseConstants.IN_USE);
           User user = new User().fromMap(param).buildCreateInfo();
           if (user.insert() != -1) {
-            return successData(Message.NEW_ADD_SUCCESS, user);
-          } else {
-            return fail(Message.NEW_ADD_FAIL);
+            return successData(NEW_ADD_SUCCESS, user);
           }
-        } else {
-          return fail(Message.NEW_ADD_FAIL);
         }
+        return fail(NEW_ADD_FAIL);
       } else {
-        return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+        return fail(DATA_CANNOT_BE_DUPLICATED);
       }
     } else {
-      return fail(Message.DATA_CANNOT_BE_EMPTY);
+      return fail(DATA_CANNOT_BE_EMPTY);
     }
 
   }
@@ -192,10 +188,10 @@ public class UserController extends BaseController {
   @PostMapping("/modify")
   public PlatResult modify(@RequestParam Map<String, Object> param) {
     String rowId = (String) param.get("rowId");
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       String id = (String) param.get("id");
       String name = (String) param.get("name");
-      if (UtilsTool.isValidAll(id, name)) {//工号和姓名不能为空
+      if (isValidAll(id, name)) {//工号和姓名不能为空
         //工号不能重复
         Condition condition = new ConditionBuilder(User.class).and().equal("id", id).endAnd().buildDone();
         List<User> users = userService.select(condition);
@@ -204,18 +200,18 @@ public class UserController extends BaseController {
           User user = new User();
           User modify = user.fromMap(param).buildModifyInfo();
           if (modify.updateById() != -1) {
-            return success(Message.UPDATE_SUCCESS);
+            return success(UPDATE_SUCCESS);
           } else {
-            return fail(Message.UPDATE_FAIL);
+            return fail(UPDATE_FAIL);
           }
         } else {
-          return fail(Message.DATA_CANNOT_BE_DUPLICATED);
+          return fail(DATA_CANNOT_BE_DUPLICATED);
         }
       } else {
-        return fail(Message.DATA_CANNOT_BE_EMPTY);
+        return fail(DATA_CANNOT_BE_EMPTY);
       }
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -228,32 +224,29 @@ public class UserController extends BaseController {
   @PostMapping("/modifyPassword")
   public PlatResult modifyPassword(@RequestParam Map<String, Object> param) {
     String rowId = (String) param.get("rowId");
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       //查询原密码
       String oldPassword = (String) param.get("oldPassword");//用户输入的原密码
       String password = (String) param.get("password");//用户输入的新密码
-      if (UtilsTool.isValidAll(oldPassword, password)) {
+      if (isValidAll(oldPassword, password)) {
         Condition condition = new ConditionBuilder(User.class).and().equal("rowId", rowId).endAnd().buildDone();
         List<User> oldOne = userService.select(condition);
         String oldPwd = oldOne.get(0).getPassword();//数据库中的原密码
         if (HexUtil.validPassword(oldPassword, oldPwd) && validPassword(password)) {//校验密码
           param.remove("oldPassword");
-          param.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+          param.put("passwordUpdateTime", getDateTimeNow());
           param.put("password", HexUtil.getEncryptedPwd(password));
           User user = new User().fromMap(param).buildModifyInfo();
           if (user.updateById() != -1) {
-            return success(Message.UPDATE_SUCCESS);
-          } else {
-            return fail(Message.UPDATE_FAIL);
+            return success(UPDATE_SUCCESS);
           }
-        } else {
-          return fail(Message.UPDATE_FAIL);
         }
+        return fail(UPDATE_FAIL);
       } else {
-        return fail(Message.DATA_CANNOT_BE_EMPTY);
+        return fail(DATA_CANNOT_BE_EMPTY);
       }
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -265,15 +258,15 @@ public class UserController extends BaseController {
    */
   @PostMapping("/delete")
   public PlatResult delete(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       User user = new User().buildDeleteInfo();
       if (user.logicalDeleteById(rowId) != -1) {
-        return success(Message.DELETE_SUCCESS);
+        return success(DELETE_SUCCESS);
       } else {
-        return fail(Message.DELETE_FAIL);
+        return fail(DELETE_FAIL);
       }
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -285,15 +278,15 @@ public class UserController extends BaseController {
    */
   @PostMapping(value = "/deleteBatch")
   public PlatResult deleteBatch(@RequestParam(required = false) List<Serializable> rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       User user = new User().buildDeleteInfo();
       if (user.logicalDeleteByIds(rowId) != -1) {
-        return success(Message.DELETE_SUCCESS);
+        return success(DELETE_SUCCESS);
       } else {
-        return fail(Message.DELETE_FAIL);
+        return fail(DELETE_FAIL);
       }
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -307,10 +300,10 @@ public class UserController extends BaseController {
    */
   @PostMapping("/lock")
   public PlatResult lock(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       return updateBatch(Collections.singletonList(rowId), BaseConstants.LOCKED);
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -335,10 +328,10 @@ public class UserController extends BaseController {
    */
   @PostMapping("/unLock")
   public PlatResult unLock(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       return updateBatch(Collections.singletonList(rowId), BaseConstants.UNLOCK);
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -361,10 +354,10 @@ public class UserController extends BaseController {
    */
   @PostMapping("/inUse")
   public PlatResult inUse(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       return updateBatch(Collections.singletonList(rowId), BaseConstants.IN_USE);
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -387,10 +380,10 @@ public class UserController extends BaseController {
    */
   @PostMapping("/outOfUse")
   public PlatResult outOfUse(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       return updateBatch(Collections.singletonList(rowId), BaseConstants.OUT_OF_USE);
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -413,10 +406,10 @@ public class UserController extends BaseController {
    */
   @PostMapping("/resetPassword")
   public PlatResult resetPassword(String rowId) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       return updateBatch(Collections.singletonList(rowId), "resetPassword");
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -439,10 +432,10 @@ public class UserController extends BaseController {
    * @return PlatResult
    */
   private PlatResult updateBatch(List<String> rowId, String status) {
-    if (UtilsTool.isValid(rowId)) {
+    if (isValid(rowId)) {
       //查询数据库中的数据，判断此用户是否已经执行过此操作，如果已经执行过，则不执行此操作
       List<User> users = userService.select(new FieldCondition("rowId", Operator.IN, rowId));
-      if (UtilsTool.isValid(users)) {
+      if (isValid(users)) {
         boolean flag = true;
         for (User user : users) {
           if (status.equals(user.getStatus())) {//重置密码的操作总是能被执行
@@ -455,7 +448,7 @@ public class UserController extends BaseController {
           switch (status) {
             case BaseConstants.LOCKED:
               map.put("status", status);
-              map.put("accountLockedTime", UtilsTool.getDateTimeNow());
+              map.put("accountLockedTime", getDateTimeNow());
               break;
             case BaseConstants.UNLOCK:
               map.put("status", status);
@@ -469,25 +462,25 @@ public class UserController extends BaseController {
               break;
             case "resetPassword":
               map.put("password", HexUtil.getEncryptedPwd(SystemSettingManager.getDefaultPwd()));
-              map.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+              map.put("passwordUpdateTime", getDateTimeNow());
               break;
             default:
           }
           User user = new User().fromMap(map).buildModifyInfo();
           Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowId).endAnd().buildDone();
           if (userService.update(user, condition) != -1) {
-            return success(Message.OPERATOR_SUCCESS);
+            return success(OPERATOR_SUCCESS);
           } else {
-            return fail(Message.OPERATOR_FAIL);
+            return fail(OPERATOR_FAIL);
           }
         } else {
-          return fail("用户已经执行过此操作");
+          return fail("所选用户已经执行过此操作");
         }
       } else {
         return fail("查无此用户");
       }
     } else {
-      return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
+      return fail(PRIMARY_KEY_CANNOT_BE_EMPTY);
     }
   }
 
@@ -504,11 +497,11 @@ public class UserController extends BaseController {
     String passwordUpdateTime;
     if (user != null && user.size() != 0) {
       passwordUpdateTime = user.get(0).getPasswordUpdateTime();
-      long dateCompare = UtilsTool.dateCompare(passwordUpdateTime, UtilsTool.getDateTimeNow());
+      long dateCompare = dateCompare(passwordUpdateTime, getDateTimeNow());
       if (dateCompare >= 90) {
-        return fail(Message.REGULAR_REPLACE);
+        return fail(REGULAR_REPLACE);
       }
-      return success(Message.QUERY_SUCCESS);
+      return success(QUERY_SUCCESS);
     }
     return null;
   }
@@ -526,7 +519,7 @@ public class UserController extends BaseController {
   public void downloadExcel(String fileName, String rowIds, String fields, HttpServletResponse response) {
     String[] _rowIds = null;
     if (null != rowIds) {
-      List<String> strings = UtilsTool.jsonToObj(rowIds, List.class, String.class);
+      List<String> strings = jsonToObj(rowIds, List.class, String.class);
       if (null != strings) {
         _rowIds = writeListToArray(strings);
       }
@@ -534,7 +527,7 @@ public class UserController extends BaseController {
 
     String[] _fields = null;
     if (null != fields) {
-      List<String> strings = UtilsTool.jsonToObj(fields, List.class, String.class);
+      List<String> strings = jsonToObj(fields, List.class, String.class);
       if (null != strings) {
         _fields = writeListToArray(strings);
       }

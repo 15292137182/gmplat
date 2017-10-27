@@ -1,7 +1,6 @@
 package com.bcx.plat.core.service;
 
 import com.bcx.plat.core.base.BaseService;
-import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.BaseOrg;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.morebatis.builder.AndConditionSequenceBuilder;
@@ -15,7 +14,6 @@ import com.bcx.plat.core.morebatis.component.condition.And;
 import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -24,6 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.util.*;
+
+import static com.bcx.plat.core.constants.Message.QUERY_FAIL;
+import static com.bcx.plat.core.constants.Message.QUERY_SUCCESS;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * 用户信息业务层
@@ -46,10 +48,10 @@ public class UserService extends BaseService<User> {
    * @return ServerResult
    */
   public ServerResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
-    Condition condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));//or;
-    if (UtilsTool.isValid(param)) {
-      Map paramMap = UtilsTool.jsonToObj(param, Map.class);
+    LinkedList<Order> orders = dataSort(User.class, order);
+    Condition condition = !isValid(search) ? null : createBlankQuery(blankSelectFields(), collectToSet(search));//or;
+    if (isValid(param)) {
+      Map paramMap = jsonToObj(param, Map.class);
       assert paramMap != null;
       //取出所属部门进行判断，支持单参数和多参数
       Object belongOrg = paramMap.remove("belongOrg");
@@ -62,7 +64,7 @@ public class UserService extends BaseService<User> {
           orgList = (List) belongOrg;
         }
       }
-      if (UtilsTool.isValid(orgList)) {
+      if (isValid(orgList)) {
         OrConditionSequenceBuilder<AndConditionSequenceBuilder<ConditionBuilder>> halfCondition = new ConditionBuilder(User.class).and().or();
         orgList.forEach(str -> halfCondition.startWith("belongOrg", str));
         if (null == condition) {
@@ -73,26 +75,26 @@ public class UserService extends BaseService<User> {
       }
       if (!paramMap.isEmpty()) {//根据指定字段查询
         if (null == condition) {
-          condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap);
+          condition = convertMapToAndConditionSeparatedByLike(User.class, paramMap);
         } else {
-          condition = new And(UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, paramMap), condition);
+          condition = new And(convertMapToAndConditionSeparatedByLike(User.class, paramMap), condition);
         }
       }
     }
-    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
+    condition = addNotDeleteCondition(condition, User.class);
     //左外联查询,查询出用户信息的所有字段，以及用户所属部门的名称
     Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
     PageResult<Map<String, Object>> users;
-    if (UtilsTool.isValid(pageNum)) {//判断是否分页查询
+    if (isValid(pageNum)) {//判断是否分页查询
       users = leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, pageNum, pageSize, orders);
     } else {
       users = new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, orders));
     }
-    if (UtilsTool.isValid(null == users ? null : users.getResult())) {
+    if (isValid(null == users ? null : users.getResult())) {
       return new ServerResult<>(users);
     } else {
-      return fail(Message.QUERY_FAIL);
+      return fail(QUERY_FAIL);
     }
   }
 
@@ -103,21 +105,21 @@ public class UserService extends BaseService<User> {
    * @return ServerResult
    */
   public ServerResult queryByOrg(List list, Integer pageNum, Integer pageSize, String order) {
-    LinkedList<Order> orders = UtilsTool.dataSort(User.class, order);
+    LinkedList<Order> orders = dataSort(User.class, order);
     Condition condition = new FieldCondition("belongOrg", Operator.IN, list);
-    condition = UtilsTool.addNotDeleteCondition(condition, User.class);
+    condition = addNotDeleteCondition(condition, User.class);
     Collection<Field> fields = new LinkedList<>(moreBatis.getColumns(User.class));
     fields.add(moreBatis.getColumnByAlias(BaseOrg.class, "orgName"));
     PageResult result;
-    if (UtilsTool.isValid(pageNum)) {
+    if (isValid(pageNum)) {
       result = leftAssociationQueryPage(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, pageNum, pageSize, orders);
     } else {
       result = new PageResult<>(leftAssociationQuery(User.class, BaseOrg.class, "belongOrg", "rowId", fields, condition, orders));
     }
-    if (UtilsTool.isValid(null == result ? null : result.getResult())) {
-      return successData(Message.QUERY_SUCCESS, result);
+    if (isValid(null == result ? null : result.getResult())) {
+      return successData(QUERY_SUCCESS, result);
     } else {
-      return fail(Message.QUERY_FAIL);
+      return fail(QUERY_FAIL);
     }
   }
 
