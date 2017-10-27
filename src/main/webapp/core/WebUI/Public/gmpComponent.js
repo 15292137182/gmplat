@@ -63,6 +63,7 @@ Vue.component("single-selection", {
         };
     },
     methods: {
+        // 下拉框值改变时回调
         changeSelect(val) {
             // console.log(val);
             // 保存this指针

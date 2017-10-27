@@ -158,7 +158,7 @@ td.el-table__expanded-cell{
 }
 
 /*下拉框在最上层*/
-.el-select-dropdown {
+.el-select-dropdown, .gmp-dropdown-menu {
     z-index: 900000000 !important;
 }
 /*tree的边框去掉*/

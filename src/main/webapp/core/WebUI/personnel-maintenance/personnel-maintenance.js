@@ -402,9 +402,43 @@ gmp_onload=function(){
                         pageNum:1,
                         pageSize:this.pageSize,
                     }
-
-                    querySearch.searchResourceFirst(searchMore,headDate,this,function(res){
-
+                    // 保存this指针
+                    var self = this;
+                    querySearch.searchResourceFirst(searchMore,headDate,this,function(res) {
+                        // 当前实例下数据tableData
+                        var userData = self.tableData;
+                        // 定义按钮状态
+                        var base = false,
+                            unlock = false,
+                            lock = false;
+                        // 循环遍历tableData
+                        for(var i = 0;i < userData.length;i++) {
+                            // 判断状态
+                            if(userData[i].status == "01") {
+                                base = false;
+                                unlock = false;
+                                lock = true;
+                            }
+                            if(userData[i].status == "02") {
+                                base = false;
+                                unlock = true;
+                                lock = false;
+                            }
+                            if(userData[i].status == "03") {
+                                base = false;
+                                unlock = false;
+                                lock = false;
+                            }
+                            if(userData[i].status == "04") {
+                                base = true;
+                                unlock = true;
+                                lock = true;
+                            }
+                            // 设置按钮状态值
+                            self.$set(self.$data.tableData[i], "baseIcon", base);
+                            self.$set(self.$data.tableData[i], "unlock", unlock);
+                            self.$set(self.$data.tableData[i], "lock", lock);
+                        }
                     })
                 }else{  //不需要search
                     var param={

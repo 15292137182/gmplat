@@ -32,7 +32,7 @@
         <el-col :span="24" class="com_block">
             <el-col :span="4" class="label">基本下拉框</el-col>
             <el-col :span="10">
-                <single-selection :initial="singleSelect" @hide="hide"></single-selection>
+                <single-selection :initial="singleSelect" @hide="hide" @change-data="changeData"></single-selection>
             </el-col>
         </el-col>
 
@@ -184,18 +184,30 @@
                 }
             },
             methods: {
+                // 下拉框单选状态下清空选项后回调
+                changeData(id) {
+                    console.log(id);
+                },
+
+                // 下拉框隐藏时的回调函数
                 hide(data) {
                     console.log(data);
                 },
+
+                // 点击树节点的回调函数
                 getNodes(data, id, name) {
                     console.log(data);
                     console.log("选中行id为：" + id);
                     console.log("选中行名称为：" + name);
                 },
+
+                // 树形下拉框点击确认按钮后的回调函数
                 getNodeId(id) {
                     console.log(id);
 //                    console.log("当前选中节点 id为：" + id);
                 },
+
+                // 勾选树节点的回调函数
                 getChecked(data, id, allChecked, name, flag) {
                     // 依次接收 当前选择节点数据 当前节点id 当前树上选中节点数组 当前选中节点名称 当前节点是否选中标识
                     console.log(data);
@@ -204,6 +216,8 @@
                     console.log("当前树选中节点集合为：" + allChecked);
                     console.log("选中标识为：" + flag);
                 },
+
+                // 清空树形下拉框时的回调函数
                 clear(id, name) {
                     console.log(id);
                     console.log(name);
