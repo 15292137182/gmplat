@@ -6,6 +6,8 @@ import com.bcx.plat.core.constants.Message;
 import com.bcx.plat.core.entity.User;
 import com.bcx.plat.core.manager.SystemSettingManager;
 import com.bcx.plat.core.morebatis.builder.ConditionBuilder;
+import com.bcx.plat.core.morebatis.component.FieldCondition;
+import com.bcx.plat.core.morebatis.component.constant.Operator;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.service.UserService;
 import com.bcx.plat.core.utils.HexUtil;
@@ -438,34 +440,51 @@ public class UserController extends BaseController {
    */
   private PlatResult updateBatch(List<String> rowId, String status) {
     if (UtilsTool.isValid(rowId)) {
-      Map<String, String> map = new HashMap<>();
-      switch (status) {
-        case BaseConstants.LOCKED:
-          map.put("status", BaseConstants.LOCKED);
-          map.put("accountLockedTime", UtilsTool.getDateTimeNow());
-          break;
-        case BaseConstants.UNLOCK:
-          map.put("status", BaseConstants.UNLOCK);
-          map.put("accountLockedTime", "");
-          break;
-        case BaseConstants.IN_USE:
-          map.put("status", BaseConstants.IN_USE);
-          break;
-        case BaseConstants.OUT_OF_USE:
-          map.put("status", BaseConstants.OUT_OF_USE);
-          break;
-        case "resetPassword":
-          map.put("password", HexUtil.getEncryptedPwd(SystemSettingManager.getDefaultPwd()));
-          map.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
-          break;
-        default:
-      }
-      User user = new User().fromMap(map).buildModifyInfo();
-      Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowId).endAnd().buildDone();
-      if (userService.update(user, condition) != -1) {
-        return success(Message.OPERATOR_SUCCESS);
+      //查询数据库中的数据，判断此用户是否已经执行过此操作，如果已经执行过，则不执行此操作
+      List<User> users = userService.select(new FieldCondition("rowId", Operator.IN, rowId));
+      if (UtilsTool.isValid(users)) {
+        boolean flag = true;
+        for (User user : users) {
+          if (status.equals(user.getStatus())) {//重置密码的操作总是能被执行
+            flag = false;
+            break;
+          }
+        }
+        if (flag) {
+          Map<String, String> map = new HashMap<>();
+          switch (status) {
+            case BaseConstants.LOCKED:
+              map.put("status", status);
+              map.put("accountLockedTime", UtilsTool.getDateTimeNow());
+              break;
+            case BaseConstants.UNLOCK:
+              map.put("status", status);
+              map.put("accountLockedTime", "");
+              break;
+            case BaseConstants.IN_USE:
+              map.put("status", status);
+              break;
+            case BaseConstants.OUT_OF_USE:
+              map.put("status", status);
+              break;
+            case "resetPassword":
+              map.put("password", HexUtil.getEncryptedPwd(SystemSettingManager.getDefaultPwd()));
+              map.put("passwordUpdateTime", UtilsTool.getDateTimeNow());
+              break;
+            default:
+          }
+          User user = new User().fromMap(map).buildModifyInfo();
+          Condition condition = new ConditionBuilder(User.class).and().in("rowId", rowId).endAnd().buildDone();
+          if (userService.update(user, condition) != -1) {
+            return success(Message.OPERATOR_SUCCESS);
+          } else {
+            return fail(Message.OPERATOR_FAIL);
+          }
+        } else {
+          return fail("用户已经执行过此操作");
+        }
       } else {
-        return fail(Message.OPERATOR_FAIL);
+        return fail("查无此用户");
       }
     } else {
       return fail(Message.PRIMARY_KEY_CANNOT_BE_EMPTY);
