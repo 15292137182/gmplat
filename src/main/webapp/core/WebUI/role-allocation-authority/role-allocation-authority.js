@@ -13,16 +13,10 @@ var Organization = serverPath + "/role/queryBySpecify";
 var queryPermission = serverPath + "/role/queryPermissions";
 
 //查看组织机构下的人员信息
-var PersonnelInformationUrl = serverPath + "/user/queryByOrg"
+var PersonnelInformationUrl = serverPath + "/user/queryByOrg";
 
-//查看组织机构下的角色信息
-var roleViewUrl = serverPath + "/baseOrg/queryOrgRole"
-
-//组织机构编辑接口
-var modify = serverPath + "/baseOrg/modify";
-
-//组织机构删除接口
-var deleteUrl = serverPath + "/baseOrg/delete";
+//角色权限删除接口
+var deleteUrl = serverPath + "/role/deletePermission";
 
 function GlobalParameter(){
     var args={"tableKeySet":{
@@ -72,6 +66,7 @@ gmp_onload=function(){
                 }
             },
             rowIdArr:[0],
+            rowId:'',
         }),
         methods:{
             //点击左边的树得到数据
@@ -140,14 +135,18 @@ gmp_onload=function(){
         }),
         methods:{
             //删除
-            del(row){},
-            //人员信息查询
-            PersonnelInformation(rowId){
-                var strArr = '["'+rowId+'"]';
-                var data = {param:strArr};
-                console.log(strArr);
-                querySearch.getDataPage(PersonnelInformationUrl,data,this,function(res){
-                    console.log(res);
+            del(row){
+                console.log(row);
+                deleteObj.del(function(){
+                    var data = {
+                        "url":deleteUrl,
+                        "jsonData":{roleRowId:left.rowId,permissionRowIds:row.rowId},
+                        "obj":rightBottom,
+                        "showMsg":true
+                    }
+                    gmpAjax.showAjax(data,function(res){
+                        rightBottom.rolePermission(left.rowId);
+                    })
                 })
             },
             //点击
@@ -158,18 +157,16 @@ gmp_onload=function(){
             handleSizeChange(val){
                 //alert("点击每页显示多少条");
                 this.pageSize = val;
+                rightBottom.rolePermission(left.rowId,1);
             },
             handleCurrentChange(val){
                 //alert("当前第几页");
-                var strArr = '["'+right.rowId+'"]';
-                console.log(strArr);
-                querySearch.jumpPage(PersonnelInformationUrl,strArr,this,val,function(res){
-                    console.log(res);
-                })
+                this.pageNum = val;
+                rightBottom.rolePermission(left.rowId,val);
             },
             //刷新按钮
             btnRefresh(){
-                this.PersonnelInformation(left.rowId);
+
             },
             //查询角色下的权限方法
             rolePermission(permissionRowId,numberPage,search,param){
