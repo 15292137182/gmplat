@@ -413,9 +413,11 @@ public abstract class BaseService<T extends BaseEntity<T>> {
   @SuppressWarnings("unchecked")
   protected PageResult<Map<String, Object>> leftAssociationQueryPageAlias(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
                                                                           String relationPrimary, String relationSecondary, Condition condition,
-                                                                          int pageNum, int pageSize, List<Order> orders, Aliased aliased) {
+                                                                          int pageNum, int pageSize, List<Order> orders, Aliased aliased, Boolean distinct,
+                                                                          List<Map<String,Class>> removeField) {
     try {
-      return getTClass().newInstance().associationQueryPageAlias(primary, secondary, relationPrimary, relationSecondary, condition, pageNum, pageSize, orders, aliased);
+      return getTClass().newInstance().associationQueryPageAlias(primary, secondary, relationPrimary, relationSecondary,
+          condition, pageNum, pageSize, orders, aliased, distinct, removeField);
     } catch (InstantiationException | IllegalAccessException e) {
       e.printStackTrace();
     }

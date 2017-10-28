@@ -44,6 +44,9 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
 @RequestMapping(PLAT_SYS_PREFIX + "/core/userGroup")
 public class UserGroupController extends BaseController {
 
+  private static final String ROW_ID = "rowId";
+  private static final String GROUP_NAME = "groupName";
+
   @Resource
   private UserGroupService userGroupService;
 
@@ -61,7 +64,7 @@ public class UserGroupController extends BaseController {
   @PostMapping("/add")
   public PlatResult addUserGroup(@RequestParam Map<String, Object> param) {
     PlatResult platResult;
-    String groupName = String.valueOf(param.get("groupName"));
+    String groupName = String.valueOf(param.get(GROUP_NAME));
     if (isValid(groupName)) {
       UserGroup userGroup = new UserGroup().buildCreateInfo().fromMap(param);
       int insert = userGroup.insert();
@@ -85,8 +88,8 @@ public class UserGroupController extends BaseController {
   @PostMapping("/modify")
   public PlatResult modifyUserGroup(@RequestParam Map<String, Object> param) {
     PlatResult platResult;
-    if (UtilsTool.isValid(param.get("rowId"))) {
-      String groupName = String.valueOf(param.get("groupName"));
+    if (UtilsTool.isValid(param.get(ROW_ID))) {
+      String groupName = String.valueOf(param.get(GROUP_NAME));
       if (isValid(groupName)) {
         UserGroup userGroup = new UserGroup().buildModifyInfo().fromMap(param);
         int update = userGroup.updateById();
@@ -113,7 +116,7 @@ public class UserGroupController extends BaseController {
   @PostMapping("/logicDelete")
   public PlatResult deleteLogic(@RequestParam List<String> rowId) {
     PlatResult platResult = null;
-    Condition condition = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
+    Condition condition = new ConditionBuilder(UserGroup.class).and().in(ROW_ID, rowId).endAnd().buildDone();
     List<UserGroup> userGroups = userGroupService.select(condition);
     if (UtilsTool.isValid(rowId)) {
       for (UserGroup group : userGroups) {
@@ -142,11 +145,11 @@ public class UserGroupController extends BaseController {
   public PlatResult deletePhysics(@RequestParam List<String> rowId) {
     PlatResult platResult;
     if (UtilsTool.isValid(rowId)) {
-      Condition condition = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
+      Condition condition = new ConditionBuilder(UserGroup.class).and().in(ROW_ID, rowId).endAnd().buildDone();
       List<UserGroup> userGroups = userGroupService.select(condition);
       Condition groupRowId = new ConditionBuilder(UserRelateUserGroup.class).and().in("userGroupRowId", rowId).endAnd().buildDone();
       int delete = new UserRelateUserGroup().delete(groupRowId);
-      Condition done = new ConditionBuilder(UserGroup.class).and().in("rowId", rowId).endAnd().buildDone();
+      Condition done = new ConditionBuilder(UserGroup.class).and().in(ROW_ID, rowId).endAnd().buildDone();
       int deleteUserGroup = new UserGroup().delete(done);
       if (deleteUserGroup == -1 && delete == -1) {
         platResult = fail(Message.DELETE_FAIL);
@@ -175,14 +178,17 @@ public class UserGroupController extends BaseController {
     PlatResult platResult;
     LinkedList<Order> orders = dataSort(UserGroup.class, order);
     Condition condition;
-    if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
+    if (UtilsTool.isValid(param)) {
+      // 判断是否有param参数，如果有，根据指定字段查询
       Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
       condition = UtilsTool.convertMapToAndConditionSeparatedByLike(UserGroup.class, map);
-    } else { // 如果没有param参数，则进行空格查询
+    } else {
+      // 如果没有param参数，则进行空格查询
       condition = !UtilsTool.isValid(search) ? null : UtilsTool.createBlankQuery(blankSelectFields(), UtilsTool.collectToSet(search));
     }
     PageResult result;
-    if (UtilsTool.isValid(pageNum)) { // 判断是否分页查询
+    if (UtilsTool.isValid(pageNum)) {
+      // 判断是否分页查询
       result = userGroupService.selectPageMap(condition, orders, pageNum, pageSize);
     } else {
       result = new PageResult<>(userGroupService.selectMap(condition, orders));

@@ -9,7 +9,6 @@ import com.bcx.plat.core.morebatis.cctv1.PageResult;
 import com.bcx.plat.core.morebatis.component.Order;
 import com.bcx.plat.core.morebatis.phantom.Condition;
 import com.bcx.plat.core.utils.ServerResult;
-import com.bcx.plat.core.utils.UtilsTool;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,11 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.bcx.plat.core.base.BaseConstants.LOCKED;
+import static com.bcx.plat.core.base.BaseConstants.OUT_OF_USE;
 import static com.bcx.plat.core.constants.Message.OPERATOR_FAIL;
 import static com.bcx.plat.core.constants.Message.OPERATOR_SUCCESS;
 import static com.bcx.plat.core.constants.Message.QUERY_FAIL;
 import static com.bcx.plat.core.constants.Message.QUERY_SUCCESS;
-import static com.bcx.plat.core.utils.UtilsTool.isValid;
+import static com.bcx.plat.core.utils.UtilsTool.*;
 
 /**
  * <p>Title: </p>
@@ -35,6 +36,8 @@ import static com.bcx.plat.core.utils.UtilsTool.isValid;
  */
 @Service
 public class UserGroupService extends BaseService<UserGroup> {
+
+  private static final int ERGODIC = 5;
 
   /**
    * 删除用户组下的用户信息
@@ -101,7 +104,7 @@ public class UserGroupService extends BaseService<UserGroup> {
    */
   public ServerResult addUserGroupUser(List<String> userRowIds, String userGroupRowId) {
     ServerResult serverResult = null;
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>(1);
     for (String user : userRowIds) {
       map.put("userGroupRowId", userGroupRowId);
       map.put("userRowId", user);
@@ -146,7 +149,7 @@ public class UserGroupService extends BaseService<UserGroup> {
     if (isValid(userRelateUserGroups)) {
       //获取用户关联用户组表中的已经存在的数据
       List<String> strings = userRelateUserGroups.stream().map(UserRelateUserGroup::getUserRowId).collect(Collectors.toList());
-      for (int i = 0; i <= 5; i++) {
+      for (int i = 0; i <= ERGODIC; i++) {
         for (int j = 0; j < users.size(); j++) {
           //如果包含关联表中包含用户相同的数据就直接删除
           if (strings.contains(users.get(j).getRowId())) {
@@ -156,18 +159,25 @@ public class UserGroupService extends BaseService<UserGroup> {
       }
       //获取用户中所有的用户记录
       List<String> collect = users.stream().map(User::getRowId).collect(Collectors.toList());
-      if (isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询
-        Map<String, Object> map = UtilsTool.jsonToObj(param, Map.class);
-        condition = UtilsTool.convertMapToAndConditionSeparatedByLike(User.class, map);
-      } else { // 如果没有param参数，则进行空格查询
-        condition = !isValid(search) ? null : UtilsTool.createBlankQuery(Arrays.asList("id", "name", "nickname", "belongOrg"), UtilsTool.collectToSet(search));
+      if (isValid(param)) {
+        // 判断是否有param参数，如果有，根据指定字段查询
+        Map<String, Object> map = jsonToObj(param, Map.class);
+        condition = convertMapToAndConditionSeparatedByLike(User.class, map);
+      } else {
+        // 如果没有param参数，则进行空格查询
+        condition = !isValid(search) ? null : createBlankQuery(Arrays.asList("id", "name", "nickname", "belongOrg"),
+            collectToSet(search));
       }
       Condition buildDone;
       if (condition != null) {
-        buildDone = new ConditionBuilder(User.class).and().in("rowId", collect).endAnd().and().addCondition(condition).endAnd().buildDone();
+        buildDone = new ConditionBuilder(User.class).and().in("rowId", collect)
+            .notEqual("status", LOCKED).notEqual("status", OUT_OF_USE)
+            .endAnd().and().addCondition(condition).endAnd().buildDone();
       } else {
         //将用户信息作为条件添加
-        buildDone = new ConditionBuilder(User.class).and().in("rowId", collect).endAnd().buildDone();
+        buildDone = new ConditionBuilder(User.class).and().in("rowId", collect)
+            .notEqual("status", LOCKED).notEqual("status", OUT_OF_USE)
+            .endAnd().buildDone();
       }
       //查询用户信息并分页排序显示
       PageResult<User> user = new User().selectPage(buildDone, pageNum, pageSize, orders);
@@ -177,7 +187,8 @@ public class UserGroupService extends BaseService<UserGroup> {
         serverResult = fail(QUERY_FAIL);
       }
     } else {
-      PageResult<User> userPageResult = new User().selectPage(null, pageNum, pageSize, orders);
+      Condition done = new ConditionBuilder(User.class).and().notEqual("status", LOCKED).notEqual("status", OUT_OF_USE).endAnd().buildDone();
+      PageResult<User> userPageResult = new User().selectPage(done, pageNum, pageSize, orders);
       serverResult = successData(QUERY_SUCCESS, userPageResult);
     }
     return serverResult;

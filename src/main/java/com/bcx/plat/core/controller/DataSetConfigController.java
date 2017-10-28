@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,7 +119,7 @@ public class DataSetConfigController extends BaseController {
    */
   @RequestMapping("/queryPage")
   @SuppressWarnings("unchecked")
-  public PlatResult queryPage(String search, String param, Integer pageNum, Integer pageSize, String order) {
+  public PlatResult queryPage(HttpServletRequest request,String search, String param, Integer pageNum, Integer pageSize, String order) {
     LinkedList<Order> orders = dataSort(DataSetConfig.class, order);
     Condition condition;
     if (UtilsTool.isValid(param)) { // 判断是否有param参数，如果有，根据指定字段查询

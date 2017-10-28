@@ -457,18 +457,31 @@ public abstract class BaseORM<T extends BeanInterface> implements BeanInterface<
    */
   PageResult<Map<String, Object>> associationQueryPageAlias(Class<? extends BeanInterface> primary, Class<? extends BeanInterface> secondary,
                                                             String relationPrimary, String relationSecondary,
-                                                            Condition condition, int num, int size, List<Order> orders, Aliased aliased) {
+                                                            Condition condition, int num, int size, List<Order> orders, Aliased aliased, Boolean distinct,
+                                                            List<Map<String, Class>> removeField) {
     PageResult<Map<String, Object>> execute;
     if (condition != null) {
       QueryAction queryAction = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN);
       queryAction.setAliasedColumns(new LinkedList<>(queryAction.getAliasedColumns()));
       queryAction.getAliasedColumns().add(aliased);
-      execute = queryAction.where(condition).orderBy(orders).selectPage(num, size);
+      if (removeField != null && removeField.size() > 0) {
+        Map<String,Class> classStringMap = removeField.get(0);
+        for (Map.Entry<String,Class> next : classStringMap.entrySet()) {
+          queryAction.getAliasedColumns().remove(MORE_BATIS.getColumnByAlias(next.getValue(),next.getKey()));
+        }
+      }
+      execute = queryAction.distinct(distinct).where(condition).orderBy(orders).selectPage(num, size);
     } else {
       QueryAction queryAction = getMoreBatis().select(primary, secondary, relationPrimary, relationSecondary, JoinType.LEFT_JOIN);
       queryAction.setAliasedColumns(new LinkedList<>(queryAction.getAliasedColumns()));
       queryAction.getAliasedColumns().add(aliased);
-      execute = queryAction.orderBy(orders).selectPage(num, size);
+      if (removeField != null && removeField.size() > 0) {
+        Map<String,Class> classStringMap = removeField.get(0);
+        for (Map.Entry<String,Class> next : classStringMap.entrySet()) {
+          queryAction.getAliasedColumns().remove(MORE_BATIS.getColumnByAlias(next.getValue(),next.getKey()));
+        }
+      }
+      execute = queryAction.distinct(distinct).orderBy(orders).selectPage(num, size);
     }
     return execute;
   }
